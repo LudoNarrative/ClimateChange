@@ -20,16 +20,18 @@ $(document).ready(function(){
 	// Check if spacebar pressed.
 	$(window).keypress(function(e) {
   		if (e.keyCode === 0 || e.keyCode === 32) {
-	    	if (check_collision("#ball","#sweet-spot")){						
+  			// Only update score if game is in progress.
+  			if (store.get("update")==1){
+  				if (check_collision("#ball","#sweet-spot")){						
 				store.set("score",store.get("score")+50);
 				flash_color("#score","green");			
-			}
-			else{
-				store.set("score",store.get("score")-25);
-				flash_color("#score","red");
-			}
-			update_score();
-
+				}
+				else{
+					store.set("score",store.get("score")-25);
+					flash_color("#score","red");
+				}
+				update_score();
+  			}
   		}
 	});
 
