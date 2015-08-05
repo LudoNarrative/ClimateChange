@@ -241,8 +241,13 @@ function check_end(){
 		// Stop checking for end.
 		clearInterval(checkEnd);
 
-		// Render the fail screen.
-		passages["fail"].render();
+		// Render the fail screen if score was bad.
+		if (store.get("score") < -100){
+			passages["fail"].render();
+		}
+		else{
+			passages["ClassEnds"].render();
+		}
 
 		// When the user clicks, redirect them to start.
 		$(document).on({
