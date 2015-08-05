@@ -1,0 +1,196 @@
+/*** MAIN CODE ****/
+
+score = 0;
+store.set("score",-50);
+// store.set("questionsLeft",3);
+store.set("stress",0);
+store.set("losecool",0);
+store.set("update",1);
+
+
+$(document).ready(function(){	
+	score = 0;
+	// Place the sweet spot in the scene.
+	place_object('sweet-spot','sweet-spot.png',200,100,100,100);
+
+	// Place the ball in the scene.
+	place_object('ball','red-glossy-orb.png',200,100,100,100);
+
+	// Make the ball move to the left and right.
+	back_and_forth('#ball',400,0);
+
+	// Check if spacebar pressed.
+	$(window).keypress(function(e) {
+  		if (e.keyCode === 0 || e.keyCode === 32) {
+	    	if (check_collision("#ball","#sweet-spot")){						
+				score += 50;
+				update_score();
+				flash_color("#score","green");			
+			}
+  		}
+	});
+
+	lose_cool();
+    setInterval ( lose_cool, 1000 );
+
+    check_end();
+    setInterval ( check_end, 500 );	
+
+});
+
+/**** ALL FUNCTIONS ****/
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Choose a random element from an array.
+function choose_random_element(list){
+	return list[Math.floor(Math.random() * list.length)];
+}
+
+// Choose random item.
+function choose_random_item(){
+	return choose_random_element(window.items)
+}
+
+// Choose random location.
+function choose_random_location(){
+	return choose_random_element(window.locations)
+}
+
+// Change the background image of the canvas.
+function change_scene(image){
+	$('#canvas').css('background-image', 'url("../img/'+image+'")');	
+}
+
+// Place a generic object on the canvas.
+function place_object(id,img,x,y,w,h){
+	var elem = document.createElement("img");	
+		
+	elem.setAttribute("alt", id);
+	elem.setAttribute("id", id);
+	// elem.id = id;
+	document.getElementById("canvas").appendChild(elem);
+	set_height(id,h);
+	set_width(id,w);	
+	set_src(id,img);
+	
+	elem.style.position = 'absolute';	
+	set_x(id, x);	
+	set_y(id, y);
+}
+
+// Set height of a canvas element.
+function set_height(id, h){
+	var elem = document.getElementById(id);
+	elem.setAttribute("height", h);
+}
+
+// Set width of a canvas element.
+function set_width(id, w){
+	var elem = document.getElementById(id);
+	elem.setAttribute("width", w);
+}
+
+// Set x of a canvas element.
+function set_x(id, x){
+	var elem = document.getElementById(id);
+	elem.style.left = x + 'px';	
+}
+
+// Set y of a canvas element.
+function set_y(id, y){
+	var elem = document.getElementById(id);
+	elem.style.bottom = y + 'px';	
+}
+
+// Set image of a canvas element.
+function set_src(id,img){
+	var elem = document.getElementById(id);
+	elem.src = '../img/' +img;
+}
+
+// Make an object move horizontally back and forth.
+function back_and_forth(id,distance,x){	
+	var halfTime = 1500;
+
+	setInterval(function(){
+    $(id).stop(true,true).animate({left: distance}, halfTime, 
+          function(){ 
+          	$(this).stop(true,true).animate({left: x}, halfTime); 
+    	  });
+	}, halfTime*2);	
+	
+}
+
+function check_collision(id1, id2){
+	// console.log(id1 + " is at " + get_pos(id1).x + " " + get_pos(id1).y);
+	// console.log(id2 + " is at " + get_pos(id2).x + " " + get_pos(id2).y);
+
+ 	var ax = get_pos(id1).x; 
+ 	var ay = get_pos(id1).y;
+ 	var bx = get_pos(id2).x;
+ 	var by = get_pos(id2).y;
+
+ 	return !(
+        ((ay + $(id1).height()) < (by)) ||
+        (ay > (by + $(id2).height())) ||
+        ((ax + $(id1).width()) < bx) ||
+        (ax > (bx + $(id2).width()))
+    );
+}
+
+function get_pos(id){
+	var offsets = $(id).offset();
+	var top = offsets.top;
+	var left = offsets.left;
+	return{x:left,y:top};
+}
+
+function update_score(){
+	$('#score').text('Score: ' + score);
+}
+
+// Provide a brief flash of color to an element.
+function flash_color(id,color1){
+	$(id).stop().css("color", color1)
+    .animate({ color: "#FFFFFF"}, 1200, function() {
+    	$(id).stop().css("color", "#FFFFFF")
+    	.animate({ color: color1}, 1200);
+    });    
+}
+
+function lose_cool(){	
+	score -= store.get("losecool");
+	update_score();
+	if (score < 0){
+		flash_color("#score","red");
+	}
+}
+
+function check_end(){
+	var stress = store.get("stress");
+	
+	// Update stress image.
+	if (stress < 1){
+		set_src("stressface","stress-1.png");
+	}
+	else if (stress < 3){
+		set_src("stressface","stress-2.png");
+	}
+	else if (stress < 5){
+		set_src("stressface","stress-3.png");
+	}
+	else{
+		set_src("stressface","stress-4.png");
+	}	
+
+	if (!store.get("update")){
+		$("#ball").hide();
+	}
+}

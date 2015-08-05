@@ -1,0 +1,188 @@
+[
+	{
+		"title": 	"Start",
+		"scene": 	["You're nervous. Heart pounding, sweat beading on your forehead. You didn't expect teaching to be so stressful.", "Five more minutes. You can do this.@@set difficulty to 0@@ @@set questionsLeft to 3@@ @@set calledElika to false@@ @@set calledFranklin to false@@ @@set calledShy to false@@"],
+
+		"choices": 	[
+						["Keep Talking.", "N2"]
+					]
+	},
+	{
+		"title": 	"N2",
+		"scene": 	["\"So@@if score lt 0@@, uh, @@endif@@ you can see that as CO2 levels @@if score lt 0@@fall-- er, no, I mean rise--@@else@@rise@@endif@@, the ocean becomes more acidic. Already 25% more acidic than in the 1800s.\""],
+		"choices": 	[
+						["Next Slide.", "N3"]
+					]
+	},
+	{
+		"title": 	"N3",
+		"scene": 	["\"And we know that more acidic seawater makes it@@if score lt 0@@\"-- you trail off, losing your train of thought for a moment, then regroup-- \"makes it@@endif@@ harder for shell-forming sea creatures like corals, oysters, and shrimp to survive.\""],
+		"choices": 	[
+						["Next Slide.", "N4"]
+					]
+	},
+	{
+		"title": 	"N4",
+		"scene": 	["\"Even plankton, which is the base of the food chain for most ocean life, is affected. So there's@@if score lt 0@@, um, a link, a direct link, you see,@@else@@a direct link@@end if@@ between a rise in CO2 and the survival of most life in the oceans.\""],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+
+	{
+		"title": 	"Questions",
+		"scene": 	["You have time for @@get questionsLeft@@ more questions."],
+		"choices": 	[
+						["@@if calledElika eq false@@Call on Élika: she's smart and passionate.@@endif@@", "Elika1"],
+						["@@if calledFranklin eq false@@Call on Franklin, also smart but skeptical about climate change@@endif@@", "Franklin1"],
+						["@@if calledShy eq false@@A shy student in the back whose name you don't know@@endif@@", "Shy"],
+						["@@if questionsLeft lt 1@@[Time's up.]@@endif@@", "ClassEnds"]
+					]
+	},
+
+	{
+		"title": 	"Questions2",
+		"scene": 	["You have time for @@get questionsLeft@@ more questions."],
+		"choices": 	[
+						["@@if calledElika eq false@@Call on Élika: she's smart and passionate.@@endif@@", "Elika1"],
+						["@@if calledFranklin eq false@@Call on Franklin, also smart but skeptical about climate change@@endif@@", "Franklin1"],
+						["@@if calledShy eq false@@A shy student in the back whose name you don't know@@endif@@", "Shy"],
+						["@@if questionsLeft lt 1@@[Time's up.]@@endif@@", "ClassEnds"]
+					]
+	},
+
+	{
+		"title": 	"Elika1",
+		"scene": 	["\"Doctor Banks, if the pH is changing @@decr questionsLeft@@, why aren't species adapting to those changes?\"", "A smart question, and you know the answer-- letting you calm down a little.@@set calledElika to true@@ @@decr difficulty 1@@"],
+		"choices": [
+						["More", "Elika2"]
+					]
+	},
+	{
+		"title": "Elika2",
+		"scene": ["\"Good question, Élika. @@if score lt 0@@Um... the@@else@@The@@end if@@ reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.", "\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and@@if score lt 0@@, er, those, um,@@else@@those@@end if@@ catastrophes usually triggered mass extinctions."],
+		"choices": 	[
+						["Élika looks like she has a follow-up.", "Elika3"],
+						["Call on someone else.", "Questions"]
+					]
+	},
+	{
+		"title": 	"Elika3",
+		"scene": 	["@@decr questionsLeft@@(Follow up question with Elika.)"],
+		"choices": [
+						["Take another question.", "Questions"]
+					]
+	},
+
+
+	{
+		"title": 	"Franklin1",
+		"scene": 	["@@decr questionsLeft@@\"Emma, you always say in this class that correlation does not imply causality. So why are all you global warming nuts so sure things are different this time?\"@@set calledFranklin to true@@"],
+		"choices": 	[
+						["More.", "Franklin2"]
+					]
+	},
+	{
+		"title": 	"Franklin2",
+		"scene": 	["@@incr difficulty 1@@Great. You're terrible at confrontations like this-- it's one of your biggest fears about becoming a professor."],
+		"choices": 	[
+						["Appeal to logic.", "FranklinLogic"],
+						["Appeal to values.", "FranklinValues"],
+						["Dodge the question.", "FranklinDodge"]
+					]
+	},
+	{
+		"title": 	"FranklinLogic",
+		"scene": 	["\"That's @@if score lt 0@@um, @@endif@@ a good point, Franklin, but it's not applicable in this case. There are @@if score lt 0@@um, thousands... well maybe not that many, but definitely dozens at least,@@else@@dozens@@endif@@ of independent studies using many different techniques, that all suggest a causal link between increased CO2 and increased ocean acidity."],
+		"choices": 	[
+						["More.", "FranklinLogic2"]
+					]
+	},
+	{
+		"title": 	"FranklinLogic2",
+		"scene": 	["\"When we see a recurring pattern, validated by independent techniques, the scientific method @@if score lt 0@@, um... it, er, @@endif@@ tells us our model of a system is useful.", "He doesn't seem especially happy, but seems to accept the point. Good: that makes you feel a little better.@@decr difficulty 1@@"],
+		"choices": 	[
+						["Franklin looks like he wants to respond.", "FranklinMore"],
+						["Call on someone else.", "Questions"]
+					]
+	},
+	{
+		"title": 	"FranklinMore",
+		"scene": 	["@@decr questionsLeft@@[Further stressful conversation with Franklin."],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+
+	{
+		"title": 	"FranklinValues",
+		"scene": 	["@@if score lt 0@@(You try to appeal to his emotion, but you're so stressed out this doesn't work.@@else@@(You appeal to his emotion.)@@endif@@"],
+		"choices": 	[
+						["Franklin looks like he wants to respond.", "FranklinMore"],
+						["Call on someone else.", "Questions"]
+					]
+	},
+	{
+		"title": 	"FranklinDodge",
+		"scene": 	["@@if score lt 0@@(You try to dodge the question, but your stress level is so high, it's clear to the class what you're doing.)@@else@@(You successfully dodge the question.)@@endif@@"],
+		"choices": 	[
+						["Franklin looks like he wants to respond.", "FranklinMore"],
+						["Call on someone else.", "Questions"]
+					]
+	},
+
+	{
+		"title": 	"Shy",
+		"scene": 	["@@decr questionsLeft@@(Someone asks how acidification hurts these species.)@@set calledShy to true@@"],
+		"choices": 	[
+						["More.", "Shy2"]
+					]
+	},
+	{
+		"title": 	"Shy2",
+		"scene": 	["(Some options for how to respond. How confident are you feeling?)"],
+		"choices": 	[
+						["Explain with a cool example.", "ShyExample"],
+						["Explain with a straightforward answer.", "ShyStraight"],
+						["Drop your guard: tell a personal anecdote.", "ShyPersonal"]
+					]
+	},
+	{
+		"title": 	"ShyExample",
+		"scene": 	["@@if score lt 0@@(You try to explain a bold example, but realize halfway through it's too complicated; you're losing people.@@else@@(You deliver a cool example.)@@endif@@"],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+	{
+		"title": 	"ShyStraight",
+		"scene": 	["(You give a straight response. The students aren't too interested.)"],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+	{
+		"title": 	"ShyPersonal",
+		"scene": 	["@@if score lt 0@@(You try to tell a personal story, but because of your stress level it just comes across as awkward.@@else@@(You tell a personal story, and have your students smiling by the end.)@@endif@@"],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+
+	{
+		"title": 	"ClassEnds",
+		"scene": 	["Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 0@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. I wouldn't worry. I think you're going to make a wonderful professor.\""],
+		"choices": 	[
+						["Back to start", "Start"]
+					]
+	},
+
+	{
+		"title": 	"fail",
+		"scene": 	["(You're so nervous that you're sweating. The class looks visibly awkward. By the end of the lecture, you're shaking.)", "Dr. Tennerson steps up. \"Don't worry, Emma. You'll get better.\""],
+		"choices": 	[
+						["Back to start", "Start"]
+					]
+	}
+	
+]
