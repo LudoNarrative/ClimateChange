@@ -241,6 +241,23 @@ function check_end(){
 		// Stop checking for end.
 		clearInterval(checkEnd);
 
+		// Render the fail screen.
 		passages["fail"].render();
+
+		// When the user clicks, redirect them to start.
+		$(document).on({
+		    'click.myevent': function () {
+		        passages["Start"].render();
+			    $("#ball").show();
+			    store.set("score",0);
+			    update_score();
+			    store.set("update",1);
+			    loseCool = setInterval ( lose_cool, 1000 );
+	    		checkEnd = setInterval ( check_end, 500 );	
+	    		$(document).off('click.myevent', '.choice-point');
+		    }
+		}, '.choice-point');
+		
+
 	}
 }
