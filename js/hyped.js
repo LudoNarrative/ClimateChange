@@ -48,7 +48,10 @@ Passage.prototype = {
 		// Show scene description.
 		change_text_with_breaks('scene-description',scenes);	
 
-		// Show choice points.		
+		// Clear choice points.
+		document.getElementById("choice-points").innerHTML = "";
+
+		// Add new choice points.		
 		var element = document.getElementById("choice-points");
 		for (i=0; i<chs.list.length;i++){			
 			// Check for commands in the current choice point.

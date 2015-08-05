@@ -34,10 +34,10 @@ $(document).ready(function(){
 	});
 
 	lose_cool();
-    setInterval ( lose_cool, 1000 );
+    loseCool = setInterval ( lose_cool, 1000 );
 
     check_end();
-    setInterval ( check_end, 500 );	
+    checkEnd = setInterval ( check_end, 500 );	
 
 });
 
@@ -145,7 +145,7 @@ function check_collision(id1, id2){
 	else{
 		extra_width=0;
 	}
-	
+
  	var ax = get_pos(id1).x; 
  	var ay = get_pos(id1).y;
  	var bx = get_pos(id2).x;
@@ -204,6 +204,11 @@ function lose_cool(){
 	if (store.get("score") < 0){
 		flash_color("#score","red");
 	}
+
+	// If the score is super bad, end game early
+	if (store.get("score") < -100){
+		store.set("update",0);
+	}
 }
 
 function check_end(){	
@@ -223,8 +228,17 @@ function check_end(){
 		set_src("stressface","stress-4.png");
 	}	
 
-	// Hide the ball if the game is done.
+	// If the game is done,
 	if (!store.get("update")){
+		// Hide the ball.
 		$("#ball").hide();
+
+		// Stop changing score.
+		clearInterval(loseCool);
+
+		// Stop checking for end.
+		clearInterval(checkEnd);
+
+		passages["fail"].render();
 	}
 }
