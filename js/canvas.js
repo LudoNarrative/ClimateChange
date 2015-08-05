@@ -132,19 +132,32 @@ function back_and_forth(id,distance,x){
 }
 
 function check_collision(id1, id2){
-	// console.log(id1 + " is at " + get_pos(id1).x + " " + get_pos(id1).y);
-	// console.log(id2 + " is at " + get_pos(id2).x + " " + get_pos(id2).y);
+	// add extended safe zone based on difficulty
+	var extra_width = 0;
+	var diff = store.get("difficulty");
 
+	if (diff<=0){
+		extra_width=50;
+	}
+	else if (diff<=1){
+		extra_width=25;
+	}
+	else{
+		extra_width=0;
+	}
+	
  	var ax = get_pos(id1).x; 
  	var ay = get_pos(id1).y;
  	var bx = get_pos(id2).x;
  	var by = get_pos(id2).y;
 
+ 	var width = $(id1).width() + extra_width;
+
  	return !(
         ((ay + $(id1).height()) < (by)) ||
         (ay > (by + $(id2).height())) ||
-        ((ax + $(id1).width()) < bx) ||
-        (ax > (bx + $(id2).width()))
+        ((ax + width) < bx) ||
+        (ax > (bx + width))
     );
 }
 
