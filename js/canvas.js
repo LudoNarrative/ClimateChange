@@ -1,12 +1,10 @@
 /*** MAIN CODE ****/
 
+// Global Parameters
 score = 0;
-store.set("score",-50);
-// store.set("questionsLeft",3);
-store.set("stress",0);
-store.set("losecool",0);
-store.set("update",1);
-
+store.set("score",0);
+store.set("difficulty",0);
+store.set("update",1); // tells the game to end when update is 0
 
 $(document).ready(function(){	
 	score = 0;
@@ -23,7 +21,8 @@ $(document).ready(function(){
 	$(window).keypress(function(e) {
   		if (e.keyCode === 0 || e.keyCode === 32) {
 	    	if (check_collision("#ball","#sweet-spot")){						
-				score += 50;
+				store.set("score",store.get("score")+50);
+
 				update_score();
 				flash_color("#score","green");			
 			}
@@ -153,7 +152,7 @@ function get_pos(id){
 }
 
 function update_score(){
-	$('#score').text('Score: ' + score);
+	$('#score').text('Score: ' + store.get("score"));
 }
 
 // Provide a brief flash of color to an element.
@@ -166,30 +165,48 @@ function flash_color(id,color1){
 }
 
 function lose_cool(){	
-	score -= store.get("losecool");
+	// Determine how much cool is lost based on difficulty level.
+	var losecool = 0;
+	var diff = store.get("difficulty");
+
+	if (diff<=0){
+		losecool=1;
+	}
+	else if (diff <=1){
+		losecool=5;
+	}
+	else{
+		losecool=15;
+	}
+
+	// Update score.
+	store.set("score",store.get("score")-losecool);	
 	update_score();
-	if (score < 0){
+
+	// If the score is bad, change its color to red.
+	if (store.get("score") < 0){
 		flash_color("#score","red");
 	}
 }
 
-function check_end(){
-	var stress = store.get("stress");
+function check_end(){	
+	var score = store.get("score");
 	
 	// Update stress image.
-	if (stress < 1){
+	if (score > 100){
 		set_src("stressface","stress-1.png");
 	}
-	else if (stress < 3){
+	else if (score > 50){
 		set_src("stressface","stress-2.png");
 	}
-	else if (stress < 5){
+	else if (score > 0){
 		set_src("stressface","stress-3.png");
 	}
 	else{
 		set_src("stressface","stress-4.png");
 	}	
 
+	// Hide the ball if the game is done.
 	if (!store.get("update")){
 		$("#ball").hide();
 	}
