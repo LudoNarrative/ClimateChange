@@ -11,9 +11,10 @@
 
 // A dictionary to store Passages.
 passages = {};
+filename = "../demo.json";
 
 // Read in passage data from demo.json
-$.getJSON( "../demo.json", function( data ) {
+$.getJSON( filename, function( data ) {
 
 	// For each set of passage data,
 	for (var i=0; i<data.length; i++){
