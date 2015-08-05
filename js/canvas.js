@@ -22,10 +22,14 @@ $(document).ready(function(){
   		if (e.keyCode === 0 || e.keyCode === 32) {
 	    	if (check_collision("#ball","#sweet-spot")){						
 				store.set("score",store.get("score")+50);
-
-				update_score();
 				flash_color("#score","green");			
 			}
+			else{
+				store.set("score",store.get("score")-25);
+				flash_color("#score","red");
+			}
+			update_score();
+
   		}
 	});
 
@@ -191,7 +195,7 @@ function lose_cool(){
 
 function check_end(){	
 	var score = store.get("score");
-	
+
 	// Update stress image.
 	if (score > 100){
 		set_src("stressface","stress-1.png");
