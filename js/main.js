@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2015 Sarah Harmon
- * 
+ *
  * This source code is free to use under the GNU General Public License (GPL) with author attribution.
  *
  * The following code will read in data from the demo.json file, and
- * construct Passage objects.  It will then display the Passage with 
+ * construct Passage objects.  It will then display the Passage with
  * the title "Start".
  *
  **/
@@ -25,11 +25,11 @@ $.getJSON( filename, function( data ) {
 			choiceList.addChoice(data[i].choices[j][0],data[i].choices[j][1]);
 		}
 
-		// Define the data as a Passage object. 
-		var p = new Passage(data[i].title, data[i].scene, choiceList);		
+		// Define the data as a Passage object.
+		var p = new Passage(data[i].title, data[i].scene, choiceList);
 
 		// Add the Passage object to a searchable dictionary, with passage titles as keys.
-		passages[p.getTitle()] = p;		
+		passages[p.title] = p;
 	}
 
 	// Display the first passage.
