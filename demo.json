@@ -31,7 +31,7 @@
 
 	{
 		"title": 	"Questions",
-		"scene": 	["You have time for @@get questionsLeft@@ more questions."],
+		"scene": 	["@@if questionsLeft leq 0@@You're out of time for questions.@@else@@You have time for @@get questionsLeft@@ more questions.@@endif@@"],
 		"choices": 	[
 						["@@if calledElika eq false@@Call on Élika: she's smart and passionate.@@endif@@", "Elika1"],
 						["@@if calledFranklin eq false@@Call on Franklin, also smart but skeptical about climate change@@endif@@", "Franklin1"],
@@ -49,7 +49,7 @@
 	},
 	{
 		"title": "Elika2",
-		"scene": ["\"Good question, Élika. @@if score lt 0@@Um... the@@else@@The@@end if@@ reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.", "\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and@@if score lt 0@@, er, those, um,@@else@@those@@end if@@ catastrophes usually triggered mass extinctions."],
+		"scene": ["\"Good question, Élika. @@if score lt 0@@Um... the@@else@@The@@endif@@ reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.", "\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and@@if score lt 0@@, er, those, um, @@else@@those@@end if@@ catastrophes usually triggered mass extinctions."],
 		"choices": 	[
 						["Élika looks like she has a follow-up.", "Elika3"],
 						["Call on someone else.", "Questions"]
@@ -57,7 +57,7 @@
 	},
 	{
 		"title": 	"Elika3",
-		"scene": 	["@@decr questionsLeft@@(Follow up question with Elika.)"],
+		"scene": 	["@@decr questionsLeft@@You go back and forth with Élika for the next few minutes, which is pleasant, but you see some of the other students growing resentful that she's dominating the converation.@@decr difficulty 1@@"],
 		"choices": [
 						["Take another question.", "Questions"]
 					]
@@ -97,7 +97,7 @@
 	},
 	{
 		"title": 	"FranklinMore",
-		"scene": 	["@@decr questionsLeft@@[Further stressful conversation with Franklin."],
+		"scene": 	["@@decr questionsLeft@@@@incr difficulty 1@@Franklin dominates the discussion for the next few minutes. You thought it was important to let him have his say, but it uses up a lot of class time that maybe could have been better spent on other things."],
 		"choices": 	[
 						["More", "Questions"]
 					]
