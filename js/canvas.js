@@ -1,13 +1,11 @@
 /*** MAIN CODE ****/
 
 // Global Parameters
-score = 0;
 store.set("score",0);
 store.set("difficulty",0);
 store.set("update",1); // tells the game to end when update is 0
 
-$(document).ready(function(){	
-	score = 0;
+$(document).ready(function(){
 	// Place the sweet spot in the scene.
 	place_object('sweet-spot','sweet-spot.png',200,100,100,100);
 
@@ -22,9 +20,9 @@ $(document).ready(function(){
   		if (e.keyCode === 0 || e.keyCode === 32) {
   			// Only update score if game is in progress.
   			if (store.get("update")==1){
-  				if (check_collision("#ball","#sweet-spot")){						
+  				if (check_collision("#ball","#sweet-spot")){
 				store.set("score",store.get("score")+50);
-				flash_color("#score","green");			
+				flash_color("#score","green");
 				}
 				else{
 					store.set("score",store.get("score")-25);
@@ -39,7 +37,7 @@ $(document).ready(function(){
     loseCool = setInterval ( lose_cool, 1000 );
 
     check_end();
-    checkEnd = setInterval ( check_end, 500 );	
+    checkEnd = setInterval ( check_end, 500 );
 
 });
 
@@ -70,23 +68,23 @@ function choose_random_location(){
 
 // Change the background image of the canvas.
 function change_scene(image){
-	$('#canvas').css('background-image', 'url("../img/'+image+'")');	
+	$('#canvas').css('background-image', 'url("../img/'+image+'")');
 }
 
 // Place a generic object on the canvas.
 function place_object(id,img,x,y,w,h){
-	var elem = document.createElement("img");	
-		
+	var elem = document.createElement("img");
+
 	elem.setAttribute("alt", id);
 	elem.setAttribute("id", id);
 	// elem.id = id;
 	document.getElementById("canvas").appendChild(elem);
 	set_height(id,h);
-	set_width(id,w);	
+	set_width(id,w);
 	set_src(id,img);
-	
-	elem.style.position = 'absolute';	
-	set_x(id, x);	
+
+	elem.style.position = 'absolute';
+	set_x(id, x);
 	set_y(id, y);
 }
 
@@ -105,13 +103,13 @@ function set_width(id, w){
 // Set x of a canvas element.
 function set_x(id, x){
 	var elem = document.getElementById(id);
-	elem.style.left = x + 'px';	
+	elem.style.left = x + 'px';
 }
 
 // Set y of a canvas element.
 function set_y(id, y){
 	var elem = document.getElementById(id);
-	elem.style.bottom = y + 'px';	
+	elem.style.bottom = y + 'px';
 }
 
 // Set image of a canvas element.
@@ -121,16 +119,16 @@ function set_src(id,img){
 }
 
 // Make an object move horizontally back and forth.
-function back_and_forth(id,distance,x){	
+function back_and_forth(id,distance,x){
 	var halfTime = 1500;
 
 	setInterval(function(){
-    $(id).stop(true,true).animate({left: distance}, halfTime, 
-          function(){ 
-          	$(this).stop(true,true).animate({left: x}, halfTime); 
+    $(id).stop(true,true).animate({left: distance}, halfTime,
+          function(){
+          	$(this).stop(true,true).animate({left: x}, halfTime);
     	  });
-	}, halfTime*2);	
-	
+	}, halfTime*2);
+
 }
 
 function check_collision(id1, id2){
@@ -148,7 +146,7 @@ function check_collision(id1, id2){
 		extra_width=0;
 	}
 
- 	var ax = get_pos(id1).x; 
+ 	var ax = get_pos(id1).x;
  	var ay = get_pos(id1).y;
  	var bx = get_pos(id2).x;
  	var by = get_pos(id2).y;
@@ -180,10 +178,10 @@ function flash_color(id,color1){
     .animate({ color: "#FFFFFF"}, 1200, function() {
     	$(id).stop().css("color", "#FFFFFF")
     	.animate({ color: color1}, 1200);
-    });    
+    });
 }
 
-function lose_cool(){	
+function lose_cool(){
 	// Determine how much cool is lost based on difficulty level.
 	var losecool = 0;
 	var diff = store.get("difficulty");
@@ -199,7 +197,7 @@ function lose_cool(){
 	}
 
 	// Update score.
-	store.set("score",store.get("score")-losecool);	
+	store.set("score",store.get("score")-losecool);
 	update_score();
 
 	// If the score is bad, change its color to red.
@@ -213,7 +211,7 @@ function lose_cool(){
 	}
 }
 
-function check_end(){	
+function check_end(){
 	var score = store.get("score");
 
 	// Update stress image.
@@ -228,7 +226,7 @@ function check_end(){
 	}
 	else{
 		set_src("stressface","stress-4.png");
-	}	
+	}
 
 	// If the game is done,
 	if (!store.get("update")){
@@ -258,11 +256,11 @@ function check_end(){
 			    update_score();
 			    store.set("update",1);
 			    loseCool = setInterval ( lose_cool, 1000 );
-	    		checkEnd = setInterval ( check_end, 500 );	
+	    		checkEnd = setInterval ( check_end, 500 );
 	    		$(document).off('click.myevent', '.choice-point');
 		    }
 		}, '.choice-point');
-		
+
 
 	}
 }
