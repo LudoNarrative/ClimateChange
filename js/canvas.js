@@ -206,7 +206,7 @@ function lose_cool(){
 	}
 
 	// If the score is super bad, end game early
-	if (store.get("score") < -100){
+	if (store.get("score") <= -25){
 		store.set("update",0);
 	}
 }
@@ -240,7 +240,7 @@ function check_end(){
 		clearInterval(checkEnd);
 
 		// Render the fail screen if score was bad.
-		if (store.get("score") < -100){
+		if (store.get("score") <= -25){
 			passages["fail"].render();
 		}
 		else{
