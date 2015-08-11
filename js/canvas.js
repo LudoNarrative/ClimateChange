@@ -21,8 +21,14 @@ $(document).ready(function(){
   			// Only update score if game is in progress.
   			if (store.get("update")==1){
   				if (check_collision("#ball","#sweet-spot")){
-				store.set("score",store.get("score")+50);
-				flash_color("#score","green");
+  					if (store.get("score")+50 < 60){
+  						store.set("score",store.get("score")+50);
+  					}
+  					else{
+  						store.set("score",60);
+  					}
+
+						flash_color("#score","green");
 				}
 				else{
 					store.set("score",store.get("score")-25);
@@ -215,10 +221,10 @@ function check_end(){
 	var score = store.get("score");
 
 	// Update stress image.
-	if (score > 100){
+	if (score > 40){
 		set_src("stressface","stress-1.png");
 	}
-	else if (score > 50){
+	else if (score > 20){
 		set_src("stressface","stress-2.png");
 	}
 	else if (score > 0){
