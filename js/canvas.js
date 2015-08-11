@@ -115,7 +115,12 @@ function set_x(id, x){
 // Set y of a canvas element.
 function set_y(id, y){
 	var elem = document.getElementById(id);
-	elem.style.bottom = y + 'px';
+	elem.style.top = y + 'px';
+}
+
+// Get coordinates of a canvas element.
+function get_coords(id){
+	return $("#" + id).position();
 }
 
 // Set image of a canvas element.
@@ -238,8 +243,6 @@ function check_end(){
 
 	// If the game is done,
 	if (!store.get("update")){
-		// Hide the ball.
-		$("#ball").hide();
 
 		// Stop changing score.
 		clearInterval(loseCool);
@@ -252,8 +255,16 @@ function check_end(){
 			passages["fail"].render();
 		}
 		else{
+			// Render the good ending.
 			passages["ClassEnds"].render();
+
+			// Make the ball "explode" (show explosion gif and then hide ball).
+			var coords = get_coords("ball");
+			place_object('explosion','the_bay_touch_once.gif',coords.left,coords.top-40,142,200);
 		}
+
+		// Hide the ball.
+		$("#ball").hide();
 
 		// When the user clicks, redirect them to start.
 		$(document).on({
