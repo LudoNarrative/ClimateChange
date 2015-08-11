@@ -1,7 +1,7 @@
 [
 	{
 		"title": 	"Start",
-		"scene": 	["You're nervous. Heart pounding, sweat beading on your forehead. You didn't expect teaching to be so stressful.", "Five more minutes. You can do this.@@set difficulty to 0@@ @@set questionsLeft to 3@@ @@set calledElika to false@@ @@set calledFranklin to false@@ @@set calledShy to false@@"],
+		"scene": 	["You're nervous. Heart pounding, sweat beading on your forehead. You didn't expect teaching to be so stressful.", "Five more minutes. You can do this.@@set difficulty to 0@@ @@set questionsLeft to 3@@"],
 
 		"choices": 	[
 						["Keep Talking.", "N2"]
@@ -41,19 +41,8 @@
 	},
 
 	{
-		"title": 	"Questions2",
-		"scene": 	["You have time for @@get questionsLeft@@ more questions."],
-		"choices": 	[
-						["@@if calledElika eq false@@Call on Élika: she's smart and passionate.@@endif@@", "Elika1"],
-						["@@if calledFranklin eq false@@Call on Franklin, also smart but skeptical about climate change@@endif@@", "Franklin1"],
-						["@@if calledShy eq false@@A shy student in the back whose name you don't know@@endif@@", "Shy"],
-						["@@if questionsLeft lt 1@@[Time's up.]@@endif@@", "ClassEnds"]
-					]
-	},
-
-	{
 		"title": 	"Elika1",
-		"scene": 	["\"Doctor Banks, if the pH is changing @@decr questionsLeft@@, why aren't species adapting to those changes?\"", "A smart question, and you know the answer-- letting you calm down a little.@@set calledElika to true@@ @@decr difficulty 1@@"],
+		"scene": 	["@@decr questionsLeft@@\"Doctor Banks, if the pH is changing, why aren't species adapting to those changes?\"", "A smart question, and you know the answer-- letting you calm down a little.@@set calledElika to true@@ @@decr difficulty 1@@"],
 		"choices": [
 						["More", "Elika2"]
 					]
@@ -116,7 +105,7 @@
 
 	{
 		"title": 	"FranklinValues",
-		"scene": 	["@@if score lt 0@@(You try to appeal to his emotion, but you're so stressed out this doesn't work.@@else@@(You appeal to his emotion.)@@endif@@"],
+		"scene": 	["@@if score lt 0@@\"What you <i>deniers</i> don't seem to understand is that there's no uncertainty about this,\" you snap. \"The science is solid, and sticking your head in the sand won't make the problem go away.<br><br>There's some uncertain muttering. That came out harsher than you intended. Maybe if you weren't so nervous...@@else@@\"Don't you think we have an ethical obligation to investigate this and take action, even if things aren't entirely settled?\" you reply. \"If there was a 97% chance your child was ill, wouldn't you act to protect her rather than wait?\"", "Franklin seems annoyed by this response, but there are some positive murmurs from the rest of the class.@@endif@@"],
 		"choices": 	[
 						["Franklin looks like he wants to respond.", "FranklinMore"],
 						["Call on someone else.", "Questions"]
@@ -124,7 +113,7 @@
 	},
 	{
 		"title": 	"FranklinDodge",
-		"scene": 	["@@if score lt 0@@(You try to dodge the question, but your stress level is so high, it's clear to the class what you're doing.)@@else@@(You successfully dodge the question.)@@endif@@"],
+		"scene": 	["@@decr difficulty 1@@\"Let's not make this political,\" you say quickly. \"We're just talking about these particular results, nothing else.\"", "Well, you avoided getting into a complex issue, which helps your stress, but there's a lot of unhappy faces in the crowd. Maybe you shouldn't have dodged the bullet."],
 		"choices": 	[
 						["Franklin looks like he wants to respond.", "FranklinMore"],
 						["Call on someone else.", "Questions"]
@@ -133,37 +122,44 @@
 
 	{
 		"title": 	"Shy",
-		"scene": 	["@@decr questionsLeft@@(Someone asks how acidification hurts these species.)@@set calledShy to true@@"],
+		"scene": 	["@@decr questionsLeft@@@@set calledShy to true@@\"Doctor Banks, I get the connection between CO2 and pH, but how exactly does higher pH interfere with mollusks and stuff?\"", "It's a straightforward question... should you give it a straightforward answer, or try to inject a little personality?"],
 		"choices": 	[
-						["More.", "Shy2"]
-					]
-	},
-	{
-		"title": 	"Shy2",
-		"scene": 	["(Some options for how to respond. How confident are you feeling?)"],
-		"choices": 	[
-						["Explain with a cool example.", "ShyExample"],
 						["Explain with a straightforward answer.", "ShyStraight"],
+						["Explain with a cool example.", "ShyExample"],
 						["Drop your guard: tell a personal anecdote.", "ShyPersonal"]
 					]
 	},
 	{
-		"title": 	"ShyExample",
-		"scene": 	["@@if score lt 0@@(You try to explain a bold example, but realize halfway through it's too complicated; you're losing people.@@else@@(You deliver a cool example.)@@endif@@"],
+		"title": 	"ShyStraight",
+		"scene": 	["You briefly explain that the calcium carbonate minerals these creatures use to make their shells have a harder time calcifying as acidity goes up: if it's high enough, the shells are eaten away faster than they can form.", "The class seems satisfied, but not particularly engaged."],
 		"choices": 	[
 						["More", "Questions"]
 					]
 	},
 	{
-		"title": 	"ShyStraight",
-		"scene": 	["(You give a straight response. The students aren't too interested.)"],
+		"title": 	"ShyExample",
+		"scene": 	["You think this might be a great opportunity to use that new chemistry visualization package you've got on your laptop. It should let you show visually how calcium carbonate is affected by higher acidity."],
+		"choices": 	[
+						["More", "ShyExample2"]
+					]
+	},
+	{
+		"title": 	"ShyExample2",
+		"scene": 	["@@if score lt 0@@It doesn't go over so well. Due to your high stress level, you fumble around forever trying to get the program launched and set up. By the time you get it working, half the class are checking their phones. Maybe this stressed, you shouldn't have tried something unusual...@@else@@It works! Within a few minutes, you've set up an example that shows higher and higher levels of acidity slowing down and eventually reversing the slow build-up of calcium carbonate that so many ocean creatures use to make their shells. Good thing you were able to keep your cool and do the demo so well.@@endif@@"],
 		"choices": 	[
 						["More", "Questions"]
 					]
 	},
 	{
 		"title": 	"ShyPersonal",
-		"scene": 	["@@if score lt 0@@(You try to tell a personal story, but because of your stress level it just comes across as awkward.@@else@@(You tell a personal story, and have your students smiling by the end.)@@endif@@"],
+		"scene": 	["@@incr difficulty 1@@It's scary, but you drop your guard a bit and try to make a personal connection, telling a story about a disastrous first date with a marine biologist who was researching this very question."],
+		"choices": 	[
+						["More", "ShyPersonal2"]
+					]
+	},
+	{
+		"title": 	"ShyPersonal2",
+		"scene": 	[ "@@if score lt 0@@But you're so stressed the story just comes out weird and overly personal. By the time you finally stammer your way to the answer, you feel like an idiot.@@else@@The story seems to go over well... you get a couple smiles and laughs, and at the end when you tie it into the question, the shy student (Justin! You remember now) seems more engaged.@@endif@@"],
 		"choices": 	[
 						["More", "Questions"]
 					]
@@ -171,7 +167,7 @@
 
 	{
 		"title": 	"ClassEnds",
-		"scene": 	["@@set update to 0@@ Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 0@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. I wouldn't worry. I think you're going to make a wonderful professor.\""],
+		"scene": 	["Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 0@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. I wouldn't worry. I think you're going to make a wonderful professor.\""],
 		"choices": 	[
 						["Back to start", "Start"]
 					]
@@ -179,7 +175,15 @@
 
 	{
 		"title": 	"fail",
-		"scene": 	["(You're so nervous that you're sweating. The class looks visibly awkward. By the end of the lecture, you're shaking.)", "Dr. Tennerson steps up. \"Don't worry, Emma. You'll get better.\""],
+		"scene": 	["You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.", "Wretchedly, you manage to remind the students about their homework and dismiss the class."],
+		"choices": 	[
+						["More", "fail2"]
+					]
+	},
+
+	{
+		"title": 	"fail2",
+		"scene": 	["Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. It's hard at first, I remember But you'll get better. I know you will.\""],
 		"choices": 	[
 						["Back to start", "Start"]
 					]
