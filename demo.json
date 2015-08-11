@@ -1,7 +1,7 @@
 [
 	{
 		"title": 	"Start",
-		"scene": 	["You're nervous. Heart pounding, sweat beading on your forehead. You didn't expect teaching to be so stressful.", "Five more minutes. You can do this.@@set difficulty to 0@@ @@set questionsLeft to 3@@"],
+		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@You're nervous. Heart pounding, sweat beading on your forehead. You didn't expect teaching to be so stressful.", "Five more minutes. You can do this.@@set difficulty to 0@@ @@set questionsLeft to 3@@"],
 
 		"choices": 	[
 						["Keep Talking.", "N2"]
