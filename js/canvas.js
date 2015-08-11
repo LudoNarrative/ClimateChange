@@ -2,7 +2,7 @@
 
 // Global Parameters
 store.set("score",0);
-store.set("difficulty",0);
+store.set("difficulty",1);
 store.set("update",1); // tells the game to end when update is 0
 
 $(document).ready(function(){
