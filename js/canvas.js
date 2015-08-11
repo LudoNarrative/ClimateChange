@@ -193,12 +193,14 @@ function lose_cool(){
 	var diff = store.get("difficulty");
 
 	if (diff<=0){
+		store.set("difficulty",0);
 		losecool=1;
 	}
 	else if (diff <=1){
 		losecool=5;
 	}
 	else{
+		store.set("difficulty",2);
 		losecool=15;
 	}
 
