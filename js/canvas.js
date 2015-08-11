@@ -22,7 +22,7 @@ $(document).ready(function(){
   			if (store.get("update")==1){
   				if (check_collision("#ball","#sweet-spot")){
   					if (store.get("score")+50 < 60){
-  						store.set("score",store.get("score")+50);
+  						store.set("score",store.get("score")+40);
   					}
   					else{
   						store.set("score",60);
