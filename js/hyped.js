@@ -126,8 +126,14 @@ function check_commands(text){
 
 		// Process conditionals.
 		text = text.replace(/\@@(if\s.*?)\endif@@/g, function(matched){
-			return process_conditional(matched);
+			try {
+				return process_conditional(matched);
+			} catch(e) {
+				throw new Error("In command '" + matched + "', " + e);
+			}
 		});
+
+		// Here would be a good spot to check for bad commands (like @@end if@@) although we'd have to strip out the commands we successfully dealt with above for this to work.
 
 		// Return text with commands removed.
 		text = text.replace(re,"");
@@ -175,7 +181,7 @@ function follow_simple_command(text){
 	}
 	else if(~text.indexOf("mult ")){
 		perform_op(text,"mult");
-	}
+	} 
 }
 
 /*
@@ -280,6 +286,11 @@ function perform_op(text,op){
 	// Retrieve stored param
 	var paramVal = store.get(paramName);
 
+	if (isNaN(toOp)) {
+		// Catches malformed commands like @@incr x to 2@@
+		throw new Error("In command '" + text + "', did not recognize operator.");
+	}
+
 	// If it is a number, increment appropriately
 	if (isNumeric(paramVal)){
 		if (op=="incr"){
@@ -292,8 +303,10 @@ function perform_op(text,op){
 			store.set(paramName, paramVal*toOp);
 		}
 		else{
-			console.log("Unrecognized operator. " + paramName + " is still " + paramVal + ".");
+			throw new Error("In command '" + text + "', unrecognized operator: " + paramName + " is still " + paramVal + ".");
 		}
+	} else {
+		throw new Error("In command '" + text + "', expected '" + paramVal + "' to be numeric.");
 	}
 }
 /*
@@ -339,7 +352,7 @@ function is_exp_true(param, op, val){
 		}
 	}
 	else{
-		console.log("Unrecognized operator.  Returning false.");
+		throw new Error("Unrecognized operator.");
 	}
 
 	return isTrue;
