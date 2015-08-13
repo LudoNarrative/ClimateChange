@@ -1,19 +1,19 @@
 /*** MAIN CODE ****/
 
 // Global Parameters
-store.set("score",60);
+store.set("score",100);
 store.set("difficulty",1);
 store.set("update",1); // tells the game to end when update is 0
 
 $(document).ready(function(){
 	// Place the sweet spot in the scene.
-	place_object('sweet-spot','sweet-spot.png',200,100,100,100);
+	place_object('sweet-spot','sweet-spot.png',175,0,80,80);
 
 	// Place the ball in the scene.
-	place_object('ball','red-glossy-orb.png',200,100,100,100);
+	place_object('ball','red-glossy-orb.png',175,0,80,80);
 
 	// Make the ball move to the left and right.
-	back_and_forth('#ball',400,0);
+	back_and_forth('#ball',350,0,1500);
 
 	// Check if spacebar pressed.
 	$(window).keypress(function(e) {
@@ -130,10 +130,11 @@ function set_src(id,img){
 }
 
 // Make an object move horizontally back and forth.
-function back_and_forth(id,distance,x){
-	var halfTime = 1500;
+function back_and_forth(id,distance,x,halfTime){
+	// var halfTime = 1500;
 
 	setInterval(function(){
+
     $(id).stop(true,true).animate({left: distance}, halfTime,
           function(){
           	$(this).stop(true,true).animate({left: x}, halfTime);
@@ -149,6 +150,7 @@ function check_collision(id1, id2){
 
 	if (diff<=0){
 		extra_width=50;
+
 	}
 	else if (diff<=1){
 		extra_width=25;
@@ -229,16 +231,16 @@ function check_end(){
 
 	// Update stress image.
 	if (score > 40){
-		set_src("stressface","stress-1.png");
+		set_src("stressface","teaching_chill.png");
 	}
 	else if (score > 20){
-		set_src("stressface","stress-2.png");
+		set_src("stressface","teaching_neutral.png");
 	}
 	else if (score > 0){
-		set_src("stressface","stress-3.png");
+		set_src("stressface","teaching_stressed.png");
 	}
 	else{
-		set_src("stressface","stress-4.png");
+		set_src("stressface","teaching_stressed.png");
 	}
 
 	// If the game is done,
@@ -266,12 +268,16 @@ function check_end(){
 		// Hide the ball.
 		$("#ball").hide();
 
+		// Hide the target.
+		$("#sweet-spot").hide();
+
 		// When the user clicks, redirect them to start.
 		$(document).on({
 		    'click.myevent': function () {
 		        passages["Start"].render();
 			    $("#ball").show();
-			    store.set("score",0);
+			    $("#sweet-spot").show();
+			    store.set("score",60);
 			    update_score();
 			    store.set("update",1);
 			    loseCool = setInterval ( lose_cool, 1000 );

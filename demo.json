@@ -23,7 +23,7 @@
 	},
 	{
 		"title": 	"N4",
-		"scene": 	["\"Even plankton, which is the base of the food chain for most ocean life, is affected. So there's@@if score lt 40@@, um, a link, a direct link, you see,@@else@@a direct link@@endif@@ between a rise in CO2 and the survival of most life in the oceans.\""],
+		"scene": 	["\"Even plankton, which is the base of the food chain for most ocean life, is affected. So there's@@if score lt 40@@, um, a link, a direct link, you see,@@else@@ a direct link@@endif@@ between a rise in CO2 and the survival of most life in the oceans.\""],
 		"choices": 	[
 						["More", "Questions"]
 					]
