@@ -28,6 +28,7 @@ html, body{
 }
 #canvas{
 	background-repeat:no-repeat;
+	background: #222;
 	width:400px;
 	height:100px;
 }
@@ -70,7 +71,7 @@ html, body{
 	height:100px;
 	position:absolute;
 	left:20px;
-	top:20px;
+	top:30px;
 }
 /*#target-box:hover{
 	cursor:crosshair;

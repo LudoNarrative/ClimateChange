@@ -25,10 +25,10 @@ function startTutorial(){
 	store.set("score",40);
 
 	// Place the sweet spot in the scene.
-	place_object('sweet-spot','sweet-spot.png',175,0,80,80);
+	place_object('sweet-spot','sweet-spot.png',175,10,80,80);
 
 	// Place the ball in the scene.
-	place_object('ball','red-glossy-orb.png',175,0,80,80);
+	place_object('ball','ball.png',175,10,80,80);
 	$('#ball').hide();
 
 	// Make the ball move to the left and right.
