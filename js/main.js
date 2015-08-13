@@ -33,5 +33,6 @@ $.getJSON( filename, function( data ) {
 	}
 
 	// Display the first passage.
-	passages["Start"].render();
+	// passages["Start"].render();
+	passages["Intro"].render();
 });

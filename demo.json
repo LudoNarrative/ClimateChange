@@ -1,4 +1,13 @@
 [
+
+	{
+		"title": 	"Intro",
+		"scene": 	["Whew.  My first day as a professor.  I've got to really be able to keep my cool."],
+
+		"choices": 	[
+						["<i>Click to continue</i>.", "Start"]
+					]
+	},
 	{
 		"title": 	"Start",
 		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@You're nervous. Heart pounding, sweat beading on your forehead. You didn't expect teaching to be so stressful.", "Five more minutes. You can do this.@@set difficulty to 1@@ @@set questionsLeft to 3@@"],
@@ -175,15 +184,7 @@
 
 	{
 		"title": 	"fail",
-		"scene": 	["You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.", "Wretchedly, you manage to remind the students about their homework and dismiss the class."],
-		"choices": 	[
-						["More", "fail2"]
-					]
-	},
-
-	{
-		"title": 	"fail2",
-		"scene": 	["Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. It's hard at first, I remember But you'll get better. I know you will.\""],
+		"scene": 	["You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.", "Wretchedly, you manage to remind the students about their homework and dismiss the class.","Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. It's hard at first, but you'll get better. I know you will.\""],
 		"choices": 	[
 						["Back to start", "Start"]
 					]

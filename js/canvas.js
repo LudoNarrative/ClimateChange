@@ -1,19 +1,46 @@
 /*** MAIN CODE ****/
 
 // Global Parameters
-store.set("score",100);
+store.set("score",60);
 store.set("difficulty",1);
 store.set("update",1); // tells the game to end when update is 0
+checkEnd = null;
 
 $(document).ready(function(){
+
+	// If user clicks...
+	$(document).on({
+		    'click.myevent': function () {
+		        document.getElementById("scene-description").innerHTML = "<i><p>To keep your cool, press the spacebar when the ball is inside the target zone.</p></i>";
+		        document.getElementById("choice-points").innerHTML = "<p class='choice-point' id='Start' onClick='click_choice(this.id)'>Okay.  I think I'm ready.</p>";
+		        startTutorial();
+	    		$(document).off('click.myevent', '.choice-point');
+		    }
+		}, '.choice-point');
+
+});
+
+function startTutorial(){
+	// Set score at a scary place
+	store.set("score",40);
+
 	// Place the sweet spot in the scene.
 	place_object('sweet-spot','sweet-spot.png',175,0,80,80);
 
 	// Place the ball in the scene.
 	place_object('ball','red-glossy-orb.png',175,0,80,80);
+	$('#ball').hide();
 
 	// Make the ball move to the left and right.
 	back_and_forth('#ball',350,0,1500);
+
+	// Once delay for movement has completed, show the ball.
+	setTimeout(function(){
+   if (store.get("update")){
+     $('#ball').show();
+   }
+
+  }, 3000);
 
 	// Check if spacebar pressed.
 	$(window).keypress(function(e) {
@@ -26,6 +53,7 @@ $(document).ready(function(){
   					}
   					else{
   						store.set("score",60);
+
   					}
 
 						flash_color("#score","green");
@@ -40,12 +68,27 @@ $(document).ready(function(){
 	});
 
 	lose_cool();
-    loseCool = setInterval ( lose_cool, 1000 );
+  loseCool = setInterval ( lose_cool, 1000 );
 
-    check_end();
-    checkEnd = setInterval ( check_end, 500 );
 
-});
+  // If user clicks...
+	$(document).on({
+		    'click.myevent2': function () {
+		        startGame();
+	    		$(document).off('click.myevent2', '.choice-point');
+		    }
+		}, '.choice-point');
+}
+
+function startGame(){
+	passages["Start"].render();
+	store.set("score",80);
+	store.set("difficulty",0);
+  setTimeout(function(){
+   	check_end();
+  	checkEnd = setInterval ( check_end, 500 );
+  }, 2000);
+}
 
 /**** ALL FUNCTIONS ****/
 
@@ -195,6 +238,21 @@ function flash_color(id,color1){
 }
 
 function lose_cool(){
+	// Update stress image.
+	var score = store.get("score");
+	if (score > 40){
+		set_src("stressface","teaching_chill.png");
+	}
+	else if (score > 20){
+		set_src("stressface","teaching_neutral.png");
+	}
+	else if (score > 0){
+		set_src("stressface","teaching_stressed.png");
+	}
+	else{
+		set_src("stressface","teaching_ultrastressed.png");
+	}
+
 	// Determine how much cool is lost based on difficulty level.
 	var losecool = 0;
 	var diff = store.get("difficulty");
@@ -220,32 +278,17 @@ function lose_cool(){
 		flash_color("#score","red");
 	}
 
+	console.log(store.get("score"));
+
+}
+
+function check_end(){
 	// If the score is super bad, end game early
 	if (store.get("score") <= -25){
 		store.set("update",0);
 	}
-}
-
-function check_end(){
-	var score = store.get("score");
-
-	// Update stress image.
-	if (score > 40){
-		set_src("stressface","teaching_chill.png");
-	}
-	else if (score > 20){
-		set_src("stressface","teaching_neutral.png");
-	}
-	else if (score > 0){
-		set_src("stressface","teaching_stressed.png");
-	}
-	else{
-		set_src("stressface","teaching_stressed.png");
-	}
-
 	// If the game is done,
 	if (!store.get("update")){
-
 		// Stop changing score.
 		clearInterval(loseCool);
 
@@ -273,19 +316,29 @@ function check_end(){
 
 		// When the user clicks, redirect them to start.
 		$(document).on({
-		    'click.myevent': function () {
+		    'click.myevent3': function () {
 		        passages["Start"].render();
 			    $("#ball").show();
 			    $("#sweet-spot").show();
-			    store.set("score",60);
+			    store.set("score",80);
 			    update_score();
 			    store.set("update",1);
 			    loseCool = setInterval ( lose_cool, 1000 );
 	    		checkEnd = setInterval ( check_end, 500 );
-	    		$(document).off('click.myevent', '.choice-point');
+	    		$(document).off('click.myevent3', '.choice-point');
 		    }
 		}, '.choice-point');
-
-
 	}
+}
+
+// Remove element of ID or class.  Works for modern browsers (not IE 7 and below).
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = this.length - 1; i >= 0; i--) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
 }
