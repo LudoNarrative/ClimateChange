@@ -105,7 +105,7 @@
 
 	{
 		"title": 	"FranklinValues",
-		"scene": 	["@@if score lt 40@@\"What you <i>deniers</i> don't seem to understand is that there's no uncertainty about this,\" you snap. \"The science is solid, and sticking your head in the sand won't make the problem go away.<br><br>There's some uncertain muttering. That came out harsher than you intended. Maybe if you weren't so nervous...@@else@@\"Don't you think we have an ethical obligation to investigate this and take action, even if things aren't entirely settled?\" you reply. \"If there was a 97% chance your child was ill, wouldn't you act to protect her rather than wait?\"", "Franklin seems annoyed by this response, but there are some positive murmurs from the rest of the class.@@endif@@"],
+		"scene": 	["@@if score lt 40@@\"What you <i>deniers</i> don't seem to understand is that there's no uncertainty about this,\" you snap. \"The science is solid, and sticking your head in the sand won't make the problem go away.<br><br>There's some uncertain muttering. That came out harsher than you intended. Maybe if you weren't so nervous...@@else@@\"Don't you think we have an ethical obligation to investigate this and take action, even if things aren't entirely settled?\" you reply. \"If there was a 97% chance your child was ill, wouldn't you act to protect her rather than wait?\"<br><br>Franklin seems annoyed by this response, but there are some positive murmurs from the rest of the class.@@endif@@"],
 		"choices": 	[
 						["Franklin looks like he wants to respond.", "FranklinMore"],
 						["Call on someone else.", "Questions"]
