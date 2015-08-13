@@ -1,0 +1,201 @@
+[
+	{
+		"title": 	"Start",
+		"scene": 	["@@set optimism to 0@@@@set emotional to 0@@Hot as a furnace out here, huh?"],
+
+		"choices": 	[
+						["Sure is.", "S2"]
+					]
+	},
+	{
+		"title": 	"S2",
+		"scene": 	["Name's Rick. Nice meeting you.", "How's your crew doing on the south side?"],
+
+		"choices": 	[
+						["We've already got half the saplings replanted!", "progGood"],
+						["It's slow going, but we're making progress.", "progMed"],
+						["Going nowhere. What are we even doing out here?", "progBad"]
+					]
+	},
+	{
+		"title": 	"progGood",
+		"scene": 	["@@incr optimism 1@@Well, goody for you.", "We're taking our sweet time on that side. No sense killing ourselves in this heat."],
+
+		"choices": 	[
+						["Stay hydrated.", "hydrated"],
+						["Don't you care about what we're doing here?", "dontucare"]
+					]
+	},
+	{
+		"title": 	"progMed",
+		"scene": 	["If you can call what we're doing \"progress...\""],
+
+		"choices": 	[
+						["I don't follow.", "spellitout"],
+						["What the hell's <i>that</i> supposed to mean?", "dontucare"]
+					]
+	},
+	{
+		"title": 	"progBad",
+		"scene": 	["@@decr optimism 1@@Tell me about it.", "We're taking our sweet time on that side, too. No sense killing ourselves in this heat."],
+
+		"choices": 	[
+						["I'm surprised no one's passed out yet!", "passedout"],
+						["Stay hydrated, and you'll be fine.", "hydrated"]
+					]
+	},
+	{
+		"title": 	"hydrated",
+		"scene": 	["@@decr emotional 1@@Good advice. Even if this well water tastes like goat piss..."],
+		"choices": 	[
+						["More", "pointless"]
+					]
+	},
+	{
+		"title": 	"passedout",
+		"scene": 	["@@incr emotional 1@@Don't get yourself all worked up about it.", "Look. Let me explain what's going on here."],
+		"choices": 	[
+						["More", "pointless"]
+					]
+	},
+	{
+		"title": 	"dontucare",
+		"scene": 	["@@incr emotional 1@@Are you kidding me?", "Look. Let me explain something to you."],
+		"choices": 	[
+						["More", "pointless"]
+					]
+	},
+	{
+		"title": 	"spellitout",
+		"scene": 	["@@decr emotional 1@@Well, let me spell it out for you, then."],
+		"choices": 	[
+						["More", "pointless"]
+					]
+	},
+	{
+		"title": 	"pointless",
+		"scene": 	["You realize this whole project is pointless, right?"],
+
+		"choices": 	[
+						["What do you mean?", "doomed"]
+					]
+	},
+	{
+		"title": 	"doomed",
+		"scene": 	["We're rearranging the deck chairs on the Titanic.", "I mean, the planet's <i>doomed</i>.", "How the hell is moving a couple thousand trees from one ridge to another going to make any difference?"],
+
+		"choices": 	[
+						["It'll help our valley survive warmer winters.", "warmerwinters"],
+						["Every little bit helps! We're leading by example.", "leadbyexample"],
+						["We have to do <i>something</i>.", "dosomething"],
+						["You're right. This is pointless.", "itspointless"]
+					]
+	},
+	{
+		"title": 	"warmerwinters",
+		"scene": 	["@@incr optimism 1@@@@decr emotional 1@@Yeah, so they tell us. Looks great on paper.", "Meanwhile the other 99.99% of the world keeps burning."],
+
+		"choices": 	[
+						["More", "nobodycares"]
+					]
+	},
+	{
+		"title": 	"leadbyexample",
+		"scene": 	["@@incr optimism 1@@@@incr emotional 1@@Yeah. Like bailing out an ocean liner ship with a teaspoon."],
+
+		"choices": 	[
+						["More", "nobodycares"]
+					]
+	},
+	{
+		"title": 	"dosomething",
+		"scene": 	["@@decr optimism 1@@@@incr emotional 1@@Everyone seems to feel that way.", "I wonder why we really bother."],
+
+		"choices": 	[
+						["More", "nobodycares"]
+					]
+	},
+	{
+		"title": 	"itspointless",
+		"scene": 	["@@decr optimism 1@@@@decr emotional 1@@Hey man, at least it's a job. Government job, no less.", "Hard to come by these days."],
+
+		"choices": 	[
+						["More", "nobodycares"]
+					]
+	},
+
+	{
+		"title": 	"nobodycares",
+		"scene": 	["Face it.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
+
+		"choices": 	[
+						["Maybe common good and personal good can be the same thing.", "forgood"],
+						["Maybe people are inherently selfish.", "selfish"],
+						["I guess the point is that we're doing it.", "doingit"]
+					]
+	},
+	{
+		"title": 	"forgood",
+		"scene": 	["@@incr optimism 1@@You really believe that, huh?"],
+
+		"choices": 	[
+						["With all my heart.", "allheart"],
+						["It's as good a theory as any.", "goodtheory"]
+					]
+	},
+	{
+		"title": 	"allheart",
+		"scene": 	["@@incr emotional 1@@"],
+
+		"choices": 	[
+						["There's the shift whistle.", "outtro"]
+					]
+	},
+	{
+		"title": 	"goodtheory",
+		"scene": 	["@@decr emotional 1@@"],
+
+		"choices": 	[
+						["There's the shift whistle.", "outtro"]
+					]
+	},
+
+
+	{
+		"title": 	"selfish",
+		"scene": 	["@@decr optimism 1@@Then in the end, I guess we all get nothing."],
+
+		"choices": 	[
+						["There's the shift whistle.", "outtro"]
+					]
+	},
+	{
+		"title": 	"doingit",
+		"scene": 	["I guess so.", "Look. I got a little girl. Am I supposed to lie to her? Tell her everything's going to be all right?"],
+
+		"choices": 	[
+						["Tell her what you believe.", "allheart"],
+						["Teach her what you know.", "goodtheory"]
+					]
+	},
+
+	{
+		"title": 	"outtro",
+		"scene": 	["Back to work.", "@@if optimism gt 0@@Optimist, huh? Been a while since I met one of those.<br><br>Thought y'all were extinct, too.@@endif@@@@if optimism lt 0@@You're kind of a downer. You must get that a lot, huh?@@endif@@", "Be seeing you.<br><br><span style='color:yellow'>@@if emotional gt 0@@Trait gained: Emotional@@endif@@@@if emotional lt 0@@Trait gained: Level-headed@@endif@@<br>@@if optimism gt 0@@Trait gained: Optimist@@endif@@@@if optimism lt 0@@Trait gained: Pessimist@@endif@@"],
+
+		"choices": 	[
+						["Start Over", "Start"]
+					]
+	},
+
+	{
+		"title": "fail",
+		"scene": ["Look, I got to run. Our side's back on shift, anyway.", "Be seeing you."],
+		"choices": [
+			["Start Over", "Start"]
+		]
+	}
+
+
+
+]	
