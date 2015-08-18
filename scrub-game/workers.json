@@ -18,7 +18,7 @@
 	},
 	{
 		"title": 	"S2",
-		"scene": 	["Name's Rick. Nice meeting you.", "How's your crew doing on this side of the beach?"],
+		"scene": 	["@@set required_percent to 5@@Name's Rick. Nice meeting you.", "How's your crew doing on this side of the beach?"],
 
 		"choices": 	[
 						["We've found almost a thousand crabs so far.", "progGood"],
@@ -28,7 +28,7 @@
 	},
 	{
 		"title": 	"progGood",
-		"scene": 	["@@incr optimism 1@@Well, goody for you.", "We're taking our sweet time on my side. No sense killing ourselves in this heat."],
+		"scene": 	["@@set required_percent to 10@@@@incr optimism 1@@Well, goody for you.", "We're taking our sweet time on my side. No sense killing ourselves in this heat."],
 
 		"choices": 	[
 						["Stay hydrated.", "hydrated"],
@@ -37,7 +37,7 @@
 	},
 	{
 		"title": 	"progMed",
-		"scene": 	["If you can call what we're doing \"progress...\""],
+		"scene": 	["@@set required_percent to 10@@If you can call what we're doing \"progress...\""],
 
 		"choices": 	[
 						["I don't follow.", "spellitout"],
@@ -46,7 +46,7 @@
 	},
 	{
 		"title": 	"progBad",
-		"scene": 	["@@decr optimism 1@@Tell me about it.", "We're taking our sweet time on my side, too. No sense killing ourselves in this heat."],
+		"scene": 	["@@set required_percent to 15@@@@decr optimism 1@@Tell me about it.", "We're taking our sweet time on my side, too. No sense killing ourselves in this heat."],
 
 		"choices": 	[
 						["I'm surprised no one's passed out yet!", "passedout"],
@@ -55,7 +55,7 @@
 	},
 	{
 		"title": 	"hydrated",
-		"scene": 	["@@decr emotional 1@@Good advice. Even if this desal'd water tastes like something died in it..."],
+		"scene": 	["@@decr emotional 1@@Good advice. Even if this desal water tastes like something died in it..."],
 		"choices": 	[
 						["More", "pointless"]
 					]
@@ -83,7 +83,7 @@
 	},
 	{
 		"title": 	"pointless",
-		"scene": 	["@@set required_percent to 50@@You realize this whole project is pointless, right?"],
+		"scene": 	["@@set required_percent to 33@@You realize this whole project is pointless, right?"],
 
 		"choices": 	[
 						["What do you mean?", "doomed"]
@@ -91,7 +91,7 @@
 	},
 	{
 		"title": 	"doomed",
-		"scene": 	["We're rearranging the deck chairs on the Titanic.", "I mean, the planet's <i>doomed</i>.", "How's moving some crabs from one beach to another going to make any difference?"],
+		"scene": 	["@@set required_percent to 40@@We're rearranging the deck chairs on the Titanic.", "I mean, the planet's <i>doomed</i>.", "How's moving some crabs from one beach to another going to make any difference?"],
 
 		"choices": 	[
 						["They're more protected on the other side of the bay. They won't die out there.", "warmerwinters"],
@@ -102,7 +102,7 @@
 	},
 	{
 		"title": 	"warmerwinters",
-		"scene": 	["@@incr optimism 1@@@@decr emotional 1@@Yeah, so they tell us. Looks great on paper.", "Meanwhile the other 99.99% of the world keeps burning."],
+		"scene": 	["@@set required_percent to 50@@@@incr optimism 1@@@@decr emotional 1@@Yeah, so they tell us. Looks great on paper.", "Meanwhile the other 99.99% of the world keeps burning."],
 
 		"choices": 	[
 						["More", "nobodycares"]
@@ -110,7 +110,7 @@
 	},
 	{
 		"title": 	"leadbyexample",
-		"scene": 	["@@incr optimism 1@@@@incr emotional 1@@Yeah. Like bailing out an ocean liner with a teaspoon."],
+		"scene": 	["@@set required_percent to 50@@@@incr optimism 1@@@@incr emotional 1@@Yeah. Like bailing out an ocean liner with a teaspoon."],
 
 		"choices": 	[
 						["More", "nobodycares"]
@@ -118,7 +118,7 @@
 	},
 	{
 		"title": 	"dosomething",
-		"scene": 	["@@decr optimism 1@@@@incr emotional 1@@That's what everyone says.", "I wonder why we really bother."],
+		"scene": 	["@@set required_percent to 50@@@@decr optimism 1@@@@incr emotional 1@@That's what everyone says.", "I wonder why we really bother."],
 
 		"choices": 	[
 						["More", "nobodycares"]
@@ -126,7 +126,7 @@
 	},
 	{
 		"title": 	"itspointless",
-		"scene": 	["@@decr optimism 1@@@@decr emotional 1@@Hey man, at least it's a job. Government job, no less.", "Hard to come by these days."],
+		"scene": 	["@@set required_percent to 50@@@@decr optimism 1@@@@decr emotional 1@@Hey man, at least it's a job. Government job, no less.", "Hard to come by these days."],
 
 		"choices": 	[
 						["More", "nobodycares"]
@@ -135,7 +135,7 @@
 
 	{
 		"title": 	"nobodycares",
-		"scene": 	["@@if optimism gt 0@@Face it@@endif@@@@if optimist leq 0@@You're right, you know@@endif@@.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
+		"scene": 	["@@set required_percent to 60@@@@if optimism gt 0@@Face it@@endif@@@@if optimist leq 0@@You're right, you know@@endif@@.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
 
 		"choices": 	[
 						["Maybe common good and personal good can be the same thing.", "forgood"],
@@ -180,7 +180,7 @@
 	},
 	{
 		"title": 	"doingit",
-		"scene": 	["I guess so.", "Look. Am I supposed to lie to my little girl? Tell her everything's going to be all right?"],
+		"scene": 	["@@set required_percent to 80@@I guess so.", "Look. Am I supposed to lie to my little girl? Tell her everything's going to be all right?"],
 
 		"choices": 	[
 						["Tell her what you believe.", "allheart"],
@@ -190,7 +190,7 @@
 
 	{
 		"title": 	"outtro",
-		"scene": 	["@@set update to 0@@Back to work.", "@@if optimism gt 0@@Optimist, huh? Been a while since I met one of those.<br><br>Thought y'all were extinct, too.@@endif@@@@if optimism lt 0@@You're kind of a downer. You must get that a lot, huh?@@endif@@", "Be seeing you.<br><br><span style='color:yellow'>@@if emotional gt 0@@Trait gained: Emotional@@endif@@@@if emotional lt 0@@Trait gained: Level-headed@@endif@@<br>@@if optimism gt 0@@Trait gained: Optimist@@endif@@@@if optimism lt 0@@Trait gained: Pessimist@@endif@@"],
+		"scene": 	["@@set required_percent to 85@@@@set update to 0@@Back to work.", "@@if optimism gt 0@@Optimist, huh? Been a while since I met one of those.<br><br>Thought y'all were extinct, too.@@endif@@@@if optimism lt 0@@You're kind of a downer. You must get that a lot, huh?@@endif@@", "Be seeing you.<br><br><span style='color:yellow'>@@if emotional gt 0@@Trait gained: Emotional@@endif@@@@if emotional lt 0@@Trait gained: Level-headed@@endif@@<br>@@if optimism gt 0@@Trait gained: Optimist@@endif@@@@if optimism lt 0@@Trait gained: Pessimist@@endif@@"],
 
 		"choices": 	[
 						["Start Over", "Start"]

@@ -47,17 +47,30 @@ Passage.prototype = {
 	}
 }
 
+scrubTimer = undefined;
+showingScrubMessage = false;
 function update_passage(passage){
 	// Check if scrub percentage threshold has been met (scrubbing game).
 
 	if (store.get("required_percent") != -1){
 		if (store.get("percent") < store.get("required_percent")){
 
-			document.getElementById("scene-description").innerHTML = "";
-			document.getElementById("choice-points").innerHTML = "";
+			if (!showingScrubMessage) {
+				document.getElementById("scene-description").innerHTML = "";
+				document.getElementById("choice-points").innerHTML = "";
+				if (!scrubTimer) {
+					scrubTimer = setTimeout(function() {
+						document.getElementById("choice-points").innerHTML = "<span style='color:yellow'>Keep scrubbing...";
+						showingScrubMessage = true;
+					}, 1500);
+				}
+			}
 		}
 		else{
 			show_passage(passage);
+			clearTimeout(scrubTimer);
+			scrubTimer = undefined;
+			showingScrubMessage = false;
 		}
 	}
 	else{
