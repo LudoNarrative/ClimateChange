@@ -1,25 +1,34 @@
 [
 	{
 		"title": 	"Start",
-		"scene": 	["@@set optimism to 0@@@@set emotional to 0@@@@set required_percent to 0@@Hot as a furnace out here, huh?", "This dust gets everywhere."],
+		"scene": 	["@@set optimism to 0@@@@set emotional to 0@@@@set required_percent to 0@@<span style='color:lightgreen'>Scrub away the sand in the upper right to find all the crabs and advance the conversation."],
 
 		"choices": 	[
-						["Sure does. @@if percent gt 0@@ Man, dusting shoes is hard work.@@endif@@", "S2"]
+						["Okay. I'm ready to start.", "convstart"]
+					]
+	},
+
+	{
+		"title": 	"convstart",
+		"scene": 	["Hot day, huh?", "Thought it was supposed to be cooler by the beach."],
+
+		"choices": 	[
+						["Used to be. @@if percent gt 0@@ Man, dusting shoes is hard work.@@endif@@", "S2"]
 					]
 	},
 	{
 		"title": 	"S2",
-		"scene": 	["Name's Rick. Nice meeting you.", "How's your crew doing on the south side?"],
+		"scene": 	["Name's Rick. Nice meeting you.", "How's your crew doing on this side of the beach?"],
 
 		"choices": 	[
-						["We've already got half the saplings replanted!", "progGood"],
-						["It's slow going, but we're making progress.", "progMed"],
+						["We've found almost a thousand crabs so far.", "progGood"],
+						["Slow going, but we're making progress.", "progMed"],
 						["Going nowhere. What are we even doing out here?", "progBad"]
 					]
 	},
 	{
 		"title": 	"progGood",
-		"scene": 	["@@incr optimism 1@@Well, goody for you.", "We're taking our sweet time on that side. No sense killing ourselves in this heat."],
+		"scene": 	["@@incr optimism 1@@Well, goody for you.", "We're taking our sweet time on my side. No sense killing ourselves in this heat."],
 
 		"choices": 	[
 						["Stay hydrated.", "hydrated"],
@@ -32,12 +41,12 @@
 
 		"choices": 	[
 						["I don't follow.", "spellitout"],
-						["What the hell's <i>that</i> supposed to mean?", "dontucare"]
+						["What's <i>that</i> supposed to mean?", "dontucare"]
 					]
 	},
 	{
 		"title": 	"progBad",
-		"scene": 	["@@decr optimism 1@@Tell me about it.", "We're taking our sweet time on that side, too. No sense killing ourselves in this heat."],
+		"scene": 	["@@decr optimism 1@@Tell me about it.", "We're taking our sweet time on my side, too. No sense killing ourselves in this heat."],
 
 		"choices": 	[
 						["I'm surprised no one's passed out yet!", "passedout"],
@@ -46,7 +55,7 @@
 	},
 	{
 		"title": 	"hydrated",
-		"scene": 	["@@decr emotional 1@@Good advice. Even if this well water tastes like goat piss..."],
+		"scene": 	["@@decr emotional 1@@Good advice. Even if this desal'd water tastes like something died in it..."],
 		"choices": 	[
 						["More", "pointless"]
 					]
@@ -82,11 +91,11 @@
 	},
 	{
 		"title": 	"doomed",
-		"scene": 	["We're rearranging the deck chairs on the Titanic.", "I mean, the planet's <i>doomed</i>.", "How the hell is moving a couple thousand trees from one ridge to another going to make any difference?"],
+		"scene": 	["We're rearranging the deck chairs on the Titanic.", "I mean, the planet's <i>doomed</i>.", "How's moving some crabs from one beach to another going to make any difference?"],
 
 		"choices": 	[
-						["It'll help our valley survive warmer winters.", "warmerwinters"],
-						["Every little bit helps! We're leading by example.", "leadbyexample"],
+						["They're more protected on the other side of the bay. They won't die out there.", "warmerwinters"],
+						["Every little bit helps. We lead by example.", "leadbyexample"],
 						["We have to do <i>something</i>.", "dosomething"],
 						["You're right. This is pointless.", "itspointless"]
 					]
@@ -109,7 +118,7 @@
 	},
 	{
 		"title": 	"dosomething",
-		"scene": 	["@@decr optimism 1@@@@incr emotional 1@@Everyone seems to feel that way.", "I wonder why we really bother."],
+		"scene": 	["@@decr optimism 1@@@@incr emotional 1@@That's what everyone says.", "I wonder why we really bother."],
 
 		"choices": 	[
 						["More", "nobodycares"]
@@ -126,7 +135,7 @@
 
 	{
 		"title": 	"nobodycares",
-		"scene": 	["Face it.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
+		"scene": 	["@@if optimism gt 0@@Face it@@endif@@@@if optimist leq 0@@You're right, you know@@endif@@.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
 
 		"choices": 	[
 						["Maybe common good and personal good can be the same thing.", "forgood"],
@@ -171,7 +180,7 @@
 	},
 	{
 		"title": 	"doingit",
-		"scene": 	["I guess so.", "Look. I got a little girl. Am I supposed to lie to her? Tell her everything's going to be all right?"],
+		"scene": 	["I guess so.", "Look. Am I supposed to lie to my little girl? Tell her everything's going to be all right?"],
 
 		"choices": 	[
 						["Tell her what you believe.", "allheart"],
@@ -190,7 +199,7 @@
 
 	{
 		"title": "fail",
-		"scene": ["@@set update to 0@@Look, I got to run. Our side's back on shift, anyway.", "Be seeing you."],
+		"scene": ["@@set update to 0@@Look, no offense, but I'm going to work on my side. With someone who can hold up a conversation.", "Be seeing you."],
 		"choices": [
 			["Start Over", "Start"]
 		]
@@ -198,4 +207,4 @@
 
 
 
-]
+]	
