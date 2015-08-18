@@ -82,8 +82,8 @@ function startTutorial(){
 
 function startGame(){
 	passages["Start"].render();
-	store.set("score",80);
-	store.set("difficulty",0);
+	store.set("score",60);
+	store.set("difficulty",1);
   setTimeout(function(){
    	check_end();
   	checkEnd = setInterval ( check_end, 500 );
