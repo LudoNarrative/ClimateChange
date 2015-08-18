@@ -18,10 +18,10 @@ window.onload = function() {
 
 	createScratchCard({
 		'container': document.getElementById('scratch1'),
-		'background':'img/shoes-clean.jpg',
-		'foreground':'img/shoes-dusty.jpg',
+		'background':'img/beach-revealed.jpg',
+		'foreground':'img/beach.jpg',
 		'percent': 99,
-		'thickness':10,
+		'thickness':6,
 		'counter':'percent',
 		'callback': 'callback',
 		'flashPath' : 'assets/swf/scratchcard.swf'
