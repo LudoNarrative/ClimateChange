@@ -13,12 +13,12 @@
 		"scene": 	["Hot day, huh?", "Thought it was supposed to be cooler by the beach."],
 
 		"choices": 	[
-						["Used to be. @@if percent gt 0@@ Man, dusting shoes is hard work.@@endif@@", "S2"]
+						["Used to be. @@if percent gt 0@@ Man, finding these little guys is hard work.@@endif@@", "S2"]
 					]
 	},
 	{
 		"title": 	"S2",
-		"scene": 	["@@set required_percent to 5@@Name's Rick. Nice meeting you.", "How's your crew doing on this side of the beach?"],
+		"scene": 	["@@set required_percent to 5@@Name's Rick. Nice meeting you.", "@@if percent gt 10@@ Sick work finding those crabs, son. @@endif@@How's your crew doing on this side of the beach?"],
 
 		"choices": 	[
 						["We've found almost a thousand crabs so far.", "progGood"],
@@ -207,4 +207,4 @@
 
 
 
-]	
+]
