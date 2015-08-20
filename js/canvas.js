@@ -24,7 +24,8 @@ function startTutorial(){
 	store.set("score",40);
 
 	// Place the sweet spot in the scene.
-	place_object('sweet-spot','sweet-spot.png',175,10,80,80);
+	// place_object('sweet-spot','sweet-spot.png',175,10,80,80);
+	place_div('sweet-spot', 175,10,80,80, "#666666");
 
 	// Place the ball in the scene.
 	place_object('ball','ball.png',175,10,80,80);
@@ -55,11 +56,11 @@ function startTutorial(){
 
   					}
 
-						flash_color("#score","green");
+					flash_color("#sweet-spot","green", "background-color");
 				}
 				else{
 					store.set("score",store.get("score")-25);
-					flash_color("#score","red");
+					flash_color("#sweet-spot","red", "background-color");
 				}
 				update_score();
   			}
@@ -119,33 +120,54 @@ function change_scene(image){
 	$('#canvas').css('background-image', 'url("../img/'+image+'")');
 }
 
-// Place a generic object on the canvas.
-function place_object(id,img,x,y,w,h){
-	var elem = document.createElement("img");
+function place_element(id,elType,x,y,w,h,params) {
+	var elem = document.createElement(elType);
 
 	elem.setAttribute("alt", id);
 	elem.setAttribute("id", id);
-	// elem.id = id;
 	document.getElementById("canvas").appendChild(elem);
 	set_height(id,h);
 	set_width(id,w);
-	set_src(id,img);
+	if (params.img) {
+		set_src(id,params.img);
+	}
+	if (params.color) {
+		set_color(id, params.color);
+	}
 
 	elem.style.position = 'absolute';
 	set_x(id, x);
 	set_y(id, y);
 }
 
+// Place a generic object on the canvas.
+function place_object(id,img,x,y,w,h){
+	place_element(id, "img", x, y, w, h, {img: img});
+}
+
+// Place a div on the canvas.
+function place_div(id,x,y,w,h,color){
+	place_element(id, "div", x, y, w, h, {color: color});
+}
+
 // Set height of a canvas element.
 function set_height(id, h){
 	var elem = document.getElementById(id);
 	elem.setAttribute("height", h);
+	elem.style.height = h + "px";
 }
 
 // Set width of a canvas element.
 function set_width(id, w){
 	var elem = document.getElementById(id);
 	elem.setAttribute("width", w);
+	elem.style.width = w + "px";
+}
+
+// Set color of a canvas element.
+function set_color(id, color){
+	var elem = document.getElementById(id);
+	elem.style["background-color"] = color;
 }
 
 // Set x of a canvas element.
@@ -228,11 +250,16 @@ function update_score(){
 }
 
 // Provide a brief flash of color to an element.
-function flash_color(id,color1){
-	$(id).stop().css("color", color1)
-    .animate({ color: "#FFFFFF"}, 1200, function() {
-    	$(id).stop().css("color", "#FFFFFF")
-    	.animate({ color: color1}, 1200);
+// Note: color animations won't work without jQueryUI or another plugin.
+var flashLength = 500;
+function flash_color(id,color1,param){
+	var el = $(id);
+	el.stop(true, true);
+	var origColor = el.css(param);
+	el.css(param, color1)
+    .animate({ color: origColor}, flashLength, function() {
+    	el.stop(true, true).css(param, origColor)
+    	.animate({ color: color1}, flashLength);
     });
 }
 
@@ -273,11 +300,11 @@ function lose_cool(){
 	update_score();
 
 	// If the score is bad, change its color to red.
-	if (store.get("score") < 0){
-		flash_color("#score","red");
-	}
+	// if (store.get("score") < 0){
+	// 	flash_color("#score","red");
+	// }
 
-	console.log(store.get("score"));
+	// console.log(store.get("score"));
 
 }
 
