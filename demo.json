@@ -2,10 +2,18 @@
 
 	{
 		"title": 	"Intro",
-		"scene": 	["Whew.  My first day as a professor.  I've got to really be able to keep my cool."],
+		"scene": 	["@@set required_percent to -1@@Whew.  My first day as a professor.  I've got to really be able to keep my cool."],
 
 		"choices": 	[
-						["<i>Click to continue</i>.", "Start"]
+						["<i>Click to continue</i>.", "Intro-2"]
+					]
+	},
+	{
+		"title": 	"Intro-2",
+		"scene": 	["<i>To keep your cool, press the spacebar when the ball is inside the target zone.</i>","@@if score gt 20@@You're feeling a little nervous.@@else@@Who knew teaching a bunch of kids would be so scary?@@endif@@"],
+
+		"choices": 	[
+						["Okay.  I think I'm ready.", "Start"]
 					]
 	},
 	{

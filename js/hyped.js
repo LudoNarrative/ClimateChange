@@ -22,40 +22,73 @@ window.Passage = function(title,scene,choices){
 	this.choices = choices;
 };
 
+updatePassage = null;
 Passage.prototype = {
-	render:function(){
-		// Make temporary arrays for scene and choices.
-		// This will ensure that we do not overwrite coded variables.
-		var scenes = this.scene.slice(0);
+  render:function(){
+    clearInterval(updatePassage);
 
-		var chs = new Choices([]);
-		for (var j=0; j<this.choices.list.length;j++){
-			chs.addChoice(this.choices.list[j].text,this.choices.list[j].link);
-		}
+    update_passage([new Passage(this.title,this.scene,this.choices)]);
+    updatePassage = setInterval ( update_passage, 1000, [new Passage(this.title,this.scene,this.choices)]);
 
-
-		// Check for commands.
-		for(k=0;k<scenes.length;k++){
-			scenes[k] = check_commands(scenes[k]);
-		}
-
-		// Show scene description.
-		document.getElementById("scene-description").innerHTML = scenes.join("<br><br>");
-
-		// Clear choice points.
-		document.getElementById("choice-points").innerHTML = "";
-
-		// Add new choice points.
-		var element = document.getElementById("choice-points");
-		for (i=0; i<chs.list.length;i++){
-			// Check for commands in the current choice point.
-			chs.list[i].text = check_commands(chs.list[i].text);
-
-			// Show choice point.
-			element.innerHTML +=  "<p class='choice-point' id="+ chs.list[i].link + " onClick='click_choice(this.id)'>" + chs.list[i].text + "</p>";
-		}
-	}
+  }
 }
+
+function update_passage(passage){
+
+  // Make temporary array for choices.
+  // This will ensure that we do not overwrite coded variables.
+  var scenes = passage[0].scene.slice(0);
+
+  // Check for scene commands.
+  // Doing this prior to the scrub check will ensure passages are not accidentally
+  // displayed before they should be.
+  for(k=0;k<scenes.length;k++){
+    scenes[k] = check_commands(scenes[k]);
+  }
+
+  // Check if scrub percentage threshold has been met (scrubbing game).
+  if (store.get("required_percent") != -1){
+    if (store.get("percent") < store.get("required_percent")){
+
+      document.getElementById("scene-description").innerHTML = "";
+      document.getElementById("choice-points").innerHTML = "";
+    }
+    else{
+      show_passage([new Passage(passage[0].title,scenes,passage[0].choices)]);
+    }
+  }
+  else{
+    show_passage([new Passage(passage[0].title,scenes,passage[0].choices)]);
+  }
+}
+
+function show_passage(passage){
+  // Make temporary array for choices.
+  // This will ensure that we do not overwrite coded variables.
+  var scenes = passage[0].scene.slice(0);
+
+  var chs = new Choices([]);
+  for (var j=0; j<passage[0].choices.list.length;j++){
+    chs.addChoice(passage[0].choices.list[j].text,passage[0].choices.list[j].link);
+  }
+
+  // Show scene description.
+  document.getElementById("scene-description").innerHTML = scenes.join("<br><br>");
+
+  // Clear choice points.
+  document.getElementById("choice-points").innerHTML = "";
+
+  // Add new choice points.
+  var element = document.getElementById("choice-points");
+  for (i=0; i<chs.list.length;i++){
+    // Check for commands in the current choice point.
+    chs.list[i].text = check_commands(chs.list[i].text);
+
+    // Show choice point.
+    element.innerHTML +=  "<p class='choice-point' id="+ chs.list[i].link + " onClick='click_choice(this.id)'>" + chs.list[i].text + "</p>";
+  }
+}
+
 
 /*
  * Creates a Choices object.
@@ -181,7 +214,7 @@ function follow_simple_command(text){
 	}
 	else if(~text.indexOf("mult ")){
 		perform_op(text,"mult");
-	} 
+	}
 }
 
 /*

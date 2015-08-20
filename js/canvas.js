@@ -2,6 +2,7 @@
 
 // Global Parameters
 store.set("score",60);
+store.set("required_percent",-1);
 store.set("difficulty",1);
 store.set("update",1); // tells the game to end when update is 0
 checkEnd = null;
@@ -11,8 +12,6 @@ $(document).ready(function(){
 	// If user clicks...
 	$(document).on({
 		    'click.myevent': function () {
-		        document.getElementById("scene-description").innerHTML = "<i><p>To keep your cool, press the spacebar when the ball is inside the target zone.</p></i>";
-		        document.getElementById("choice-points").innerHTML = "<p class='choice-point' id='Start' onClick='click_choice(this.id)'>Okay.  I think I'm ready.</p>";
 		        startTutorial();
 	    		$(document).off('click.myevent', '.choice-point');
 		    }
