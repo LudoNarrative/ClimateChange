@@ -1,0 +1,171 @@
+[
+	{
+		"title": 	"Start",
+		"scene": 	["@@set career to 0@@@@set confidence to 0@@Have some more stew, Em."],
+		"choices": 	[
+						["Thanks. What's it called again?", "whatscalled"],
+						["It's so good. Thanks for bringing it.", "thanksbringing"],
+						["No thanks, Z. I'm stuffed.", "stuffed"]
+					]
+	},
+	{
+		"title": 	"whatscalled",
+		"scene": 	["<i>Cocido</i>, chica.", "Figured some comfort food would be good for a graduation party."],
+		"choices": 	[
+						["More.", "inSpain"]
+					]
+	},
+	{
+		"title": 	"thanksbringing",
+		"scene": 	["Had to make something special for your graduation party.", "Important to defend a dissertation after a night of friends and delicious food."],
+		"choices": 	[
+						["More.", "inSpain"]
+					]
+	},
+	{
+		"title": 	"stuffed",
+		"scene": 	["Are you kidding me? You've hardly had anything.", "Nervous about your dissertation defense tomorrow?"],
+		"choices": 	[
+						["I guess.", "inSpain"]
+					]
+	},
+
+	{
+		"title": 	"inSpain",
+		"scene": 	["I ate <i>so</i> much of this stuff in Spain.", "This is only, like, half as good as when you get it there."],
+		"choices": 	[
+						["I wish I could have come with you.", "regrets"],
+						["That was \"the year of qualifying exams\" for me.", "quals"],
+						["I'm still jealous you got to spend six months over there.", "regrets"]
+					]
+	},
+	{
+		"title": 	"regrets",
+		"scene": 	["@@decr confidence 1@@Regrets? Tonight? Are you kidding me?", "Tomorrow you'll be Dr. Emma Richards. Nothing to regret about that."],
+		"choices": 	[
+						["More.", "loveocean"]
+					]
+	},
+	{
+		"title": 	"quals",
+		"scene": 	["Well, it all paid off, right?", "Tomorrow you'll be Dr. Emma Richards. That's pretty awesome.", "Hey, pass the bread."],
+		"choices": 	[
+						["Sure.", "loveocean"]
+					]
+	},
+
+
+	{
+		"title": 	"loveocean",
+		"scene": 	["I mean, you've been in love with the oceans since... forever. Mrs. Anderson's 4th grade class, at least.", "That diorama. Oh my god, you spent ages on that."],
+		"choices": 	[
+						["More", "whatspecialty"]
+					]
+	},
+	{
+		"title": 	"whatspecialty",
+		"scene": 	["Whoever thought fifteen years later you'd be a freaking expert in... what are they called again?"],
+		"choices": 	[
+						["<i>Lysmata amboinensis.</i> The Pacific cleaner shrimp.", "pickShrimp"],
+						["<i>Homarus americanus.</i> Lobsters.", "pickLobsters"],
+						["<i>Bacillariophyceae.</i> Diatoms.", "pickDiatoms"]
+					]
+	},
+
+	{
+		"title": 	"pickShrimp",
+		"scene": 	["@@set career to 0@@Right. Those guys."],
+		"choices": 	[
+						["More", "howufeel"]
+					]
+	},
+	{
+		"title": 	"pickLobsters",
+		"scene": 	["@@set career to 1@@Right. Those guys."],
+		"choices": 	[
+						["More", "howufeel"]
+					]
+	},
+	{
+		"title": 	"pickDiatoms",
+		"scene": 	["@@set career to 2@@Right. Those guys."],
+		"choices": 	[
+						["More", "howufeel"]
+					]
+	},
+
+	{
+		"title": 	"howufeel",
+		"scene": 	["You're suspiciously quiet tonight, Em.", "What's on your mind?"],
+		"choices": 	[
+						["It's just overwhelming to be almost done!", "surePath"],
+						["I'm just wondering if it was worth it.", "unsurePath"],
+						["I'm just worried about the future.", "futureWorry"]
+					]
+	},
+
+	
+	{
+		"title": 	"surePath",
+		"scene": 	["@@incr confidence 1@@Never had any doubts, myself.", "Relax! Have some wine, celebrate!", "You did it, girl. You finally did it."],
+		"choices": 	[
+						["More", "result"]
+					]
+	},
+
+	{
+		"title": 	"unsurePath",
+		"scene": 	["@@decr confidence 1@@Worth it? Are you kidding?", "You're about to start a career doing everything you love.", "You'll be <i>fine</i>. Now quit hogging the mashed potatoes."],
+		"choices": 	[
+						["More", "result"]
+					]
+	},
+
+	{
+		"title": 	"futureWorry",
+		"scene": 	["@@decr confidence 1@@Oh, look at you. Always freaking out whenever things go well.", "Look, Emma. What are you so worried about, really?"],
+		"choices": 	[
+						["I'm worried I won't be a good teacher.", "teacherworry"],
+						["I'm worried I won't be a good scientist.", "teacherworry"],
+						["I'm worried I'll always put my career first.", "careerworry"],
+						["Everything.", "careerdone"]
+					]
+	},
+
+	{
+		"title": 	"teacherworry",
+		"scene": 	["Of course you won't be. Not at first.", "But you'll get <i>better</i>. That's the point.", "And don't hog the mashed potatoes."],
+		"choices": 	[
+						["More", "result"]
+					]
+	},
+	{
+		"title": 	"careerworry",
+		"scene": 	["Before... other things, huh?", "So what are you going to do about it, then?", "Like... when was the last time you went on a date?"],
+		"choices": 	[
+						["I shouldn't have said anything.", "careerdone"],
+						["Know anyone single who's free tomorrow night?.", "careerdone"]
+					]
+	},
+	{
+		"title": 	"careerdone",
+		"scene": 	["You'll be okay, Em.", "Now, quit hogging the mashed potatoes."],
+		"choices": 	[
+						["More", "result"]
+					]
+	},
+	{
+		"title": 	"result",
+		"scene": 	["@@if confidence gt 0@@<span style='color:yellow'>Trait gained: Confident</span>@@endif@@@@if confidence lt 0@@<span style='color:yellow'>Trait gained: Cautious</span>@@endif@@"],
+		"choices": 	[
+						["Start Over", "Start"]
+					]
+	}
+]
+
+
+
+
+
+
+
