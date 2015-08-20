@@ -2,8 +2,7 @@
 
 	{
 		"title": 	"Intro",
-		"scene": 	["@@set required_percent to -1@@Whew.  My first day as a professor.  I've got to really be able to keep my cool."],
-
+		"scene": 	["@@set required_percent to -1@@<i>It's Emma's first class as a professor. Help her keep her cool.</i>"],
 		"choices": 	[
 						["<i>Click to continue</i>.", "Intro-2"]
 					]
@@ -18,7 +17,7 @@
 	},
 	{
 		"title": 	"Start",
-		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@You're nervous. Heart pounding, sweat beading on your forehead. You didn't expect teaching to be so stressful.", "Five more minutes. You can do this.@@set difficulty to 1@@ @@set questionsLeft to 3@@"],
+		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@@@if confidence gt 0@@Class has been going well so far, like you knew it would. But if you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson.@@endif@@@@if confidence leq 0@@You didn't expect teaching to be anything near so stressful. Your heart's pounding and sweat's beading on your forehead. Dr. Tennerson's here evaluating you today-- keep it together, Emma!@@endif@@", "Five more minutes. You can do this.@@set difficulty to 1@@ @@set questionsLeft to 3@@", "For the @@if career eq 0@@shrimp, Emma. For the shrimp.@@endif@@@@if career eq 1@@lobsters, Emma. For the lobsters.@@endif@@@@if career eq 2@@diatoms, Emma. For the diatoms.@@endif@@"],
 
 		"choices": 	[
 						["Keep Talking.", "N2"]
@@ -33,7 +32,7 @@
 	},
 	{
 		"title": 	"N3",
-		"scene": 	["\"And we know that more acidic seawater makes it@@if score lt 40@@\"-- you trail off, losing your train of thought for a moment, then regroup-- \"makes it@@endif@@ harder for shell-forming sea creatures like corals, oysters, and shrimp to survive.\""],
+		"scene": 	["\"And we know that more acidic seawater makes it@@if score lt 40@@\"-- you trail off, losing your train of thought for a moment, then regroup-- \"makes it@@endif@@ harder for shell-forming sea creatures like corals, oysters, and of course my own favorite creature, @@if career eq 0@@the shrimp@@endif@@@@if career eq 1@@the lobster@@endif@@@@if career eq 2@@diatoms@@endif@@.\""],
 		"choices": 	[
 						["Next Slide.", "N4"]
 					]
@@ -66,7 +65,7 @@
 	},
 	{
 		"title": "Elika2",
-		"scene": ["\"Good question, Élika. @@if score lt 40@@Um... the@@else@@The@@endif@@ reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.", "\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and@@if score lt 40@@, er, those, um, @@else@@those@@endif@@ catastrophes usually triggered mass extinctions."],
+		"scene": ["\"Good question, Élika. @@if score lt 40@@Um... the@@else@@The@@endif@@ reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.", "\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and@@if score lt 40@@, er, those, um, @@else@@those @@endif@@ catastrophes usually triggered mass extinctions."],
 		"choices": 	[
 						["Élika looks like she has a follow-up.", "Elika3"],
 						["Call on someone else.", "Questions"]
@@ -184,7 +183,7 @@
 
 	{
 		"title": 	"ClassEnds",
-		"scene": 	["@@set update to 0@@ Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 40@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. I wouldn't worry. I think you're going to make a wonderful professor.\""],
+		"scene": 	["@@set update to 0@@ Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 40@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. @@if confidence gt 0@@Your confidence really shines through@@endif@@@@if confidence leq 0@@Your confidence is building every day.@@endif@@ I think you're going to make a wonderful professor.\""],
 		"choices": 	[
 						["Back to start", "Start"]
 					]
@@ -192,7 +191,7 @@
 
 	{
 		"title": 	"fail",
-		"scene": 	["You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.", "Wretchedly, you manage to remind the students about their homework and dismiss the class.","Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. It's hard at first, but you'll get better. I know you will.\""],
+		"scene": 	["You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.", "Wretchedly, you manage to remind the students about their homework and dismiss the class.","Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. @@if confidence gt 0@@You'll find that confidence again.@@endif@@@@if confidence leq 0@@It's hard at first, but you'll get better.@@endif@@ I know you will.\""],
 		"choices": 	[
 						["Back to start", "Start"]
 					]
