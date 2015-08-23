@@ -12,10 +12,10 @@ store.set("emotional",0);
 // Update stress for scrubbing game.
 function update_stress(){
 	if (store.get("emotional") <= 0){
-		set_src("stressface","scene2_chill.png");
+		set_src("stressface", choose_random_element(["scrubGame_chill_1.png", "scrubGame_chill_2.png", "scrubGame_chill_3.png", "scrubGame_chill_4.png"]));
 	}
 	else{
-		set_src("stressface","scene2_bummed.png");
+		set_src("stressface", choose_random_element(["scrubGame_upset_1.png", "scrubGame_upset_2.png"]));
 	}
 }
 
