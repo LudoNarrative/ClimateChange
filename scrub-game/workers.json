@@ -1,7 +1,7 @@
 [
 	{
 		"title": 	"Start",
-		"scene": 	["@@set optimism to 0@@@@set emotional to 0@@@@set required_percent to 0@@<span style='color:lightgreen'>Scrub away the sand in the upper right to find all the crabs and advance the conversation."],
+		"scene": 	["@@set optimism to 0@@@@set emotional to 0@@@@set required_percent to 0@@<span style='color:lightgreen'>Scrub away the sand to find all the crabs and advance the conversation."],
 
 		"choices": 	[
 						["Okay. I'm ready to start.", "convstart"]
@@ -13,12 +13,20 @@
 		"scene": 	["Hot day, huh?", "Thought it was supposed to be cooler by the beach."],
 
 		"choices": 	[
-						["Used to be. @@if percent gt 0@@ Man, finding these little guys is hard work.@@endif@@", "S2"]
+						["Used to be. @@if percent gt 1@@ Man, finding these little guys is hard work.@@endif@@", "S2"]
 					]
 	},
 	{
 		"title": 	"S2",
-		"scene": 	["@@set required_percent to 5@@Name's Rick. Nice meeting you.", "@@if percent gt 10@@ Sick work finding those crabs, son. @@endif@@How's your crew doing on this side of the beach?"],
+		"scene": 	["@@set required_percent to 5@@Name's Rick. Nice meeting you.", "How'd you get conscripted into this?"],
+		"choices": [
+			["Used to be an academic. Studied @@if career eq 0@@shrimp@@endif@@@@if career eq 1@@lobsters@@endif@@@@if career eq 2@@diatoms@@endif@@. But I decided teaching wasn't for me.", "S3"],
+			["Thought I could do more good out in the field.", "S3"]
+		] 
+	},
+	{
+			"title": "S3",
+			"scene": ["Hmm. Used to be truck driver, here. Back when that was still a thing.", "How's your crew doing on this side of the beach?"],
 
 		"choices": 	[
 						["We've found almost a thousand crabs so far.", "progGood"],
@@ -32,7 +40,8 @@
 
 		"choices": 	[
 						["Stay hydrated.", "hydrated"],
-						["Don't you care about what we're doing here?", "dontucare"]
+						["@@if confidence gt 0@@<span style='color:yellow;'>[Confident]</span> Don't you care about what we're doing here?@@endif@@", "dontucare"],
+						["@@if confidence lt 0@@<span style='color:yellow;'>[Cautious]</span> You sound like you aren't too sold on this job.@@endif@@", "dontucare"]
 					]
 	},
 	{
@@ -168,6 +177,14 @@
 						["There's the shift whistle.", "outtro"]
 					]
 	},
+	{
+		"title": 	"noncommital",
+		"scene": 	[""],
+
+		"choices": 	[
+						["There's the shift whistle.", "outtro"]
+					]
+	},
 
 
 	{
@@ -180,17 +197,18 @@
 	},
 	{
 		"title": 	"doingit",
-		"scene": 	["@@set required_percent to 80@@I guess so.", "Look. Am I supposed to lie to my little girl? Tell her everything's going to be all right?"],
+		"scene": 	["@@set required_percent to 70@@I guess so.", "Look. Am I supposed to lie to my little girl? Tell her everything's going to be all right?"],
 
 		"choices": 	[
 						["Tell her what you believe.", "allheart"],
-						["Teach her what you know.", "goodtheory"]
+						["Teach her what you know.", "goodtheory"],
+						["@@if confidence lt 0@@<span style='color:yellow'>[Cautious]</span>: It's not really my place to say.", "noncommital"]
 					]
 	},
 
 	{
 		"title": 	"outtro",
-		"scene": 	["@@set required_percent to 85@@@@set update to 0@@Back to work.", "@@if optimism gt 0@@Optimist, huh? Been a while since I met one of those.<br><br>Thought y'all were extinct, too.@@endif@@@@if optimism lt 0@@You're kind of a downer. You must get that a lot, huh?@@endif@@", "Be seeing you.<br><br><span style='color:yellow'>@@if emotional gt 0@@Trait gained: Emotional@@endif@@@@if emotional lt 0@@Trait gained: Level-headed@@endif@@<br>@@if optimism gt 0@@Trait gained: Optimist@@endif@@@@if optimism lt 0@@Trait gained: Pessimist@@endif@@"],
+		"scene": 	["@@set required_percent to 77@@@@set update to 0@@Back to work.", "@@if optimism gt 0@@Optimist, huh? Been a while since I met one of those.<br><br>Thought y'all were extinct, too.@@endif@@@@if optimism lt 0@@You're kind of a downer. You must get that a lot, huh?@@endif@@", "Be seeing you.<br><br><span style='color:yellow'>@@if emotional gt 0@@Trait gained: Emotional@@endif@@@@if emotional lt 0@@Trait gained: Level-headed@@endif@@<br>@@if optimism gt 0@@Trait gained: Optimist@@endif@@@@if optimism lt 0@@Trait gained: Pessimist@@endif@@"],
 
 		"choices": 	[
 						["Start Over", "Start"]
