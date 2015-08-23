@@ -68,7 +68,7 @@
 		"choices": 	[
 						["<i>Lysmata amboinensis.</i> The Pacific cleaner shrimp.", "pickShrimp"],
 						["<i>Homarus americanus.</i> Lobsters.", "pickLobsters"],
-						["<i>Bacillariophyceae.</i> Diatoms.", "pickDiatoms"]
+						["<i>Octocorallia.</i> Coral reefs.", "pickCoral"]
 					]
 	},
 
@@ -87,7 +87,7 @@
 					]
 	},
 	{
-		"title": 	"pickDiatoms",
+		"title": 	"pickCoral",
 		"scene": 	["@@set career to 2@@Right. Those guys."],
 		"choices": 	[
 						["More", "howufeel"]
@@ -156,7 +156,7 @@
 	},
 	{
 		"title": 	"result",
-		"scene": 	["@@if confidence gt 0@@<span style='color:yellow'>Trait gained: Confident</span>@@endif@@@@if confidence lt 0@@<span style='color:yellow'>Trait gained: Cautious</span>@@endif@@"],
+		"scene": 	["@@set update to 0@@@@if confidence gt 0@@<span style='color:yellow'>Trait gained: Confident</span>@@endif@@@@if confidence lt 0@@<span style='color:yellow'>Trait gained: Cautious</span>@@endif@@"],
 		"choices": 	[
 						["Start Over", "Start"]
 					]

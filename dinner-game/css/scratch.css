@@ -1,0 +1,128 @@
+@import url(https://fonts.googleapis.com/css?family=Droid+Sans);
+* {
+  font-family: 'Droid Sans';
+}
+
+body {
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  line-height: 1.4;
+}
+
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+
+  height: 33px;
+  padding: 10px 20px;
+  background-color: #373535;
+  border-bottom: 1px solid #454545;
+}
+
+#header .buy {
+  background-color: #82b440;
+  border-bottom: 2px solid #60a21e;
+  height: 33px;
+  line-height: 33px;
+  padding: 0 10px;
+  border-radius: 4px;
+  color: #eee;
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: bold;
+  display: block;
+  float: right;
+}
+#header .buy:hover {
+  opacity: 0.95;
+  color: #fff;
+}
+
+#content {
+  display: block;
+
+  overflow: auto;
+  max-width: 1400px;
+  margin: auto;
+  text-align: center;
+
+  padding: 50px 0 0;
+}
+
+#content h1 {
+  color: #2f343d;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#content {
+
+  color: #7a838c;
+}
+#content h2 {
+  color: #545c6a;
+  font-weight: normal;
+  margin: 50px 0 10px;
+}
+
+.example {
+  padding: 20px 0;
+}
+.example .about {
+  display: inline-block;
+
+  min-width: 400px;
+  width: 45%;
+  max-width: 300px;
+
+
+  vertical-align: middle;
+  text-align: left;
+  padding: 40px;
+  text-align: justify;
+
+
+}
+.example .about p { font-size: 1.2em; }
+
+
+
+#scratch1 {
+  margin: 0 !important;
+  box-shadow: none !important;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+
+
+
+.second-demo { display: inline-block; width: 410px; vertical-align: middle; }
+#decagon, #star, #multiple  { display: inline-block; margin: 0 5px 5px 0; }
+
+
+
+
+.scratch-cursor {
+  cursor: none;
+  width: 97px;
+  height: 137px;
+  /*background: url("/article-sources/images/pointer-cursor.gif") no-repeat left top;*/
+  position: absolute;
+  display: none;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  pointer-events:none; /* not supported by IE */
+}
+
+#scratch3 { display: inline-block; vertical-align: top; }
+#scratch3 canvas {
+  /*position: absolute;*/
+  -webkit-box-shadow: inset 0px 0px 0px 2px rgba(255,255,255, 0.1);
+  -moz-box-shadow: inset 0px 0px 0px 2px rgba(255,255,255, 0.1);
+  box-shadow: inset 0px 0px 0px 2px rgba(255,255,255, 0.1);
+}

@@ -1,0 +1,26 @@
+@-webkit-keyframes impatientLeft {
+  0%   { margin-left: 0px; }
+  6%   { margin-left: 15px; }
+  20%   { margin-left: 0px; }
+  26%   { margin-left: 15px; }
+  60%   { margin-left: 0px; }
+  100% { margin-left: 0px; }
+}
+@-webkit-keyframes impatientRight {
+  0%   { margin-left: 0px; }
+  6%   { margin-left: -15px; }
+  20%   { margin-left: 0px; }
+  26%   { margin-left: -15px; }
+  60%   { margin-left: 0px; }
+  100% { margin-left: 0px; }
+}
+
+.impatient {
+    background-color: rgba(255, 38, 0, 0.27);
+}
+#dishLeft.impatient {
+    -webkit-animation: impatientLeft 3s infinite;
+}
+#dishRight.impatient {
+    -webkit-animation: impatientRight 3s infinite;
+}

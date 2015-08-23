@@ -1,0 +1,25 @@
+html,body{
+	background: #000;
+	color: lightgreen;
+	margin: 0px;
+	padding: 0px;	
+	font-family: Arial;
+}
+
+h1,h2,h3,ul{margin:0px;}
+
+a{
+	color:lightblue;
+}
+i{
+	color:#fff;
+}
+#dialogue{
+	padding:40px;
+}
+.choice-point{
+	color:lightblue;	
+}
+.choice-point:hover{
+	cursor:pointer;
+}

@@ -1,0 +1,1 @@
+To run: download zip, cd to the directory, and then run python -m SimpleHTTPServer.  Open localhost:8000 to see the demo.
