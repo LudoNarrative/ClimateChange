@@ -20,7 +20,7 @@
 		"title": 	"S2",
 		"scene": 	["@@set required_percent to 5@@Name's Rick. Nice meeting you.", "How'd you get conscripted into this?"],
 		"choices": [
-			["Used to be an academic. Studied @@if career eq 0@@shrimp@@endif@@@@if career eq 1@@lobsters@@endif@@@@if career eq 2@@diatoms@@endif@@. But I decided teaching wasn't for me.", "S3"],
+			["Used to be an academic. Studied @@if career eq 0@@shrimp@@endif@@@@if career eq 1@@lobsters@@endif@@@@if career eq 2@@coral reefs@@endif@@. But I decided teaching wasn't for me.", "S3"],
 			["Thought I could do more good out in the field.", "S3"]
 		] 
 	},

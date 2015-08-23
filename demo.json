@@ -17,7 +17,7 @@
 	},
 	{
 		"title": 	"Start",
-		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@@@if confidence gt 0@@Class has been going well so far, like you knew it would. But if you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson.@@endif@@@@if confidence leq 0@@You didn't expect teaching to be anything near so stressful. Your heart's pounding and sweat's beading on your forehead. Dr. Tennerson's here evaluating you today-- keep it together, Emma!@@endif@@", "Five more minutes. You can do this.@@set difficulty to 1@@ @@set questionsLeft to 3@@", "For the @@if career eq 0@@shrimp, Emma. For the shrimp.@@endif@@@@if career eq 1@@lobsters, Emma. For the lobsters.@@endif@@@@if career eq 2@@diatoms, Emma. For the diatoms.@@endif@@"],
+		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@@@if confidence gt 0@@Class has been going well so far, like you knew it would. But if you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson.@@endif@@@@if confidence leq 0@@You didn't expect teaching to be anything near so stressful. Your heart's pounding and sweat's beading on your forehead. Dr. Tennerson's here evaluating you today-- keep it together, Emma!@@endif@@", "Five more minutes. You can do this.@@set difficulty to 1@@ @@set questionsLeft to 3@@", "For the @@if career eq 0@@shrimp, Emma. For the shrimp.@@endif@@@@if career eq 1@@lobsters, Emma. For the lobsters.@@endif@@@@if career eq 2@@coral reefs, Emma. For the reefs.@@endif@@"],
 
 		"choices": 	[
 						["Keep Talking.", "N2"]
@@ -32,7 +32,7 @@
 	},
 	{
 		"title": 	"N3",
-		"scene": 	["\"And we know that more acidic seawater makes it@@if score lt 40@@\"-- you trail off, losing your train of thought for a moment, then regroup-- \"makes it@@endif@@ harder for shell-forming sea creatures like corals, oysters, and of course my own favorite creature, @@if career eq 0@@the shrimp@@endif@@@@if career eq 1@@the lobster@@endif@@@@if career eq 2@@diatoms@@endif@@.\""],
+		"scene": 	["\"And we know that more acidic seawater makes it@@if score lt 40@@\"-- you trail off, losing your train of thought for a moment, then regroup-- \"makes it@@endif@@ harder for shell-forming sea creatures like corals, oysters, and of course my own favorite life form, @@if career eq 0@@the shrimp@@endif@@@@if career eq 1@@the lobster@@endif@@@@if career eq 2@@coral reefs@@endif@@.\""],
 		"choices": 	[
 						["Next Slide.", "N4"]
 					]
