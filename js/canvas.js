@@ -8,15 +8,7 @@ store.set("update",1); // tells the game to end when update is 0
 checkEnd = null;
 
 $(document).ready(function(){
-
-	// If user clicks...
-	$(document).on({
-		    'click.myevent': function () {
-		        startTutorial();
-	    		$(document).off('click.myevent', '.choice-point');
-		    }
-		}, '.choice-point');
-
+	startTutorial();
 });
 
 function startTutorial(){
@@ -24,8 +16,7 @@ function startTutorial(){
 	store.set("score",40);
 
 	// Place the sweet spot in the scene.
-	// place_object('sweet-spot','sweet-spot.png',175,10,80,80);
-	place_div('sweet-spot', 175,10,80,80, "#666666");
+	place_div('sweet-spot', 175,10,80,80, "#666");
 
 	// Place the ball in the scene.
 	place_object('ball','ball.png',175,10,80,80);
@@ -35,37 +26,28 @@ function startTutorial(){
 	back_and_forth('#ball',350,0,1500);
 
 	// Once delay for movement has completed, show the ball.
-	setTimeout(function(){
+	//setTimeout(function(){
    if (store.get("update")){
      $('#ball').show();
    }
 
-  }, 3000);
+  //}, 3000);
 
-	// Check if spacebar pressed.
-	$(window).keypress(function(e) {
-  		if (e.keyCode === 0 || e.keyCode === 32) {
-  			// Only update score if game is in progress.
-  			if (store.get("update")==1){
-  				if (check_collision("#ball","#sweet-spot")){
-  					if (store.get("score")+50 < 60){
-  						store.set("score",store.get("score")+40);
-  					}
-  					else{
-  						store.set("score",60);
-
-  					}
-
-					flash_color("#sweet-spot","green", "background-color");
-				}
-				else{
-					store.set("score",store.get("score")-25);
-					flash_color("#sweet-spot","red", "background-color");
-				}
-				update_score();
-  			}
-  		}
+	// Check if ball in middle of target on click.
+	$('#ball').click(function(e){
+		e.preventDefault();
+		checkCool();
 	});
+	$('#sweet-spot').click(function(e){
+		e.preventDefault();
+		checkCool();
+	});
+	$("#canvas").on("click", function(e) {
+		e.preventDefault();
+		checkCool();
+	});
+
+
 
 	lose_cool();
   loseCool = setInterval ( lose_cool, 1000 );
@@ -78,6 +60,30 @@ function startTutorial(){
 	    		$(document).off('click.myevent2', '.choice-point');
 		    }
 		}, '.choice-point');
+}
+
+function checkCool(){
+	// console.log("check");
+	// Only update score if game is in progress.
+	if (store.get("update")==1){
+		if (check_collision("#ball","#sweet-spot")){
+			if (store.get("score")+50 < 60){
+				store.set("score",store.get("score")+40);
+			}
+			else{
+				store.set("score",60);
+
+			}
+		// console.log("green");
+		flash_color("#sweet-spot","green", "background-color");
+		}
+		else{
+			store.set("score",store.get("score")-25);
+			flash_color("#sweet-spot","red", "background-color");
+			// console.log("red");
+		}
+		update_score();
+	}
 }
 
 function startGame(){

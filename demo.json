@@ -1,15 +1,7 @@
 [
-
 	{
 		"title": 	"Intro",
-		"scene": 	["@@set required_percent to -1@@<i>It's Emma's first class as a professor. Help her keep her cool.</i>"],
-		"choices": 	[
-						["<i>Click to continue</i>.", "Intro-2"]
-					]
-	},
-	{
-		"title": 	"Intro-2",
-		"scene": 	["<i>To keep your cool, press the spacebar when the ball is inside the target zone.</i>","@@if score gt 20@@You're feeling a little nervous.@@else@@Who knew teaching a bunch of kids would be so scary?@@endif@@"],
+		"scene": 	["@@set required_percent to -1@@<i>Keep your cool during this lecture. When you see you’re losing your cool, click on the ball when it's in the middle of the square.</i>","@@if score gt 20@@You're feeling a little nervous.@@else@@Who knew teaching a bunch of kids would be so scary?@@endif@@"],
 
 		"choices": 	[
 						["Okay.  I think I'm ready.", "Start"]
