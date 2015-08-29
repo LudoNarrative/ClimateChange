@@ -330,8 +330,8 @@ function check_end(){
 			passages["ClassEnds"].render();
 
 			// Make the ball "explode" (show explosion gif and then hide ball).
-			var coords = get_coords("ball");
-			place_object('explosion','the_bay_touch_once.gif',coords.left,coords.top-40,142,200);
+			// var coords = get_coords("ball");
+			// place_object('explosion','the_bay_touch_once.gif',coords.left,coords.top-40,142,200);
 		}
 
 		// Hide the ball.
