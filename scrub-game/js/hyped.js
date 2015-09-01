@@ -34,6 +34,9 @@ Passage.prototype = {
   }
 }
 
+scrubTimer = undefined;
+showingScrubMessage = false;
+
 function update_passage(passage){
   // Make temporary array for choices.
   // This will ensure that we do not overwrite coded variables.
@@ -46,8 +49,6 @@ function update_passage(passage){
     scenes[k] = check_commands(scenes[k]);
   }
 
-  scrubTimer = undefined;
-  showingScrubMessage = false;
 
   // Check if scrub percentage threshold has been met (scrubbing game).
   if (store.get("required_percent") != -1){
@@ -59,7 +60,7 @@ function update_passage(passage){
         document.getElementById("choice-points").innerHTML = "";
 		if (!scrubTimer) {
 		  scrubTimer = setTimeout(function() {
-		    document.getElementById("choice-points").innerHTML = "<span style='color:yellow'>Keep scrubbing...";
+		    document.getElementById("choice-points").innerHTML = "<span style='color:yellow'>Keep scrubbing...</span>";
 		    showingScrubMessage = true;
 		  }, 1500);
 		}
