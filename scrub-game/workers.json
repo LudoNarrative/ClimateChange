@@ -18,7 +18,7 @@
 	},
 	{
 		"title": 	"S2",
-		"scene": 	["@@set required_percent to 5@@Name's Rick. Nice meeting you.", "How'd you get conscripted into this?"],
+		"scene": 	["@@set required_percent to 7@@Name's Rick. Nice meeting you.", "How'd you get conscripted into this?"],
 		"choices": [
 			["Used to be an academic. Studied @@if career eq 0@@shrimp@@endif@@@@if career eq 1@@lobsters@@endif@@@@if career eq 2@@coral reefs@@endif@@. But I decided teaching wasn't for me.", "S3"],
 			["Thought I could do more good out in the field.", "S3"]
@@ -26,7 +26,7 @@
 	},
 	{
 			"title": "S3",
-			"scene": ["Hmm. Used to be truck driver, here. Back when that was still a thing.", "How's your crew doing on this side of the beach?"],
+			"scene": ["@@set required_percent to 12@@Hmm. Used to be truck driver, here. Back when that was still a thing.", "How's your crew doing on this side of the beach?"],
 
 		"choices": 	[
 						["We've found almost a thousand crabs so far.", "progGood"],
@@ -36,7 +36,7 @@
 	},
 	{
 		"title": 	"progGood",
-		"scene": 	["@@set required_percent to 10@@@@incr optimism 1@@Well, goody for you.", "We're taking our sweet time on my side. No sense killing ourselves in this heat."],
+		"scene": 	["@@set required_percent to 17@@@@incr optimism 1@@Well, goody for you.", "We're taking our sweet time on my side. No sense killing ourselves in this heat."],
 
 		"choices": 	[
 						["Stay hydrated.", "hydrated"],
@@ -46,7 +46,7 @@
 	},
 	{
 		"title": 	"progMed",
-		"scene": 	["@@set required_percent to 10@@If you can call what we're doing \"progress...\""],
+		"scene": 	["@@set required_percent to 17@@If you can call what we're doing \"progress...\""],
 
 		"choices": 	[
 						["I don't follow.", "spellitout"],
@@ -55,7 +55,7 @@
 	},
 	{
 		"title": 	"progBad",
-		"scene": 	["@@set required_percent to 15@@@@decr optimism 1@@Tell me about it.", "We're taking our sweet time on my side, too. No sense killing ourselves in this heat."],
+		"scene": 	["@@set required_percent to 17@@@@decr optimism 1@@Tell me about it.", "We're taking our sweet time on my side, too. No sense killing ourselves in this heat."],
 
 		"choices": 	[
 						["I'm surprised no one's passed out yet!", "passedout"],
