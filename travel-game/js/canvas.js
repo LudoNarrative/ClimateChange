@@ -23,6 +23,7 @@ store.set("player_funds", 3000);							// Player's current funds.
 store.set("max_flights", 2);									// How many times you can travel.
 store.set("num_flights", 0);									// How many times the player has already traveled.
 
+spawnCity = null;
 checkEnd = null;
 
 $(document).ready(function(){
@@ -30,7 +31,7 @@ $(document).ready(function(){
 });
 
 function selectCity(){
-	document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
+	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
 	document.getElementById('choice-points').innerHTML = ("<div class='choice-point'></div>");
 
 	change_scene("canvas", "europe-map.png");
@@ -42,28 +43,46 @@ function selectCity(){
 
 
 	// Place cities.
-	place_object("MADRID", "star-2.png",60,240,25,25);
-	var d = document.getElementById("MADRID");
-	d.className = "node";
-	$('#MADRID').data('data', { location: 'Madrid', cost: 692, carbon:0.58, fame: 150});
+	place_random_city();
 
-	place_object("PARIS", "star-2.png",110,195,25,25);
-	var d = document.getElementById("PARIS");
-	d.className = "node";
-	$('#PARIS').data('data', { location: 'Paris', cost: 741, carbon:1.32, fame: 350});
+	// Repeat process after a delay.
+	spawnCity = setInterval(place_random_city, 8000);
 
-	place_object("BERLIN", "star-2.png",170,170,25,25);
-	var d = document.getElementById("BERLIN");
+}
+
+function place_random_city(){
+	// Remove all previous nodes.
+	$(".node").remove();
+
+	// Clear scene description and cursor.
+	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
+	$(this).css('cursor','auto');
+
+	// Choose new city.
+	var cities = [{'id': 'Madrid', 'x': 60, 'y':240},
+								{'id': 'Paris', 'x': 110, 'y':195},
+								{'id': 'Berlin', 'x': 170, 'y':170},
+					 		 ]
+
+	var random_city = cities[Math.floor(Math.random() * cities.length)];
+
+	place_object(random_city.id, "star-2.png", random_city.x, random_city.y, 25, 25)
+
+	var random_cost = getRandomInt(300,1200);
+	var random_carbon = getRandomInt(0.1,5);
+	var random_fame = getRandomInt(25,300);
+
+	var d = document.getElementById(random_city.id);
 	d.className = "node";
-	$('#BERLIN').data('data', { location: 'Berlin', cost: 733, carbon:1.34, fame: 210});
+	$('#' + random_city.id).data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame});
 
 	// On mouseover, show city stats.
 	$('.node').mouseover(function(){
-		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:174px;padding:10px;line-height:50px'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "&nbsp;<img src='img/money.png' width=30px></li><li style='color:purple'>+"+$("#"+this.id).data("data").fame+"&nbsp;<img src='img/crown.png' width=30px></li><li style='color:black'>+" + $("#"+this.id).data("data").carbon + " tons <img src='img/CO2.png' width=50px></li></ul>");
+		document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id.toUpperCase() + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:174px;padding:10px;line-height:38px'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "&nbsp;<img src='img/money.png' width=30px></li><li style='color:purple'>+"+$("#"+this.id).data("data").fame+"&nbsp;<img src='img/crown.png' width=30px></li><li style='color:black'>+" + $("#"+this.id).data("data").carbon + " tons <img src='img/CO2.png' width=50px></li></ul>");
 		$(this).css('cursor','pointer');
 		set_src(this.id, "star.png");
 	}).mouseout(function(){
-	  document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
+	  document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
 	  $(this).css('cursor','auto');
 	  set_src(this.id, "star-2.png");
 	});
@@ -77,14 +96,15 @@ function selectCity(){
 		store.set("current_fame",$("#"+this.id).data("data").fame);
 		store.set("num_flights",store.get("num_flights")+1);
 
+		clearInterval(spawnCity);
 		passages["Start"].render();
 		$(".node").remove();
 		change_scene("canvas", "plane-flying.gif");
 
-		// If user clicks, start reading / flying game.
+		// If user clicks, start reading article of their choice.
 		$(document).on({
 			    'click.myevent2': function () {
-			        startGame();
+			      startGame();
 		    		$(document).off('click.myevent2', '.choice-point');
 			    }
 			}, '.choice-point');
@@ -138,16 +158,6 @@ function getRandomInt(min, max) {
 // Choose a random element from an array.
 function choose_random_element(list){
 	return list[Math.floor(Math.random() * list.length)];
-}
-
-// Choose random item.
-function choose_random_item(){
-	return choose_random_element(window.items)
-}
-
-// Choose random location.
-function choose_random_location(){
-	return choose_random_element(window.locations)
 }
 
 // Change the background image of a canvas.
