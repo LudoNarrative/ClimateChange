@@ -5,36 +5,50 @@ store.set("score",60);
 store.set("required_percent",-1);
 store.set("difficulty",1);
 store.set("update",1); // tells the game to end when update is 0
-store.set("reading",0);
+
+// Stats specific to the travel game.
+store.set("reading",0);												// Whether the player is currently reading an article.
+store.set("player_fame",0);										// How much fame the player has.
+store.set("current_fame",0);									// How much fame the player is going to increase by.
+store.set("player_CO2",0);										// The player's carbon footprint.
+store.set("player_time", 14);									// How much time (in days) the player has to spend at conferences.
+store.set("player_location", "Santa Cruz");		// Player's current location.
+store.set("player_funds", 3000);			// Player's current funds.
+
 checkEnd = null;
 
 $(document).ready(function(){
+	selectCity();
+});
+
+function selectCity(){
 	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.");
+	document.getElementById('choice-points').innerHTML = ("<div class='choice-point'></div>");
 
 	change_scene("canvas", "europe-map.jpg");
 
 	place_object("MADRID", "node.png",60,240,25,25);
 	var d = document.getElementById("MADRID");
 	d.className = "node";
-	$('#MADRID').data('data', { cost: '692', carbon:'0.58'});
+	$('#MADRID').data('data', { location: 'Madrid', cost: '692', carbon:'0.58', fame: 150});
 
 	place_object("PARIS", "node.png",110,195,25,25);
 	var d = document.getElementById("PARIS");
 	d.className = "node";
-	$('#PARIS').data('data', { cost: '741', carbon:'1.32'});
+	$('#PARIS').data('data', { location: 'Paris', cost: '741', carbon:'1.32', fame: 350});
 
 
 	place_object("BERLIN", "node.png",170,170,25,25);
 	var d = document.getElementById("BERLIN");
 	d.className = "node";
-	$('#BERLIN').data('data', { cost: '733', carbon:'1.34'});
+	$('#BERLIN').data('data', { location: 'Berlin', cost: '733', carbon:'1.34', fame: 210});
 
 	$('.node').mouseover(function(){
 		$(this).animate({
 	    width: "30px",
 	    height: "30px"
 	  }, 100 );
-		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><b>"+this.id + ":</b>" + "<ul><li>$" + $("#"+this.id).data("data").cost + "</li><li>" + $("#"+this.id).data("data").carbon + " tons CO<sub>2</sub></li></ul>");
+		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:164px;padding:10px;'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "</li><li style='color:green'>+"+$("#"+this.id).data("data").fame+"</li><li style='color:grey'>+" + $("#"+this.id).data("data").carbon + " tons CO<sub>2</sub></li></ul>");
 		$(this).css('cursor','pointer');
 	}).mouseout(function(){
 		$(this).animate({
@@ -46,6 +60,13 @@ $(document).ready(function(){
 	});
 
 	$('.node').click(function(){
+		store.set("player_location",$("#"+this.id).data("data").location);
+		store.set("player_funds",store.get("player_funds") - $("#"+this.id).data("data").cost);
+		store.set("player_fame",store.get("player_fame") + $("#"+this.id).data("data").fame);
+		store.set("player_CO2",store.get("player_CO2") + $("#"+this.id).data("data").carbon);
+		store.set("current_fame",$("#"+this.id).data("data").fame);
+
+
 		passages["Start"].render();
 		$(".node").remove();
 		change_scene("canvas", "plane-flying.gif");
@@ -59,9 +80,7 @@ $(document).ready(function(){
 			}, '.choice-point');
 
 	});
-
-});
-
+}
 
 function startGame(){
 	// If user clicks, check if all articles have been read.
@@ -81,9 +100,12 @@ function checkArticlesRead(){
 }
 
 function endGame(){
+	clearInterval(updatePassage);
 	change_scene("canvas", "runway.jpg");
 	$("#progress-bar").hide();
-	passages["End"].render();
+	// passages["End"].render();
+	document.getElementById('scene-description').innerHTML = ("You gained +" + store.get('current_fame') + " fame for attending the conference in " + store.get('player_location') + "!");
+	document.getElementById('choice-points').innerHTML = ("<div class='choice-point' onclick='selectCity()'>Fly to your next conference.</div>");
 }
 
 /**** ALL FUNCTIONS ****/
