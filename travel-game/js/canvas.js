@@ -8,12 +8,20 @@ store.set("update",1); // tells the game to end when update is 0
 
 // Stats specific to the travel game.
 store.set("reading",0);												// Whether the player is currently reading an article.
+
+store.set("readFood",0);											// Whether you have read the article about food or not.
+store.set("readAirport",0);
+store.set("readSpecies",0);
+store.set("readRefugees",0);
+
 store.set("player_fame",0);										// How much fame the player has.
 store.set("current_fame",0);									// How much fame the player is going to increase by.
 store.set("player_CO2",0);										// The player's carbon footprint.
 store.set("player_time", 14);									// How much time (in days) the player has to spend at conferences.
 store.set("player_location", "Santa Cruz");		// Player's current location.
 store.set("player_funds", 3000);							// Player's current funds.
+store.set("max_flights", 2);									// How many times you can travel.
+store.set("num_flights", 0);									// How many times the player has already traveled.
 
 checkEnd = null;
 
@@ -67,6 +75,7 @@ function selectCity(){
 		store.set("player_fame",store.get("player_fame") + $("#"+this.id).data("data").fame);
 		store.set("player_CO2",store.get("player_CO2") + $("#"+this.id).data("data").carbon);
 		store.set("current_fame",$("#"+this.id).data("data").fame);
+		store.set("num_flights",store.get("num_flights")+1);
 
 		passages["Start"].render();
 		$(".node").remove();
@@ -105,8 +114,15 @@ function endGame(){
 	change_scene("canvas", "scrubGame_chill_3.png");
 	$("#progress-bar").hide();
 	// passages["End"].render();
-	document.getElementById('scene-description').innerHTML = ("You gained +" + store.get('current_fame') + " fame for attending the conference in " + store.get('player_location') + "!");
-	document.getElementById('choice-points').innerHTML = ("<div class='choice-point' onclick='selectCity()'>Fly to your next conference.</div>");
+	document.getElementById('scene-description').innerHTML = ("<p>You gained +" + store.get('current_fame') + " fame for attending the conference in " + store.get('player_location') + "!</p>");
+	if (store.get("num_flights") < 2){
+		document.getElementById('choice-points').innerHTML = ("<div class='choice-point' onclick='selectCity()'>Fly to your next conference.</div>");
+	}
+	else{
+		document.getElementById('scene-description').innerHTML += ("<p>Exhausted from traveling, you decide to fly home.</p>")
+		document.getElementById('choice-points').innerHTML = ("");
+	}
+
 }
 
 /**** ALL FUNCTIONS ****/
