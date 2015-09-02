@@ -25,38 +25,31 @@ function selectCity(){
 	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.");
 	document.getElementById('choice-points').innerHTML = ("<div class='choice-point'></div>");
 
-	change_scene("canvas", "europe-map.jpg");
+	change_scene("canvas", "europe-map.png");
 
-	place_object("MADRID", "node.png",60,240,25,25);
+	place_object("MADRID", "star-2.png",60,240,25,25);
 	var d = document.getElementById("MADRID");
 	d.className = "node";
 	$('#MADRID').data('data', { location: 'Madrid', cost: '692', carbon:'0.58', fame: 150});
 
-	place_object("PARIS", "node.png",110,195,25,25);
+	place_object("PARIS", "star-2.png",110,195,25,25);
 	var d = document.getElementById("PARIS");
 	d.className = "node";
 	$('#PARIS').data('data', { location: 'Paris', cost: '741', carbon:'1.32', fame: 350});
 
-
-	place_object("BERLIN", "node.png",170,170,25,25);
+	place_object("BERLIN", "star-2.png",170,170,25,25);
 	var d = document.getElementById("BERLIN");
 	d.className = "node";
 	$('#BERLIN').data('data', { location: 'Berlin', cost: '733', carbon:'1.34', fame: 210});
 
 	$('.node').mouseover(function(){
-		$(this).animate({
-	    width: "30px",
-	    height: "30px"
-	  }, 100 );
 		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:164px;padding:10px;'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "</li><li style='color:green'>+"+$("#"+this.id).data("data").fame+"</li><li style='color:grey'>+" + $("#"+this.id).data("data").carbon + " tons CO<sub>2</sub></li></ul>");
 		$(this).css('cursor','pointer');
+		set_src(this.id, "star.png");
 	}).mouseout(function(){
-		$(this).animate({
-	    width: "25px",
-	    height: "25px"
-	  }, 100 );
 	  document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.");
 	  $(this).css('cursor','auto');
+	  set_src(this.id, "star-2.png");
 	});
 
 	$('.node').click(function(){
