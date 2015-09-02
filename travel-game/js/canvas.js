@@ -13,7 +13,7 @@ store.set("current_fame",0);									// How much fame the player is going to inc
 store.set("player_CO2",0);										// The player's carbon footprint.
 store.set("player_time", 14);									// How much time (in days) the player has to spend at conferences.
 store.set("player_location", "Santa Cruz");		// Player's current location.
-store.set("player_funds", 3000);			// Player's current funds.
+store.set("player_funds", 3000);							// Player's current funds.
 
 checkEnd = null;
 
@@ -22,43 +22,51 @@ $(document).ready(function(){
 });
 
 function selectCity(){
-	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.");
+	document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
 	document.getElementById('choice-points').innerHTML = ("<div class='choice-point'></div>");
 
 	change_scene("canvas", "europe-map.png");
 
+	// Place stats.
+	// place_object("money-icon", "money.png", 20,310,40,40);
+	// place_object("fame-icon", "crown.png", 150,310,40,40);
+	// place_object("co2-icon", "CO2.png", 280,310,55,40);
+
+
+	// Place cities.
 	place_object("MADRID", "star-2.png",60,240,25,25);
 	var d = document.getElementById("MADRID");
 	d.className = "node";
-	$('#MADRID').data('data', { location: 'Madrid', cost: '692', carbon:'0.58', fame: 150});
+	$('#MADRID').data('data', { location: 'Madrid', cost: 692, carbon:0.58, fame: 150});
 
 	place_object("PARIS", "star-2.png",110,195,25,25);
 	var d = document.getElementById("PARIS");
 	d.className = "node";
-	$('#PARIS').data('data', { location: 'Paris', cost: '741', carbon:'1.32', fame: 350});
+	$('#PARIS').data('data', { location: 'Paris', cost: 741, carbon:1.32, fame: 350});
 
 	place_object("BERLIN", "star-2.png",170,170,25,25);
 	var d = document.getElementById("BERLIN");
 	d.className = "node";
-	$('#BERLIN').data('data', { location: 'Berlin', cost: '733', carbon:'1.34', fame: 210});
+	$('#BERLIN').data('data', { location: 'Berlin', cost: 733, carbon:1.34, fame: 210});
 
+	// On mouseover, show city stats.
 	$('.node').mouseover(function(){
-		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:174px;padding:10px;line-height:50px'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "&nbsp;<img src='img/money.jpg' width=30px></li><li style='color:purple'>+"+$("#"+this.id).data("data").fame+"&nbsp;<img src='img/crown.png' width=30px></li><li style='color:black'>+" + $("#"+this.id).data("data").carbon + " tons <img src='img/CO2.png' width=50px></li></ul>");
+		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:174px;padding:10px;line-height:50px'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "&nbsp;<img src='img/money.png' width=30px></li><li style='color:purple'>+"+$("#"+this.id).data("data").fame+"&nbsp;<img src='img/crown.png' width=30px></li><li style='color:black'>+" + $("#"+this.id).data("data").carbon + " tons <img src='img/CO2.png' width=50px></li></ul>");
 		$(this).css('cursor','pointer');
 		set_src(this.id, "star.png");
 	}).mouseout(function(){
-	  document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.");
+	  document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
 	  $(this).css('cursor','auto');
 	  set_src(this.id, "star-2.png");
 	});
 
+	// On click, travel to that city.
 	$('.node').click(function(){
 		store.set("player_location",$("#"+this.id).data("data").location);
 		store.set("player_funds",store.get("player_funds") - $("#"+this.id).data("data").cost);
 		store.set("player_fame",store.get("player_fame") + $("#"+this.id).data("data").fame);
 		store.set("player_CO2",store.get("player_CO2") + $("#"+this.id).data("data").carbon);
 		store.set("current_fame",$("#"+this.id).data("data").fame);
-
 
 		passages["Start"].render();
 		$(".node").remove();
