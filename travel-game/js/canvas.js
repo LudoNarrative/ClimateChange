@@ -7,7 +7,6 @@ store.set("difficulty",1);
 store.set("update",1); // tells the game to end when update is 0
 store.set("reading",0);
 checkEnd = null;
-notFlying=1;
 
 $(document).ready(function(){
 	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.");
@@ -72,25 +71,11 @@ function startGame(){
 			    }
 			}, '.choice-point');
 
-		document.getElementById("canvas-2").innerHTML = "<progress id='progress-bar' value='0' max='300'></progress>";
 }
 
 function checkArticlesRead(){
-	if ((store.get("readFood")||store.get("readAirport")||store.get("readSpecies")||store.get("readRefugees"))&&notFlying){
-		fly_more();
-  	flyMore = setInterval ( fly_more, 1000 );
-  	notFlying=0;
-	}
 	if (store.get("readFood")&&store.get("readAirport")&&store.get("readSpecies")&&store.get("readRefugees")&&store.get("reading")==0){
 		$(document).off('click.myevent3', '.choice-point');
-		endGame();
-	}
-}
-
-function fly_more(){
-	document.getElementById("progress-bar").value +=5;
-	var value = $('progress:first').prop('value');
-	if (value >= 300){
 		endGame();
 	}
 }
