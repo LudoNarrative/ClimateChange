@@ -74,7 +74,7 @@ function startGame(){
 }
 
 function checkArticlesRead(){
-	if (store.get("readFood")&&store.get("readAirport")&&store.get("readSpecies")&&store.get("readRefugees")&&store.get("reading")==0){
+	if ((store.get("readFood")||store.get("readAirport")||store.get("readSpecies")||store.get("readRefugees"))&&store.get("reading")==0){
 		$(document).off('click.myevent3', '.choice-point');
 		endGame();
 	}
