@@ -43,7 +43,7 @@ function selectCity(){
 	$('#BERLIN').data('data', { location: 'Berlin', cost: '733', carbon:'1.34', fame: 210});
 
 	$('.node').mouseover(function(){
-		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:164px;padding:10px;'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "</li><li style='color:green'>+"+$("#"+this.id).data("data").fame+"</li><li style='color:grey'>+" + $("#"+this.id).data("data").carbon + " tons CO<sub>2</sub></li></ul>");
+		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:174px;padding:10px;line-height:50px'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "&nbsp;<img src='img/money.jpg' width=30px></li><li style='color:purple'>+"+$("#"+this.id).data("data").fame+"&nbsp;<img src='img/crown.png' width=30px></li><li style='color:black'>+" + $("#"+this.id).data("data").carbon + " tons <img src='img/CO2.png' width=50px></li></ul>");
 		$(this).css('cursor','pointer');
 		set_src(this.id, "star.png");
 	}).mouseout(function(){
