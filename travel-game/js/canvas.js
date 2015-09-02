@@ -101,7 +101,7 @@ function checkArticlesRead(){
 
 function endGame(){
 	clearInterval(updatePassage);
-	change_scene("canvas", "runway.jpg");
+	change_scene("canvas", "scrubGame_chill_3.png");
 	$("#progress-bar").hide();
 	// passages["End"].render();
 	document.getElementById('scene-description').innerHTML = ("You gained +" + store.get('current_fame') + " fame for attending the conference in " + store.get('player_location') + "!");
