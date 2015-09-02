@@ -1,7 +1,7 @@
 [
 	{
 		"title": 	"Start",
-		"scene": 	["@@set readFood to 0@@@@set readAirport to 0@@@@set readSpecies to 0@@@@set readRefugees to 0@@As the plane takes flight, you read today's news headlines. [Further game instructions here.]"],
+		"scene": 	["@@set readFood to 0@@@@set readAirport to 0@@@@set readSpecies to 0@@@@set readRefugees to 0@@As the plane takes flight, you read today's news headlines."],
 
 		"choices": 	[
 						["Okay. I'm ready to start.", "frontpage"]
