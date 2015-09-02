@@ -59,9 +59,12 @@ function place_random_city(){
 	$(this).css('cursor','auto');
 
 	// Choose new city.
-	var cities = [{'id': 'Madrid', 'x': 60, 'y':240},
-								{'id': 'Paris', 'x': 110, 'y':195},
-								{'id': 'Berlin', 'x': 170, 'y':170},
+	var cities = [{'id': 'Madrid', 	'x': 60, 'y':240},
+								{'id': 'Paris', 	'x': 110, 'y':195},
+								{'id': 'Berlin', 	'x': 170, 'y':170},
+								{'id': 'Rome', 		'x': 165, 'y':240},
+								{'id': 'Warsaw', 	'x': 210, 'y':170},
+								{'id': 'Moscow', 	'x': 290, 'y':110},
 					 		 ]
 
 	var random_city = cities[Math.floor(Math.random() * cities.length)];
