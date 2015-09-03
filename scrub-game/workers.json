@@ -144,7 +144,7 @@
 
 	{
 		"title": 	"nobodycares",
-		"scene": 	["@@set required_percent to 60@@@@if optimism gt 0@@Face it@@endif@@@@if optimist leq 0@@You're right, you know@@endif@@.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
+		"scene": 	["@@set required_percent to 60@@@@if optimism gt 0@@Face it@@endif@@@@if optimism leq 0@@You're right, you know@@endif@@.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
 
 		"choices": 	[
 						["Maybe common good and personal good can be the same thing.", "forgood"],
@@ -208,7 +208,7 @@
 
 	{
 		"title": 	"outtro",
-		"scene": 	["@@set required_percent to 77@@@@set update to 0@@Back to work.", "@@if optimism gt 0@@Optimist, huh? Been a while since I met one of those.<br><br>Thought y'all were extinct, too.@@endif@@@@if optimism lt 0@@You're kind of a downer. You must get that a lot, huh?@@endif@@", "Be seeing you.<br><br><span style='color:yellow'>@@if emotional gt 0@@Trait gained: Emotional@@endif@@@@if emotional lt 0@@Trait gained: Level-headed@@endif@@<br>@@if optimism gt 0@@Trait gained: Optimist@@endif@@@@if optimism lt 0@@Trait gained: Pessimist@@endif@@"],
+		"scene": 	["@@set required_percent to 77@@@@set update to 0@@Back to work.", "@@if optimism gt 0@@Optimist, huh? Been a while since I met one of those.<br><br>Thought y'all were extinct, too.@@endif@@@@if optimism lt 0@@You're kind of a downer. You must get that a lot, huh?@@endif@@", "Be seeing you.<br><br><div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul>@@if emotional gt 0@@<li>Emma is more <span class='keyword'>emotional</span></li>@@endif@@@@if emotional lt 0@@<li>Emma is more <span class='keyword'>level-headed</span></li>@@endif@@@@if optimism gt 0@@<li>Emma is more <span class='keyword'>optimistic</span></li>@@endif@@@@if optimism lt 0@@<li>Emma is more <span class='keyword'>pessimistic</span></li>@@endif@@</ul></div>"],
 
 		"choices": 	[
 						["Start Over", "Start"]
@@ -217,7 +217,7 @@
 
 	{
 		"title": "fail",
-		"scene": ["@@set update to 0@@Look, no offense, but I'm going to work on my side. With someone who can hold up a conversation.", "Be seeing you."],
+		"scene": ["@@set update to 0@@Look, no offense, but I'm going to work on my side. With someone who can hold up a conversation.", "Be seeing you.<br><br><div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul>@@if emotional gt 0@@<li>Emma is more <span class='keyword'>emotional</span></li>@@endif@@@@if emotional lt 0@@<li>Emma is more <span class='keyword'>level-headed</span></li>@@endif@@@@if optimism gt 0@@<li>Emma is more <span class='keyword'>optimistic</span></li>@@endif@@@@if optimism lt 0@@<li>Emma is more <span class='keyword'>pessimistic</span></li>@@endif@@</ul></div>"],
 		"choices": [
 			["Start Over", "Start"]
 		]

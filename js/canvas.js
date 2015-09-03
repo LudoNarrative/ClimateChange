@@ -326,6 +326,7 @@ function check_end(){
 
 		// Stop checking for end.
 		clearInterval(checkEnd);
+		clearInterval(updatePassage);
 
 		// Render the fail screen if score was bad.
 		if (store.get("score") <= -25){
