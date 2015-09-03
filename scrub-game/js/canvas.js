@@ -107,7 +107,7 @@ function get_coords(id){
 // Set image of a canvas element.
 function set_src(id,img){
 	var elem = document.getElementById(id);
-	elem.src = '../img/' +img;
+	elem.src = 'img/' +img;
 }
 
 // Make an object move horizontally back and forth.

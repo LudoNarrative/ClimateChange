@@ -11,7 +11,7 @@
 
 // A dictionary to store Passages.
 passages = {};
-filename = "../newspaper.json";
+filename = "newspaper.json";
 
 // Read in passage data from demo.json
 $.getJSON( filename, function( data ) {

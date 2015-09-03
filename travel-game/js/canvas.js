@@ -165,7 +165,7 @@ function choose_random_element(list){
 
 // Change the background image of a canvas.
 function change_scene(canvasID, image){
-	$('#'+canvasID).css('background-image', 'url("../img/'+image+'")');
+	$('#'+canvasID).css('background-image', 'url("img/'+image+'")');
 }
 
 function place_element(id,elType,x,y,w,h,params) {
@@ -238,7 +238,7 @@ function get_coords(id){
 // Set image of a canvas element.
 function set_src(id,img){
 	var elem = document.getElementById(id);
-	elem.src = '../img/' +img;
+	elem.src = 'img/' +img;
 }
 
 

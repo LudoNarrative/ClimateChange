@@ -56,7 +56,7 @@ var removeArrows = function() {
 
 // Show the appropriate plate food image.
 var updateFoodImage = function() {
-	$("#plate").attr("src", "../img/plate" + plateStatus + ".png");
+	$("#plate").attr("src", "img/plate" + plateStatus + ".png");
 }
 
 
@@ -273,7 +273,7 @@ function choose_random_location(){
 
 // Change the background image of the canvas.
 function change_scene(image){
-	$('#canvas').css('background-image', 'url("../img/'+image+'")');
+	$('#canvas').css('background-image', 'url("img/'+image+'")');
 }
 
 function place_element(id,elType,x,y,w,h,params) {
@@ -359,7 +359,7 @@ function get_coords(id){
 // Set image of a canvas element.
 function set_src(id,img){
 	var elem = document.getElementById(id);
-	elem.src = '../img/' +img;
+	elem.src = 'img/' +img;
 }
 
 

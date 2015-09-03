@@ -1,6 +1,13 @@
 [
 	{
 		"title": 	"Start",
+		"scene": 	["<span style='color:yellow'>Click food dishes to pass them left or right. Click on your plate to add food.</span>"],
+		"choices": 	[
+						["Okay, I'm ready to start.", "dinnerStart"]
+					]
+	},
+	{
+		"title": 	"dinnerStart",
 		"scene": 	["@@set career to 0@@@@set confidence to 0@@Have some more stew, Em."],
 		"choices": 	[
 						["Thanks. What's it called again?", "whatscalled"],

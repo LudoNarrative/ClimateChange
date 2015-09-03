@@ -1,60 +1,192 @@
 [
 	{
-		"title": 	"Start",
-		"scene": 	["\"So the graph shows us, uh, that the pH levels in each of these periods, or epochs, is sharply correlated with, er, within 3% of, um, the rise and fall of these ankrymatic species.\"",
-					"Blank stares. You're losing them. Come on, Emma. Don't botch your first lecture ever. @@set losecool to 1@@ @@set update to 1@@ @@set stress to 0@@"],
+		"title": 	"Intro",
+		"scene": 	["@@set required_percent to -1@@<i>Keep your cool during this lecture. When you see you’re losing your cool, click on the ball when it's in the middle of the square.</i>","@@if score gt 20@@You're feeling a little nervous.@@else@@Who knew teaching a bunch of kids would be so scary?@@endif@@"],
+
 		"choices": 	[
-						[">>Skip to the point", "N2"],
-						["Drop your guard: tell a personal anecdote", "N2"],
-						["See if there are any questions.", "N2"]						
+						["Okay.  I think I'm ready.", "Start"]
+					]
+	},
+	{
+		"title": 	"Start",
+		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@@@if confidence gt 0@@Class has been going well so far, like you knew it would. But if you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson.@@endif@@@@if confidence leq 0@@You didn't expect teaching to be anything near so stressful. Your heart's pounding and sweat's beading on your forehead. Dr. Tennerson's here evaluating you today-- keep it together, Emma!@@endif@@", "Five more minutes. You can do this.@@set difficulty to 1@@ @@set questionsLeft to 3@@", "For the @@if career eq 0@@shrimp, Emma. For the shrimp.@@endif@@@@if career eq 1@@lobsters, Emma. For the lobsters.@@endif@@@@if career eq 2@@coral reefs, Emma. For the reefs.@@endif@@"],
+
+		"choices": 	[
+						["Keep Talking.", "N2"]
 					]
 	},
 	{
 		"title": 	"N2",
-		"scene": 	["\"... so we can see the fossil record is very clear on this. When ocean pH changes, there's always a massive species die-off. And creatures like shellfish that are adapted to the current oceanic pH are put at extreme risk.\"",
-					"Some hands go up. Who should you call on?"],
+		"scene": 	["\"So@@if score lt 40@@, uh, @@endif@@ you can see that as CO2 levels @@if score lt 40@@fall-- er, no, I mean rise--@@else@@rise@@endif@@, the ocean becomes more acidic. Already 25% more acidic than in the 1800s.\""],
 		"choices": 	[
-						[">>Élika, a smart and passionate student", "N3"],
-						["Franklin, also smart but skeptical about climate change", "N3"],
-						["A shy student in the back whose name you don't know", "N3"]
-
+						["Next Slide.", "N3"]
 					]
 	},
 	{
 		"title": 	"N3",
-		"scene": 	["\"Doctor Banks, if the pH has changed so much over historical levels, why haven't species adapted to survive those changes?\"@@incr stress@@", "\"Good question, Élika. Although technically I won't be 'Doctor' Banks for another few weeks.\" That wins you a few smiles.", "\"The reason is that these changes often happen far faster than evolution and natural selection can react. A meteorite strike or huge eruption that changes the amount of sunlight or ocean particulates overnight... it takes species thousands of years to adapt through the blind process of natural selection. Sudden changes-- like the mass industrialization that's happened in the past century and half-- can be fatal.\""],
+		"scene": 	["\"And we know that more acidic seawater makes it@@if score lt 40@@\"-- you trail off, losing your train of thought for a moment, then regroup-- \"makes it@@endif@@ harder for shell-forming sea creatures like corals, oysters, and of course my own favorite life form, @@if career eq 0@@the shrimp@@endif@@@@if career eq 1@@the lobster@@endif@@@@if career eq 2@@coral reefs@@endif@@.\""],
 		"choices": 	[
-						["Elika raises her hand with a follow-up.", "N4"],
-						[">> Franklin still has his hand up, and looks impatient.", "N4"],
-						["<span style='color:gray'>(The shy student puts their hand down.)</span>", "N4"]
-
+						["Next Slide.", "N4"]
 					]
 	},
 	{
 		"title": 	"N4",
-		"scene": 	["\"Emma, you always say in this class that correlation does not imply causality. So why are all you global warming nuts so sure things are different this time?\"@@mult stress 9@@", "Great. You're terrible at confrontations like this-- it's one of your biggest fears about becoming a professor.@@set losecool to 15@@"],
+		"scene": 	["\"Even plankton, which is the base of the food chain for most ocean life, is affected. So there's@@if score lt 40@@, um, a link, a direct link, you see,@@else@@ a direct link@@endif@@ between a rise in CO2 and the survival of most life in the oceans.\""],
 		"choices": 	[
-						[">> Appeal to logic.", "N5"],
-						["Appeal to emotion.", "N5"],
-						["Appeal to values.", "N5"],
-						["Dodge the question.", "N5"]
+						["More", "Questions"]
+					]
+	},
+
+	{
+		"title": 	"Questions",
+		"scene": 	["@@if questionsLeft leq 0@@You're almost out of time for questions.@@endif@@@@if questionsLeft eq 1@@You have time for one more question.@@endif@@@@if questionsLeft geq 2@@You have time for a few more questions.@@endif@@"],
+		"choices": 	[
+						["@@if calledElika eq false@@Call on Élika: she's smart and passionate.@@endif@@", "Elika1"],
+						["@@if calledFranklin eq false@@Call on Franklin, also smart but skeptical about climate change@@endif@@", "Franklin1"],
+						["@@if calledShy eq false@@A shy student in the back whose name you don't know@@endif@@", "Shy"],
+						["@@if questionsLeft lt 1@@[Time's up.]@@endif@@", "ClassEnds"]
+					]
+	},
+
+	{
+		"title": 	"Elika1",
+		"scene": 	["@@decr questionsLeft@@\"Doctor Banks, if the pH is changing, why aren't species adapting to those changes?\"", "A smart question, and you know the answer-- letting you calm down a little.@@set calledElika to true@@ @@decr difficulty 1@@"],
+		"choices": [
+						["More", "Elika2"]
 					]
 	},
 	{
-		"title": 	"N5",
-		"scene": 	["\"You're right to be skeptical. But in this case, an overwhelming amount of evidence collected over decades and from all different kinds of experiments all points to the same conclusions. When we see a recurring pattern like that, validated by independent techniques, the scientific method tells us we can start to be confident that our model of a system is useful.\""],
+		"title": "Elika2",
+		"scene": ["\"Good question, Élika. @@if score lt 40@@Um... the@@else@@The@@endif@@ reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.", "\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and@@if score lt 40@@, er, those, um, @@else@@those @@endif@@ catastrophes usually triggered mass extinctions."],
 		"choices": 	[
-						["Franklin has a follow-up.", "N6"],
-						["Êlika seems to want to respond to that.", "N6"],
-						["Another student has a different question.", "N6"]
+						["Élika looks like she has a follow-up.", "Elika3"],
+						["Call on someone else.", "Questions"]
 					]
 	},
 	{
-		"title": 	"N6",
-		"scene": 	["After a few more questions, class time is officially over. You remind the students about the reading due Friday, and dismiss the class.", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. @@set losecool to 0@@ @@set update to 0@@ \"You handled that well, Emma. I wouldn't worry. I think you're going to make a wonderful professor.\"", "<span style='color:gray'>[Reward: \"Didn't Play Favorites\"]</span>"],
+		"title": 	"Elika3",
+		"scene": 	["@@decr questionsLeft@@You go back and forth with Élika for the next few minutes, which is pleasant, but you see some of the other students growing resentful that she's dominating the converation.@@decr difficulty 1@@"],
+		"choices": [
+						["Take another question.", "Questions"]
+					]
+	},
+
+
+	{
+		"title": 	"Franklin1",
+		"scene": 	["@@decr questionsLeft@@\"Emma, you always say in this class that correlation does not imply causality. So why are all you global warming nuts so sure things are different this time?\"@@set calledFranklin to true@@"],
+		"choices": 	[
+						["More.", "Franklin2"]
+					]
+	},
+	{
+		"title": 	"Franklin2",
+		"scene": 	["@@incr difficulty 1@@Great. You're terrible at confrontations like this-- it's one of your biggest fears about becoming a professor."],
+		"choices": 	[
+						["Appeal to logic.", "FranklinLogic"],
+						["Appeal to values.", "FranklinValues"],
+						["Dodge the question.", "FranklinDodge"]
+					]
+	},
+	{
+		"title": 	"FranklinLogic",
+		"scene": 	["\"That's @@if score lt 40@@um, @@endif@@ a good point, Franklin, but it's not applicable in this case. There are @@if score lt 40@@um, thousands... well maybe not that many, but definitely dozens at least,@@else@@dozens@@endif@@ of independent studies using many different techniques, that all suggest a causal link between increased CO2 and increased ocean acidity."],
+		"choices": 	[
+						["More.", "FranklinLogic2"]
+					]
+	},
+	{
+		"title": 	"FranklinLogic2",
+		"scene": 	["\"When we see a recurring pattern, validated by independent techniques, the scientific method @@if score lt 40@@, um... it, er, @@endif@@ tells us our model of a system is useful.", "He doesn't seem especially happy, but seems to accept the point. Good: that makes you feel a little better.@@decr difficulty 1@@"],
+		"choices": 	[
+						["Franklin looks like he wants to respond.", "FranklinMore"],
+						["Call on someone else.", "Questions"]
+					]
+	},
+	{
+		"title": 	"FranklinMore",
+		"scene": 	["@@decr questionsLeft@@@@incr difficulty 1@@Franklin dominates the discussion for the next few minutes. You thought it was important to let him have his say, but it uses up a lot of class time that maybe could have been better spent on other things."],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+
+	{
+		"title": 	"FranklinValues",
+		"scene": 	["@@if score lt 40@@\"What you <i>deniers</i> don't seem to understand is that there's no uncertainty about this,\" you snap. \"The science is solid, and sticking your head in the sand won't make the problem go away.<br><br>There's some uncertain muttering. That came out harsher than you intended. Maybe if you weren't so nervous...@@else@@\"Don't you think we have an ethical obligation to investigate this and take action, even if things aren't entirely settled?\" you reply. \"If there was a 97% chance your child was ill, wouldn't you act to protect her rather than wait?\"<br><br>Franklin seems annoyed by this response, but there are some positive murmurs from the rest of the class.@@endif@@"],
+		"choices": 	[
+						["Franklin looks like he wants to respond.", "FranklinMore"],
+						["Call on someone else.", "Questions"]
+					]
+	},
+	{
+		"title": 	"FranklinDodge",
+		"scene": 	["@@decr difficulty 1@@\"Let's not make this political,\" you say quickly. \"We're just talking about these particular results, nothing else.\"", "Well, you avoided getting into a complex issue, which helps your stress, but there's a lot of unhappy faces in the crowd. Maybe you shouldn't have dodged the bullet."],
+		"choices": 	[
+						["Franklin looks like he wants to respond.", "FranklinMore"],
+						["Call on someone else.", "Questions"]
+					]
+	},
+
+	{
+		"title": 	"Shy",
+		"scene": 	["@@decr questionsLeft@@@@set calledShy to true@@\"Doctor Banks, I get the connection between CO2 and pH, but how exactly does higher pH interfere with mollusks and stuff?\"", "It's a straightforward question... should you give it a straightforward answer, or try to inject a little personality?"],
+		"choices": 	[
+						["Explain with a straightforward answer.", "ShyStraight"],
+						["Explain with a cool example.", "ShyExample"],
+						["Drop your guard: tell a personal anecdote.", "ShyPersonal"]
+					]
+	},
+	{
+		"title": 	"ShyStraight",
+		"scene": 	["You briefly explain that the calcium carbonate minerals these creatures use to make their shells have a harder time calcifying as acidity goes up: if it's high enough, the shells are eaten away faster than they can form.", "The class seems satisfied, but not particularly engaged."],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+	{
+		"title": 	"ShyExample",
+		"scene": 	["You think this might be a great opportunity to use that new chemistry visualization package you've got on your laptop. It should let you show visually how calcium carbonate is affected by higher acidity."],
+		"choices": 	[
+						["More", "ShyExample2"]
+					]
+	},
+	{
+		"title": 	"ShyExample2",
+		"scene": 	["@@if score lt 40@@It doesn't go over so well. Due to your high stress level, you fumble around forever trying to get the program launched and set up. By the time you get it working, half the class are checking their phones. Maybe this stressed, you shouldn't have tried something unusual...@@else@@It works! Within a few minutes, you've set up an example that shows higher and higher levels of acidity slowing down and eventually reversing the slow build-up of calcium carbonate that so many ocean creatures use to make their shells. Good thing you were able to keep your cool and do the demo so well.@@endif@@"],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+	{
+		"title": 	"ShyPersonal",
+		"scene": 	["@@incr difficulty 1@@It's scary, but you drop your guard a bit and try to make a personal connection, telling a story about a disastrous first date with a marine biologist who was researching this very question."],
+		"choices": 	[
+						["More", "ShyPersonal2"]
+					]
+	},
+	{
+		"title": 	"ShyPersonal2",
+		"scene": 	[ "@@if score lt 40@@But you're so stressed the story just comes out weird and overly personal. By the time you finally stammer your way to the answer, you feel like an idiot.@@else@@The story seems to go over well... you get a couple smiles and laughs, and at the end when you tie it into the question, the shy student (Justin! You remember now) seems more engaged.@@endif@@"],
+		"choices": 	[
+						["More", "Questions"]
+					]
+	},
+
+	{
+		"title": 	"ClassEnds",
+		"scene": 	["@@set update to 0@@ Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 40@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. @@if confidence gt 0@@Your confidence really shines through@@endif@@@@if confidence leq 0@@Your confidence is building every day.@@endif@@ I think you're going to make a wonderful professor.\""],
+		"choices": 	[
+						["Back to start", "Start"]
+					]
+	},
+
+	{
+		"title": 	"fail",
+		"scene": 	["You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.", "Wretchedly, you manage to remind the students about their homework and dismiss the class.","Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. @@if confidence gt 0@@You'll find that confidence again.@@endif@@@@if confidence leq 0@@It's hard at first, but you'll get better.@@endif@@ I know you will.\""],
 		"choices": 	[
 						["Back to start", "Start"]
 					]
 	}
-	
+
 ]
