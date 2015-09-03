@@ -89,17 +89,6 @@ body {
 .example .about p { font-size: 1.2em; }
 
 
-
-#scratch1 {
-  margin: 0 !important;
-  box-shadow: none !important;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-
-
-
 .second-demo { display: inline-block; width: 410px; vertical-align: middle; }
 #decagon, #star, #multiple  { display: inline-block; margin: 0 5px 5px 0; }
 
