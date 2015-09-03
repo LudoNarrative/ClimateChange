@@ -76,3 +76,21 @@ html, body{
 /*#target-box:hover{
 	cursor:crosshair;
 }*/
+.outcome {
+	background-color: #333333;
+    padding: 5px;
+}
+.outcomeHeader {
+	font-size: 70%;
+    text-transform: uppercase;
+    color: #C1C1FF;
+}
+.outcome ul {
+
+}
+.outcome li {
+
+}
+.keyword {
+	color: #FDFF4A;
+}

@@ -175,7 +175,7 @@
 
 	{
 		"title": 	"ClassEnds",
-		"scene": 	["@@set update to 0@@ Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 40@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. @@if confidence gt 0@@Your confidence really shines through@@endif@@@@if confidence leq 0@@Your confidence is building every day.@@endif@@ I think you're going to make a wonderful professor.\""],
+		"scene": 	["@@set update to 0@@ Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 40@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. @@if confidence gt 0@@Your confidence really shines through@@endif@@@@if confidence leq 0@@Your confidence is building every day.@@endif@@ I think you're going to make a wonderful professor.\"<br><br><div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma is more <span class='keyword'>academic</span></li>@@if calledFranklin eq true@@<li>Emma is more <span class='keyword'>brave</span></li>@@endif@@@@if calledFranklin eq false@@<li>Emma is more <span class='keyword'>cautious</span></li>@@endif@@</ul></div>"],
 		"choices": 	[
 						["Back to start", "Start"]
 					]
@@ -183,7 +183,7 @@
 
 	{
 		"title": 	"fail",
-		"scene": 	["You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.", "Wretchedly, you manage to remind the students about their homework and dismiss the class.","Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. @@if confidence gt 0@@You'll find that confidence again.@@endif@@@@if confidence leq 0@@It's hard at first, but you'll get better.@@endif@@ I know you will.\""],
+		"scene": 	["You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.", "Wretchedly, you manage to remind the students about their homework and dismiss the class.","Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. @@if confidence gt 0@@You'll find that confidence again.@@endif@@@@if confidence leq 0@@It's hard at first, but you'll get better.@@endif@@ I know you will.\"<br><br><div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma is less <span class='keyword'>academic</span></li>@@if calledFranklin eq true@@<li>Emma is more <span class='keyword'>brave</span></li>@@endif@@@@if calledFranklin eq false@@<li>Emma is more <span class='keyword'>cautious</span></li>@@endif@@</ul></div>"],
 		"choices": 	[
 						["Back to start", "Start"]
 					]
