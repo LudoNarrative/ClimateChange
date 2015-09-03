@@ -11,7 +11,7 @@
 
 // A dictionary to store Passages.
 passages = {};
-filename = "../demo.json";
+filename = "teacher.json";
 
 // Read in passage data from demo.json
 $.getJSON( filename, function( data ) {
@@ -33,6 +33,6 @@ $.getJSON( filename, function( data ) {
 	}
 
 	// Display the first passage.
-	// passages["Start"].render();
-	passages["Intro"].render();
+	passages["Start"].render();
+	// passages["Intro"].render();
 });
