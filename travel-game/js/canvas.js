@@ -5,64 +5,115 @@ store.set("score",60);
 store.set("required_percent",-1);
 store.set("difficulty",1);
 store.set("update",1); // tells the game to end when update is 0
-store.set("reading",0);
+
+// Stats specific to the travel game.
+store.set("reading",0);												// Whether the player is currently reading an article.
+
+store.set("readFood",0);											// Whether you have read the article about food or not.
+store.set("readAirport",0);
+store.set("readSpecies",0);
+store.set("readRefugees",0);
+
+store.set("player_fame",0);										// How much fame the player has.
+store.set("current_fame",0);									// How much fame the player is going to increase by.
+store.set("player_CO2",0);										// The player's carbon footprint.
+store.set("player_time", 14);									// How much time (in days) the player has to spend at conferences.
+store.set("player_location", "Santa Cruz");		// Player's current location.
+store.set("player_funds", 3000);							// Player's current funds.
+store.set("max_flights", 2);									// How many times you can travel.
+store.set("num_flights", 0);									// How many times the player has already traveled.
+
+spawnCity = null;
 checkEnd = null;
-notFlying=1;
 
 $(document).ready(function(){
-	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.");
+	selectCity();
+});
 
-	change_scene("canvas", "europe-map.jpg");
+function selectCity(){
+	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
+	document.getElementById('choice-points').innerHTML = ("<div class='choice-point'></div>");
 
-	place_object("MADRID", "node.png",60,240,25,25);
-	var d = document.getElementById("MADRID");
+	change_scene("canvas", "europe-map.png");
+
+	// Place stats.
+	// place_object("money-icon", "money.png", 20,310,40,40);
+	// place_object("fame-icon", "crown.png", 150,310,40,40);
+	// place_object("co2-icon", "CO2.png", 280,310,55,40);
+
+
+	// Place cities.
+	place_random_city();
+
+	// Repeat process after a delay.
+	spawnCity = setInterval(place_random_city, 8000);
+
+}
+
+function place_random_city(){
+	// Remove all previous nodes.
+	$(".node").remove();
+
+	// Clear scene description and cursor.
+	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
+	$(this).css('cursor','auto');
+
+	// Choose new city.
+	var cities = [{'id': 'Madrid', 	'x': 60, 'y':240},
+								{'id': 'Paris', 	'x': 110, 'y':195},
+								{'id': 'Berlin', 	'x': 170, 'y':170},
+								{'id': 'Rome', 		'x': 165, 'y':240},
+								{'id': 'Warsaw', 	'x': 210, 'y':170},
+								{'id': 'Moscow', 	'x': 290, 'y':110},
+					 		 ]
+
+	var random_city = cities[Math.floor(Math.random() * cities.length)];
+
+	place_object(random_city.id, "star-2.png", random_city.x, random_city.y, 25, 25)
+
+	var random_cost = getRandomInt(300,1200);
+	var random_carbon = getRandomInt(0.1,5);
+	var random_fame = getRandomInt(25,300);
+
+	var d = document.getElementById(random_city.id);
 	d.className = "node";
-	$('#MADRID').data('data', { cost: '692', carbon:'0.58'});
+	$('#' + random_city.id).data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame});
 
-	place_object("PARIS", "node.png",110,195,25,25);
-	var d = document.getElementById("PARIS");
-	d.className = "node";
-	$('#PARIS').data('data', { cost: '741', carbon:'1.32'});
-
-
-	place_object("BERLIN", "node.png",170,170,25,25);
-	var d = document.getElementById("BERLIN");
-	d.className = "node";
-	$('#BERLIN').data('data', { cost: '733', carbon:'1.34'});
-
+	// On mouseover, show city stats.
 	$('.node').mouseover(function(){
-		$(this).animate({
-	    width: "30px",
-	    height: "30px"
-	  }, 100 );
-		document.getElementById('scene-description').innerHTML = ("<p>Click on a city to travel there.</p><b>"+this.id + ":</b>" + "<ul><li>$" + $("#"+this.id).data("data").cost + "</li><li>" + $("#"+this.id).data("data").carbon + " tons CO<sub>2</sub></li></ul>");
+		document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id.toUpperCase() + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:174px;padding:10px;line-height:38px'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "&nbsp;<img src='img/money.png' width=30px></li><li style='color:purple'>+"+$("#"+this.id).data("data").fame+"&nbsp;<img src='img/crown.png' width=30px></li><li style='color:black'>+" + $("#"+this.id).data("data").carbon + " tons <img src='img/CO2.png' width=50px></li></ul>");
 		$(this).css('cursor','pointer');
+		set_src(this.id, "star.png");
 	}).mouseout(function(){
-		$(this).animate({
-	    width: "25px",
-	    height: "25px"
-	  }, 100 );
-	  document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.");
+	  document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='img/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='img/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='img/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
 	  $(this).css('cursor','auto');
+	  set_src(this.id, "star-2.png");
 	});
 
+	// On click, travel to that city.
 	$('.node').click(function(){
+		store.set("player_location",$("#"+this.id).data("data").location);
+		store.set("player_funds",store.get("player_funds") - $("#"+this.id).data("data").cost);
+		store.set("player_fame",store.get("player_fame") + $("#"+this.id).data("data").fame);
+		store.set("player_CO2",store.get("player_CO2") + $("#"+this.id).data("data").carbon);
+		store.set("current_fame",$("#"+this.id).data("data").fame);
+		store.set("num_flights",store.get("num_flights")+1);
+
+		clearInterval(spawnCity);
 		passages["Start"].render();
 		$(".node").remove();
 		change_scene("canvas", "plane-flying.gif");
 
-		// If user clicks, start reading / flying game.
+		// If user clicks, start reading article of their choice.
 		$(document).on({
 			    'click.myevent2': function () {
-			        startGame();
+			      startGame();
 		    		$(document).off('click.myevent2', '.choice-point');
 			    }
 			}, '.choice-point');
 
 	});
-
-});
-
+}
 
 function startGame(){
 	// If user clicks, check if all articles have been read.
@@ -72,33 +123,29 @@ function startGame(){
 			    }
 			}, '.choice-point');
 
-		document.getElementById("canvas-2").innerHTML = "<progress id='progress-bar' value='0' max='300'></progress>";
 }
 
 function checkArticlesRead(){
-	if ((store.get("readFood")||store.get("readAirport")||store.get("readSpecies")||store.get("readRefugees"))&&notFlying){
-		fly_more();
-  	flyMore = setInterval ( fly_more, 1000 );
-  	notFlying=0;
-	}
-	if (store.get("readFood")&&store.get("readAirport")&&store.get("readSpecies")&&store.get("readRefugees")&&store.get("reading")==0){
+	if ((store.get("readFood")||store.get("readAirport")||store.get("readSpecies")||store.get("readRefugees"))&&store.get("reading")==0){
 		$(document).off('click.myevent3', '.choice-point');
 		endGame();
 	}
 }
 
-function fly_more(){
-	document.getElementById("progress-bar").value +=5;
-	var value = $('progress:first').prop('value');
-	if (value >= 300){
-		endGame();
-	}
-}
-
 function endGame(){
-	change_scene("canvas", "runway.jpg");
+	clearInterval(updatePassage);
+	change_scene("canvas", "scrubGame_chill_3.png");
 	$("#progress-bar").hide();
-	passages["End"].render();
+	// passages["End"].render();
+	document.getElementById('scene-description').innerHTML = ("<p>You gained +" + store.get('current_fame') + " fame for attending the conference in " + store.get('player_location') + "!</p>");
+	if (store.get("num_flights") < 2){
+		document.getElementById('choice-points').innerHTML = ("<div class='choice-point' onclick='selectCity()'>Fly to your next conference.</div>");
+	}
+	else{
+		document.getElementById('scene-description').innerHTML += ("<p>Exhausted from traveling, you decide to fly home.</p>")
+		document.getElementById('choice-points').innerHTML = ("");
+	}
+
 }
 
 /**** ALL FUNCTIONS ****/
@@ -114,16 +161,6 @@ function getRandomInt(min, max) {
 // Choose a random element from an array.
 function choose_random_element(list){
 	return list[Math.floor(Math.random() * list.length)];
-}
-
-// Choose random item.
-function choose_random_item(){
-	return choose_random_element(window.items)
-}
-
-// Choose random location.
-function choose_random_location(){
-	return choose_random_element(window.locations)
 }
 
 // Change the background image of a canvas.

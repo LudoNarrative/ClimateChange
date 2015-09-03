@@ -1,7 +1,7 @@
 [
 	{
 		"title": 	"Start",
-		"scene": 	["@@set readFood to 0@@@@set readAirport to 0@@@@set readSpecies to 0@@@@set readRefugees to 0@@As the plane takes flight, you read today's news headlines. [Further game instructions here.]"],
+		"scene": 	["As the plane takes flight, you read today's news headlines."],
 
 		"choices": 	[
 						["Okay. I'm ready to start.", "frontpage"]
@@ -24,33 +24,33 @@
 		"title": 	"food",
 		"scene": 	["@@set readFood to 1@@@@set reading to 1@@FOOD PRICES CREEP HIGHER", "DES MOINES - Americans are taking bigger and bigger hits at the grocery store, as cycles of extreme weather continue to intensify, driving up prices for food across the board.", "\"Last year was the worst drought on record,\" a third-generation farmer here said at an emergency agriculture summit. \"And this year the worst flooding the state's ever seen. I don't know anyone who's had a good crop in years now.\"", "While it has been well-established since the 1990s that a warming planet would produce more and more extreme cycles of weather, the specifics are only now becoming clear, with no end in sight."],
 		"choices": 	[
-						["Back to front page", "frontpage"]
+						["I'm finished reading.", "frontpage"]
 					]
 	},
 	{
 		"title": 	"airport",
 		"scene": 	["@@set readAirport to 1@@@@set reading to 1@@CLIMATE PROTESTERS SHUT DOWN AIRPORT ", "LOS ANGELES - Thousands of protesters swarmed LAX this morning, blocking two major runways and shutting down traffic at the major international air hub for six hours.", "\"Air travel is one of the biggest remaining contributors to global warming,\" a protester told reporters. \"We have to change our way of life to survive, and we can't wait any longer.\"", "The chief of police expressed sympathy with the protesters concerns, but said the proper way to change policy is through the political and legislate process. Most protesters here today, however, say it's too late to wait any longer for change."],
 		"choices": 	[
-						["Back to front page", "frontpage"]
+						["I'm finished reading.", "frontpage"]
 					]
 	},
 	{
 		"title": 	"species",
 		"scene": 	["@@set readSpecies to 1@@@@set reading to 1@@@@if career eq 0@@SHRIMP@@endif@@@@if career eq 1@@LOBSTER@@endif@@@@if career eq 2@@CORAL@@endif@@ THREATENED BY CHANGING OCEANS", "@@if career eq 0@@SEATTLE - The once-thriving shrimp population off the west coast has@@endif@@@@if career eq 1@@BANGOR, MAINE - The once-thriving lobster population off the eastern seaboard has@@endif@@@@if career eq 2@@BRISBANE, AUSTRALIA - The once-thriving coral reefs of Australia have@@endif@@ been reduced to less than 5% of the 1990 population, researchers now say.", "@@if career eq 0@@A vital part of the food chain for all marine life@@endif@@@@if career eq 1@@Through strict overfishing laws have been in place for nearly a decade@@endif@@@@if career eq 2@@A bellwether for the state of all oceanic life@@endif@@, a new study shows the drastic die-off is in part caused by the inability of young @@if career eq 0@@shrimp@@endif@@@@if career eq 1@@lobsters@@endif@@@@if career eq 2@@coral@@endif@@ to build hard enough shells to survive attacks from predators.", "Dr. Emma Richards, a leading expert on the species, @@if confidence gt 0@@is boldly pushing to categorize them@@endif@@@@if confidence leq 0@@has cautiously recommended they be categorized@@endif@@ as endangered, which would help fund further studies to try to save them."],
 		"choices": 	[
-						["Back to front page", "frontpage"]
+						["I'm finished reading.", "frontpage"]
 					]
 	},
 	{
 		"title": 	"refugees",
 		"scene": 	["@@set readRefugees to 1@@@@set reading to 1@@CLIMATE REFUGEES FLOOD CITIES", "PHILADELPHIA - In what has become a familiar sight across the country, ramshackle tent cities filled to capacity with desperate refugees are taking over Philly's empty lots and abandoned neighborhoods.", "\"We bribed our way onto a container ship heading for America,\" one refugee from the collapsed state of Mauritania said. \"There was no food or fresh water there any more. My family almost starved.\"", "The warming climate has disrupted agriculture and access to fresh water across the globe, and the threat of rising oceans has led to mass migrations away from low-lying coastal regions, still home to over one billion people.", "While the mayor expressed sympathy with the refugees in a statement, he also stated firmly that they could not stay in Philadelphia."],
 		"choices": 	[
-						["Back to front page", "frontpage"]
+						["I'm finished reading.", "frontpage"]
 					]
 	},
 	{
 		"title": 	"End",
-		"scene": 	["Your plane has landed."],
+		"scene": 	["You gain fame for attending the conference!"],
 		"choices": 	[
 						[]
 					]

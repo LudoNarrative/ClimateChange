@@ -30,7 +30,7 @@ html, body{
 	background-repeat:no-repeat;
 	background: #222;
 	width:400px;
-	height:309px;
+	height:300px;
 }
 #score{
 	float:right;
@@ -59,10 +59,10 @@ html, body{
 }
 
 .round{
-	-moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -khtml-border-radius: 10px;
-    border-radius: 10px;
+	-moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
 }
 #target-box{
 	background:#fff;
