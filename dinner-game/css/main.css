@@ -1,17 +1,17 @@
-html, body{ 
+html, body{
 	background: #000;
 	font-family: Avenir, Futura, sans-serif;
 	width: 100%;
 	height: 100%;
 	margin: 0px;
 	padding: 0px;
-	overflow-x: hidden; 
-	overflow-y: hidden; 
-	color: #fff;	
+	overflow-x: hidden;
+	overflow-y: hidden;
+	color: #fff;
 }
 
 #primary-navbar{
-	height: 40px;		  
+	height: 40px;
 	background:#111;
 	opacity:0.9;
 	padding:5px 20px;
@@ -41,7 +41,7 @@ html, body{
 }
 .choice-point{
 	color:lightblue;
-	font-size: 19px;	
+	font-size: 19px;
 }
 .choice-point:hover{
 	cursor:pointer;
@@ -51,10 +51,10 @@ html, body{
 	cursor: url('../img/crosshair.png'), auto;
 }
 .no-select{
-	-moz-user-select: none; 
-    -khtml-user-select: none; 
-    -webkit-user-select: none; 
-    -o-user-select: none; 
+	-moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
 .round{

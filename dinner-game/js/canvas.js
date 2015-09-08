@@ -1,6 +1,7 @@
 /*** MAIN CODE ****/
 
 // Global Parameters
+store.set("chapter",1);
 store.set("score",60);
 store.set("required_percent",-1);
 store.set("difficulty",1);
@@ -124,7 +125,7 @@ var eatFood = function() {
 	if (plateStatus > 0) {
 		plateStatus -= 1;
 		updateFoodImage();
-	}	
+	}
 }
 
 // Handle adding a new dish to be passed on either the left or right.
@@ -202,7 +203,7 @@ var plate_loop = function() {
 			} else if (rightSide === 1) {
 				// dish becomes impatient
 				makeDishImpatient(true);
-			}  
+			}
 		} else {
 			// dish on left
 			if (leftSide === 0) {
@@ -211,7 +212,7 @@ var plate_loop = function() {
 			} else if (leftSide === 1) {
 				// dish becomes impatient
 				makeDishImpatient(false);
-			}  
+			}
 		}
 	}
 
@@ -389,6 +390,15 @@ function flash_color(id,color1,param){
 function check_end(){
 	// If the game is done,
 	if (!store.get("update")){
+
+		// Stop updating passage.
+		clearInterval(updatePassage);
+
+		//Add choice point to point back to menu.
+		document.getElementById('choice-points').innerHTML = ("<a class='choice-point' href='../index.html'>End of Chapter One.</a>");
+
+		// Update chapter.
+		store.set("chapter",store.get("chapter")+1);
 
 		clearInterval(plateInterval);
 		clearInterval(checkEnd);

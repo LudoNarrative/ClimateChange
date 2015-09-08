@@ -143,7 +143,12 @@ function endGame(){
 	}
 	else{
 		document.getElementById('scene-description').innerHTML += ("<p>Exhausted from traveling, you decide to fly home.</p>")
-		document.getElementById('choice-points').innerHTML = ("");
+
+		// Stop updating passage.
+		clearInterval(updatePassage);
+
+		//Add choice point to point back to menu.
+		document.getElementById('choice-points').innerHTML = ("<a class='choice-point' href='../index.html'>End of Chapter Three.</a>");
 	}
 
 }

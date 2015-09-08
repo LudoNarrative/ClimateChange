@@ -40,17 +40,49 @@
     MENU
   </div>
   <div class="container" style="font-size: 30px;line-height: 80px;">
-    <div class="row no-select">
-      <a href="/dinner-game/index.html">Chapter 1: Dinner</a>
+    <div id="CH1" class="row no-select">
+      <a href="/dinner-game/index.html">Chapter 1: The Graduate</a>
     </div>
-    <div class="row no-select">
-      <a href="/teach-game/index.html">Chapter 2: The Lecture</a>
+    <div id="CH2" class="row no-select">
+      <a href="/teach-game/index.html">Chapter 2: The Lecturer</a>
     </div>
-    <div class="row no-select">
-      <a href="/travel-game/index.html">Chapter 3a: Travel</a>
+    <div id="CH3A" class="row no-select">
+      <a href="/travel-game/index.html">Chapter 3: The Traveler</a>
     </div>
-    <div class="row no-select">
-      <a href="/scrub-game/index.html">Chapter 3b: Activism</a>
+    <div id="CH3B" class="row no-select">
+      <a href="/scrub-game/index.html">Chapter 3: The Activist</a>
     </div>
   </div>
+  <!-- JS -->
+  <script src="teach-game/js/jquery-1.11.3.min.js"></script>
+  <script src="teach-game/js/store.min.js" type="text/javascript" ></script>
+
+  <script>
+  $(document).ready(function() {
+    $('#CH3A').hide();
+    $('#CH3B').hide();
+
+    // Show Chapter 2 if completed dinner game.
+    if(store.get("chapter") >= 2) {
+        document.getElementById('CH2').style.display = 'block';
+    }else {
+        document.getElementById('CH2').style.display = 'none';
+    }
+
+    // If completed Chapter 2,
+    if(store.get("chapter")>= 3){
+      // Show travel game if did well in Chapter 2.
+      // Otherwise, show activist game.
+      if(store.get("profession") =="professor"){
+        $('#CH3A').show();
+      }
+      else if (store.get("profession") =="activist"){
+        $('#CH3B').show();
+      }
+    }
+
+
+
+  });
+  </script>
 </body>

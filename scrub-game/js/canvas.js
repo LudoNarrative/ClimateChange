@@ -1,7 +1,7 @@
 /*** MAIN CODE ****/
 
 // Global Parameters
-store.set("score",60);
+// store.set("score",60);
 store.set("difficulty",1);
 store.set("update",1); // tells the game to end when update is 0
 
@@ -181,6 +181,17 @@ function check_end(){
 
 		// Stop checking for end.
 		clearInterval(checkEnd);
+
+		// Stop updating passage.
+		clearInterval(updatePassage);
+
+		// Clear scrubbing message.
+		clearTimeout(scrubTimer);
+   	scrubTimer = undefined;
+   	showingScrubMessage = false;
+
+		//Add choice point to point back to menu.
+		document.getElementById('choice-points').innerHTML = ("<a class='choice-point' href='../index.html'>End of Chapter Three.</a>");
 
 		// When the user clicks, redirect them to start.
 		$(document).on({

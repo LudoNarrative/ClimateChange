@@ -331,11 +331,12 @@ function check_end(){
 		// Render the fail screen if score was bad.
 		if (store.get("score") <= -25){
 			passages["fail"].render();
+			store.set("profession","activist");
 		}
 		else{
 			// Render the good ending.
 			passages["ClassEnds"].render();
-
+			store.set("profession","professor");
 			// Make the ball "explode" (show explosion gif and then hide ball).
 			// var coords = get_coords("ball");
 			// place_object('explosion','the_bay_touch_once.gif',coords.left,coords.top-40,142,200);
@@ -347,20 +348,29 @@ function check_end(){
 		// Hide the target.
 		$("#sweet-spot").hide();
 
+		// Stop updating passage.
+		clearInterval(updatePassage);
+
+		//Add choice point to point back to menu.
+		document.getElementById('choice-points').innerHTML = ("<a class='choice-point' href='../index.html'>End of Chapter Two.</a>");
+
+		// Update chapter.
+		store.set("chapter",store.get("chapter")+1);
+
 		// When the user clicks, redirect them to start.
-		$(document).on({
-		    'click.myevent3': function () {
-		        passages["Start"].render();
-			    $("#ball").show();
-			    $("#sweet-spot").show();
-			    store.set("score",80);
-			    update_score();
-			    store.set("update",1);
-			    loseCool = setInterval ( lose_cool, 1000 );
-	    		checkEnd = setInterval ( check_end, 500 );
-	    		$(document).off('click.myevent3', '.choice-point');
-		    }
-		}, '.choice-point');
+		// $(document).on({
+		//     'click.myevent3': function () {
+		//         passages["Start"].render();
+		// 	    $("#ball").show();
+		// 	    $("#sweet-spot").show();
+		// 	    store.set("score",80);
+		// 	    update_score();
+		// 	    store.set("update",1);
+		// 	    loseCool = setInterval ( lose_cool, 1000 );
+	 //    		checkEnd = setInterval ( check_end, 500 );
+	 //    		$(document).off('click.myevent3', '.choice-point');
+		//     }
+		// }, '.choice-point');
 	}
 }
 
