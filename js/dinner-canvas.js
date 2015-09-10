@@ -260,28 +260,7 @@ function check_end(){
 		clearInterval(checkEnd);
 		store.set("dishesCritical", false);
 
-    	$("#dishRight, #dishLeft, #dishCenter").remove();
-    	removeArrows();
-
-		// When the user clicks, redirect them to start.
-		$(document).on({
-		    'click.myevent3': function () {
-		    	store.set("update",1);
-	    		$(document).off('click.myevent3', '.choice-point');
-		    	startGame();
-		    }
-		}, '.choice-point');
+  	$("#dishRight, #dishLeft, #dishCenter").remove();
+  	removeArrows();
 	}
-}
-
-// Remove element of ID or class.  Works for modern browsers (not IE 7 and below).
-Element.prototype.remove = function() {
-    this.parentElement.removeChild(this);
-}
-NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
-    for(var i = this.length - 1; i >= 0; i--) {
-        if(this[i] && this[i].parentElement) {
-            this[i].parentElement.removeChild(this[i]);
-        }
-    }
 }
