@@ -237,36 +237,66 @@ function follow_simple_command(text){
  * Currently handles:
  *  - @@if PARAM eq VALUE@@Write something.@@endif@@
  *  - @@if PARAM eq VALUE@@Write something.@@else@@Write something else.@@endif@@
+ *  - @@if PARAM eq VALUE AND PARAM eq VALUE@@
+ *  - @@if PARAM eq VALUE OR PARAM eq VALUE@@
+ *  - @@if PARAM eq VALUE AND PARAM eq VALUE AND PARAM eq VALUE@@ ...
  */
 function process_conditional(cond){
   var replacement = "";   // We will replace the code with the text it specifies.
   var operator = "";    // eq, geq, leq, gt, lt
+  var reachedTerminal = false;
+  var rest = cond;
+  var logic = "";
+  var logicOp = "if";
 
-  // Determine parameter name.
-  var findParam = get_var_name(cond,"if",true);
-  var param = findParam[0];
+  while (!reachedTerminal) {
+    // Determine parameter name.
+    var findParam = get_var_name(rest,logicOp,true);
+    
+    var param = findParam[0];
 
-  // Determine operator.
-  var findOp = get_var_name(findParam[1],param,false);
-  var operator = findOp[0];
+    // Determine operator.
+    var findOp = get_var_name(findParam[1],param,false);
+    operator = findOp[0];
 
-  // Handy variables for later reference:
-  //  - x is remaining command after finding the operator
-  //  - y is the first space we find in x
-  var x = findOp[1];
-  var y = x.indexOf(" ");
+    rest = findOp[1].slice(operator.length + 1, findOp[1].length).trim();
 
-  // Determine value.
-  var z = x.indexOf("@@");
-  var value = x.slice(y+1,z);
+    // Determine value.
+    var symPos = rest.indexOf("@@");
+    var andPos = rest.indexOf("AND");
+    var orPos = rest.indexOf("OR");
+    var xPos;
+    if (andPos >= 0 && andPos < symPos) {
+      xPos = andPos;
+      logicOp = "AND";
+    } else if (orPos >= 0 && orPos < symPos) {
+      xPos = orPos;
+      logicOp = "OR";
+    } else {
+      // @@
+      logicOp = undefined;
+      xPos = symPos;
+      reachedTerminal = true;
+    }
+    var value = rest.slice(0, xPos).trim();
+    var startPos = xPos;
+    if (logicOp) {
+      startPos += logicOp.length;
+    }
 
-  // Check if the expression is true.
-  isTrue = is_exp_true(param,operator,value);
+    // Check if the expression is true.
+    var isTrue = is_exp_true(param,operator,value);
+    logic += isTrue;
+    if (!reachedTerminal) {
+      logic += " " + (logicOp === "AND" ? "&&" : "||") + " ";
+    }
+  }
 
-  // If the conditional is true, write the first statement.
-  if (isTrue){
-    var g = x.indexOf("@@");
-    var i = x.slice(g+2);
+  // If the overall logic condition is true, write the first statement.
+  var isOverallTrue = eval(logic);
+  if (isOverallTrue){
+    var g = rest.indexOf("@@");
+    var i = rest.slice(g+2);
     var h = i.indexOf("@@");
 
     replacement = i.slice(0,h);
@@ -274,16 +304,69 @@ function process_conditional(cond){
   // If the conditional is not true,
   else{
     // If conditional contains else,
-    var a = x.indexOf('@@else@@');
+    var a = rest.indexOf('@@else@@');
     if(~a){
       // ...write the statement corresponding with the else.
-      var b = x.slice(a+8);
+      var b = rest.slice(a+8);
       var c = b.indexOf("@@endif@@");
       replacement=b.slice(0,c);
     }
   }
   return replacement;
 }
+
+// Basic unit test for process conditional.
+
+// function test_process_conditional() {
+//   var result, cond;
+//   store.set("testVar", 0);
+//   store.set("testVar2", 0);
+//   cond = "@@if testVar eq 5@@Output A@@endif@@";
+//   result = process_conditional(cond);
+//   console.assert(result === "", "Simple if should return empty string if false");
+//   store.set("testVar", 5);
+//   result = process_conditional(cond);
+//   console.assert(result === "Output A", "Simple if should return contents if true");
+//   cond = "@@if testVar eq 5@@Output B@@else@@Output C@@endif@@";
+//   result = process_conditional(cond);
+//   console.assert(result === "Output B", "Else should return first field if true");
+//   store.set("testVar", 0);
+//   result = process_conditional(cond);
+//   console.assert(result === "Output C", "Else should return second field if false");
+//   store.set("testVar2", 5);
+//   cond = "@@if testVar eq 0 AND testVar2 eq 5@@Output D@@else@@Output E@@endif@@";
+//   result = process_conditional(cond);
+//   console.assert(result === "Output D", "Compound with AND should return first field if both true");
+//   store.set("testVar2", 0);
+//   result = process_conditional(cond);
+//   console.assert(result === "Output E", "Compound with AND should return second field if either one false");
+//   store.set("testVar", 3);
+//   result = process_conditional(cond);
+//   console.assert(result === "Output E", "Compound with AND should return second field if both false");
+//   cond = "@@if testVar eq 0 OR testVar2 eq 0@@Output F@@else@@Output G@@endif@@";
+//   store.set("testVar", 0);
+//   store.set("testVar2", 1);
+//   result = process_conditional(cond);
+//   console.assert(result === "Output F", "Compound with OR should return first field if second true");
+//   store.set("testVar", 1);
+//   store.set("testVar2", 0);
+//   result = process_conditional(cond);
+//   console.assert(result === "Output F", "Compound with OR should return first field if first true");
+//   store.set("testVar", 0);
+//   result = process_conditional(cond);
+//   console.assert(result === "Output F", "Compound with OR should return first field if both true");
+//   store.set("testVar", 1);
+//   store.set("testVar2", 1);
+//   result = process_conditional(cond);
+//   console.assert(result === "Output G", "Compound with OR should return second field if both false");
+//   cond = "@@if testVar eq 1 AND testVar2 eq 1 AND testVar leq 1 AND testVar2 geq 1@@Output J@@else@@Output K@@endif@@";
+//   result = process_conditional(cond);
+//   console.assert(result === "Output J", "Compound with > 2 operators should parse correctly.");
+//   cond = "@@  if   testVar   eq   1    AND    testVar2   eq       1   @@Output H@@endif@@";
+//   result = process_conditional(cond);
+//   console.assert(result === "Output H", "Extra spaces shouldn't mess things up.");
+// }
+// test_process_conditional();
 
 /*
  * Extracts entity name from a command expression
@@ -298,7 +381,8 @@ function get_var_name(text, keyword, codetag){
   if (codetag){
     tag = 2;
   }
-  var keywordRemoved = text.slice(keyword.length+tag+1);
+  var keywordPos = text.indexOf(keyword);
+  var keywordRemoved = text.slice(keywordPos+keyword.length + 1).trim();
   var firstSpace = keywordRemoved.indexOf(" ");
 
   // If there is no first space, parameter is until end of string
@@ -392,7 +476,7 @@ function is_exp_true(param, op, val){
     }
   }
   else{
-    console.log("Unrecognized operator.  Returning false.");
+    console.log("Unrecognized operator '" + op + "'.  Returning false.");
   }
 
   return isTrue;
