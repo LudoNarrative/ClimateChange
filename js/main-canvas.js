@@ -98,7 +98,6 @@ function set_width(id, w){
 }
 
 function set_zindex(id, z){
-  console.log("!", id, z);
   var elem = document.getElementById(id);
   elem.style["z-index"] = z;
 }
