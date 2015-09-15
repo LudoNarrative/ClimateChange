@@ -208,14 +208,18 @@ var downClick = function() {
 
 var eatCounter = 0;
 var eatEveryNSeconds = 10;
-var percentChancePerSecondOfDish = 20;
+var secondsUntilNextDish = 5;
+var minSecondsBetweenDishes = 5;
+var maxSecondsBetweenDishes = 10;
 
 // Called on loop while scene is active. (Should be once per seccond for variables above to be accurate.)
 var plate_loop = function() {
 
+	secondsUntilNextDish--;
 	// Handle a dish appearing or escalating.
-	if (getRandomInt(1, 100) < percentChancePerSecondOfDish) {
-		if (getRandomInt(1, 100) > 50) {
+	if (secondsUntilNextDish <= 0) {
+		secondsUntilNextDish = getRandomInt(minSecondsBetweenDishes, maxSecondsBetweenDishes);
+		if (getRandomInt(1, 100) > 50 && rightSide < 2) {
 			// dish on right
 			if (rightSide === 0) {
 				// dish appears
