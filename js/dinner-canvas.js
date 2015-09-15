@@ -42,11 +42,23 @@ var rightDishCoords = { x: 335, y: 489, w: 116, h: 60 };
 var centerDishCoords = { x: 60, y: 390, w: 238, h: 120 };
 
 // Show and hide the direction arrows when you're holding a dish.
-var showArrows = function() {
+var showRightArrow = function() {
+	place_object('rightArrow', 'dinner/right.png', 330, 431, 37, 40);	
+}
+var showLeftArrow = function() {
 	place_object('leftArrow', 'dinner/left.png', 8, 431, 37, 40);
-	place_object('rightArrow', 'dinner/right.png', 330, 431, 37, 40);
+}
+var showDownArrow = function() {
+	place_object('downArrow', 'dinner/down.png', 165, 506, 25, 30);
+}
+var showArrows = function() {
+	if (center === 1) {
+		showRightArrow();
+	} else if (center === -1) {
+		showLeftArrow();
+	}
 	if (plateStatus !== 4) {
-		place_object('downArrow', 'dinner/down.png', 165, 506, 25, 30);
+		showDownArrow();
 	}
 }
 var removeArrows = function() {
@@ -127,6 +139,9 @@ var eatFood = function() {
 		plateStatus -= 1;
 		$("#fork").animate({"top": 679}, 850, function() {
 			updateFoodImage();
+			if (!takenFromThisDish && !($("#downArrow").length)) {
+				showDownArrow();
+			}
 			$(this).animate({"top": 529}, 850);
 		});
 		
@@ -223,7 +238,7 @@ var plate_loop = function() {
 
 	// Eat food every so often when hands are free.
 	eatCounter += 1;
-	if (eatCounter % eatEveryNSeconds === 0 && center === 0) {
+	if (eatCounter % eatEveryNSeconds === 0) {
 		eatFood();
 	}
 }
