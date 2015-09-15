@@ -139,7 +139,7 @@ var eatFood = function() {
 		plateStatus -= 1;
 		$("#fork").animate({"top": 679}, 850, function() {
 			updateFoodImage();
-			if (!takenFromThisDish && !($("#downArrow").length)) {
+			if (!takenFromThisDish && !($("#downArrow").length) && center !== 0) {
 				showDownArrow();
 			}
 			$(this).animate({"top": 529}, 850);
@@ -200,6 +200,9 @@ var downClick = function() {
 	// If we've got a dish and haven't taken food yet, try to take.
 	if (center !== 0 && !takenFromThisDish) {
 		takeFood();
+	} else if (plateStatus > 0) {
+		eatFood();
+		eatCounter = 0;
 	}
 }
 
@@ -207,7 +210,7 @@ var downClick = function() {
 // Dinner scene intervals.
 
 var eatCounter = 0;
-var eatEveryNSeconds = 10;
+var eatEveryNSeconds = 12;
 var secondsUntilNextDish = 5;
 var minSecondsBetweenDishes = 5;
 var maxSecondsBetweenDishes = 10;
