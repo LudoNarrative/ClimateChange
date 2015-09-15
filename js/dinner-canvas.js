@@ -8,6 +8,7 @@ $(document).ready(function() {
 
 	place_object('bg', 'dinner/background.png', 0, 70, 375, 540);
 	place_object('plate', 'dinner/plate4.png', 103, 482, 168, 129);
+	place_object('fork', 'dinner/fork.png', 247, 529, 50, 75);
 
 	place_div('leftZone', 0, 70, 78, 540, {z: 999});
 	$("#leftZone").click(leftSideClick);
@@ -119,7 +120,11 @@ var takeFood = function() {
 var eatFood = function() {
 	if (plateStatus > 0) {
 		plateStatus -= 1;
-		updateFoodImage();
+		$("#fork").animate({"top": 679}, 850, function() {
+			updateFoodImage();
+			$(this).animate({"top": 529}, 850);
+		});
+		
 	}
 }
 
