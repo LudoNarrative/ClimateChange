@@ -45,7 +45,9 @@ var centerDishCoords = { x: 60, y: 390, w: 238, h: 120 };
 var showArrows = function() {
 	place_object('leftArrow', 'dinner/left.png', 8, 431, 37, 40);
 	place_object('rightArrow', 'dinner/right.png', 330, 431, 37, 40);
-	place_object('downArrow', 'dinner/down.png', 165, 506, 25, 30);
+	if (plateStatus !== 4) {
+		place_object('downArrow', 'dinner/down.png', 165, 506, 25, 30);
+	}
 }
 var removeArrows = function() {
 	$("#leftArrow, #rightArrow, #downArrow").remove();
@@ -112,6 +114,9 @@ var takeFood = function() {
 		updateFoodImage();
 		$("#downArrow").remove();
 	} else {
+		$("#dishCenter").stop(true, true).animate({top: centerDishCoords.y + 10}, 125, function() {
+			$(this).animate({top: centerDishCoords.y}, 300);
+		});
 		// Plate is full.
 	}
 }
