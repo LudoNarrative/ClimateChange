@@ -26,6 +26,10 @@ html, body{
 	font-size: 20px;
 	text-align: center;
 }
+#reset-btn{
+	float:right;
+	cursor:pointer;
+}
 #canvas{
 	background-repeat:no-repeat;
 	width:400px;
