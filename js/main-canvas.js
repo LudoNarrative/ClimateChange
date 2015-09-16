@@ -36,6 +36,28 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+var lastVals = {};
+/**
+ * Tries to return a different random number than the last time we called
+ * this function with the same key.
+ */ 
+function getRandomIntNoRepeat(min, max, key) {
+    var num = 0;
+    var lastTime = lastVals[key];
+    if (min === max) return min;
+    if (lastTime === undefined) {
+      num = getRandomInt(min, max);
+    } else {
+      num = getRandomInt(min, max - 1);
+      if (num >= lastTime) {
+        num += 1;
+      }
+    }     
+    lastVals[key] = num;
+    return num;
+  }
+
+
 // Choose a random element from an array.
 function choose_random_element(list){
   return list[Math.floor(Math.random() * list.length)];
