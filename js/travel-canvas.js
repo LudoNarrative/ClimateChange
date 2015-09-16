@@ -22,7 +22,7 @@ function showTravelerStats() {
 }
 
 function showHeader() {
-	changeArea("scene-description-header", "Click on a city to travel there.<p class='instructionDetail'>Hover over a city to see details of that trip. New trips will spawn every " + spawnTimeInSeconds + " seconds.</p>");
+	changeArea("scene-description-header", "Create an itinerary by accepting academic invitations.<p class='instructionDetail'>Hover over a city to see details of that offer. New offers will spawn every " + spawnTimeInSeconds + " seconds.</p>");
 }
 
 function showCityStats(cityEl) {
@@ -38,6 +38,9 @@ function cancelButtonClick() {
 	var lastLeg = cancelLatestLeg();
 	$("#"+lastLeg.id).remove();
 	showItinerary();
+	if (!spawnCityInterval) {
+		startCitySpawning();
+	}
 }
 function beginTripClick() {
 	startTrip();
@@ -74,39 +77,38 @@ function showItinerary() {
 	var destinationNames = itinerary.map(function(destination) {
 		return destination.id;
 	});
-	var output = destinationNames.join(", ");
 	var cancelButton = "<button class='cancelLeg' onclick='cancelButtonClick();'>x</button>"
+	var cityList = "";
+	if (itinerary.length > 0) {
+		cityList = "<p><span class='lineLabel'>Visiting:</span> " + destinationNames.join(", ") + cancelButton + "</p>";
+	}
 
 	var tripSummary;
 	if (itinerary.length > 0) {
-		tripSummary = "Trip Cost: " + getItineraryCost() + "<br>Trip Fame: " + getItineraryFame() + "<br>Carbon Impact: " + getItineraryCarbon() + "<br><br>";
+		tripSummary = "<span class='lineLabel'>Total Cost:</span> <span>$" + getItineraryCost() + "</span> <img src='../img/travel/money.png' width=21px><br><span class='lineLabel'>Fame Increase:</span> " + getItineraryFame() + " <img src='../img/travel/crown.png' width=21px><br><span class='lineLabel'>Carbon Impact:</span> " + getItineraryCarbon() + " <img src='../img/travel/CO2.png' width=25px><br><br>";
 		if (itinerary.length < minCitiesOnItinerary) {
 			var left = minCitiesOnItinerary - itinerary.length;
-			tripSummary += "Add " + left + " more destination" + (left !== 1 ? "s" : "") + " to your itinerary";
+			tripSummary += "<p id='cantBeginTrip'>Add at least " + left + " destination" + (left !== 1 ? "s" : "") + " to complete your itinerary</p>";
 		} else {
-			tripSummary += "<button id='beginTrip' onclick='beginTripClick();'>Begin Trip</button>";
+			tripSummary += "<p id='beginButton'><button id='beginTrip' onclick='beginTripClick();'>Begin Trip</button></p>";
 		}
 	} else {
-		tripSummary = "No destinations scheduled yet.";
+		tripSummary = "<p id='cantBeginTrip'>No destinations scheduled yet.</p>";
 	}
 
-	changeArea("itinerary", "<p>" + output + cancelButton + "</p><p id='tripSummary'>" + tripSummary + "</p>");
+	changeArea("itinerary", "<div id='itineraryArea'><p id='itineraryHeader'>Itinerary</p>" + cityList + "<p>" + tripSummary + "</p></div>");
 }
 
 
-function selectCity(){
-	showHeader();
-	showTravelerStats();
-	document.getElementById('choice-points').innerHTML = ("<div class='choice-point'></div>");
-
-	change_scene("canvas", "travel/europe-map.png");
-
-	// Place cities.
-	place_random_city();
-
-	// Repeat process after a delay.
+function startCitySpawning() {
 	spawnCityInterval = setInterval(place_random_city, spawnTimeInSeconds * 1000);
-
+	setTimeout(function() {
+		place_random_city();
+	}, 1000);
+}
+function stopCitySpawning() {
+	clearInterval(spawnCityInterval);
+	spawnCityInterval = null;
 }
 
 var cities = [{'id': 'Madrid', 	'x': 60, 'y':240},
@@ -182,6 +184,9 @@ function place_random_city(){
 			$(this).removeClass("tripOffer");
 			set_src(this.id, "travel/starSelected.png");
 			clearCityStats();
+			if (itinerary.length >= maxCitiesOnItinerary) {
+				stopCitySpawning();
+			}
 		}
 	});
 }
@@ -198,7 +203,7 @@ function startTrip() {
 
 	$(".tripOffer, .tripItinerary").remove();
 
-	clearInterval(spawnCityInterval);
+	stopCitySpawning();
 	startPassages("newspaper.json","Start");
 	$(".tripOffer").remove();
 	change_scene("canvas", "travel/plane-flying.gif");
@@ -213,13 +218,21 @@ function startTrip() {
 }
 
 function writeGameFrame() {
-	document.getElementById('scene-description').innerHTML = "<div id='scene-description-header'></div><div id='status'></div><div id='city-stats'></div><div id='itinerary'></div>";	
+	document.getElementById('scene-description').innerHTML = "<div id='scene-description-header'></div><div id='status'></div><div id='itinerary'></div>";	
 }
 
 function startGame(){
 	writeGameFrame();
 	itinerary = [];
-	selectCity();
+	showHeader();
+	showTravelerStats();
+	document.getElementById('choice-points').innerHTML = ("<div class='choice-point'></div>");
+
+	change_scene("canvas", "travel/europe-map.png");
+
+	// Repeat process after a delay.
+	startCitySpawning();
+	showItinerary();
 }
 
 function beginReading() {

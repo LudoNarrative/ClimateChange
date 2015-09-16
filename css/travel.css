@@ -5,8 +5,9 @@
 }
 
 #city-stats {
-  width:174px;
+  width:400px;
   padding-top: 15px;
+  font-size: 120%;
 }
 #city-stats p {
   background-color: lightgoldenrodyellow;
@@ -23,6 +24,10 @@
   padding:10px;
   line-height:38px;
   margin-top: -10px;
+}
+#city-stats li {
+  display: inline;
+  margin-right: 20px;
 }
 #city-stats li.moneyItem {
   color: red;
@@ -73,12 +78,41 @@
   margin-left: 10px;
 }
 
-#tripSummary {
-  background-color: #73778C;
-  width: 240px;
-  padding: 8px 13px;
-  margin-left: 15px;
+#itinerary {
+    width: 328px;
+    margin-left: 15px;
+    margin-top: 30px;
+    font-size: 85%;  
+}
+#itineraryArea {
+    background-color: #73778C;
+    width: 100%;
+    padding: 8px 13px;
 }
 #beginTrip {
   color: black;
+}
+#beginButton {
+  text-align: center;
+}
+
+.lineLabel {
+ color: #313131;
+    font-size: 75%;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#itineraryHeader {
+    text-decoration: underline;
+  text-align: center;
+      color: black;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 90%;
+      letter-spacing: 0.5em;
+}
+#cantBeginTrip {
+ text-align: center;
+    color: #FFD2D2;
+    font-style: italic;
 }
