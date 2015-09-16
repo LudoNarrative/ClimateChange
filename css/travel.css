@@ -44,7 +44,7 @@
   font-size: 85%;
 }
 #status {
-  outline: thin solid gray;
+  /*outline: thin solid gray;*/
   padding: 2px 7px;
   margin-top: 25px;
   width: 380px;
@@ -60,4 +60,25 @@
   display: block;
   text-align: left;
   color: #CACACA;
+}
+.cancelLeg {
+  background-color: black;
+  color: red;
+  width: 20px;
+  height: 25px;
+  padding: 0px;
+  padding-top: -5px;
+  font-size: 80%;
+  vertical-align: text-top;
+  margin-left: 10px;
+}
+
+#tripSummary {
+  background-color: #73778C;
+  width: 240px;
+  padding: 8px 13px;
+  margin-left: 15px;
+}
+#beginTrip {
+  color: black;
 }
