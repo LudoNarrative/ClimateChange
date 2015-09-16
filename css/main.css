@@ -30,6 +30,9 @@ html, body{
 	float:right;
 	cursor:pointer;
 }
+a{
+	cursor:pointer;
+}
 #canvas{
 	background-repeat:no-repeat;
 	width:400px;
