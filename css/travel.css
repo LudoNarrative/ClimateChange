@@ -1,0 +1,39 @@
+.instructionDetail {
+  font-style : italic;
+  color:gray;
+  font-size:16px;
+}
+
+#city-stats {
+  width:174px;
+  padding-top: 15px;
+}
+#city-stats p {
+  background-color: lightgoldenrodyellow;
+  color:orange;
+  border:2px solid gold;
+  padding:2px;
+  font-weight: bold;
+}
+#city-stats ul {
+  list-style-type:none;
+  border:1px solid #fff;
+  border:2px solid gray;
+  background:#ffe;
+  padding:10px;
+  line-height:38px;
+  margin-top: -10px;
+}
+#city-stats li.moneyItem {
+  color: red;
+}
+#city-stats li.fameItem {
+  color: purple;
+}
+#city-stats li.carbonItem {
+  color: black;
+}
+
+.cityStar {
+  cursor: pointer;
+}

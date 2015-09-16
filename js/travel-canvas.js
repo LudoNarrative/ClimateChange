@@ -1,12 +1,32 @@
 /*** MAIN CODE ****/
+/*global $, store, change_scene, place_object, getRandomInt, set_src, startPassages, updatePassage  */
+
+var spawnCityInterval;
+var spawnTimeInSeconds = 8;
 
 $(document).ready(function(){
-
-	selectCity();
+	startGame();
 });
 
+function changeArea(id, content) {
+	document.getElementById(id).innerHTML = content;
+}
+
+function showHeader() {
+	changeArea("scene-description-header", "Click on a city to travel there.<p class='instructionDetail'>New offers will spawn every " + spawnTimeInSeconds + " seconds.</p>");
+	changeArea("status", "<p><span style='margin:10px'><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
+}
+
+function showCityStats(cityEl) {
+	changeArea("city-stats", "<p class='round'>"+cityEl.id.toUpperCase() + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></p>" + "<ul class='round'><li class='moneyItem'>-$" + $("#"+cityEl.id).data("data").cost + "&nbsp;<img src='../img/travel/money.png' width=30px></li><li class='fameItem'>+"+$("#"+cityEl.id).data("data").fame+"&nbsp;<img src='../img/travel/crown.png' width=30px></li><li class='carbonItem'>+" + $("#"+cityEl.id).data("data").carbon + " tons <img src='../img/travel/CO2.png' width=50px></li></ul>");
+}
+
+function clearCityStats() {
+	document.getElementById('city-stats').innerHTML = "";
+}
+
 function selectCity(){
-	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
+	showHeader();
 	document.getElementById('choice-points').innerHTML = ("<div class='choice-point'></div>");
 
 	change_scene("canvas", "travel/europe-map.png");
@@ -15,16 +35,16 @@ function selectCity(){
 	place_random_city();
 
 	// Repeat process after a delay.
-	spawnCity = setInterval(place_random_city, 8000);
+	spawnCityInterval = setInterval(place_random_city, spawnTimeInSeconds * 1000);
 
 }
 
 function place_random_city(){
 	// Remove all previous nodes.
 	$(".node").remove();
+	clearCityStats();
 
 	// Clear scene description and cursor.
-	document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
 	$(this).css('cursor','auto');
 
 	// Choose new city.
@@ -46,17 +66,15 @@ function place_random_city(){
 
 	var d = document.getElementById(random_city.id);
 	d.className = "node";
-	$('#' + random_city.id).data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame});
+	$('#' + random_city.id).addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame});
 
 	// On mouseover, show city stats.
 	$('.node').mouseover(function(){
-		document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p><br><b class='round' style='background-color:lightgoldenrodyellow; color:orange; border:2px solid gold;padding:2px'>"+this.id.toUpperCase() + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></b>" + "<ul class='round' style='list-style-type:none;border:1px solid #fff; border:2px solid grey; background:#ffe;width:174px;padding:10px;line-height:38px'><li style='color:red'>-$" + $("#"+this.id).data("data").cost + "&nbsp;<img src='../img/travel/money.png' width=30px></li><li style='color:purple'>+"+$("#"+this.id).data("data").fame+"&nbsp;<img src='../img/travel/crown.png' width=30px></li><li style='color:black'>+" + $("#"+this.id).data("data").carbon + " tons <img src='../img/travel/CO2.png' width=50px></li></ul>");
-		$(this).css('cursor','pointer');
+		showCityStats(this);
 		set_src(this.id, "travel/star.png");
 	}).mouseout(function(){
-	  document.getElementById('scene-description').innerHTML = ("Click on a city to travel there.<p><i style='color:grey;font-size:16px;'>New offers will spawn every 8 seconds.</i></p><p><span style='margin:10px'><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
-	  $(this).css('cursor','auto');
-	  set_src(this.id, "travel/star-2.png");
+		clearCityStats();
+	    set_src(this.id, "travel/star-2.png");
 	});
 
 	// On click, travel to that city.
@@ -68,7 +86,7 @@ function place_random_city(){
 		store.set("current_fame",$("#"+this.id).data("data").fame);
 		store.set("num_flights",store.get("num_flights")+1);
 
-		clearInterval(spawnCity);
+		clearInterval(spawnCityInterval);
 		startPassages("newspaper.json","Start");
 		$(".node").remove();
 		change_scene("canvas", "travel/plane-flying.gif");
@@ -76,7 +94,7 @@ function place_random_city(){
 		// If user clicks, start reading article of their choice.
 		$(document).on({
 			    'click.myevent2': function () {
-			      startGame();
+			      beginReading();
 		    		$(document).off('click.myevent2', '.choice-point');
 			    }
 			}, '.choice-point');
@@ -85,39 +103,43 @@ function place_random_city(){
 }
 
 function startGame(){
+	document.getElementById('scene-description').innerHTML = "<div id='scene-description-header'></div><div id='status'></div><div id='city-stats'></div>";
+	selectCity();
+}
+
+function beginReading() {
 	// If user clicks, check if all articles have been read.
 		$(document).on({
 			    'click.myevent3': function () {
 			      checkArticlesRead();
 			    }
 			}, '.choice-point');
-
 }
 
 function checkArticlesRead(){
-	if ((store.get("readFood")||store.get("readAirport")||store.get("readSpecies")||store.get("readRefugees"))&&store.get("reading")==0){
+	if ((store.get("readFood")||store.get("readAirport")||store.get("readSpecies")||store.get("readRefugees"))&&store.get("reading")===0){
 		$(document).off('click.myevent3', '.choice-point');
-		endGame();
+		endReading();
 	}
 }
 
-function endGame(){
+function endReading(){
 	clearInterval(updatePassage);
 	change_scene("canvas", "conversation/scrubGame_chill_3.png");
 	$("#progress-bar").hide();
 	// passages["End"].render();
-	document.getElementById('scene-description').innerHTML = ("<p>You gained +" + store.get('current_fame') + " fame for attending the conference in " + store.get('player_location') + "!</p>");
+	changeArea("scene-description", "<p>You gained +" + store.get('current_fame') + " fame for attending the conference in " + store.get('player_location') + "!</p>");
 	if (store.get("num_flights") < 2){
-		document.getElementById('choice-points').innerHTML = ("<div class='choice-point' onclick='selectCity()'>Fly to your next conference.</div>");
+		changeArea("choice-points", "<div class='choice-point' onclick='startGame()'>Fly to your next conference.</div>");
 	}
 	else{
-		document.getElementById('scene-description').innerHTML += ("<p>Exhausted from traveling, you decide to fly home.</p>")
+		changeArea("scene-description", "<p>Exhausted from traveling, you decide to fly home.</p>");
 
 		// Stop updating passage.
 		clearInterval(updatePassage);
 
 		//Add choice point to point back to menu.
-		document.getElementById('choice-points').innerHTML = ("<a class='choice-point' href='../index.html'>End of Chapter Three.</a>");
+		changeArea("choice-points", "<a class='choice-point' href='../index.html'>End of Chapter Three.</a>");
 	}
 
 }
