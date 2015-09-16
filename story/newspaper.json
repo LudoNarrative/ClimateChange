@@ -29,7 +29,7 @@
 	},
 	{
 		"title": 	"airport",
-		"scene": 	["@@set readAirport to 1@@@@set reading to 1@@CLIMATE PROTESTERS SHUT DOWN AIRPORT ", "LOS ANGELES - Thousands of protesters swarmed LAX this morning, blocking two major runways and shutting down traffic at the major international air hub for six hours.", "\"Air travel is one of the biggest remaining contributors to global warming,\" a protester told reporters. \"We have to change our way of life to survive, and we can't wait any longer.\"", "The chief of police expressed sympathy with the protesters concerns, but said the proper way to change policy is through the political and legislate process. Most protesters here today, however, say it's too late to wait any longer for change."],
+		"scene": 	["@@set readAirport to 1@@@@set reading to 1@@CLIMATE PROTESTERS SHUT DOWN AIRPORT ", "LOS ANGELES - Thousands of protesters swarmed LAX this morning, blocking two major runways and shutting down traffic at the major international air hub for six hours.", "\"Air travel is one of the biggest remaining contributors to global warming,\" a protester told reporters. \"We have to change our way of life to survive, and we can't wait any longer.\"", "The chief of police expressed sympathy with the protesters concerns, but said the proper way to change policy is through the political and legislative process. Most protesters here today, however, say it's too late to wait any longer for change."],
 		"choices": 	[
 						["I'm finished reading.", "frontpage"]
 					]
