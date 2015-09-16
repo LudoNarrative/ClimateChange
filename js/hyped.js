@@ -53,26 +53,31 @@ function update_passage(passage){
   // Check if scrub percentage threshold has been met (scrubbing game).
   if (store.get("required_percent") != -1){
     if (store.get("percent") < store.get("required_percent")){
-
-    if (!showingScrubMessage) {
-
+      if (!showingScrubMessage) {
         document.getElementById("scene-description").innerHTML = "";
         document.getElementById("choice-points").innerHTML = "";
-    if (!scrubTimer) {
-      scrubTimer = setTimeout(function() {
-        document.getElementById("choice-points").innerHTML = "<span style='color:yellow'>Keep scrubbing...</span>";
-        showingScrubMessage = true;
-      }, 1500);
-    }
-    }
+        if (!scrubTimer) {
+          scrubTimer = setTimeout(function() {
+            document.getElementById("choice-points").innerHTML = "<span style='color:yellow'>Keep scrubbing...</span>";
+            set_src("stressface", "conversation/scrubGame_topdown.png");
+            showingScrubMessage = true;
+          }, 1500);
+        }
+      }
     }
     else {
-    show_passage(passage);
-    clearTimeout(scrubTimer);
-    scrubTimer = undefined;
-    showingScrubMessage = false;
-
+      show_passage(passage);
+      clearTimeout(scrubTimer);
+      scrubTimer = undefined;
+      showingScrubMessage = false;
       show_passage([new Passage(passage[0].title,scenes,passage[0].choices)]);
+
+      if (store.get("emotional") <= 0){
+        set_src("stressface", "conversation/scrubGame_chill_1.png");
+      }
+      else{
+        set_src("stressface", "conversation/scrubGame_upset_1.png");
+      }
     }
   }
   else{
@@ -252,7 +257,7 @@ function process_conditional(cond){
   while (!reachedTerminal) {
     // Determine parameter name.
     var findParam = get_var_name(rest,logicOp,true);
-    
+
     var param = findParam[0];
 
     // Determine operator.
