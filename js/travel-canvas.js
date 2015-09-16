@@ -1,8 +1,8 @@
 /*** MAIN CODE ****/
-/*global $, store, change_scene, place_object, getRandomInt, set_src, startPassages, updatePassage, getRandomIntNoRepeat */
+/*global $, store, change_scene, place_object, getRandomInt, set_src, startPassages, updatePassage, getRandomIntNoRepeat, getRandomInt */
 
 var spawnCityInterval;
-var spawnTimeInSeconds = 3;
+var spawnTimeInSeconds = 10;
 
 var minCitiesOnItinerary = 3;
 var maxCitiesOnItinerary = 3;
@@ -26,7 +26,7 @@ function showHeader() {
 }
 
 function showCityStats(cityEl) {
-	changeArea("city-stats", "<p class='round'>"+cityEl.id.toUpperCase() + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span></p>" + "<ul class='round'><li class='moneyItem'>-$" + $("#"+cityEl.id).data("data").cost + "&nbsp;<img src='../img/travel/money.png' width=30px></li><li class='fameItem'>+"+$("#"+cityEl.id).data("data").fame+"&nbsp;<img src='../img/travel/crown.png' width=30px></li><li class='carbonItem'>+" + $("#"+cityEl.id).data("data").carbon + " tons <img src='../img/travel/CO2.png' width=50px></li></ul>");
+	changeArea("city-stats", "<p class='round'>"+cityEl.id.toUpperCase() + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span><br><span class='conference'>" + $("#"+cityEl.id).data("data").conference + "</span></p>" + "<ul class='round'><li class='moneyItem'>-$" + $("#"+cityEl.id).data("data").cost + "&nbsp;<img src='../img/travel/money.png' width=30px></li><li class='fameItem'>+"+$("#"+cityEl.id).data("data").fame+"&nbsp;<img src='../img/travel/crown.png' width=30px></li><li class='carbonItem'>+" + $("#"+cityEl.id).data("data").carbon + " tons <img src='../img/travel/CO2.png' width=50px></li></ul>");
 }
 
 function clearCityStats() {
@@ -111,6 +111,47 @@ function stopCitySpawning() {
 	spawnCityInterval = null;
 }
 
+var jobTitle = ["Keynote Address", "Director", "Opening Keynote", "Plenary Address", "Closing Address", "Workshop Coordinator", "Visionary Research Award", "Featured Speaker"];
+var eventTitles = ["Conference", "Symposium", "Workshop", "Seminar", "Congress", "Summit"];
+var eventPrefixes = ["International", "European", "Interdisciplinary", "National", "Decadal", "Biennial", "Annual"];
+var ordinal = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Twelfth", "Fifteenth", "Twenty-Third", "Twenty-Fifth"];
+var topicPrefixes = ["the Future of", "the State of", "the Development of", "Sustainable"];
+var generalTopics = ["Oceanography", "Marine Sciences", "Biodiversity", "Climate Change", "Aquaculture", "Ecological and Life Sciences", "Ecosystems in Crisis", "Fisheries"];
+var shrimpTopics = ["Shrimp", "Shrimp", "Decapod Crustaceans", "Crustaceans and Molluscs"];
+var lobsterTopics = ["Lobster", "Crustaceans", "Decapoda", "Marine Arthropods"];
+var coralTopics = ["Coral Reefs", "Marine Invertebrates", "the Australian Reefs"];
+
+
+function makeConferenceName() {
+	var oneOf = function(arr) {
+		return arr[getRandomInt(1, arr.length)-1];
+	}
+	var title = oneOf(jobTitle) + ", ";
+	if (getRandomInt(1, 100) > 33) {
+		title += oneOf(ordinal) + " ";
+	}
+	if (getRandomInt(1, 100) > 50) {
+		title += oneOf(eventPrefixes) + " ";
+	}
+	title += oneOf(eventTitles) + " on ";
+	if (getRandomInt(1, 100) > 66) {
+		title += oneOf(topicPrefixes) + " ";
+	}
+	if (getRandomInt(1, 100) > 50) {
+		var career = store.get("career");
+		if (career === 0) {
+			title += oneOf(shrimpTopics) + " ";
+		} else if (career === 1) {
+			title += oneOf(lobsterTopics) + " ";
+		} else {
+			title += oneOf(coralTopics) + " ";
+		}
+	} else {
+		title += oneOf(generalTopics);
+	}
+	return title;
+}
+
 var cities = [{'id': 'Madrid', 	'x': 60, 'y':240},
 			  {'id': 'Paris', 	'x': 110, 'y':195},
 			  {'id': 'Berlin', 	'x': 170, 'y':170},
@@ -159,7 +200,7 @@ function place_random_city(){
 
 	var d = document.getElementById(random_city.id);
 	d.className = "tripOffer";
-	$('#' + random_city.id).addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame});
+	$('#' + random_city.id).addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame, conference: makeConferenceName()});
 
 	// On mouseover, show city stats.
 	$('.tripOffer').mouseover(function(){
