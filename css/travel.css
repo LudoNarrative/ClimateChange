@@ -37,3 +37,27 @@
 .cityStar {
   cursor: pointer;
 }
+
+#status-header {
+  font-weight: bold;
+  color: #FFD800;
+  font-size: 85%;
+}
+#status {
+  outline: thin solid gray;
+  padding: 2px 7px;
+  margin-top: 25px;
+  width: 380px;
+}
+#status div.statusItem {
+  display: inline-block;
+  margin-right: 10px;
+  width: 110px;
+  background-color: #1C1E2F;
+}
+#status .label {
+  font-size: 55%;
+  display: block;
+  text-align: left;
+  color: #CACACA;
+}

@@ -13,8 +13,8 @@ function changeArea(id, content) {
 }
 
 function showHeader() {
-	changeArea("scene-description-header", "Click on a city to travel there.<p class='instructionDetail'>New offers will spawn every " + spawnTimeInSeconds + " seconds.</p>");
-	changeArea("status", "<p><span style='margin:10px'><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</span><span style='margin:10px'><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</span><span style='margin:10px'><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</span></p>");
+	changeArea("scene-description-header", "Click on a city to travel there.<p class='instructionDetail'>Hover over a city to see details of that trip. New trips will spawn every " + spawnTimeInSeconds + " seconds.</p>");
+	changeArea("status", "<p id='status-header'>Emma's Current Status:</p><p><div class='statusItem'><span class='label'>Travel Funds</span><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</div><div class='statusItem'><span class='label'>Fame Level</span><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</div><div class='statusItem'><span class='label'>Carbon Footprint</span><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</div></p>");
 }
 
 function showCityStats(cityEl) {
