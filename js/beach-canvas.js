@@ -17,7 +17,12 @@ function update_stress(){
 
 $(document).ready(function(){
 	startPassages("workers.json","Start");
-	updateStress = setInterval(update_stress, 1000);
+
+	// updateStress = setInterval(update_stress, 1000);
+	$('#choice-points').on('click',function()
+	{
+		update_stress();
+	});
 
   check_end();
   checkEnd = setInterval ( check_end, 500 );
