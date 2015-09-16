@@ -72,12 +72,7 @@ function update_passage(passage){
       showingScrubMessage = false;
       show_passage([new Passage(passage[0].title,scenes,passage[0].choices)]);
 
-      if (store.get("emotional") <= 0){
-        set_src("stressface", "conversation/scrubGame_chill_1.png");
-      }
-      else{
-        set_src("stressface", "conversation/scrubGame_upset_1.png");
-      }
+      update_stress();
     }
   }
   else{
