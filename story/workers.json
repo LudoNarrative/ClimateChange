@@ -1,7 +1,7 @@
 [
 	{
 		"title": 	"Start",
-		"scene": 	["@@set optimism to 0@@@@set emotional to 0@@@@set required_percent to 0@@<span style='color:lightgreen'>Scrub away the sand to find all the crabs and advance the conversation."],
+		"scene": 	["@@set optimism to 0@@@@set emotional to 0@@@@set serious to chill@@@@set required_percent to 0@@<span style='color:lightgreen'>Scrub away the sand to find all the crabs and advance the conversation."],
 
 		"choices": 	[
 						["Okay. I'm ready to start.", "convstart"]
@@ -46,7 +46,7 @@
 	},
 	{
 		"title": 	"progMed",
-		"scene": 	["@@set required_percent to 17@@If you can call what we're doing \"progress...\""],
+		"scene": 	["@@set required_percent to 17@@@@set serious to chillsis@@If you can call what we're doing \"progress...\""],
 
 		"choices": 	[
 						["I don't follow.", "spellitout"],
@@ -55,7 +55,7 @@
 	},
 	{
 		"title": 	"progBad",
-		"scene": 	["@@set required_percent to 17@@@@decr optimism 1@@Tell me about it.", "We're taking our sweet time on my side, too. No sense killing ourselves in this heat."],
+		"scene": 	["@@set required_percent to 17@@@@decr optimism 1@@@@set serious to chillbro@@Tell me about it.", "We're taking our sweet time on my side, too. No sense killing ourselves in this heat."],
 
 		"choices": 	[
 						["I'm surprised no one's passed out yet!", "passedout"],
@@ -64,35 +64,35 @@
 	},
 	{
 		"title": 	"hydrated",
-		"scene": 	["@@decr emotional 1@@Good advice. Even if this desal water tastes like something died in it..."],
+		"scene": 	["@@decr emotional 1@@@@set serious to unchill@@Good advice. Even if this desal water tastes like something died in it..."],
 		"choices": 	[
 						["More", "pointless"]
 					]
 	},
 	{
 		"title": 	"passedout",
-		"scene": 	["@@incr emotional 1@@Don't get yourself all worked up about it.", "Look. Let me explain what's going on here."],
+		"scene": 	["@@incr emotional 1@@@@set serious to unchill@@Don't get yourself all worked up about it.", "Look. Let me explain what's going on here."],
 		"choices": 	[
 						["More", "pointless"]
 					]
 	},
 	{
 		"title": 	"dontucare",
-		"scene": 	["@@incr emotional 1@@Are you kidding me?", "Look. Let me explain something to you."],
+		"scene": 	["@@incr emotional 1@@@@set serious to unchill@@Are you kidding me?", "Look. Let me explain something to you."],
 		"choices": 	[
 						["More", "pointless"]
 					]
 	},
 	{
 		"title": 	"spellitout",
-		"scene": 	["@@decr emotional 1@@Well, let me spell it out for you, then."],
+		"scene": 	["@@decr emotional 1@@@@set serious to unchill@@Well, let me spell it out for you, then."],
 		"choices": 	[
 						["More", "pointless"]
 					]
 	},
 	{
 		"title": 	"pointless",
-		"scene": 	["@@set required_percent to 33@@You realize this whole project is pointless, right?"],
+		"scene": 	["@@set required_percent to 33@@@@set serious to unchillbro@@You realize this whole project is pointless, right?"],
 
 		"choices": 	[
 						["What do you mean?", "doomed"]
@@ -127,7 +127,7 @@
 	},
 	{
 		"title": 	"dosomething",
-		"scene": 	["@@set required_percent to 50@@@@decr optimism 1@@@@incr emotional 1@@That's what everyone says.", "I wonder why we really bother."],
+		"scene": 	["@@set required_percent to 50@@@@incr emotional 1@@That's what everyone says.", "I wonder why we really bother."],
 
 		"choices": 	[
 						["More", "nobodycares"]
@@ -135,7 +135,7 @@
 	},
 	{
 		"title": 	"itspointless",
-		"scene": 	["@@set required_percent to 50@@@@decr optimism 1@@@@decr emotional 1@@Hey man, at least it's a job. Government job, no less.", "Hard to come by these days."],
+		"scene": 	["@@set required_percent to 50@@@@decr optimism 1@@@@decr emotional 1@@@@set serious to chillbro@@Hey man, at least it's a job. Government job, no less.", "Hard to come by these days."],
 
 		"choices": 	[
 						["More", "nobodycares"]
@@ -144,7 +144,7 @@
 
 	{
 		"title": 	"nobodycares",
-		"scene": 	["@@set required_percent to 60@@@@if optimism gt 0@@Face it@@endif@@@@if optimism leq 0@@You're right, you know@@endif@@.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
+		"scene": 	["@@set required_percent to 60@@@@set serious to unchill@@@@if optimism gt 0@@Face it@@endif@@@@if optimism leq 0@@You're right, you know@@endif@@.", "No one cares about the environment. Even now.", "People are just doing this for a paycheck, to feel better about themselves. Not for some common good."],
 
 		"choices": 	[
 						["Maybe common good and personal good can be the same thing.", "forgood"],
@@ -154,7 +154,7 @@
 	},
 	{
 		"title": 	"forgood",
-		"scene": 	["@@incr optimism 1@@You really believe that, huh?"],
+		"scene": 	["@@incr optimism 1@@@@set serious to chillbro@@You really believe that, huh?"],
 
 		"choices": 	[
 						["With all my heart.", "allheart"],
@@ -163,7 +163,7 @@
 	},
 	{
 		"title": 	"allheart",
-		"scene": 	["@@incr emotional 1@@"],
+		"scene": 	["@@incr emotional 1@@@@set serious to neutral@@"],
 
 		"choices": 	[
 						["There's the shift whistle.", "outtro"]
@@ -171,7 +171,7 @@
 	},
 	{
 		"title": 	"goodtheory",
-		"scene": 	["@@decr emotional 1@@"],
+		"scene": 	["@@decr emotional 1@@@@set serious to neutral@@"],
 
 		"choices": 	[
 						["There's the shift whistle.", "outtro"]
@@ -179,7 +179,7 @@
 	},
 	{
 		"title": 	"noncommital",
-		"scene": 	[""],
+		"scene": 	["@@set serious to neutral@@"],
 
 		"choices": 	[
 						["There's the shift whistle.", "outtro"]
@@ -189,7 +189,7 @@
 
 	{
 		"title": 	"selfish",
-		"scene": 	["@@decr optimism 1@@Then in the end, I guess we all get nothing."],
+		"scene": 	["@@decr optimism 1@@@@set serious to unchill@@Then in the end, I guess we all get nothing."],
 
 		"choices": 	[
 						["There's the shift whistle.", "outtro"]
