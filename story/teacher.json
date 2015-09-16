@@ -9,7 +9,7 @@
 	},
 	{
 		"title": 	"Start",
-		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@@@if confidence gt 0@@Class has been going well so far, like you knew it would. But if you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson.@@endif@@@@if confidence leq 0@@You didn't expect teaching to be anything near so stressful. Your heart's pounding and sweat's beading on your forehead. Dr. Tennerson's here evaluating you today-- keep it together, Emma!@@endif@@", "Five more minutes. You can do this.@@set difficulty to 1@@ @@set questionsLeft to 3@@", "For the @@if career eq 0@@shrimp, Emma. For the shrimp.@@endif@@@@if career eq 1@@lobsters, Emma. For the lobsters.@@endif@@@@if career eq 2@@coral reefs, Emma. For the reefs.@@endif@@"],
+		"scene": 	["@@set calledFranklin to false@@@@set calledElika to false@@@@set calledShy to false@@@@if confidence gt 0@@Class has been going well so far, like you knew it would. But if you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson.@@endif@@@@if confidence leq 0@@You didn't expect teaching to be anything near so stressful. Your heart's pounding and sweat's beading on your forehead. Dr. Tennerson's here evaluating you today-- keep it together, Emma!@@endif@@", "Five more minutes. You can do this.@@set difficulty to 1@@ @@set questionsLeft to 3@@"],
 
 		"choices": 	[
 						["Keep Talking.", "N2"]
@@ -39,11 +39,11 @@
 
 	{
 		"title": 	"Questions",
-		"scene": 	["@@if questionsLeft leq 0@@You're almost out of time for questions.@@endif@@@@if questionsLeft eq 1@@You have time for one more question.@@endif@@@@if questionsLeft geq 2@@You have time for a few more questions.@@endif@@"],
+		"scene": 	["@@if questionsLeft leq 0@@You're out of time for questions.@@endif@@@@if questionsLeft eq 1@@You have time for one more question.@@endif@@@@if questionsLeft geq 2@@You have time for a few more questions.@@endif@@"],
 		"choices": 	[
-						["@@if calledElika eq false@@Call on Élika: she's smart and passionate.@@endif@@", "Elika1"],
-						["@@if calledFranklin eq false@@Call on Franklin, also smart but skeptical about climate change@@endif@@", "Franklin1"],
-						["@@if calledShy eq false@@A shy student in the back whose name you don't know@@endif@@", "Shy"],
+						["@@if questionsLeft geq 1 AND calledElika eq false@@Call on Élika: she's smart and passionate.@@endif@@", "Elika1"],
+						["@@if questionsLeft geq 1 AND calledFranklin eq false@@Call on Franklin, also smart but skeptical about climate change@@endif@@", "Franklin1"],
+						["@@if questionsLeft geq 1 AND calledShy eq false@@A shy student in the back whose name you don't know@@endif@@", "Shy"],
 						["@@if questionsLeft lt 1@@[Time's up.]@@endif@@", "ClassEnds"]
 					]
 	},
@@ -57,7 +57,7 @@
 	},
 	{
 		"title": "Elika2",
-		"scene": ["\"Good question, Élika. @@if score lt 40@@Um... the@@else@@The@@endif@@ reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.", "\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and@@if score lt 40@@, er, those, um, @@else@@those @@endif@@ catastrophes usually triggered mass extinctions."],
+		"scene": ["\"Good question, Élika. @@if score lt 40@@Um... the@@else@@The@@endif@@ reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.", "\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and@@if score lt 40@@, er, those, um, @@else@@ those @@endif@@ catastrophes usually triggered mass extinctions."],
 		"choices": 	[
 						["Élika looks like she has a follow-up.", "Elika3"],
 						["Call on someone else.", "Questions"]
@@ -175,7 +175,7 @@
 
 	{
 		"title": 	"ClassEnds",
-		"scene": 	["@@set update to 0@@ Soon, time's up. You remind everyone about the Friday reading, and dismiss the class. @@if score lt 40@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. @@if confidence gt 0@@Your confidence really shines through@@endif@@@@if confidence leq 0@@Your confidence is building every day.@@endif@@ I think you're going to make a wonderful professor.\"<br><br><div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma is more <span class='keyword'>academic</span></li>@@if calledFranklin eq true@@<li>Emma is more <span class='keyword'>brave</span></li>@@endif@@@@if calledFranklin eq false@@<li>Emma is more <span class='keyword'>cautious</span></li>@@endif@@</ul></div>"],
+		"scene": 	["@@set update to 0@@ You remind everyone about the Friday reading, and dismiss the class. @@if score lt 40@@You're shaking, still nervous as hell, but you made it.@@else@@You feel great-- you kept your cool together, and pulled it off.@@endif@@", "Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. @@if confidence gt 0@@Your confidence really shines through@@endif@@@@if confidence leq 0@@Your confidence is building every day.@@endif@@ I think you're going to make a wonderful professor.\"<br><br><div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma is more <span class='keyword'>academic</span></li>@@if calledFranklin eq true@@<li>Emma is more <span class='keyword'>brave</span></li>@@endif@@@@if calledFranklin eq false@@<li>Emma is more <span class='keyword'>cautious</span></li>@@endif@@</ul></div>"],
 		"choices": 	[
 						["Back to start", "Start"]
 					]
