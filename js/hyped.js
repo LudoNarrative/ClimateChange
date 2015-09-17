@@ -72,7 +72,9 @@ function update_passage(passage){
       showingScrubMessage = false;
       show_passage([new Passage(passage[0].title,scenes,passage[0].choices)]);
 
-      update_stress();
+      if (typeof update_stress !== "undefined") {
+        update_stress();
+      }
     }
   }
   else if (store.get("dishesCritical") === true) {
