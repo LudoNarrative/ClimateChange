@@ -163,7 +163,7 @@
 	},
 	{
 		"title": 	"result",
-		"scene": 	["@@set update to 0@@ <br><br><div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>@@if career eq 0@@shrimp@@endif@@@@if career eq 1@@lobster@@endif@@@@if career eq 2@@coral reefs@@endif@@</span></li>@@if confidence gt 0@@<li>Emma is more <span class='keyword'>confident</span></li>@@endif@@@@if confidence leq 0@@<li>Emma is more <span class='keyword'>cautious</span></li>@@endif@@</ul></div>"],
+		"scene": 	["@@set dishesCritical to false@@@@set update to 0@@ <br><br><div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>@@if career eq 0@@shrimp@@endif@@@@if career eq 1@@lobster@@endif@@@@if career eq 2@@coral reefs@@endif@@</span></li>@@if confidence gt 0@@<li>Emma is more <span class='keyword'>confident</span></li>@@endif@@@@if confidence leq 0@@<li>Emma is more <span class='keyword'>cautious</span></li>@@endif@@</ul></div>"],
 		"choices": 	[
 						[]
 					]

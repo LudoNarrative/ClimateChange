@@ -73,6 +73,15 @@ function getItineraryCarbon() {
 	return Math.round(carbon*10)/10;
 }
 
+var writtenForms = [null, "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+function numToWritten(num) {
+	if (writtenForms[num]) {
+		return writtenForms[num];
+	}
+	return num;
+}
+
+
 function showItinerary() {
 	var destinationNames = itinerary.map(function(destination) {
 		return destination.id;
@@ -88,7 +97,11 @@ function showItinerary() {
 		tripSummary = "<span class='lineLabel'>Total Cost:</span> <span>$" + getItineraryCost() + "</span> <img src='../img/travel/money.png' width=21px><br><span class='lineLabel'>Fame Increase:</span> " + getItineraryFame() + " <img src='../img/travel/crown.png' width=21px><br><span class='lineLabel'>Carbon Impact:</span> " + getItineraryCarbon() + " <img src='../img/travel/CO2.png' width=25px><br><br>";
 		if (itinerary.length < minCitiesOnItinerary) {
 			var left = minCitiesOnItinerary - itinerary.length;
-			tripSummary += "<p id='cantBeginTrip'>Add at least " + left + " destination" + (left !== 1 ? "s" : "") + " to complete your itinerary</p>";
+			var amountHint = "at least " + numToWritten(left);
+			if (maxCitiesOnItinerary === minCitiesOnItinerary) {
+				amountHint = numToWritten(left) + " more";
+			}
+			tripSummary += "<p id='cantBeginTrip'>Add " + amountHint + " destination" + (left !== 1 ? "s" : "") + " to complete your itinerary</p>";
 		} else {
 			tripSummary += "<p id='beginButton'><button id='beginTrip' onclick='beginTripClick();'>Begin Trip</button></p>";
 		}
@@ -294,7 +307,7 @@ function checkArticlesRead(){
 
 function endReading(){
 	clearInterval(updatePassage);
-	change_scene("canvas", "conversation/scrubGame_chill_3.png");
+	change_scene("canvas", "travel/emmaRelaxed.jpg");
 	$("#progress-bar").hide();
 	// passages["End"].render();
 	writeGameFrame();
