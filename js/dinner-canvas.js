@@ -10,13 +10,6 @@ $(document).ready(function() {
 	place_object('plate', 'dinner/plate3.png', 151, 322, 168, 99);
 	place_object('fork', 'dinner/fork.png', 310, 354, 59, 75);
 
-
-// width: 119px;
-//     z-index: 999;
-//     position: absolute;
-//     left: 350px;
-//     top: 70px;
-
 	place_div('leftZone', 0, 70, 118, 380, {z: 999});
 	$("#leftZone").click(leftSideClick);
 	place_div('centerZone', 118, 70, 232, 380, {z: 999});
