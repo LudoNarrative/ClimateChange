@@ -6,20 +6,27 @@ plateInterval = null;
 
 $(document).ready(function() {
 
-	place_object('bg', 'dinner/background.png', 0, 70, 375, 540);
-	place_object('plate', 'dinner/plate4.png', 103, 482, 168, 129);
-	place_object('fork', 'dinner/fork.png', 247, 529, 50, 75);
+	place_object('bg', 'dinner/background.png', 0, 70, 469, 351);
+	place_object('plate', 'dinner/plate3.png', 151, 322, 168, 99);
+	place_object('fork', 'dinner/fork.png', 310, 354, 59, 75);
 
-	place_div('leftZone', 0, 70, 78, 540, {z: 999});
+
+// width: 119px;
+//     z-index: 999;
+//     position: absolute;
+//     left: 350px;
+//     top: 70px;
+
+	place_div('leftZone', 0, 70, 118, 380, {z: 999});
 	$("#leftZone").click(leftSideClick);
-	place_div('centerZone', 78, 70, 212, 540, {z: 999});
+	place_div('centerZone', 118, 70, 232, 380, {z: 999});
 	$("#centerZone").click(downClick);
-	place_div('rightZone', 290, 70, 85, 540, {z: 999});
+	place_div('rightZone', 350, 70, 119, 380, {z: 999});
 	$("#rightZone").click(rightSideClick);
 
 	// This is a gross hack to clip the half-offscreen dishes to the background: put two black boxes with higher z-index on top of where the offscreen portion of the dishes show up.
-	place_div('leftClip', -190, 384, 190, 180, {z: 1000, color: "black"});
-	place_div('rightClip', 375, 384, 190, 180, {z: 1000, color: "black"});
+	place_div('leftClip', -190, 241, 190, 180, {z: 1000, color: "black"});
+	place_div('rightClip', 469, 241, 190, 180, {z: 1000, color: "black"});
 
 
 	startGame();
@@ -30,26 +37,27 @@ $(document).ready(function() {
 
 /* DINNER GAME CODE */
 
-var plateStatus = 4; // 0 (empty) to 4 (full)
-var maxPlate = 4;
+var plateStatus; // 0 (empty) to 4 (full)
+var maxPlate;
 
 var leftSide = 0; // 0 = empty, 1 = dish waiting, 2 = impatient dish waiting
 var rightSide = 0;
 var center = 0; // 0 = nothing, -1: left-bound dish, 1: right-bound dish
 var takenFromThisDish;
-var leftDishCoords = { x: -78, y: 489, w: 116, h: 60 };
-var rightDishCoords = { x: 335, y: 489, w: 116, h: 60 };
-var centerDishCoords = { x: 60, y: 390, w: 238, h: 120 };
+var leftDishCoords = { x: -78, y: 354, w: 116, h: 60 };
+var rightDishCoords = { x: 426, y: 354, w: 116, h: 60 };
+var centerDishCoords = { x: 144, y: 262, w: 190, h: 96 };
+var forkCoords = { x: 310, y: 354, w: 59, h: 75};
 
 // Show and hide the direction arrows when you're holding a dish.
 var showRightArrow = function() {
-	place_object('rightArrow', 'dinner/right.png', 330, 431, 37, 40);	
+	place_object('rightArrow', 'dinner/right.png', 340, 301, 32, 35);	
 }
 var showLeftArrow = function() {
-	place_object('leftArrow', 'dinner/left.png', 8, 431, 37, 40);
+	place_object('leftArrow', 'dinner/left.png', 98, 305, 32, 35);
 }
 var showDownArrow = function() {
-	place_object('downArrow', 'dinner/down.png', 165, 506, 25, 30);
+	place_object('downArrow', 'dinner/down.png', 227, 354, 20, 25);
 }
 var showArrows = function() {
 	if (center === 1) {
@@ -137,12 +145,12 @@ var takeFood = function() {
 var eatFood = function() {
 	if (plateStatus > 0) {
 		plateStatus -= 1;
-		$("#fork").animate({"top": 679}, 850, function() {
+		$("#fork").animate({"top": forkCoords.y + 100}, 850, function() {
 			updateFoodImage();
 			if (!takenFromThisDish && !($("#downArrow").length) && center !== 0) {
 				showDownArrow();
 			}
-			$(this).animate({"top": 529}, 850);
+			$(this).animate({"top": forkCoords.y}, 850);
 		});
 		
 	}
@@ -256,8 +264,8 @@ var plate_loop = function() {
 
 function startGame(){
 
-	plateStatus = 4; // 0 (empty) to 4 (full)
-	maxPlate = 4;
+	plateStatus = 3; // 0 (empty) to 4 (full)
+	maxPlate = 3;
 
 	leftSide = 0; // 0 = empty, 1 = dish waiting, 2 = impatient dish waiting
 	rightSide = 0;
