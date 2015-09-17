@@ -3,6 +3,7 @@
 
 var spawnCityInterval;
 var spawnTimeInSeconds = 10;
+var flashTime = 4;
 
 var minCitiesOnItinerary = 3;
 var maxCitiesOnItinerary = 3;
@@ -213,7 +214,17 @@ function place_random_city(){
 
 	var d = document.getElementById(random_city.id);
 	d.className = "tripOffer";
-	$('#' + random_city.id).addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame, conference: makeConferenceName()});
+	var $city = $('#' + random_city.id);
+	$city.addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame, conference: makeConferenceName()});
+
+	// Set up to show expire warning.
+	$("#city-stats").removeClass("expiring");
+	setTimeout(function() {
+		if ($city.hasClass("tripOffer")) {
+			$city.addClass("expiring");
+			$("#city-stats").addClass("expiring");
+		}
+	}, (spawnTimeInSeconds - flashTime) * 1000)
 
 	// On mouseover, show city stats.
 	$('.tripOffer').mouseover(function(){
@@ -233,6 +244,7 @@ function place_random_city(){
 		if (itinerary.length < maxCitiesOnItinerary) {
 			addTripLeg(this);
 			showItinerary();
+			$("#city-stats").removeClass("expiring");
 			$(this).off("click");
 			$(this).addClass("tripItinerary");
 			$(this).removeClass("tripOffer");

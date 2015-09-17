@@ -119,3 +119,13 @@
 .conference {
   font-size: 80%;
 }
+
+@-webkit-keyframes expiring {
+  0%   { opacity: 1; }
+  50%   { opacity: 0; }
+  100%   { opacity: 1; }
+}
+.expiring {
+  animation: expiring 1s infinite;
+  -webkit-animation: expiring 1s infinite;
+}
