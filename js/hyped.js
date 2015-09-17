@@ -75,6 +75,10 @@ function update_passage(passage){
       update_stress();
     }
   }
+  else if (store.get("dishesCritical") === true) {
+    document.getElementById("scene-description").innerHTML = "<span style='color:yellow'>Hey, keep the food moving, would you?</span>";
+    document.getElementById("choice-points").innerHTML = "";
+  }
   else{
     show_passage([new Passage(passage[0].title,scenes,passage[0].choices)]);
   }
