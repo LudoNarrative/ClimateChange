@@ -14,6 +14,7 @@
   * Choices: List of choices for the passage (String array).
  */
 
+
 (function() {
 
 window.Passage = function(title,scene,choices){
@@ -36,6 +37,7 @@ Passage.prototype = {
 
 scrubTimer = undefined;
 showingScrubMessage = false;
+updateAfterScrub=false;
 
 function update_passage(passage){
   // Make temporary array for choices.
@@ -61,6 +63,7 @@ function update_passage(passage){
             document.getElementById("choice-points").innerHTML = "<span style='color:yellow'>Keep scrubbing...</span>";
             set_src("stressface", "conversation/scrubGame_topdown.png");
             showingScrubMessage = true;
+            updateAfterScrub=false;
           }, 1500);
         }
       }
@@ -72,8 +75,9 @@ function update_passage(passage){
       showingScrubMessage = false;
       show_passage([new Passage(passage[0].title,scenes,passage[0].choices)]);
 
-      if (typeof update_stress !== "undefined") {
+      if (typeof update_stress !== "undefined" && !updateAfterScrub) {
         update_stress();
+        updateAfterScrub=true;
       }
     }
   }
