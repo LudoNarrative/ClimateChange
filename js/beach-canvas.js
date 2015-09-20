@@ -7,9 +7,10 @@ store.set("emotional",0);
 
 // Update stress for scrubbing game.
 function update_stress(){
+	var sfsrc = (document.getElementById("stressface").src).substring(26);
+
 	if (store.get("serious") == "chill"){
-		 set_src("stressface", "conversation/scrubGame_chill_1.png")
-		// set_src("stressface", choose_random_element(["conversation/scrubGame_chill_1.png", "conversation/scrubGame_chill_2.png", "conversation/scrubGame_chill_3.png", "conversation/scrubGame_chill_4.png"]));
+		 set_src("stressface", get_random_in_list(["conversation/scrubGame_chill_1.png", "conversation/scrubGame_chill_2.png", "conversation/scrubGame_chill_3.png", "conversation/scrubGame_chill_4.png"],sfsrc));
 	}
 	else if (store.get("serious")=="chillbro"){
 		set_src("stressface","conversation/scrubGame_chill_bro.png");
@@ -31,7 +32,6 @@ function update_stress(){
 $(document).ready(function(){
 	startPassages("workers.json","Start");
 
-	// updateStress = setInterval(update_stress, 1000);
 	$('#choice-points').on('click',function()
 	{
 		update_stress();
@@ -41,6 +41,19 @@ $(document).ready(function(){
   checkEnd = setInterval ( check_end, 500 );
 });
 
+
+function get_random_in_list(list, exception){
+	el = exception;
+	if (list.length > 1){
+		while(el==exception){
+			el = choose_random_element(list)
+		}
+	}
+	else{
+		console.log("List length too small (requires length > 1).")
+	}
+	return el;
+}
 
 function check_end(){
 
