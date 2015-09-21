@@ -19,7 +19,7 @@ function changeArea(id, content) {
 }
 
 function showTravelerStats() {
-	changeArea("status", "<p id='status-header'>Emma's Current Status:</p><p><div class='statusItem'><span class='label'>Travel Funds</span><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</div><div class='statusItem'><span class='label'>Fame Level</span><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</div><div class='statusItem'><span class='label'>Carbon Footprint</span><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+"</div></p>");
+	changeArea("status", "<p id='status-header'>Emma's Current Status:</p><p><div class='statusItem'><span class='label'>Travel Funds</span><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</div><div class='statusItem'><span class='label'>Fame Level</span><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</div><div class='statusItem'><span class='label'>Carbon Footprint</span><img src='../img/travel/CO2.png' width=40px>&nbsp;"+ store.get('player_CO2')+" tons</div></p>");
 }
 
 function showHeader() {
@@ -106,7 +106,7 @@ function showItinerary() {
 
 	var tripSummary;
 	if (itinerary.length > 0) {
-		tripSummary = "<span class='lineLabel'>Total Cost:</span> <span>$" + getItineraryCost() + "</span> <img src='../img/travel/money.png' width=21px><br><span class='lineLabel'>Fame Increase:</span> " + getItineraryFame() + " <img src='../img/travel/crown.png' width=21px><br><span class='lineLabel'>Carbon Impact:</span> " + getItineraryCarbon() + " <img src='../img/travel/CO2.png' width=25px><br><br>";
+		tripSummary = "<span class='lineLabel'>Total Cost:</span> <span>$" + getItineraryCost() + "</span> <img src='../img/travel/money.png' width=21px><br><span class='lineLabel'>Fame Increase:</span> " + getItineraryFame() + " <img src='../img/travel/crown.png' width=21px><br><span class='lineLabel'>Carbon Impact:</span> " + getItineraryCarbon() + " tons <img src='../img/travel/CO2.png' width=25px><br><br>";
 		if (itinerary.length < minCitiesOnItinerary) {
 			var left = minCitiesOnItinerary - itinerary.length;
 			var amountHint = "at least " + numToWritten(left);
