@@ -33,6 +33,10 @@
 		</div>
 
 	</div>
+	
+	<!-- Canvas element for SVG drawing. Width and Height need to be set explicitly (or use jQuery to dynamically set on browser window resize...) pointer-events: none prevents the canvas from blocking clicks on elements. -->
+	<canvas width="1200" height="1000" id="svgCanvas" style="position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;"></canvas>
+
 	<!-- JS -->
 	<script src="../js/jquery-1.11.3.min.js"></script>
 	<script src="../js/store.min.js" type="text/javascript"></script>

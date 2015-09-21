@@ -47,14 +47,25 @@ function beginTripClick() {
 	startTrip();
 }
 
-
 var itinerary = [];
 function addTripLeg(el) {
 	itinerary.push(el);
+	updateLines();
 } 
 function cancelLatestLeg() {
 	if (itinerary.length > 0) {
-		return itinerary.pop();
+		var canceledCity = itinerary.pop();
+		updateLines();
+		return canceledCity;
+	}
+}
+// Draw lines between cities on itinerary.
+function updateLines() {
+	clearCanvas();
+	for (var i = 0; i < itinerary.length; i++) {
+		if (i+1 < itinerary.length) {
+			lineBetween(itinerary[i].id, itinerary[i+1].id);
+		}
 	}
 }
 function getItineraryFame() {
@@ -245,6 +256,7 @@ function place_random_city(){
 			addTripLeg(this);
 			showItinerary();
 			$("#city-stats").removeClass("expiring");
+			$(this).removeClass("expiring");
 			$(this).off("click");
 			$(this).addClass("tripItinerary");
 			$(this).removeClass("tripOffer");
@@ -340,4 +352,47 @@ function endReading(){
 
 }
 
+/* LINE DRAWING */
+
+var canvas = $("#svgCanvas")[0]; // Assumes an element with id "canvas" in DOM
+var ctx = canvas.getContext("2d");
+var defaultLineColor = "#65e348";
+var defaultLineWidth = 3;
+
+var line = function(fromX, fromY, toX, toY, params) {
+	params = params || {}; // If params is undefined, make empty object
+	ctx.strokeStyle = params.color ? params.color : defaultLineColor;
+	ctx.lineWidth = params.width ? params.width : defaultLineWidth;
+	ctx.beginPath();
+	ctx.moveTo(fromX, fromY);
+	ctx.lineTo(toX, toY);
+	ctx.closePath();
+	ctx.stroke();
+}
+
+// Draw a line between two points, specified as either IDs or jQuery objects.
+var lineBetween = function(id1, id2, params) {
+	var dom1 = id1;
+	
+	if (typeof id1 === "string") {
+		dom1 = $("#"+id1);
+	}
+	var dom2 = id2;
+	if (typeof id2 === "string") {
+		dom2 = $("#"+id2);
+	}
+
+	var pos1 = dom1.offset();
+	var pos2 = dom2.offset();
+	var x1 = pos1.left + (dom1.width() / 2);
+	var y1 = pos1.top + (dom1.height() / 2);
+	var x2 = pos2.left + (dom2.width() / 2);
+	var y2 = pos2.top + (dom2.height() / 2);
+
+	line(x1, y1, x2, y2, params);
+}    
+
+var clearCanvas = function() {
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 
