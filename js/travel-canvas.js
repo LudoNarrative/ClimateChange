@@ -183,10 +183,12 @@ var cities = [{'id': 'Madrid', 	'x': 60, 'y':240},
 			  {'id': 'Rome', 	'x': 165, 'y':240},
 			  {'id': 'Warsaw', 	'x': 210, 'y':170},
 			  {'id': 'Moscow', 	'x': 290, 'y':110},
+			  {'id': 'Reykjavík', 'x': 60, 'y':40},
+			  {'id': 'London', 'x': 103, 'y':160}
 ];
 
 // Return a subset of "cities" excluding any city in the current itinerary.
-function getValidCity() {
+function getValidCities() {
 	var validCities = [];
 	cities.forEach(function(city) {
 		var ok = true;
@@ -212,21 +214,31 @@ function place_random_city(){
 
 	// Choose new city.
 
-	var validCities = getValidCity();
+	var validCities = getValidCities();
 
 	if (validCities.length === 0) return;
 	var pos = getRandomIntNoRepeat(1, validCities.length, "citySelection") - 1;
 	var random_city = validCities[pos];
 	place_object(random_city.id, "travel/star-2.png", random_city.x, random_city.y, 25, 25)
+	var $city = $('#' + random_city.id);
 
 	var random_cost = getRandomInt(300,1200);
-	var random_carbon = getRandomInt(0.1,5);
+	var carbon;
+	var maxCarbon = 8;
+	var approxMaxDistanceInPixels = 300;
+	if (itinerary.length > 0) {
+		var lastCity = $("#"+itinerary[itinerary.length-1].id);
+		carbon = calcDist($city, lastCity); 
+		carbon = carbon / (approxMaxDistanceInPixels / maxCarbon); // scale
+		carbon = Math.round(carbon*10)/10; // round to 1 decimal place
+	} else {
+		carbon = getRandomInt(0.1, maxCarbon/2);
+	}
 	var random_fame = getRandomInt(25,300);
 
 	var d = document.getElementById(random_city.id);
 	d.className = "tripOffer";
-	var $city = $('#' + random_city.id);
-	$city.addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: random_carbon, fame: random_fame, conference: makeConferenceName()});
+	$city.addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: carbon, fame: random_fame, conference: makeConferenceName()});
 
 	// Set up to show expire warning.
 	$("#city-stats").removeClass("expiring");
@@ -369,6 +381,17 @@ var line = function(fromX, fromY, toX, toY, params) {
 	ctx.closePath();
 	ctx.stroke();
 }
+
+// Only works on jQuery objects.
+function calcDist(point1, point2) {
+	var pos1 = point1.offset();
+	var pos2 = point2.offset();
+	var x = pos2.left - pos1.left;
+	var y = pos2.top - pos1.top;
+	var dist = Math.sqrt(x*x + y*y);
+	return dist;
+}
+
 
 // Draw a line between two points, specified as either IDs or jQuery objects.
 var lineBetween = function(id1, id2, params) {
