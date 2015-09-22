@@ -18,7 +18,7 @@ $(document).ready(function() {
 	$("#rightZone").click(rightSideClick);
 
 	// This is a gross hack to clip the half-offscreen dishes to the background: put two black boxes with higher z-index on top of where the offscreen portion of the dishes show up.
-	place_div('leftClip', -190, 241, 190, 180, {z: 1000, color: "black"});
+	place_div('leftClip', -190, 261, 190, 160, {z: 1000, color: "black"});
 	place_div('rightClip', 469, 241, 190, 180, {z: 1000, color: "black"});
 
 
