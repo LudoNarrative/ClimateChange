@@ -290,6 +290,7 @@ function startTrip() {
 	store.set("player_CO2",newCarbon);
 	store.set("current_fame",getItineraryFame());
 	store.set("num_flights",store.get("num_flights")+1);
+	clearCanvas();
 
 	$(".tripOffer, .tripItinerary").remove();
 
