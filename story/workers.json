@@ -36,7 +36,7 @@
 	},
 	{
 		"title": 	"progGood",
-		"scene": 	["@@set required_percent to 17@@@@incr optimism 1@@Well, goody for you.", "We're taking our sweet time on my side. No sense killing ourselves in this heat."],
+		"scene": 	["@@set required_percent to 17@@@@incr optimism 1@@@@set serious to chillsis@@Well, goody for you.", "We're taking our sweet time on my side. No sense killing ourselves in this heat."],
 
 		"choices": 	[
 						["Stay hydrated.", "hydrated"],
@@ -92,7 +92,7 @@
 	},
 	{
 		"title": 	"pointless",
-		"scene": 	["@@set required_percent to 33@@@@set serious to unchillbro@@You realize this whole project is pointless, right?"],
+		"scene": 	["@@set required_percent to 33@@@@set serious to unchill@@You realize this whole project is pointless, right?"],
 
 		"choices": 	[
 						["What do you mean?", "doomed"]
