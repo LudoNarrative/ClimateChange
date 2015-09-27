@@ -51,7 +51,7 @@ var itinerary = [];
 function addTripLeg(el) {
 	itinerary.push(el);
 	updateLines();
-} 
+}
 function cancelLatestLeg() {
 	if (itinerary.length > 0) {
 		var canceledCity = itinerary.pop();
@@ -228,7 +228,7 @@ function place_random_city(){
 	var approxMaxDistanceInPixels = 300;
 	if (itinerary.length > 0) {
 		var lastCity = $("#"+itinerary[itinerary.length-1].id);
-		carbon = calcDist($city, lastCity); 
+		carbon = calcDist($city, lastCity);
 		carbon = carbon / (approxMaxDistanceInPixels / maxCarbon); // scale
 		carbon = Math.round(carbon*10)/10; // round to 1 decimal place
 	} else {
@@ -241,11 +241,9 @@ function place_random_city(){
 	$city.addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: carbon, fame: random_fame, conference: makeConferenceName()});
 
 	// Set up to show expire warning.
-	$("#city-stats").removeClass("expiring");
 	setTimeout(function() {
 		if ($city.hasClass("tripOffer")) {
 			$city.addClass("expiring");
-			$("#city-stats").addClass("expiring");
 		}
 	}, (spawnTimeInSeconds - flashTime) * 1000)
 
@@ -309,7 +307,7 @@ function startTrip() {
 }
 
 function writeGameFrame() {
-	document.getElementById('scene-description').innerHTML = "<div id='scene-description-header'></div><div id='status'></div><div id='itinerary'></div>";	
+	document.getElementById('scene-description').innerHTML = "<div id='scene-description-header'></div><div id='status'></div><div id='itinerary'></div>";
 }
 
 function startGame(){
@@ -397,7 +395,7 @@ function calcDist(point1, point2) {
 // Draw a line between two points, specified as either IDs or jQuery objects.
 var lineBetween = function(id1, id2, params) {
 	var dom1 = id1;
-	
+
 	if (typeof id1 === "string") {
 		dom1 = $("#"+id1);
 	}
@@ -414,7 +412,7 @@ var lineBetween = function(id1, id2, params) {
 	var y2 = pos2.top + (dom2.height() / 2);
 
 	line(x1, y1, x2, y2, params);
-}    
+}
 
 var clearCanvas = function() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
