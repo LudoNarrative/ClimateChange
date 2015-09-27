@@ -15,9 +15,6 @@ function update_stress(){
 	else if (store.get("serious")=="chillbro"){
 		set_src("stressface","conversation/scrubGame_chill_bro.png");
 	}
-	else if (store.get("serious")=="unchillbro"){ // super unchill bro!  he sad.
-		set_src("stressface","conversation/scrubGame_serious_2.png");
-	}
 	else if (store.get("serious")=="chillsis"){
 		set_src("stressface","conversation/scrubGame_chill_sis.png");
 	}
@@ -25,7 +22,7 @@ function update_stress(){
 		set_src("stressface","conversation/scrubGame_neutral.png");
 	}
 	else{ // "unchill"
-		set_src("stressface", "conversation/scrubGame_serious.png");
+		set_src("stressface", get_random_in_list(["conversation/scrubGame_serious.png", "conversation/scrubGame_serious_2.png", "conversation/scrubGame_serious_3.png", "conversation/scrubGame_serious_4.png"],sfsrc));
 	}
 }
 
