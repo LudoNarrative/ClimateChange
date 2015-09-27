@@ -53,12 +53,12 @@
   /*outline: thin solid gray;*/
   padding: 2px 7px;
   margin-top: 25px;
-  width: 380px;
+  width: 500px;
 }
 #status div.statusItem {
   display: inline-block;
   margin-right: 10px;
-  width: 110px;
+  width: 140px;
   background-color: #1C1E2F;
 }
 #status .label {
@@ -83,7 +83,7 @@
     width: 328px;
     margin-left: 15px;
     margin-top: 30px;
-    font-size: 85%;  
+    font-size: 85%;
 }
 #itineraryArea {
     background-color: #73778C;
