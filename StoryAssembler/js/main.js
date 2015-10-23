@@ -3,6 +3,7 @@
 requirejs.config({
 	paths: {
 		"domReady": "../lib/domReady",
+		"text": "../lib/text",
 		"Display": "Display"
 	}
 });
