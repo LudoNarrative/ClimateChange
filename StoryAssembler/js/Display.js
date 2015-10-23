@@ -5,7 +5,7 @@
 
 /* global define */
 
-define([], function() {
+define(["text!../data/sampleChoiceFrame.json"], function(sampleChoiceFrame) {
 	"use strict";
 
 	/* PRIVATE FUNCTIONS AND VARIABLES */
@@ -50,12 +50,17 @@ define([], function() {
 	}
 
 	var showFrame = function() {
-		// Test this
 		clearAll();
-		addStoryChunk("First sentence of a story. ");
-		addStoryChunk("Second sentence of a story. ");
-		addChoice("Option #1");
-		addChoice("Option #2");
+
+		var frame = JSON.parse(sampleChoiceFrame);
+
+		frame.chunks.forEach(function(chunk) {
+			addStoryChunk(chunk.text);
+		});
+
+		frame.choices.forEach(function(choice) {
+			addChoice(choice.text);
+		});
 
 	}
 

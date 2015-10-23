@@ -1,0 +1,23 @@
+{
+	"id": "sampleChoiceFrame",
+	"chunks": [
+		{
+			"text": "This is the first example sentence."
+		},
+		{
+			"text": "This is the second example sentence."
+		}
+	],
+	"choices": [
+		{
+			"text": "Option #1",
+			"effects": [],
+			"responseFrame": "someResponseFrame"
+		},
+		{
+			"text": "Option #2",
+			"effects": [],
+			"responseFrame": "differentResponseFrame"
+		}
+	]
+}
