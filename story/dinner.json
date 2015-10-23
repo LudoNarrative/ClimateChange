@@ -48,7 +48,7 @@
 	},
 	{
 		"title": 	"regrets",
-		"scene": 	["@@decr confidence 1@@Oh, come on. Don't beat yourself up. I'm <i>pretty sure</i> you made the right decision.", "Tomorrow you'll be Dr. Emma Richards, marine biologist. And I'll just be some chick who ate too much <i>cocido</i>."],
+		"scene": 	["@@decr confidence 1@@Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision.", "Tomorrow you'll be Dr. Emma Richards, marine biologist. And I'll just be some chick who ate too much <i>cocido</i>."],
 		"choices": 	[
 						["Well, maybe...", "loveocean"]
 					]
