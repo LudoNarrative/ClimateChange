@@ -22,6 +22,7 @@ store.set("player_location", "Santa Cruz");   // Player's current location.
 store.set("player_funds", 50000);              // Player's current funds.
 store.set("max_flights", 2);                  // How many times you can travel.
 store.set("num_flights", 0);                  // How many times the player has already traveled.
+store.set("dishesCritical", false);
 
 spawnCity = null;
 checkEnd = null;
