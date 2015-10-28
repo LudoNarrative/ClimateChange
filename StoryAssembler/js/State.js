@@ -18,6 +18,52 @@ define([], function() {
 		blackboard[key] = value;
 	}
 
+	/* Currently handles PARAM op VALUE, true, or false
+	op can be eq, geq, leq, gt, lt
+	*/
+	var isTrue = function(condition) {
+		condition = "" + condition; // coerce to string
+		var conditionParts = condition.replace(/\s\s+/g, " ").split(" ");
+		if (conditionParts.length !== 3) {
+			if (conditionParts[0] === "true") {
+				return true;
+			} else if (conditionParts[0] === "false") {
+				return false;
+			} else {
+				throw new Error("Expected condition in the form 'PARAM OP VALUE' but saw '" + condition + "' which seems to have " + conditionParts.length + " parts.");
+			}
+		}
+		var param = conditionParts[0];
+		var op = conditionParts[1].toLowerCase();
+		var value = conditionParts[2];
+		if (value === "true") value = true;
+		if (value === "false") value = false;
+		console.log("param, op, value", param, op, value);
+
+		var valOfParam = get(param);
+		if (op !== "eq" && isNaN(parseFloat(valOfParam))) {
+			throw new Error("Tried to perform op '" + op + "' on param '" + param + "' (" + valOfParam + ") but that does not appear to be a number.");
+		}
+		switch(op) {
+			case "eq":
+				console.log("valOfParam, typeof valOfParam, value, typeof value", valOfParam, typeof valOfParam, value, typeof value);
+				return valOfParam == value;
+			case "geq":
+			case "gte":
+				return valOfParam >= value;
+			case "leq":
+			case "lte":
+				return valOfParam <= value;
+			case "gt":
+				return valOfParam > value;
+			case "lt":
+				return valOfParam < value;
+			default:
+				throw new Error("Found invalid op '" + op + "' in condition '" + condition + "' (valid ops are: eq, geq, leq, gt, lt)");
+
+		}
+	}
+
 	/*
 	 * Makes a change to the state based on a recognized command.
 	 *
@@ -83,6 +129,7 @@ define([], function() {
 	return {
 		get: get,
 		set: set,
-		change: change
+		change: change,
+		isTrue: isTrue
 	}
 });
