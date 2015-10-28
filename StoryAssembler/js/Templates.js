@@ -62,29 +62,35 @@ define(["underscore", "util", "text!../data/SceneTemplates.json", "text!../data/
 		return plan;
 	}
 
-	var toScenePlan = function() {
-		return toPlan(this, "frames");
+	var makeMissing = function(id, field) {
+		var missingItem = {};
+		if (field === "chunks") {
+			missingItem.text =  "(" + id + ")";
+		} else if (field === "frames") {
+			missingItem.id = "MissingFrameTemplate";
+		}
+		return missingItem;
 	}
 
-	var toFramePlan = function() {
-		return toPlan(this, "chunks");
+	var loadTemplate = function(id, templateSource, itemField) {
+		var template = templateSource[id];
+		if (!template || !template[itemField]) {
+			template = {};
+			template[itemField] = [];
+			template[itemField].push(makeMissing(id, itemField));
+		}
+		template.toPlan = function() {
+			return toPlan(this, itemField);
+		};
+		return template;
 	}
 
 	var loadFrame = function(id) {
-		var template = frameTemplates[id];
-		if (!template || !template.chunks) {
-			template = {};
-			template.chunks = [];
-			template.chunks.push({"text": "(" + id + ")"});
-		}
-		template.toPlan = toFramePlan;
-		return template;
+		return loadTemplate(id, frameTemplates, "chunks");
 	}
 
 	var loadScene = function(id) {
-		var template = sceneTemplates[id];
-		template.toPlan = toScenePlan;
-		return template;
+		return loadTemplate(id, sceneTemplates, "frames");
 	}
 
 	return {
