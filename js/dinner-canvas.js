@@ -17,6 +17,8 @@ $(document).ready(function() {
 	place_div('rightZone', 350, 70, 119, 380, {z: 999});
 	$("#rightZone").click(rightSideClick);
 
+	document.onkeydown = checkKey;
+
 	// This is a gross hack to clip the half-offscreen dishes to the background: put two black boxes with higher z-index on top of where the offscreen portion of the dishes show up.
 	place_div('leftClip', -190, 261, 190, 160, {z: 1000, color: "black"});
 	place_div('rightClip', 469, 241, 190, 180, {z: 1000, color: "black"});
@@ -42,9 +44,24 @@ var rightDishCoords = { x: 426, y: 354, w: 116, h: 60 };
 var centerDishCoords = { x: 144, y: 262, w: 190, h: 96 };
 var forkCoords = { x: 310, y: 354, w: 59, h: 75};
 
+// If the player uses the arrow keys to play.
+function checkKey(e) {
+    e = e || window.event;
+    if (e.keyCode == '40') {		// down arrow
+    	downClick();
+    }
+    else if (e.keyCode == '37') {		// left arrow
+    	leftSideClick();
+    }
+    else if (e.keyCode == '39') {		// right arrow
+    	rightSideClick();
+    }
+
+}
+
 // Show and hide the direction arrows when you're holding a dish.
 var showRightArrow = function() {
-	place_object('rightArrow', 'dinner/right.png', 340, 301, 32, 35);	
+	place_object('rightArrow', 'dinner/right.png', 340, 301, 32, 35);
 }
 var showLeftArrow = function() {
 	place_object('leftArrow', 'dinner/left.png', 98, 305, 32, 35);
@@ -145,7 +162,7 @@ var eatFood = function() {
 			}
 			$(this).animate({"top": forkCoords.y}, 850);
 		});
-		
+
 	}
 }
 

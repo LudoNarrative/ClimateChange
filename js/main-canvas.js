@@ -19,9 +19,10 @@ store.set("current_fame",0);                  // How much fame the player is goi
 store.set("player_CO2",0);                    // The player's carbon footprint.
 store.set("player_time", 14);                 // How much time (in days) the player has to spend at conferences.
 store.set("player_location", "Santa Cruz");   // Player's current location.
-store.set("player_funds", 3000);              // Player's current funds.
+store.set("player_funds", 50000);              // Player's current funds.
 store.set("max_flights", 2);                  // How many times you can travel.
 store.set("num_flights", 0);                  // How many times the player has already traveled.
+store.set("dishesCritical", false);
 
 spawnCity = null;
 checkEnd = null;

@@ -144,7 +144,7 @@ var topicPrefixes = ["the Future of", "the State of", "the Development of", "Sus
 var generalTopics = ["Oceanography", "Marine Sciences", "Biodiversity", "Climate Change", "Aquaculture", "Ecological and Life Sciences", "Ecosystems in Crisis", "Fisheries"];
 var shrimpTopics = ["Shrimp", "Shrimp", "Decapod Crustaceans", "Crustaceans and Molluscs"];
 var lobsterTopics = ["Lobster", "Crustaceans", "Decapoda", "Marine Arthropods"];
-var coralTopics = ["Coral Reefs", "Marine Invertebrates", "the Australian Reefs"];
+var coralTopics = ["Coral Reefs", "Marine Invertebrates", "Australian Reefs"];
 
 
 function makeConferenceName() {
