@@ -48,14 +48,19 @@ define(["underscore", "util", "text!../data/SceneTemplates.json", "text!../data/
 		return steps;
 	}
 
+	var reifyTemplate = function(originalField) {
+		var finalField = util.clone(originalField);
+		finalField = sortByOrder(finalField);
+		finalField = evaluateConditions(finalField);
+		return finalField;
+	}
+
 	var toPlan = function(template, field) {
 		console.assert(util.isArray(template[field]), "Scene templates must have a '" + field + "' array.");
 		var plan = {};
-		plan[field] = util.clone(template[field]);
-		plan[field] = sortByOrder(plan[field]);
-		plan[field] = evaluateConditions(plan[field]);
+		plan[field] = reifyTemplate(template[field]);
 		if (field === "chunks") {
-			plan.choices = template.choices;
+			plan.choices = reifyTemplate(template.choices);
 		} else if (template.choices) {
 			throw new Error("Choices can only appear in a Frame plan, not a Scene plan.");
 		}
