@@ -1,0 +1,44 @@
+{
+	"EstablishCareer": {
+		"chunkRequests": [
+			{
+				"text": "So, what's your speciality?"
+			}
+		],
+		"choices": [
+			{
+				"text": "Lobsters.",
+				"responseFrame": "RespondToLobsters"
+			},
+			{
+				"text": "Coral reefs.",
+				"responseFrame": "RespondToCoral"
+			},
+			{
+				"text": "Kelp.",
+				"responseFrame": "RespondToKelp"
+			}
+		]
+	},
+	"RespondToLobsters": {
+		"chunkRequests": [
+			{
+				"text": "Oh, cool! I love lobsters."
+			}
+		]
+	},
+	"RespondToCoral": {
+		"chunkRequests": [
+			{
+				"text": "That's awesome. Coral reefs are the best!"
+			}
+		]
+	},
+	"RespondToKelp": {
+		"chunkRequests": [
+			{
+				"text": "Kelp is groovy."
+			}
+		]
+	}
+}
