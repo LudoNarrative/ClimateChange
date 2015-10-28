@@ -2,12 +2,18 @@
 	"EstablishCareer": {
 		"chunks": [
 			{
-				"text": "So, what's your speciality?"
+				"text": "So, what's your speciality?",
+				"conditions": [true, true],
+				"order": "last"
+			},
+			{
+				"text": "I heard you're a scientist."
 			}
 		],
 		"choices": [
 			{
 				"text": "Lobsters.",
+				"conditions": [true, true],
 				"responseFrame": "RespondToLobsters"
 			},
 			{
