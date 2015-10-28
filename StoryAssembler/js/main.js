@@ -8,9 +8,11 @@ requirejs.config({
 	}
 });
 
-requirejs(["Display", "domReady!"], function(Display) {
+requirejs(["Display", "text!../data/sampleChoiceFrame.json", "domReady!"], function(Display, sampleChoiceFrame) {
 	console.log("main.js loaded.");
 
+	var frame = JSON.parse(sampleChoiceFrame);	
+
 	Display.init();
-	Display.showFrame();
+	Display.showFrame(frame);
 });

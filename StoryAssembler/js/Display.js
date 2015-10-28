@@ -5,7 +5,7 @@
 
 /* global define */
 
-define(["text!../data/sampleChoiceFrame.json"], function(sampleChoiceFrame) {
+define([], function(sampleChoiceFrame) {
 	"use strict";
 
 	/* PRIVATE FUNCTIONS AND VARIABLES */
@@ -49,10 +49,8 @@ define(["text!../data/sampleChoiceFrame.json"], function(sampleChoiceFrame) {
 		document.getElementById("choiceArea").innerHTML = "";
 	}
 
-	var showFrame = function() {
+	var showFrame = function(frame) {
 		clearAll();
-
-		var frame = JSON.parse(sampleChoiceFrame);
 
 		frame.chunks.forEach(function(chunk) {
 			addStoryChunk(chunk.text);
