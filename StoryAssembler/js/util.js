@@ -1,4 +1,5 @@
-
+/* 	Utility Functions
+*/
 /* global define, toString */
 
 define([], function() {
@@ -50,6 +51,7 @@ define([], function() {
 	    throw new Error("Unable to copy obj! Its type isn't supported.");
 	}
 
+	// PUBLIC INTERFACE
 	return {
 		isArray: isArray,
 		clone: clone
