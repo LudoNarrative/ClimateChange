@@ -4,7 +4,7 @@
 
 /* global define */
 
-define(["underscore", "util", "text!../data/SceneTemplates.json", "text!../data/FrameTemplates.json"], function(underscore, util, SceneTemplates, FrameTemplates) {
+define(["underscore", "util", "State", "text!../data/SceneTemplates.json", "text!../data/FrameTemplates.json"], function(underscore, util, State, SceneTemplates, FrameTemplates) {
 	"use strict";
 
 	// Immediately load and parse external files when the module is loaded.
@@ -68,7 +68,7 @@ define(["underscore", "util", "text!../data/SceneTemplates.json", "text!../data/
 		items.forEach(function(item) {
 			if (item.conditions) {
 				for (var i = 0; i < item.conditions.length; i++) {
-					var conditionIsTrue = testCondition(item.conditions[i]);
+					var conditionIsTrue = State.isTrue(item.conditions[i]);
 					if (!conditionIsTrue) return; // continue to next item
 				}
 			}
@@ -76,11 +76,6 @@ define(["underscore", "util", "text!../data/SceneTemplates.json", "text!../data/
 			returnItems.push(util.clone(item));
 		});
 		return returnItems;
-	}
-
-	// Stub for evaluating a single condition: right now, handles only true/false.
-	var testCondition = function(condition) {
-		return condition;
 	}
 
 	// When given an array of objects with a "order" key, sorts them such that any values of "first" happen at the beginning, "last" happen at the end, and any omitted order becomes 0.
