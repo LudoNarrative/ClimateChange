@@ -1,6 +1,6 @@
 {
 	"EstablishCareer": {
-		"chunkRequests": [
+		"chunks": [
 			{
 				"text": "So, what's your speciality?"
 			}
@@ -21,14 +21,14 @@
 		]
 	},
 	"RespondToLobsters": {
-		"chunkRequests": [
+		"chunks": [
 			{
 				"text": "Oh, cool! I love lobsters."
 			}
 		]
 	},
 	"RespondToCoral": {
-		"chunkRequests": [
+		"chunks": [
 			{
 				"text": "That's awesome."
 			},
@@ -38,7 +38,7 @@
 		]
 	},
 	"RespondToKelp": {
-		"chunkRequests": [
+		"chunks": [
 			{
 				"text": "Kelp is groovy."
 			}
