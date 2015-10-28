@@ -30,7 +30,10 @@
 	"RespondToCoral": {
 		"chunkRequests": [
 			{
-				"text": "That's awesome. Coral reefs are the best!"
+				"text": "That's awesome."
+			},
+			{
+				"text": "Coral reefs are the best!"
 			}
 		]
 	},
