@@ -51,7 +51,11 @@ define([], function() {
 
 	// Set up the Display module to begin showing stories.
 	var init = function() {
-		makeUI();
+		if (!document.getElementById("storyArea")) {
+			makeUI();
+		} else {
+			clearAll();
+		}
 	}
 
 	// Remove all content from the UI.
@@ -60,8 +64,10 @@ define([], function() {
 		document.getElementById("choiceArea").innerHTML = "";
 	}
 
-	var addStory = function(chunk) {
-		addStoryChunk(chunk.text);
+	var showChunks = function(chunks) {
+		chunks.forEach(function(chunk) {
+			addStoryChunk(chunk.text);
+		})
 	}
 
 	var showChoices = function(choices, _clickHandler) {
@@ -74,7 +80,7 @@ define([], function() {
 	return {
 		init: init,
 		clearAll: clearAll,
-		addStory: addStory,
+		showChunks: showChunks,
 		showChoices: showChoices
 	}
 })
