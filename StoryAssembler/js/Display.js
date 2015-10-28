@@ -30,9 +30,9 @@ define([], function() {
 		document.getElementsByTagName('body')[0].appendChild(el);
 	}
 
-	// Add a "chunk" of story to the story window.
-	var addStoryChunk = function(chunkContent) {
-		var el = makeEl("span", chunkContent);
+	// Add some story text to the story window.
+	var addStoryText = function(text) {
+		var el = makeEl("span", text);
 		el.classList.add("chunk");
 		document.getElementById("storyArea").appendChild(el);
 	}
@@ -65,10 +65,7 @@ define([], function() {
 		document.getElementById("choiceArea").innerHTML = "";
 	}
 
-	var addStoryText = function(text) {
-		addStoryChunk(text);
-	}
-
+	// PUBLIC INTERFACE
 	return {
 		init: init,
 		clearAll: clearAll,
