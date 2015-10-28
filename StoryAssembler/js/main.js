@@ -12,7 +12,8 @@ requirejs.config({
 		"StoryAssembler": "StoryAssembler",
 		"Display": "Display",
 		"Templates": "Templates",
-		"Chunks": "Chunks"
+		"Chunks": "Chunks",
+		"State": "State"
 	}
 });
 
