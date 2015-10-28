@@ -1,4 +1,4 @@
-/* 	Display Module
+/* 	Templates Module
 
 	This module handles showing stories in the UI, and responding to user events.
 */
