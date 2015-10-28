@@ -38,11 +38,11 @@ define([], function() {
 	}
 
 	// Add a choice to the choice window.
-	var addChoice = function(choiceText, responseFrame) {
-		var el = makeEl("div", choiceText);
+	var addChoice = function(choice) {
+		var el = makeEl("div", choice.text);
 		el.classList.add("choice");
 		el.onclick = function() {
-			clickHandler(responseFrame);
+			clickHandler(choice.responseFrame);
 		}
 		document.getElementById("choiceArea").appendChild(el);
 	}
@@ -50,7 +50,8 @@ define([], function() {
 	/* PUBLIC-FACING FUNCTIONS */
 
 	// Set up the Display module to begin showing stories.
-	var init = function() {
+	var init = function(_clickHandler) {
+		clickHandler = _clickHandler;
 		if (!document.getElementById("storyArea")) {
 			makeUI();
 		} else {
@@ -64,23 +65,14 @@ define([], function() {
 		document.getElementById("choiceArea").innerHTML = "";
 	}
 
-	var showChunks = function(chunks) {
-		chunks.forEach(function(chunk) {
-			addStoryChunk(chunk.text);
-		})
-	}
-
-	var showChoices = function(choices, _clickHandler) {
-		clickHandler = _clickHandler;
-		choices.forEach(function(choice) {
-			addChoice(choice.text, choice.responseFrame);
-		});
+	var addStoryText = function(text) {
+		addStoryChunk(text);
 	}
 
 	return {
 		init: init,
 		clearAll: clearAll,
-		showChunks: showChunks,
-		showChoices: showChoices
+		addStoryText: addStoryText,
+		addChoice: addChoice
 	}
 })

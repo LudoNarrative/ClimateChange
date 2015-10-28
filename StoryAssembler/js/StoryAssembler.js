@@ -5,7 +5,7 @@ Handles the core loop of running a StoryAssembler story.
 
 /* global define */
 
-define(["Display", "Templates"], function(Display, Templates) {
+define(["Display", "Templates", "Chunks"], function(Display, Templates, Chunks) {
 	"use strict";
 
 	var scenePosition = 0;
@@ -15,7 +15,7 @@ define(["Display", "Templates"], function(Display, Templates) {
 	// Begins running a scene with the given ID.
 	var beginScene = function(sceneId) {
 		scenePosition = 0;
-		Display.init();
+		Display.init(handleSelection);
 		sceneTemplate = Templates.loadScene(sceneId);
 		scenePlan = sceneTemplate.toPlan();
 		doNextFrame();
@@ -36,9 +36,15 @@ define(["Display", "Templates"], function(Display, Templates) {
 	var processFrame = function(frameId) {
 		var frameTemplate = Templates.loadFrame(frameId);
 		var framePlan = frameTemplate.toPlan();
-		Display.showChunks(framePlan.chunks);
+		framePlan.chunks.forEach(function(chunk) {
+			var renderedChunk = Chunks.render(chunk);
+			Display.addStoryText(renderedChunk);
+		})
 		if (framePlan.choices) {
-			Display.showChoices(framePlan.choices, handleSelection);
+			framePlan.choices.forEach(function(choice) {
+				var renderedChoice = choice;
+				Display.addChoice(renderedChoice);
+			});
 		}
 	}
 
@@ -51,7 +57,7 @@ define(["Display", "Templates"], function(Display, Templates) {
 
 	// Show an indicator that the scene is over.
 	var endScene = function() {
-		Display.showChunks([{"text": "End of scene!"}]);
+		Display.addStoryText("End of scene!");
 	}
 
 	// PUBLIC INTERFACE
