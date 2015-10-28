@@ -48,35 +48,34 @@ define(["underscore", "util", "text!../data/SceneTemplates.json", "text!../data/
 		return steps;
 	}
 
-	var toScenePlan = function() {
-		console.log("this", this);
-		console.assert(util.isArray(this.frames), "Scene templates must have a 'frames' array.");
+	var toPlan = function(template, field) {
+		console.assert(util.isArray(template[field]), "Scene templates must have a '" + field + "' array.");
 		var plan = {};
-		plan.name = this.name;
-		plan.frames = util.clone(this.frames);
-		plan.frames = sortByOrder(plan.frames);
-		plan.frames = evaluateConditions(plan.frames);
+		plan[field] = util.clone(template[field]);
+		plan[field] = sortByOrder(plan[field]);
+		plan[field] = evaluateConditions(plan[field]);
+		if (field === "chunks") {
+			plan.choices = template.choices;
+		} else if (template.choices) {
+			throw new Error("Choices can only appear in a Frame plan, not a Scene plan.");
+		}
 		return plan;
 	}
 
+	var toScenePlan = function() {
+		return toPlan(this, "frames");
+	}
+
 	var toFramePlan = function() {
-		console.log("this", this);
-		console.assert(util.isArray(this.chunkRequests), "Frame templates must have a 'chunkRequests' array.");
-		var plan = {};
-		// plan.name = this.name;
-		plan.chunks = util.clone(this.chunkRequests);
-		plan.chunks = sortByOrder(plan.chunks);
-		plan.chunks = evaluateConditions(plan.chunks);
-		plan.choices = this.choices;
-		return plan;
+		return toPlan(this, "chunks");
 	}
 
 	var loadFrame = function(id) {
 		var template = frameTemplates[id];
-		if (!template || !template.chunkRequests) {
+		if (!template || !template.chunks) {
 			template = {};
-			template.chunkRequests = [];
-			template.chunkRequests.push({"text": "(" + id + ")"});
+			template.chunks = [];
+			template.chunks.push({"text": "(" + id + ")"});
 		}
 		template.toPlan = toFramePlan;
 		return template;
