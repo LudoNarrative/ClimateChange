@@ -42,7 +42,7 @@ define([], function() {
 		var el = makeEl("div", choice.text);
 		el.classList.add("choice");
 		el.onclick = function() {
-			clickHandler(choice.responseFrame);
+			clickHandler(choice);
 		}
 		document.getElementById("choiceArea").appendChild(el);
 	}

@@ -5,7 +5,7 @@ Handles the core loop of running a StoryAssembler story.
 
 /* global define */
 
-define(["Display", "Templates", "Chunks"], function(Display, Templates, Chunks) {
+define(["Display", "Templates", "Chunks", "State"], function(Display, Templates, Chunks, State) {
 	"use strict";
 
 	var scenePosition = 0;
@@ -49,9 +49,16 @@ define(["Display", "Templates", "Chunks"], function(Display, Templates, Chunks) 
 	}
 
 	// Deals with the player selecting a choice.
-	var handleSelection = function(responseFrameId) {
+	var handleSelection = function(choice) {
+		// Handle any effects of the choice
+		if (choice.effects) {
+			choice.effects.forEach(function(effect) {
+				State.change(effect);
+			});
+		}
+		console.log("State.get('timesAnnoyed')", State.get('timesAnnoyed'));
 		Display.clearAll();
-		processFrame(responseFrameId);
+		processFrame(choice.responseFrame);
 		doNextFrame();
 	}
 
