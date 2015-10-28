@@ -1,0 +1,24 @@
+{
+	"BestFriend": {
+		"frames": [
+			{
+				"conditions": [false],
+				"id": "IntroduceFriendCharacter",
+				"order": "first"
+			},
+			{
+				"conditions": [true],
+				"id": "EstablishCareer"
+			},
+			{
+				"conditions": [false],
+				"id": "BondingMoment"
+			},
+			{
+				"conditions": [false],
+				"id": "PlansForFuture",
+				"order": "first"
+			}
+		]
+	}
+}

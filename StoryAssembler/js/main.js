@@ -14,7 +14,7 @@ requirejs.config({
 	}
 });
 
-requirejs(["Display", "Templates", "text!../data/sampleSceneTemplate.json", "domReady!"], function(Display, Templates, sampleSceneTemplate) {
+requirejs(["Display", "Templates", "domReady!"], function(Display, Templates) {
 	console.log("main.js loaded.");
 
 	var handleSelection = function(responseFrameId) {
@@ -51,7 +51,7 @@ requirejs(["Display", "Templates", "text!../data/sampleSceneTemplate.json", "dom
 
 	// Load scene and handle first frame.
 	Display.init();
-	var sceneTemplate = Templates.loadScene(sampleSceneTemplate);
+	var sceneTemplate = Templates.loadScene("BestFriend");
 	var scenePlan = sceneTemplate.toPlan();
 	console.log("scenePlan", scenePlan);
 	var scenePosition = 0;

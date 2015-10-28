@@ -5,10 +5,11 @@
 
 /* global define */
 
-define(["underscore", "util", "text!../data/FrameTemplates.json"], function(underscore, util, FrameTemplates) {
+define(["underscore", "util", "text!../data/SceneTemplates.json", "text!../data/FrameTemplates.json"], function(underscore, util, SceneTemplates, FrameTemplates) {
 	"use strict";
 
 	var frameTemplates = JSON.parse(FrameTemplates);
+	var sceneTemplates = JSON.parse(SceneTemplates);
 
 	var testCondition = function(condition) {
 		return condition;
@@ -72,7 +73,7 @@ define(["underscore", "util", "text!../data/FrameTemplates.json"], function(unde
 
 	var loadFrame = function(id) {
 		var template = frameTemplates[id];
-		if (!template) {
+		if (!template || !template.chunkRequests) {
 			template = {};
 			template.chunkRequests = [];
 			template.chunkRequests.push({"text": "(" + id + ")"});
@@ -81,8 +82,8 @@ define(["underscore", "util", "text!../data/FrameTemplates.json"], function(unde
 		return template;
 	}
 
-	var loadScene = function(obj) {
-		var template = JSON.parse(obj);
+	var loadScene = function(id) {
+		var template = sceneTemplates[id];
 		template.toPlan = toScenePlan;
 		return template;
 	}
