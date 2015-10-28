@@ -48,6 +48,9 @@ define(["underscore", "util", "text!../data/SceneTemplates.json", "text!../data/
 				throw new Error("Choices can only appear in a Frame plan, not a Scene plan.");
 			}
 		}
+		if (template.effects) {
+			plan.effects = template.effects;
+		}
 		return plan;
 	}
 

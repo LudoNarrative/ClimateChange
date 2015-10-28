@@ -28,6 +28,7 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 			return;
 		}
 		var frame = scenePlan.frames[scenePosition];
+		handleEffects(frame);
 		processFrame(frame.id);	
 		scenePosition++;
 	}
@@ -37,6 +38,7 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 		var frameTemplate = Templates.loadFrame(frameId);
 		var framePlan = frameTemplate.toPlan();
 		framePlan.chunks.forEach(function(chunk) {
+			handleEffects(chunk);
 			var renderedChunk = Chunks.render(chunk);
 			Display.addStoryText(renderedChunk);
 		})
@@ -48,14 +50,17 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 		}
 	}
 
+	var handleEffects = function(unit) {
+		if (!unit.effects) return;
+		unit.effects.forEach(function(effect) {
+			State.change(effect);
+		});
+	}
+
 	// Deals with the player selecting a choice.
 	var handleSelection = function(choice) {
 		// Handle any effects of the choice
-		if (choice.effects) {
-			choice.effects.forEach(function(effect) {
-				State.change(effect);
-			});
-		}
+		handleEffects(choice);
 		console.log("State.get('timesAnnoyed')", State.get('timesAnnoyed'));
 		Display.clearAll();
 		processFrame(choice.responseFrame);
