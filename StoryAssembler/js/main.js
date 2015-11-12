@@ -17,10 +17,11 @@ requirejs.config({
 	}
 });
 
-requirejs(["StoryAssembler", "domReady!"], function(StoryAssembler) {
+requirejs(["StoryAssembler", "State", "domReady!"], function(StoryAssembler, State) {
 	console.log("main.js loaded.");
 
 	// Load scene and handle first frame.
+	State.set("knowCareer", 0);
 	StoryAssembler.beginScene("BestFriend");
 
 });

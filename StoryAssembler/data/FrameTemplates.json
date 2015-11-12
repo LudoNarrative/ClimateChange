@@ -7,7 +7,7 @@
 				"order": "last"
 			},
 			{
-				"text": "I heard you're a scientist."
+				"text": "{ifState|knowCareer|1|I already know you're|So let me guess... you're} a {rnd|scientist|doctor|student}."
 			}
 		],
 		"choices": [
