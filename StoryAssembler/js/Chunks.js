@@ -4,7 +4,7 @@
 
 /* global define */
 
-define(["util"], function(util) {
+define(["State", "util"], function(State, util) {
 	"use strict";
 
 	var templates = {
@@ -13,8 +13,27 @@ define(["util"], function(util) {
 				console.error("Template command 'rnd' must have at least one param, in text '" + text + "'.");
 				return "(rnd)";
 			}
-			var rNum = util.randomInt(params.length);
+			var rNum = util.randomInt(params.length) - 1;
 			return params[rNum];
+		},
+		"ifState": function(params, text) {
+			// {ifState|career|3|text if true|text if false}
+			if (params.length !== 4) {
+				console.error("Template command 'ifState' must have four params: variable, value, text if true, text if false: in text '" + text + "'.");
+				return "(ifState)";
+			}
+			
+			var varToCheck = params[0];
+			var expectedVal = params[1];
+			var textIfTrue = params[2];
+			var textIfFalse = params[3];
+
+			var currVal = State.get(varToCheck);
+			if (currVal == expectedVal) { // Note: double equals "truthy" comparison
+				return textIfTrue;
+			} else {
+				return textIfFalse;
+			}
 		}
 	}
 
