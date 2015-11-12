@@ -51,10 +51,18 @@ define([], function() {
 	    throw new Error("Unable to copy obj! Its type isn't supported.");
 	}
 
+	var randomInt = function (max) {
+		if (max <= 1 || typeof max !== "number") {
+			return 1;
+		}
+		return Math.floor(Math.random() * Math.round(max)) + 1;
+	}
+
 	// PUBLIC INTERFACE
 	return {
 		isArray: isArray,
-		clone: clone
+		clone: clone,
+		randomInt, randomInt
 	}
 
 });
