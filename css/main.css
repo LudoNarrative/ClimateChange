@@ -26,9 +26,10 @@ html, body{
 	font-size: 20px;
 	text-align: center;
 }
-#reset-btn{
+.top-menu-btn{
 	float:right;
 	cursor:pointer;
+	padding-left:10px;
 }
 a{
 	cursor:pointer;
