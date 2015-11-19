@@ -39,7 +39,8 @@
 <body>
   <div id="primary-navbar">
     MENU
-    <a id='reset-btn' onclick='store.clear();location.reload();'>reset</a>
+    <a id='reset-btn' class='top-menu-btn' onclick='store.clear();location.reload();'>reset</a>
+    <a id='stats-btn' class='top-menu-btn' onclick='alert("Career: " + store.get("career") + "\nProfession: " + store.get("profession") + "\n");'>stats</a>
   </div>
   <div id="CH0" style="font-size:30px;margin:30px">
       <p>You are Emma Richards, a PhD student who studies the ocean.</p>
@@ -103,7 +104,15 @@
       }
     }
 
-
+    // If completed Chapter 3,
+    if(store.get("chapter")>= 4){
+      // Show stats.
+      $('#stats-btn').show();
+    }
+    else{
+      // Hide stats.
+      $('#stats-btn').hide();
+    }
 
   });
   </script>
