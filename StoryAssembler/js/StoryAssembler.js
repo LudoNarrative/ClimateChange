@@ -35,6 +35,7 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 
 	// Takes a frame, renders all its content (including choices if any) and shows it in the UI.
 	var processFrame = function(frameId) {
+		var processResults = {};
 		var frameTemplate = Templates.loadFrame(frameId);
 		var framePlan = frameTemplate.toPlan();
 		framePlan.chunks.forEach(function(chunk) {
@@ -47,7 +48,10 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 				var renderedChoice = choice;
 				Display.addChoice(renderedChoice);
 			});
+			processResults.frameHasChoices = true;
 		}
+		processResults.frameHasChoices = false;
+		return processResults;
 	}
 
 	var handleEffects = function(unit) {
@@ -61,10 +65,14 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 	var handleSelection = function(choice) {
 		// Handle any effects of the choice
 		handleEffects(choice);
-		console.log("State.get('timesAnnoyed')", State.get('timesAnnoyed'));
 		Display.clearAll();
-		processFrame(choice.responseFrame);
-		doNextFrame();
+		var processResults = processFrame(choice.responseFrame);
+
+		// If this frame provides more choices, we wait for another user choice selection.
+		// If not, we're done with this frame; move on to the next one.
+		if (!processResults.frameHasChoices) {
+			doNextFrame();
+		}
 	}
 
 	// Show an indicator that the scene is over.
