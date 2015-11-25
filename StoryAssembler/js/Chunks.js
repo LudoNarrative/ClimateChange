@@ -4,7 +4,7 @@
 
 /* global define */
 
-define(["State", "util"], function(State, util) {
+define(["State", "TextChanger", "util"], function(State, TextChanger, util) {
 	"use strict";
 
 	var templates = {
@@ -90,6 +90,11 @@ define(["State", "util"], function(State, util) {
 			var matchText = match[0];
 			txt = txt.replace(matchText, processTemplate(matchText));
 			re = /{[^}]*}/g;
+		}
+
+		var isCharShy = true;
+		if (isCharShy) {
+			txt = TextChanger.shy(txt);
 		}
 
 		return txt;
