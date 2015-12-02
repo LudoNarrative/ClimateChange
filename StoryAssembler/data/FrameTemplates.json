@@ -3,7 +3,7 @@
 		"chunkSpeaker": "Mel",
 		"chunks": [
 			{
-				"text": "Emma. <i>Seriously</i>, girl. This stew is not going to eat itself."
+				"text": "{ifState|knowCareer|1|Dr. Emma Watson, marine biologist extraordinare.|Emma.} Seriously, girl. This stew is not going to eat itself."
 			}
 		],
 		"choiceSpeaker": "Emma",
@@ -96,66 +96,61 @@
 	"EstablishCareer": {
 		"chunks": [
 			{
-				"text": "So, what's your speciality?",
-				"conditions": [true, true],
+				"text": "So, remind me what your speciality is again?",
 				"order": "last"
-			},
-			{
-				"text": "{ifState|knowCareer|1|I already know you're|So let me guess... you're} a {rnd|scientist|doctor|student}."
 			}
 		],
 		"choices": [
 			{
 				"text": "Lobsters.",
-				"conditions": [true, true],
-				"responseFrame": "RespondToLobsters"
+				"responseFrame": "respondToLobsters"
 			},
 			{
 				"text": "Coral reefs.",
-				"responseFrame": "RespondToCoral"
+				"responseFrame": "respondToCoral"
 			},
 			{
 				"text": "Kelp.",
-				"responseFrame": "RespondToKelp"
+				"responseFrame": "respondToKelp"
 			}
 		]
 	},
-	"RespondToLobsters": {
+	"respondToLobsters": {
+		"type": "secondary",
 		"chunks": [
 			{
-				"text": "Oh, cool! I love lobsters."
+				"text": "Oh, cool! I love lobsters.",
+				"effects": ["set knowCareer 1"]
 			}
 		],
 		"choices": [
 			{
-				"text": "Is that a fact?",
-				"responseFrame": "YesItIsAFact"
+				"text": "Me too... obviously."
 			}
 		]
 	},
-	"RespondToCoral": {
+	"respondToCoral": {
+		"type": "secondary",
 		"chunks": [
 			{
-				"text": "That's awesome."
-			},
+				"text": "That's awesome.",
+				"effects": ["set knowCareer 1"]
+			}
+		],
+		"choices": [
 			{
 				"text": "Coral reefs are the best!"
 			}
 		]
 	},
-	"RespondToKelp": {
+	"respondToKelp": {
+		"type": "secondary",
 		"chunks": [
 			{
-				"text": "Kelp is groovy."
-			}
-		]
-	},
-
-	"YesItIsAFact": {
-		"chunks": [
-			{
-				"text": "Yes, yes it is!"
+				"text": "Kelp is groovy.",
+				"effects": ["set knowCareer 1"]
 			}
 		]
 	}
+
 }

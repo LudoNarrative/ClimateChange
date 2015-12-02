@@ -84,6 +84,7 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 		// Handle any effects of the choice
 		handleEffects(choice);
 		Display.clearAll();
+		var processResults = {};
 		if (choice.responseFrame) {
 			// If this frame provides more valid choices, we show it and wait for another user choice selection.
 			if (Templates.isFramePrimary(choice.responseFrame)) {
@@ -91,8 +92,9 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 				Display.addStoryText("Error: Can only jump to a 'secondary' frame, not to another point in a scene plan.");
 				return;
 			}
-			var processResults = processFrame(choice.responseFrame);
-		} else {
+			processResults = processFrame(choice.responseFrame);
+		} 
+		if (!choice.responseFrame || !processResults.frameChoices) {
 			// If not, we're done with this frame; move on to the next one.
 			doNextFrame();
 		}

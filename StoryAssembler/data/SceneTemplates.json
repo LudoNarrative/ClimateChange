@@ -7,12 +7,12 @@
 				"order": "first"
 			},
 			{
-				"id": "Regrets",
-				"conditions": [true]
+				"conditions": ["knowCareer neq 1"],
+				"id": "EstablishCareer"
 			},
 			{
-				"conditions": [false],
-				"id": "EstablishCareer"
+				"id": "Regrets",
+				"conditions": [true]
 			},
 			{
 				"conditions": [false],
