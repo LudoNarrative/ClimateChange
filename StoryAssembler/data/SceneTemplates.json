@@ -2,12 +2,16 @@
 	"BestFriend": {
 		"frames": [
 			{
-				"conditions": [false],
+				"conditions": [true],
 				"id": "IntroduceFriendCharacter",
 				"order": "first"
 			},
 			{
-				"conditions": [true],
+				"id": "Regrets",
+				"conditions": [true]
+			},
+			{
+				"conditions": [false],
 				"id": "EstablishCareer"
 			},
 			{

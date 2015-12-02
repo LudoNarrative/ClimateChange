@@ -48,9 +48,8 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 				var renderedChoice = choice;
 				Display.addChoice(renderedChoice);
 			});
-			processResults.frameHasChoices = true;
-		}
-		processResults.frameHasChoices = false;
+			processResults.frameChoices = framePlan.choices;
+		} 
 		return processResults;
 	}
 
@@ -66,11 +65,16 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 		// Handle any effects of the choice
 		handleEffects(choice);
 		Display.clearAll();
-		var processResults = processFrame(choice.responseFrame);
-
-		// If this frame provides more choices, we wait for another user choice selection.
-		// If not, we're done with this frame; move on to the next one.
-		if (!processResults.frameHasChoices) {
+		if (choice.responseFrame) {
+			// If this frame provides more valid choices, we show it and wait for another user choice selection.
+			if (Templates.isFramePrimary(choice.responseFrame)) {
+				Display.clearAll();
+				Display.addStoryText("Error: Can only jump to a 'secondary' frame, not to another point in a scene plan.");
+				return;
+			}
+			var processResults = processFrame(choice.responseFrame);
+		} else {
+			// If not, we're done with this frame; move on to the next one.
 			doNextFrame();
 		}
 	}
