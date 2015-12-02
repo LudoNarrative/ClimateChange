@@ -19,7 +19,7 @@ define([], function() {
 	}
 
 	/* Currently handles PARAM op VALUE, true, or false
-	op can be eq, geq, leq, gt, lt
+	op can be eq, neq, geq, leq, gt, lt
 	*/
 	var isTrue = function(condition) {
 		condition = "" + condition; // coerce to string
@@ -46,8 +46,9 @@ define([], function() {
 		}
 		switch(op) {
 			case "eq":
-				console.log("valOfParam, typeof valOfParam, value, typeof value", valOfParam, typeof valOfParam, value, typeof value);
 				return valOfParam == value;
+			case "neq":
+				return valOfParam != value;
 			case "geq":
 			case "gte":
 				return valOfParam >= value;
