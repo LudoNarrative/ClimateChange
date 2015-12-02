@@ -1,4 +1,96 @@
 {
+	"IntroduceFriendCharacter": {
+		"chunks": [
+			{
+				"text": "Emma. <i>Seriously</i>, girl. This stew is not going to eat itself."
+			}
+		],
+		"choices": [
+			{
+				"text": "Thanks. What's it called again?",
+				"responseFrame": "whatscalled"
+			},
+			{
+				"text": "It's so good. You made this?",
+				"responseFrame": "thanksbringing"
+			},
+			{
+				"text": "No thanks, Z. I'm stuffed.",
+				"responseFrame": "stuffed"
+			}
+		]
+	},
+	"whatscalled": {
+		"type": "secondary",
+		"chunks": [
+			{
+				"text": "<i>Cocido</i>, chica. Figured comfort food would be good the night before my best friend's dissertation defense."
+			}
+		],
+		"choices": [
+			{
+				"text": "I know, right?"
+			}
+		]
+	},
+	"thanksbringing": {
+		"type": "secondary",
+		"chunks": [
+			{
+				"text": "Don't look at me like that! I'm a better cook than you. And it's not like I'm going to let my best friend defend her dissertation after a night of takeout."
+			}
+		],
+		"choices": [
+			{
+				"text": "You're amazing."
+			}
+		]
+	},
+	"stuffed": {
+		"type": "secondary",
+		"chunks": [
+			{
+				"text": "Are you kidding me? You've hardly had anything. Nervous about your dissertation defense tomorrow, huh?"
+			}
+		],
+		"choices": [
+			{
+				"text": "I guess."
+			}
+		]
+	},
+
+	"Regrets": {
+		"chunks": [
+			{
+				"text": "You would not believe how much of this stuff I ate in Spain. This recipe's okay, if I do say so myself, but only half as good as when you get it there."
+			}
+		],
+		"choices": [
+			{
+				"text": "Wish I could have come with you.",
+				"responseFrame": "regretsPayoff"
+			},
+			{
+				"text": "I was busy that year taking quals, if I recall.",
+				"responseFrame": "regretsPayoff"
+			},
+			{
+				"text": "Still jealous you got to spend six months there.",
+				"responseFrame": "regretsPayoff"
+			}
+		]
+	},
+
+	"regretsPayoff": {
+		"type": "secondary",
+		"chunks": [
+			{
+				"text": "Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. And I'll just be some chick who ate too much <i>cocido</i>."
+			}
+		]
+	},
+
 	"EstablishCareer": {
 		"chunks": [
 			{
@@ -31,6 +123,12 @@
 			{
 				"text": "Oh, cool! I love lobsters."
 			}
+		],
+		"choices": [
+			{
+				"text": "Is that a fact?",
+				"responseFrame": "YesItIsAFact"
+			}
 		]
 	},
 	"RespondToCoral": {
@@ -47,6 +145,14 @@
 		"chunks": [
 			{
 				"text": "Kelp is groovy."
+			}
+		]
+	},
+
+	"YesItIsAFact": {
+		"chunks": [
+			{
+				"text": "Yes, yes it is!"
 			}
 		]
 	}

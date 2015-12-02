@@ -11,6 +11,10 @@ define(["underscore", "util", "State", "text!../data/SceneTemplates.json", "text
 	var frameTemplates = JSON.parse(FrameTemplates);
 	var sceneTemplates = JSON.parse(SceneTemplates);
 
+	var isFramePrimary = function(id) {
+		if (!frameTemplates[id]) return false;
+		return frameTemplates[id].type !== "secondary";
+	}
 
 	// Use the helper function below to return an instantiated Scene template.
 	var loadScene = function(id) {
@@ -113,7 +117,8 @@ define(["underscore", "util", "State", "text!../data/SceneTemplates.json", "text
 	// PUBLIC INTERFACE
 	return {
 		loadScene: loadScene,
-		loadFrame: loadFrame
+		loadFrame: loadFrame,
+		isFramePrimary: isFramePrimary
 	}
 
 });
