@@ -2,10 +2,10 @@
 
 %GENERAL
 objects(1..objectCount).
-%:- not good.
 
 {relationship(NAME,SUBJ,OBJ,TARGET) : relationships(NAME)}  :- SUBJ != OBJ, SUBJ != TARGET, OBJ != TARGET, objects(SUBJ), objects(OBJ), objects(TARGET).
 {relationship(NAME,SUBJ,OBJ) :relationships(NAME)} :- SUBJ != OBJ, objects(SUBJ), objects(OBJ).
+
 
 relationship(X) :- relationship(X,_,_,_).
 relationship(X) :- relationship(X,_,_).
@@ -86,14 +86,28 @@ roles(obscurer;;obscured;;unobscurer).
 :- relationship(uncovers,_,_,TARGET),  not affordance(TARGET,findable).
 :- relationship(uncovers,_,_).
 
+% Open question about abstract mechanics - as currently setup - they represent an entire game
+% Should they instead be more modular?  I know that's more in line with how Game-O-Matic works
+% but maybe the variations come from the objects/properties/relationships and which concrete mechanics
+% are chosen.  That certainly seems easier to manage to me
 
 %% Relationships -> Abstract Mechanics
-good :- role(SUBJ_1,request_satisfaction,source), role(OBJ,request_satisfaction,satisfier), 
+validRelationships :- role(SUBJ_1,request_satisfaction,source), role(OBJ,request_satisfaction,satisfier), 
      	role(SUBJ,request_satisfaction,deliverer), role(TARGET,request_satisfaction,requestor) , 
      	relationship(eats,TARGET,OBJ), relationship(pass_to,SUBJ,OBJ,TARGET), relationship(pass_to,SUBJ_1,OBJ,SUBJ).
 
-good :- role(SUBJ,unobscure,unobscurer),  role(OBJ,unobscure,obscurer), role(TARGET,unobscure,obscured) , 
+validRelationships :- role(SUBJ,unobscure,unobscurer),  role(OBJ,unobscure,obscurer), role(TARGET,unobscure,obscured) , 
      	relationship(uncovers,SUBJ,OBJ,TARGET).
 
-:- not good.
+:- not validRelationships.
 
+
+%% Abstract Mechanics -> Concrete Mechanics
+
+% How to represent concrete mechanics?
+
+concreteProperties(clickable;;visible;;onTimer;;dragable).
+
+%{concreteProperty(NAME,SUBJ) :concreteProperties(NAME)} :-  objects(SUBJ).
+
+%:- concreteProperty role(SUBJ_1,request_satisfaction,source)
