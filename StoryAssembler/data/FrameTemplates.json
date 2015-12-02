@@ -1,10 +1,12 @@
 {
 	"IntroduceFriendCharacter": {
+		"chunkSpeaker": "Mel",
 		"chunks": [
 			{
 				"text": "Emma. <i>Seriously</i>, girl. This stew is not going to eat itself."
 			}
 		],
+		"choiceSpeaker": "Emma",
 		"choices": [
 			{
 				"text": "Thanks. What's it called again?",

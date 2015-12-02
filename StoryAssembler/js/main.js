@@ -13,7 +13,8 @@ requirejs.config({
 		"Display": "Display",
 		"Templates": "Templates",
 		"Chunks": "Chunks",
-		"State": "State"
+		"State": "State",
+		"TextChanger": "TextChanger"
 	}
 });
 
@@ -21,7 +22,17 @@ requirejs(["StoryAssembler", "State", "domReady!"], function(StoryAssembler, Sta
 	console.log("main.js loaded.");
 
 	// Load scene and handle first frame.
+	var characters = {
+		"Emma": {
+			displayName: "Emma",
+			attributes: []
+		},
+		"Mel": {
+			displayName: "Mel",
+			attributes: ["shy"]
+		}
+	};
 	State.set("knowCareer", 0);
-	StoryAssembler.beginScene("BestFriend");
+	StoryAssembler.beginScene("BestFriend", characters);
 
 });

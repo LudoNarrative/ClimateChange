@@ -55,6 +55,8 @@ define(["underscore", "util", "State", "text!../data/SceneTemplates.json", "text
 		if (template.effects) {
 			plan.effects = template.effects;
 		}
+		plan.chunkSpeaker = template.chunkSpeaker;
+		plan.choiceSpeaker = template.choiceSpeaker;
 		return plan;
 	}
 
