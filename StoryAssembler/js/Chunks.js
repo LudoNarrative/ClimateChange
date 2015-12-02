@@ -78,7 +78,7 @@ define(["State", "TextChanger", "util"], function(State, TextChanger, util) {
 
 	// Returns text that's had all templates replaced by fully realized versions.
 	// Format: {command|opt1|opt2|...}
-	var render = function(chunk) {
+	var render = function(chunk, speaker) {
 		var txt = chunk.text;
 		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
 		var match;
@@ -92,9 +92,10 @@ define(["State", "TextChanger", "util"], function(State, TextChanger, util) {
 			re = /{[^}]*}/g;
 		}
 
-		var isCharShy = true;
-		if (isCharShy) {
-			txt = TextChanger.shy(txt);
+		if (speaker && speaker.attributes) {
+			if (speaker.attributes.indexOf("shy") >= 0) {
+				txt = TextChanger.shy(txt);
+			}
 		}
 
 		return txt;

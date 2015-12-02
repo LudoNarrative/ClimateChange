@@ -11,11 +11,15 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 	var scenePosition = 0;
 	var sceneTemplate;
 	var scenePlan;
+	var characters; // A dictionary of all valid characters for this scene, with keys "displayName" and "attributes".
+	var chunkSpeaker;
+	var choiceSpeaker;
 
 	// Begins running a scene with the given ID.
-	var beginScene = function(sceneId) {
+	var beginScene = function(sceneId, charArray) {
 		scenePosition = 0;
 		Display.init(handleSelection);
+		characters = charArray || {};
 		sceneTemplate = Templates.loadScene(sceneId);
 		scenePlan = sceneTemplate.toPlan();
 		doNextFrame();
@@ -38,15 +42,30 @@ define(["Display", "Templates", "Chunks", "State"], function(Display, Templates,
 		var processResults = {};
 		var frameTemplate = Templates.loadFrame(frameId);
 		var framePlan = frameTemplate.toPlan();
+
+		// Update speakers, if the plan provides this info. Speakers are assumed to remain the same until/unless updated.
+		if (framePlan.chunkSpeaker) {
+			if (!characters[framePlan.chunkSpeaker]) {
+				throw new Error("Tried to set chunkSpeaker to '" + framePlan.chunkSpeaker + "' but this is not a registered character.");
+			}
+			chunkSpeaker = framePlan.chunkSpeaker;
+		}
+		if (framePlan.choiceSpeaker) {
+			if (!characters[framePlan.choiceSpeaker]) {
+				throw new Error("Tried to set choiceSpeaker to '" + framePlan.choiceSpeaker + "' but this is not a registered character.");
+			}
+			choiceSpeaker = framePlan.choiceSpeaker;
+		}
+
 		framePlan.chunks.forEach(function(chunk) {
 			handleEffects(chunk);
-			var renderedChunk = Chunks.render(chunk);
+			var renderedChunk = Chunks.render(chunk, characters[chunkSpeaker]);
 			Display.addStoryText(renderedChunk);
 		})
 		if (framePlan.choices) {
 			framePlan.choices.forEach(function(choice) {
-				var renderedChoice = choice;
-				Display.addChoice(renderedChoice);
+				choice.text = Chunks.render(choice, characters[choiceSpeaker]);
+				Display.addChoice(choice);
 			});
 			processResults.frameChoices = framePlan.choices;
 		} 
