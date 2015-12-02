@@ -37,7 +37,7 @@ define([], function() {
   // Inserts a filled pause randomly within a sentence.
   function shy(sentence){
     var finalText = sentence;
-    var re = /[\w']+|[.,!?;:]/g;
+    var re = /[\w<>\/']+|[.,!?;:]/g;
     var m;
     var arrayToSay = new Array();
     var filledPauses = ["um","er","ah","uh","mm","you know","I mean"];
