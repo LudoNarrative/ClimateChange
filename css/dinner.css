@@ -16,11 +16,14 @@
 }
 
 .impatient {
-    /*background-color: rgba(255, 38, 0, 0.27);*/
+    background-color: rgba(255, 38, 0, 0.27) !important;
 }
 #dishLeft.impatient {
     -webkit-animation: impatientLeft 3s infinite;
 }
 #dishRight.impatient {
     -webkit-animation: impatientRight 3s infinite;
+}
+#dishLeft, #dishRight {
+    background-color: #CFF7D8;
 }
