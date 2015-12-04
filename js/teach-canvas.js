@@ -1,5 +1,17 @@
 /*** MAIN CODE ****/
 
+var successfulClickStressRestoreAmount = 23;
+var maxStress = 60;
+var stressLossNormDiff = 1;
+var stressLossMedDiff = 3;
+var stressLossHighDiff = 8;
+var chillStressLevel = 40;
+var neutralStressLevel = 20;
+var highStressLevel = 0;
+var stressLostPerMissedClick = 20;
+var failPoint = -25;
+var ballSpeed = 1500;
+
 $(document).ready(function(){
   // set (top) canvas height to 100px
   $('#canvas').height('100px');
@@ -22,7 +34,7 @@ function startTutorial(){
   $('#ball').hide();
 
   // Make the ball move to the left and right.
-  back_and_forth('#ball',350,0,1500);
+  back_and_forth('#ball',350,0,ballSpeed);
 
   // Once delay for movement has completed, show the ball.
   //setTimeout(function(){
@@ -66,18 +78,18 @@ function checkCool(){
   // Only update score if game is in progress.
   if (store.get("update")==1){
     if (check_collision("#ball","#sweet-spot")){
-      if (store.get("score")+50 < 60){
-        store.set("score",store.get("score")+40);
+      if (store.get("score")+successfulClickStressRestoreAmount < maxStress){
+        store.set("score",store.get("score")+successfulClickStressRestoreAmount);
       }
       else{
-        store.set("score",60);
+        store.set("score",maxStress);
 
       }
     // console.log("green");
     flash_color("#sweet-spot","green", "background-color");
     }
     else{
-      store.set("score",store.get("score")-25);
+      store.set("score",store.get("score")-stressLostPerMissedClick);
       flash_color("#sweet-spot","red", "background-color");
       // console.log("red");
     }
@@ -87,7 +99,7 @@ function checkCool(){
 
 function startGame(){
   passages["Start"].render();
-  store.set("score",60);
+  store.set("score", maxStress);
   store.set("difficulty",1);
   setTimeout(function(){
     check_end();
@@ -170,13 +182,13 @@ function flash_color(id,color1,param){
 function lose_cool(){
   // Update stress image.
   var score = store.get("score");
-  if (score > 40){
+  if (score > chillStressLevel){
     set_src("stressface","balance/teaching_chill.png");
   }
-  else if (score > 20){
+  else if (score > neutralStressLevel){
     set_src("stressface","balance/teaching_neutral.png");
   }
-  else if (score > 0){
+  else if (score > highStressLevel){
     set_src("stressface","balance/teaching_stressed.png");
   }
   else{
@@ -189,14 +201,14 @@ function lose_cool(){
 
   if (diff<=0){
     store.set("difficulty",0);
-    losecool=1;
+    losecool=stressLossNormDiff;
   }
   else if (diff <=1){
-    losecool=5;
+    losecool=stressLossMedDiff;
   }
   else{
     store.set("difficulty",2);
-    losecool=15;
+    losecool=stressLossHighDiff;
   }
 
   // Update score.
@@ -207,7 +219,7 @@ function lose_cool(){
 
 function check_end(){
   // If the score is super bad, end game early
-  if (store.get("score") <= -25){
+  if (store.get("score") <= failPoint){
     store.set("update",0);
   }
   // If the game is done,
@@ -220,7 +232,7 @@ function check_end(){
     clearInterval(updatePassage);
 
     // Render the fail screen if score was bad.
-    if (store.get("score") <= -25){
+    if (store.get("score") <= failPoint){
       passages["fail"].render();
       store.set("profession","activist");
     }
