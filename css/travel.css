@@ -126,7 +126,19 @@
   50%   { opacity: 0; }
   100%   { opacity: 1; }
 }
+@-webkit-keyframes notEnough {
+  0%   { background-color: red; }
+  100%   { background-color: #1C1E2F; }
+}
 .expiring {
   animation: expiring 1s infinite;
   -webkit-animation: expiring 1s infinite;
+  color: red;
+}
+.notEnoughMoney {
+  animation: notEnough 4s;
+  -webkit-animation: notEnough 4s;
+}
+#isExpiringSoon {
+  color: red;
 }
