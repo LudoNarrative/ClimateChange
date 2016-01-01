@@ -1,7 +1,7 @@
 [
 	{
 		"title": 	"Start",
-		"scene": 	["<span style='color:yellow'>Click food dishes to pass them left or right. Select the down arrow to add food to your plate.</span>"],
+		"scene": 	["<span style='color:yellow'>Keep the dishes moving around the table, or conversation will stop. Click a dish passed to you to pass it on, or the down arrow to add food to your plate.</span>"],
 		"choices": 	[
 						["Okay, I'm ready to start.", "dinnerStart"]
 					]

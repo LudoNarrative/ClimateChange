@@ -2,15 +2,35 @@
 /*global $, store, change_scene, place_object, getRandomInt, set_src, startPassages, updatePassage, getRandomIntNoRepeat, getRandomInt */
 
 var spawnCityInterval;
-var spawnTimeInSeconds = 10;
+var spawnTimeInSeconds = 5;
+var citiesPersistInSeconds = 15;
 var flashTime = 4;
+var gameLengthInSeconds = 90;
 
 var minCitiesOnItinerary = 3;
 var maxCitiesOnItinerary = 3;
 
 var numberOfTrips = 2;
 
+var startingFunds = 15000;
+var startingFame = 0;
+var startingCarbon = 0;
+var tripCostMin = 800;
+var tripCostMax = 8000;
+var minCarbonTons = 0.1;
+var maxCarbonTons = 0.85; // "One round-trip flight from New York to Europe or to San Francisco creates a warming effect equivalent to 2 or 3 tons of carbon dioxide per person." http://www.nytimes.com/2013/01/27/sunday-review/the-biggest-carbon-sin-air-travel.html
+var minFame = 10;
+var maxFame = 300;
+
+
+var gameTimer;
+var gameTimerTimeout;
+
 $(document).ready(function(){
+	store.set("player_funds", startingFunds);
+	store.set("player_fame", startingFame);
+	store.set("player_CO2", startingCarbon);
+
 	startGame();
 });
 
@@ -19,25 +39,27 @@ function changeArea(id, content) {
 }
 
 function showTravelerStats() {
-	changeArea("status", "<p id='status-header'>Emma's Current Status:</p><p><div class='statusItem'><span class='label'>Travel Funds</span><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</div><div class='statusItem'><span class='label'>Fame Level</span><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</div><div class='statusItem'><span class='label'>Carbon Footprint</span><img src='../img/travel/co2.png' width=40px>&nbsp;"+ store.get('player_CO2')+" tons</div></p>");
+	changeArea("status", "<p id='status-header'>Emma's Current Status:</p><p><div class='statusItem statusMoney'><span class='label'>Travel Funds</span><img src='../img/travel/money.png' width=30px>&nbsp;$"+ store.get('player_funds')+"</div><div class='statusItem'><span class='label'>Fame Level</span><img src='../img/travel/crown.png' width=30px>&nbsp;"+ store.get('player_fame')+"</div><div class='statusItem'><span class='label'>Carbon Footprint</span><img src='../img/travel/co2.png' width=40px>&nbsp;"+ store.get('player_CO2')+" lbs</div></p>");
 }
 
 function showHeader() {
-	changeArea("scene-description-header", "Create an itinerary by accepting academic invitations.<p class='instructionDetail'>Hover over a city to see details of that offer. New offers will spawn every " + spawnTimeInSeconds + " seconds.</p>");
+	changeArea("scene-description-header", "Create the best itinerary you can before time's out.<p class='instructionDetail'>Hover over a city to see details of that speaking opportunity.");
 }
 
 function showCityStats(cityEl) {
-	changeArea("city-stats", "<p class='round'>"+cityEl.id.toUpperCase() + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span><br><span class='conference'>" + $("#"+cityEl.id).data("data").conference + "</span></p>" + "<ul class='round'><li class='moneyItem'>-$" + $("#"+cityEl.id).data("data").cost + "&nbsp;<img src='../img/travel/money.png' width=30px></li><li class='fameItem'>+"+$("#"+cityEl.id).data("data").fame+"&nbsp;<img src='../img/travel/crown.png' width=30px></li><li class='carbonItem'>+" + $("#"+cityEl.id).data("data").carbon + " tons <img src='../img/travel/co2.png' width=50px></li></ul>");
+	changeArea("city-stats", "<p class='round'>"+cityEl.id.toUpperCase() + "&nbsp;<span class='glyphicon glyphicon-star' aria-hidden='true' style='color:orange'></span><span id='isExpiringSoon'></span><br><span class='conference'>" + $("#"+cityEl.id).data("data").conference + "</span></p>" + "<ul class='round'><li class='moneyItem'>-$" + $("#"+cityEl.id).data("data").cost + "&nbsp;<img src='../img/travel/money.png' width=30px></li><li class='fameItem'>+"+$("#"+cityEl.id).data("data").fame+"&nbsp;<img src='../img/travel/crown.png' width=30px></li><li class='carbonItem'>+" + $("#"+cityEl.id).data("data").carbon + " lbs <img src='../img/travel/co2.png' width=50px></li></ul>");
+	$("#city-stats").data("showing", cityEl.id);
 }
 
 function clearCityStats() {
 	document.getElementById('city-stats').innerHTML = "";
+	$("#city-stats").data("showing", "");
 }
 
 
 function cancelButtonClick() {
 	var lastLeg = cancelLatestLeg();
-	$("#"+lastLeg.id).remove();
+	$("#"+(lastLeg.id)).remove();
 	showItinerary();
 	if (!spawnCityInterval) {
 		startCitySpawning();
@@ -49,6 +71,7 @@ function beginTripClick() {
 
 var itinerary = [];
 function addTripLeg(el) {
+	console.log("addTripLeg", el)
 	itinerary.push(el);
 	updateLines();
 }
@@ -106,20 +129,20 @@ function showItinerary() {
 
 	var tripSummary;
 	if (itinerary.length > 0) {
-		tripSummary = "<span class='lineLabel'>Total Cost:</span> <span>$" + getItineraryCost() + "</span> <img src='../img/travel/money.png' width=21px><br><span class='lineLabel'>Fame Increase:</span> " + getItineraryFame() + " <img src='../img/travel/crown.png' width=21px><br><span class='lineLabel'>Carbon Impact:</span> " + getItineraryCarbon() + " tons <img src='../img/travel/co2.png' width=25px><br><br>";
+		tripSummary = "<span class='lineLabel'>Total Cost:</span> <span>$" + getItineraryCost() + "</span> <img src='../img/travel/money.png' width=21px><br><span class='lineLabel'>Fame Increase:</span> " + getItineraryFame() + " <img src='../img/travel/crown.png' width=21px><br><span class='lineLabel'>Carbon Impact:</span> " + getItineraryCarbon() + " lbs <img src='../img/travel/co2.png' width=25px><br><br>";
 		if (itinerary.length < minCitiesOnItinerary) {
 			var left = minCitiesOnItinerary - itinerary.length;
 			var amountHint = "at least " + numToWritten(left);
 			if (maxCitiesOnItinerary === minCitiesOnItinerary) {
 				amountHint = numToWritten(left) + " more";
 			}
-			tripSummary += "<p id='cantBeginTrip'>Add " + amountHint + " destination" + (left !== 1 ? "s" : "") + " to complete your itinerary</p>";
-		} else {
-			tripSummary += "<p id='beginButton'><button id='beginTrip' onclick='beginTripClick();'>Begin Trip</button></p>";
+			tripSummary += "<p id='cantBeginTrip'>Add " + amountHint + " destination" + (left !== 1 ? "s" : "") + " to complete your itinerary, or:</p>";
 		}
 	} else {
 		tripSummary = "<p id='cantBeginTrip'>No destinations scheduled yet.</p>";
 	}
+	tripSummary += "<p id='beginButton'><button id='beginTrip' onclick='beginTripClick();'>Begin Trip</button></p>";
+	tripSummary += "<p style='font-size:80%;text-align:center'><span id='gameTimer'>" + gameLengthInSeconds + "</span> seconds left to confirm this trip.</p>";
 
 	changeArea("itinerary", "<div id='itineraryArea'><p id='itineraryHeader'>Itinerary</p>" + cityList + "<p>" + tripSummary + "</p></div>");
 }
@@ -133,6 +156,7 @@ function startCitySpawning() {
 }
 function stopCitySpawning() {
 	clearInterval(spawnCityInterval);
+	$(".tripOffer").remove();
 	spawnCityInterval = null;
 }
 
@@ -187,13 +211,16 @@ var cities = [{'id': 'Madrid', 	'x': 60, 'y':240},
 			  {'id': 'London', 'x': 103, 'y':160}
 ];
 
-// Return a subset of "cities" excluding any city in the current itinerary.
+// Return a subset of "cities" excluding any city in the current itinerary, or currently on the map.
 function getValidCities() {
 	var validCities = [];
 	cities.forEach(function(city) {
 		var ok = true;
 		itinerary.forEach(function(destination) {
 			if (destination.id === city.id) {
+				ok = false;
+			}
+			if ($("#"+city.id).length > 0) {
 				ok = false;
 			}
 		});
@@ -204,10 +231,15 @@ function getValidCities() {
 	return validCities;
 }
 
+function notEnoughFunds() {
+	$(".statusMoney").removeClass("notEnoughMoney");
+	setTimeout(function() {
+		$(".statusMoney").addClass("notEnoughMoney");
+	}, 0); // timeout is necessary to trigger css redraw
+}
+
 function place_random_city(){
-	// Remove all previous tripOffers.
-	$(".tripOffer").remove();
-	clearCityStats();
+	// clearCityStats();
 
 	// Clear scene description and cursor.
 	$(this).css('cursor','auto');
@@ -219,33 +251,50 @@ function place_random_city(){
 	if (validCities.length === 0) return;
 	var pos = getRandomIntNoRepeat(1, validCities.length, "citySelection") - 1;
 	var random_city = validCities[pos];
+
+	// Don't place the same city twice.
+	if ($("#"+random_city.id).length > 0) {
+		return;
+	}
+
 	place_object(random_city.id, "travel/star-2.png", random_city.x, random_city.y, 25, 25)
 	var $city = $('#' + random_city.id);
+	$city.addClass("placedCity");
 
-	var random_cost = getRandomInt(300,1200);
+	var random_cost = getRandomInt(tripCostMin/100, tripCostMax/100) * 100;
 	var carbon;
-	var maxCarbon = 8;
 	var approxMaxDistanceInPixels = 300;
 	if (itinerary.length > 0) {
 		var lastCity = $("#"+itinerary[itinerary.length-1].id);
 		carbon = calcDist($city, lastCity);
-		carbon = carbon / (approxMaxDistanceInPixels / maxCarbon); // scale
-		carbon = Math.round(carbon*10)/10; // round to 1 decimal place
+		carbon = carbon / (approxMaxDistanceInPixels / maxCarbonTons); // scale
+		carbon = Math.round(carbon * 100) * 10; // round to 1 decimal place
 	} else {
-		carbon = getRandomInt(0.1, maxCarbon/2);
+		carbon = Math.round(getRandomInt(minCarbonTons*100, (maxCarbonTons/2)*100)) * 10;
 	}
-	var random_fame = getRandomInt(25,300);
+	var random_fame = getRandomInt(minFame, maxFame);
 
 	var d = document.getElementById(random_city.id);
 	d.className = "tripOffer";
-	$city.addClass("cityStar").data('data', { location: random_city.id, cost: random_cost, carbon: carbon, fame: random_fame, conference: makeConferenceName()});
+	$city.addClass("cityStar placedCity").data('data', { location: random_city.id, cost: random_cost, carbon: carbon, fame: random_fame, conference: makeConferenceName()});
 
-	// Set up to show expire warning.
+	// Set up to show expire warning and removal.
 	setTimeout(function() {
 		if ($city.hasClass("tripOffer")) {
 			$city.addClass("expiring");
 		}
-	}, (spawnTimeInSeconds - flashTime) * 1000)
+	}, (citiesPersistInSeconds - flashTime) * 1000);
+
+	setTimeout(function() {
+		if ($city.hasClass("tripOffer")) {
+			$city.remove();
+			console.log("'" + $("#city-stats").data("showing") + "', '" + random_city.id + "'");
+			if ($("#city-stats").data("showing") === random_city.id) {
+				clearCityStats();
+			}
+		}
+
+	}, citiesPersistInSeconds * 1000);
 
 	// On mouseover, show city stats.
 	$('.tripOffer').mouseover(function(){
@@ -261,8 +310,12 @@ function place_random_city(){
 	});
 
 	// On click, add city to itinerary.
-	$('.tripOffer').click(function(){
-		if (itinerary.length < maxCitiesOnItinerary) {
+	$('.tripOffer').off("click").click(function(){
+		console.log("store.get('player_funds')", store.get('player_funds'));
+		console.log("getItineraryCost()", getItineraryCost());
+		if (store.get('player_funds') - getItineraryCost() - $(this).data("data").cost < 0) {
+			notEnoughFunds();
+		} else if (itinerary.length < maxCitiesOnItinerary) {
 			addTripLeg(this);
 			showItinerary();
 			$("#city-stats").removeClass("expiring");
@@ -272,6 +325,8 @@ function place_random_city(){
 			$(this).removeClass("tripOffer");
 			set_src(this.id, "travel/starSelected.png");
 			clearCityStats();
+
+			// Now that we've added, if we've exceeded, stop spawning.
 			if (itinerary.length >= maxCitiesOnItinerary) {
 				stopCitySpawning();
 			}
@@ -281,6 +336,7 @@ function place_random_city(){
 
 function startTrip() {
 	// store.set("player_location",$("#"+this.id).data("data").location);
+	clearInterval(gameTimerTimeout);
 	store.set("player_funds",store.get("player_funds") - getItineraryCost());
 	store.set("player_fame",store.get("player_fame") + getItineraryFame());
 	var newCarbon = store.get("player_CO2") + getItineraryCarbon();
@@ -290,12 +346,13 @@ function startTrip() {
 	store.set("num_flights",store.get("num_flights")+1);
 	clearCanvas();
 
-	$(".tripOffer, .tripItinerary").remove();
+	$(".tripOffer, .tripItinerary, .placedCity").remove();
+	$("#gameTimer").removeClass("expiring");
 
 	stopCitySpawning();
 	startPassages("newspaper.json","Start");
 	$(".tripOffer").remove();
-	change_scene("canvas", "travel/plane-flying.gif");
+	change_scene("canvas", "travel/plane-flying.png");
 
 	// If user clicks, start reading article of their choice.
 	$(document).on({
@@ -322,6 +379,28 @@ function startGame(){
 	// Repeat process after a delay.
 	startCitySpawning();
 	showItinerary();
+	gameTimer = gameLengthInSeconds;
+	gameTick();
+}
+
+function gameTick() {
+	gameTimer -= 1;
+	$("#gameTimer").html(gameTimer);
+	if (gameTimer > 0 && gameTimer < 10) {
+		$("#gameTimer").addClass("expiring");
+	}
+	if (gameTimer <= 0) {
+		outOfTime();
+	} else {
+		gameTimerTimeout = setTimeout(function(){
+			gameTick();
+		}, 1000);
+	}
+}
+
+function outOfTime() {
+	// alert("Out of time!");
+	startTrip();
 }
 
 function beginReading() {
