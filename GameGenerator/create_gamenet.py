@@ -8,7 +8,7 @@ def solve(*args):
     """Run clingo with the provided argument list and return the parsed JSON result."""
     
     CLINGO = "~/bin/clingo"
-    arg = [CLINGO, "--outf=2"] + list(args)
+    arg = [CLINGO,'petri.lp','knowledge_base.lp', "--outf=2"] + list(args)
     arg = [a for a in arg]
     clingo = subprocess.Popen(
         ' '.join(arg),
@@ -61,7 +61,7 @@ def solve_randomly(*args):
 
 if __name__ == '__main__':
 	if len(sys.argv) != 4:
-		print "Usage: {} <lp file> <threads> <output name>".format(sys.argv[0])
+		print "Usage: {} <scenario file> <threads> <output name>".format(sys.argv[0])
 		exit()
 	lp_file = sys.argv[1]
 	threads = int(sys.argv[2])
