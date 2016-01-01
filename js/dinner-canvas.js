@@ -44,6 +44,13 @@ var rightDishCoords = { x: 426, y: 354, w: 116, h: 60 };
 var centerDishCoords = { x: 144, y: 262, w: 190, h: 96 };
 var forkCoords = { x: 310, y: 354, w: 59, h: 75};
 
+var eatCounter = 0;
+var eatEveryNSeconds = 20;
+var secondsUntilNextDish = 6;
+var minSecondsBetweenDishes = 6;
+var maxSecondsBetweenDishes = 12;
+
+
 // If the player uses the arrow keys to play.
 function checkKey(e) {
     e = e || window.event;
@@ -224,15 +231,6 @@ var downClick = function() {
 	}
 }
 
-
-// Dinner scene intervals.
-
-var eatCounter = 0;
-var eatEveryNSeconds = 12;
-var secondsUntilNextDish = 5;
-var minSecondsBetweenDishes = 5;
-var maxSecondsBetweenDishes = 10;
-
 // Called on loop while scene is active. (Should be once per seccond for variables above to be accurate.)
 var plate_loop = function() {
 
@@ -274,8 +272,8 @@ var plate_loop = function() {
 
 function startGame(){
 
-	plateStatus = 3; // 0 (empty) to 4 (full)
-	maxPlate = 3;
+	plateStatus = 2; // 0 (empty) to 4 (full)
+	maxPlate = 4;
 
 	leftSide = 0; // 0 = empty, 1 = dish waiting, 2 = impatient dish waiting
 	rightSide = 0;

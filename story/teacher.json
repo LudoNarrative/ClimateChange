@@ -1,7 +1,7 @@
 [
 	{
 		"title": 	"Intro",
-		"scene": 	["@@set required_percent to -1@@<i>Keep your cool during the lecture. When you see you’re losing your cool, click on the ball when it's in the middle of the square.</i>","<span style='color:yellow'>Practice Mode: @@if score gt 40@@You're very calm.@@endif@@@@if score gt 20 AND score leq 40@@You're a little nervous.@@endif@@@@if score gt 0 AND score leq 20@@You're feeling a lot of stress!@@endif@@@@if score leq 0@@You're about to have a breakdown!@@endif@@</span>"],
+		"scene": 	["@@set required_percent to -1@@<i>Keep your cool during the lecture. When you see you’re losing your cool, click on the ball when it's in the middle of the square.</i>","<span style='color:yellow'>Practice Mode: @@if score gt 40@@You're keeping your cool.@@endif@@@@if score gt 20 AND score leq 40@@You're just a bit nervous.@@endif@@@@if score gt 0 AND score leq 20@@You're starting to feel stressed.@@endif@@@@if score leq 0@@You're feeling very stressed!@@endif@@</span>"],
 
 		"choices": 	[
 						["Okay.  I think I'm ready.", "Start"]
