@@ -1,12 +1,19 @@
-#const minSources = 1.
-#const maxSources = 1.
-#const minSinks = 1.
-#const maxSinks = 1.
-#const minConverters = 1.
-#const maxConverters = 1.
-
+#const minSources = 0.
+#const maxSources = 3.
+#const minSinks = 0.
+#const maxSinks = 3.
+#const minConverters = 0.
+#const maxConverters = 3.
+#const minRelationships = 1.
+#const maxRelationships = 3.
 
 availableObject(player).
 availableObject(friend).
 availableObject(banana).
 availableObject(plate).
+availableObject(hunger).
+availableObject(food).
+availableObject(satiation).
+availableObject(happiness).
+availableObject(time).
+availableObject(impatience).
