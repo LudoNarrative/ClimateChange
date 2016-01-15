@@ -1,27 +1,33 @@
-#const maxUses = 2.
-#const maxRelationships = 5.
-#const maxObjectUses = 2.
+#const maxUses = 4.
+#const maxRelationships = 3.
+#const maxObjectUses = 4.
 
 infinite(somebody).
 accumulation(plate).
 boolean(food).
 
-useOnly(somebody,1,1).
-useOnly(eats,2).
+%useOnly(somebody,1,1).
+%useOnly(eats,2).
+
 
 object(somebody,1).
 object(somebody,2).
 object(banana,3).
-
+object(plate,4).
 
 %%%%%%%%%%%%%%%%%
 
 
 hyponym(food,banana).
+hyponym(something,plate).
+
 
 input(eats,somebody,1).
 input(eats,food,2).
 output(eats,somebody,1).
+
+input(serves,plate,1).
+output(serves,food,2).
 
 
 %input(enjoys_eating,1).
@@ -30,9 +36,9 @@ output(eats,somebody,1).
 %output(enjoys_eating,satiation,3).
 
 
-%input(offers, somebody,1).
-%output(offers, somebody,1).
-%output(offers, something,2).
+input(offers, somebody,1).
+output(offers, somebody,1).
+output(offers, something,2).
 
 
 %%%%
@@ -72,3 +78,15 @@ prettyAssignment(REL,REL_ID,ROLE,OBJ,OBJ_ID) :- relationAssignment(REL_ID,ROLE_I
 :- relationAssignment(REL_ID,ROLE_ID,OBJ_ID), not goodAssignment(REL_ID,ROLE_ID,OBJ_ID).
 
 :- relationAssignment(REL_ID,ROLE_ID1,OBJ), relationAssignment(REL_ID,ROLE_ID2,OBJ), ROLE_ID1 != ROLE_ID2.
+
+:- relationAssignment(REL_ID,ROLE_ID,OBJ_ID), infinite(OBJ), object(OBJ,OBJ_ID), input(REL,_,ROLE_ID), not output(REL,_,ROLE_ID), relationship(REL,REL_ID).
+
+needToAccumulate(OBJ_ID) :- relationAssignment(REL_ID1,ROLE_ID1,OBJ_ID), relationship(REL1,REL_ID1), input(REL1,ROLE1,ROLE_ID1), object(OBJ,OBJ_ID), accumulation(OBJ).
+
+goodAccumulator(OBJ_ID) :- needToAccumulate(OBJ_ID), relationAssignment(REL_ID,ROLE_ID,OBJ_ID), output(REL,_,ROLE_ID), relationship(REL,REL_ID).
+goodAccumulator(OBJ_ID) :- not needToAccumulate(OBJ_ID), relationAssignment(REL_ID,ROLE_ID,OBJ_ID).
+:- not goodAccumulator(OBJ_ID), relationAssignment(_,_,OBJ_ID).
+
+goodBoolean(OBJ_ID,OBJ) :- relationAssignment(REL_ID1,ROLE_ID1,OBJ_ID), relationship(REL1,REL_ID1), input(REL1,ROLE1,ROLE_ID1), object(OBJ,OBJ_ID), relationAssignment(REL_ID2,ROLE_ID2,OBJ_ID), relationship(REL2,REL_ID2), output(REL2,ROLE2,ROLE_ID2),boolean(OBJ_PARENT),hyponym(OBJ_PARENT,OBJ), REL_ID1 != REL_ID2.
+
+:- boolean(OBJ_PARENT),hyponym(OBJ_PARENT,OBJ), object(OBJ,OBJ_ID), not goodBoolean(OBJ_ID,OBJ), relationAssignment(_,_,OBJ_ID).
