@@ -8,7 +8,7 @@ def solve(*args):
     """Run clingo with the provided argument list and return the parsed JSON result."""
     
     CLINGO = "~/bin/clingo"
-    arg = [CLINGO,'petri_constraints.lp','knowledge_base.lp', "--outf=2"] + list(args)
+    arg = [CLINGO,'constraints.lp','knowledge_base.lp', "--outf=2"] + list(args)
     arg = [a for a in arg]
     clingo = subprocess.Popen(
         ' '.join(arg),
@@ -69,6 +69,40 @@ if __name__ == '__main__':
 	counter = 0
 	with open(sys.argv[3],'w') as outfile:
 		outfile.write('digraph G{\n')
+		transitions = set()
+		locations = set()
+		edges = []
+		for assignment in net['prettyAssignment']:
+			tran = (assignment[0],assignment[1])
+			loc = (assignment[3],assignment[4])
+			transitions.add(tran)
+			locations.add(loc)
+			if assignment[5] == 'input':
+				edges.append((loc,tran,'l'))
+			else:
+				edges.append((tran,loc,'t'))
+		
+		for transition in transitions:
+			outfile.write('{}{} [label="{}",shape = box]\n'.format(transition[0],transition[1],transition[0]))
+		for location in locations:
+			outfile.write('{}{} [label="{}",shape = circle]\n'.format(location[0],location[1],location[0]))
+		for edge in edges:
+			l = edge[0]
+			t = edge[1]
+			color = 'black'
+			if edge[2] == 'l':
+				if (t,l,'t') not in edges:
+					color = 'red'
+			if edge[2] == 't':
+				if (t,l,'l') not in edges:
+					color = 'green'
+			outfile.write('{}{} -> {}{} [color="{}"]\n'.format(l[0],l[1],t[0],t[1],color))
+
+		outfile.write('}\n')
+
+	'''
+	with open(sys.argv[3],'w') as outfile:
+		outfile.write('digraph G{\n')
 		if 'activeSource' in net:
 			for s in net['activeSource']:
 				counter += 1
@@ -111,3 +145,4 @@ if __name__ == '__main__':
 						outfile.write('{} -> {}{}\n'.format(s1,s[0],counter))
 						outfile.write('{}{} -> {} [color = blue]\n'.format(s[0],counter,s2))
 		outfile.write('}\n')
+		'''
