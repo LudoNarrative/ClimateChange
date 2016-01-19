@@ -52,3 +52,8 @@ goodAccumulator(OBJ_ID) :- not needToAccumulate(OBJ_ID), relationAssignment(REL_
 goodBoolean(OBJ_ID,OBJ) :- relationAssignment(REL_ID1,ROLE_ID1,OBJ_ID), relationship(REL1,REL_ID1), input(REL1,ROLE1,ROLE_ID1), object(OBJ,OBJ_ID), relationAssignment(REL_ID2,ROLE_ID2,OBJ_ID), relationship(REL2,REL_ID2), output(REL2,ROLE2,ROLE_ID2),boolean(OBJ_PARENT),hyponym(OBJ_PARENT,OBJ), REL_ID1 != REL_ID2.
 
 :- boolean(OBJ_PARENT),hyponym(OBJ_PARENT,OBJ), object(OBJ,OBJ_ID), not goodBoolean(OBJ_ID,OBJ), relationAssignment(_,_,OBJ_ID).
+
+
+mismatch(REL_ID1,REL_ID2) :- relationAssignment(REL_ID1,ROLE_ID,OBJ_ID1), relationship(REL,REL_ID1), relationAssignment(REL_ID2,ROLE_ID,OBJ_ID2),  relationship(REL,REL_ID2), OBJ_ID1 != OBJ_ID2, REL_ID1 != REL_ID2.
+
+:-  relationAssignment(REL_ID1,ROLE_ID,OBJ_ID1), relationship(REL,REL_ID1), relationAssignment(REL_ID2,ROLE_ID,OBJ_ID2),  relationship(REL,REL_ID2), not mismatch(REL_ID1,REL_ID2), REL_ID1 != REL_ID2.
