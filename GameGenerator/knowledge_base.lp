@@ -1,10 +1,13 @@
 %%% KNOWLEDGE ENGINEERING
-
+%THOUGHTS
+% 1) Still missing something personal, I want it encoded that the one eating is the one gaining satisfaction.  Ownership of resources should be (or be able to) encoded
+% 2) The hyponym system feels right to me - should expand it to actions as well
 
 %infinite(somebody).
 %accumulation(plate).
 %boolean(food).
 
+accumulation(clarity).
 
 hyponym(food,banana).
 hyponym(something,plate).
@@ -19,10 +22,27 @@ hyponym(wanted,plate).
 
 hyponym(tick,stutter).
 
+hyponym(unwanted,trash).
+hyponym(unwanted,oil).
+
 hyponym(revealer,scrubber).
+hyponym(obscurant,oil).
+hyponym(obscured,trash).
 hyponym(obscurant,sand).
 hyponym(obscured,crab).
+hyponym(obscured,stone).
 
+hyponym(contemplative,reveal).
+hyponym(contemplative,shave).
+
+output(contemplative,contemplation,1).
+
+
+input(neutralized,oil,1).
+input(neutralized,dishsoap,2).
+output(neutralized,trash,3).
+
+input(dispose,unwanted,1).
 
 
 input(eats,somebody,1).
@@ -99,6 +119,7 @@ input(relieves_tick,tick,2).
 input(relieves_tick,confidence,2).
 output(relieves_tick,somebody,1).
 output(relieves_tick,confidence,2).
+
 
 
 input(reveal,revealer,1).

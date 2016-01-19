@@ -11,4 +11,8 @@ object(scrubber,2).
 object(sand,3).
 object(crab,4).
 object(clarity,5).
-
+object(stone,6).
+object(trash,7).
+object(oil,8).
+object(dishsoap,9).
+object(contemplation,10).
