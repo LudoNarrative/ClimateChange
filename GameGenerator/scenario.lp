@@ -17,3 +17,4 @@ object(satiation,8).
 object(happiness,9).
 object(time,10).
 object(impatience,11).
+object(hunger,12).
