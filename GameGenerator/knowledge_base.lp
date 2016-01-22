@@ -1,7 +1,7 @@
 %%% KNOWLEDGE ENGINEERING
 %THOUGHTS
 % 1) Still missing something personal, I want it encoded that the one eating is the one gaining satisfaction.  Ownership of resources should be (or be able to) encoded
-% 2) The hyponym system feels right to me - should expand it to actions as well
+% 2) Some of Chris's stuff feels non-abstract to me (e.g. speed controller, pretty much anything where time is involved) -  This raises question "Should abstract/non-abstract be generated separately?  Or is abstract about the skeleton and then non-abstract comes in and fleshes it out?"
 
 %infinite(somebody).
 %accumulation(plate).
@@ -35,7 +35,7 @@ hyponym(obscured,stone).
 hyponym(contemplative,reveal).
 hyponym(contemplative,shave).
 
-output(contemplative,contemplation,1).
+output(contemplative,contemplation,contemplation).
 
 
 input(neutralized,oil,1).
@@ -132,6 +132,19 @@ output(find,obscured,2).
 
 input(clear,clarity,1).
 
+input(shave,beard,1).
+input(shave,razor,2).
+output(shave,shaving,3).
+output(shave,razor,2).
 
+input(shave_beard,shaving,1).
+input(shave_beard,careful,2).
 
+input(cut_face,shaving,1).
+input(cut_face,careless,2).
 
+input(choose_location,required_choice,4).
+input(choose_location,location,5).
+input(choose_location,money,1).
+output(choose_location,fame,2).
+output(choose_location,carbon,3).

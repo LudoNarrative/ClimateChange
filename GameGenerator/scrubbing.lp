@@ -1,6 +1,6 @@
-#const maxUses = 3.
-#const maxRelationships = 5.
-#const maxObjectUses = 3.
+#const maxUses = 2.
+#const maxRelationships = 3.
+#const maxObjectUses = 2.
 
 %useOnly(somebody,1,1).
 %useOnly(eats,2).
