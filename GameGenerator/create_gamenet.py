@@ -68,7 +68,7 @@ if __name__ == '__main__':
 	net = solve_randomly(lp_file,'--parallel-mode={}'.format(threads))
 	counter = 0
 	with open(sys.argv[3],'w') as outfile:
-		outfile.write('digraph G{\n')
+		outfile.write('digraph G{\nconcentrate=true\n')
 		transitions = set()
 		locations = set()
 		edges = []
@@ -78,9 +78,11 @@ if __name__ == '__main__':
 			transitions.add(tran)
 			locations.add(loc)
 			if assignment[5] == 'input':
-				edges.append((loc,tran,'l'))
+				if (loc,tran,'l') not in edges:
+					edges.append((loc,tran,'l'))
 			else:
-				edges.append((tran,loc,'t'))
+				if (tran,loc,'t') not in edges:
+					edges.append((tran,loc,'t'))
 		
 		for transition in transitions:
 			outfile.write('{}{} [label="{}",shape = box]\n'.format(transition[0],transition[1],transition[0]))
