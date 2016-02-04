@@ -13,5 +13,14 @@ New ideas:
 
 - Player/system assignment to transitions
 - Reward/punishment system for constraining the system by mood/theme?
-  => this starts to get into the player skills required for a given
-    mechanic, which requires some concretization.
+  E.g. "reward contemplation, punish haste." Do these make sense at the
+  abstract level?
+
+Possible complete overhauls:
+- What if we went the other direction, concrete -> abstract? It seems like
+  "value specifications" ("reward contemplation, punish haste") are going
+  to manifest better as concrete mechanics. Abstracting after-the-fact
+  probably still makes sense as a top-down check on the global sense-making
+  of the game design?
+
+
