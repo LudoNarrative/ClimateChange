@@ -1,0 +1,17 @@
+CRM 2/4/2016:
+It seems like the code gets exponentially slower the more objects I add to
+the scenario file. Is it feasible to combine scenarios into a single pool?
+
+The ownership version of things seems to only produce one net?
+
+Hypernyms are solving a problem that I agree exists (lack of generality of
+entities), but I'm not certain it's the right solution. What if resource
+pools were adjectives/properties, and we assigned said properties to
+various nouns that could instantiate them? 
+
+New ideas:
+
+- Player/system assignment to transitions
+- Reward/punishment system for constraining the system by mood/theme?
+  => this starts to get into the player skills required for a given
+    mechanic, which requires some concretization.
