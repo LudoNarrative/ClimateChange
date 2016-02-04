@@ -1,7 +1,13 @@
 %%% KNOWLEDGE ENGINEERING
-%THOUGHTS
-% 1) Still missing something personal, I want it encoded that the one eating is the one gaining satisfaction.  Ownership of resources should be (or be able to) encoded
-% 2) Some of Chris's stuff feels non-abstract to me (e.g. speed controller, pretty much anything where time is involved) -  This raises question "Should abstract/non-abstract be generated separately?  Or is abstract about the skeleton and then non-abstract comes in and fleshes it out?"
+% THOUGHTS
+% 1) Still missing something personal, I want it encoded that the one
+% eating is the one gaining satisfaction.  Ownership of resources should be
+% (or be able to) encoded
+%
+% 2) Some of Chris's stuff feels non-abstract to me (e.g. speed controller,
+% pretty much anything where time is involved) -  This raises question
+% "Should abstract/non-abstract be generated separately?  Or is abstract
+% about the skeleton and then non-abstract comes in and fleshes it out?"
 
 %infinite(somebody).
 %accumulation(plate).
@@ -148,3 +154,23 @@ input(choose_location,location,5).
 input(choose_location,money,1).
 output(choose_location,fame,2).
 output(choose_location,carbon,3).
+
+% Bacon cooking game
+input(add_to_pan, raw_bacon).
+output(add_to_pan, cooking_bacon).
+
+input(generate_bacon, time).
+output(generate_bacon, bacon).
+
+input(remove_early, cooking_bacon).
+output(remove_early, raw_bacon).
+
+input(cook, time).
+input(cook, cooking_bacon).
+output(cook, cooked_bacon).
+
+input(remove_cooked, cooked_bacon).
+output(remove_cooked, edible_bacon).
+
+input(burn, cooked_bacon).
+output(burn, burned_bacon).
