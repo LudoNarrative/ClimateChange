@@ -17,14 +17,14 @@ driving : gametype.
 ponglike : gametype.
 sim : gametype.
 
-thing : type.
-frog : thing.
-car : thing.
-truck : thing.
-log : thing.
-turtle : thing.
-lilypad : thing.
-road : thing.
+noun : type.
+frog : noun.
+car : noun.
+truck : noun.
+log : noun.
+turtle : noun.
+lilypad : noun.
+road : noun.
 
 % verbs
 verb : type.
@@ -33,7 +33,7 @@ crosses : verb.
 traverses : verb.
 carries : verb.
 
-does verb thing thing : bwd.
+does verb noun noun : bwd.
 
 does hits car frog.
 does hits frog lilypad.
@@ -43,9 +43,12 @@ does traverses car road.
 does carries log frog.
 
 make gametype : pred.
-selected thing : pred.
+connect noun noun : pred.
+connected noun verb noun : pred.
+node noun : pred.
+selected noun : pred.
 pick_player : pred.
-player_plays thing verb thing : pred.
+player_plays noun verb noun : pred.
 
 stage generate = {
 make/frogger :
@@ -55,10 +58,28 @@ make frogger
   -o selected Car * selected Frog * selected Road
       * selected Target * selected Log * pick_player.
 
+make/connect
+  : connect Noun1 Noun2 -o node Noun1 * node Noun2.
+
+connect/direct :
+  node Noun1 * node Noun2 * does Verb Noun1 Noun2
+  -o connected Noun1 Verb Noun2.
+
+connect/indirect/subject :
+  node Noun * does Verb Noun Noun'
+    -o connected Noun Verb Noun' * node Noun'.
+
+connect/indirect/object :
+  node Noun * does Verb Noun' Noun
+    -o connected Noun' Verb Noun * node Noun'.
+
 set_player
   : selected Thing * does Verb Thing Object * pick_player 
     -o player_plays Thing Verb Object.
 
+
+
 }
 
-#trace _ generate {make frogger}.
+% #trace _ generate {make frogger}.
+#trace _ generate {connect log lilypad}.
