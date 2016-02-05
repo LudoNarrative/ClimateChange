@@ -1,0 +1,64 @@
+
+gametype : type.
+frogger : gametype.
+packing : gametype.
+  % e.g.: shopping, republia times, moving stories
+travel : gametype.
+maintaining_pipeline : gametype.
+  % e.g.: dinner game; bacon game
+fishing : gametype.
+connecting_paths : gametype.
+balance : gametype.
+scrubbing : gametype.
+pass_time : gametype.
+tuning : gametype.
+taking_measurements : gametype.
+driving : gametype.
+ponglike : gametype.
+sim : gametype.
+
+thing : type.
+frog : thing.
+car : thing.
+truck : thing.
+log : thing.
+turtle : thing.
+lilypad : thing.
+road : thing.
+
+% verbs
+verb : type.
+hits : verb.
+crosses : verb.
+traverses : verb.
+carries : verb.
+
+does verb thing thing : bwd.
+
+does hits car frog.
+does hits frog lilypad.
+does crosses frog road.
+does traverses log road.
+does traverses car road.
+does carries log frog.
+
+make gametype : pred.
+selected thing : pred.
+pick_player : pred.
+player_plays thing verb thing : pred.
+
+stage generate = {
+make/frogger :
+make frogger
+  * does hits Car Frog * does traverses Car Road * does crosses Frog Road
+  * does hits Frog Target * does traverses Log Road * does carries Log Frog
+  -o selected Car * selected Frog * selected Road
+      * selected Target * selected Log * pick_player.
+
+set_player
+  : selected Thing * does Verb Thing Object * pick_player 
+    -o player_plays Thing Verb Object.
+
+}
+
+#trace _ generate {make frogger}.
