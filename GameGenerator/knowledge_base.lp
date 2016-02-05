@@ -156,21 +156,22 @@ output(choose_location,fame,2).
 output(choose_location,carbon,3).
 
 % Bacon cooking game
-input(add_to_pan, raw_bacon).
-output(add_to_pan, cooking_bacon).
+input(add_to_pan, raw_bacon, 1).
+output(add_to_pan, cooking_bacon, 2).
 
-input(generate_bacon, time).
-output(generate_bacon, bacon).
+input(generate_bacon, time, 1).
+output(generate_bacon, bacon, 2).
 
-input(remove_early, cooking_bacon).
-output(remove_early, raw_bacon).
+input(remove_early, cooking_bacon, 1).
+output(remove_early, raw_bacon, 2).
+ 
+input(cook, time, 1).
+input(cook, cooking_bacon, 2).
+output(cook, cooked_bacon, 3).
 
-input(cook, time).
-input(cook, cooking_bacon).
-output(cook, cooked_bacon).
+input(remove_cooked, cooked_bacon, 1).
+output(remove_cooked, edible_bacon, 2).
 
-input(remove_cooked, cooked_bacon).
-output(remove_cooked, edible_bacon).
+input(burn, cooked_bacon, 1).
+output(burn, burned_bacon, 2).
 
-input(burn, cooked_bacon).
-output(burn, burned_bacon).
