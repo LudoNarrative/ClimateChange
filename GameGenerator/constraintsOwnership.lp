@@ -1,100 +1,143 @@
 
-actorID(ID) :- actor(_,ID).
-relationshipID(1..maxRelationshipCount).
-entityID(1..entityCount).
+actorID(ID) :- actor(_, ID).
+transitionID(1..maxTransitionCount).
+resourceID(1..resourceCount).
 
-entityType(NAME) :- input(_,NAME,_,_), not abstract(NAME).
-entityType(NAME) :- output(_,NAME,_,_), not abstract(NAME).
-entityType(NAME) :- hyponym(NAME,_), not abstract(NAME).
-entityType(NAME) :- hyponym(_,NAME), not abstract(NAME).
-hyponym(NAME,NAME) :- entityType(NAME).
+resourceType(Resource_type) :-
+	input(_, Resource_type, _, _),
+	not abstract(Resource_type).
+resourceType(Resource_type) :-
+	output(_, Resource_type, _, _),
+	not abstract(Resource_type).
+resourceType(Resource_type) :-
+	hyponym(Resource_type, _),
+	not abstract(Resource_type).
+resourceType(Resource_type) :-
+	hyponym(_, Resource_type),
+	not abstract(Resource_type).
+hyponym(Resource_type, Resource_type) :-
+	resourceType(Resource_type).
 
-{usedEntity(NAME,ID) : entityType(NAME)} 1 :- entityID(ID).
-1 {usedEntity(NAME,ID) : entityType(NAME), entityID(ID)}.
-C {usedEntity(NAME,ID) : entityID(ID)} C :- entity(NAME,C).
-
-
-input(REL,ROLE,ACTOR_ID,ROLE_ID) :- input(PARENT_REL,ROLE,ACTOR_ID,ROLE_ID), hyponym(PARENT_REL,REL).
-output(REL,ROLE,ACTOR_ID,ROLE_ID) :- output(PARENT_REL,ROLE,ACTOR_ID,ROLE_ID), hyponym(PARENT_REL,REL).
-role(REL,ROLE,ACTOR_ID,ROLE_ID) :- input(REL,ROLE,ACTOR_ID,ROLE_ID).
-role(REL,ROLE,ACTOR_ID,ROLE_ID) :- output(REL,ROLE,ACTOR_ID,ROLE_ID).
-
-maxPerConcept(N,C) :- useOnly(N,C).
-maxPerConcept(N,C) :- concept(N), not useOnly(N,_) , C = maxPerConcept.
-
-maxPerEntity(N,C) :- useOnly(N,C).
-maxPerEntity(N,C) :- usedEntity(N,_), not useOnly(N,_) , C = maxPerEntity.
-
-maxPerActor(N,C) :- useOnly(N,C).
-maxPerActor(N,C) :- actor(N,_), not useOnly(N,_) , C = maxPerActor.
-
-{relationship(N,ID) : relationshipID(ID)} C :- concept(N), maxPerConcept(N,C). 
-{relationship(N,ID) : concept(N)} 1 :- relationshipID(ID). 
+{usedResource(Resource_type, ID) : resourceType(Resource_type)} 1 :-
+	resourceID(ID).
+1 {usedResource(Resource_type, ID) : resourceType(Resource_type),
+	resourceID(ID)}.
+C {usedResource(Resource_type, ID) : resourceID(ID)} C :-
+	resource(Resource_type, C).
 
 
-concept(NAME) :- input(NAME,_,_,_), not abstract(NAME).
-concept(NAME) :- output(NAME,_,_,_), not abstract(NAME).
-minRelationshipCount {relationship(N,ID) : concept(N), relationshipID(ID)} maxRelationshipCount.
+input(Transition_type, Resource_type, Actor_ID, Role_ID) :-
+	input(Parent_Transition_type, Resource_type, Actor_ID, Role_ID),
+	hyponym(Parent_Transition_type, Transition_type).
+output(Transition_type, Resource_type, Actor_ID, Role_ID) :-
+	output(Parent_Transition_type, Resource_type, Actor_ID, Role_ID),
+	hyponym(Parent_Transition_type, Transition_type).
+role(Transition_type, Resource_type, Actor_ID, Role_ID) :-
+	input(Transition_type, Resource_type, Actor_ID, Role_ID).
+role(Transition_type, Resource_type, Actor_ID, Role_ID) :-
+	output(Transition_type, Resource_type, Actor_ID, Role_ID).
 
-relationshipRoleID(REL_ID,ROLE_ID) :- relationship(N,REL_ID), role(N,_,_,ROLE_ID).
-relationshipPartID(REL_ID,ROLE_ID) :- relationship(N,REL_ID),role(N,_,ROLE_ID,_).
+maxPerConcept(N, C) :- useOnly(N, C).
+maxPerConcept(N, C) :-
+	concept(N),
+	not useOnly(N, _) ,  C = maxPerConcept.
 
-1 {relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID) : entityID(ENTITY_ID)} 1 :- relationshipRoleID(REL_ID,ROLE_ID).
-C {relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID) : relationshipRoleID(REL_ID,ROLE_ID)} C :-  entityID(ENTITY_ID), maxPerEntity(ENTITY_ID,C).
+maxPerResource(N, C) :- useOnly(N, C).
+maxPerResource(N, C) :-
+	usedResource(N, _),
+	not useOnly(N, _) ,  C = maxPerResource.
 
-goodEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID) :- 	relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID),  
-											role(REL,ENTITY,_,ROLE_ID), relationship(REL,REL_ID), 
-								  			hyponym(ENTITY,ACTUAL_ENTITY), usedEntity(ACTUAL_ENTITY,ENTITY_ID).
+maxPerActor(N, C) :- useOnly(N, C).
+maxPerActor(N, C) :-
+	actor(N, _),
+	not useOnly(N, _) ,  C = maxPerActor.
 
-:- relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID), not goodEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID).
-
-
-1 {relationActorAssignment(REL_ID,PART_ID,ACTOR_ID) : actorID(ACTOR_ID)} 1 :- relationshipPartID(REL_ID,PART_ID).
-{relationActorAssignment(REL_ID,PART_ID,ACTOR_ID) : relationshipPartID(REL_ID,PART_ID)} C :-  actorID(ACTOR_ID), maxPerActor(ACTOR_ID,C).
-
-
-goodActorAssignment(REL_ID,PART_ID,ACTOR_ID) :- 	relationActorAssignment(REL_ID,PART_ID,ACTOR_ID),  
-											role(REL,_,PART_ID,_), relationship(REL,REL_ID), actor(_,ACTOR_ID).
-
-:- relationActorAssignment(REL_ID,PART_ID,ACTOR_ID), not goodActorAssignment(REL_ID,PART_ID,ACTOR_ID).
-
-:- relationActorAssignment(REL_ID1,PART_ID,ACTOR_ID),relationActorAssignment(REL_ID2,PART_ID,ACTOR_ID), relationship(REL,REL_ID1),relationship(REL,REL_ID2), REL_ID1 != REL_ID2.
-
-:- relationActorAssignment(REL_ID,PART_ID1,ACTOR_ID),relationActorAssignment(REL_ID,PART_ID2,ACTOR_ID), PART_ID1 != PART_ID2.
-
-
-connection(REL_ID1,ACTOR_ID1,REL_ID2,ACTOR_ID2) :- 	relationEntityAssignment(REL_ID1,_,ENTITY_ID),relationActorAssignment(REL_ID1,PART_ID1,ACTOR_ID1),
-								relationship(REL1,REL_ID1) ,role(REL1,_,PART_ID1,ROLE_ID1),
-								relationEntityAssignment(REL_ID2,_,ENTITY_ID),relationActorAssignment(REL_ID2,PART_ID2,ACTOR_ID2),relationship(REL2,REL_ID2) ,role(REL2,_,PART_ID2,ROLE_ID2), REL1 != REL2, input(REL1,_,PART_ID1,ROLE_ID1), output(REL2,_,PART_ID2,ROLE_ID2).
-connection(REL_ID1,ACTOR_ID1,REL_ID2,ACTOR_ID2) :- connection(REL_ID2,ACTOR_ID2,REL_ID1,ACTOR_ID1).
-connection(REL_ID1,ACTOR_ID1,REL_ID3,ACTOR_ID3) :- connection(REL_ID1,ACTOR_ID1,REL_ID2,ACTOR_ID2), connection(REL_ID2,ACTOR_ID2,REL_ID3,ACTOR_ID3).
+{transition(N, ID) : transitionID(ID)} C :-
+	concept(N),
+	maxPerConcept(N, C). 
+{transition(N, ID) : concept(N)} 1 :-
+	transitionID(ID). 
 
 
-:- not connection(REL_ID1,ACTOR_ID1,REL_ID2,ACTOR_ID2), relationActorAssignment(REL_ID1,_,ACTOR_ID1),relationActorAssignment(REL_ID2,_,ACTOR_ID2),REL_ID1 != REL_ID2.
+concept(Transition_type) :- input(Transition_type, _, _, _),
+	not abstract(Transition_type).
+concept(Transition_type) :- output(Transition_type, _, _, _),
+	not abstract(Transition_type).
+minTransitionCount {transition(N, ID) : concept(N),
+	transitionID(ID)} maxTransitionCount.
 
-%%%%
+transitionRoleID(Transition_ID, Role_ID) :-
+	transition(N, Transition_ID),
+	role(N, _, _, Role_ID).
+transitionPartID(Transition_ID, Role_ID) :-
+	transition(N, Transition_ID),
+	role(N, _, Role_ID, _).
 
-needToAccumulate(ENTITY_ID,ACTOR_ID) :- relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID), relationship(REL,REL_ID), input(REL,ROLE,PART_ID,ROLE_ID), usedEntity(ENTITY,ENTITY_ID), accumulation(ENTITY), relationActorAssignment(REL_ID,PART_ID,ACTOR_ID).
+1 {transitionResourceAssignment(Transition_ID, Role_ID, Resource_ID) : resourceID(Resource_ID)} 1 :-
+	transitionRoleID(Transition_ID, Role_ID).
+    
+C {transitionResourceAssignment(Transition_ID, Role_ID, Resource_ID) : transitionRoleID(Transition_ID, Role_ID)} C :-
+	resourceID(Resource_ID),
+	maxPerResource(Resource_ID, C).
 
-goodAccumulator(ENTITY_ID,ACTOR_ID) :- needToAccumulate(ENTITY_ID,ACTOR_ID), relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID), output(REL,_,PART_ID,ROLE_ID), relationship(REL,REL_ID), relationActorAssignment(REL_ID,PART_ID,ACTOR_ID), not input(REL,_,_,ROLE_ID).
+goodResourceAssignment(Transition_ID, Role_ID, Resource_ID) :-
+	transitionResourceAssignment(Transition_ID, Role_ID, Resource_ID),
+	role(Transition_type, Resource, _, Role_ID),
+	transition(Transition_type, Transition_ID),
+    hyponym(Resource, Actual_Resource),
+	usedResource(Actual_Resource, Resource_ID).
 
-goodAccumulator(ENTITY_ID,ACTOR_ID) :- not needToAccumulate(ENTITY_ID,ACTOR_ID), 
-										relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID), 
-										relationActorAssignment(REL_ID,PART_ID,ACTOR_ID),role(REL,ROLE,PART_ID,ROLE_ID).
-
-:- not goodAccumulator(ENTITY_ID,ACTOR_ID), relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID),relationActorAssignment(REL_ID,PART_ID,ACTOR_ID).
-
-%%%%
-
-
+:- transitionResourceAssignment(Transition_ID, Role_ID, Resource_ID),
+	not goodResourceAssignment(Transition_ID, Role_ID, Resource_ID).
 
 
-%%%%
+1 {transitionActorAssignment(Transition_ID, Part_ID, Actor_ID) : actorID(Actor_ID)} 1 :-
+	transitionPartID(Transition_ID, Part_ID).
+    
+{transitionActorAssignment(Transition_ID, Part_ID, Actor_ID) : transitionPartID(Transition_ID, Part_ID)} C :-
+	actorID(Actor_ID),
+	maxPerActor(Actor_ID, C).
 
-prettyAssignment(REL,REL_ID,ROLE,ENTITY,ENTITY_ID,PART_ID,ACTOR,ACTOR_ID, input) :- input(REL,ROLE,PART_ID,ROLE_ID), 
-			relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID), relationship(REL,REL_ID), usedEntity(ENTITY,ENTITY_ID), 
-			relationActorAssignment(REL_ID,PART_ID,ACTOR_ID), actor(ACTOR,ACTOR_ID).
 
-prettyAssignment(REL,REL_ID,ROLE,ENTITY,ENTITY_ID,PART_ID,ACTOR,ACTOR_ID, output) :- output(REL,ROLE,PART_ID,ROLE_ID), 
-			relationEntityAssignment(REL_ID,ROLE_ID,ENTITY_ID), relationship(REL,REL_ID), usedEntity(ENTITY,ENTITY_ID), 
-			relationActorAssignment(REL_ID,PART_ID,ACTOR_ID), actor(ACTOR,ACTOR_ID).
+goodActorAssignment(Transition_ID, Part_ID, Actor_ID) :- 	
+    transitionActorAssignment(Transition_ID, Part_ID, Actor_ID),	
+	role(Transition_type, _, Part_ID, _),	
+    transition(Transition_type, Transition_ID),	
+    actor(_, Actor_ID).
+
+:- transitionActorAssignment(Transition_ID, Part_ID, Actor_ID),
+	not goodActorAssignment(Transition_ID, Part_ID, Actor_ID).
+
+actorToTransitionPartType(Transition_type,Part_ID,Actor_ID) :-
+    transitionActorAssignment(Transition_ID, Part_ID, Actor_ID), 
+    transition(Transition_type, Transition_ID).
+
+actorToTransitionPart(Transition_type,Transition_ID,Part_ID,Actor_ID) :-
+    transitionActorAssignment(Transition_ID, Part_ID, Actor_ID), 
+    transition(Transition_type, Transition_ID).
+    
+:- actorToTransitionPartType(Transition_type,Part_ID,Actor_ID), 2 {actorToTransitionPart(Transition_type,Transition_ID,Part_ID,Actor_ID)}.
+  
+actorToTransition(Transition_ID,Actor_ID) :-  transitionActorAssignment(Transition_ID, Part_ID, Actor_ID).
+
+:- actorToTransition(Transition_ID,Actor_ID) , 2 { transitionActorAssignment(Transition_ID, Part_ID, Actor_ID)}.
+
+accumulationResource(Resource_ID) :- 
+    accumulation(Resource_type),	
+    usedResource(Resource_type, Resource_ID).
+
+usedAsInput(Resource_ID) :-  
+    input(Transition_type,  Role_type,  Part_ID,  Resource_ID),	
+    transition(Transition_type,  Transition_ID),	
+    transitionResourceAssignment(Transition_ID,  Role_ID,  Resource_ID),	
+    role(Transition_type,  Role_type,  Part_ID,  Resource_ID).
+    
+usedAsOutput(Resource_ID) :-  
+    output(Transition_type,  Role_type,  Part_ID,  Resource_ID),	
+    transition(Transition_type,  Transition_ID),	
+    transitionResourceAssignment(Transition_ID,  Role_ID,  Resource_ID),	
+	role(Transition_type,  Role_type,  Part_ID,  Resource_ID).
+    
+:- accumulationResource(Resource_ID),	
+    usedAsInput(Resource_ID),	
+    not usedAsOutput(Resource_ID).
