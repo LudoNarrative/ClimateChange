@@ -1,0 +1,30 @@
+
+enum(direction,left)
+enum(direction,right)
+
+//feels clunky - velocity as a number?
+change_pre(tick_left,cursor,pos_x,number,X)
+change_pre(tick_left,cursor,vel,direction,left)
+change_post(tick_left,cursor,pos_x,number,X--)	
+     
+change_pre(tick_right,cursor,pos_x,number,X)
+change_pre(tick_right,cursor,vel,direction,right)
+change_post(tick_right,cursor,pos_x,number,X++)
+
+change_pre(change_dir,cursor,vel,direction,_)
+change_pre(change_dir,cursor.pos_x < -#Some Constant?)  -- these could be split into 2 rules, but I like having them in one - treating them as an or, but maybe it should be an and? I don't know
+change_pre(change_dir,cursor.pos_x > #Some Constant?)
+change_post(change_dir,cursor,vel,direction,INVERT) -- maybe all binary enums can be inverted?  I'd prefer to not have to check and do other
+
+
+
+react_pre(succeed,cursor.pos_x = 0)
+react_pre(succeed,cursor.active)
+react_pre(succeed,player,anxiety,number,X)
+react_post(succeed,player,anxiety,number,X--)
+
+
+react_pre(fail,cursor.pos_x != 0) //maybe some notion of epsilon?
+react_pre(fail,cursor.active)
+react_pre(fail,player,anxiety,number,X)
+react_post(fail,player,anxiety,number,X++)
