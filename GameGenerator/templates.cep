@@ -81,5 +81,8 @@ set_player
 
 }
 
-% #trace _ generate {make frogger}.
-#trace _ generate {connect log lilypad}.
+#trace _ generate {make frogger}.
+% #trace _ generate {connect log lilypad}.
+
+
+
