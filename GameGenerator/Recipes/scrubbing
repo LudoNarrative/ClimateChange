@@ -1,0 +1,32 @@
+
+
+
+//feels unnecessary - maybe I'm misunderstanding Chris's idea
+react_pre(scrub,scrubber,pos_x,number,_)
+react_pre(scrub,scrubber,pos_y,number,_)
+react_pre(scrub,scrubber,active,bool,true)
+react_pre(scrub,sand,pos_x,number,_)
+react_pre(scrub,sand,pos_y,number,_)
+react_pre(scrub,sand,active,bool,true)
+react_pre(scrub,sand.pos_x = scrubber.pos_x)
+react_pre(scrub,sand.pos_y = scrubber.pos_y)
+
+react_post(scrub,sand,active,bool,false)
+
+//react_post(scrub,scrubber,pos_x,number,_)
+//react_post(scrub,scrubber,pos_y,number,_)
+//react_post(scrub,scrubber,active,bool,true)
+//react_post(scrub,sand,pos_x,number,_)
+//react_post(scrub,sand,pos_y,number,_)
+
+
+////Cleaner?
+react_pre(scrub,scrubber,active,bool,true)
+react_pre(scrub,sand,active,bool,true)
+react_pre(scrub,sand.pos_x = scrubber.pos_x)
+react_pre(scrub,sand.pos_y = scrubber.pos_y)
+
+react_post(scrub,sand,active,bool,false)
+
+change_pre(toggle_scrubbing,scrubber,active,_)
+change_post(toggle_scrubbing,scrubber,active,INVERT)
