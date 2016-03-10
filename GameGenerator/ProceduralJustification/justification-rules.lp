@@ -1,7 +1,7 @@
 
-%%%%%%%%%%%%%%% %%%%%%%%%%%%%%% %%%%%%%%%%%%%%% %%%%%%%%%%%%%%%
-%% Values X and Y are coupled if there is a mechanic that modifies both of
-%% them in the same direction (increase or decrease).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Values X and Y are coupled if all mechanics that affect one of them
+%% affect the other in an analogous way (increase or decrease).
 
 coupled_game_mechanic(Game, Mechanic, X, Y) :- 
     has_mechanic(Game, Mechanic), 
@@ -13,19 +13,27 @@ coupled_game_mechanic(Game, Mechanic, X, Y) :-
     decreases(Game, Mechanic, X, Value_X),  
     decreases(Game, Mechanic, Y, Value_Y).
 
-coupled(Game, X, Y) :- 
+exists_coupling(Game, X, Y) :-
+  has_mechanic(Game, Mechanic),
+  has_value(Game, X),
+  has_value(Game, Y),
+  coupled_game_mechanic(Game, Mechanic, X, Y).
+
+%% Game has a mechanic that decouples X and Y.
+exists_decoupling(Game, X, Y) :- 
   has_mechanic(Game, Mechanic),
   has_value(Game, X), 
   has_value(Game, Y),
-  coupled_game_mechanic(Game, Mechanic, X, Y). 
+  not coupled_game_mechanic(Game, Mechanic, X, Y). 
 
-decoupled(Game, X, Y) :- 
-  not coupled(X,Y), 
-  has_value(Game, X), 
-  has_value(Game, Y).
+coupled(Game, X, Y) :- 
+  exists_coupling(Game, X, Y),
+  not exists_decoupling(Game, X, Y).
 
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Values X and Y are in a tradeoff relationship if there is 
+%% all mechanics that increase (decrease) X decrease (increase) Y.
 
 tradeoff_game_mechanic(Game, Mechanic, X, Y) :- 
     has_mechanic(Game, Mechanic),
@@ -36,18 +44,23 @@ tradeoff_game_mechanic(Game, Mechanic, X, Y) :-
     has_mechanic(Game,Mechanic), 
     decreases(Game,Mechanic,X,Value_X),
     increases(Game,Mechanic,Y,Value_Y).
+
+exists_non_tradeoff(Game, X, Y) :-
+    has_mechanic(Game, Mechanic),
+    has_value(Game, X),
+    has_value(Game, Y),
+    not tradeoff_game_mechanic(Game, Mechanic, X, Y).
     
-tradeoff(Game, X, Y) :- 
-  has_mechanic(Game,Mechanic), 
-  has_value(Game,X), 
-  has_value(Game,Y),
-  tradeoff_game_mechanic(Game,Mechanic,X,Y).
+exists_tradeoff(Game, X, Y) :-
+    has_mechanic(Game, Mechanic),
+    has_value(Game, X),
+    has_value(Game, Y),
+    tradeoff_game_mechanic(Game, Mechanic, X, Y).
 
+trafeoff(Game, X, Y) :-
+    exists_tradeoff(Game, X, Y),
+    not exists_non_tradeoff(Game, X, Y).
 
-not_tradeoff(Game, X,Y) :- 
-  not tradeoff(X,Y), 
-  has_value(Game,X), 
-  has_value(Game,Y).
 
 %%%%%%%%%%%%%%%
 
