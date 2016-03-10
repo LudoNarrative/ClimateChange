@@ -2,10 +2,15 @@
 %%%%%%%%%%%%%%%
 
 coupled_game_mechanic(Game,Mechanic,X,Y) :- 
-    has_mechanic(Game,Mechanic), increases(Game,Mechanic,X,Value_X),  increases(Game,Mechanic,Y,Value_Y).
+    has_mechanic(Game,Mechanic), 
+    increases(Game,Mechanic,X,Value_X),  
+    increases(Game,Mechanic,Y,Value_Y).
 
-not_coupled(X,Y) :- not coupled_game_mechanic(Game,Mechanic,X,Y), has_mechanic(Game,Mechanic), has_value(Game,X), has_value(Game,Y).
-
+not_coupled(X,Y) :- 
+  not coupled_game_mechanic(Game,Mechanic,X,Y), 
+  has_mechanic(Game,Mechanic), 
+  has_value(Game,X), 
+  has_value(Game,Y).
 
 coupled(X,Y) :- not not_coupled(X,Y), has_value(Game,X), has_value(Game,Y), X != Y.
 
