@@ -19,7 +19,7 @@ has_mechanic(travel,selection).
 precondition(thresh(gt,0,money),selection).
 decreases(travel,selection,money,city(cost)).
 increases(travel,selection,co2,city(pollution)).
-increases(travel,selection,fame,city(prestive)). % perhaps not necessary?  
+increases(travel,selection,fame,city(prestige)). % perhaps not necessary?  
 chooses(travel,selection,city,multiple). %perhaps not necessary - perhaps choosing+accumulating(x) means chooses(x)? 
 
 
@@ -31,7 +31,6 @@ has_value(beach,sand(amount)).
 goal(beach,discard,sand(amount)).
 has_mechanic(beach,scrubbing).
 decreases(beach,scrubbing,sand(amount),amount).
-%Don't feel need to specify any sort of mechanic type
 
 
 game(lecture).
