@@ -7,9 +7,9 @@ has_entity(travel, city, many).
 has_value(travel, money).
 has_value(travel, co2).
 has_value(travel, fame).
-has_value(travel,city(cost)).
-has_value(travel,city(pollution)).
-has_value(travel,city(prestige)).
+has_value(travel, city(cost)).
+has_value(travel, city(pollution)).
+has_value(travel, city(prestige)).
 narrative(travel, co2).
 narrative(travel, fame).
 
@@ -19,9 +19,8 @@ has_mechanic(travel,selection).
 precondition(thresh(gt,0,money),selection).
 decreases(travel,selection,money,city(cost)).
 increases(travel,selection,co2,city(pollution)).
-increases(travel,selection,fame,city(prestive)). % perhaps not necessary?  
+increases(travel,selection,fame,city(prestige)). % perhaps not necessary?  
 chooses(travel,selection,city,multiple). %perhaps not necessary - perhaps choosing+accumulating(x) means chooses(x)? 
-
 
 game(beach).
 
@@ -31,7 +30,6 @@ has_value(beach,sand(amount)).
 goal(beach,discard,sand(amount)).
 has_mechanic(beach,scrubbing).
 decreases(beach,scrubbing,sand(amount),amount).
-%Don't feel need to specify any sort of mechanic type
 
 
 game(lecture).
@@ -49,9 +47,6 @@ increases(lecture,focus,confidence,amount).
 system_controlled(lecture,time). % better name than time needed
 player_controlled(lecture,focus).
 has_goal(lecture,focus,align,target,cursor). % maybe align(target,cursor)?
-
-
-
 
 
 
