@@ -52,12 +52,13 @@ decreases(push, block, targets_matched).
 impedes(block, movement).
 impedes(block, push).
 
+mechanic(M) :- has_mechanic(G,M).
 %% rules for interpreting whether a game description matches a design
 %% intent
 
 % a mechanic is meditative if nothing impedes it.
-meditative(M) :- not impedes(M', M).
-
+non_meditative(M) :- impedes(M_prime, M).
+meditative(M) :- mechanic(M), not non_meditative(M).
 % other things to capture:
 % - monotonocity of progress
 % - allocation of resources; feedback loops that constrain future choices
