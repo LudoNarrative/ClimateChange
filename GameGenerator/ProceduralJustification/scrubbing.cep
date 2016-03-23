@@ -1,0 +1,46 @@
+nat : type.
+z : nat.
+s nat : nat.
+
+sand nat : pred.
+
+stage game = {
+  scrub : sand (s N) -o sand N.
+}
+
+context init =
+{sand (s (s (s (s (s z)))))}.
+
+%% A refinement...
+
+position : type.
+cursor position : pred.
+sand_at position : pred.
+adjacent position position : bwd.
+
+stage mouse_game = {
+  scrub : cursor Position * sand_at Position -o cursor Position.
+  move_cursor : cursor Position * adjacent Position P' -o cursor P'.
+} #interactive mouse_game.
+
+p1 : position.
+p2 : position.
+p3 : position.
+p4 : position.
+adjacent p1 p2.
+adjacent p2 p1.
+adjacent p2 p3.
+adjacent p3 p2.
+adjacent p3 p1.
+adjacent p1 p3.
+adjacent p4 p1.
+adjacent p1 p4.
+adjacent p4 p2.
+adjacent p2 p4.
+adjacent p4 p3.
+adjacent p3 p4.
+
+context init_mousegame =
+{sand_at p1, sand_at p2, sand_at p3, sand_at p4, cursor p1}.
+
+#trace _ mouse_game init_mousegame.
