@@ -1,0 +1,86 @@
+%% This version is probably too complex to do procedural reasoning over.
+
+destination : type.
+possible_dest destination : bwd.
+berlin : destination. possible_dest berlin.
+paris : destination. possible_dest paris.
+prague : destination. possible_dest prague.
+
+amount : type.
+m0 : amount.
+m500 : amount.
+m1000 : amount.
+m1500 : amount.
+m2000 : amount.
+m2500 : amount.
+m3000 : amount.
+
+cost_to_fly destination destination amount : bwd.
+cost_to_fly berlin paris m500.
+cost_to_fly berlin prague m1000.
+cost_to_fly paris berlin m1500.
+cost_to_fly paris prague m2000.
+cost_to_fly prague berlin m500.
+cost_to_fly prague paris m1500.
+
+cost_from_home destination amount : bwd.
+cost_from_home berlin m2000.
+cost_from_home paris m2000.
+cost_from_home prague m2000.
+
+subtract amount amount amount : bwd.
+subtract M m0 M.
+subtract M M m0.
+subtract m3000 m2000 m1000.
+subtract m3000 m1500 m1500.
+subtract m3000 m1000 m2000.
+subtract m3000 m500 m2500.
+subtract m2500 m2000 m500.
+subtract m2500 m1500 m1000.
+subtract m2500 m1000 m1500.
+subtract m2500 m500 m2000.
+subtract m2000 m1000 m1000.
+subtract m2000 m1500 m500.
+subtract m2000 m500 m1500.
+subtract m1500 m1000 m500.
+subtract m1500 m500 m1000.
+subtract m1000 m500 m500.
+
+
+dest_list : type.
+nil : dest_list.
+cons destination dest_list : dest_list.
+
+available destination : pred.
+money amount : pred.
+itinerary dest_list : pred.
+choosing : pred.
+
+stage build_itinerary = {
+
+first_dest :
+  $choosing *
+  available Dest * itinerary nil * money M 
+    * cost_from_home Dest C * subtract M C M'
+    -o money M' * itinerary (cons Dest nil).
+
+add_dest : 
+  $choosing *
+  available Dest * itinerary (cons Last I) * money M 
+    * cost_to_fly Last Dest C * subtract M C M'
+  -o itinerary (cons Dest (cons Last I)) * money M'.
+
+generate_dest :
+  $choosing * 
+  possible_dest Dest -o available Dest.
+
+ungen_dest :
+  $choosing * available Dest -o ().
+
+done : choosing -o ().
+
+} #interactive build_itinerary.
+context init = {money m3000, money m3000, itinerary nil, choosing}.
+
+
+#trace _ build_itinerary init.

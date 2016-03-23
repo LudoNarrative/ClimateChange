@@ -44,3 +44,4 @@ context init_mousegame =
 {sand_at p1, sand_at p2, sand_at p3, sand_at p4, cursor p1}.
 
 #trace _ mouse_game init_mousegame.
+
