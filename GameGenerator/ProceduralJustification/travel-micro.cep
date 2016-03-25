@@ -1,0 +1,66 @@
+%% This version is probably too complex to do procedural reasoning over.
+
+invitation : pred.
+destination : pred.
+money : pred.
+fame : pred.
+carbon : pred.
+
+gen_fame : pred.
+gen_carbon : pred.
+choosing : pred.
+
+stage build_itinerary = {
+
+%% Player rules
+add_dest : 
+  $choosing * invitation * money
+  -o destination.
+
+unadd_dest :
+  $choosing * destination
+  -o invitation * money.
+
+done : choosing -o ().
+
+
+%% Game rules
+
+invite :
+  $choosing -o invitation.
+
+uninvite :
+  $choosing * invitation -o ().
+
+} #interactive build_itinerary.
+
+qui * stage build_itinerary -o stage take_trip.
+
+stage take_trip = {
+
+go : destination -o gen_fame * gen_carbon.
+
+gen_fame/stop :
+  gen_fame -o fame.
+
+gen_fame/more :
+  gen_fame -o fame * gen_fame.
+
+gen_carbon/stop :
+  gen_carbon -o carbon.
+
+gen_carbon/more :
+  gen_carbon -o carbon * gen_carbon.
+
+}
+
+qui * stage take_trip
+  -o stage build_itinerary * choosing.
+
+context init = {
+money, money, money, money, money, money, 
+choosing
+}.
+
+
+#trace _ build_itinerary init.
