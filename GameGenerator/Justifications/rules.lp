@@ -86,8 +86,81 @@ timingChallenge(RESOURCE) :-
 
     
 goal(maintain,RESOURCE) :- 
-    precondition(below_0(RESOURCE), modeLogic(game_loss)).
+    precondition(below_0(RESOURCE), 
+    modeLogic(game_loss)).
+    
+goal(eliminate,RESOURCE) :- 
+    precondition(below_0(RESOURCE), 
+    modeLogic(game_win)).
+goal(LOGIC) :- 
+    precondition(LOGIC, 
+    modeLogic(game_win)).
+goal(LOGIC) :- 
+    precondition(LOGIC, 
+    narrativeLogic(story_progression)).
 
+goalIsEasy(goal(LOGIC)) :-
+    easy(LOGIC).
+    
 timingChallengeToMaintain(RESOURCE) :- 
     goal(maintain,RESOURCE),
     timingChallenge(RESOURCE).
+ 
+possibleStates(STATE) :- 
+    canHappen(graphicalLogic(ENTITY,STATE,ACTION)).
+     
+canHappen(LOGIC) :- 
+    precondition(ANYTHING , LOGIC).
+canHappen(LOGIC) :- 
+    precondition(LOGIC , ANYTHING).
+
+monotonicallyDecreases(ENTITY) :- 
+    canHappen(graphicalLogic(ENTITY,STATE,removed)), 
+    not canHappen(graphicalLogic(ENTITY,OTHER_STATE,added)), 
+    possibleStates(OTHER_STATE).
+ 
+entities(ENTITY) :- 
+    canHappen(graphicalLogic(ENTITY,STATE,ACTION)).
+entities(ENTITY) :-
+    graphicalLogic(ENTITY,STATE).
+    
+unrestricted(ENTITY) :- 
+    physicsLogic(ENTITY,controlLogic(LOGIC)),
+    not collisionLogic(ENTITY,ENTITY_B,blocked),
+    entities(ENTITY_B).
+    
+unrestricted(ENTITY) :- 
+    physicsLogic(ENTITY,controlLogic(LOGIC)),
+    not collisionLogic(ENTITY_B,ENTITY,blocked),
+    entities(ENTITY_B).
+
+unrestricted(collisionLogic(ENTITY,ENTITY_B,TYPE)) :-
+    unrestricted(ENTITY),
+    canHappen(collisionLogic(ENTITY,ENTITY_B,TYPE)).
+
+unrestricted(collisionLogic(ENTITY,ENTITY_B,TYPE)) :-
+    unrestricted(ENTITY_B),
+    canHappen(collisionLogic(ENTITY,ENTITY_B,TYPE)).    
+
+restricted(LOGIC) :-
+    precondition(RESTRICTED,LOGIC),
+    not unrestricted(RESTRICTED).
+unrestricted(LOGIC) :-
+    precondition(UNRESTRICTED,LOGIC),
+    unrestricted(UNRESTRICTED).
+%All such preconditions must be unrestricted?
+unrestricted(graphicalLogic(ENTITY,ACTION)) :- 
+    unrestricted(graphicalLogic(ENTITY,STATE,ACTION)).
+
+easy(graphicalLogic(ENTITY,removed)) :-
+    unrestricted(graphicalLogic(ENTITY,removed)),
+    monotonicallyDecreases(ENTITY).
+
+easy(LOGIC) :- 
+    precondition(EASY,LOGIC),
+    easy(EASY).
+
+%% KNOWLEGE BASE
+
+unrestricted(controlLogic(click)). %player can always click
+
