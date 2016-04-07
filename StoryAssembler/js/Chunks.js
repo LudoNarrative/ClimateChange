@@ -34,7 +34,17 @@ define(["State", "TextChanger", "util"], function(State, TextChanger, util) {
 			} else {
 				return textIfFalse;
 			}
-		}
+		},
+		// "attr": function(params, text) {
+		// 	if (params.length !== 3) {
+		// 		console.error("Template command 'attr' must have three params: attribute to check for current speaker, text if true, text if false: in text '" + text + "'.");
+		// 		return "(attr)";
+		// 	}
+
+		// 	var attToCheck = params[0];
+		// 	var textIfTrue = params[1];
+		// 	var textIfFalse = params[2];
+		// }
 	}
 
 	var addTemplateCommand = function(cmd, func) {
@@ -92,6 +102,7 @@ define(["State", "TextChanger", "util"], function(State, TextChanger, util) {
 			re = /{[^}]*}/g;
 		}
 
+		// Now that all templates have been replaced, modify the text based on state. (NLG techniques.)
 		if (speaker && speaker.attributes) {
 			if (speaker.attributes.indexOf("shy") >= 0) {
 				txt = TextChanger.shy(txt);

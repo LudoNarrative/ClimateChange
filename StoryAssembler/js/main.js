@@ -25,11 +25,11 @@ requirejs(["StoryAssembler", "State", "domReady!"], function(StoryAssembler, Sta
 	var characters = {
 		"Emma": {
 			displayName: "Emma",
-			attributes: []
+			attributes: ["kind", "shy"]
 		},
 		"Mel": {
 			displayName: "Mel",
-			attributes: ["shy"]
+			attributes: []
 		}
 	};
 	State.set("knowCareer", 0);
