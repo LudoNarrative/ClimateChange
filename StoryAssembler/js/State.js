@@ -18,8 +18,9 @@ define([], function() {
 		blackboard[key] = value;
 	}
 
-	/* Currently handles PARAM op VALUE, true, or false
-	op can be eq, neq, geq, leq, gt, lt
+	/* Checks a condition against the state.
+	Currently handles condition strings in the form "PARAM op VALUE" and returns true or false
+	"op" can be eq, neq, geq, leq, gt, lt; is not case sensitive
 	*/
 	var isTrue = function(condition) {
 		condition = "" + condition; // coerce to string
@@ -38,7 +39,6 @@ define([], function() {
 		var value = conditionParts[2];
 		if (value === "true") value = true;
 		if (value === "false") value = false;
-		console.log("param, op, value", param, op, value);
 
 		var valOfParam = get(param);
 		if (op !== "eq" && isNaN(parseFloat(valOfParam))) {
