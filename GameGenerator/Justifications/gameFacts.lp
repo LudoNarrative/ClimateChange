@@ -1,5 +1,5 @@
 
-% LECTURE GAME
+%%%%% LECTURE GAME
 % physicsLogic(ball,spring).
 % graphicalLogic(ball,visible).
 % graphicalLogic(square,visible).
@@ -21,6 +21,8 @@
 % goal(maintain,confidence).
 
 
+
+%%%%% SCRUBBING GAME 
 graphicalLogic(hand,visible).
 graphicalLogic(sand,visible).
 physicsLogic(hand,controlLogic(cursor_movement)).

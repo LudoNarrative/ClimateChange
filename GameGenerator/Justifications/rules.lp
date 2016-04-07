@@ -5,6 +5,7 @@ good(RESOURCE) :-
 good(RESOURCE) :- 
     precondition(below_thresh(RESOURCE,THRESHOLD), 
     modeLogic(game_loss)).
+    
 bad(RESOURCE) :- 
     precondition(above_thresh(RESOURCE,THRESHOLD), 
     modeLogic(game_loss)).
