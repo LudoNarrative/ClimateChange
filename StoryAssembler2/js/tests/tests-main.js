@@ -1,5 +1,16 @@
 /* global requirejs */
 
+/*
+Some helpful QUnit syntaxes.
+https://qunitjs.com/cookbook/
+
+assert.ok(true) --> fails if param is not true
+assert.deepEqual(actual, expected) --> === (works on objects, too)
+(also notOk, notDeepEqual, etc.
+
+
+*/
+
 requirejs.config({
 	paths: {
 		"domReady": "../../lib/domReady",

@@ -20,6 +20,7 @@ define([], function() {
 
 	/* Checks a condition against the state.
 	Currently handles condition strings in the form "PARAM op VALUE" and returns true or false
+	Also supports plain "true" or "false"
 	"op" can be eq, neq, geq, leq, gt, lt; is not case sensitive
 	*/
 	var isTrue = function(condition) {
@@ -41,7 +42,7 @@ define([], function() {
 		if (value === "false") value = false;
 
 		var valOfParam = get(param);
-		if (op !== "eq" && isNaN(parseFloat(valOfParam))) {
+		if (op !== "eq" && op !== "neq" && isNaN(parseFloat(valOfParam))) {
 			throw new Error("Tried to perform op '" + op + "' on param '" + param + "' (" + valOfParam + ") but that does not appear to be a number.");
 		}
 		switch(op) {
@@ -70,9 +71,7 @@ define([], function() {
 	 *
 	 * Currently handles:
 	 *  - @@set PARAM VALUE@@: Sets a variable to a number or string.
-	 *  - @@incr PARAM@@:   Increments a numeric variable by one.
 	 *  - @@incr PARAM x@@: Increments a numeric variable by x.
-	 *  - @@decr PARAM@@:   Decrements a numeric variable by one.
 	 *  - @@decr PARAM x@@: Decrements a numeric variable by x.
 	 *  - @@mult PARAM x@@: Multiplies a numeric variable by x.
 	 */
@@ -103,24 +102,25 @@ define([], function() {
 
 		var params = effect.replace(/\s\s+/g, " ").split(" ");
 		var op = params.splice(0, 1)[0];
+		var val = params[1];
+		if (val === "true") val = true;
+		if (val === "false") val = false;
 		switch(op) {
 			case "set":
 				expect(2);
-				set(params[0], params[1]);
+				set(params[0], val);
 				break;
 			case "incr":
-				if (!params[1]) params[1] = 1;
 				validateNumberParams();
-				set(params[0], get(params[0]) + parseFloat(params[1]));
+				set(params[0], get(params[0]) + parseFloat(val));
 				break;
 			case "decr":
-				if (!params[1]) params[1] = 1;
 				validateNumberParams();
-				set(params[0], get(params[0]) - parseFloat(params[1]));
+				set(params[0], get(params[0]) - parseFloat(val));
 				break;
 			case "mult":
 				validateNumberParams();
-				set(params[0], get(params[0]) * parseFloat(params[1]));
+				set(params[0], get(params[0]) * parseFloat(val));
 				break;
 			default:
 				throw new Error("Invalid op '" + op + "' in effect '" + effect + "'");

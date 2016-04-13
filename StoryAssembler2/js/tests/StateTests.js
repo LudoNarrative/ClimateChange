@@ -1,10 +1,84 @@
+/* global test */
 "use strict";
 define(["../State"], function(State) {
 	
 	var run = function() {
-		test( "getting and setting", function( assert ) {
+		test("getting and setting", function( assert ) {
+			
+			State.set("testNum", 5);
+			assert.deepEqual(State.get("testNum"), 5, "number set/get");
+			
+			State.set("testStr", "alpha");
+			assert.deepEqual(State.get("testStr"), "alpha", "string set/get");
+
+			State.set("testNum", 12);
+			assert.deepEqual(State.get("testNum"), 12, "updating number value");
+
+			State.set("testNum", "12");
+			assert.deepEqual(State.get("testNum"), "12", "strings that look like numbers stay strings");
+
+			State.set("testBool", true);
+			assert.deepEqual(State.get("testBool"), true, "true booleans");
+			State.set("testBool", false);
+			assert.deepEqual(State.get("testBool"), false, "false booleans");
+
+			assert.deepEqual(State.get("notARealValue"), undefined, "getting something nonexistent should return undefined");
+		});
+
+		test("conditions", function(assert) {
+			State.set("testNum", 5);
+			assert.ok(State.isTrue("testNum eq 5"), "eq");
+			assert.notOk(State.isTrue("testNum neq 5"), "neq");
+			assert.ok(State.isTrue("testNum geq 5"), "geq (equal)");
+			assert.ok(State.isTrue("testNum geq 4"), "geq (when lesser)");
+			assert.notOk(State.isTrue("testNum geq 6"), "geq (when greater)");
+			assert.ok(State.isTrue("testNum leq 5"), "leq");
+			assert.ok(State.isTrue("testNum gt 4"), "gt");
+			assert.ok(State.isTrue("testNum lt 6"), "lt");
+
+			assert.ok(State.isTrue("testNum EQ 5"), "not case sensitive");
+			assert.ok(State.isTrue("testNum    EQ    5"), "whitespace doesn't matter");
+
+			assert.ok(State.isTrue("true"), "plain true");
+			assert.notOk(State.isTrue("false"), "plain false");
+
+			State.set("testBool", false);
+			assert.ok(State.isTrue("testBool eq false"), "eq on booleans");
+			assert.ok(State.isTrue("testBool neq true"), "neq on booleans");
+
+			assert.throws(function(){State.isTrue("testNum")}, "param alone invalid");
+			assert.throws(function(){State.isTrue("testNum eq")}, "missing val invalid");
+			assert.throws(function(){State.isTrue("testNum 4")}, "missing op invalid");
+			assert.throws(function(){State.isTrue("testNum eq 5 blank")}, "extra param invalid");
+			assert.throws(function(){State.isTrue("testNum foo 5")}, "invalid op");
+		});
+
+		test("change", function(assert) {
 			State.set("testVal", 5);
-			assert.ok( State.get("testVal") == 5, "Passed!" );
+			State.change("set testVal 7");
+			assert.ok(State.isTrue("testVal eq 7"), "set param val");
+			State.change("set testVal alpha");
+			assert.ok(State.isTrue("testVal eq alpha"), "set param val (changing type to string)");
+			State.change("set testVal true");
+			assert.ok(State.isTrue("testVal eq true"), "set param val (changing type to bool)");
+			State.set("testVal", 5);
+			State.change("incr testVal 6");
+			assert.ok(State.isTrue("testVal eq 11"), "incr param val");
+			State.change("decr testVal 5");
+			assert.ok(State.isTrue("testVal eq 6"), "decr param val");
+			State.change("mult testVal 3");
+			assert.ok(State.isTrue("testVal eq 18"), "mult param val");
+			State.change("mult testVal -2");
+			assert.ok(State.isTrue("testVal eq -36"), "negative number");
+			State.change("incr testVal 1.5");
+			assert.ok(State.isTrue("testVal eq -34.5"), "decimal");
+
+			assert.throws(function(){State.change("incr")}, "op alone invalid");
+			assert.throws(function(){State.change("incr testVal")}, "missing val invalid");
+			assert.throws(function(){State.change("incr 5")}, "missing var invalid");
+			assert.throws(function(){State.change("foobar testVal 5")}, "bad op invalid");
+			assert.throws(function(){State.change("incr testVal string")}, "expected number");
+
 		});
 	}
 
