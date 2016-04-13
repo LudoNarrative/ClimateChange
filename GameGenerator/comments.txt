@@ -1,0 +1,26 @@
+CRM 2/4/2016:
+It seems like the code gets exponentially slower the more objects I add to
+the scenario file. Is it feasible to combine scenarios into a single pool?
+
+The ownership version of things seems to only produce one net?
+
+Hypernyms are solving a problem that I agree exists (lack of generality of
+entities), but I'm not certain it's the right solution. What if resource
+pools were adjectives/properties, and we assigned said properties to
+various nouns that could instantiate them? 
+
+New ideas:
+
+- Player/system assignment to transitions
+- Reward/punishment system for constraining the system by mood/theme?
+  E.g. "reward contemplation, punish haste." Do these make sense at the
+  abstract level?
+
+Possible complete overhauls:
+- What if we went the other direction, concrete -> abstract? It seems like
+  "value specifications" ("reward contemplation, punish haste") are going
+  to manifest better as concrete mechanics. Abstracting after-the-fact
+  probably still makes sense as a top-down check on the global sense-making
+  of the game design?
+
+

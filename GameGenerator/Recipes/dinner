@@ -1,0 +1,27 @@
+
+
+enum(side,left)
+enum(side,right)
+enum(side,center)
+
+generate(offer,plate,location != center)
+generate(offer,plate,location = origin)
+generate(offer,plate,origin,side,_)
+generate(offer,plate,location,side,_)
+generate(offer,plate,food,bool,true)
+
+change_pre(take, plate,location != center)
+change_pre(take,plate,location,side,_)
+change_post(take,plate,location,side,center)
+
+
+react_pre(serve, plate,location = center)
+react_pre(serve,plate,food,bool,true)
+react_pre(serve,player,food,number,X)
+react_post(serve,plate,food,bool,false)
+react_post(serve,player,food,number,X++)
+
+
+change_pre(give,plate,location,side,center)
+change_post(give,plate,location,side,_)
+change_post(give,plate,location != origin)

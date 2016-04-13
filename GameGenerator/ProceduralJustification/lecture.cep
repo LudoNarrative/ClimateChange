@@ -1,0 +1,32 @@
+% Lecture game
+
+nat : type.
+z : nat.
+s nat : nat.
+
+click : pred.
+aligned : pred.
+not_aligned : pred.
+confidence nat : pred.
+timer_tick : pred.
+game_end : pred.
+
+system : pred.
+player : pred.
+
+stage game = {
+  successful_click : click * $aligned * confidence C -o confidence (s C).
+  unsuccessful_click : click * $not_aligned * confidence (s C) -o confidence C.
+  move_off_target : timer_tick * aligned -o not_aligned.
+  move_on_target : timer_tick * not_aligned -o aligned.
+  drain_confidence : timer_tick * confidence (s C) -o confidence C.
+  end_condition : confidence z -o game_end.
+
+  clock : system -o timer_tick.
+  player_click : player -o click.
+} #interactive game.
+
+context init =
+{ not_aligned, confidence (s (s (s z))), !system, !player }.
+  
+#trace _ game init.
