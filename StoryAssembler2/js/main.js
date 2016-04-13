@@ -10,19 +10,22 @@ requirejs.config({
 		// "util": "util",
 
 		// "StoryAssembler": "StoryAssembler",
-		// "Display": "Display",
+		"Display": "Display",
 		// "Templates": "Templates",
 		// "Chunks": "Chunks",
-		// "State": "State",
+		"State": "State",
 		// "TextChanger": "TextChanger"
 	}
 });
 
-requirejs(["domReady!"], function() {
+requirejs(["State", "Display", "domReady!"], function(State, Display) {
 	console.log("SA2 main.js loaded.");
 
 	// Load scene and handle first frame.
-	// State.set("knowCareer", 0);
+	State.set("knowCareer", 12);
+	Display.init(function(){});
+	Display.addStoryText("Display module working!");
+	console.log("knowCareer should be 12: ", State.get("knowCareer"));
 	// StoryAssembler.beginScene("BestFriend", characters);
 
 });
