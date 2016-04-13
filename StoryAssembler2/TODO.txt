@@ -1,0 +1,15 @@
+
+
+
+Tasks:
+- Basic framework.
+- Get unit test framework running
+- Create basic skeleton
+- Design major modules
+
+
+Future:
+
+- Figure out a way to allow comments in data format.
+- makeMissing needs to correctly deal with missing frames and chunks.
+- Where do starting conditions live
