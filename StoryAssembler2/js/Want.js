@@ -9,6 +9,7 @@ define(["Request"], function(Request) {
 
 	var create = function(params) {
 		var want = {};
+		params = params || {};
 
 		// Consume params.
 		if (params.request) {
