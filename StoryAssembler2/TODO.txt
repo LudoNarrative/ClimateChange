@@ -2,7 +2,6 @@
 
 
 Tasks:
-- Get unit test framework running
 - Create basic skeleton
 - Design major modules
 

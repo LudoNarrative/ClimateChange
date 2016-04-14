@@ -29,10 +29,10 @@ define(["../State"], function(State) {
 			State.set("testNum", 5);
 			assert.ok(State.isTrue("testNum eq 5"), "eq");
 			assert.notOk(State.isTrue("testNum neq 5"), "neq");
-			assert.ok(State.isTrue("testNum geq 5"), "geq (equal)");
-			assert.ok(State.isTrue("testNum geq 4"), "geq (when lesser)");
-			assert.notOk(State.isTrue("testNum geq 6"), "geq (when greater)");
-			assert.ok(State.isTrue("testNum leq 5"), "leq");
+			assert.ok(State.isTrue("testNum gte 5"), "gte (equal)");
+			assert.ok(State.isTrue("testNum gte 4"), "gte (when lesser)");
+			assert.notOk(State.isTrue("testNum gte 6"), "gte (when greater)");
+			assert.ok(State.isTrue("testNum lte 5"), "lte");
 			assert.ok(State.isTrue("testNum gt 4"), "gt");
 			assert.ok(State.isTrue("testNum lt 6"), "lt");
 

@@ -5,7 +5,7 @@
 
 /* global define */
 
-define([], function() {
+define(["Condition"], function(Condition) {
 	"use strict";
 
 	var blackboard = {};
@@ -19,50 +19,39 @@ define([], function() {
 	}
 
 	/* Checks a condition against the state.
-	Currently handles condition strings in the form "PARAM op VALUE" and returns true or false
-	Also supports plain "true" or "false"
-	"op" can be eq, neq, geq, leq, gt, lt; is not case sensitive
+	the condition string are validated by the Condition module.
 	*/
 	var isTrue = function(condition) {
-		condition = "" + condition; // coerce to string
-		var conditionParts = condition.replace(/\s\s+/g, " ").split(" ");
-		if (conditionParts.length !== 3) {
-			if (conditionParts[0] === "true") {
-				return true;
-			} else if (conditionParts[0] === "false") {
-				return false;
-			} else {
-				throw new Error("Expected condition in the form 'PARAM OP VALUE' but saw '" + condition + "' which seems to have " + conditionParts.length + " parts.");
+		// Parse condition string; if invalid, will throw an error.
+		var conditionParts = Condition.parts(condition);
+
+		var valOfParam;
+		var param = conditionParts.param;
+		var op = conditionParts.op;
+		var value = conditionParts.value;
+		if (param !== undefined) {
+			valOfParam = get(param);
+			if (op !== "eq" && op !== "neq" && isNaN(parseFloat(valOfParam))) {
+				throw new Error("Tried to perform op '" + op + "' on param '" + param + "' (" + valOfParam + ") but that does not appear to be a number.");
 			}
 		}
-		var param = conditionParts[0];
-		var op = conditionParts[1].toLowerCase();
-		var value = conditionParts[2];
-		if (value === "true") value = true;
-		if (value === "false") value = false;
-
-		var valOfParam = get(param);
-		if (op !== "eq" && op !== "neq" && isNaN(parseFloat(valOfParam))) {
-			throw new Error("Tried to perform op '" + op + "' on param '" + param + "' (" + valOfParam + ") but that does not appear to be a number.");
-		}
 		switch(op) {
+			case "forceTrue":
+				return true;
+			case "forceFalse":
+				return false;
 			case "eq":
 				return valOfParam == value;
 			case "neq":
 				return valOfParam != value;
-			case "geq":
 			case "gte":
 				return valOfParam >= value;
-			case "leq":
 			case "lte":
 				return valOfParam <= value;
 			case "gt":
 				return valOfParam > value;
 			case "lt":
 				return valOfParam < value;
-			default:
-				throw new Error("Found invalid op '" + op + "' in condition '" + condition + "' (valid ops are: eq, geq, leq, gt, lt)");
-
 		}
 	}
 
