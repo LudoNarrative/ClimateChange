@@ -14,18 +14,26 @@ requirejs.config({
 		// "Templates": "Templates",
 		// "Chunks": "Chunks",
 		"State": "State",
+		"Condition": "Condition",
+		"Request": "Request",
+		"Want": "Want"
 		// "TextChanger": "TextChanger"
 	}
 });
 
-requirejs(["State", "Display", "domReady!"], function(State, Display) {
+requirejs(["State", "Want", "Display", "domReady!"], function(State, Want, Display) {
 	console.log("SA2 main.js loaded.");
 
-	// Load scene and handle first frame.
-	State.set("knowCareer", 12);
-	Display.init(function(){});
-	Display.addStoryText("Display module working!");
-	console.log("knowCareer should be 12: ", State.get("knowCareer"));
-	// StoryAssembler.beginScene("BestFriend", characters);
+	Display.init(function(){}); // Click handler will go here.
+
+	var sampleWishlist = [];
+	sampleWishlist.push(Want.create({
+		request: "introduceFriend eq true",
+		order: "first",
+		mandatory: true
+	}), Want.create({
+		id: "epilogue",
+		order: "last"
+	}));
 
 });
