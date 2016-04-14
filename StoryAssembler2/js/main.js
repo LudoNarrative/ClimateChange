@@ -7,7 +7,7 @@ requirejs.config({
 
 		// "underscore": "../lib/underscore-min",
 
-		// "util": "util",
+		"util": "util",
 
 		// "StoryAssembler": "StoryAssembler",
 		"Display": "Display",
@@ -32,7 +32,7 @@ requirejs(["State", "Want", "Display", "domReady!"], function(State, Want, Displ
 		order: "first",
 		mandatory: true
 	}), Want.create({
-		id: "epilogue",
+		chunkId: "epilogue",
 		order: "last"
 	}));
 
