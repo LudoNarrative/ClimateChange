@@ -1,23 +1,29 @@
+%%% Rules I want to encode
+ % repeatable
+ % limited/unlimited
+ %
+
+
 
 good(RESOURCE) :-     
     precondition(
         below(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,game_loss).
+    result(OUTCOME,mode_change(game_loss)).
     
 bad(RESOURCE) :- 
     precondition(
         above(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,game_loss).
+    result(OUTCOME,mode_change(game_loss)).
 
 bad(RESOURCE) :-     
     precondition(
         below(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,game_win).
+    result(OUTCOME,mode_change(game_win)).
     
 good(RESOURCE) :- 
     precondition(
         above(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,game_win).
+    result(OUTCOME,mode_change(game_win)).
     
 
 bad(RESOURCE) :-     
@@ -43,23 +49,23 @@ onlyOnePrecondition(OUTCOME) :-
 
 worseWithTime(RESOURCE) :- 
     good(RESOURCE),
-    precondition(time,OUTCOME), 
+    precondition(tick,OUTCOME), 
     onlyOnePrecondition(OUTCOME),
     result(OUTCOME,decreases(RESOURCE,AMOUNT)).
 worseWithTime(RESOURCE) :- 
     bad(RESOURCE),
-    precondition(time,OUTCOME), 
+    precondition(tick,OUTCOME), 
     onlyOnePrecondition(OUTCOME),
     result(OUTCOME,increases(RESOURCE,AMOUNT)).
 
 betterWithTime(RESOURCE) :- 
     bad(RESOURCE),
-    precondition(time,OUTCOME), 
+    precondition(tick,OUTCOME), 
     onlyOnePrecondition(OUTCOME),
     result(OUTCOME,decreases(RESOURCE,AMOUNT)).
 betterWithTime(RESOURCE) :- 
     good(RESOURCE),
-    precondition(time,OUTCOME), 
+    precondition(tick,OUTCOME), 
     onlyOnePrecondition(OUTCOME),
     result(OUTCOME,increases(RESOURCE,AMOUNT)).
     
@@ -67,40 +73,40 @@ betterWithTime(RESOURCE) :-
 
 
 
-playerActionHelps(PLAYER_ACTION,RESOURCE) :-
+playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE) :-
     good(RESOURCE),
-    precondition(control_event(PLAYER_ACTION),OUTCOME),
+    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
     result(OUTCOME,increases(RESOURCE,AMOUNT)).
 
-playerActionHelps(PLAYER_ACTION,RESOURCE) :-
+playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE) :-
     bad(RESOURCE),
-    precondition(control_event(PLAYER_ACTION),OUTCOME),
+    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
     result(OUTCOME,decreases(RESOURCE,AMOUNT)).
     
-playerActionHurts(PLAYER_ACTION,RESOURCE) :-
+playerActionHurts(BUTTON,BUTTON_STATE,RESOURCE) :-
     bad(RESOURCE),
-    precondition(control_event(PLAYER_ACTION),OUTCOME),
+    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
     result(OUTCOME,increases(RESOURCE,AMOUNT)).
 
-playerActionHurts(PLAYER_ACTION,RESOURCE) :-
+playerActionHurts(BUTTON,BUTTON_STATE,RESOURCE) :-
     good(RESOURCE),
-    precondition(control_event(PLAYER_ACTION),OUTCOME),
+    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
     result(OUTCOME,decreases(RESOURCE,AMOUNT)).
 
     
-playerActionAffects(PLAYER_ACTION,RESOURCE) :-
-    playerActionHurts(PLAYER_ACTION,RESOURCE).
+playerActionAffects(BUTTON,BUTTON_STATE,RESOURCE) :-
+    playerActionHurts(BUTTON,BUTTON_STATE,RESOURCE).
     
-playerActionAffects(PLAYER_ACTION,RESOURCE) :-
-    playerActionHelps(PLAYER_ACTION,RESOURCE).
+playerActionAffects(BUTTON,BUTTON_STATE,RESOURCE) :-
+    playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE).
     
     
-actionHasRiskReward(PLAYER_ACTION) :- 
-    playerActionHelps(PLAYER_ACTION,RESOURCE1),
-    playerActionHurts(PLAYER_ACTION,RESOURCE2).
+actionHasRiskReward(BUTTON,BUTTON_STATE) :- 
+    playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE1),
+    playerActionHurts(BUTTON,BUTTON_STATE,RESOURCE2).
     
-actionNeededForMaintenance(PLAYER_ACTION,RESOURCE) :-
-    playerActionHelps(PLAYER_ACTION,RESOURCE),
+actionNeededForMaintenance(BUTTON,BUTTON_STATE,RESOURCE) :-
+    playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE),
     worseWithTime(RESOURCE).
     
 timingBasedPhysics(spring).
@@ -125,27 +131,27 @@ timingAffectsEntity(ENTITY) :-
     timingBasedPhysics(PHYSICS_TYPE).
 
 
-timingAffectsAction(PLAYER_ACTION) :- 
-    precondition(control_event(PLAYER_ACTION),OUTCOME),
+timingAffectsAction(BUTTON,BUTTON_STATE) :- 
+    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
     precondition(collides(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
     timingAffectsEntity(ENTITY_A).
 
-timingAffectsAction(PLAYER_ACTION) :- 
-    precondition(control_event(PLAYER_ACTION),OUTCOME),
+timingAffectsAction(BUTTON,BUTTON_STATE) :- 
+    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
     precondition(collides(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
     timingAffectsEntity(ENTITY_B).
   
-timingChallenge(PLAYER_ACTION) :- 
-    actionHasRiskReward(PLAYER_ACTION),
-    timingAffectsAction(PLAYER_ACTION).
+timingChallenge(BUTTON,BUTTON_STATE) :- 
+    actionHasRiskReward(BUTTON,BUTTON_STATE),
+    timingAffectsAction(BUTTON,BUTTON_STATE).
 
 goal(achieve(OUTCOME)) :-
-    result(OUTCOME, game_win).
+    result(OUTCOME, mode_change(game_win)).
 goal(achieve(OUTCOME)) :-
     result(OUTCOME, story_progression).
     
 goal(prevent(OUTCOME)) :-
-    result(OUTCOME, game_loss).
+    result(OUTCOME, mode_change(game_loss)).
 
 result(OUTCOME,decreases(RESOURCE,1)) :-
     result(OUTCOME,delete(ENTITY)),
@@ -245,8 +251,8 @@ goal(relates(OUTCOME)) :-
     
 timingChallengeGoal :- 
     goal(relates(OUTCOME)),
-    precondition(control_event(PLAYER_ACTION),OUTCOME),
-    timingChallenge(PLAYER_ACTION).
+    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
+    timingChallenge(BUTTON,BUTTON_STATE).
     
     
 goal(maintain(RESOURCE)) :-
@@ -316,45 +322,16 @@ unrestrictedCondition(above(RESOURCE,THRESHOLD)) :-
     unrestricted(OUTCOME).
 
 gradual(OUTCOME) :-
-    precondition(time,OUTCOME).
-    
+    precondition(tick,OUTCOME).
 gradual(OUTCOME_PRIME) :-
     gradual(OUTCOME),
     enables(OUTCOME,OUTCOME_PRIME).
-  
-    
-allocation(RESOURCE) :-
-    precondition(above(RESOURCE,THRESHOLD),OUTCOME_STEP),
-    result(OUTCOME_STEP,decreases(RESOURCE,AMOUNT)),
-    enables(OUTCOME_STEP,OUTCOME),
-    goal(achieve(OUTCOME)).
-    
-    
-arbitrage(RESOURCE)  :-
-    result(OUTCOME1,increases(RESOURCE,AMOUNT1)),
-    result(OUTCOME2,decreases(RESOURCE,AMOUNT2)),
-    AMOUNT1 > AMOUNT2,
-    enables(OUTCOME2,OUTCOME1).
-    
-unlimited(RESOURCE) :-
-    result(OUTCOME,increases(RESOURCE,AMOUNT)),
-    unrestricted(OUTCOME).
 
-limited(RESOURCE) :-
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)),
-    not unlimited(RESOURCE),
-    not arbitrage(RESOURCE),
-    enables(OUTCOME,GOAL_OUTCOME),
-    goal(achieve(GOAL_OUTCOME)).
-    
-    
-limited(RESOURCE) :-
-    result(OUTCOME,increases(RESOURCE,AMOUNT)),
-    not unlimited(RESOURCE),
-    not arbitrage(RESOURCE),
-    hinders(OUTCOME,GOAL_OUTCOME),
-    goal(prevent(GOAL_OUTCOME)).
-    
+amount(AMOUNT) :-
+    result(OUTCOME,increases(RESOURCE,AMOUNT)).
+amount(AMOUNT) :- 
+    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+   
 medium_stakes :-
     enables(GOOD_STEP,GOAL_OUTCOME),
     goal(achieve(GOAL_OUTCOME)),
@@ -368,10 +345,10 @@ thoughtful :-
 % %% KNOWLEGE BASE
 
 unrestrictedCondition(control_event(click)). %player can always click
-unrestrictedCondition(time).
+unrestrictedCondition(tick).
 unrestrictedGame :- 
     unrestricted(OUTCOME),
     result(OUTCOME,story_progression).
 unrestrictedGame :- 
     unrestricted(OUTCOME),
-    result(OUTCOME,game_win).
+    result(OUTCOME,mode_change(game_win)).
