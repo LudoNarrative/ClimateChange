@@ -16,6 +16,7 @@ requirejs.config({
 		"domReady": "../../lib/domReady",
 		"QUnit": "../../lib/qunit-1.23.1",
     	"Condition": "../../js/Condition",
+    	"Request": "../../js/Request",
 	},
 	shim: {
        "QUnit": {
@@ -28,11 +29,12 @@ requirejs.config({
     }
 });
 
-requirejs(["QUnit", "StateTests", "RequestTests", "domReady!"], function(QUnit, StateTests, RequestTests) {
+requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "domReady!"], function(QUnit, StateTests, RequestTests, WantTests) {
 	console.log("SA2 tests-main.js loaded.");
 
 	StateTests.run();
 	RequestTests.run();
+	WantTests.run();
 
 	QUnit.load();
 	QUnit.start();
