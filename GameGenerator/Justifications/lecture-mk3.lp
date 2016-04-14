@@ -5,6 +5,10 @@
 %% and --confidence occurred on mouse up ,i.e. the symmetry is important
 %% this reasoning should obviously be in the rules (not in the game) but I'm just using this as a journal
 %% 
+%% Something about the fairness/difficulty of the initialization/constants chosen?
+%% There is still no reasoning about the speed of the spring as well
+%% maybe something like set_constants(ball,spring,fast), set_constants(ball,spring,slow), etc.
+%% and we just have some hand tuned values for each type of physicsy thing (gravity, pendulum, acceleration, impulse, etc.)
 
 
 % graphic(class)
@@ -33,6 +37,16 @@ control_logic(mouse).
 mode_logic(playing).
 mode_logic(game_loss).
 
+initialize(set_to(confidence,5)).
+initialize(set_sprite(ball,circle)).
+initialize(set_color(ball,light_grey)).
+initialize(set_depth(ball,front)).
+
+initialize(set_sprite(square,square)).
+initialize(set_color(square,dark_grey)).
+initialize(set_depth(square,back)).
+%% Ordering of sprites? 
+
 
 %Ok, so communication strategies - I think the idea that a given
 % sprite communicates is something to be handled by the rules -
@@ -43,15 +57,15 @@ mode_logic(game_loss).
 % particle effect shower, etc. 
 
 precondition(below(confidence,5),bad_face).
-result(bad_face,change_sprite(face, upset_face)).  
+result(bad_face,set_sprite(face, upset_face)).  
 %I'm thinking we have a pool of tagged sprites we can pull from
 
 precondition(below(confidence,10),neutral_face).
 precondition(above(confidence,5),neutral_face).
-result(neutral_face,change_sprite(face,anxious_face)).
+result(neutral_face,set_sprite(face,anxious_face)).
 
 precondition(above(confidence,10),good_face).
-result(good_face,change_sprite(face, happy_face)). 
+result(good_face,set_sprite(face, happy_face)). 
 
 %I've decided I prefer tick as opposed to time as I tend to think of tick as 
 % a discrete event that happens every update
