@@ -17,6 +17,7 @@ requirejs.config({
 		"QUnit": "../../lib/qunit-1.23.1",
     	"Condition": "../../js/Condition",
     	"Request": "../../js/Request",
+    	"util": "../../js/util"
 	},
 	shim: {
        "QUnit": {

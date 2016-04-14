@@ -3,9 +3,9 @@
 A want is a Request with associated metadata.
 */
 
-define(["Request"], function(Request) {
+define(["Request", "util"], function(Request, util) {
 
-	var requiredFields = ["content"];
+	var requiredFields = ["id", "content"];
 
 	var create = function(params) {
 		var want = {};
@@ -20,12 +20,12 @@ define(["Request"], function(Request) {
 				throw new Error("Could not create a Want with invalid condition: " + e);
 			}
 		}
-		if (params.id) {
+		if (params.chunkId) {
 			try {
-				want.content = Request.createWithId(params.id);
-				delete params.id;
+				want.content = Request.createWithId(params.chunkId);
+				delete params.chunkId;
 			} catch(e) {
-				throw new Error("Could not create a Want with invalid id: " + e);
+				throw new Error("Could not create a Want with invalid chunkId: " + e);
 			}
 		}
 		if (params.order) {
@@ -36,6 +36,8 @@ define(["Request"], function(Request) {
 			want.mandatory = params.mandatory;
 			delete params.mandatory;
 		}
+
+		want.id = util.iterator("wants");
 
 		// Ensure we have all required fields
 		var missingFields = [];
