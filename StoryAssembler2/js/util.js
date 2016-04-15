@@ -82,10 +82,15 @@ define([], function() {
 	    throw new Error("Unable to copy obj! Its type isn't supported.");
 	}
 
+	var isArray = function(obj) {
+		return toString.call(obj) === "[object Array]";
+	}
+
 	return {
 		iterator: iterator,
 		oneOf: oneOf,
 		randomNumber: randomNumber,
-		clone: clone
+		clone: clone,
+		isArray: isArray
 	}
 });

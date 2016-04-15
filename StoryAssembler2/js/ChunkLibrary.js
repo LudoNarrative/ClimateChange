@@ -13,7 +13,7 @@ define(["Validate", "util"], function(Validate, util) {
 	var optionalFields = ["id", "choices", "choiceContent", "effects", "conditions"];
 
 	// Validates and adds a chunk to the library.
-	var add = function(chunk) {
+	var addChunk = function(chunk) {
 		Validate.check(chunk, requiredFields, optionalFields); // will throw an error if chunk has wrong fields.
 
 		// Assign an ID if one was not specified
@@ -24,6 +24,19 @@ define(["Validate", "util"], function(Validate, util) {
 		_library[chunk.id] = chunk;
 
 		return chunk.id;
+	}
+
+	// Add a single chunk or an array of chunks to the library, returning a single ID or array of IDs.
+	var add = function(input) {
+		if (util.isArray(input)) {
+			var newIds = [];
+			input.forEach(function(chunk) {
+				newIds.push(addChunk(chunk));
+			});
+			return newIds;
+		} else {
+			return addChunk(input);
+		}
 	}
 
 	// return a chunk from a given id.
