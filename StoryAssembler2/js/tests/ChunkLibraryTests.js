@@ -5,7 +5,7 @@ define(["../ChunkLibrary"], function(ChunkLibrary) {
 	var run = function() {
 		test("get and set", function( assert ) {
 			var chunk1 = {
-				content: "R:AskPlayerHowToReact",
+				request: "R:AskPlayerHowToReact",
 				choices: [
 				   "R:{shownPlayerAttribute eq true}",
 				   "R:spurnHost"
@@ -42,10 +42,10 @@ define(["../ChunkLibrary"], function(ChunkLibrary) {
 			addedId = ChunkLibrary.add(chunk5);
 			assert.deepEqual(ChunkLibrary.get(addedId).content, "xyzzy", "should generate unique id if necessary");
 
-			var badChunk1 = {
-				id: "bar"
-			};
-			assert.throws(function(){ChunkLibrary.add(badChunk1)}, "missing required 'content' field");
+			// var badChunk1 = {
+			// 	id: "bar"
+			// };
+			// assert.throws(function(){ChunkLibrary.add(badChunk1)}, "missing required 'content' field");
 			var badChunk2 = {
 				content: "text",
 				foo: "bar"

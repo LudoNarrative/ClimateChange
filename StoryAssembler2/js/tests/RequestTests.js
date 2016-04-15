@@ -4,9 +4,16 @@ define(["../Request"], function(Request) {
 	
 	var run = function() {
 		test("requests", function( assert ) {
-			assert.equal(Request.createWithId("alpha"), "R:alpha", "id request");
-			assert.equal(Request.createWithCondition("param eq 5"), "R:{param eq 5}", "condition request");
-			assert.throws(function(){Request.createWithCondition("param fakeop 5")}, "request with malformed condition");
+			var request = Request.byId("alpha");
+			assert.deepEqual(request.type, "id", "id request should have right type");
+			assert.deepEqual(request.val, "alpha", "id request should ahve right value");
+
+			request = Request.byCondition("param eq 5");
+			assert.deepEqual(request.type, "condition", "condition request should have right type");
+			assert.deepEqual(request.val, "param eq 5", "condition request should ahve right value");
+
+			assert.throws(function(){Request.byCondition("param fakeop 5")}, "request with malformed condition");
+
 		});
 	}
 

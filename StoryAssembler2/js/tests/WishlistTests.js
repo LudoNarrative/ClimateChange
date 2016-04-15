@@ -16,7 +16,7 @@ define(["../Wishlist", "../ChunkLibrary"], function(Wishlist, ChunkLibrary) {
 			]);
 			assert.deepEqual(wl.wantsRemaining(), 2, "should have correct number of wants");
 			var next = wl.selectNext();
-			assert.deepEqual(next.content[0], "R", "should return a want with a content field with something that looks like a request.");
+			assert.deepEqual(typeof next.request, "object", "should return a want with a request field.");
 			wl.remove(next.id);
 			assert.deepEqual(wl.wantsRemaining(), 1, "should have correct number of wants after a remove");
 			next = wl.selectNext();
@@ -43,23 +43,24 @@ define(["../Wishlist", "../ChunkLibrary"], function(Wishlist, ChunkLibrary) {
 		});
 
 		test("selectNext", function( assert ) {
+			ChunkLibrary.reset();
 			var wl = Wishlist.create([{chunkId: "TestNode"}]);
 
 			ChunkLibrary.add([
 				{ id: "TestNode", content: "Hello, world!" },
 			]);
 			var nextPath = wl.findBestPath(ChunkLibrary);
-			assert.deepEqual(nextPath.path, ["TestNode"], "simple id request should have right path");
-			assert.deepEqual(nextPath.satisfies, ["R:TestNode"], "simple id request should have right satisfies");
+			assert.deepEqual(nextPath.steps, ["TestNode"], "simple id request should have right path");
+			assert.deepEqual(nextPath.satisfies[0].val, "TestNode", "simple id request should have right satisfies");
 
 			ChunkLibrary.reset();
 			ChunkLibrary.add([
-				{ id: "TestNode", content: "R:TestNode2" },
+				{ id: "TestNode", request: "R:TestNode2" },
 				{ id: "TestNode2", content: "Hola, mundo!" }
 			]);
 			nextPath = wl.findBestPath(ChunkLibrary);
-			assert.deepEqual(nextPath.path, ["TestNode", "TestNode2"], "path should go all the way to a leaf node");
-			assert.deepEqual(nextPath.satisfies, ["R:TestNode"], "two-step path should only show wants satisfied");
+			assert.deepEqual(nextPath.steps, ["TestNode", "TestNode2"], "path should go all the way to a leaf node");
+			assert.deepEqual(nextPath.satisfies.length, 1, "two-step path should only show wants satisfied");
 
 
 		});

@@ -9,14 +9,16 @@ define(["../Want"], function(Want) {
 				order: "first",
 				mandatory: true
 			});
-			assert.deepEqual(want.content, "R:{introduceFriend eq true}", "request-based want should have a valid content field");
+			assert.deepEqual(want.request.val, "introduceFriend eq true", "request-based want should have a valid request value");
+			assert.deepEqual(want.request.type, "condition", "request-based want should have a valid request type");
 			assert.deepEqual(want.mandatory, true, "want should preserve creation parameters");
 
 			var want2 = Want.create({
 				chunkId: "epilogue",
 				order: 2
 			});
-			assert.deepEqual(want2.content, "R:epilogue", "chunkId-based want should have a valid content field");
+			assert.deepEqual(want2.request.val, "epilogue", "chunkId-based want should have a valid request value");
+			assert.deepEqual(want2.request.type, "id", "chunkId-based want should have a valid request type");
 			assert.notDeepEqual(want.id, want2.id, "wants should have unique ids.");
 
 			assert.throws(function(){Want.create({})}, "should reject invalid want definition");
