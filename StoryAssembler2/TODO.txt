@@ -1,4 +1,6 @@
-
+TODO
+- Factor Display out of StoryAssembler (shouldn't depend on it)
+- Request smells bad
 
 
 Tasks:
