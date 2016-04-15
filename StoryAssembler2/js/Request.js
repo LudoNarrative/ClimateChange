@@ -13,7 +13,7 @@ Some valid request strings:
 
 */
 
-define(["Condition"], function(Condition) {
+define(["Condition", "ChunkLibrary"], function(Condition, ChunkLibrary) {
 
 	var requestPrefix = "R:";
 
@@ -28,8 +28,22 @@ define(["Condition"], function(Condition) {
 		return requestPrefix + "{" + condition + "}";
 	}
 
+	// For a valid request, return text to display.
+	var getText = function(request) {
+		if (request[2] === "{") {
+			// condition.
+			return request.substr(2, request.length-1);
+		} else {
+			// id
+			var id = request.substr(2, request.length);
+			var chunk = ChunkLibrary.get(id);
+			return chunk ? chunk.content : "[missing chunk " + id + "]";
+		}
+	}
+
 	return {
 		createWithId: createWithId,
-		createWithCondition: createWithCondition
+		createWithCondition: createWithCondition,
+		getText: getText
 	}
 });	

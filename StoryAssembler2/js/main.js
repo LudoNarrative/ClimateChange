@@ -5,35 +5,33 @@ requirejs.config({
 		"domReady": "../lib/domReady",
 		"text": "../lib/text",
 
-		// "underscore": "../lib/underscore-min",
-
 		"util": "util",
 
-		// "StoryAssembler": "StoryAssembler",
+		"StoryAssembler": "StoryAssembler",
 		"Display": "Display",
-		// "Templates": "Templates",
-		// "Chunks": "Chunks",
 		"State": "State",
 		"Condition": "Condition",
 		"Request": "Request",
-		"Want": "Want"
-		// "TextChanger": "TextChanger"
+		"Want": "Want",
+		"Validate": "Validate",
+		"ChunkLibrary": "ChunkLibrary"
 	}
 });
 
-requirejs(["State", "Want", "Display", "domReady!"], function(State, Want, Display) {
+requirejs(
+	["StoryAssembler", "State", "Wishlist", "ChunkLibrary", "text!../data/TestChunks.json", "domReady!"],
+	function(StoryAssembler, State, Wishlist, ChunkLibrary, TestChunksFile) {
+	
 	console.log("SA2 main.js loaded.");
 
-	Display.init(function(){}); // Click handler will go here.
+	State.set("initialized", true); // initial conditions
 
-	var sampleWishlist = [];
-	sampleWishlist.push(Want.create({
-		request: "introduceFriend eq true",
-		order: "first",
-		mandatory: true
-	}), Want.create({
-		chunkId: "epilogue",
-		order: "last"
-	}));
+	var testChunks = JSON.parse(TestChunksFile);
+	ChunkLibrary.add(testChunks);
+
+	var testWishlist = Wishlist.create([{
+		chunkId: "testChunk01",
+	}]);
+	StoryAssembler.beginScene(testWishlist);
 
 });
