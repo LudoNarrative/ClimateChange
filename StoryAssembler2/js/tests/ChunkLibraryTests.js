@@ -3,7 +3,7 @@
 define(["../ChunkLibrary"], function(ChunkLibrary) {
 	
 	var run = function() {
-		test("chunk library", function( assert ) {
+		test("get and set", function( assert ) {
 			var chunk1 = {
 				content: "R:AskPlayerHowToReact",
 				choices: [
@@ -51,7 +51,25 @@ define(["../ChunkLibrary"], function(ChunkLibrary) {
 				foo: "bar"
 			};
 			assert.throws(function(){ChunkLibrary.add(badChunk2)}, "contains unrecognized 'foo' field");
+		});
 
+		test("first and next", function( assert ) {
+			ChunkLibrary.reset();
+			ChunkLibrary.add([
+				{id: "Test1", content: "foo"},
+				{id: "Test2", content: "foo"},
+				{id: "Test3", content: "foo"}
+			]);
+			assert.deepEqual(ChunkLibrary.size(), 3);
+			var result = ChunkLibrary.first();
+			assert.deepEqual(typeof result.id, "string");
+			result = ChunkLibrary.next();
+			result = ChunkLibrary.next();
+			assert.deepEqual(typeof result.id, "string");
+			result = ChunkLibrary.next();
+			assert.deepEqual(result, undefined);
+			result = ChunkLibrary.first();
+			assert.deepEqual(typeof result.id, "string");
 		});
 	}
 
