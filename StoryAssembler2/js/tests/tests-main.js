@@ -18,6 +18,7 @@ requirejs.config({
     	"Condition": "../../js/Condition",
     	"Request": "../../js/Request",
     	"Want": "../../js/Want",
+    	"Validate": "../../js/Validate",
     	"util": "../../js/util"
 	},
 	shim: {
