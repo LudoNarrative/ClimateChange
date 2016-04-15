@@ -3,58 +3,35 @@
 A want is a Request with associated metadata.
 */
 
-define(["Request", "util"], function(Request, util) {
+define(["Request", "Validate", "util"], function(Request, Validate, util) {
 
-	var requiredFields = ["id", "content"];
+	var requiredFields = [];
+	var optionalFields = ["request", "chunkId", "order", "mandatory"];
 
-	var create = function(params) {
-		var want = {};
-		params = params || {};
+	var create = function(want) {
+		Validate.check(want, requiredFields, optionalFields);
 
-		// Consume params.
-		if (params.request) {
+		if (want.request) {
 			try {
-				want.content = Request.createWithCondition(params.request);
-				delete params.request;
+				want.content = Request.createWithCondition(want.request);
+				delete want.request;
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid condition: " + e);
 			}
 		}
-		if (params.chunkId) {
+		else if (want.chunkId) {
 			try {
-				want.content = Request.createWithId(params.chunkId);
-				delete params.chunkId;
+				want.content = Request.createWithId(want.chunkId);
+				delete want.chunkId;
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid chunkId: " + e);
 			}
-		}
-		if (params.order) {
-			want.order = params.order;
-			delete params.order;
-		}
-		if (params.mandatory) {
-			want.mandatory = params.mandatory;
-			delete params.mandatory;
+		} else {
+			throw new Error("A Want must be created with either a 'chunkId' or a 'request' field.");
 		}
 
 		want.id = util.iterator("wants");
 
-		// Ensure we have all required fields
-		var missingFields = [];
-		requiredFields.forEach(function(field) {
-			if (want[field] === undefined) {
-				missingFields.push(field);
-			}
-		});
-		if (missingFields.length > 0) {
-			throw new Error("Tried to create a new want but missing these fields: " + missingFields.join(", "));
-		}
-
-		// Ensure we don't have any extra fields
-		var remainingKeys = Object.keys(params);
-		if (remainingKeys.length > 0) {
-			throw new Error("Tried to create a new want but could not make sense of these keys: " + remainingKeys.join(", "));
-		}
 		return want;
 	}
 
