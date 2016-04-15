@@ -32,13 +32,14 @@ requirejs.config({
     }
 });
 
-requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", "domReady!"], function(QUnit, StateTests, RequestTests, WantTests, WishlistTests) {
+requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", "ChunkLibraryTests", "domReady!"], function(QUnit, StateTests, RequestTests, WantTests, WishlistTests, ChunkLibraryTests) {
 	console.log("SA2 tests-main.js loaded.");
 
 	StateTests.run();
 	RequestTests.run();
 	WantTests.run();
 	WishlistTests.run();
+	ChunkLibraryTests.run();
 
 	QUnit.load();
 	QUnit.start();
