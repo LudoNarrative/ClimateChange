@@ -19,6 +19,7 @@ requirejs.config({
     	"Request": "../../js/Request",
     	"Want": "../../js/Want",
     	"Validate": "../../js/Validate",
+    	"ChunkLibrary": "../../js/ChunkLibrary",
     	"util": "../../js/util"
 	},
 	shim: {

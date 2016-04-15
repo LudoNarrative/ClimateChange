@@ -1,6 +1,6 @@
 /* global test */
 "use strict";
-define(["../Wishlist"], function(Wishlist) {
+define(["../Wishlist", "../ChunkLibrary"], function(Wishlist, ChunkLibrary) {
 	
 	var run = function() {
 		test("wishlist", function( assert ) {
@@ -41,6 +41,18 @@ define(["../Wishlist"], function(Wishlist) {
 			assert.deepEqual(wl.wantsRemaining(), 0, "making new wishlist shouldn't affect old one");
 			assert.deepEqual(wl3.wantsRemaining(), 1, "new wishlist should have proper values");
 		});
+
+		test("selectNext", function( assert ) {
+			ChunkLibrary.add([
+				{ id: "TestNode", content: "Hello, world!" },
+			]);
+			var wl = Wishlist.create([{chunkId: "TestNode"}]);
+			var nextPath = wl.findBestPath(ChunkLibrary);
+			assert.deepEqual(nextPath.path, ["TestNode"], "simple id request should have right path");
+			assert.deepEqual(nextPath.satisfies, ["R:TestNode"], "simple id request should have right satisfies");
+
+		});
+
 	}
 
 	return {

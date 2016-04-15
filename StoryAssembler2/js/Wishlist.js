@@ -27,6 +27,26 @@ define(["Want", "util"], function(Want, util) {
 			return undefined;
 		}
 
+		var findBestPath = function(chunkLibrary) {
+			// Pick the first want. (Temp)
+			var want = this.selectNext();
+			// Iterate through chunks.
+			var chunk = chunkLibrary.first();
+			var result = {
+				path: [],
+				satisfies: []
+			};
+			while (chunk !== undefined) {
+				// TODO: Check conditions.
+				if (chunk.id && chunk.id === want.content.substr(2, want.content.length)) {
+					result.path.push(chunk.id);
+					result.satisfies.push(want.content);
+				}
+				chunk = chunkLibrary.next();
+			}
+			return result;
+		}
+
 		var wantsRemaining = function() {
 			return Object.keys(_wants).length;
 		}
@@ -35,6 +55,7 @@ define(["Want", "util"], function(Want, util) {
 		return {
 			remove: remove,
 			selectNext: selectNext,
+			findBestPath: findBestPath,
 			wantsRemaining: wantsRemaining
 		}
 	}
