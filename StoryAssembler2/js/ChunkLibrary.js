@@ -68,12 +68,17 @@ define(["Validate", "util"], function(Validate, util) {
 		return Object.keys(_library).length;
 	}
 
+	var getKeys = function() {
+		return Object.keys(_library);
+	}
+
 	return {
 		add: add,
 		get: get,
 		first: first,
 		next: next,
 		reset: reset,
-		size: size
+		size: size,
+		getKeys: getKeys
 	}
 });		
