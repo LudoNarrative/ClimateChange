@@ -1,8 +1,8 @@
 
 %%% Biggest things missing - We probably want some reasoning over control/visuals
 %% I think we have resource flows/events pretty well handled 
-%% I'm thinking things like - it would be an odd design if ++confidence occurred on mouse down
-%% and --confidence occurred on mouse up ,i.e. the symmetry is important
+%% I'm thinking things like - it would be an odd design if ++confidence occurred on mouse_button down
+%% and --confidence occurred on mouse_button up ,i.e. the symmetry is important
 %% this reasoning should obviously be in the rules (not in the game) but I'm just using this as a journal
 %% 
 %% Something about the fairness/difficulty of the initialization/constants chosen?
@@ -11,10 +11,17 @@
 %% and we just have some hand tuned values for each type of physicsy thing (gravity, pendulum, acceleration, impulse, etc.)
 
 
-% graphic(class)
-graphic(ball).
-graphic(square).
-graphic(face).
+
+
+%I tend to think there are 2 classes of things - entities and resources
+% or in OO land something like objects and primitives 
+% I'd say be default all entities have things like x,y, v_x,v_y, a_x,a_y even 
+% if that entity has no use for those fields (i.e. it is a container for other information)
+
+% entity(class)
+entity(ball).
+entity(square).
+entity(face).
 
 %resource(class)
 resource(confidence).
@@ -30,12 +37,12 @@ overlapLogic(ball,square).
 
 % Specify which controllers we are using i.e. controlLogic(button)
 % then look for control_event(button,state)
-% buttons - mouse, up,down,left,right,space
+% buttons - mouse_button, up,down,left,right,space
 % states - pressed, held, released
-control_logic(mouse).
+controlLogic(mouse_button).
 
-mode_logic(playing).
-mode_logic(game_loss).
+modeLogic(playing).
+modeLogic(game_loss).
 
 initialize(set_to(confidence,5)).
 initialize(set_sprite(ball,circle)).
@@ -74,15 +81,15 @@ result(good_face,set_sprite(face, happy_face)).
 precondition(tick,drain).
 result(drain,decreases(confidence,1)).
 
-% I think it's actually mouse,released? 
+% I think it's actually mouse_button,released? 
 % this is me capturing how I would design it, not how it is
 
-precondition(control_event(mouse,pressed),gain).
+precondition(control_event(mouse_button,pressed),gain).
 precondition(overlaps(ball,square,true),gain).
 result(gain,increases(confidence,2)).
 result(gain,change_color(square,green,1)).
 
-precondition(control_event(mouse,pressed),loss).
+precondition(control_event(mouse_button,pressed),loss).
 precondition(overlaps(ball,square,false),loss).
 result(loss,decreases(confidence,2)).
 result(gain,change_color(square,red,1)).

@@ -29,12 +29,12 @@ good(RESOURCE) :-
 bad(RESOURCE) :-     
     precondition(
         below(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,story_progression).
+    result(OUTCOME,mode_change(game_end)).
     
 good(RESOURCE) :- 
     precondition(
         above(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,story_progression).
+    result(OUTCOME,mode_change(game_end)).
     
     
 outcome(OUTCOME) :- precondition(CONDITION,OUTCOME).
@@ -71,6 +71,8 @@ betterWithTime(RESOURCE) :-
     
  
 
+thing(OUTCOME,ENTITY,POLARITY) :- 
+    result(OUTCOME,select(ENTITY,POLARITY)).
 
 
 playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE) :-
@@ -130,6 +132,10 @@ timingAffectsEntity(ENTITY) :-
     physicsLogic(ENTITY,PHYSICS_TYPE),
     timingBasedPhysics(PHYSICS_TYPE).
 
+    
+consumedBy(RESOURCE,OUTCOME) :-
+    precondition(above(RESOURCE,THRESHOLD),OUTCOME),
+    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
 
 timingAffectsAction(BUTTON,BUTTON_STATE) :- 
     precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
@@ -148,7 +154,7 @@ timingChallenge(BUTTON,BUTTON_STATE) :-
 goal(achieve(OUTCOME)) :-
     result(OUTCOME, mode_change(game_win)).
 goal(achieve(OUTCOME)) :-
-    result(OUTCOME, story_progression).
+    result(OUTCOME, mode_change(game_end)).
     
 goal(prevent(OUTCOME)) :-
     result(OUTCOME, mode_change(game_loss)).
@@ -201,40 +207,41 @@ hinders(OUTCOME,OUTCOME2) :-
 enables(OUTCOME,OUTCOME3) :-
     enables(OUTCOME,OUTCOME2),
     enables(OUTCOME2,OUTCOME3).
-    
-hinders(OUTCOME,OUTCOME3) :-
-    enables(OUTCOME,OUTCOME2),
-    hinders(OUTCOME2,OUTCOME3),
-    OUTCOME != OUTCOME3.
-    
-hinders(OUTCOME,OUTCOME3) :-
-    hinders(OUTCOME,OUTCOME2),
-    enables(OUTCOME2,OUTCOME3),
-    OUTCOME != OUTCOME3.
-    
-enables(OUTCOME,OUTCOME3) :-
-    hinders(OUTCOME,OUTCOME2),
-    hinders(OUTCOME2,OUTCOME3),
-    OUTCOME != OUTCOME3.
+ 
+selection(OUTCOME) :-
+    result(OUTCOME,select(ENTITY,CONDITION)).
 
-
+allocation(RESOURCE) :- 
+    consumedBy(RESOURCE,OUTCOME),
+    selection(OUTCOME).
+    
+    
 subGoal(prevent(OUTCOME_PRIME),1) :-
     enables(OUTCOME_PRIME,OUTCOME),
-    goal(prevent(OUTCOME)). 
+    goal(prevent(OUTCOME)),
+    not subGoal(achieve(OUTCOME_PRIME),1),
+    humanAffected(OUTCOME_PRIME). 
     
 subGoal(achieve(OUTCOME_PRIME),1) :-
     hinders(OUTCOME_PRIME,OUTCOME),
-    goal(prevent(OUTCOME)).
+    goal(prevent(OUTCOME)),
+    humanAffected(OUTCOME_PRIME).
     
 
+subGoal(achieve(OUTCOME_PRIME),1) :-
+    enables(OUTCOME_PRIME,OUTCOME),
+    goal(achieve(OUTCOME)),
+    humanAffected(OUTCOME_PRIME).
 
 subGoal(prevent(OUTCOME_PRIME),I+1) :-
     enables(OUTCOME_PRIME,OUTCOME),
-    subGoal(prevent(OUTCOME),I). 
+    subGoal(prevent(OUTCOME),I),
+    humanAffected(OUTCOME_PRIME). 
     
 subGoal(achieve(OUTCOME_PRIME),I+1) :-
     hinders(OUTCOME_PRIME,OUTCOME),
-    goal(prevent(OUTCOME),I).
+    goal(prevent(OUTCOME),I),
+    humanAffected(OUTCOME_PRIME).
     
 
 goal(relates(OUTCOME)) :- 
@@ -279,11 +286,28 @@ monotonicallyDecreases(RESOURCE) :-
 monotonicallyIncreases(RESOURCE) :- 
     result(OUTCOME1,increases(RESOURCE,AMOUNT)),
     not nonMonotonic(RESOURCE).
+
+
     
-      
-entity(ENTITY) :- 
-    graphicalLogic(ENTITY,STATE).
-   
+    
+
+humanAffected(OUTCOME) :-
+    precondition(control_event(BUTTON,STATE),OUTCOME).
+    
+    
+humanControlled(ENTITY) :-        
+    physicsLogic(ENTITY, follows(cursor)).
+
+humanAffected(OUTCOME) :-
+    requiredBy(OUTCOME,ENTITY),
+    humanControlled(ENTITY).
+    
+humanAffected(OUTCOME2) :-
+    enables(OUTCOME1,OUTCOME2),
+    humanAffected(OUTCOME1).
+    
+physicsLogic(pointer, follows(cursor)).
+    
 unrestrictedEntity(ENTITY) :-
     not result(OUTCOME,applyRestitution(ENTITY)),
     outcome(OUTCOME),
@@ -342,6 +366,20 @@ thoughtful :-
     medium_stakes,
     allocation(RESOURCE),
     limited(RESOURCE).
+ 
+
+    
+replenishible(RESOURCE) :-
+    2 {result(OUTCOME1,increases(RESOURCE,AMOUNT1));
+    result(OUTCOME2,decreases(RESOURCE,AMOUNT2));
+    result(OUTCOME3,set_to(RESOURCE,AMOUNT3))}, resource(RESOURCE).
+
+    
+
+limited(RESOURCE) :-
+    not replenishible(RESOURCE),
+    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+    
 % %% KNOWLEGE BASE
 
 unrestrictedCondition(control_event(click)). %player can always click
