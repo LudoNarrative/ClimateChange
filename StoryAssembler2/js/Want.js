@@ -13,15 +13,14 @@ define(["Request", "Validate", "util"], function(Request, Validate, util) {
 
 		if (want.request) {
 			try {
-				want.content = Request.createWithCondition(want.request);
-				delete want.request;
+				want.request = Request.byCondition(want.request);
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid condition: " + e);
 			}
 		}
 		else if (want.chunkId) {
 			try {
-				want.content = Request.createWithId(want.chunkId);
+				want.request = Request.byId(want.chunkId);
 				delete want.chunkId;
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid chunkId: " + e);
