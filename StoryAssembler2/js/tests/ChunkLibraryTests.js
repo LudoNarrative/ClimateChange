@@ -55,6 +55,7 @@ define(["../ChunkLibrary"], function(ChunkLibrary) {
 
 		test("first and next", function( assert ) {
 			ChunkLibrary.reset();
+			assert.deepEqual(ChunkLibrary.size(), 0);
 			ChunkLibrary.add([
 				{id: "Test1", content: "foo"},
 				{id: "Test2", content: "foo"},

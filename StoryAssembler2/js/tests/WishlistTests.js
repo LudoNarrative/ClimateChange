@@ -43,13 +43,24 @@ define(["../Wishlist", "../ChunkLibrary"], function(Wishlist, ChunkLibrary) {
 		});
 
 		test("selectNext", function( assert ) {
+			var wl = Wishlist.create([{chunkId: "TestNode"}]);
+
 			ChunkLibrary.add([
 				{ id: "TestNode", content: "Hello, world!" },
 			]);
-			var wl = Wishlist.create([{chunkId: "TestNode"}]);
 			var nextPath = wl.findBestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.path, ["TestNode"], "simple id request should have right path");
 			assert.deepEqual(nextPath.satisfies, ["R:TestNode"], "simple id request should have right satisfies");
+
+			ChunkLibrary.reset();
+			ChunkLibrary.add([
+				{ id: "TestNode", content: "R:TestNode2" },
+				{ id: "TestNode2", content: "Hola, mundo!" }
+			]);
+			nextPath = wl.findBestPath(ChunkLibrary);
+			assert.deepEqual(nextPath.path, ["TestNode", "TestNode2"], "path should go all the way to a leaf node");
+			assert.deepEqual(nextPath.satisfies, ["R:TestNode"], "two-step path should only show wants satisfied");
+
 
 		});
 
