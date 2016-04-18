@@ -3,7 +3,7 @@
 A wishlist is an unordered set of Wants.
 */
 
-define(["Want", "util"], function(Want, util) {
+define(["Want", "Request", "util"], function(Want, Request, util) {
 
 	var create = function(items) {
 		items = items || [];
@@ -27,36 +27,59 @@ define(["Want", "util"], function(Want, util) {
 			return undefined;
 		}
 
-		var findPathSatisfyingWant = function(path, want, chunkLibrary) {
-			// Iterate through chunks.
+		var findBestPath = function(chunkLibrary) {
+			var paths = [];
+			var want = this.selectNext().request;
+			console.log("want", want);
+
 			var keys = chunkLibrary.getKeys();
 			for (var i = 0; i < keys.length; i++) {
 				var chunk = chunkLibrary.get(keys[i]);
-				// TODO: Check conditions.
-				console.log("chunk, want", chunk, want);
-				if (path.steps.indexOf(chunk.id) < 0) {
-					if (chunk.id && want.type === "id" && chunk.id === want.val) {
-						path.steps.push(chunk.id);
-					} else if (chunk.content) {
-						path.steps.push(chunk.id);
-					}
-					if (chunk.request) {
-						findPathSatisfyingWant(path, chunk.request, chunkLibrary);
-					}
+				console.log("considering " + chunk.id);
+				var result = findAllSatisfyingPathsFrom(chunk, want, chunkLibrary);
+				if (result.length > 0) {
+					paths = paths.concat(result);
 				}
+			}
+
+			console.log("paths", paths);
+			if (paths.length > 0) {
+				return chooseFromPotentialPaths(paths);
+			} else {
+				return undefined;
 			}
 		}
 
-		var findBestPath = function(chunkLibrary) {
-			// Pick the first want. (Temp)
-			var want = this.selectNext();
-			var path = {
-				steps: [],
-				satisfies: []
+		var findAllSatisfyingPathsFrom = function(chunk, want, chunkLibrary) {
+			var paths = [];
+			var path;
+			if (chunk.id && want.type === "id" && chunk.id === want.val) {
+				console.log("id " + chunk.id + " matches want " + want.val + "; adding to path");
+				path = {
+					route: [chunk.id],
+					satisfies: [want]
+				}
 			}
-			findPathSatisfyingWant(path, want.request, chunkLibrary);
-			path.satisfies.push(want.request);
-			return path;
+			if (chunk.request && chunk.request.type === "id") {
+				console.log("request of type id: iterating down");
+				var requestedChunk = chunkLibrary.get(chunk.request.val);
+				var reqPath = findAllSatisfyingPathsFrom(requestedChunk, Request.byId(chunk.request.val));
+				if (reqPath.length > 0) {
+					var firstPath = reqPath[0];
+					path.route = path.route.concat(firstPath.route);
+					// path.satisfies = path.satisfies.concat(firstPath.satisfies); // TODO: we don't want to record the want we satisfied as a result of being in this node: we only care about the original want. Maybe we can prune when we get back to the top?
+				}
+			}
+			if (path) {
+				paths.push(path);
+			}
+			return paths;
+		}
+
+		var chooseFromPotentialPaths = function(paths) {
+			// Stub: just return the first.
+			console.log("paths[0]", paths[0]);
+			return paths[0];
 		}
 
 		var wantsRemaining = function() {
