@@ -1,0 +1,74 @@
+
+<html>
+<head>
+    <title>ASP Example</title>
+</head>
+<body>
+    <script type="text/javascript">
+    //-----------------------------------------------------------------------------
+        //detect and return the Clingo executable path and ASPFile path for Mac or PC
+        var getClingoPaths = function(ASPFile) {
+            var path = require('path');
+            var only_path = path.dirname(process.execPath);         //get path to running process
+            var clingoDir;
+            if (process.platform === 'win32') { clingoDir = "clingo-4.5.4-win64"; }      //windows (even 64-bit) always returns win32
+            else { clingoDir = "clingo-4.5.4-macos-10.9" }
+
+            //var ASPloc = "/Users/jacob/Work/grad school/UCSC 2011-13/EIS/Year 3/Climate Game/Phaser/test/clingo-4.5.4-macos-10.9/clingo";
+            var finalPath = only_path.split(path.sep);       //split string to array using OS-specific slashes (diff between Mac and PC)
+            while (finalPath[finalPath.length -1] !== "compiled") {   //cut off everything below the compiled directory path
+                finalPath.length--;
+            }
+            finalPath.length--;                          //cut off "compiled" (now we should be in same directory as "clingo")
+            finalPath = finalPath.join(path.sep);             //join back into a string
+            var exePath = finalPath + path.sep + "clingo" + path.sep + clingoDir + path.sep + "clingo";         //add in path to Clingo
+            var filePath = finalPath + path.sep + "clingo" + path.sep + "game_files" + path.sep + ASPFile;
+  
+            return {"exePath" : exePath, "filePath" : filePath};      
+        }
+
+    //-----------------------------------------------------------------------------
+        // Get an ASP Model
+        var runClingo = function(ASPFile, command) {
+            
+            var clingoPaths = getClingoPaths(ASPFile);
+
+            //get the args together for the file and parameters
+            var args = [clingoPaths["filePath"]].concat(command.split(" "));            
+
+            // execute Clingo using child_process' spawn function, not exec because we may be returning a lot of data some day?
+            var ASP = require('child_process').spawn(clingoPaths["exePath"], args);
+            
+            ASP.stdout.on('data', function (data) {           //data returned is in UINT-8 format
+                var result = JSON.parse(String.fromCharCode.apply(null, data));
+                processResult(result);          //hand it off to processing function, since this is asynchronous
+            });
+            
+            /* // do something when stdout ends?
+            ASP.stdout.on('end', function(data) {
+                
+            }); */
+
+            // when the spawn child process exits, check if there were any errors
+            ASP.on('exit', function(code) {
+                if (code != 0) {
+                    console.log('Failed: ' + code);
+                }
+            });
+        };
+
+        //----------------------------------------------------------------------------------
+        //Do amazing things with the returned object from Clingo
+        var processResult = function(result) {
+            console.log(result);
+        }
+
+        //----------------------------------------------------------------------------------
+
+        var ASPFile = "clingo-bridge-example.lp";        //name of ASP file
+
+        runClingo(ASPFile, "--outf=2 -n 10");         //run the ASP file with this command
+
+    </script>
+</body>
+</html>
