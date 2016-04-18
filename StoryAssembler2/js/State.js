@@ -18,6 +18,10 @@ define(["Condition"], function(Condition) {
 		blackboard[key] = value;
 	}
 
+	var reset = function() {
+		blackboard = {};
+	}
+
 	/* Checks a condition against the state.
 	the condition string are validated by the Condition module.
 	*/
@@ -35,6 +39,7 @@ define(["Condition"], function(Condition) {
 				throw new Error("Tried to perform op '" + op + "' on param '" + param + "' (" + valOfParam + ") but that does not appear to be a number.");
 			}
 		}
+		// TODO: Move this into Condition module, so ops aren't defined in two places
 		switch(op) {
 			case "forceTrue":
 				return true;
@@ -55,6 +60,19 @@ define(["Condition"], function(Condition) {
 		}
 	}
 
+	var _getEffectFields = function(effect) {
+		var fields = {};
+		var params = effect.replace(/\s\s+/g, " ").split(" ");
+		fields.op = params.splice(0, 1)[0];
+		var val = params[1];
+		if (val === "true") val = true;
+		if (val === "false") val = false;
+		fields.val = val;
+		fields.param = params[0];
+		fields.params = params;
+		return fields;
+	}
+
 	/*
 	 * Makes a change to the state based on a recognized command.
 	 *
@@ -67,8 +85,8 @@ define(["Condition"], function(Condition) {
 	var change = function(effect) {
 
 		var expect = function(num) {
-			if (params.length !== num) {
-				throw new Error("Invalid number of params for op '" + op + "' (found " + params.length + ", expected " + num + ") in effect '" + effect + "'");
+			if (fields.params.length !== num) {
+				throw new Error("Invalid number of params for op '" + fields.op + "' (found " + fields.params.length + ", expected " + num + ") in effect '" + effect + "'");
 			}
 		}
 		var expectNum = function(val) {
@@ -80,46 +98,54 @@ define(["Condition"], function(Condition) {
 		}
 		var validateNumberParams = function() {
 			expect(2);
-			var oldVal = get(params[0]);
+			var oldVal = get(fields.params[0]);
 			if (oldVal === undefined) {
-				set(params[0], 0);
+				set(fields.param, 0);
 				oldVal = 0;
 			}
 			expectNum(oldVal);
-			expectNum(params[1]);
+			expectNum(fields.params[1]);
 		}
 
-		var params = effect.replace(/\s\s+/g, " ").split(" ");
-		var op = params.splice(0, 1)[0];
-		var val = params[1];
-		if (val === "true") val = true;
-		if (val === "false") val = false;
-		switch(op) {
+		var fields = _getEffectFields(effect);
+		switch(fields.op) {
 			case "set":
 				expect(2);
-				set(params[0], val);
+				set(fields.param, fields.val);
 				break;
 			case "incr":
 				validateNumberParams();
-				set(params[0], get(params[0]) + parseFloat(val));
+				set(fields.param, get(fields.param) + parseFloat(fields.val));
 				break;
 			case "decr":
 				validateNumberParams();
-				set(params[0], get(params[0]) - parseFloat(val));
+				set(fields.param, get(fields.param) - parseFloat(fields.val));
 				break;
 			case "mult":
 				validateNumberParams();
-				set(params[0], get(params[0]) * parseFloat(val));
+				set(fields.param, get(fields.param) * parseFloat(fields.val));
 				break;
 			default:
-				throw new Error("Invalid op '" + op + "' in effect '" + effect + "'");
+				throw new Error("Invalid op '" + fields.op + "' in effect '" + effect + "'");
 		}
+	}
+
+	// Check if a given effect would make the given condition true, by storing the current blackboard value, running the effect, checking the condition, then restoring the original value.
+	var wouldMakeTrue = function(effect, condition) {
+		var param = _getEffectFields(effect).param;
+		var currVal = get(param);
+		change(effect);
+		var wouldBeTrue = isTrue(condition);
+		set(param, currVal);
+		return wouldBeTrue;
 	}
 
 	return {
 		get: get,
 		set: set,
+		reset: reset,
 		change: change,
-		isTrue: isTrue
+		isTrue: isTrue,
+		wouldMakeTrue: wouldMakeTrue
 	}
 });
