@@ -3,6 +3,7 @@
 define(["../ChunkLibrary"], function(ChunkLibrary) {
 	
 	var run = function() {
+		QUnit.module( "ChunkLibrary tests" );
 		test("get and set", function( assert ) {
 			var chunk1 = {
 				request: "R:AskPlayerHowToReact",

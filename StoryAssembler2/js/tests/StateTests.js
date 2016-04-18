@@ -1,8 +1,9 @@
-/* global test */
+/* global test, QUnit */
 "use strict";
 define(["../State"], function(State) {
 	
 	var run = function() {
+		QUnit.module( "State Module tests" );
 		test("getting and setting", function( assert ) {
 			
 			State.set("testNum", 5);
