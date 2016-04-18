@@ -3,6 +3,7 @@
 define(["../Request"], function(Request) {
 	
 	var run = function() {
+		QUnit.module( "Request Module tests" );
 		test("requests", function( assert ) {
 			var request = Request.byId("alpha");
 			assert.deepEqual(request.type, "id", "id request should have right type");

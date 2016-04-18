@@ -20,6 +20,7 @@ requirejs.config({
     	"Want": "../../js/Want",
     	"Validate": "../../js/Validate",
     	"ChunkLibrary": "../../js/ChunkLibrary",
+      "State": "../../js/State",
     	"util": "../../js/util"
 	},
 	shim: {

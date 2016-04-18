@@ -3,6 +3,7 @@
 define(["../Want"], function(Want) {
 	
 	var run = function() {
+		QUnit.module( "Want Module tests" );
 		test("wants", function( assert ) {
 			var want = Want.create({
 				request: "introduceFriend eq true",
