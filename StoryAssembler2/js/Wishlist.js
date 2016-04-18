@@ -5,7 +5,9 @@ A wishlist is an unordered set of Wants.
 
 define(["Want", "Request", "util"], function(Want, Request, util) {
 
-	var create = function(items) {
+	// Note: We need to pass in a reference to State, rather than including it here, so we don't create a duplicate State by requiring it above.
+	var create = function(items, _State) {
+		var State = _State;
 		items = items || [];
 		var _wants = {};
 		// Add the wants passed in to the constructor.
@@ -46,31 +48,53 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			if (paths.length > 0) {
 				return chooseFromPotentialPaths(paths);
 			} else {
-				return undefined;
+				return {};
 			}
 		}
 
 		var findAllSatisfyingPathsFrom = function(chunk, want, chunkLibrary) {
 			var paths = [];
-			var path;
-			if (chunk.id && want.type === "id" && chunk.id === want.val) {
+			var path = {};
+			if (chunk.conditions) {
+				for (var i = 0; i < chunk.conditions.length; i++) {
+					var cnd = chunk.conditions[i];
+					if (!State.isTrue(cnd)) {
+						console.log("it is not true that " + cnd + ", so skipping");
+						return paths;
+					}
+				}
+			}
+			if (want.type === "id" && chunk.id === want.val) {
 				console.log("id " + chunk.id + " matches want " + want.val + "; adding to path");
 				path = {
 					route: [chunk.id],
 					satisfies: [want]
 				}
+			} else if (want.type === "condition" && chunk.effects) {
+				chunk.effects.forEach(function(effect) {
+					if (State.wouldMakeTrue(effect, want.val)) {
+						console.log("id " + chunk.id + " has effect that would make want " + want.val + " true; adding to path");
+						path = {
+							route: [chunk.id],
+							satisfies: [want]
+						}
+						// TODO; Despite forEach loop, this can only handle one b/c sets val of path manually
+					}
+				});
 			}
 			if (chunk.request && chunk.request.type === "id") {
 				console.log("request of type id: iterating down");
 				var requestedChunk = chunkLibrary.get(chunk.request.val);
-				var reqPath = findAllSatisfyingPathsFrom(requestedChunk, Request.byId(chunk.request.val));
+				var reqPath = findAllSatisfyingPathsFrom(requestedChunk, Request.byId(chunk.request.val), chunkLibrary);
 				if (reqPath.length > 0) {
 					var firstPath = reqPath[0];
+					if (!path.route) path.route = [];
 					path.route = path.route.concat(firstPath.route);
 					// path.satisfies = path.satisfies.concat(firstPath.satisfies); // TODO: we don't want to record the want we satisfied as a result of being in this node: we only care about the original want. Maybe we can prune when we get back to the top?
 				}
 			}
-			if (path) {
+
+			if (path.route) {
 				paths.push(path);
 			}
 			return paths;

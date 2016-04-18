@@ -98,6 +98,10 @@ define(["../State"], function(State) {
 			State.set("y", true);
 			assert.ok(State.wouldMakeTrue("set y false", "y eq false"), "wouldMakeTrue for booleans (3)");
 			assert.notOk(State.wouldMakeTrue("set y false", "y eq true"), "wouldMakeTrue for booleans (4)");
+
+			assert.notOk(State.wouldMakeTrue("incr z 1", "z eq 1"), "can't relatively change value of non-existent entry");
+			assert.ok(State.wouldMakeTrue("set a 2", "a eq 2"), "ok to assign values that don't exist yet");
+
 		});
 	}
 
