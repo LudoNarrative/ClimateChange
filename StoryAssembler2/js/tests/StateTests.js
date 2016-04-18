@@ -80,6 +80,24 @@ define(["../State"], function(State) {
 			assert.throws(function(){State.change("incr testVal string")}, "expected number");
 
 		});
+
+		test("wouldMakeTrue", function(assert) {
+			State.reset();
+			State.set("x", 5);
+			assert.ok(State.wouldMakeTrue("incr x 1", "x eq 6"), "wouldMakeTrue for inc");
+			assert.deepEqual(State.get("x"), 5, "wouldMakeTrue should not change values");
+			assert.notOk(State.wouldMakeTrue("incr x 1", "x lte 5"), "wouldMakeTrue for inc, negated");
+			assert.notOk(State.wouldMakeTrue("decr x 1", "x eq 5"), "wouldMakeTrue for decr, checking old value");
+			assert.ok(State.wouldMakeTrue("set x -1", "x lt 0"), "wouldMakeTrue for set");
+			assert.notOk(State.wouldMakeTrue("set x -1", "x gt 0"), "wouldMakeTrue for set, negated");
+			assert.deepEqual(State.get("x"), 5, "wouldMakeTrue should not change values (2)");
+			State.set("y", false);
+			assert.ok(State.wouldMakeTrue("set x true", "x eq true"), "wouldMakeTrue for booleans (1)");
+			assert.notOk(State.wouldMakeTrue("set x true", "x eq false"), "wouldMakeTrue for booleans (2)");
+			State.set("y", true);
+			assert.ok(State.wouldMakeTrue("set y false", "y eq false"), "wouldMakeTrue for booleans (3)");
+			assert.notOk(State.wouldMakeTrue("set y false", "y eq true"), "wouldMakeTrue for booleans (4)");
+		});
 	}
 
 	return {
