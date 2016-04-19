@@ -38,7 +38,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			for (var i = 0; i < keys.length; i++) {
 				var chunk = chunkLibrary.get(keys[i]);
 				console.log("considering " + chunk.id);
-				var result = findAllSatisfyingPathsFrom(chunk, want, chunkLibrary);
+				var result = findAllSatisfyingPathsFrom(chunk, want, undefined, chunkLibrary);
 				if (result.length > 0) {
 					paths = paths.concat(result);
 				}
@@ -52,7 +52,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			}
 		}
 
-		var findAllSatisfyingPathsFrom = function(chunk, want, chunkLibrary) {
+		var findAllSatisfyingPathsFrom = function(chunk, want, parent, chunkLibrary) {
 			var paths = [];
 			var path = {};
 			if (chunk.conditions) {
@@ -63,6 +63,10 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 						return paths;
 					}
 				}
+			}
+			if (chunk.choiceLabel && (!parent || (parent && !parent.choices))) {
+				console.log("skipping " + chunk.id + " b/c has choiceLabel field and parent does not have choices field.");
+				return paths;
 			}
 			if (want.type === "id" && chunk.id === want.val) {
 				console.log("id " + chunk.id + " matches want " + want.val + "; adding to path");
@@ -85,7 +89,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			if (chunk.request && chunk.request.type === "id") {
 				console.log("request of type id: iterating down");
 				var requestedChunk = chunkLibrary.get(chunk.request.val);
-				var reqPath = findAllSatisfyingPathsFrom(requestedChunk, Request.byId(chunk.request.val), chunkLibrary);
+				var reqPath = findAllSatisfyingPathsFrom(requestedChunk, Request.byId(chunk.request.val), chunk, chunkLibrary);
 				if (reqPath.length > 0) {
 					var firstPath = reqPath[0];
 					if (!path.route) path.route = [];

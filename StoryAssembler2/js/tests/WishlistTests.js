@@ -110,6 +110,26 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			nextPath = wl.findBestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node2"], "conditions should restrict valid paths");
 
+			// Test choice structure.
+			ChunkLibrary.reset();
+			console.log("test choice structure");
+
+			wl = Wishlist.create([{request: "x eq 1"}], State);
+			ChunkLibrary.add([
+				{ id: "Choice1", effects: ["set x 1"], choiceLabel: "..." },
+				{ id: "Choice2", effects: ["set x 1"] } 
+			]);
+			nextPath = wl.findBestPath(ChunkLibrary);
+			assert.deepEqual(nextPath.route, ["Choice2"], "can't choose a chunk with a choiceLabel unless through a choice");
+
+			// ChunkLibrary.reset();
+			// ChunkLibrary.add([
+			// 	{ id: "alpha", content: "What do you choose?", choices: [Request.byId("Choice1"), Request.byId("Choice2")] },
+			// 	{ id: "Choice1", choiceLabel: "Choice 1", content: "Result of Choice 1." },
+			// 	{ id: "Choice2", choiceLabel: "Choice 2", content: "Result of Choice 2.", effects: ["set x 1"] } 
+			// ]);
+			// nextPath = wl.findBestPath(ChunkLibrary);
+			// assert.deepEqual(nextPath.route, ["alpha", "Choice2"], "can iterate down through choices");
 
 
 		});
