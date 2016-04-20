@@ -11,6 +11,7 @@ assert.deepEqual(actual, expected) --> === (works on objects, too)
 
 */
 
+// TODO: Any way to avoid having to require everything twice?
 requirejs.config({
 	paths: {
 		"domReady": "../../lib/domReady",

@@ -4,6 +4,7 @@ define(["../Want"], function(Want) {
 	
 	var run = function() {
 		QUnit.module( "Want Module tests" );
+		// TODO: "request" is confusing; should be "condition"?
 		test("wants", function( assert ) {
 			var want = Want.create({
 				request: "introduceFriend eq true",
