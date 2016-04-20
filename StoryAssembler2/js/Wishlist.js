@@ -31,8 +31,8 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 
 		var bestPath = function(chunkLibrary) {
 			var want = this.selectNext().request;
-
-			var paths = searchLibraryForPaths(want, chunkLibrary);
+			var wants = [want]; // For now, passing down a single want, but architected to accept a list.
+			var paths = searchLibraryForPaths(wants, chunkLibrary, [], undefined);
 			if (paths.length > 0) {
 				return chooseFromPotentialPaths(paths);
 			} else {
@@ -40,12 +40,12 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			}
 		}
 
-		var searchLibraryForPaths = function(want, chunkLibrary) {
+		var searchLibraryForPaths = function(wants, chunkLibrary, skipList, parent) {
 			var paths = [];
 			var keys = chunkLibrary.getKeys();
 			for (var i = 0; i < keys.length; i++) {
 				var chunk = chunkLibrary.get(keys[i]);
-				var result = findAllSatisfyingPathsFrom(chunk, want, undefined, chunkLibrary);
+				var result = findAllSatisfyingPathsFrom(chunk, wants, parent, chunkLibrary, skipList);
 				if (result.length > 0) {
 					paths = paths.concat(result);
 				}
@@ -53,14 +53,18 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			return paths;
 		}
 
-		var findAllSatisfyingPathsFrom = function(chunk, want, parent, chunkLibrary) {
+		var findAllSatisfyingPathsFrom = function(chunk, wants, parent, chunkLibrary, skipList) {
 			var paths = [];
 			var path = {};
+			if (skipList.indexOf(chunk.id) >= 0) {
+				return paths;
+			}
 			if (chunk.conditions) {
 				for (var i = 0; i < chunk.conditions.length; i++) {
 					var cnd = chunk.conditions[i];
 					if (!State.isTrue(cnd)) {
 						console.log("it is not true that " + cnd + ", so skipping");
+						skipList.push(chunk.id);
 						return paths;
 					}
 				}
@@ -69,41 +73,49 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 				console.log("skipping " + chunk.id + " b/c has choiceLabel field and parent does not have choices field.");
 				return paths;
 			}
-			if (want.type === "id" && chunk.id === want.val) {
-				console.log("id " + chunk.id + " matches want " + want.val + "; adding to path");
-				path = {
-					route: [chunk.id],
-					satisfies: [want]
-				}
-			} else if (want.type === "condition" && chunk.effects) {
-				chunk.effects.forEach(function(effect) {
-					if (State.wouldMakeTrue(effect, want.val)) {
-						console.log("id " + chunk.id + " has effect that would make want " + want.val + " true; adding to path");
-						path = {
-							route: [chunk.id],
-							satisfies: [want]
-						}
-						// TODO; Despite forEach loop, this can only handle one b/c sets val of path manually
+			for (var z = 0; z < wants.length; z++) {
+				var want = wants[z];
+				if (want.type === "id" && chunk.id === want.val) {
+					console.log("id " + chunk.id + " matches want " + want.val + "; adding to path");
+					path = {
+						route: [chunk.id],
+						satisfies: [want]
 					}
-				});
-			}
-			if (chunk.request && chunk.request.type === "id") {
-				console.log("request of type id: iterating down");
-				var requestedChunk = chunkLibrary.get(chunk.request.val);
-				var reqPath = findAllSatisfyingPathsFrom(requestedChunk, Request.byId(chunk.request.val), chunk, chunkLibrary);
-				if (reqPath.length > 0) {
-					var firstPath = reqPath[0];
-					if (!path.route) path.route = [];
-					path.route = path.route.concat(firstPath.route);
-					// path.satisfies = path.satisfies.concat(firstPath.satisfies); // TODO: we don't want to record the want we satisfied as a result of being in this node: we only care about the original want. Maybe we can prune when we get back to the top?
+				} else if (want.type === "condition" && chunk.effects) {
+					chunk.effects.forEach(function(effect) {
+						if (State.wouldMakeTrue(effect, want.val)) {
+							console.log("id " + chunk.id + " has effect that would make want " + want.val + " true; adding to path");
+							path = {
+								route: [chunk.id],
+								satisfies: [want]
+							}
+							// TODO; Despite forEach loop, this can only handle one b/c sets val of path manually
+						}
+					});
 				}
+				if (chunk.request && chunk.request.type === "id") {
+					console.log("request of type id: iterating down");
+					var requestedChunk = chunkLibrary.get(chunk.request.val);
+					var reqPath = findAllSatisfyingPathsFrom(requestedChunk, [Request.byId(chunk.request.val)], chunk, chunkLibrary, []);
+					if (reqPath.length > 0) {
+						var firstPath = reqPath[0];
+						if (!path.route) path.route = [];
+						path.route = path.route.concat(firstPath.route);
+						// path.satisfies = path.satisfies.concat(firstPath.satisfies); // TODO: we don't want to record the want we satisfied as a result of being in this node: we only care about the original want. Maybe we can prune when we get back to the top?
+					}
+				}
+				// if (chunk.choices) {
+				// 	for (var j = 0; j < chunk.choices.length; j++) {
+				// 		var choice = chunk.choices[j];
+				// 		var wantFromChoice = choice; // is this right?
+				// 		skipList.push(chunk.id);
+				// 		var validPaths = searchLibraryForPaths(wantFromChoice, chunkLibrary, skipList, chunk);
+				// 		skipList = util.removeFromStringList(skipList, chunk.id);
+				// 		// Remove any paths that don't satisfy want
+				// 		paths = paths.concat(validPaths);
+				// 	}
+				// }
 			}
-			// if (chunk.choices) {
-			// 	for (var j = 0; j < chunk.choices.length; j++) {
-			// 		var choice = chunk.choices[j];
-			// 		findAllSatisfyingPathsFrom();
-			// 	}
-			// }
 
 			if (path.route) {
 				paths.push(path);

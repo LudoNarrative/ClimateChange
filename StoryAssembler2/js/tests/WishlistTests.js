@@ -116,6 +116,8 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			// TODO: Write test (and determine correct behavior) for case where something requires something where the condition is not true. [what if this is in a choice?]
 
+			// TODO: A cycle should consider the last node before cycling as a leaf node. (I.e. we want this to be valid, but we don't want to recurse forever down it looking for leaf nodes.
+
 			// Test choice structure.
 			ChunkLibrary.reset();
 			console.log("test choice structure");
@@ -129,6 +131,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			assert.deepEqual(nextPath.route, ["Choice2"], "can't choose a chunk with a choiceLabel unless through a choice");
 
 			// ChunkLibrary.reset();
+			// wl = Wishlist.create([{request: "x eq 1"}], State);
 			// ChunkLibrary.add([
 			// 	{ id: "alpha", content: "What do you choose?", choices: [Request.byId("Choice1"), Request.byId("Choice2")] },
 			// 	{ id: "Choice1", choiceLabel: "Choice 1", content: "Result of Choice 1." },

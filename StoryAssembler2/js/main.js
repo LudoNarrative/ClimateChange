@@ -21,6 +21,8 @@ requirejs.config({
 requirejs(
 	["StoryAssembler", "State", "Wishlist", "ChunkLibrary", "text!../data/TestChunks.json", "domReady!"],
 	function(StoryAssembler, State, Wishlist, ChunkLibrary, TestChunksFile) {
+
+	// TODO: Remove old StoryAssembler
 	
 	console.log("SA2 main.js loaded.");
 
