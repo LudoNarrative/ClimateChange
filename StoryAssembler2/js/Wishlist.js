@@ -29,27 +29,28 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			return undefined;
 		}
 
-		var findBestPath = function(chunkLibrary) {
-			var paths = [];
+		var bestPath = function(chunkLibrary) {
 			var want = this.selectNext().request;
-			console.log("want", want);
 
-			var keys = chunkLibrary.getKeys();
-			for (var i = 0; i < keys.length; i++) {
-				var chunk = chunkLibrary.get(keys[i]);
-				console.log("considering " + chunk.id);
-				var result = findAllSatisfyingPathsFrom(chunk, want, undefined, chunkLibrary);
-				if (result.length > 0) {
-					paths = paths.concat(result);
-				}
-			}
-
-			console.log("paths", paths);
+			var paths = searchLibraryForPaths(want, chunkLibrary);
 			if (paths.length > 0) {
 				return chooseFromPotentialPaths(paths);
 			} else {
 				return {};
 			}
+		}
+
+		var searchLibraryForPaths = function(want, chunkLibrary) {
+			var paths = [];
+			var keys = chunkLibrary.getKeys();
+			for (var i = 0; i < keys.length; i++) {
+				var chunk = chunkLibrary.get(keys[i]);
+				var result = findAllSatisfyingPathsFrom(chunk, want, undefined, chunkLibrary);
+				if (result.length > 0) {
+					paths = paths.concat(result);
+				}
+			}
+			return paths;
 		}
 
 		var findAllSatisfyingPathsFrom = function(chunk, want, parent, chunkLibrary) {
@@ -97,6 +98,12 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 					// path.satisfies = path.satisfies.concat(firstPath.satisfies); // TODO: we don't want to record the want we satisfied as a result of being in this node: we only care about the original want. Maybe we can prune when we get back to the top?
 				}
 			}
+			// if (chunk.choices) {
+			// 	for (var j = 0; j < chunk.choices.length; j++) {
+			// 		var choice = chunk.choices[j];
+			// 		findAllSatisfyingPathsFrom();
+			// 	}
+			// }
 
 			if (path.route) {
 				paths.push(path);
@@ -118,7 +125,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 		return {
 			remove: remove,
 			selectNext: selectNext,
-			findBestPath: findBestPath,
+			bestPath: bestPath,
 			wantsRemaining: wantsRemaining
 		}
 	}

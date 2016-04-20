@@ -6,7 +6,7 @@ Requests can be for a chunk with a particular ID, or for a chunk that makes a pa
 
 */
 
-define(["Condition", "ChunkLibrary"], function(Condition, ChunkLibrary) {
+define(["Condition"], function(Condition) {
 
 	var byId = function(id) {
 		return {

@@ -52,9 +52,11 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			ChunkLibrary.add([
 				{ id: "TestNode", content: "Hello, world!" },
 			]);
-			nextPath = wl.findBestPath(ChunkLibrary);
+			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["TestNode"], "simple id request should have right path");
-			assert.deepEqual(nextPath.satisfies[0].val, "TestNode", "simple id request should have right satisfies");
+			// TODO clarify what's going on below
+			assert.deepEqual(nextPath.satisfies[0].type, "id", "simple id request should satisfy the right wany");
+			assert.deepEqual(nextPath.satisfies[0].val, "TestNode", "simple id request should satisfy the right want");
 
 			// Test path based on ID extend to a leaf node.
 			ChunkLibrary.reset();
@@ -64,8 +66,9 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "TestNodeZ", content: "..." },
 				{ id: "TestNode2", content: "Hola, mundo!" }
 			]);
-			nextPath = wl.findBestPath(ChunkLibrary);
+			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["TestNode", "TestNode2"], "path should go all the way to a leaf node");
+			// TODO: once you're looking for multiple wants, it may no longer be true that you want to get rid of wants that weren't in your original list. (also in test 4 below)
 			assert.deepEqual(nextPath.satisfies.length, 1, "two-step path should only show wants satisfied");
 			assert.deepEqual(nextPath.satisfies[0].val, "TestNode", "two-step path should have correct want satisfied");
 
@@ -76,7 +79,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			ChunkLibrary.add([
 				{ id: "alpha", effects: ["set x true"] }
 			]);
-			nextPath = wl.findBestPath(ChunkLibrary);
+			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["alpha"], "request-based path");
 			assert.deepEqual(nextPath.satisfies.length, 1, "request path should only show wants satisfied");
 			assert.deepEqual(nextPath.satisfies[0].val, "x eq true", "request-based path should have correct want satisfied");
@@ -91,8 +94,9 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "Node2", effects: ["set z true"], request: Request.byId("Node3") },
 				{ id: "Node3", content: "..." }
 			]);
-			nextPath = wl.findBestPath(ChunkLibrary);
+			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node1", "Node2", "Node3"], "request-based path should go all the way to a leaf node");
+			// TODO see above
 			assert.deepEqual(nextPath.satisfies.length, 1, "request path should only show original wants satisfied");
 
 			// Test conditions restrict valid paths.
@@ -107,8 +111,10 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "Node2", effects: ["incr jokesTold 1"], conditions: ["location eq 10"], content: "..." },
 				{ id: "Node3", effects: ["incr jokesTold 1"], conditions: ["location eq 5"], content: "..." } 
 			]);
-			nextPath = wl.findBestPath(ChunkLibrary);
+			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node2"], "conditions should restrict valid paths");
+
+			// TODO: Write test (and determine correct behavior) for case where something requires something where the condition is not true. [what if this is in a choice?]
 
 			// Test choice structure.
 			ChunkLibrary.reset();
@@ -119,7 +125,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "Choice1", effects: ["set x 1"], choiceLabel: "..." },
 				{ id: "Choice2", effects: ["set x 1"] } 
 			]);
-			nextPath = wl.findBestPath(ChunkLibrary);
+			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Choice2"], "can't choose a chunk with a choiceLabel unless through a choice");
 
 			// ChunkLibrary.reset();
@@ -128,7 +134,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			// 	{ id: "Choice1", choiceLabel: "Choice 1", content: "Result of Choice 1." },
 			// 	{ id: "Choice2", choiceLabel: "Choice 2", content: "Result of Choice 2.", effects: ["set x 1"] } 
 			// ]);
-			// nextPath = wl.findBestPath(ChunkLibrary);
+			// nextPath = wl.bestPath(ChunkLibrary);
 			// assert.deepEqual(nextPath.route, ["alpha", "Choice2"], "can iterate down through choices");
 
 
