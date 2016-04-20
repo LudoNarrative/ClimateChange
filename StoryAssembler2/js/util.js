@@ -86,11 +86,20 @@ define([], function() {
 		return toString.call(obj) === "[object Array]";
 	}
 
+	var removeFromStringList = function(list, itemToRemove) {
+		var newList = clone(list);
+		var pos = newList.indexOf(itemToRemove);
+		if (pos < 0) return newList;
+		newList.splice(pos, 1);
+		return newList;
+	}
+
 	return {
 		iterator: iterator,
 		oneOf: oneOf,
 		randomNumber: randomNumber,
 		clone: clone,
-		isArray: isArray
+		isArray: isArray,
+		removeFromStringList: removeFromStringList
 	}
 });

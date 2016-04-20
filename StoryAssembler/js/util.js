@@ -58,11 +58,20 @@ define([], function() {
 		return Math.floor(Math.random() * Math.round(max)) + 1;
 	}
 
+	var removeFromStringList = function(list, itemToRemove) {
+		var newList = clone(list);
+		var pos = newList.indexOf(itemToRemove);
+		if (pos < 0) return newList;
+		newList.splice(pos, 1);
+		return newList;
+	}
+
 	// PUBLIC INTERFACE
 	return {
 		isArray: isArray,
 		clone: clone,
-		randomInt, randomInt
+		randomInt: randomInt,
+		removeFromStringList: removeFromStringList
 	}
 
 });
