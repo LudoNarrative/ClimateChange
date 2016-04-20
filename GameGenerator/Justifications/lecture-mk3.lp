@@ -23,10 +23,11 @@ entity(ball).
 entity(square).
 entity(face).
 
+singular(ball).
+singular(square).
+singular(face).
 %resource(class)
 resource(confidence).
-
-
 
 physicsLogic(ball,spring).
 
@@ -63,15 +64,15 @@ initialize(set_depth(square,back)).
 % incorporate "good" cultural knowledge - Mario coin collection noise, "good" colors (green v red)
 % particle effect shower, etc. 
 
-precondition(below(confidence,5),bad_face).
+precondition(lt(confidence,5),bad_face).
 result(bad_face,set_sprite(face, upset_face)).  
 %I'm thinking we have a pool of tagged sprites we can pull from
 
-precondition(below(confidence,10),neutral_face).
-precondition(above(confidence,5),neutral_face).
+precondition(lt(confidence,10),neutral_face).
+precondition(ge(confidence,5),neutral_face).
 result(neutral_face,set_sprite(face,anxious_face)).
 
-precondition(above(confidence,10),good_face).
+precondition(above(ge,10),good_face).
 result(good_face,set_sprite(face, happy_face)). 
 
 %I've decided I prefer tick as opposed to time as I tend to think of tick as 
@@ -92,7 +93,7 @@ result(gain,change_color(square,green,1)).
 precondition(control_event(mouse_button,pressed),loss).
 precondition(overlaps(ball,square,false),loss).
 result(loss,decreases(confidence,2)).
-result(gain,change_color(square,red,1)).
+result(loss,change_color(square,red,1)).
 
 
 precondition(below(confidence,0), lose).

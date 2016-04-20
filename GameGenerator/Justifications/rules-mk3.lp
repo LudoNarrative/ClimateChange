@@ -37,7 +37,7 @@ good(RESOURCE) :-
     result(OUTCOME,mode_change(game_end)).
     
     
-outcome(OUTCOME) :- precondition(CONDITION,OUTCOME).
+outcome(OUTCOME) :- precondition(CONDITION,OUTCOME), result(OUTCOME,EFFECT).
 condition(CONDITION) :- precondition(CONDITION,OUTCOME).
 
 moreThanOnePrecondition(OUTCOME) :- 
@@ -386,7 +386,7 @@ unrestrictedCondition(control_event(click)). %player can always click
 unrestrictedCondition(tick).
 unrestrictedGame :- 
     unrestricted(OUTCOME),
-    result(OUTCOME,story_progression).
+    result(OUTCOME,mode_change(story_progression)).
 unrestrictedGame :- 
     unrestricted(OUTCOME),
     result(OUTCOME,mode_change(game_win)).
