@@ -46,16 +46,16 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			for (var i = 0; i < keys.length; i++) {
 				var chunk = chunkLibrary.get(keys[i]);
 				var result = findAllSatisfyingPathsFrom(chunk, wants, parent, chunkLibrary, skipList);
-				if (result.length > 0) {
-					paths = paths.concat(result);
-				}
+				paths = paths.concat(result);
 			}
 			return paths;
 		}
 
 		var findAllSatisfyingPathsFrom = function(chunk, wants, parent, chunkLibrary, skipList) {
 			var paths = [];
-			var path = {};
+			var pathToHere;
+
+			// Verify this chunk is valid.
 			if (skipList.indexOf(chunk.id) >= 0) {
 				return paths;
 			}
@@ -73,54 +73,117 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 				console.log("skipping " + chunk.id + " b/c has choiceLabel field and parent does not have choices field.");
 				return paths;
 			}
+
+			// Consider each want.
 			for (var z = 0; z < wants.length; z++) {
 				var want = wants[z];
+
+				// Does this chunk directly make any want true?
 				if (want.type === "id" && chunk.id === want.val) {
 					console.log("id " + chunk.id + " matches want " + want.val + "; adding to path");
-					path = {
-						route: [chunk.id],
-						satisfies: [want]
-					}
-				} else if (want.type === "condition" && chunk.effects) {
-					chunk.effects.forEach(function(effect) {
+					pathToHere = createOrAddWant(pathToHere, chunk.id, want);
+				} else if (chunk.effects && want.type === "condition") {
+					for (var b = 0; b < chunk.effects.length; b++) {
+						var effect = chunk.effects[b]
 						if (State.wouldMakeTrue(effect, want.val)) {
 							console.log("id " + chunk.id + " has effect that would make want " + want.val + " true; adding to path");
-							path = {
-								route: [chunk.id],
-								satisfies: [want]
-							}
-							// TODO; Despite forEach loop, this can only handle one b/c sets val of path manually
+							pathToHere = createOrAddWant(pathToHere, chunk.id, want);
+							break;
 						}
-					});
-				}
-				if (chunk.request && chunk.request.type === "id") {
-					console.log("request of type id: iterating down");
-					var requestedChunk = chunkLibrary.get(chunk.request.val);
-					var reqPath = findAllSatisfyingPathsFrom(requestedChunk, [Request.byId(chunk.request.val)], chunk, chunkLibrary, []);
-					if (reqPath.length > 0) {
-						var firstPath = reqPath[0];
-						if (!path.route) path.route = [];
-						path.route = path.route.concat(firstPath.route);
-						// path.satisfies = path.satisfies.concat(firstPath.satisfies); // TODO: we don't want to record the want we satisfied as a result of being in this node: we only care about the original want. Maybe we can prune when we get back to the top?
 					}
 				}
-				// if (chunk.choices) {
-				// 	for (var j = 0; j < chunk.choices.length; j++) {
-				// 		var choice = chunk.choices[j];
-				// 		var wantFromChoice = choice; // is this right?
-				// 		skipList.push(chunk.id);
-				// 		var validPaths = searchLibraryForPaths(wantFromChoice, chunkLibrary, skipList, chunk);
-				// 		skipList = util.removeFromStringList(skipList, chunk.id);
-				// 		// Remove any paths that don't satisfy want
-				// 		paths = paths.concat(validPaths);
-				// 	}
-				// }
+			}
+			// If so, and there are no outgoing nodes, then return a one-step path to this point. 
+			if (pathToHere && !chunk.request && !chunk.choices) {
+				return [pathToHere];
 			}
 
-			if (path.route) {
-				paths.push(path);
+			// Otherwise, see if any outgoing nodes can meet any of our wants. If so, add a path that starts with this node and includes the returned path, and add any met wants to the path.
+
+			// Recurse through all possible paths from this chunk
+			if (chunk.request && chunk.request.type === "id") {
+				console.log("request of type id: iterating down");
+				var requestedChunk = chunkLibrary.get(chunk.request.val);
+				var req = Request.byId(chunk.request.val);
+				var validPaths = findAllSatisfyingPathsFrom(requestedChunk, [req], chunk, chunkLibrary, []);
+				
+				// Remove any paths that don't satisfy want
+				for (var y = 0; y < validPaths.length; y++) {
+					var thisPath = validPaths[y];
+					thisPath.satisfies = removeFromSatisfies(thisPath.satisfies, req); // scrub "satisfies" of the want we added.
+					// now, if this path has any wants from our list, count it as valid.
+					if (anyInFirstAreInSecond(thisPath.satisfies, wants)) {
+						paths.push({
+							route: pathToHere ? pathToHere.route.concat(thisPath.route) : thisPath.route,
+							satisfies: pathToHere ? pathToHere.satisfies.concat(thisPath.satisfies) : thisPath.satisfies
+						});
+					}
+				}
 			}
+			if (chunk.choices) {
+				for (var j = 0; j < chunk.choices.length; j++) {
+					var choice = chunk.choices[j];
+					skipList.push(chunk.id);
+
+					// Recurse with the additional want of satisfying this choice option's request
+					var validPaths = searchLibraryForPaths(choice, chunkLibrary, skipList, chunk);
+
+					// Remove any paths that don't satisfy want
+					for (var y = 0; y < validPaths.length; y++) {
+						var thisPath = validPaths[y];
+						thisPath.satisfies = removeFromSatisfies(thisPath.satisfies, choice); // scrub "satisfies" of the choice want we added.
+						// now, if this path has any wants from our list, count it as valid.
+						if (anyInFirstAreInSecond(thisPath.satisfies, wants)) {
+							paths.push({
+								route: pathToHere ? pathToHere.route.concat(thisPath.route) : thisPath.route,
+								satisfies: pathToHere ? pathToHere.satisfies.concat(thisPath.satisfies) : thisPath.satisfies
+							});
+						}
+					}
+
+					skipList = util.removeFromStringList(skipList, chunk.id);
+				}
+			}
+			// If none of the recursions were successful, but this one was, add it to the list.
+			if (paths.length === 0 && pathToHere) {
+				return [pathToHere];
+			}
+
 			return paths;
+		}
+
+		var removeFromSatisfies = function(satisfies, wantToRemove) {
+			var newSatisfies = [];
+			satisfies.forEach(function(want) {
+				if (want.val !== wantToRemove.val) {
+					newSatisfies.push(want);
+				}
+			});
+			return newSatisfies;
+		}
+
+		var anyInFirstAreInSecond = function(firstWants, secondWants) {
+			for (var i = 0; i < firstWants.length; i++) {
+				var want = firstWants[i];
+				for (var j = 0; j < secondWants.length; j++) {
+					if (want.val === secondWants[j].val) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+
+		var createOrAddWant = function(path, id, want) {
+			if (!path) {
+				path = { // TODO: This needs to be appending to satisfies each time through loop.
+					route: [id],
+					satisfies: [want]
+				}
+			} else {
+				path.satisfies.push(want);
+			}
+			return path;
 		}
 
 		var chooseFromPotentialPaths = function(paths) {
