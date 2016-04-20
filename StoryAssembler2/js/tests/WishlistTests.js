@@ -43,7 +43,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			assert.deepEqual(wl3.wantsRemaining(), 1, "new wishlist should have proper values");
 		});
 
-		test("selectNext", function( assert ) {
+		test("bestPath", function( assert ) {
 			var wl, nextPath;
 			wl = Wishlist.create([{chunkId: "TestNode"}], State);
 			ChunkLibrary.reset();
@@ -58,17 +58,16 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			assert.deepEqual(nextPath.satisfies[0].type, "id", "simple id request should satisfy the right wany");
 			assert.deepEqual(nextPath.satisfies[0].val, "TestNode", "simple id request should satisfy the right want");
 
-			// Test path based on ID extend to a leaf node.
-			ChunkLibrary.reset();
+			// // Test path based on ID extend to a leaf node.
+			// ChunkLibrary.reset();
 			ChunkLibrary.add([
-				{ id: "TestNodeX", content: "..." },
+				// { id: "TestNodeX", content: "..." },
 				{ id: "TestNode", request: Request.byId("TestNode2") },
-				{ id: "TestNodeZ", content: "..." },
+				// { id: "TestNodeZ", content: "..." },
 				{ id: "TestNode2", content: "Hola, mundo!" }
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
-			assert.deepEqual(nextPath.route, ["TestNode", "TestNode2"], "path should go all the way to a leaf node");
-			// TODO: once you're looking for multiple wants, it may no longer be true that you want to get rid of wants that weren't in your original list. (also in test 4 below)
+			assert.deepEqual(nextPath.route, ["TestNode"], "don't need to go to leaf nodes that don't satisfy any wants");
 			assert.deepEqual(nextPath.satisfies.length, 1, "two-step path should only show wants satisfied");
 			assert.deepEqual(nextPath.satisfies[0].val, "TestNode", "two-step path should have correct want satisfied");
 
@@ -95,7 +94,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "Node3", content: "..." }
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
-			assert.deepEqual(nextPath.route, ["Node1", "Node2", "Node3"], "request-based path should go all the way to a leaf node");
+			assert.deepEqual(nextPath.route, ["Node1"], "request-based path doesn't need to go to leaf nodes that don't satisfy useful wants");
 			// TODO see above
 			assert.deepEqual(nextPath.satisfies.length, 1, "request path should only show original wants satisfied");
 
