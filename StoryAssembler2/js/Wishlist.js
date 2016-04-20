@@ -29,10 +29,12 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			return undefined;
 		}
 
-		var bestPath = function(chunkLibrary) {
+		var chunkLibrary;
+		var bestPath = function(_chunkLibrary) {
+			chunkLibrary = _chunkLibrary;
 			var want = this.selectNext().request;
 			var wants = [want]; // For now, passing down a single want, but architected to accept a list.
-			var paths = searchLibraryForPaths(wants, chunkLibrary, [], undefined);
+			var paths = searchLibraryForPaths(wants, undefined);
 			if (paths.length > 0) {
 				return chooseFromPotentialPaths(paths);
 			} else {
@@ -40,60 +42,54 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			}
 		}
 
-		var searchLibraryForPaths = function(wants, chunkLibrary, skipList, parent) {
+		// Returns paths from searching every valid chunk in the library.
+		var searchLibraryForPaths = function(wants, parent) {
 			var paths = [];
 			var keys = chunkLibrary.getKeys();
 			for (var i = 0; i < keys.length; i++) {
 				var chunk = chunkLibrary.get(keys[i]);
-				var result = findAllSatisfyingPathsFrom(chunk, wants, parent, chunkLibrary, skipList);
+
+				// Verify this chunk is valid.
+				if (chunk.conditions) {
+					var shouldContinue = false;
+					for (var j = 0; j < chunk.conditions.length; j++) {
+						var cnd = chunk.conditions[j];
+						if (!State.isTrue(cnd)) {
+							shouldContinue = true;
+						}
+					}
+					if (shouldContinue) continue;
+				}
+				if (chunk.choiceLabel && (!parent || (parent && !parent.choices))) {
+					continue
+				}
+
+				var result = findAllSatisfyingPathsFrom(chunk, wants, parent);
 				paths = paths.concat(result);
 			}
 			return paths;
 		}
 
-		var findAllSatisfyingPathsFrom = function(chunk, wants, parent, chunkLibrary, skipList) {
+		// Returns paths from searching a single valid chunk in the library.
+		var findAllSatisfyingPathsFrom = function(chunk, wants, parent) {
 			var paths = [];
 			var pathToHere;
 
-			// Verify this chunk is valid.
-			if (skipList.indexOf(chunk.id) >= 0) {
-				return paths;
-			}
-			if (chunk.conditions) {
-				for (var i = 0; i < chunk.conditions.length; i++) {
-					var cnd = chunk.conditions[i];
-					if (!State.isTrue(cnd)) {
-						console.log("it is not true that " + cnd + ", so skipping");
-						skipList.push(chunk.id);
-						return paths;
+			// Does this chunk directly make one or more wants true?
+			wants.forEach(function(want) {
+				var satisfied = false;
+				if (want.type === "id") {
+					satisfied = chunk.id === want.val;
+				} else { // type === condition
+					if (chunk.effects) {
+						satisfied = State.wouldAnyMakeTrue(chunk.effects, want.val);
 					}
 				}
-			}
-			if (chunk.choiceLabel && (!parent || (parent && !parent.choices))) {
-				console.log("skipping " + chunk.id + " b/c has choiceLabel field and parent does not have choices field.");
-				return paths;
-			}
-
-			// Consider each want.
-			for (var z = 0; z < wants.length; z++) {
-				var want = wants[z];
-
-				// Does this chunk directly make any want true?
-				if (want.type === "id" && chunk.id === want.val) {
-					console.log("id " + chunk.id + " matches want " + want.val + "; adding to path");
+				if (satisfied) {
 					pathToHere = createOrAddWant(pathToHere, chunk.id, want);
-				} else if (chunk.effects && want.type === "condition") {
-					for (var b = 0; b < chunk.effects.length; b++) {
-						var effect = chunk.effects[b]
-						if (State.wouldMakeTrue(effect, want.val)) {
-							console.log("id " + chunk.id + " has effect that would make want " + want.val + " true; adding to path");
-							pathToHere = createOrAddWant(pathToHere, chunk.id, want);
-							break;
-						}
-					}
 				}
-			}
-			// If so, and there are no outgoing nodes, then return a one-step path to this point. 
+			});
+			// If so, and there are no outgoing nodes, then the only possible paths from this point are a single one-step path of this chunk. 
 			if (pathToHere && !chunk.request && !chunk.choices) {
 				return [pathToHere];
 			}
@@ -102,46 +98,20 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 
 			// Recurse through all possible paths from this chunk
 			if (chunk.request && chunk.request.type === "id") {
-				console.log("request of type id: iterating down");
 				var requestedChunk = chunkLibrary.get(chunk.request.val);
 				var req = Request.byId(chunk.request.val);
-				var validPaths = findAllSatisfyingPathsFrom(requestedChunk, [req], chunk, chunkLibrary, []);
-				
-				// Remove any paths that don't satisfy want
-				for (var y = 0; y < validPaths.length; y++) {
-					var thisPath = validPaths[y];
-					thisPath.satisfies = removeFromSatisfies(thisPath.satisfies, req); // scrub "satisfies" of the want we added.
-					// now, if this path has any wants from our list, count it as valid.
-					if (anyInFirstAreInSecond(thisPath.satisfies, wants)) {
-						paths.push({
-							route: pathToHere ? pathToHere.route.concat(thisPath.route) : thisPath.route,
-							satisfies: pathToHere ? pathToHere.satisfies.concat(thisPath.satisfies) : thisPath.satisfies
-						});
-					}
-				}
+				var validPaths = findAllSatisfyingPathsFrom(requestedChunk, [req], chunk);
+
+				paths = paths.concat(pathsWithValidWant(validPaths, req, wants, pathToHere));
 			}
 			if (chunk.choices) {
 				for (var j = 0; j < chunk.choices.length; j++) {
 					var choice = chunk.choices[j];
-					skipList.push(chunk.id);
 
-					// Recurse with the additional want of satisfying this choice option's request
-					var validPaths = searchLibraryForPaths(choice, chunkLibrary, skipList, chunk);
+					var validPaths = searchLibraryForPaths(choice, chunk);
 
-					// Remove any paths that don't satisfy want
-					for (var y = 0; y < validPaths.length; y++) {
-						var thisPath = validPaths[y];
-						thisPath.satisfies = removeFromSatisfies(thisPath.satisfies, choice); // scrub "satisfies" of the choice want we added.
-						// now, if this path has any wants from our list, count it as valid.
-						if (anyInFirstAreInSecond(thisPath.satisfies, wants)) {
-							paths.push({
-								route: pathToHere ? pathToHere.route.concat(thisPath.route) : thisPath.route,
-								satisfies: pathToHere ? pathToHere.satisfies.concat(thisPath.satisfies) : thisPath.satisfies
-							});
-						}
-					}
+					paths = paths.concat(pathsWithValidWant(validPaths, choice, wants, pathToHere));
 
-					skipList = util.removeFromStringList(skipList, chunk.id);
 				}
 			}
 			// If none of the recursions were successful, but this one was, add it to the list.
@@ -150,6 +120,22 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			}
 
 			return paths;
+		}
+
+		var pathsWithValidWant = function(pathList, nodeToRemove, wants, pathToHere) {
+			var returnPaths = [];
+			for (var y = 0; y < pathList.length; y++) {
+				var thisPath = pathList[y];
+				thisPath.satisfies = removeFromSatisfies(thisPath.satisfies, nodeToRemove); // scrub "satisfies" of the want we added.
+				// now, if this path has any wants from our list, count it as valid.
+				if (anyInFirstAreInSecond(thisPath.satisfies, wants)) {
+					returnPaths.push({
+						route: pathToHere ? pathToHere.route.concat(thisPath.route) : thisPath.route,
+						satisfies: pathToHere ? pathToHere.satisfies.concat(thisPath.satisfies) : thisPath.satisfies
+					});
+				}
+			}
+			return returnPaths;
 		}
 
 		var removeFromSatisfies = function(satisfies, wantToRemove) {
