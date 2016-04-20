@@ -2,6 +2,8 @@
 
 
 
+physicsMetaphors(spring;pendulum).
+
 buttons(mouse_button;up_arrow;down_arrow;left_arrow;right_arrow).
 buttonStates(pressed;held;released).
 
@@ -20,7 +22,21 @@ potentialValues(R) :-  potentialResources(R).
 potentialModes(playing;story_progression;game_loss;game_win).
 
 
-1 {precondition(tick,OUTCOME) :  potentialOutcomes(OUTCOME)}.
+{overlapLogic(ENTITY1,ENTITY2) : 
+    potentialEntities(ENTITY1),
+    potentialEntities(ENTITY2)}.
+    
+:- overlapLogic(ENTITY1,ENTITY2), not condition(overlaps(ENTITY1,ENTITY2)).
+
+:- not overlapLogic(ENTITY1,ENTITY2), condition(overlaps(ENTITY1,ENTITY2)).
+
+moving(ENTITY) :- physicsLogic(ENTITY,LOGIC).
+
+:-  overlapLogic(ENTITY1,ENTITY2),
+    not moving(ENTITY1),
+    not moving(ENTITY2).
+
+{precondition(tick,OUTCOME) :  potentialOutcomes(OUTCOME)}.
 
 {precondition(below(RESOURCE,CONSTANT),OUTCOME) : 
     potentialResources(RESOURCE), 
