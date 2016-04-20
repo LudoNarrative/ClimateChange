@@ -130,7 +130,7 @@ define(["Condition"], function(Condition) {
 		}
 	}
 
-	// Check if a given effect would make the given condition true, by storing the current blackboard value, running the effect, checking the condition, then restoring the original value.
+	// Check if a given effect would make the given condition true, by storing the current blackboard value, running the effect, checking the condition, then restoring the original value. 
 	var wouldMakeTrue = function(effect, condition) {
 		console.log("checking if " + effect + " would make " + condition + " true");
 		var fields = _getEffectFields(effect);
@@ -148,12 +148,23 @@ define(["Condition"], function(Condition) {
 		return wouldBeTrue;
 	}
 
+	// Same as above, except returns true of any effects in the passed in array would make the given condition true
+	var wouldAnyMakeTrue = function(effectArray, condition) {
+		for (var i = 0; i < effectArray.length; i++) {
+			if (wouldMakeTrue(effectArray[i], condition)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	return {
 		get: get,
 		set: set,
 		reset: reset,
 		change: change,
 		isTrue: isTrue,
-		wouldMakeTrue: wouldMakeTrue
+		wouldMakeTrue: wouldMakeTrue,
+		wouldAnyMakeTrue: wouldAnyMakeTrue
 	}
 });
