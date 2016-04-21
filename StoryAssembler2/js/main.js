@@ -14,7 +14,8 @@ requirejs.config({
 		"Request": "Request",
 		"Want": "Want",
 		"Validate": "Validate",
-		"ChunkLibrary": "ChunkLibrary"
+		"ChunkLibrary": "ChunkLibrary",
+		"BestPath": "BestPath"
 	}
 });
 
