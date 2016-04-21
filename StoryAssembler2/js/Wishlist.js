@@ -34,7 +34,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			chunkLibrary = _chunkLibrary;
 			var want = this.selectNext().request;
 			var wants = [want]; // For now, passing down a single want, but architected to accept a list.
-			var paths = searchLibraryForPaths(wants, undefined);
+			var paths = searchLibraryForPaths(wants, undefined, []);
 			if (paths.length > 0) {
 				return chooseFromPotentialPaths(paths);
 			} else {
@@ -43,13 +43,16 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 		}
 
 		// Returns paths from searching every valid chunk in the library.
-		var searchLibraryForPaths = function(wants, parent) {
+		var searchLibraryForPaths = function(wants, parent, skipList) {
 			var paths = [];
 			var keys = chunkLibrary.getKeys();
 			for (var i = 0; i < keys.length; i++) {
 				var chunk = chunkLibrary.get(keys[i]);
 
 				// Verify this chunk is valid.
+				if (skipList.indexOf(chunk.id) >= 0) {
+					continue;
+				}
 				if (chunk.conditions) {
 					var shouldContinue = false;
 					for (var j = 0; j < chunk.conditions.length; j++) {
@@ -61,21 +64,22 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 					if (shouldContinue) continue;
 				}
 				if (chunk.choiceLabel && (!parent || (parent && !parent.choices))) {
-					continue
+					continue;
 				}
 
-				var result = findAllSatisfyingPathsFrom(chunk, wants, parent);
+				var result = findAllSatisfyingPathsFrom(chunk, wants, parent, skipList);
 				paths = paths.concat(result);
 			}
 			return paths;
 		}
 
 		// Returns paths from searching a single valid chunk in the library.
-		var findAllSatisfyingPathsFrom = function(chunk, wants, parent) {
+		var findAllSatisfyingPathsFrom = function(chunk, wants, parent, skipList) {
 			var paths = [];
 			var pathToHere;
 
 			// Does this chunk directly make one or more wants true?
+			console.log("wants", wants);
 			wants.forEach(function(want) {
 				var satisfied = false;
 				if (want.type === "id") {
@@ -89,7 +93,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 					pathToHere = createOrAddWant(pathToHere, chunk.id, want);
 				}
 			});
-			// If so, and there are no outgoing nodes, then the only possible paths from this point are a single one-step path of this chunk. 
+			// If so, and there are no outgoing nodes, then the only possible paths from this point are a single one-step path of this chunk, with all the wants it satisfies.
 			if (pathToHere && !chunk.request && !chunk.choices) {
 				return [pathToHere];
 			}
@@ -97,10 +101,11 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			// Otherwise, see if any outgoing nodes can meet any of our wants. If so, add a path that starts with this node and includes the returned path, and add any met wants to the path.
 
 			// Recurse through all possible paths from this chunk
+			var validPaths;
 			if (chunk.request && chunk.request.type === "id") {
 				var requestedChunk = chunkLibrary.get(chunk.request.val);
 				var req = Request.byId(chunk.request.val);
-				var validPaths = findAllSatisfyingPathsFrom(requestedChunk, [req], chunk);
+				validPaths = findAllSatisfyingPathsFrom(requestedChunk, [req], chunk, skipList);
 
 				paths = paths.concat(pathsWithValidWant(validPaths, req, wants, pathToHere));
 			}
@@ -108,8 +113,15 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 				for (var j = 0; j < chunk.choices.length; j++) {
 					var choice = chunk.choices[j];
 
-					var validPaths = searchLibraryForPaths(choice, chunk);
+					skipList.push(chunk.id);
+					var refinedWants = util.clone(wants);
+					refinedWants.push(choice);
+					validPaths = searchLibraryForPaths(refinedWants, chunk, skipList);
+					skipList = util.removeFromStringList(skipList, chunk.id);
 
+					if (!pathToHere) {
+						pathToHere = createOrAddWant(pathToHere, chunk.id, []);
+					}
 					paths = paths.concat(pathsWithValidWant(validPaths, choice, wants, pathToHere));
 
 				}
@@ -164,7 +176,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			if (!path) {
 				path = { // TODO: This needs to be appending to satisfies each time through loop.
 					route: [id],
-					satisfies: [want]
+					satisfies: want? [want] : []
 				}
 			} else {
 				path.satisfies.push(want);
