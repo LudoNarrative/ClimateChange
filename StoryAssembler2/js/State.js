@@ -132,7 +132,6 @@ define(["Condition"], function(Condition) {
 
 	// Check if a given effect would make the given condition true, by storing the current blackboard value, running the effect, checking the condition, then restoring the original value. 
 	var wouldMakeTrue = function(effect, condition) {
-		console.log("checking if " + effect + " would make " + condition + " true");
 		var fields = _getEffectFields(effect);
 		var param = fields.param;
 		var currVal = get(param);
