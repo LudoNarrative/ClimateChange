@@ -72,7 +72,7 @@ precondition(lt(confidence,10),neutral_face).
 precondition(ge(confidence,5),neutral_face).
 result(neutral_face,set_sprite(face,anxious_face)).
 
-precondition(above(ge,10),good_face).
+precondition(ge(ge,10),good_face).
 result(good_face,set_sprite(face, happy_face)). 
 
 %I've decided I prefer tick as opposed to time as I tend to think of tick as 
@@ -96,6 +96,6 @@ result(loss,decreases(confidence,2)).
 result(loss,change_color(square,red,1)).
 
 
-precondition(below(confidence,0), lose).
+precondition(le(confidence,0), lose).
 result(lose,mode_change(game_loss)).
 

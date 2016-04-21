@@ -16,7 +16,7 @@ resource(timeTil_upper).
 resource(lives).
 
 
-%start/end - should there be something like a respawnLogic?
+%start - should there be something like a respawnLogic?
 % similarly, spawnLogic?  - feels like I want something a bit more
 % interpretable than timers and checking if on screen, etc. 
 
@@ -49,7 +49,7 @@ physicsLogic(frog,mapping(control_event(up_arrow,pressed),north,1)).
 physicsLogic(frog,mapping(control_event(down_arrow,pressed),south,1)).
 physicsLogic(frog,mapping(control_event(left_arrow,pressed),west,1)).
 physicsLogic(frog,mapping(control_event(right_arrow,pressed),east,1)).
-physicsLogic(frod,face_towards).
+physicsLogic(frog,face_towards).
 
 
 modeLogic(playing).

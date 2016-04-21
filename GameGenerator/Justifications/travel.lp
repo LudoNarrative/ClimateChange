@@ -19,13 +19,16 @@ resource(city(co2)).
 resource(city(lifetime)).
 resource(city(name)).
 
+many(city).
+
+
 physicsLogic(pointer, follows(cursor)).
 
 
 controlLogic(mouse_button).
 controlLogic(cursor).
 
-collisionLogic(city,pointer).
+overlapLogic(city,pointer).
 
 
 % this should perhaps just be a bunch of other entity specific resources
@@ -36,11 +39,18 @@ selectionLogic(city).
 %I prefer to think of pooling as a poolingLogic 
 poolingLogic(city,urn_without_replacement). %other poolingLogics - stack, queue, urn_with_replacement
 
+textLogic(money, ui).
+textLogic(fame, ui).
+textLogic(co2, ui).
+textLogic(city(money), relative_ui(city)).
+textLogic(city(fame), relative_ui(city)).
+textLogic(city(co2), relative_ui(city)).
 
-mode_logic(playing).
-mode_logic(narrative_turn).
-mode_logic(game_end).
-mode_logic(game_loss).
+
+modeLogic(playing).
+modeLogic(narrative_turn).
+modeLogic(game_end).
+modeLogic(game_loss).
 
 % these are at the start of the game
 initialize(set_to(money,5000)).
@@ -94,7 +104,7 @@ result(delete_city,delete(city)).
 % setting to something, it just sets it to the original value
 % adding/deleting again do the opposite - (unless it shouldn't? need to think abot this?)
 precondition(control_event(mouse_button,pressed),add_city).
-precondition(collides(pointer,city,true),add_city).
+precondition(overlaps(pointer,city,true),add_city).
 precondition(true(city(selectable)),add_city).
 precondition(above(money,city(money)),add_city).
 result(add_city,select(city,inPrecondition)). 
@@ -102,7 +112,7 @@ result(add_city,decreases(money,city(money))).
 result(add_city,increases(fame,city(fame))).
 result(add_city,increases(co2,city(co2))).
 result(add_city,set(city(lifetime),pos_infinity)).
-result(add_city,set(city(selectable),false)).
+result(add_city,set_selection(city)).
 result(add_city,increases(citiesSelected,1)).
 result(add_city,set_color(city,dark_grey)).
 result(add_city,create_inverse(city)).
