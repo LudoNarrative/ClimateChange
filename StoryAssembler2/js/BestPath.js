@@ -25,7 +25,7 @@ define(["Request", "util"], function(Request, util) {
 		if (paths.length > 0) {
 			return chooseFromPotentialPaths(paths);
 		} else {
-			return {};
+			return undefined;
 		}
 	}
 
@@ -92,23 +92,18 @@ define(["Request", "util"], function(Request, util) {
 		});
 
 		// Otherwise, see if any outgoing nodes can meet any of our wants. If so, add paths for each that start with this node, noting any satisfied Wants discovered along the way.
-		var vPaths, req, okToBeChoice;
+		var reqs = [];
 		if (chunk.request && chunk.request.type === "id") {
-			req = Request.byId(chunk.request.val);
-			okToBeChoice = false;
-			vPaths = findValidPaths(chunk, skipList, req, wants, pathToHere);
-			pathToHere = vPaths.pathToHere;
-			paths = paths.concat(vPaths.paths);
+			reqs.push(Request.byId(chunk.request.val));
 		}
 		if (chunk.choices) {
-			for (var j = 0; j < chunk.choices.length; j++) {
-				req = chunk.choices[j];
-				okToBeChoice = chunk.choices !== undefined;
-				vPaths = findValidPaths(chunk, skipList, req, wants, pathToHere);
-				pathToHere = vPaths.pathToHere;
-				paths = paths.concat(vPaths.paths);
-			}
+			chunk.choices.forEach(function(choice) {
+				reqs.push(choice);
+			});
 		}
+		reqs.forEach(function(req) {
+			paths = paths.concat(findValidPaths(chunk, skipList, req, wants, pathToHere));
+		});
 
 		// If nothing beneath this chunk led to a successful path, but this chunk satisfied at least one Want, then the only possible path from this point is a single one-step path to here.
 		if (paths.length === 0 && pathToHere) {
@@ -119,37 +114,53 @@ define(["Request", "util"], function(Request, util) {
 		return paths;
 	}
 
-	var findValidPaths = function(chunk, skipList, req, wants, pathToHere) {
-		skipList.push(chunk.id);
+	// Internal function to setup, recurse, and takedown a restricted search through the chunk library.
+	var findValidPaths = function(chunk, skipList, req, wants, pathToHereRef) {
+
+		// First we'll revise the list of Wants we're looking for to include the additional search parameter.
 		var newWants = util.clone(wants);
 		newWants.push(req);
 		var okToBeChoice = chunk.choices !== undefined;
-		var validPaths = searchLibraryForPaths(newWants, okToBeChoice, skipList);
+
+		// Then we'll temporarily exclude the current node from the seach space (to avoid infinite loops), and do the search.
+		skipList.push(chunk.id);
+		var foundPaths = searchLibraryForPaths(newWants, okToBeChoice, skipList);
 		skipList = util.removeFromStringList(skipList, chunk.id);
-		if (!pathToHere) {
-			pathToHere = createPathOrAddWant(pathToHere, chunk.id, []);
+
+		// Remove any paths found that only had the additional search parameter (i.e., we only care about paths from here that satisfied one of our original Wants.)
+		var validPaths = pathsWithValidWant(foundPaths, newWants, wants);
+
+		// Link each remaining path to the current node, first ensuring we have a pathToHere obj. I.e. if we're at A and we found a path B->C, we want the path to now be A->B->C.
+		if (validPaths.length > 0) {
+			if (!pathToHereRef) {
+				pathToHereRef = createPathOrAddWant(pathToHereRef, chunk.id);
+			}
+			validPaths.forEach(function(path) {
+				linkPathToHere(path, pathToHereRef);
+			});
 		}
-		return {
-			paths: pathsWithValidWant(validPaths, newWants, wants, pathToHere),
-			pathToHere: pathToHere
-		}
+
+		return validPaths;
 	}
 
-	var pathsWithValidWant = function(pathList, nodeToRemove, wants, pathToHere) {
-		var returnPaths = [];
-		for (var y = 0; y < pathList.length; y++) {
-			var thisPath = pathList[y];
-			thisPath.satisfies = removeFromSatisfies(thisPath.satisfies, nodeToRemove); // scrub "satisfies" of the want we added.
-			// now, if this path has any wants from our list, count it as valid.
-			if (anyInFirstAreInSecond(thisPath.satisfies, wants)) {
-				returnPaths.push({
-					route: pathToHere ? pathToHere.route.concat(thisPath.route) : thisPath.route,
-					satisfies: pathToHere ? pathToHere.satisfies.concat(thisPath.satisfies) : thisPath.satisfies
-				});
+	var pathsWithValidWant = function(pathList, wantToRemove, wants) {
+		var validList = [];
+		pathList.forEach(function(path) {
+			// scrub "satisfies" of the Want we added.
+			path.satisfies = removeFromSatisfies(path.satisfies, wantToRemove); 
+			// If any of our original Wants are there, keep this path.
+			if (anyInFirstAreInSecond(path.satisfies, wants)) {
+				validList.push(path);
 			}
-		}
-		return returnPaths;
+		});
+		return validList;
 	}
+
+	var linkPathToHere = function(path, pathToHere) {
+		path.route = pathToHere.route.concat(path.route);
+		path.satisfies = pathToHere.satisfies.concat(path.satisfies);
+	}
+
 
 	var removeFromSatisfies = function(satisfies, wantToRemove) {
 		var newSatisfies = [];
@@ -175,11 +186,11 @@ define(["Request", "util"], function(Request, util) {
 
 	var createPathOrAddWant = function(path, id, want) {
 		if (!path) {
-			path = { // TODO: This needs to be appending to satisfies each time through loop.
+			path = { 
 				route: [id],
-				satisfies: want? [want] : []
+				satisfies: want ? [want] : []
 			}
-		} else {
+		} else if (want) {
 			path.satisfies.push(want);
 		}
 		return path;
