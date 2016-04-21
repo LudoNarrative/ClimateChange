@@ -15,16 +15,16 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["TestNode"], "simple id request should have right path");
-			// TODO clarify what's going on below
+			// We expect "nextPath.satisfies" to be an array of Wants satisfied by this path. Normally we could not guarantee these would be in any special order, but in this case since we know there's only one, we can grab it and check its two fields, "type" and "val".
 			assert.deepEqual(nextPath.satisfies[0].type, "id", "simple id request should satisfy the right wany");
 			assert.deepEqual(nextPath.satisfies[0].val, "TestNode", "simple id request should satisfy the right want");
 
-			// // Test path based on ID extend to a leaf node.
-			// ChunkLibrary.reset();
+			// Test that ID paths ends when it satisfies Wants.
+			ChunkLibrary.reset();
 			ChunkLibrary.add([
-				// { id: "TestNodeX", content: "..." },
+				{ id: "TestNodeX", content: "..." },
 				{ id: "TestNode", request: Request.byId("TestNode2") },
-				// { id: "TestNodeZ", content: "..." },
+				{ id: "TestNodeZ", content: "..." },
 				{ id: "TestNode2", content: "Hola, mundo!" }
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
@@ -44,7 +44,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			assert.deepEqual(nextPath.satisfies.length, 1, "request path should only show wants satisfied");
 			assert.deepEqual(nextPath.satisfies[0].val, "x eq true", "request-based path should have correct want satisfied");
 
-			// Test paths based on requests extend to a leaf node.
+			// Test that request paths stop when Want is satisfied.
 			ChunkLibrary.reset();
 			State.reset();
 			State.set("x", true);
@@ -56,10 +56,9 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node1"], "request-based path doesn't need to go to leaf nodes that don't satisfy useful wants");
-			// TODO see above
 			assert.deepEqual(nextPath.satisfies.length, 1, "request path should only show original wants satisfied");
 
-			// Test conditions restrict valid paths.
+			// Test that conditions restrict valid paths.
 			ChunkLibrary.reset();
 			State.reset();
 			State.set("jokesTold", 3);
@@ -73,10 +72,6 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node2"], "conditions should restrict valid paths");
-
-			// TODO: Write test (and determine correct behavior) for case where something requires something where the condition is not true. [what if this is in a choice?]
-
-			// TODO: A cycle should consider the last node before cycling as a leaf node. (I.e. we want this to be valid, but we don't want to recurse forever down it looking for leaf nodes.
 
 			// Test choice structure.
 			ChunkLibrary.reset();
@@ -99,6 +94,33 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["alpha", "Choice2"], "can iterate down through choices");
+
+			ChunkLibrary.reset();
+			wl = Wishlist.create([{request: "x eq 1"}], State);
+			ChunkLibrary.add([
+				{ id: "alpha", content: "What do you choose?", choices: [Request.byId("Choice1"), Request.byId("z eq completed")] },
+				{ id: "Choice1", choiceLabel: "Choice 1", content: "Result of Choice 1." },
+				{ id: "Choice2", choiceLabel: "Choice 2", content: "Result of Choice 2.", effects: ["set z completed"], request: Request.byId("Node2") },
+				{ id: "Node2", content: "...", effects: ["set x 1"] },
+
+			]);
+			nextPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(nextPath.route, ["alpha", "Choice2", "Node2"], "can iterate down through choices & requests");
+
+			// ChunkLibrary.reset();
+			// wl = Wishlist.create([{request: "x eq 1"}], State);
+			// State.set("node2Banned", true);
+			// ChunkLibrary.add([
+			// 	{ id: "Node1", request: Request.byId("Node2") },
+			// 	{ id: "Node2", request: Request.byId("Node1"), conditions: ["node2Banned eq false"], effects: ["set x 1"] },
+			// ]);
+			// nextPath = wl.bestPath(ChunkLibrary);
+			// assert.deepEqual(nextPath, undefined, "can't find a path ending in a node with an invalid condition.");
+
+			// TODO: A cycle should consider the last node before cycling as a leaf node. (I.e. we want this to be valid, but we don't want to recurse forever down it looking for leaf nodes.
+
+
+			// TODO: Write test (and determine correct behavior) for case where something requires something where the condition is not true. [what if this is in a choice?]
 
 
 		});
