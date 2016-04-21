@@ -34,7 +34,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			chunkLibrary = _chunkLibrary;
 			var want = this.selectNext().request;
 			var wants = [want]; // For now, passing down a single want, but architected to accept a list.
-			var paths = searchLibraryForPaths(wants, undefined, []);
+			var paths = searchLibraryForPaths(wants, false, []);
 			if (paths.length > 0) {
 				return chooseFromPotentialPaths(paths);
 			} else {
@@ -43,7 +43,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 		}
 
 		// Returns paths from searching every valid chunk in the library.
-		var searchLibraryForPaths = function(wants, parent, skipList) {
+		var searchLibraryForPaths = function(wants, okToBeChoice, skipList) {
 			var paths = [];
 			var keys = chunkLibrary.getKeys();
 			for (var i = 0; i < keys.length; i++) {
@@ -63,18 +63,18 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 					}
 					if (shouldContinue) continue;
 				}
-				if (chunk.choiceLabel && (!parent || (parent && !parent.choices))) {
+				if (chunk.choiceLabel && (!okToBeChoice)) {
 					continue;
 				}
 
-				var result = findAllSatisfyingPathsFrom(chunk, wants, parent, skipList);
+				var result = findAllSatisfyingPathsFrom(chunk, wants, skipList);
 				paths = paths.concat(result);
 			}
 			return paths;
 		}
 
 		// Returns paths from searching a single valid chunk in the library.
-		var findAllSatisfyingPathsFrom = function(chunk, wants, parent, skipList) {
+		var findAllSatisfyingPathsFrom = function(chunk, wants, skipList) {
 			var paths = [];
 			var pathToHere;
 
@@ -105,7 +105,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 			if (chunk.request && chunk.request.type === "id") {
 				var requestedChunk = chunkLibrary.get(chunk.request.val);
 				var req = Request.byId(chunk.request.val);
-				validPaths = findAllSatisfyingPathsFrom(requestedChunk, [req], chunk, skipList);
+				validPaths = findAllSatisfyingPathsFrom(requestedChunk, [req], skipList);
 
 				paths = paths.concat(pathsWithValidWant(validPaths, req, wants, pathToHere));
 			}
@@ -116,7 +116,7 @@ define(["Want", "Request", "util"], function(Want, Request, util) {
 					skipList.push(chunk.id);
 					var refinedWants = util.clone(wants);
 					refinedWants.push(choice);
-					validPaths = searchLibraryForPaths(refinedWants, chunk, skipList);
+					validPaths = searchLibraryForPaths(refinedWants, chunk.choices, skipList);
 					skipList = util.removeFromStringList(skipList, chunk.id);
 
 					if (!pathToHere) {
