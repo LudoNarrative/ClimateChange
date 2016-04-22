@@ -12,6 +12,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		wishlist = _wishlist;
 		
 		Display.init(handleChoiceSelection);
+		Templates.init(State);
 		continueScene();
 	}
 
