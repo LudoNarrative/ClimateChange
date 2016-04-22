@@ -1,7 +1,7 @@
 [
 	{
 		"id": "TwoEffectChoice",
-		"content": "You see your friend Elika. How do you want to greet her?",
+		"content": "You see your friend {friendName}. How do you want to greet her?",
 		"conditions": ["saidTwoEffectChoice neq true"],
 		"effects": ["set saidTwoEffectChoice true"],
 		"choices": [

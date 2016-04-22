@@ -1,7 +1,7 @@
 /* Main StoryAssembler Module.
 */
 
-define(["Display", "Request"], function(Display, Request) {
+define(["Display", "Request", "Templates"], function(Display, Request, Templates) {
 
 	var chunkLibrary;
 	var State;
@@ -38,7 +38,7 @@ define(["Display", "Request"], function(Display, Request) {
 
 		// Get and show text for that item.
 		// var text = Request.getText(nextItem.content);
-		var text = chunk.content;
+		var text = Templates.render(chunk);
 		Display.addStoryText(text);
 
 		// Handle choices

@@ -134,9 +134,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "Result1", choiceLabel: "...", content: "...", effects: ["set q true"] },
 				{ id: "Result2", choiceLabel: "...", content: "...", effects: ["set y true"] }
 			]);
-			wl.logOn();
 			nextPath = wl.bestPath(ChunkLibrary);
-			wl.logOff();
 			assert.deepEqual(nextPath.route, ["ChoiceNode", "Result2"], "should maximize Wants through choice structures.");
 
 			// TODO: A cycle should consider the last node before cycling as a leaf node. (I.e. we want this to be valid, but we don't want to recurse forever down it looking for leaf nodes.
