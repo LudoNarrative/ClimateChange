@@ -1,113 +1,91 @@
-/* StoryAssembler Module
-
-Handles the core loop of running a StoryAssembler story.
+/* Main StoryAssembler Module.
 */
 
-/* global define */
+define(["Display", "Request", "Templates"], function(Display, Request, Templates) {
 
-define(["Display", "Templates", "Chunks", "State"], function(Display, Templates, Chunks, State) {
-	"use strict";
-
-	var scenePosition = 0;
-	var sceneTemplate;
-	var scenePlan;
-	var characters; // A dictionary of all valid characters for this scene, with keys "displayName" and "attributes".
-	var chunkSpeaker;
-	var choiceSpeaker;
-
-	// Begins running a scene with the given ID.
-	var beginScene = function(sceneId, charArray) {
-		scenePosition = 0;
-		Display.init(handleSelection);
-		characters = charArray || {};
-		sceneTemplate = Templates.loadScene(sceneId);
-		scenePlan = sceneTemplate.toPlan();
-		doNextFrame();
+	var chunkLibrary;
+	var State;
+	var wishlist;
+	var beginScene = function(_wishlist, _chunkLibrary, _State) {
+		chunkLibrary = _chunkLibrary;
+		State = _State;
+		wishlist = _wishlist;
+		
+		Display.init(handleChoiceSelection);
+		continueScene();
 	}
 
-	// Handle the next frame request in the scene plan.
-	var doNextFrame = function() {
-		if (scenePosition >= scenePlan.frames.length) {
+	var continueScene = function() {
+		// Pick an item from the wishlist.
+		var bestPath = wishlist.bestPath(chunkLibrary);
+		// var allPaths = wishlist.allPaths(chunkLibrary);
+		// wishlist.pathsToStr(allPaths);
+		if (bestPath) {
+			var nextStep = bestPath.route[0];
+			doChunk(nextStep);
+		} else {
+			Display.addStoryText("[Ran out of chunks early!]");
+			doStoryBreak();
 			endScene();
-			return;
 		}
-		var frame = scenePlan.frames[scenePosition];
-		handleEffects(frame);
-		processFrame(frame.id);	
-		scenePosition++;
 	}
 
-	// Takes a frame, renders all its content (including choices if any) and shows it in the UI.
-	var processFrame = function(frameId) {
-		var processResults = {};
-		var frameTemplate = Templates.loadFrame(frameId);
-		var framePlan = frameTemplate.toPlan();
+	var doChunk = function(chunkId) {
+		var chunk = chunkLibrary.get(chunkId);
 
-		// Update speakers, if the plan provides this info. Speakers are assumed to remain the same until/unless updated.
-		if (framePlan.chunkSpeaker) {
-			if (!characters[framePlan.chunkSpeaker]) {
-				throw new Error("Tried to set chunkSpeaker to '" + framePlan.chunkSpeaker + "' but this is not a registered character.");
-			}
-			chunkSpeaker = framePlan.chunkSpeaker;
-		}
-		if (framePlan.choiceSpeaker) {
-			if (!characters[framePlan.choiceSpeaker]) {
-				throw new Error("Tried to set choiceSpeaker to '" + framePlan.choiceSpeaker + "' but this is not a registered character.");
-			}
-			choiceSpeaker = framePlan.choiceSpeaker;
-		}
+		// Handle effects
+		handleEffects(chunk);
 
-		framePlan.chunks.forEach(function(chunk) {
-			handleEffects(chunk);
-			var renderedChunk = Chunks.render(chunk, characters[chunkSpeaker]);
-			Display.addStoryText(renderedChunk);
-		})
-		if (framePlan.choices) {
-			framePlan.choices.forEach(function(choice) {
-				choice.text = Chunks.render(choice, characters[choiceSpeaker]);
-				Display.addChoice(choice);
+		// Get and show text for that item.
+		// var text = Request.getText(nextItem.content);
+		var text = Templates.render(chunk);
+		Display.addStoryText(text);
+
+		// Handle choices
+		if (chunk.choices) {
+			chunk.choices.forEach(function(choice) {
+				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
+				// TODO: Our path needs to save which node we found that met the conditions for a choice, so we know what text to print here.
+				var choiceText = choice.val;
+				Display.addChoice({text: choiceText, chunkId: choice.val});
 			});
-			processResults.frameChoices = framePlan.choices;
-		} 
-		return processResults;
+		} else if (wishlist.wantsRemaining() > 0) {
+			// doStoryBreak();
+			Display.addChoice({text: "Continue"});
+		} else {
+			doStoryBreak();
+			endScene();
+		}
+
 	}
 
-	var handleEffects = function(unit) {
-		if (!unit.effects) return;
-		unit.effects.forEach(function(effect) {
+	var handleChoiceSelection = function(choice) {
+		Display.clearAll();
+		if (choice.chunkId) {
+			doChunk(choice.chunkId);
+		} else {
+			continueScene();
+		}
+	}
+
+	var handleEffects = function(chunk) {
+		if (!chunk.effects) return;
+		chunk.effects.forEach(function(effect) {
 			State.change(effect);
 		});
+		wishlist.removeSatisfiedWants();
 	}
 
-	// Deals with the player selecting a choice.
-	var handleSelection = function(choice) {
-		// Handle any effects of the choice
-		handleEffects(choice);
-		Display.clearAll();
-		var processResults = {};
-		if (choice.responseFrame) {
-			// If this frame provides more valid choices, we show it and wait for another user choice selection.
-			if (Templates.isFramePrimary(choice.responseFrame)) {
-				Display.clearAll();
-				Display.addStoryText("Error: Can only jump to a 'secondary' frame, not to another point in a scene plan.");
-				return;
-			}
-			processResults = processFrame(choice.responseFrame);
-		} 
-		if (!choice.responseFrame || !processResults.frameChoices) {
-			// If not, we're done with this frame; move on to the next one.
-			doNextFrame();
-		}
+	var doStoryBreak = function() {
+		Display.addStoryText("<br><br>");
 	}
 
 	// Show an indicator that the scene is over.
 	var endScene = function() {
-		Display.addStoryText("End of scene!");
+		Display.addStoryText("[End of scene.]");
 	}
 
-	// PUBLIC INTERFACE
 	return {
 		beginScene: beginScene
 	}
-
-});
+});		
