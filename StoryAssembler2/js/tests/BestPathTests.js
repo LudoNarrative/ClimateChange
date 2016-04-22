@@ -106,16 +106,49 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["alpha", "Choice2", "Node2"], "can iterate down through choices & requests");
+			assert.deepEqual(nextPath.satisfies.length, 1, "'satisfies' should only show original Wants");
 
-			// ChunkLibrary.reset();
-			// wl = Wishlist.create([{request: "x eq 1"}], State);
-			// State.set("node2Banned", true);
-			// ChunkLibrary.add([
-			// 	{ id: "Node1", request: Request.byId("Node2") },
-			// 	{ id: "Node2", request: Request.byId("Node1"), conditions: ["node2Banned eq false"], effects: ["set x 1"] },
-			// ]);
-			// nextPath = wl.bestPath(ChunkLibrary);
-			// assert.deepEqual(nextPath, undefined, "can't find a path ending in a node with an invalid condition.");
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{request: "x eq 1"}], State);
+			State.set("node2Banned", true);
+			ChunkLibrary.add([
+				{ id: "Node1", request: Request.byId("Node2") },
+				{ id: "Node2", request: Request.byId("Node1"), conditions: ["node2Banned eq false"], effects: ["set x 1"] },
+			]);
+			nextPath = wl.bestPath(ChunkLibrary);
+			assert.notOk(nextPath, "can't find a path ending in a node with an invalid condition.");
+
+			// Test multiple wants. 
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{request: "x eq true"}, {request: "y eq true"}], State);
+			ChunkLibrary.add([
+				{ id: "Node1", content: "...", effects: ["set x true", "set q true"] },
+				{ id: "Node2", content: "...", effects: ["set y true", "set w true", "set r true"] },
+				{ id: "Node3", content: "...", effects: ["set y true", "set x true"] },
+
+			]);
+			nextPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(nextPath.route, ["Node3"], "should pick a path that satisfies as many Wants as possible.");
+
+			wl = Wishlist.create([{request: "x eq true"}, {request: "y eq true"}, {request: "foo eq true"}], State);
+			nextPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(nextPath.route, ["Node3"], "should pick a maximally Want-satisfying path, even if not all wants can be satisfied.");
+
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{request: "x eq true"}, {request: "y eq true"}, {request: "z eq true"}], State);
+			ChunkLibrary.add([
+				{ id: "Node1", content: "...", effects: ["set x true", "set y true"] },
+				{ id: "Node2", content: "...", effects: ["set x true"], choices: [Request.byCondition("q eq true"), Request.byId("Choice2")] },
+				{ id: "Choice1", choiceLabel: "Choice1", content: "...", effects: ["set q true", "set y true"] },
+				{ id: "Choice2", choiceLabel: "Choice2", content: "...", effects: ["set y true"], request: Request.byId("Node3") },
+				{ id: "Node3", effects: ["set z true"], content: "..." }
+
+			]);
+			nextPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(nextPath.route, ["Node2", "Choice2", "Node3"], "should maximize Wants through choice structures.");
 
 			// TODO: A cycle should consider the last node before cycling as a leaf node. (I.e. we want this to be valid, but we don't want to recurse forever down it looking for leaf nodes.
 
