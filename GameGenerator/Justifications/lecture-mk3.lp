@@ -45,7 +45,8 @@ controlLogic(mouse_button).
 modeLogic(playing).
 modeLogic(game_loss).
 
-initialize(set_to(confidence,5)).
+initialize(set_to(confidence,50)).
+
 initialize(set_sprite(ball,circle)).
 initialize(set_color(ball,light_grey)).
 initialize(set_depth(ball,front)).
@@ -53,6 +54,10 @@ initialize(set_depth(ball,front)).
 initialize(set_sprite(square,square)).
 initialize(set_color(square,dark_grey)).
 initialize(set_depth(square,back)).
+
+
+initialize(set_sprite(face,anxious_face)).
+initialize(set_depth(face,front)).
 %% Ordering of sprites? 
 
 
@@ -80,20 +85,20 @@ result(good_face,set_sprite(face, happy_face)).
 
 
 precondition(tick,drain).
-result(drain,decreases(confidence,1)).
+result(drain,decreases(confidence,frac(1,600))).
 
 % I think it's actually mouse_button,released? 
 % this is me capturing how I would design it, not how it is
 
 precondition(control_event(mouse_button,pressed),gain).
 precondition(overlaps(ball,square,true),gain).
-result(gain,increases(confidence,2)).
-result(gain,change_color(square,green,1)).
+result(gain,increases(confidence,10)).
+result(gain,change_color(square,green,16)).
 
 precondition(control_event(mouse_button,pressed),loss).
 precondition(overlaps(ball,square,false),loss).
-result(loss,decreases(confidence,2)).
-result(loss,change_color(square,red,1)).
+result(loss,decreases(confidence,10)).
+result(loss,change_color(square,red,16)).
 
 
 precondition(le(confidence,0), lose).
