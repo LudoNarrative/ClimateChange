@@ -7,7 +7,7 @@ define(["../Want"], function(Want) {
 		// TODO: "request" is confusing; should be "condition"?
 		test("wants", function( assert ) {
 			var want = Want.create({
-				request: "introduceFriend eq true",
+				condition: "introduceFriend eq true",
 				order: "first",
 				mandatory: true
 			});

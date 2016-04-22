@@ -7,7 +7,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 		test("wishlist", function( assert ) {
 			var wl = Wishlist.create([
 				{
-					request: "introduceFriend eq true",
+					condition: "introduceFriend eq true",
 					order: "first",
 					mandatory: true
 				},{
@@ -27,7 +27,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			var badListOfWishes = [
 				{
-					request: "introduceFriend eq true",
+					condition: "introduceFriend eq true",
 				},{
 					foo: "bar"
 				}
@@ -36,7 +36,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			var wl3 = Wishlist.create([
 				{
-					request: "introduceFriend eq true",
+					condition: "introduceFriend eq true",
 				}
 			]);
 			assert.deepEqual(wl.wantsRemaining(), 0, "making new wishlist shouldn't affect old one");
