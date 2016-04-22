@@ -36,7 +36,7 @@ requirejs.config({
     }
 });
 
-requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", "ChunkLibraryTests", "BestPathTests", "domReady!"], function(QUnit, StateTests, RequestTests, WantTests, WishlistTests, ChunkLibraryTests, BestPathTests) {
+requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", "ChunkLibraryTests", "BestPathTests", "TemplatesTest", "domReady!"], function(QUnit, StateTests, RequestTests, WantTests, WishlistTests, ChunkLibraryTests, BestPathTests, TemplatesTest) {
 	console.log("SA2 tests-main.js loaded.");
 
 	StateTests.run();
@@ -45,6 +45,7 @@ requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", 
 	WishlistTests.run();
 	ChunkLibraryTests.run();
   BestPathTests.run();
+  TemplatesTest.run();
 
 	QUnit.load();
 	QUnit.start();
