@@ -33,10 +33,10 @@ requirejs(
 	ChunkLibrary.add(testChunks);
 
 	var testWishlist = Wishlist.create([
-		{ request: "greetedElika eq true" },
-		{ request: "demonstratedTrait eq true" },
+		{ condition: "greetedElika eq true" },
+		{ condition: "demonstratedTrait eq true" },
 	], State);
-	testWishlist.logOn();
-	StoryAssembler.beginScene(testWishlist, ChunkLibrary);
+	// testWishlist.logOn();
+	StoryAssembler.beginScene(testWishlist, ChunkLibrary, State);
 
 });

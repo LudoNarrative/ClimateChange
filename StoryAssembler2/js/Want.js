@@ -14,6 +14,7 @@ define(["Request", "Validate", "util"], function(Request, Validate, util) {
 		if (want.condition) {
 			try {
 				want.request = Request.byCondition(want.condition);
+				delete want.condition;
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid condition: " + e);
 			}
