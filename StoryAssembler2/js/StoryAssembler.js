@@ -3,15 +3,20 @@
 
 define(["Display", "Request"], function(Display, Request) {
 
-	var beginScene = function(wishlist) {
+	var chunkLibrary;
+	var beginScene = function(wishlist, _chunkLibrary) {
+		chunkLibrary = _chunkLibrary;
 		
 		Display.init(function(){});
 
 		// Pick an item from the wishlist.
-		var nextItem = wishlist.selectNext();
+		var bestPath = wishlist.bestPath(chunkLibrary);
+		var nextStep = bestPath.route[0];
 
 		// Get and show text for that item.
-		var text = Request.getText(nextItem.content);
+		// var text = Request.getText(nextItem.content);
+		var text = chunkLibrary.get(nextStep).content;
+		
 		Display.addStoryText(text);
 	}
 

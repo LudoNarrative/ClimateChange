@@ -94,12 +94,28 @@ define([], function() {
 		return newList;
 	}
 
+	var removeArrDuplicates = function(arr) {
+		var newArr = [];
+		var keys = {};
+		arr.forEach(function(val) {
+			if (typeof val === "object") {
+				throw new Error("Tried to call removeArrDuplicates on an object; must be able to compare equality. Object was:", val);
+			}
+			if (!keys[val]) {
+				newArr.push(val);
+				keys[val] = 1;
+			} 
+		});
+		return newArr;
+	}
+
 	return {
 		iterator: iterator,
 		oneOf: oneOf,
 		randomNumber: randomNumber,
 		clone: clone,
 		isArray: isArray,
-		removeFromStringList: removeFromStringList
+		removeFromStringList: removeFromStringList,
+		removeArrDuplicates: removeArrDuplicates
 	}
 });

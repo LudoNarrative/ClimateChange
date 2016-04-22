@@ -32,9 +32,10 @@ requirejs(
 	var testChunks = JSON.parse(TestChunksFile);
 	ChunkLibrary.add(testChunks);
 
-	var testWishlist = Wishlist.create([{
-		chunkId: "testChunk01",
-	}]);
-	StoryAssembler.beginScene(testWishlist);
+	var testWishlist = Wishlist.create([
+		{ request: "greetedElika eq true" },
+		{ request: "demonstratedTrait eq true" },
+	], State);
+	StoryAssembler.beginScene(testWishlist, ChunkLibrary);
 
 });

@@ -5,7 +5,7 @@ A chunk is a unit of story content and associated metadata. It can either direct
 The library controls access to chunks.
 */
 
-define(["Validate", "util"], function(Validate, util) {
+define(["Validate", "Request", "util"], function(Validate, Request, util) {
 
 	var _library = {};
 
@@ -19,6 +19,16 @@ define(["Validate", "util"], function(Validate, util) {
 		// Assign an ID if one was not specified
 		if (chunk.id === undefined) {
 			chunk.id = "unnamedChunk" + util.iterator("chunks");
+		}
+		// If choice in raw form, convert to processed form.
+		if (chunk.choices) {
+			chunk.choices.forEach(function(choice) {
+				if (choice.request) {
+					choice = Request.byCondition(choice.request);
+				} else if (choice.chunkId) {
+					choice = Request.byId(choice.chunkId);
+				}
+			});
 		}
 
 		_library[chunk.id] = chunk;

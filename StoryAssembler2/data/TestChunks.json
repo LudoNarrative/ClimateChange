@@ -1,6 +1,33 @@
 [
 	{
-		"id": "testChunk01",
-		"content": "Hello, world!"
+		"id": "TwoEffectChoice",
+		"content": "You see your friend Elika. How do you want to greet her?",
+		"choices": [
+			{"chunkId": "AffectionateGreet"},
+			{"chunkId": "NormalGreet"},
+			{"chunkId": "TooBusy"}
+		]
+	},
+	{
+		"id": "AffectionateGreet",
+		"choiceLabel": "With a hug. [Demonstrate your Affectionate nature.]",
+		"content": "You you hug your friend affectionately.",
+		"effects": ["set greetedElika true", "set demonstratedTrait true"]
+	},
+	{
+		"id": "NormalGreet",
+		"choiceLabel": "With a \"hello.\"",
+		"content": "You say hey.",
+		"effects": ["set greetedElika true"]
+	},
+	{
+		"id": "TooBusy",
+		"choiceLabel": "You're too busy to say hi now.",
+		"content": "Maybe you'll be able to catch up later."
+	},
+	{
+		"id": "Show Concerned",
+		"content": "You get into a deep conversation with Joe about your concerns about the planet.",
+		"effects": ["set demonstratedTrait true"]
 	}
 ]
