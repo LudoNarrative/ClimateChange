@@ -45,13 +45,19 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 		var bestPath = function(chunkLibrary) {
 			return BestPath.bestPath(_wantsAsArray(), chunkLibrary, State);
 		}
+		var allPaths = function(chunkLibrary) {
+			return BestPath.allPaths(_wantsAsArray(), chunkLibrary, State);
+		}
 
 		// Return the wishlist interface.
 		return {
 			remove: remove,
 			selectNext: selectNext,
 			bestPath: bestPath,
-			wantsRemaining: wantsRemaining
+			allPaths: allPaths,
+			wantsRemaining: wantsRemaining,
+			logOn: BestPath.logOn,
+			logOff: BestPath.logOff
 		}
 	}
 

@@ -149,6 +149,7 @@ define(["Condition"], function(Condition) {
 
 	// Same as above, except returns true of any effects in the passed in array would make the given condition true
 	var wouldAnyMakeTrue = function(effectArray, condition) {
+		if (!condition) return false; // TODO: fix so never called this way.
 		for (var i = 0; i < effectArray.length; i++) {
 			if (wouldMakeTrue(effectArray[i], condition)) {
 				return true;
