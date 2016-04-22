@@ -15,7 +15,8 @@ requirejs.config({
 		"Want": "Want",
 		"Validate": "Validate",
 		"ChunkLibrary": "ChunkLibrary",
-		"BestPath": "BestPath"
+		"BestPath": "BestPath",
+		"Templates": "Templates"
 	}
 });
 
@@ -28,6 +29,7 @@ requirejs(
 	console.log("SA2 main.js loaded.");
 
 	State.set("initialized", true); // initial conditions
+	State.set("friendName", "Elika"); // initial conditions
 
 	var testChunks = JSON.parse(TestChunksFile);
 	ChunkLibrary.add(testChunks);
