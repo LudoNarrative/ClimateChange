@@ -5,34 +5,40 @@ requirejs.config({
 		"domReady": "../lib/domReady",
 		"text": "../lib/text",
 
-		"underscore": "../lib/underscore-min",
-
 		"util": "util",
 
 		"StoryAssembler": "StoryAssembler",
 		"Display": "Display",
-		"Templates": "Templates",
-		"Chunks": "Chunks",
 		"State": "State",
-		"TextChanger": "TextChanger"
+		"Condition": "Condition",
+		"Request": "Request",
+		"Want": "Want",
+		"Validate": "Validate",
+		"ChunkLibrary": "ChunkLibrary",
+		"BestPath": "BestPath",
+		"Templates": "Templates"
 	}
 });
 
-requirejs(["StoryAssembler", "State", "domReady!"], function(StoryAssembler, State) {
-	console.log("main.js loaded.");
+requirejs(
+	["StoryAssembler", "State", "Wishlist", "ChunkLibrary", "text!../data/TestChunks.json", "domReady!"],
+	function(StoryAssembler, State, Wishlist, ChunkLibrary, TestChunksFile) {
 
-	// Load scene and handle first frame.
-	var characters = {
-		"Emma": {
-			displayName: "Emma",
-			attributes: ["kind", "shy"]
-		},
-		"Mel": {
-			displayName: "Mel",
-			attributes: []
-		}
-	};
-	State.set("knowCareer", 0);
-	StoryAssembler.beginScene("BestFriend", characters);
+	// TODO: Remove old StoryAssembler
+	
+	console.log("SA2 main.js loaded.");
+
+	State.set("initialized", true); // initial conditions
+	State.set("friendName", "Elika"); // initial conditions
+
+	var testChunks = JSON.parse(TestChunksFile);
+	ChunkLibrary.add(testChunks);
+
+	var testWishlist = Wishlist.create([
+		{ condition: "greetedElika eq true" },
+		{ condition: "demonstratedTrait eq true" },
+	], State);
+	// testWishlist.logOn();
+	StoryAssembler.beginScene(testWishlist, ChunkLibrary, State);
 
 });
