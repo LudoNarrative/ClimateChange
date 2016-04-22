@@ -6,14 +6,14 @@ A want is a Request with associated metadata.
 define(["Request", "Validate", "util"], function(Request, Validate, util) {
 
 	var requiredFields = [];
-	var optionalFields = ["request", "chunkId", "order", "mandatory"];
+	var optionalFields = ["condition", "chunkId", "order", "mandatory"];
 
 	var create = function(want) {
 		Validate.check(want, requiredFields, optionalFields);
 
-		if (want.request) {
+		if (want.condition) {
 			try {
-				want.request = Request.byCondition(want.request);
+				want.request = Request.byCondition(want.condition);
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid condition: " + e);
 			}

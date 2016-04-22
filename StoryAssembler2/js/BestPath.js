@@ -123,12 +123,14 @@ define(["Request", "util"], function(Request, util) {
 			reqs.push(Request.byId(chunk.request.val));
 		}
 		if (chunk.choices) {
+			console.log("chunk.choices", chunk.choices);
 			chunk.choices.forEach(function(choice) {
 				log("-->has choice '" + choice.val + "', so will recurse...");
 				reqs.push(choice);
 			});
 		}
 		reqs.forEach(function(req) {
+			log("--------------");
 			log("-->recursing down to find '" + req.val + "'");
 			paths = paths.concat(findValidPaths(chunk, skipList, req, wants, pathToHere));
 		});
@@ -225,7 +227,7 @@ define(["Request", "util"], function(Request, util) {
 	}
 
 	var createPathOrAddWant = function(path, id, want) {
-		log("createPathOrAddWant: path is " + pathToStr(path));
+		// log("createPathOrAddWant: path is " + pathToStr(path));
 		if (!path) {
 			path = { 
 				route: [id],
@@ -234,7 +236,7 @@ define(["Request", "util"], function(Request, util) {
 		} else if (want) {
 			path.satisfies.push(want);
 		}
-		log("-->and now it's " + pathToStr(path));
+		// log("-->and now it's " + pathToStr(path));
 		return path;
 	}
 

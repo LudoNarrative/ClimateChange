@@ -22,13 +22,27 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 		}
 		// If choice in raw form, convert to processed form.
 		if (chunk.choices) {
-			chunk.choices.forEach(function(choice) {
-				if (choice.request) {
-					choice = Request.byCondition(choice.request);
-				} else if (choice.chunkId) {
-					choice = Request.byId(choice.chunkId);
+			for (var i = 0; i < chunk.choices.length; i++) {
+				var c = chunk.choices[i];
+				// TODO check that choice is in valid format.
+				if (c.condition) {
+					chunk.choices[i] = Request.byCondition(c.condition);
+				} else if (c.chunkId) {
+					chunk.choices[i] = Request.byId(c.chunkId);
+				} else {
+					console.log(c)
+					throw new Error("choice not specified in right format", c);
 				}
-			});
+			}
+		}
+		if (chunk.request) {
+			if (chunk.request.condition) {
+				chunk.request = Request.byCondition(chunk.request.condition);
+			} else if (chunk.request.chunkId) {
+				chunk.request = Request.byId(chunk.request.chunkId);
+			} else {
+				throw new Error("chunk request not specified in right format", chunk.request);
+			}
 		}
 
 		_library[chunk.id] = chunk;

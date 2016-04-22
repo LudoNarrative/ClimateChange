@@ -6,10 +6,10 @@ define(["../ChunkLibrary"], function(ChunkLibrary) {
 		QUnit.module( "ChunkLibrary tests" );
 		test("get and set", function( assert ) {
 			var chunk1 = {
-				request: "R:AskPlayerHowToReact",
+				request: {chunkId: "AskPlayerHowToReact"},
 				choices: [
-				   "R:{shownPlayerAttribute eq true}",
-				   "R:spurnHost"
+				   {condition: "shownPlayerAttribute eq true"},
+				   {chunkId: "spurnHost"}
 				]
 			};
 			assert.ok(ChunkLibrary.add(chunk1));

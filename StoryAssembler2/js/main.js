@@ -36,6 +36,7 @@ requirejs(
 		{ request: "greetedElika eq true" },
 		{ request: "demonstratedTrait eq true" },
 	], State);
+	testWishlist.logOn();
 	StoryAssembler.beginScene(testWishlist, ChunkLibrary);
 
 });
