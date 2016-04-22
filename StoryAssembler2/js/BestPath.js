@@ -23,15 +23,26 @@ define(["Request", "util"], function(Request, util) {
 		chunkLibrary = _chunkLibrary;
 		var paths = searchLibraryForPaths(wants, false, []);
 		if (paths.length > 0) {
-			return chooseFromPotentialPaths(paths);
+			return chooseFromPotentialPaths(paths, wants);
 		} else {
 			return undefined;
 		}
 	}
 
-	// Stub: for now, just return the first option. In the future, this should search for the path that satisfies the most Wants.
-	var chooseFromPotentialPaths = function(paths) {
-		return paths[0];
+	// Given an array of paths, choose one that maximally satisfies Wants.
+	// We are assuming the only Wants listed are those in our original list.
+	var chooseFromPotentialPaths = function(paths, wants) {
+		console.log("pathsToStr", pathsToStr(paths));
+		var bestScore = -1;
+		var bestPos = -1;
+		paths.forEach(function(path, pos) {
+			var thisScore = path.satisfies.length;
+			if (thisScore > bestScore) {
+				bestScore = thisScore;
+				bestPos = pos;
+			}
+		});
+		return paths[bestPos];
 	}
 
 
@@ -128,7 +139,7 @@ define(["Request", "util"], function(Request, util) {
 		skipList = util.removeFromStringList(skipList, chunk.id);
 
 		// Remove any paths found that only had the additional search parameter (i.e., we only care about paths from here that satisfied one of our original Wants.)
-		var validPaths = pathsWithValidWant(foundPaths, newWants, wants);
+		var validPaths = pathsWithValidWant(foundPaths, req, wants);
 
 		// Link each remaining path to the current node, first ensuring we have a pathToHere obj. I.e. if we're at A and we found a path B->C, we want the path to now be A->B->C.
 		if (validPaths.length > 0) {
@@ -194,6 +205,13 @@ define(["Request", "util"], function(Request, util) {
 			path.satisfies.push(want);
 		}
 		return path;
+	}
+
+	var pathToStr = function(path) {
+		return path.route.join("->") + " [" + path.satisfies.map(function(x){return x.val}).join("; ") + "]";
+	}
+	var pathsToStr = function(arrOfPaths) {
+		return arrOfPaths.map(pathToStr).join("\n");
 	}
 
 	return {
