@@ -6,8 +6,13 @@ Allows including inline templating to vary text based on the State.
 
 /* global define */
 
-define(["State", "util"], function(State, util) {
+define(["util"], function(util) {
 	"use strict";
+
+	var State;
+	var init = function(_State) {
+		State = _State;
+	}
 
 	var templates = {
 		"rnd": function(params, text) {
@@ -71,7 +76,8 @@ define(["State", "util"], function(State, util) {
 
 		var texts = strippedText.split("|");
 
-		if (texts.length === 1) {
+		// If we just have a single word, and it's not a recognized command, assume we want to print a value from the state.
+		if (texts.length === 1 && !templates[texts[0]]) {
 			return State.get(texts[0]);
 		}
 
@@ -120,44 +126,11 @@ define(["State", "util"], function(State, util) {
 		return txt;
 	}
 
-	var test = function() {
-		addTemplateCommand("testNoParams", function(params, text) {
-			return "resultOne";
-		});
-		addTemplateCommand("testTwoParams", function(params, text) {
-			if (params.length !== 2) {
-				console.error("Template command 'testTwoParams' must have exactly two params, in text '" + text + "'.");
-				return "(testTwoParams)";
-			}
-			if (true) {
-				return params[0]
-			} else {
-				return params[1];
-			}
-		});
-		var expect = function(templateTxt, expectedTxt, explanation) {
-			var result = render({text: templateTxt});
-			if (result !== expectedTxt) {
-				console.error(explanation + ": '" + templateTxt + "' became '" + result + "' instead of '" + expectedTxt + "'.");
-			}
-		}
-		expect("some text", "some text", "text without templates fails");
-		expect("some {testNoParams} text", "some resultOne text", "cmd without params fails");
-		expect("{testNoParams} at start", "resultOne at start", "templates at start of string don't work");
-		expect("at end is {testNoParams}", "at end is resultOne", "templates at end of string don't work");
-		expect("some \\{testNoParams\\} text", "some \\{testNoParams\\} text", "escaping braces doesn't work");
-		expect("\\{testNoParams\\} at start", "\\{testNoParams\\} at start", "escaping braces at start of string doesn't work");
-		expect("this is {fucked {up", "this is {fucked {up", "malformed should be skipped");
-		expect("lots of {testTwoParams|fun|asdf} {testTwoParams|exciting|xcvb} {testNoParams} stuff", "lots of fun exciting resultOne stuff", "test with multiple params");
-		expect("{testTwoParams|paral|x}{testTwoParams|lel|y}", "parallel", "adjacent templates not working");
-		expect("{testTwoParams|{testNoParams}|nope}", "()|nope}", "nested params are not yet allowed");
-	}
-
 	// PUBLIC INTERFACE
 	return {
+		init: init,
 		render: render,
-		addTemplateCommand: addTemplateCommand,
-		test: test
+		addTemplateCommand: addTemplateCommand
 	}
 
 });
