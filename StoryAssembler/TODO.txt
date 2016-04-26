@@ -1,0 +1,12 @@
+TODO
+- Factor Display out of StoryAssembler (shouldn't depend on it)
+- Implement "order" and "mandatory" properties for wishlists.
+- Handle choices where not all options can be satisfied: should it remove those options? crash b/c of bad authoring?
+- Path needs to save which nodes satisfied choices, so the UI can display the correct choiceLabel in the menu.
+
+
+
+Future:
+
+- Figure out a way to allow comments in data format. (i.e. not raw json)
+- Basic editor for JSON

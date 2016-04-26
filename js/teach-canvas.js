@@ -1,6 +1,6 @@
 /*** MAIN CODE ****/
 
-var successfulClickStressRestoreAmount = 23;
+var successfulClickStressRestoreAmount = 25;
 var maxStress = 60;
 var stressLossNormDiff = 1;
 var stressLossMedDiff = 3;
@@ -8,9 +8,9 @@ var stressLossHighDiff = 8;
 var chillStressLevel = 40;
 var neutralStressLevel = 20;
 var highStressLevel = 0;
-var stressLostPerMissedClick = 20;
+var stressLostPerMissedClick = 17;
 var failPoint = -25;
-var ballSpeed = 1500;
+var ballSpeed = 1650;
 
 $(document).ready(function(){
   // set (top) canvas height to 100px

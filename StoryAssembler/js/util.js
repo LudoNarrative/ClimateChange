@@ -1,20 +1,51 @@
-/* 	Utility Functions
-*/
-/* global define, toString */
-
 define([], function() {
+	"use strict";
+	var _iterators = {};
 
-	/* Function: isArray
-	Determines if the given object is an array.
+	/* Function: iterator
+	Given a key, returns a number that starts at 1 and increases by 1 each time the function is called for the same key.
 	
 	Parameters:
-	obj - an object
+	key - a string
 	
 	Returns:
-	boolean - true if obj is an array.
+	number (integer)
+	*/	
+	var iterator = function (key) {
+		if (_iterators[key] === undefined) {
+			_iterators[key] = 0;
+		}
+		_iterators[key] += 1;
+		return _iterators[key];
+	}
+
+	/* Function: oneOf
+	Returns a random entry from an array, or undefined if the array is empty or not an array.
+	
+	Parameters:
+	arr - an array of anything
+	
+	Returns:
+	an entry from a random position in arr.
 	*/
-	var isArray = function(obj) {
-		return toString.call(obj) === "[object Array]";
+	var oneOf = function (arr) {
+		return arr[randomNumber(arr.length) - 1];
+	}
+
+	/* Function: randomNumber
+	Returns a random integer from 1 to max. Return 1 if max <= 1 or not a number.
+	
+	Parameters:
+	max - an integer, the highest number that might be returned.
+	
+	Returns:
+	number (integer) between 1 and max.
+	*/	
+	var randomNumber = function (max) {
+		if (max <= 1 || typeof max !== "number") {
+			return 1;
+		}
+		return Math.floor(Math.random() * Math.round(max)) + 1;
 	}
 
 	/* Function: clone
@@ -51,18 +82,40 @@ define([], function() {
 	    throw new Error("Unable to copy obj! Its type isn't supported.");
 	}
 
-	var randomInt = function (max) {
-		if (max <= 1 || typeof max !== "number") {
-			return 1;
-		}
-		return Math.floor(Math.random() * Math.round(max)) + 1;
+	var isArray = function(obj) {
+		return toString.call(obj) === "[object Array]";
 	}
 
-	// PUBLIC INTERFACE
+	var removeFromStringList = function(list, itemToRemove) {
+		var newList = clone(list);
+		var pos = newList.indexOf(itemToRemove);
+		if (pos < 0) return newList;
+		newList.splice(pos, 1);
+		return newList;
+	}
+
+	var removeArrDuplicates = function(arr) {
+		var newArr = [];
+		var keys = {};
+		arr.forEach(function(val) {
+			if (typeof val === "object") {
+				throw new Error("Tried to call removeArrDuplicates on an object; must be able to compare equality. Object was:", val);
+			}
+			if (!keys[val]) {
+				newArr.push(val);
+				keys[val] = 1;
+			} 
+		});
+		return newArr;
+	}
+
 	return {
-		isArray: isArray,
+		iterator: iterator,
+		oneOf: oneOf,
+		randomNumber: randomNumber,
 		clone: clone,
-		randomInt, randomInt
+		isArray: isArray,
+		removeFromStringList: removeFromStringList,
+		removeArrDuplicates: removeArrDuplicates
 	}
-
 });
