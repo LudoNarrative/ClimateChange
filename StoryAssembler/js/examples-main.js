@@ -24,9 +24,20 @@ requirejs(
 	["State", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "util", "domReady!"],
 	function(State, ChunkLibrary, Wishlist, StoryAssembler, Example1Data) {
 
-	var exampleWishlist = {};
-	var exampleDataFile = {};
-	var exampleStartState = {};
+	// To Add A New Example:
+	// - Create new definition in "examples" dictionary below
+	// - Add data file to requirejs call above (both the filename and the variable name)
+
+	var examples = {
+		"Example 1": {
+			wishlist: [
+				{ condition: "greetedElika eq true" },
+				{ condition: "demonstratedTrait eq true" },
+			],
+			dataFile: Example1Data,
+			startState: ["set initialized true", "set friendName Elika"]
+		}
+	};
 
 	var makeLink = function(id, content, target) {
 		var el = document.createElement("a");
@@ -39,33 +50,26 @@ requirejs(
 	}
 
 	var loadExample = function(id) {
-		exampleStartState[id].forEach(function(command) {
+		var example = examples[id];
+		example.startState.forEach(function(command) {
 			State.change(command);
 		});
 
-		var data = JSON.parse(exampleDataFile[id]);
+		var data = JSON.parse(example.dataFile);
 		ChunkLibrary.add(data);
 
-		var wishlist = Wishlist.create(exampleWishlist[id], State);
+		var wishlist = Wishlist.create(example.wishlist, State);
 
 		document.getElementsByTagName("body")[0].innerHTML = "";
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State);
 	}
 
 	// For each example, make a link to start it.
-
-	// EXAMPLE 1
-	var id = 1;
-	var body = document.getElementsByTagName("body")[0];
-	var el = makeLink(id, "Example " + id, "#");
-	body.appendChild(el);
-	exampleWishlist[id] = [
-		{ condition: "greetedElika eq true" },
-		{ condition: "demonstratedTrait eq true" },
-	];
-	exampleDataFile[id] = Example1Data;
-	exampleStartState[id] = ["set initialized true", "set friendName Elika"];
-
+	for (var id in examples) {
+		var body = document.getElementsByTagName("body")[0];
+		var el = makeLink(id, id, "#");
+		body.appendChild(el);
+	};
 
 
 
