@@ -69,7 +69,7 @@ good(RESOURCE) :-
         ge(RESOURCE,THRESHOLD), OUTCOME),
     result(OUTCOME,mode_change(game_end)).
     
-outcome(OUTCOME) :- precondition(CONDITION,OUTCOME), result(OUTCOME,EFFECT).
+
 condition(CONDITION) :- precondition(CONDITION,OUTCOME).
 
 moreThanOnePrecondition(OUTCOME) :- 
@@ -210,60 +210,60 @@ requiredBy(OUTCOME,ENTITY) :-
 requiredBy(OUTCOME,ENTITY) :-
     precondition(overlaps(ENTITY_B,ENTITY,POLARITY),OUTCOME).
     
-% enables(OUTCOME,OUTCOME2) :-
-    % result(OUTCOME,add(ENTITY)), 
-    % requiredBy(OUTCOME2,ENTITY),
-    % OUTCOME != OUTCOME2 .
+enables(OUTCOME,OUTCOME2) :-
+    result(OUTCOME,add(ENTITY)), 
+    requiredBy(OUTCOME2,ENTITY),
+    OUTCOME != OUTCOME2 .
  
-% hinders(OUTCOME,OUTCOME2) :-
-    % result(OUTCOME,delete(ENTITY)), 
-    % requiredBy(OUTCOME2,ENTITY),
-    % OUTCOME != OUTCOME2 .   
+hinders(OUTCOME,OUTCOME2) :-
+    result(OUTCOME,delete(ENTITY)), 
+    requiredBy(OUTCOME2,ENTITY),
+    OUTCOME != OUTCOME2 .   
     
-% enables(OUTCOME,OUTCOME2) :- 
-    % result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
-    % precondition(lt(RESOURCE,THRESHOLD),OUTCOME2),
-    % OUTCOME != OUTCOME2 .
+enables(OUTCOME,OUTCOME2) :- 
+    result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
+    precondition(lt(RESOURCE,THRESHOLD),OUTCOME2),
+    OUTCOME != OUTCOME2 .
     
-% enables(OUTCOME,OUTCOME2) :- 
-    % result(OUTCOME,increases(RESOURCE,AMOUNT)), 
-    % precondition(gt(RESOURCE,THRESHOLD),OUTCOME2),
-    % OUTCOME != OUTCOME2 .
+enables(OUTCOME,OUTCOME2) :- 
+    result(OUTCOME,increases(RESOURCE,AMOUNT)), 
+    precondition(gt(RESOURCE,THRESHOLD),OUTCOME2),
+    OUTCOME != OUTCOME2 .
     
-% hinders(OUTCOME,OUTCOME2) :- 
-    % result(OUTCOME,increases(RESOURCE,AMOUNT)), 
-    % precondition(lt(RESOURCE,THRESHOLD),OUTCOME2),
-    % OUTCOME != OUTCOME2 .
+hinders(OUTCOME,OUTCOME2) :- 
+    result(OUTCOME,increases(RESOURCE,AMOUNT)), 
+    precondition(lt(RESOURCE,THRESHOLD),OUTCOME2),
+    OUTCOME != OUTCOME2 .
     
-% hinders(OUTCOME,OUTCOME2) :- 
-    % result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
-    % precondition(gt(RESOURCE,THRESHOLD),OUTCOME2),
-    % OUTCOME != OUTCOME2 .
+hinders(OUTCOME,OUTCOME2) :- 
+    result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
+    precondition(gt(RESOURCE,THRESHOLD),OUTCOME2),
+    OUTCOME != OUTCOME2 .
     
        
-% enables(OUTCOME,OUTCOME2) :- 
-    % result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
-    % precondition(le(RESOURCE,THRESHOLD),OUTCOME2),
-    % OUTCOME != OUTCOME2 .
+enables(OUTCOME,OUTCOME2) :- 
+    result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
+    precondition(le(RESOURCE,THRESHOLD),OUTCOME2),
+    OUTCOME != OUTCOME2 .
     
-% enables(OUTCOME,OUTCOME2) :- 
-    % result(OUTCOME,increases(RESOURCE,AMOUNT)), 
-    % precondition(ge(RESOURCE,THRESHOLD),OUTCOME2),
-    % OUTCOME != OUTCOME2 .
+enables(OUTCOME,OUTCOME2) :- 
+    result(OUTCOME,increases(RESOURCE,AMOUNT)), 
+    precondition(ge(RESOURCE,THRESHOLD),OUTCOME2),
+    OUTCOME != OUTCOME2 .
     
-% hinders(OUTCOME,OUTCOME2) :- 
-    % result(OUTCOME,increases(RESOURCE,AMOUNT)), 
-    % precondition(le(RESOURCE,THRESHOLD),OUTCOME2),
-    % OUTCOME != OUTCOME2 .
+hinders(OUTCOME,OUTCOME2) :- 
+    result(OUTCOME,increases(RESOURCE,AMOUNT)), 
+    precondition(le(RESOURCE,THRESHOLD),OUTCOME2),
+    OUTCOME != OUTCOME2 .
     
-% hinders(OUTCOME,OUTCOME2) :- 
-    % result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
-    % precondition(ge(RESOURCE,THRESHOLD),OUTCOME2),
-    % OUTCOME != OUTCOME2 .
+hinders(OUTCOME,OUTCOME2) :- 
+    result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
+    precondition(ge(RESOURCE,THRESHOLD),OUTCOME2),
+    OUTCOME != OUTCOME2 .
     
-% enables(OUTCOME,OUTCOME3) :-
-    % enables(OUTCOME,OUTCOME2),
-    % enables(OUTCOME2,OUTCOME3).
+enables(OUTCOME,OUTCOME3) :-
+    enables(OUTCOME,OUTCOME2),
+    enables(OUTCOME2,OUTCOME3).
  
 selection(OUTCOME) :-
     result(OUTCOME,select(ENTITY,CONDITION)).
@@ -293,12 +293,14 @@ subGoal(achieve(OUTCOME_PRIME),1) :-
 subGoal(prevent(OUTCOME_PRIME),I+1) :-
     enables(OUTCOME_PRIME,OUTCOME),
     subGoal(prevent(OUTCOME),I),
-    humanAffected(OUTCOME_PRIME). 
+    humanAffected(OUTCOME_PRIME),
+    I < 1. 
     
 subGoal(achieve(OUTCOME_PRIME),I+1) :-
     hinders(OUTCOME_PRIME,OUTCOME),
     goal(prevent(OUTCOME),I),
-    humanAffected(OUTCOME_PRIME).
+    humanAffected(OUTCOME_PRIME),
+    I < 1.
     
 
 goal(relates(OUTCOME)) :- 
@@ -461,6 +463,9 @@ limited(RESOURCE) :-
     not replenishible(RESOURCE),
     result(OUTCOME,decreases(RESOURCE,AMOUNT)).
     
+  
+    
+    
 % %% KNOWLEGE BASE
 
 unrestrictedCondition(control_event(click)). %player can always click
@@ -471,4 +476,6 @@ unrestrictedGame :-
 unrestrictedGame :- 
     unrestricted(OUTCOME),
     result(OUTCOME,mode_change(game_win)).
+    
+
     
