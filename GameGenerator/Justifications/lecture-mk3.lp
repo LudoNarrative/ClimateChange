@@ -69,15 +69,15 @@ initialize(set_depth(face,front)).
 % incorporate "good" cultural knowledge - Mario coin collection noise, "good" colors (green v red)
 % particle effect shower, etc. 
 
-precondition(lt(confidence,5),bad_face).
+precondition(lt(confidence,50),bad_face).
 result(bad_face,set_sprite(face, upset_face)).  
 %I'm thinking we have a pool of tagged sprites we can pull from
 
-precondition(lt(confidence,10),neutral_face).
-precondition(ge(confidence,5),neutral_face).
+precondition(lt(confidence,100),neutral_face).
+precondition(ge(confidence,50),neutral_face).
 result(neutral_face,set_sprite(face,anxious_face)).
 
-precondition(ge(ge,10),good_face).
+precondition(ge(confidence,100),good_face).
 result(good_face,set_sprite(face, happy_face)). 
 
 %I've decided I prefer tick as opposed to time as I tend to think of tick as 

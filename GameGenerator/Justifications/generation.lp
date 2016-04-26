@@ -1,11 +1,18 @@
 #const max_resource_change_per = 4.
 #const max_conditions_per = 4.
+
 %%%%% SOUP OF THINGS TO PULL FROM %%%%%
 
 
 physicsMetaphors(spring;pendulum).
 
-buttons(mouse_button;up_arrow;down_arrow;left_arrow;right_arrow).
+buttons(mouse_button;space;up_arrow;down_arrow;left_arrow;right_arrow).
+buttonOrder(mouse_button,up_arrow).
+buttonOrder(space,up_arrow).
+buttonOrder(up_arrow,down_arrow).
+buttonOrder(down_arrow,left_arrow).
+buttonOrder(left_arrow,right_arrow).
+buttonOrder(A,C) :- buttonOrder(A,B), buttonOrder(B,C).
 buttonStates(pressed;held;released).
 controls(cursor). % OTHERS?
 controls(BUTTON) :- buttons(BUTTON).
@@ -14,12 +21,22 @@ sprites(square;circle;upset_face;anxious_face;happy_face).
 colors(red;green;blue;yellow;magenta;cyan;white;light_grey;dark_grey;black).
 
 potentialEntities(e1;e2;e3;e4;e5).
+entityOrdering(e1,e2).
+entityOrdering(e2,e3).
+entityOrdering(e3,e4).
+entityOrdering(e4,e5).
+entityOrdering(A,C) :- entityOrdering(A,B), entityOrdering(B,C).
+
 potentialResources(r1;r2;r3;r4;r5).
 potentialOutcomes(o1;o2;o3;o4;o5).
+outcomeOrder(o1,o2).
+outcomeOrder(o2,o3).
+outcomeOrder(o3,o4).
+outcomeOrder(o4,o5).
+outcomeOrder(A,C) :- outcomeOrder(A,B), outcomeOrder(B,C).
 
 constants(low;mid;high).
 potentialValues(V) :- constants(V).
-potentialChangeableValues(R) :- potentialResources(R).
 
 %potentialValues(R) :-  potentialResources(R).
 
@@ -29,8 +46,9 @@ polarity(true;false).
 
 %%%%%% INITIALIZATIONS %%%%%%%
 
-{entity(ENTITY) : potentialEntities(ENTITY)}.
-{resource(RESOURCE) : potentialResources(RESOURCE)}.
+min_entities {entity(ENTITY) : potentialEntities(ENTITY)} max_entities.
+min_resources {resource(RESOURCE) : potentialResources(RESOURCE)} max_resources.
+min_outcomes {outcome(OUTCOME) : potentialOutcomes(OUTCOME)} max_outcomes.
 
 
 
@@ -75,13 +93,13 @@ moving(ENTITY) :- physicsLogic(ENTITY,LOGIC).
     not moving(ENTITY2).
 
 %tick can happen
-{precondition(tick,OUTCOME) :  potentialOutcomes(OUTCOME)}.
+{precondition(tick,OUTCOME) :  outcome(OUTCOME)}.
 
 % < can happen - but don't check if something less than itself
 {precondition(lt(RESOURCE,CONSTANT),OUTCOME) : 
     resource(RESOURCE), 
     potentialValues(CONSTANT), 
-    potentialOutcomes(OUTCOME)} :- 
+    outcome(OUTCOME)} :- 
         resource(RESOURCE), 
         potentialValues(CONSTANT), 
         RESOURCE != CONSTANT.
@@ -90,7 +108,7 @@ moving(ENTITY) :- physicsLogic(ENTITY,LOGIC).
 {precondition(gt(RESOURCE,CONSTANT),OUTCOME) : 
     resource(RESOURCE), 
     potentialValues(CONSTANT), 
-    potentialOutcomes(OUTCOME)} :- 
+    outcome(OUTCOME)} :- 
         resource(RESOURCE), 
         potentialValues(CONSTANT), 
         RESOURCE != CONSTANT.
@@ -99,7 +117,7 @@ moving(ENTITY) :- physicsLogic(ENTITY,LOGIC).
 {precondition(le(RESOURCE,CONSTANT),OUTCOME) : 
     resource(RESOURCE), 
     potentialValues(CONSTANT), 
-    potentialOutcomes(OUTCOME)} :- 
+    outcome(OUTCOME)} :- 
         resource(RESOURCE), 
         potentialValues(CONSTANT), 
         RESOURCE != CONSTANT.
@@ -108,7 +126,7 @@ moving(ENTITY) :- physicsLogic(ENTITY,LOGIC).
 {precondition(ge(RESOURCE,CONSTANT),OUTCOME) : 
     resource(RESOURCE), 
     potentialValues(CONSTANT), 
-    potentialOutcomes(OUTCOME)} :- 
+    outcome(OUTCOME)} :- 
         resource(RESOURCE), 
         potentialValues(CONSTANT), 
         RESOURCE != CONSTANT.
@@ -118,7 +136,7 @@ moving(ENTITY) :- physicsLogic(ENTITY,LOGIC).
 {precondition(overlaps(ENTITY1,ENTITY2,POLARITY),OUTCOME) : 
     entity(ENTITY1), 
     entity(ENTITY2), 
-    potentialOutcomes(OUTCOME),
+    outcome(OUTCOME),
     polarity(POLARITY)} :- 
         entity(ENTITY1), 
         entity(ENTITY2),
@@ -129,7 +147,7 @@ moving(ENTITY) :- physicsLogic(ENTITY,LOGIC).
 {precondition(control_event(BUTTON,STATE),OUTCOME): 
     buttons(BUTTON), 
     buttonStates(STATE), 
-    potentialOutcomes(OUTCOME)}.
+    outcome(OUTCOME)}.
 
 {physicsLogic(ENTITY, follows(cursor)) :
     entity(ENTITY)}.
@@ -141,51 +159,49 @@ moving(ENTITY) :- physicsLogic(ENTITY,LOGIC).
     
     
 controlLogic(BUTTON) :- precondition(control_event(BUTTON,STATE),OUTCOME).
-controlLogic(cursor) :- physicsLogic(ENTITY,follows(CURSOR)).
+controlLogic(cursor) :- physicsLogic(ENTITY,follows(cursor)).
 
+:- 2{ physicsLogic(ENTITY,follows(cursor)) : entity(ENTITY)}.
 
 % outcomes exist if they have both result(s) and precondition(s)  
-outcome(OUTCOME) :- 
-    result(OUTCOME,EFFECT), 
-    precondition(CONDITION,OUTCOME).
 
     
 %%%%%% RESULTS %%%%%%%
 
 %things can increase
 {result(OUTCOME,increases(CV,V)) : 
-    potentialChangeableValues(CV),
+    resource(CV),
     potentialValues(V), 
-    potentialOutcomes(OUTCOME)} 
+    outcome(OUTCOME)} 
         :- 
-            potentialChangeableValues(CV),
+            resource(CV),
             potentialValues(V),
             V != CV .
             
 %things can decrease            
 {result(OUTCOME,decreases(CV,V)) : 
-    potentialChangeableValues(CV),
+    resource(CV),
     potentialValues(V), 
-    potentialOutcomes(OUTCOME)} 
+    outcome(OUTCOME)} 
         :- 
-            potentialChangeableValues(CV),
+            resource(CV),
             potentialValues(V),
             V != CV .
    
 %things can be set to a value            
 {result(OUTCOME,set_to(CV,V)) : 
-    potentialChangeableValues(CV),
+    resource(CV),
     potentialValues(V), 
-    potentialOutcomes(OUTCOME)} 
+    outcome(OUTCOME)} 
         :- 
-            potentialChangeableValues(CV),
+            resource(CV),
             potentialValues(V),
             V != CV .
             
 % mode can change - but only once per outcome
 {result(OUTCOME, mode_change(MODE)) : 
     potentialModes(MODE), 
-    potentialOutcomes(OUTCOME)} 1 :- potentialOutcomes(OUTCOME).
+    outcome(OUTCOME)} 1 :- outcome(OUTCOME).
 
 
 % VISUALS %
@@ -193,49 +209,49 @@ outcome(OUTCOME) :-
 {result(OUTCOME,  set_sprite(ENTITY,SPRITE)) :
     sprites(SPRITE),
     entity(ENTITY), 
-    potentialOutcomes(OUTCOME)} 1 :-
+    outcome(OUTCOME)} 1 :-
         entity(ENTITY),
-        potentialOutcomes(OUTCOME).
+        outcome(OUTCOME).
 
 {result(OUTCOME,  change_color(ENTITY,COLOR,DURATION)) :
     colors(COLOR),
     entity(ENTITY), 
-    potentialOutcomes(OUTCOME),
+    outcome(OUTCOME),
     constants(DURATION)} 1 :- 
-        potentialOutcomes(OUTCOME),
+        outcome(OUTCOME),
         entity(ENTITY).
     
+  
+changes(RESOURCE,OUTCOME) :- result(OUTCOME,increases(RESOURCE,AMOUNT1)).
+changes(RESOURCE,OUTCOME) :- result(OUTCOME,decreases(RESOURCE,AMOUNT2)).
+changes(RESOURCE,OUTCOME) :- result(OUTCOME,set_to(RESOURCE,AMOUNT3)).
     
 %%%% OUTCOMES %%%%
 
 changes(OUTCOME,increases,CV,V) :- result(OUTCOME,increases(CV,V)).
 changes(OUTCOME,decreases,CV,V) :- result(OUTCOME,decreases(CV,V)).
-changes(OUTCOME,decreases,CV,V) :- result(OUTCOME,set_to(CV,V)).
+changes(OUTCOME,set_to,CV,V) :- result(OUTCOME,set_to(CV,V)).
 
-condition(CONDITION) :- precondition(CONDITION).
+condition(CONDITION) :- precondition(CONDITION,OUTCOME).
 
-change(increases;decreases).
+change(increases;decreases;set_to).
 
 
 % CONSTRAINTS
 
 :- max_resource_change_per + 1  {changes(OUTCOME,CHANGE, CV,V) :
-    potentialChangeableValues(CV),
+    resource(CV),
     potentialValues(V), 
     change(CHANGE)}, 
         outcome(OUTCOME).
 :-  2 {changes(OUTCOME,CHANGE,CV,V)}, 
     outcome(OUTCOME), 
-    potentialChangeableValues(CV).        
+    resource(CV).        
         
         
-        
-        
-
-3 {outcome(OUTCOME) : outcome(OUTCOME)}.
-
 :- goal(prevent(OUTCOME)), goal(achieve(OUTCOME)).
 
+:- bad(RESOURCE), good(RESOURCE).
 
 controlLogic :- controlLogic(CONTROLS).
 :- not controlLogic.
@@ -257,30 +273,65 @@ controlLogic :- controlLogic(CONTROLS).
 :- 2 {precondition(control_event(BUTTON,STATE),OUTCOME): 
     buttons(BUTTON), 
     buttonStates(STATE), 
-    potentialOutcomes(OUTCOME)}, outcome(OUTCOME).
+    outcome(OUTCOME)}, outcome(OUTCOME).
+
+same(OUTCOME1, OUTCOME2) :- 
+    precondition(CONDITION,OUTCOME1),
+    precondition(CONDITION,OUTCOME2),
+    outcomeOrder(OUTCOME1,OUTCOME2).
     
 different(OUTCOME1,OUTCOME2) :- 
-    precondition(CONDITION1,OUTCOME1),
-    precondition(CONDITION2,OUTCOME2),
-    CONDITION1 != CONDITION2,
-    OUTCOME1 != OUTCOME2.
+    precondition(CONDITION,OUTCOME1),
+    not precondition(CONDITION,OUTCOME2),
+    condition(CONDITION),
+    outcomeOrder(OUTCOME1,OUTCOME2),
+    same(OUTCOME1,OUTCOME2).
+
     
 :-  not different(OUTCOME1,OUTCOME2), 
-    outcome(OUTCOME1),outcome(OUTCOME2), 
-    OUTCOME1 != OUTCOME2.
+    outcome(OUTCOME1),outcome(OUTCOME2),
+    outcomeOrder(OUTCOME1,OUTCOME2),
+    same(OUTCOME1,OUTCOME2). 
     
 :- max_conditions_per {precondition(CONDITION,OUTCOME)}, outcome(OUTCOME).
 
-:- 2 {precondition(overlaps(E1,E2),OUTCOME) :
-    entity(E1),entity(E2)}, 
+:- 2 {precondition(overlaps(E1,E2,POLARITY),OUTCOME) :
+    entity(E1),entity(E2),polarity(POLARITY)}, 
         outcome(OUTCOME).
         
+:-  2 {precondition(le(RESOURCE,VALUE),OUTCOME) :
+            potentialValues(VALUE)}, 
+        outcome(OUTCOME), 
+        resource(RESOURCE).
+
+:-  2 {precondition(lt(RESOURCE,VALUE),OUTCOME) :
+            potentialValues(VALUE)}, 
+        outcome(OUTCOME), 
+        resource(RESOURCE).
+        
+:-  2 {precondition(ge(RESOURCE,VALUE),OUTCOME) :
+            potentialValues(VALUE)}, 
+        outcome(OUTCOME), 
+        resource(RESOURCE).
+        
+:-  2 {precondition(gt(RESOURCE,VALUE),OUTCOME) :
+            potentialValues(VALUE)}, 
+        outcome(OUTCOME), 
+        resource(RESOURCE).
+    
 :-  precondition(le(RESOURCE,VALUE),OUTCOME), 
     precondition(lt(RESOURCE,VALUE2),OUTCOME).
     
 :-  precondition(ge(RESOURCE,VALUE),OUTCOME), 
     precondition(gt(RESOURCE,VALUE2),OUTCOME).
-    
+
+result_outcome(OUTCOME) :-     result(OUTCOME,EFFECT).
+precondition_outcome(OUTCOME) :-     precondition(CONDITION,OUTCOME).
+validOutcome(OUTCOME) :- result_outcome(OUTCOME), 
+    precondition_outcome(OUTCOME).
+:- outcome(OUTCOME), not validOutcome(OUTCOME).
+
+ 
 below(RESOURCE,VALUE,OUTCOME) :- 
     precondition(le(RESOURCE,VALUE),OUTCOME).
 
@@ -292,10 +343,45 @@ above(RESOURCE,VALUE,OUTCOME) :-
 above(RESOURCE,VALUE,OUTCOME) :- 
     precondition(gt(RESOURCE,VALUE),OUTCOME).
 
-    
+conditionedOnResource(RESOURCE,OUTCOME) :- above(RESOURCE,VALUE,OUTCOME).
+conditionedOnResource(RESOURCE,OUTCOME) :- below(RESOURCE,VALUE,OUTCOME).
+  
+  
 lower_than(low,mid).
 lower_than(low,high).
 lower_than(mid,high).
 :-  below(RESOURCE,VALUE_L,OUTCOME), 
     above(RESOURCE,VALUE_H,OUTCOME), 
     lower_than(VALUE_L,VALUE_H).
+
+:- controlLogic(BUTTON), not controlLogic(BUTTON_H), buttonOrder(BUTTON_H,BUTTON).
+
+:- condition(overlaps(A,B,POLARITY)), entityOrdering(B,A).
+
+:- conditionedOnResource(RESOURCE,OUTCOME1), not changes(RESOURCE,OUTCOME2), OUTCOME1 != OUTCOME2, outcome(OUTCOME2).
+
+end_mode(game_loss;game_win).
+
+effect(EFFECT) :- result(OUTCOME,EFFECT).
+
+:-  result(OUTCOME,mode_change(END)), 
+    end_mode(END),
+    2 {result(OUTCOME,EFFECT) : effect(EFFECT)}.
+    
+:-  precondition(control_event(BUTTON,STATE),OUTCOME),
+    result(OUTCOME,mode_change(END)), 
+    end_mode(END).
+    
+:-  precondition(tick,OUTCOME), 
+    result(OUTCOME,set_to(RESOURCE,VALUE)).
+:-  precondition(tick,OUTCOME), 
+    result(OUTCOME,mode_change(MODE)).
+:-  precondition(tick,OUTCOME), 
+    result(OUTCOME,change_color(ENTITY,COLOR,TIME)).
+:-  precondition(tick,OUTCOME), 
+    result(OUTCOME,set_sprite(ENTITY,SPRITE)).
+    
+:-  precondition(tick,OUTCOME),
+    changes(OUTCOME,CHANGE,CV,high).
+:-  precondition(tick,OUTCOME),
+    changes(OUTCOME,CHANGE,CV,mid).
