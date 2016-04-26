@@ -5,7 +5,7 @@
 
 /* global define */
 
-define([], function() {
+define(["Condition"], function(Condition) {
 	"use strict";
 
 	var blackboard = {};
@@ -18,51 +18,59 @@ define([], function() {
 		blackboard[key] = value;
 	}
 
-	/* Currently handles PARAM op VALUE, true, or false
-	op can be eq, neq, geq, leq, gt, lt
+	var reset = function() {
+		blackboard = {};
+	}
+
+	/* Checks a condition against the state.
+	the condition string are validated by the Condition module.
 	*/
 	var isTrue = function(condition) {
-		condition = "" + condition; // coerce to string
-		var conditionParts = condition.replace(/\s\s+/g, " ").split(" ");
-		if (conditionParts.length !== 3) {
-			if (conditionParts[0] === "true") {
-				return true;
-			} else if (conditionParts[0] === "false") {
-				return false;
-			} else {
-				throw new Error("Expected condition in the form 'PARAM OP VALUE' but saw '" + condition + "' which seems to have " + conditionParts.length + " parts.");
+		// Parse condition string; if invalid, will throw an error.
+		var conditionParts = Condition.parts(condition);
+
+		var valOfParam;
+		var param = conditionParts.param;
+		var op = conditionParts.op;
+		var value = conditionParts.value;
+		if (param !== undefined) {
+			valOfParam = get(param);
+			if (op !== "eq" && op !== "neq" && isNaN(parseFloat(valOfParam))) {
+				throw new Error("Tried to perform op '" + op + "' on param '" + param + "' (" + valOfParam + ") but that does not appear to be a number.");
 			}
 		}
-		var param = conditionParts[0];
-		var op = conditionParts[1].toLowerCase();
-		var value = conditionParts[2];
-		if (value === "true") value = true;
-		if (value === "false") value = false;
-		console.log("param, op, value", param, op, value);
-
-		var valOfParam = get(param);
-		if (op !== "eq" && isNaN(parseFloat(valOfParam))) {
-			throw new Error("Tried to perform op '" + op + "' on param '" + param + "' (" + valOfParam + ") but that does not appear to be a number.");
-		}
+		// TODO: Move this into Condition module, so ops aren't defined in two places
 		switch(op) {
+			case "forceTrue":
+				return true;
+			case "forceFalse":
+				return false;
 			case "eq":
 				return valOfParam == value;
 			case "neq":
 				return valOfParam != value;
-			case "geq":
 			case "gte":
 				return valOfParam >= value;
-			case "leq":
 			case "lte":
 				return valOfParam <= value;
 			case "gt":
 				return valOfParam > value;
 			case "lt":
 				return valOfParam < value;
-			default:
-				throw new Error("Found invalid op '" + op + "' in condition '" + condition + "' (valid ops are: eq, geq, leq, gt, lt)");
-
 		}
+	}
+
+	var _getEffectFields = function(effect) {
+		var fields = {};
+		var params = effect.replace(/\s\s+/g, " ").split(" ");
+		fields.op = params.splice(0, 1)[0];
+		var val = params[1];
+		if (val === "true") val = true;
+		if (val === "false") val = false;
+		fields.val = val;
+		fields.param = params[0];
+		fields.params = params;
+		return fields;
 	}
 
 	/*
@@ -70,17 +78,15 @@ define([], function() {
 	 *
 	 * Currently handles:
 	 *  - @@set PARAM VALUE@@: Sets a variable to a number or string.
-	 *  - @@incr PARAM@@:   Increments a numeric variable by one.
 	 *  - @@incr PARAM x@@: Increments a numeric variable by x.
-	 *  - @@decr PARAM@@:   Decrements a numeric variable by one.
 	 *  - @@decr PARAM x@@: Decrements a numeric variable by x.
 	 *  - @@mult PARAM x@@: Multiplies a numeric variable by x.
 	 */
 	var change = function(effect) {
 
 		var expect = function(num) {
-			if (params.length !== num) {
-				throw new Error("Invalid number of params for op '" + op + "' (found " + params.length + ", expected " + num + ") in effect '" + effect + "'");
+			if (fields.params.length !== num) {
+				throw new Error("Invalid number of params for op '" + fields.op + "' (found " + fields.params.length + ", expected " + num + ") in effect '" + effect + "'");
 			}
 		}
 		var expectNum = function(val) {
@@ -92,45 +98,73 @@ define([], function() {
 		}
 		var validateNumberParams = function() {
 			expect(2);
-			var oldVal = get(params[0]);
+			var oldVal = get(fields.params[0]);
 			if (oldVal === undefined) {
-				set(params[0], 0);
+				set(fields.param, 0);
 				oldVal = 0;
 			}
 			expectNum(oldVal);
-			expectNum(params[1]);
+			expectNum(fields.params[1]);
 		}
 
-		var params = effect.replace(/\s\s+/g, " ").split(" ");
-		var op = params.splice(0, 1)[0];
-		switch(op) {
+		var fields = _getEffectFields(effect);
+		switch(fields.op) {
 			case "set":
 				expect(2);
-				set(params[0], params[1]);
+				set(fields.param, fields.val);
 				break;
 			case "incr":
-				if (!params[1]) params[1] = 1;
 				validateNumberParams();
-				set(params[0], get(params[0]) + parseFloat(params[1]));
+				set(fields.param, get(fields.param) + parseFloat(fields.val));
 				break;
 			case "decr":
-				if (!params[1]) params[1] = 1;
 				validateNumberParams();
-				set(params[0], get(params[0]) - parseFloat(params[1]));
+				set(fields.param, get(fields.param) - parseFloat(fields.val));
 				break;
 			case "mult":
 				validateNumberParams();
-				set(params[0], get(params[0]) * parseFloat(params[1]));
+				set(fields.param, get(fields.param) * parseFloat(fields.val));
 				break;
 			default:
-				throw new Error("Invalid op '" + op + "' in effect '" + effect + "'");
+				throw new Error("Invalid op '" + fields.op + "' in effect '" + effect + "'");
 		}
+	}
+
+	// Check if a given effect would make the given condition true, by storing the current blackboard value, running the effect, checking the condition, then restoring the original value. 
+	var wouldMakeTrue = function(effect, condition) {
+		var fields = _getEffectFields(effect);
+		var param = fields.param;
+		var currVal = get(param);
+
+		// Don't allow relative operations on a value that doesn't exist.
+		if (currVal === undefined && ["incr", "decr", "mult"].indexOf(fields.op) >= 0) {
+			return false;
+		}
+		
+		change(effect);
+		var wouldBeTrue = isTrue(condition);
+		set(param, currVal);
+		return wouldBeTrue;
+	}
+
+	// Same as above, except returns true of any effects in the passed in array would make the given condition true
+	var wouldAnyMakeTrue = function(effectArray, condition) {
+		if (!condition) return false; // TODO: fix so never called this way.
+		for (var i = 0; i < effectArray.length; i++) {
+			if (wouldMakeTrue(effectArray[i], condition)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	return {
 		get: get,
 		set: set,
+		reset: reset,
 		change: change,
-		isTrue: isTrue
+		isTrue: isTrue,
+		wouldMakeTrue: wouldMakeTrue,
+		wouldAnyMakeTrue: wouldAnyMakeTrue
 	}
 });

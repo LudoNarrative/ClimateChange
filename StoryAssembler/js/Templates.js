@@ -1,126 +1,136 @@
 /* 	Templates Module
 
+Allows including inline templating to vary text based on the State.
+
 */
 
 /* global define */
 
-define(["underscore", "util", "State", "text!../data/SceneTemplates.json", "text!../data/FrameTemplates.json"], function(underscore, util, State, SceneTemplates, FrameTemplates) {
+define(["util"], function(util) {
 	"use strict";
 
-	// Immediately load and parse external files when the module is loaded.
-	var frameTemplates = JSON.parse(FrameTemplates);
-	var sceneTemplates = JSON.parse(SceneTemplates);
-
-	var isFramePrimary = function(id) {
-		if (!frameTemplates[id]) return false;
-		return frameTemplates[id].type !== "secondary";
+	var State;
+	var init = function(_State) {
+		State = _State;
 	}
 
-	// Use the helper function below to return an instantiated Scene template.
-	var loadScene = function(id) {
-		return loadTemplate(id, sceneTemplates, "frames");
-	}
+	var templates = {
+		"rnd": function(params, text) {
+			// {rnd|one|of|these}
+			if (params.length === 0) {
+				console.error("Template command 'rnd' must have at least one param, in text '" + text + "'.");
+				return "(rnd)";
+			}
+			var rNum = util.randomNumber(params.length) - 1;
+			return params[rNum];
+		},
+		"ifState": function(params, text) {
+			// {ifState|career|3|text if true|text if false}
+			if (params.length !== 4) {
+				console.error("Template command 'ifState' must have four params: variable, value, text if true, text if false: in text '" + text + "'.");
+				return "(ifState)";
+			}
+			
+			var varToCheck = params[0];
+			var expectedVal = params[1];
+			var textIfTrue = params[2];
+			var textIfFalse = params[3];
 
-	// Use the helper function below to return an instantiated Frame template.
-	var loadFrame = function(id) {
-		return loadTemplate(id, frameTemplates, "chunks");
-	}
-
-	// Get a specific template from the given source, making a minimally valid stand-in if it doesn't exist or is underspecified,  give it a "toPlan" function, then return it.
-	var loadTemplate = function(id, templateSource, itemField) {
-		var template = templateSource[id];
-		if (!template || !template[itemField]) {
-			template = {};
-			template[itemField] = [];
-			template[itemField].push(makeMissing(id, itemField));
-		}
-		template.toPlan = function() {
-			return toPlan(this, itemField);
-		};
-		return template;
-	}
-
-	// When run on a template, will return a plan generated from that template. Most of the magic is triggered in reifyTemplate.
-	var toPlan = function(template, field) {
-		var plan = {};
-		plan[field] = reifyTemplate(template[field]);
-		delete plan.conditions;
-		if (template.choices) {
-			if (field === "chunks") {
-				plan.choices = reifyTemplate(template.choices);
+			var currVal = State.get(varToCheck);
+			if (currVal == expectedVal) { // Note: double equals "truthy" comparison
+				return textIfTrue;
 			} else {
-				throw new Error("Choices can only appear in a Frame plan, not a Scene plan.");
+				return textIfFalse;
 			}
-		}
-		if (template.effects) {
-			plan.effects = template.effects;
-		}
-		plan.chunkSpeaker = template.chunkSpeaker;
-		plan.choiceSpeaker = template.choiceSpeaker;
-		return plan;
+		},
+		// "attr": function(params, text) {
+		// 	if (params.length !== 3) {
+		// 		console.error("Template command 'attr' must have three params: attribute to check for current speaker, text if true, text if false: in text '" + text + "'.");
+		// 		return "(attr)";
+		// 	}
+
+		// 	var attToCheck = params[0];
+		// 	var textIfTrue = params[1];
+		// 	var textIfFalse = params[2];
+		// }
 	}
 
-	// Sorts the given field in a template into a final order, and eliminates any which do not meet the current conditions.
-	var reifyTemplate = function(originalField) {
-		var finalField = util.clone(originalField);
-		finalField = sortByOrder(finalField);
-		finalField = evaluateConditions(finalField);
-		return finalField;
+	var addTemplateCommand = function(cmd, func) {
+		templates[cmd] = func;
 	}
 
-	// Considers every object in a given field, and evaluates all of its conditions. If any are false, omit the object from the final plan. 
-	var evaluateConditions = function(items) {
-		var returnItems = [];
-		items.forEach(function(item) {
-			if (item.conditions) {
-				for (var i = 0; i < item.conditions.length; i++) {
-					var conditionIsTrue = State.isTrue(item.conditions[i]);
-					if (!conditionIsTrue) return; // continue to next item
-				}
-			}
-			// If we haven't rejected this item, save it.
-			returnItems.push(util.clone(item));
-		});
-		return returnItems;
-	}
+	// Process a single templated string in the form {command|param1|param2}
+	// (Parameters are optional)
+	var processTemplate = function(text) {
+		// Check format is correct
+		console.assert(text[0] === "{", "template '" + text + "' does not begin with curly brace.");
+		console.assert(text[text.length - 1] === "}", "template '" + text + "' does not end with curly brace.");
 
-	// When given an array of objects with a "order" key, sorts them such that any values of "first" happen at the beginning, "last" happen at the end, and any omitted order becomes 0.
-	var sortByOrder = function(steps) {
-		// Convert special tokens to numeric values, and make sure every chunk has a numeric order.
-		for (var i = 0; i < steps.length; i++) {
-			var thisOrder = steps[i].order;
-			if (thisOrder === "first") {
-				steps[i].order = Number.NEGATIVE_INFINITY;
-			} else if (thisOrder === "last") {
-				steps[i].order = Number.POSITIVE_INFINITY;
-			} else if (thisOrder === undefined) {
-				steps[i].order = 0;
-			}
+		// strip opening/closing characters, verify no nesting, and make into an array
+		var strippedText = text.slice(1, text.length - 1);
+
+		if (strippedText.search(/[\{\}]/g) >= 0) {
+			console.error("Nested params are not allowed in template '" + strippedText + "'");
+			return "()";
 		}
 
-		// Use the underscore library to do the sorting.
-		steps = underscore.sortBy(steps, "order");
+		var texts = strippedText.split("|");
 
-		return steps;
-	}
-
-	// Generate a blank Frame or Chunk that won't crash the rest of the system.
-	var makeMissing = function(id, field) {
-		var missingItem = {};
-		if (field === "chunks") {
-			missingItem.text =  "(" + id + ")";
-		} else if (field === "frames") {
-			missingItem.id = "MissingFrameTemplate";
+		// If we just have a single word, and it's not a recognized command, assume we want to print a value from the state.
+		if (texts.length === 1 && !templates[texts[0]]) {
+			return State.get(texts[0]);
 		}
-		return missingItem;
+
+		// Assume the first element is the command, and the rest are parameters
+		var cmd = texts[0];
+		var params = [];
+		if (texts.length > 0) {
+			texts.shift();
+			params = texts;
+		}
+		if (!templates[cmd]) {
+			console.error("Missing template command '" + cmd + "'. Process text '" + text + "'.");
+			return "(" + cmd + ")";
+		}
+		if (typeof templates[cmd] !== "function") {
+			console.error("Template command '" + cmd + "' is not a function! Processing text '" + text + "'.");
+			return "(" + cmd + ")";
+		}
+		return templates[cmd](params, text);
 	}
 
+	// Returns text that's had all templates replaced by fully realized versions.
+	// Format: {command|opt1|opt2|...}
+	var render = function(chunk) {
+		console.log("chunk", chunk);
+		var txt = chunk.content;
+		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
+		var match;
+		while ((match = re.exec(txt)) !== null) {
+			// Reject escaped opening braces, so \{ won't count.
+			if (match.index > 0 && txt[match.index - 1] === "\\") continue;
+
+			// Replace match with rendered version.
+			var matchText = match[0];
+			txt = txt.replace(matchText, processTemplate(matchText));
+			re = /{[^}]*}/g;
+		}
+
+		// Now that all templates have been replaced, modify the text based on state. (NLG techniques.)
+		// if (speaker && speaker.attributes) {
+		// 	if (speaker.attributes.indexOf("shy") >= 0) {
+		// 		txt = TextChanger.shy(txt);
+		// 	}
+		// }
+
+		return txt;
+	}
 
 	// PUBLIC INTERFACE
 	return {
-		loadScene: loadScene,
-		loadFrame: loadFrame,
-		isFramePrimary: isFramePrimary
+		init: init,
+		render: render,
+		addTemplateCommand: addTemplateCommand
 	}
 
 });
