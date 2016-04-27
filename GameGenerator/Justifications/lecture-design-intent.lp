@@ -4,14 +4,15 @@
 #const max_resources = 1.
 #const min_outcomes = 3.
 #const max_outcomes = 5.
-
+:- not good(r1).
 :- not condition(tick).
 denotes(r1,confidence).
 
-:- not goal(maintain(r1)).
-abc :- timingChallenge(BUTTON,BUTTON_STATE).
-:- not abc.
-%:- not timingChallengeGoal.
+:- not timingChallengeGoal.
+:- not worseWithTime(r1).
+:- isEasy.
+
+:- physicsLogic(e1,mapping(control_event(left_arrow,pressed),east,low)).
 
 % Something something cultural knowledge about confidence
 % face communicates confidence

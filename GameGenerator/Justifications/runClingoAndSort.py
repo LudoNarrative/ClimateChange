@@ -82,11 +82,17 @@ if __name__ == '__main__':
         if result not in actionsOfResult:
             actionsOfResult[result] = []
         actionsOfResult[result].append(effect)
-        
+    
+    for type in ['entity','singular','many','resource','physicsLogic','resourceLogic','controlLogic','initialize']:
+        if type in out:
+            for thing in sorted(out[type]):
+                print '{}{}'.format(type,thing)
+            print ''
+    
     for outcome in sorted(preconditionsOfResult):
         for precondition in preconditionsOfResult[outcome]:
             print 'precondition({},{})'.format(precondition,outcome)
         for action in actionsOfResult[outcome]:
             print 'result({},{})'.format(outcome,action)
-        print '\n'
+        print ''
             
