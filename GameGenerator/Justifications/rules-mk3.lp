@@ -143,8 +143,7 @@ actionNeededForMaintenance(BUTTON,BUTTON_STATE,RESOURCE) :-
     playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE),
     worseWithTime(RESOURCE).
     
-timingBasedPhysics(spring).
-timingBasedPhysics(pendulum).
+timingBasedPhysics(spring;pendulum;chase;random;random_chase;flee;random_flee).
 
 correlated(RESOURCE1,RESOURCE2,positive) :-
     result(OUTCOME,increases(RESOURCE1, AMOUNT1)),
@@ -187,6 +186,8 @@ timingChallenge(BUTTON,BUTTON_STATE) :-
     actionHasRiskReward(BUTTON,BUTTON_STATE),
     timingAffectsAction(BUTTON,BUTTON_STATE).
 
+
+    
 goal(achieve(OUTCOME)) :-
     result(OUTCOME, mode_change(game_win)).
 goal(achieve(OUTCOME)) :-
@@ -309,17 +310,22 @@ goal(relates(OUTCOME)) :-
 goal(relates(OUTCOME)) :-
     goal(prevent(OUTCOME)).
 
-goal(relates(OUTCOME)) :- 
+goal(achieve(OUTCOME)) :- 
     subGoal(achieve(OUTCOME),DEPTH).
     
-goal(relates(OUTCOME)) :-
+goal(prevent(OUTCOME)) :-
     subGoal(prevent(OUTCOME),DEPTH).
     
 timingChallengeGoal :- 
-    goal(relates(OUTCOME)),
+    goal(achieve(OUTCOME)),
     precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
     timingChallenge(BUTTON,BUTTON_STATE).
     
+
+timingChallengeGoal :- 
+    goal(achieve(OUTCOME)),
+    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
+    timingChallenge(BUTTON,BUTTON_STATE).
     
 goal(maintain(RESOURCE)) :-
     precondition(lt(RESOURCE,THRESHOLD),OUTCOME),
@@ -329,7 +335,13 @@ goal(eliminate(RESOURCE)) :-
     precondition(lt(RESOURCE,THRESHOLD),OUTCOME),
     goal(achieve(OUTCOME)).
    
+easy(OUTCOME) :-
+    unrestricted(OUTCOME).
 
+easy(OUTCOME) :-
+    precondition(overlaps(ENTITY_A,ENTITY_B,false),OUTCOME),
+    not agent(ENTITY_A),
+    not agent(ENTITY_B).
     
 goal(maintain(RESOURCE)) :-
     precondition(le(RESOURCE,THRESHOLD),OUTCOME),
@@ -364,6 +376,9 @@ humanAffected(OUTCOME) :-
     
     
 humanControlled(ENTITY) :-        
+     physicsLogic(ENTITY,mapping(control_event(BUTTON,STATE),DIR,AMOUNT)).
+    
+humanControlled(ENTITY) :-        
     physicsLogic(ENTITY, follows(cursor)).
 
 humanAffected(OUTCOME) :-
@@ -373,18 +388,35 @@ humanAffected(OUTCOME) :-
 humanAffected(OUTCOME2) :-
     enables(OUTCOME1,OUTCOME2),
     humanAffected(OUTCOME1).
+
+restrictedEntity(ENTITY) :- 
+    entity(ENTITY),
+    not humanControlled(ENTITY).
+    
+restrictedEntity(ENTITY) :-
+    result(OUTCOME,applyRestitution(ENTITY)).
+    
+restrictedEntity(ENTITY) :-
+    precondition(overlaps(ENTITY,OTHER,POLARITY),OUTCOME),
+    result(OUTCOME,delete(ENTITY)).
     
     
+restrictedEntity(ENTITY) :-
+    precondition(overlaps(OTHER,ENTITY,POLARITY),OUTCOME),
+    result(OUTCOME,delete(ENTITY)).
+
 unrestrictedEntity(ENTITY) :-
-    not result(OUTCOME,applyRestitution(ENTITY)),
-    outcome(OUTCOME),
-    physicsLogic(ENTITY,controlLogic(PHYSICS_CONTROL)).
+    entity(ENTITY), 
+    not restrictedEntity(ENTITY).
+    
     
 restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
-    not unrestrictedEntity(ENTITY_A),
-    not unrestrictedEntity(ENTITY_B).
+    restrictedEntity(ENTITY_A).
 
+restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
+    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
+    restrictedEntity(ENTITY_B).
 unrestrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
     not restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)).
@@ -462,13 +494,16 @@ replenishible(RESOURCE) :-
 limited(RESOURCE) :-
     not replenishible(RESOURCE),
     result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+      
     
-  
-    
-    
+playerAgency(ENTITY) :- 
+    physicsLogic(ENTITY,follows(cursor)).
+
+playerAgency(ENTITY) :-    
+    physicsLogic(ENTITY,mapping(control_event(BUTTON,STATE),DIRECTION,AMOUNT)).
 % %% KNOWLEGE BASE
 
-unrestrictedCondition(control_event(click)). %player can always click
+unrestrictedCondition(control_event(BUTTON,BUTTON_STATE)) :- buttons(BUTTON), buttonStates(BUTTON_STATE).
 unrestrictedCondition(tick).
 unrestrictedGame :- 
     unrestricted(OUTCOME),
