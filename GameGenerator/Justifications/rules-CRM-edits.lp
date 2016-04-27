@@ -2,8 +2,6 @@
 %   good(Resource)
 %   bad(Resource)
 %
-%% Predicates (from before)
-%
 
 
 good(RESOURCE) :- 
