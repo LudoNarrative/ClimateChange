@@ -1,0 +1,73 @@
+
+
+<program> := <global>create(){ <create>}update(){<update>}
+
+<global> := <declaration>|<declaration><global>
+
+<declaration> := var <entity>;|var <resource>;
+
+<create> := <initialization><create>|<initialization>
+
+<initialization> :=
+	       <entity> = game.add.sprite(NAT,NAT,<sprite>)<entity_behavior>;|
+	       <resource> = NAT;|
+	       <entity>.tint = NAT;|
+	       <entity> = game.add.physicsGroup();
+	       for (var <xy> in <sequence>){
+	       	   <entity>.create(NAT,NAT,<sprite>)<entity_behavior>;	
+	       }
+
+<entity_behavior> :=  |
+                      addBehavior(<behavior>)|
+		      <entity_behavior><entity_behavior>
+		  
+	       
+<behavior> := ????
+	       
+
+<update> := <update_line>|<update_line><update>
+
+
+<update_line> :=
+		<result>|
+		<precondition>
+<result> :=  <result_line><result> | <result_line>
+
+<result_line> := 
+		<resource> += <resource>;|
+		<resource> -= <resource>;|
+		<resource> += NAT;|
+		<resource> -= NAT;|
+		<resource> = NAT|
+		<resource> = <resource>;|
+		<entity>.kill();|
+
+<precondition> := game.physics.arcade.overlaps(<entity>,<entity>,null,function(){ <precondition> },this) |
+	       	  if (<condition>) {
+		     <result>
+		  }
+
+<condition> := <condition_line>&&<condition> | <condition_line>
+
+<condition_line> :=
+		 !<condition_line> |
+		 <resource> <comparator> NAT |
+		 <resource> <comparator> <resource> |
+		 <input> |
+		 <entity>.alive() 
+		 
+		 
+<comparator> := >|<|>=|<=
+
+<input> :=
+		mouseDown |
+		mouseHeld |
+		mouseUp |
+		<key>.down |
+		<key>.held |
+		<key>.up
+
+<key> := upArrow|downArrow|leftArrow|rightArrow|space
+
+
+
