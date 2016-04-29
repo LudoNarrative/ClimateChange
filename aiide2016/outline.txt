@@ -1,0 +1,29 @@
+Working Title:
+Operationalizing Procedural Reasoning
+
+Scope:
+Describe the work on the game generator side -- specifically, by
+representing the arguments used in prior work to do "procedural readings"
+as rules in ASP, and by representing facts about various games as base ASP
+facts, we can automatically:
+- Check whether a game matches a high-level design specification
+- Generate high-level design knowledge from a game's mechanics and other
+  characteristics
+- Generate fully-specified games from high-level design specifications.
+
+Novel contribution:
+- Range of operational logics (not just 1)
+- Automated game understanding, in general
+- Theme, mood, and cultural context incorporated into generation and
+  reasoning process
+
+Outline:
+I. Introduction
+II. Approach
+  Operational logics
+  Procedural readings
+  Game generation
+III. Results
+  Automatic reasoning
+  Game generation
+IV. Discussion
