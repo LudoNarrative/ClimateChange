@@ -19,11 +19,22 @@ Novel contribution:
 
 Outline:
 I. Introduction
+  Overview
+  Motivating example: 
+    combat, e.g. Joe's paper, 
+    + generation of combat games
+  Related work
 II. Approach
+  Pedagogical example
+    something lecture-game scale? that we can fit in the paper.
   Operational logics
   Procedural readings
+  ASP encoding
   Game generation
 III. Results
   Automatic reasoning
   Game generation
 IV. Discussion
+  Summary
+  Future Work
+
