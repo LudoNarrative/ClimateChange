@@ -21,8 +21,8 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "util", "domReady!"],
-	function(State, ChunkLibrary, Wishlist, StoryAssembler, Example1Data) {
+	["State", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "util", "domReady!"],
+	function(State, ChunkLibrary, Wishlist, StoryAssembler, Example1Data, Example2Data) {
 
 	// To Add A New Example:
 	// - Create new definition in "examples" dictionary below
@@ -36,6 +36,22 @@ requirejs(
 			],
 			dataFile: Example1Data,
 			startState: ["set initialized true", "set friendName Elika"]
+		},
+		"Example 2": {
+			wishlist: [
+				{ condition: "introMechanics eq true" },
+				{ condition: "beat eq 1" },
+				{ condition: "beat eq 2" },
+				{ condition: "beat eq 3" },
+				{ condition: "beat eq 4" },
+			],
+			dataFile: Example2Data,
+			startState: [
+				"set initialized true", 
+				"set friendName Emma",
+				"set career 0",
+
+			]
 		}
 	};
 
@@ -59,6 +75,7 @@ requirejs(
 		ChunkLibrary.add(data);
 
 		var wishlist = Wishlist.create(example.wishlist, State);
+		//wishlist.logOn();
 
 		document.getElementsByTagName("body")[0].innerHTML = "";
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State);
