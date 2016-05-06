@@ -47,7 +47,8 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 			chunk.choices.forEach(function(choice) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
 				// TODO: Our path needs to save which node we found that met the conditions for a choice, so we know what text to print here.
-				var choiceText = choice.val;
+				var choiceText;
+				if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
 				Display.addChoice({text: choiceText, chunkId: choice.val});
 			});
 		} else if (wishlist.wantsRemaining() > 0) {
@@ -58,6 +59,10 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 			endScene();
 		}
 
+	}
+
+	var getChoiceText = function(choiceId) {
+		return chunkLibrary.get(choiceId).choiceLabel;
 	}
 
 	var handleChoiceSelection = function(choice) {
@@ -75,6 +80,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 			State.change(effect);
 		});
 		wishlist.removeSatisfiedWants();
+		console.log("wants remaining:", wishlist.wantsRemaining());
 	}
 
 	var doStoryBreak = function() {
