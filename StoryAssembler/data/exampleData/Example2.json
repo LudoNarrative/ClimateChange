@@ -1,0 +1,104 @@
+[
+	{
+		"id": "Start",
+		"content": "Keep the dishes moving around the table, or conversation will stop. Click a dish passed to you to pass it on, or the down arrow to add food to your plate.",
+		"conditions": ["introMechanics neq true"],
+		"effects": ["set introMechanics true", "set career 0", "set confidence 0"]
+	},
+	{
+		"id": "dinnerStart",
+		"content": ["Emma. Seriously, girl. This stew is not going to eat itself."],
+		"choices": [
+			{"chunkId": "whatscalled"},
+			{"chunkId": "thanksbringing"},
+			{"chunkId": "stuffed"}
+		]
+	},
+	{
+		"id": "whatscalled",
+		"choiceLabel": "Thanks. What's it called again?",
+		"content": "<i>Cocido</i>, chica. Figured comfort food would be good the night before my best friend's dissertation defense.",
+		"choices": [
+			{"chunkId": "iknowright"}
+		],
+		"effects": ["set beat 1"]
+	},
+	{
+		"id": "thanksbringing",
+		"choiceLabel": "It's so good. You made this?",
+		"content": "Don't look at me like that! I'm a better cook than you. And it's not like I'm going to let my best friend defend her dissertation after a night of takeout.",
+		"choices": [
+			{"chunkId": "youreamazing"}
+		],
+		"effects": ["set beat 1"]
+	},
+	{
+		"id": "stuffed",
+		"choiceLabel": "No thanks, Z. I'm stuffed.",
+		"content": "Are you kidding me? You've hardly had anything. Nervous about your dissertation defense tomorrow, huh?",
+		"choices": [
+			{"chunkId": "iguess"}
+		],
+		"effects": ["set beat 1"]
+	},
+	{
+		"id": "iknowright",
+		"choiceLabel": "I know, right?",
+		"request": {"condition": "beat eq 2"}
+	},
+	{
+		"id": "youreamazing",
+		"choiceLabel": "You're amazing.",
+		"request": {"condition": "beat eq 2"}
+	},
+	{
+		"id": "iguess",
+		"choiceLabel": "I guess.",
+		"request": {"condition": "beat eq 2"}
+	},
+	{
+		"id": "inSpain",
+		"content": "You would not believe how much of this stuff I ate in Spain. This recipe's okay, if I do say so myself, but only half as good as when you get it there.",
+		"choices" : [
+			{"chunkId": "wishcouldgo"},
+			{"chunkId": "quals"},
+			{"chunkId": "stilljealous"}
+		],
+		"effects": ["set beat 2"]
+	},
+	{
+		"id": "wishcouldgo",
+		"choiceLabel": "Wish I could have come with you.",
+		"conditions": ["goto_regrets eq true"]
+	},
+	{
+		"id": "quals",
+		"choiceLabel": "I was busy that year taking quals, if I recall.",
+		"content": "And now you're reaping the sweet rewards of that wise decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. I'll just be some chick who ate too much <i>cocido</i>. Speaking of which, could you, uh, pass that back...?"
+	},
+	{
+		"id": "stilljealous",
+		"choiceLabel": "Still jealous you got to spend six months there.",
+		"conditions": ["goto_regrets eq true"]
+	},
+	{
+		"id": "regrets",
+		"content": "Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. And I'll just be some chick who ate too much <i>cocido</i>.",
+		"choices" : [
+			{"chunkId": "wishcouldgo"}
+		],
+		"conditions" : ["beat eq 2"],
+		"effects": ["set goto_regrets true", "decr confidence 1", "set beat 3"]
+	},
+	{
+		"id": "wellmaybe",
+		"choiceLabel": "Well, maybe...",
+		"conditions": ["goto_loveocean eq true"]
+	},
+	{
+		"id": "loveocean",
+		"content": "Look, Em. I've known you as long as anyone. And you've <i>always</i> wanted this. You've been in love with the oceans since we were kids. Remember 4th grade? Mrs. Anderson? Oh my god, that diorama. You spent <i>ages</i> on that.",
+		"effects" : ["set beat 4"],
+		"conditions": ["beat eq 3"]
+	}
+]
