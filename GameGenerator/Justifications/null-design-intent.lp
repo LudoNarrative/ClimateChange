@@ -6,10 +6,4 @@
 #const min_outcomes = 2.
 #const max_outcomes = 5.
 
-:- timingChallengeGoal.
-
-:- not good(r1).
-
-:- not monotonicallyIncreases(r1).
-
 

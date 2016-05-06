@@ -356,8 +356,11 @@ isEasy :-
     easy(OUTCOME).
     
 nonMonotonic(RESOURCE) :-
-    result(OUTCOME1,decreases(RESOURCE,AMOUNT)),
-    result(OUTCOME2, increases(RESOURCE,AMOUNT)).
+    result(OUTCOME1,decreases(RESOURCE,AMOUNT1)),
+    result(OUTCOME2, increases(RESOURCE,AMOUNT2)).
+
+nonMonotonic(Resource) :-
+    result(Outcome, set_to(Resource, Value)).
     
 monotonicallyDecreases(RESOURCE) :- 
     result(OUTCOME1,decreases(RESOURCE,AMOUNT)),
