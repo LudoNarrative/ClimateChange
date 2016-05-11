@@ -265,7 +265,7 @@ define(["Request", "util"], function(Request, util) {
 			if (choiceMatch) {
 				return [{choiceDetails: {id: choiceMatch}}];
 			} else {
-				return [{choiceDetails: {missing: true}}]
+				return [{choiceDetails: {missing: true, requestVal: req.val}}]
 			}
 		}
 	}
