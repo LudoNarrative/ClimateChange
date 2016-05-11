@@ -102,7 +102,6 @@ define(["util"], function(util) {
 	// Returns text that's had all templates replaced by fully realized versions.
 	// Format: {command|opt1|opt2|...}
 	var render = function(chunk) {
-		console.log("chunk", chunk);
 		var txt = chunk.content;
 		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
 		var match;

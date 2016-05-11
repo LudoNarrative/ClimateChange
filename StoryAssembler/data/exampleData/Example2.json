@@ -64,7 +64,8 @@
 			{"chunkId": "quals"},
 			{"chunkId": "stilljealous"}
 		],
-		"effects": ["set beat 2"]
+		"effects": ["set beat 2"],
+		"conditions": ["beat eq 1"]
 	},
 	{
 		"id": "wishcouldgo",
@@ -98,7 +99,128 @@
 	{
 		"id": "loveocean",
 		"content": "Look, Em. I've known you as long as anyone. And you've <i>always</i> wanted this. You've been in love with the oceans since we were kids. Remember 4th grade? Mrs. Anderson? Oh my god, that diorama. You spent <i>ages</i> on that.",
+		"choices" : [
+			{"chunkId": "wantedToBePerfect"}
+		],
 		"effects" : ["set beat 4"],
 		"conditions": ["beat eq 3"]
+	},
+	{
+		"id": "wantedToBePerfect",
+		"choiceLabel": "I wanted it to be... perfect.",
+		"conditions": ["goto_loveocean eq true"]
+	},
+	{
+		"id": 	"whatspecialty",
+		"content": "You're kind of still working on it. It's just a 400 page brick of a dissertation now. What are they called again, your little buddies?",
+		"choices": 	[
+			{ "chunkId" : "pickShrimp"},
+			{ "chunkId" : "pickLobsters"},
+			{ "chunkId" : "pickCoral"}
+		]
+	},
+	{
+		"id": 	"pickShrimp",
+		"choiceLabel" : "<i>Lysmata amboinensis.</i> Pacific cleaner shrimp.",
+		"content": 	"Right. Lysmata amoeba ninnies. Thingies. I invited some to dinner, but turned out they're a more expensive date than I thought. Seafood is ex<i>pennnn</i>sive.",
+		"choices": 	[
+			{ "chunkId" : "howufeelChoicetext1" }
+		],
+		"effects" : ["set career 0"]
+	},
+	{
+		"id": 	"pickLobsters",
+		"content": 	"Right. I tried to invite old Homarus to dinner, but turns out he's a more expensive date than I thought. Seafood's getting ex<i>pennnn</i>sive.",
+		"choiceLabel" : "<i>Homarus americanus.</i> Lobsters.",
+		"choices": 	[
+			{ "chunkId" : "howufeelChoicetext1" }
+		],
+		"effects" : ["set career 1"]
+	},
+	{
+		"id": 	"pickCoral",
+		"choiceLabel" : "<i>Octocorallia.</i> Backbone of the coral reefs.",
+		"content": 	"Right. Octo-coro-lala-rama-dingdong. I tried to invite ol' Octo Lala to dinner, but turns out he was too busy getting registered on the endangered species list to attend.",
+		"choices": 	[
+			{ "chunkId" : "howufeelChoicetext2" }
+		],
+		"effects" : ["set career 2"]
+	},
+	{
+		"id": "howufeelChoicetext1",
+		"choiceLabel" : "Don't blame me, I just work here.",
+		"request": {"condition": "beat eq 2"}
+	},
+	{
+		"id": "howufeelChoicetext2",
+		"choiceLabel" : "Very funny.",
+		"request": {"condition": "beat eq 2"}
+	},
+	{
+		"id": "howufeel",
+		"content" : "Hey. What's up? Oh, don't give me that look. You're quiet, and it's not just nerves. What's on your mind?",
+		"choices": 	[
+			{ "chunkId" : "surePath" },
+			{ "chunkId" : "unsurePath" },
+			{ "chunkId" : "futureWorry" }
+		],
+		"conditions" : ["beat eq 4"],
+		"effects" : ["set beat 5"]
+	},
+
+	{
+		"id" : "surePath",
+		"choiceLabel" : "I'm just excited to be starting my career.",
+		"content" : "Heh. You're gonna knock 'em out of the park, Em. {ifState|career|0|Those amoeba shrimp|}{ifState|career|1|Your Homarus Lobstarus buddies|}{ifState|career|2|Your octo-coral-reefie pals|} have got a new superhero.",
+		"effects" : ["incr confidence 1"],
+		"choices" : [
+			{ "chunkId" : "more_haveSomeWine" }
+		]
+	},
+	{
+		"id" : "unsurePath",
+		"choiceLabel" : "I'm just wondering if it was worth it.",
+		"content" : "Worth it? Are you kidding? You're about to start a career doing everything you love. Emma Richards, defender of {ifState|career|0|the amoeba shrimp!|}{ifState|career|1|Homarus Lobstarus!|}{ifState|career|2|the octo-coral-reefies!|} You're going places. I can feel it.",
+		"effects" : ["decr confidence 1"],
+		"choices" : [
+			{ "chunkId" : "more_haveSomeWine" }
+		]
+	},
+	{
+		"id" : "futureWorry",
+		"choiceLabel" : "I'm just worried about the future.",
+		"content" : "Look at you, always freaking out when things go too well. Look, Emma. You've fought hard to get here. From what I've seen, you're an amazing scientist and a good teacher. Now if I can just get you to take an evening off and go on a date, you'll pretty much have it all.",
+		"effects" : ["decr confidence 1"],
+		"choices" : [
+			{ "chunkId" : "thanks_haveSomeWine" }
+		]
+	},
+
+	{
+		"id" : "more_haveSomeWine",
+		"choiceLabel" : "More",
+		"request": {"condition": "beat eq 6"}
+	},
+
+	{
+		"id" : "thanks_haveSomeWine",
+		"choiceLabel" : "Thanks, Cupid.",
+		"request": {"condition": "beat eq 6"}
+	},
+
+	{
+		"id" : "haveSomeWine",
+		"content" : "Now seriously. I am not joking about this. Have some damn wine. Relax with your friends. The future can take care of itself.",
+		"choices" : [
+			{"chunkId" : "result"}
+		],
+		"conditions" : ["beat eq 5"],
+		"effects" : ["set beat 6"]
+	},
+
+	{
+		"id" : "results",
+		"choiceLabel" : "More",
+		"content" : "<div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>{ifState|career|0|shrimp|}{ifState|career|1|lobster|}{ifState|career|2|coral reefs!|}</span></li><li>Emma has {confidence} <span class='keyword'>confidence</span></li></ul></div>"
 	}
 ]

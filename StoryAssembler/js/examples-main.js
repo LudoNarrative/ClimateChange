@@ -62,7 +62,9 @@ requirejs(
 			loadExample(id);
 		}
 		el.innerHTML = content;
-		return el;
+		var p = document.createElement("p");
+		p.appendChild(el);
+		return p;
 	}
 
 	var loadExample = function(id) {
@@ -75,7 +77,7 @@ requirejs(
 		ChunkLibrary.add(data);
 
 		var wishlist = Wishlist.create(example.wishlist, State);
-		//wishlist.logOn();
+		// wishlist.logOn();
 
 		document.getElementsByTagName("body")[0].innerHTML = "";
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State);
@@ -87,6 +89,7 @@ requirejs(
 		var el = makeLink(id, id, "#");
 		body.appendChild(el);
 	};
+
 
 
 
