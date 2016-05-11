@@ -46,7 +46,7 @@ define(["Request", "util"], function(Request, util) {
 	// Another possible entry function, for if we want to return the list of all possible paths. (Currently used mostly for unit testing.)
 	var allPaths = function(wants, _chunkLibrary, _State) {
 		if (_chunkLibrary) init(_chunkLibrary, _State);
-		return searchLibraryForPaths(wants, false, [], 0);
+		return searchLibraryForPaths(wants, false, [], false, 0);
 	}
 
 	// Given a set of paths, choose the path that maximally satisfies Wants.
@@ -147,46 +147,65 @@ define(["Request", "util"], function(Request, util) {
 			log(rLevel, "nothing in " + chunk.id + " directly made any Wants true");
 		}
 		// If we still have unsatisfied wants, check for outgoing nodes; otherwise we can stop here.
+		var choiceDetails = [];
 		if (wants.length > 0) { 
 			// See if any outgoing nodes can meet any of our wants. If so, add paths for each that start with this node, noting any satisfied Wants discovered along the way.
 			if (chunk.request && chunk.request.type === "id") {
 				var req = Request.byId(chunk.request.val);
 				log(rLevel, "We will now search for the request in chunk " + chunk.id + ".");
-				var validPaths = searchFromHere(paths, chunk, skipList, req, wants, pathToHere, rLevel);
-				paths = addNewIfUnique(paths, validPaths);
-			}
-			if (chunk.choices) {
-				log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
-				chunk.choices.forEach(function(choice) {
-					var validPaths = searchFromHere(paths, chunk, skipList, choice, wants, pathToHere, rLevel);
+				var validPaths = searchFromHere(paths, chunk, skipList, req, wants, pathToHere, rLevel, false);
+				if (validPaths.length > 0 && validPaths[0].route) {
 					paths = addNewIfUnique(paths, validPaths);
-				});
-				log(rLevel, "Search through choice(s) of " + chunk.id + " finished.")
+				}
 			}
-		}		
+		}
+		if (chunk.choices) {
+			// Even if we've satisfied all our wants, we need to recurse so we know what nodes this choice leads to.
+			log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
+			chunk.choices.forEach(function(choice) {
+				var validPaths = searchFromHere(paths, chunk, skipList, choice, wants, pathToHere, rLevel, true);
+				// Each path in validPaths should have a choiceDetails field, even if it didn't meet the Want requirements (so we know what choice labels to print when displaying the choice).
+				if (!util.isArray(validPaths[0].choiceDetails)) {
+					choiceDetails.push(validPaths[0].choiceDetails);
+				} else {
+					choiceDetails.push(validPaths[0].choiceDetails[0]);
+				}
+				if (validPaths.length > 0 && validPaths[0].route) {
+					paths = addNewIfUnique(paths, validPaths);
+				}
+			});
+			log(rLevel, "After choices, choiceDetails is now " + choiceDetails.map(function(x){return x.id}));
+			log(rLevel, "Search through choice(s) of " + chunk.id + " finished.")
+		}
 		if (paths.length === 0) {
 			if (pathToHere) {
 				// If nothing beneath this chunk led to a successful path, but this chunk satisfied at least one Want, then the only possible path from this point is a single one-step path to here.
 				log(rLevel, "-->no valid descendants of '" + chunk.id + "', but it directly satisfied >= 1 Want, so marking path to here successful: " + pathToStr(pathToHere));
+				if (chunk.choices) {
+					pathToHere.choiceDetails = choiceDetails;
+				}
 				return [pathToHere];
 			} else {
 				return []; // return an empty array to indicate our search was unsuccessful
 			}
 		} else {
 			// Otherwise, we found something and added it to paths.
+			paths.forEach(function(path) {
+				path.choiceDetails = choiceDetails;
+			});
 			return paths;
 		}
 	}
 
 	// Recurse down into a request (either a direct request or a choice request) and return any unique paths found.
-	var searchFromHere = function(paths, chunk, skipList, req, wants, pathToHere, rLevel) {
+	var searchFromHere = function(paths, chunk, skipList, req, wants, pathToHere, rLevel, isChoice) {
 		var newSkipList = util.clone(skipList);
-		return findValidPaths(chunk, newSkipList, req, wants, pathToHere, rLevel);
+		return findValidPaths(chunk, newSkipList, req, wants, pathToHere, rLevel, isChoice);
 	}
 
 	// Internal function to setup, recurse, and takedown a restricted search through the chunk library.
 	// We have a list of Wants we're searching for. In that context, we have a specific Want (req). What we want to do is start a new top-level search for just req; but from the results, we want to abandon any that don't meet one of our original wants.
-	var findValidPaths = function(chunk, skipList, req, wants, pathToHereRef, rLevel) {
+	var findValidPaths = function(chunk, skipList, req, wants, pathToHereRef, rLevel, isChoice) {
 
 		var validPaths = [];
 
@@ -205,6 +224,14 @@ define(["Request", "util"], function(Request, util) {
 		log(rLevel, "found " + foundPaths.length + " paths");
 		log(rLevel, "We only want paths that satisfy " + req.val + " AND satisfy at least one of these Wants: " + showWants(wants));
 		validPaths = pathsThatSatisfyReq(foundPaths, req);
+
+		// If we have any paths at this point, pick one and save the id of the first step in its route, so if this is a choice we'll know what chunk matched.
+		var choiceMatch;
+		if (isChoice && validPaths.length) {
+			choiceMatch = validPaths[0].route[0];
+			log(rLevel, "setting choiceMatch to " + choiceMatch);
+		}
+
 		validPaths = pathsPrunedToOriginalWants(validPaths, wants);
 		log(rLevel, "(" + validPaths.length + " are valid)");
 
@@ -216,10 +243,16 @@ define(["Request", "util"], function(Request, util) {
 			validPaths.forEach(function(path) {
 				path.route = pathToHereRef.route.concat(path.route);
 				path.satisfies = pathToHereRef.satisfies.concat(path.satisfies);
+				if (choiceMatch) {
+					path.choiceDetails = [{id: choiceMatch}];
+				}
 			});
+			return validPaths;
 		}
-
-		return validPaths;
+		// AAR: Maybe what we need to do is if isChoice and nothing was found, return choiceMatch anyway.
+		else {
+			return [{choiceDetails: {id: choiceMatch}}];
+		}
 	}
 
 	// From pathList, eliminate paths that do not satisfy 'req'.
@@ -285,7 +318,7 @@ define(["Request", "util"], function(Request, util) {
 		if (!path) {
 			path = { 
 				route: [id],
-				satisfies: want ? [want] : []
+				satisfies: want ? [want] : [],
 			}
 		} else if (want) {
 			path.satisfies.push(want);
@@ -295,7 +328,13 @@ define(["Request", "util"], function(Request, util) {
 
 	var pathToStr = function(path) {
 		if (!path) return "undefined";
-		return path.route.join("->") + " [satisfies " + path.satisfies.map(function(x){return x.val}).join("; ") + "]";
+		var msg = path.route.join("->") + " [satisfies " + path.satisfies.map(function(x){return x.val}).join("; ");
+		if (path.choiceDetails) {
+			msg += ", choiceDetails: " + path.choiceDetails.map(function(x){return x.id}).join("; ") + "]";
+		} else { 
+			msg += "]"
+		}
+		return msg;
 	}
 	var pathsToStr = function(arrOfPaths) {
 		return arrOfPaths.map(pathToStr).join(" | ");

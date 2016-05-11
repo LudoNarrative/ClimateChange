@@ -23,7 +23,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		// wishlist.pathsToStr(allPaths);
 		if (bestPath) {
 			var nextStep = bestPath.route[0];
-			doChunk(nextStep);
+			doChunk(nextStep, bestPath.choiceDetails);
 		} else {
 			Display.addStoryText("[Ran out of chunks early!]");
 			doStoryBreak();
@@ -31,7 +31,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		}
 	}
 
-	var doChunk = function(chunkId) {
+	var doChunk = function(chunkId, choiceDetails) {
 		var chunk = chunkLibrary.get(chunkId);
 
 		// Handle effects
@@ -45,11 +45,11 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 
 		// Handle choices
 		if (chunk.choices) {
-			chunk.choices.forEach(function(choice) {
+			chunk.choices.forEach(function(choice, pos) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
 				// TODO: Our path needs to save which node we found that met the conditions for a choice, so we know what text to print here.
-				var choiceText;
-				if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
+				var choiceText = getChoiceText(choiceDetails[pos].id);
+				// if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
 				Display.addChoice({text: choiceText, chunkId: choice.val});
 			});
 		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
@@ -64,6 +64,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 	}
 
 	var getChoiceText = function(choiceId) {
+		console.log("choiceId", choiceId);
 		return chunkLibrary.get(choiceId).choiceLabel;
 	}
 
