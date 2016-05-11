@@ -93,9 +93,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "Choice1", choiceLabel: "Choice 1", content: "Result of Choice 1." },
 				{ id: "Choice2", choiceLabel: "Choice 2", content: "Result of Choice 2.", effects: ["set z 5", "set x 1"] },
 			]);
-			wl.logOn();
 			nextPath = wl.bestPath(ChunkLibrary);
-			wl.logOff();
 			assert.deepEqual(nextPath.route, ["alpha", "Choice2"], "can iterate down through choices");
 			assert.deepEqual(nextPath.satisfies.length, 1, "'satisfies' should only show original Wants");
 			var allPaths = wl.allPaths(ChunkLibrary);
@@ -190,18 +188,45 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.notOk(bestPath.choiceDetails, "If the first step in the path is not a choice, should not have a choiceDetails field.");
 
-			// ChunkLibrary.reset();
-			// State.reset();
-			// wl = Wishlist.create([{condition: "x eq true"}], State);
-			// ChunkLibrary.add([
-			// 	{ id: "Choice1", effects: ["set x true"], choices: [{chunkId: "answerY"}, {condition: "z eq true"}] },
-			// 	{ id: "answerY", choiceLabel: "answerY choiceLabel" },
-			// 	{ id: "answerZ", choiceLabel: "answerZ choiceLabel", effects: ["set z true"]}
-			// ]);
-			// bestPath = wl.bestPath(ChunkLibrary);
-			// assert.deepEqual(bestPath.choiceDetails.length, 2, "choiceDetails field should exist and have same length as chunk's choices field");
-			// assert.deepEqual(bestPath.choiceDetails[0].id, "answerY", "choiceDetails order should match up with chunk's choices array (1/2)");
-			// assert.deepEqual(bestPath.choiceDetails[1].id, "answerZ", "choiceDetails order should match up with chunk's choices array (2/2)");
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true"}], State);
+			ChunkLibrary.add([
+				{ id: "Choice1", effects: ["set x true"], choices: [{chunkId: "answerY"}, {condition: "z eq true"}] },
+				{ id: "answerY", choiceLabel: "answerY choiceLabel", effects: ["set y true"] },
+				{ id: "answerZ", choiceLabel: "answerZ choiceLabel", effects: ["set z true"]}
+			]);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Choice1", "answerY"], "choiceDetails correct when we recurse into a choice.");
+			assert.deepEqual(bestPath.choiceDetails.length, 2, "choiceDetails field should exist and have same length as chunk's choices field");
+			assert.deepEqual(bestPath.choiceDetails[0].id, "answerY", "choiceDetails order should match up with chunk's choices array (1/2)");
+			assert.deepEqual(bestPath.choiceDetails[1].id, "answerZ", "choiceDetails order should match up with chunk's choices array (2/2)");
+
+			wl = Wishlist.create([{condition: "x eq true"}], State);
+			ChunkLibrary.reset();
+			ChunkLibrary.add([
+				{ id: "Choice1", effects: ["set x true"], choices: [{chunkId: "answerY"}, {condition: "z eq true"}] },
+				{ id: "answerY", choiceLabel: "answerY choiceLabel", effects: ["set y true"] },
+				{ id: "answerZ", choiceLabel: "answerZ choiceLabel", effects: ["set z true"]}
+			]);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Choice1"], "choiceDetails correct when we don't need to recurse into a choice.");
+			assert.deepEqual(bestPath.choiceDetails.length, 2, "choiceDetails field should exist and have same length as chunk's choices field (when no recurse)");
+			assert.deepEqual(bestPath.choiceDetails[0].id, "answerY", "choiceDetails order should match up with chunk's choices array when no recurse (1/2)");
+			assert.deepEqual(bestPath.choiceDetails[1].id, "answerZ", "choiceDetails order should match up with chunk's choices array when no recurse (2/2)");
+
+			wl = Wishlist.create([{condition: "x eq true"}], State);
+			ChunkLibrary.reset();
+			ChunkLibrary.add([
+				{ id: "Choice1", effects: ["set x true"], choices: [{chunkId: "answerY"}, {condition: "z eq true"}] },
+				{ id: "answerY", choiceLabel: "answerY choiceLabel", choices: [{chunkId: "q eq true"}], effects: ["set y true"] },
+				{ id: "answerZ", choiceLabel: "answerZ choiceLabel", effects: ["set z true"]},
+				{ id: "NodeQ", choiceLabel: "NodeQ choiceLabel", effects: ["set q true"] }
+			]);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.choiceDetails.length, 2, "recursing through multiple choices shouldn't affect top-level choiceDetails (1/3)");
+			assert.deepEqual(bestPath.choiceDetails[0].id, "answerY", "recursing through multiple choices shouldn't affect top-level choiceDetails (2/3)");
+			assert.deepEqual(bestPath.choiceDetails[1].id, "answerZ", "recursing through multiple choices shouldn't affect top-level choiceDetails (3/3)");
 		});
 
 		test("allPaths", function( assert ) {
