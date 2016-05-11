@@ -8,6 +8,11 @@ The returned path will be an object in the form:
 	satisfies: [] // set of every Want object that this path makes true. order is not important.
 }
 
+We need to modify this so that if route[0] is a choice, we know the first step of each choice we recursed into, so we can print the choice labels. An additional field:
+	choiceDetails: [
+		{ id: string chunkId } OR {} (could not be satisfied)
+	] // in same order as Requests.
+
 Note that not everything in "satisfies" will necessarily come to pass: our path might lead through a choice, for instance, but at run time the player selects a different choice. We will really only use the first node in "route" to move the state forward, but we return the whole path in case the rest of the system wants it for some other purpose.
 
 For reference, a Want object (defined in Want.js) is in the form:
@@ -144,29 +149,21 @@ define(["Request", "util"], function(Request, util) {
 		// If we still have unsatisfied wants, check for outgoing nodes; otherwise we can stop here.
 		if (wants.length > 0) { 
 			// See if any outgoing nodes can meet any of our wants. If so, add paths for each that start with this node, noting any satisfied Wants discovered along the way.
-			var reqs = [];
 			if (chunk.request && chunk.request.type === "id") {
-				reqs.push(Request.byId(chunk.request.val));
+				var req = Request.byId(chunk.request.val);
+				log(rLevel, "We will now search for the request in chunk " + chunk.id + ".");
+				var validPaths = searchFromHere(paths, chunk, skipList, req, wants, pathToHere, rLevel);
+				paths = addNewIfUnique(paths, validPaths);
 			}
 			if (chunk.choices) {
+				log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
 				chunk.choices.forEach(function(choice) {
-					reqs.push(choice);
+					var validPaths = searchFromHere(paths, chunk, skipList, choice, wants, pathToHere, rLevel);
+					paths = addNewIfUnique(paths, validPaths);
 				});
+				log(rLevel, "Search through choice(s) of " + chunk.id + " finished.")
 			}
-			if (reqs.length > 0) {
-				log(rLevel, "We will now search through the " + reqs.length + " request(s) in chunk " + chunk.id + ".");
-				reqs.forEach(function(req) {
-					log(rLevel, "-->searching for '" + req.val + "'");
-					var newSkipList = util.clone(skipList);
-					var pathsWithNewRequest = findValidPaths(chunk, newSkipList, req, wants, pathToHere, rLevel);
-					paths = addNewIfUnique(paths, pathsWithNewRequest);
-					log(rLevel, "**>search for '" + req.val + " finished: paths is now " + (paths.length ? pathsToStr(paths) : "[]"));
-				});
-				log(rLevel, "Search through request(s) of " + chunk.id + " finished.")
-			} 
-		}
-
-		
+		}		
 		if (paths.length === 0) {
 			if (pathToHere) {
 				// If nothing beneath this chunk led to a successful path, but this chunk satisfied at least one Want, then the only possible path from this point is a single one-step path to here.
@@ -179,6 +176,12 @@ define(["Request", "util"], function(Request, util) {
 			// Otherwise, we found something and added it to paths.
 			return paths;
 		}
+	}
+
+	// Recurse down into a request (either a direct request or a choice request) and return any unique paths found.
+	var searchFromHere = function(paths, chunk, skipList, req, wants, pathToHere, rLevel) {
+		var newSkipList = util.clone(skipList);
+		return findValidPaths(chunk, newSkipList, req, wants, pathToHere, rLevel);
 	}
 
 	// Internal function to setup, recurse, and takedown a restricted search through the chunk library.
