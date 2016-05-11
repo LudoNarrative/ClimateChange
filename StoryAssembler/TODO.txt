@@ -1,10 +1,10 @@
 TODO
+- Horrifying inefficiency. [to do with BestPath recursion, specifically when looking for ids it shouldn't need to recurse through stuff, just stop.]
 - Path needs to save which nodes satisfied choices, so the UI can display the correct choiceLabel in the menu.
 - Factor Display out of StoryAssembler (shouldn't depend on it)
 - Implement "order" and "mandatory" properties for wishlists.
 - Handle choices where not all options can be satisfied: should it remove those options? crash b/c of bad authoring?
 - ON-screen debugging showing current wishlist, possibly chunk library too.
-- Horrifying inefficiency. [to do with BestPath recursion, specifically when looking for ids it shouldn't need to recurse through stuff, just stop.]
 
 
 Future:
@@ -13,3 +13,4 @@ Future:
 - Basic editor for JSON
 - What about chunks being reused
 - ALlow commentsi n JSON
+- Research in unit tests: how to test properties of an object? If you check directly, it'll crash with a "cannot read property x of y." If you check that the object exists first, it just adds a failing test before the crash.

@@ -93,9 +93,13 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "Choice1", choiceLabel: "Choice 1", content: "Result of Choice 1." },
 				{ id: "Choice2", choiceLabel: "Choice 2", content: "Result of Choice 2.", effects: ["set z 5", "set x 1"] },
 			]);
+			wl.logOn();
 			nextPath = wl.bestPath(ChunkLibrary);
+			wl.logOff();
 			assert.deepEqual(nextPath.route, ["alpha", "Choice2"], "can iterate down through choices");
 			assert.deepEqual(nextPath.satisfies.length, 1, "'satisfies' should only show original Wants");
+			var allPaths = wl.allPaths(ChunkLibrary);
+			assert.deepEqual(allPaths.length, 1, "should only find a single path when only one choice can meet an original Want.");
 
 			ChunkLibrary.reset();
 			State.reset();
@@ -147,7 +151,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{ id: "answer2", choiceLabel: "..." }
 			]);
 			nextPath = wl.bestPath(ChunkLibrary);
-			assert.deepEqual(nextPath.route, ["Choice2"], "when recursing through multiple chunks with choices, skipList shouldn't get corrupted");
+			assert.deepEqual(nextPath.route, ["Choice2"], "Multiple choices should be handled correctly.");
 
 			// TODO: A cycle should consider the last node before cycling as a leaf node. (I.e. we want this to be valid, but we don't want to recurse forever down it looking for leaf nodes.
 

@@ -109,12 +109,23 @@ define([], function() {
 		return newArr;
 	}
 
+	// Return true if the two arrays have the same contents in the same order.
+	var arrEqual = function(arr1, arr2) {
+		if (arr1.length !== arr2.length) return false;
+		if (arr1.length === 0) return true;
+		for (var i = 0; i < arr1.length; i++) {
+			if (arr1[i] !== arr2[i]) return false;
+		}
+		return true;
+	}
+
 	return {
 		iterator: iterator,
 		oneOf: oneOf,
 		randomNumber: randomNumber,
 		clone: clone,
 		isArray: isArray,
+		arrEqual: arrEqual,
 		removeFromStringList: removeFromStringList,
 		removeArrDuplicates: removeArrDuplicates
 	}

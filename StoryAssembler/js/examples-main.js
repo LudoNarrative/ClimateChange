@@ -21,8 +21,8 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "util", "domReady!"],
-	function(State, ChunkLibrary, Wishlist, StoryAssembler, Example1Data, Example2Data) {
+	["State", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "text!../data/exampleData/Example3.json", "util", "domReady!"],
+	function(State, ChunkLibrary, Wishlist, StoryAssembler, Example1Data, Example2Data, Example3Data) {
 
 	// To Add A New Example:
 	// - Create new definition in "examples" dictionary below
@@ -52,6 +52,14 @@ requirejs(
 				"set career 0",
 
 			]
+		},
+		"Example 3": {
+			wishlist: [
+				{ condition: "spain eq true" },
+			],
+			dataFile: Example3Data,
+			startState: [
+			]
 		}
 	};
 
@@ -77,7 +85,7 @@ requirejs(
 		ChunkLibrary.add(data);
 
 		var wishlist = Wishlist.create(example.wishlist, State);
-		//wishlist.logOn();
+		wishlist.logOn();
 
 		document.getElementsByTagName("body")[0].innerHTML = "";
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State);
@@ -89,6 +97,7 @@ requirejs(
 		var el = makeLink(id, id, "#");
 		body.appendChild(el);
 	};
+
 
 
 
