@@ -21,8 +21,8 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "text!../data/exampleData/Example3.json", "util", "domReady!"],
-	function(State, ChunkLibrary, Wishlist, StoryAssembler, Example1Data, Example2Data, Example3Data) {
+	["State", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "util", "domReady!"],
+	function(State, ChunkLibrary, Wishlist, StoryAssembler, Example1Data, Example2Data) {
 
 	// To Add A New Example:
 	// - Create new definition in "examples" dictionary below
@@ -51,14 +51,6 @@ requirejs(
 				"set friendName Emma",
 				"set career 0",
 
-			]
-		},
-		"Example 3": {
-			wishlist: [
-				{ condition: "spain eq true" },
-			],
-			dataFile: Example3Data,
-			startState: [
 			]
 		}
 	};
