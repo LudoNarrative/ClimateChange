@@ -41,6 +41,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		// var text = Request.getText(nextItem.content);
 		var text = Templates.render(chunk);
 		Display.addStoryText(text);
+		// TODO: We shouldn't display "undefined" if there's no content field.
 
 		// Handle choices
 		if (chunk.choices) {
@@ -51,6 +52,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 				if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
 				Display.addChoice({text: choiceText, chunkId: choice.val});
 			});
+		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
 		} else if (wishlist.wantsRemaining() > 0) {
 			// doStoryBreak();
 			Display.addChoice({text: "Continue"});
