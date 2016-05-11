@@ -13,6 +13,8 @@ opposite(east,west).
 opposite(forward,backward).
 opposite(left,right).
 opposite(B,A) :- opposite(A,B).
+direction(D)
+  :- opposite(D, _).
 
 vertical(north;south;forward;backward).
 horizontal(east;west;left;right).

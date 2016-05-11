@@ -68,7 +68,47 @@ good(RESOURCE) :-
     precondition(
         ge(RESOURCE,THRESHOLD), OUTCOME),
     result(OUTCOME,mode_change(game_end)).
+
+good(Resource) :-
+    goal(maintain(Resource)).
+
+bad(Resource) :-
+    goal(eliminate(Resource)).
+
+bad(Resource) :-
+    goal(limit(Resource)).
+
+bad(Resource) :-
+    precondition(le(Resource, Thresh), Outcome),
+    outcomeUnfavorable(Outcome).
     
+resourceAffects(Resource, Outcome) :-
+    precondition(ge(Resource, Thresh), Outcome).
+resourceAffects(Resource, Outcome) :-
+    precondition(le(Resource, Thresh), Outcome).
+resourceAffects(Resource, Outcome) :-
+    precondition(gt(Resource, Thresh), Outcome).
+resourceAffects(Resource, Outcome) :-
+    precondition(lt(Resource, Thresh), Outcome).
+
+outcomeAffects(Resource, Outcome) :-
+    result(Outcome, increase(Resource, Amount)).
+outcomeAffects(Resource, Outcome) :-
+    result(Outcome, decrease(Resource, Amount)).
+
+outcomeFavorable(Outcome) :-
+    result(Outcome, increase(Resource, Amount)),
+    good(Resource).
+outcomeFavorable(Outcome) :-
+    result(Outcome, decrease(Resource, Amount)),
+    bad(Resource).
+
+outcomeUnfavorable(Outcome) :-
+    result(Outcome, increase(Resource, Amount)),
+    bad(Resource).
+outcomeUnfavorable(Outcome) :-
+    result(Outcome, decrease(Resource, Amount)),
+    good(Resource).
 
 condition(CONDITION) :- precondition(CONDITION,OUTCOME).
 
@@ -107,33 +147,38 @@ thing(OUTCOME,ENTITY,POLARITY) :-
     result(OUTCOME,select(ENTITY,POLARITY)).
 
 
-playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE) :-
-    good(RESOURCE),
-    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
-    result(OUTCOME,increases(RESOURCE,AMOUNT)).
+% XXX rewrite these to involve more generality than buttons
+playerActionHelps(ControlEvent, Resource) :-
+    good(Resource),
+    precondition(control_event(ControlEvent), Outcome),
+    result(Outcome, increases(Resource, Amount)).
 
-playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE) :-
-    bad(RESOURCE),
-    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+playerActionHelps(ControlEvent, Resource) :-
+    bad(Resource),
+    precondition(control_event(ControlEvent), Outcome),
+    result(Outcome, decreases(Resource, Amount)).
     
-playerActionHurts(BUTTON,BUTTON_STATE,RESOURCE) :-
-    bad(RESOURCE),
-    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
-    result(OUTCOME,increases(RESOURCE,AMOUNT)).
+playerActionHurts(ControlEvent, Resource) :-
+    bad(Resource),
+    precondition(control_event(ControlEvent), Outcome),
+    result(Outcome, increases(Resource, Amount)).
 
-playerActionHurts(BUTTON,BUTTON_STATE,RESOURCE) :-
-    good(RESOURCE),
-    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+playerActionHurts(ControlEvent, Resource) :-
+    good(Resource),
+    precondition(control_event(ControlEvent), Outcome),
+    result(Outcome, decreases(Resource, Amount)).
 
     
-playerActionAffects(BUTTON,BUTTON_STATE,RESOURCE) :-
-    playerActionHurts(BUTTON,BUTTON_STATE,RESOURCE).
+playerActionAffects(ControlEvent, Resource) :-
+    playerActionHurts(ControlEvent, Resource).
     
-playerActionAffects(BUTTON,BUTTON_STATE,RESOURCE) :-
-    playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE).
+playerActionAffects(ControlEvent, Resource) :-
+    playerActionHelps(ControlEvent, Resource).
     
+playerInfluences(Outcome) :-
+    playerActionAffects(_, _, Resource),
+    resourceAffects(Resource, Outcome).
+
     
 actionHasRiskReward(BUTTON,BUTTON_STATE) :- 
     playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE1),
@@ -211,6 +256,9 @@ requiredBy(OUTCOME,ENTITY) :-
 requiredBy(OUTCOME,ENTITY) :-
     precondition(overlaps(ENTITY_B,ENTITY,POLARITY),OUTCOME).
     
+
+%% Relationships between outcomes
+
 enables(OUTCOME,OUTCOME2) :-
     result(OUTCOME,add(ENTITY)), 
     requiredBy(OUTCOME2,ENTITY),
@@ -261,10 +309,34 @@ hinders(OUTCOME,OUTCOME2) :-
     result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
     precondition(ge(RESOURCE,THRESHOLD),OUTCOME2),
     OUTCOME != OUTCOME2 .
-    
+
+%% Collision and movement
+collide_precond(E1, E2, Outcome)
+  :- precondition(collide(E1, E2), Outcome).
+collide_precond(E2, E1, Outcome)
+  :- precondition(collide(E1, E2), Outcome).
+
+enables(O1, O2) :-
+    result(O1, move_toward(E1, E2)),
+    collide_precond(E1, E2, O2).
+
+enables(Pushing, Collision) :-
+    result(Pushing, move_away(E1, E2)),
+    collide_precond(E1, Other, Collision),
+    Other != E2.
+
+condition_enables(C, O) :-
+    precondition(C, O).
+
+condition_enables(C, O) :-
+    condition_enables(C, O'),
+    enables(O', O).
+
+%% Transitivity of enablement
 enables(OUTCOME,OUTCOME3) :-
     enables(OUTCOME,OUTCOME2),
     enables(OUTCOME2,OUTCOME3).
+
  
 selection(OUTCOME) :-
     result(OUTCOME,select(ENTITY,CONDITION)).
@@ -326,6 +398,10 @@ timingChallengeGoal :-
     goal(achieve(OUTCOME)),
     precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
     timingChallenge(BUTTON,BUTTON_STATE).
+
+goal(limit(Resource)) :-
+    precondition(gt(Resource, Threshold), Outcome),
+    goal(prevent(Outcome)).
     
 goal(maintain(RESOURCE)) :-
     precondition(lt(RESOURCE,THRESHOLD),OUTCOME),
@@ -372,14 +448,15 @@ monotonicallyIncreases(RESOURCE) :-
 
 
     
-    
+
+%% XXX revisit these
 
 humanAffected(OUTCOME) :-
     precondition(control_event(BUTTON,STATE),OUTCOME).
     
     
 humanControlled(ENTITY) :-        
-     physicsLogic(ENTITY,mapping(control_event(BUTTON,STATE),DIR,AMOUNT)).
+     physicsLogic(ENTITY, mapping(control_event(_), DIR, AMOUNT)).
     
 humanControlled(ENTITY) :-        
     physicsLogic(ENTITY, follows(cursor)).
@@ -420,6 +497,7 @@ restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
 restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
     restrictedEntity(ENTITY_B).
+
 unrestrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
     not restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)).
@@ -502,8 +580,62 @@ limited(RESOURCE) :-
 playerAgency(ENTITY) :- 
     physicsLogic(ENTITY,follows(cursor)).
 
+playerAgency(ENTITY) :- 
+    physicsLogic(ENTITY,follows(mouse_cursor)).
+
 playerAgency(ENTITY) :-    
     physicsLogic(ENTITY,mapping(control_event(BUTTON,STATE),DIRECTION,AMOUNT)).
+
+%% Entity influence and determination
+entityInfluences(Entity, Outcome) :-
+    precondition(near(Entity, _), Outcome).
+
+% XXX there should be more rules here for more entity preconditions
+
+entityDetermines(Entity, Outcome) :-
+    entityInfluences(Entity, Outcome),
+    onlyOnePrecondition(Outcome).
+
+
+
+%% Player influence and determination
+
+playerCreatesCondition(controlEvent(E)) :-
+    precondition(controlEvent(E), Outcome).
+
+playerCreatesCondition(near(Entity, Other)) :-
+    playerAgency(Entity),
+    precondition(near(Entity, Other), Outcome).
+
+playerInfluences(Outcome) :-
+    playerCreatesCondition(C),
+    precondition(C, Outcome).
+
+playerInfluences(Outcome) :-
+    playerAgency(Entity),
+    entityInfluences(Entity, Outcome).
+
+playerDetermines(Outcome) :-
+    playerInfluences(Outcome),
+    onlyOnePrecondition(Outcome).
+
+% XXX: to make this more general we should have some way of stating
+% that all preconditions have some property.
+
+
+%% Player prediction/lightweight modeling
+
+% playerWillDo(Cond, Outcome) :-
+%   playerCreatesCondition(Cond),
+%   precondition(Cond, Outcome),
+%   outcomeFavorable(Outcome).
+%% More general:
+
+playerWillDo(Cond, Outcome) :-
+  playerCreatesCondition(Cond),
+  condition_enables(Cond, Outcome),
+  outcomeFavorable(Outcome).
+
 % %% KNOWLEGE BASE
 
 unrestrictedCondition(control_event(BUTTON,BUTTON_STATE)) :- buttons(BUTTON), buttonStates(BUTTON_STATE).

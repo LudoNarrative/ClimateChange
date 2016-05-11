@@ -1,12 +1,18 @@
+CURRENT
+- Handle choices where not all options can be satisfied: should it remove those options? crash b/c of bad authoring?
+
+
 TODO
 - Factor Display out of StoryAssembler (shouldn't depend on it)
 - Implement "order" and "mandatory" properties for wishlists.
-- Handle choices where not all options can be satisfied: should it remove those options? crash b/c of bad authoring?
-- Path needs to save which nodes satisfied choices, so the UI can display the correct choiceLabel in the menu.
-
+- ON-screen debugging showing current wishlist, possibly chunk library too.
+- Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
 
 
 Future:
 
 - Figure out a way to allow comments in data format. (i.e. not raw json)
 - Basic editor for JSON
+- What about chunks being reused
+- ALlow commentsi n JSON
+- Research in unit tests: how to test properties of an object? If you check directly, it'll crash with a "cannot read property x of y." If you check that the object exists first, it just adds a failing test before the crash.
