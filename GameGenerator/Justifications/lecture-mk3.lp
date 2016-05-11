@@ -90,12 +90,12 @@ result(drain,decreases(confidence,frac(1,600))).
 % I think it's actually mouse_button,released? 
 % this is me capturing how I would design it, not how it is
 
-precondition(control_event(mouse_button,pressed),gain).
+precondition(control_event(pressed(mouse_button)),gain).
 precondition(overlaps(ball,square,true),gain).
 result(gain,increases(confidence,10)).
 result(gain,change_color(square,green,16)).
 
-precondition(control_event(mouse_button,pressed),loss).
+precondition(control_event(pressed(mouse_button)),loss).
 precondition(overlaps(ball,square,false),loss).
 result(loss,decreases(confidence,10)).
 result(loss,change_color(square,red,16)).
