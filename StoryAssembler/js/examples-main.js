@@ -62,7 +62,9 @@ requirejs(
 			loadExample(id);
 		}
 		el.innerHTML = content;
-		return el;
+		var p = document.createElement("p");
+		p.appendChild(el);
+		return p;
 	}
 
 	var loadExample = function(id) {

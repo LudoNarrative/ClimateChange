@@ -25,7 +25,8 @@ define(["Request", "util"], function(Request, util) {
 	// The entry function: does setup, gets the set of all possible paths that satisfy at leat one Want from the list, and returns the best candidate.
 	var bestPath = function(wants, _chunkLibrary, _State) {
 		if (_chunkLibrary) init(_chunkLibrary, _State);
-		var paths = searchLibraryForPaths(wants, false, []);
+		log(0, "bestPath(). We have this wants list [" + showWants(wants) + "] and are going to find a path satisfying as many as possible.");
+		var paths = searchLibraryForPaths(wants, false, [], 0);
 		if (paths.length > 0) {
 			return chooseFromPotentialPaths(paths, wants);
 		} else {
@@ -35,7 +36,7 @@ define(["Request", "util"], function(Request, util) {
 
 	var allPaths = function(wants, _chunkLibrary, _State) {
 		if (_chunkLibrary) init(_chunkLibrary, _State);
-		return searchLibraryForPaths(wants, false, []);
+		return searchLibraryForPaths(wants, false, [], 0);
 	}
 
 	// Given an array of paths, choose one that maximally satisfies Wants.
@@ -55,15 +56,17 @@ define(["Request", "util"], function(Request, util) {
 
 
 	// Returns paths from searching every valid chunk in the library.
-	var searchLibraryForPaths = function(wants, okToBeChoice, skipList) {
+	var searchLibraryForPaths = function(wants, okToBeChoice, skipList, rLevel) {
 		var paths = [];
 		var keys = chunkLibrary.getKeys();
+		log(rLevel, "searchLibraryForPaths. wants is [" + showWants(wants) + "] and we are skipping [" + skipList + "]");
 		for (var i = 0; i < keys.length; i++) {
 			var chunk = chunkLibrary.get(keys[i]);
 
 			// Verify this chunk is valid:
 			// --> it's not blacklisted.
 			if (skipList.indexOf(chunk.id) >= 0) {
+				log(rLevel, "skipping '" + chunk.id + "'");
 				continue;
 			}
 			// --> the conditions don't disallow it given the current State.
@@ -74,27 +77,32 @@ define(["Request", "util"], function(Request, util) {
 						shouldContinue = true;
 					}
 				}
+				log(rLevel, "skipping '" + chunk.id + "' because a condition contradicts current State.");
 				if (shouldContinue) continue;
 			}
 			// --> it's not a response to a choice
 			if (chunk.choiceLabel && (!okToBeChoice)) {
+				log(rLevel, "skipping '" + chunk.id + "' b/c has a choiceLabel field");
 				continue;
 			}
 
 			// If we made it, consider this chunk and save any found paths
-			var result = findAllSatisfyingPathsFrom(chunk, wants, skipList);
+			log(rLevel, "--> considering '" + chunk.id + "':");
+			var result = findAllSatisfyingPathsFrom(chunk, wants, skipList, rLevel+1);
+			log(rLevel, "found these paths: " + pathsToStr(result) + " and adding those to existing list of " + pathsToStr(paths));
 			paths = paths.concat(result);
 		}
 
 		// Return all discovered paths.
+		log(rLevel, "finished searchLibraryForPaths. Returning paths of " + pathsToStr(paths) + ".");
 		return paths;
 	}
 
 	// Returns paths from searching a single valid chunk in the library.
-	var findAllSatisfyingPathsFrom = function(chunk, originalWants, skipList) {
+	var findAllSatisfyingPathsFrom = function(chunk, originalWants, skipList, rLevel) {
 		var paths = [];
 		var pathToHere;
-		log("considering " + chunk.id);
+		log(rLevel, "findAllSatisfyingPaths starting from '" + chunk.id + "' and satisfying wants: " + showWants(originalWants));
 		
 		// Does this chunk directly make one or more Wants true?
 		var wants = [];
@@ -102,12 +110,12 @@ define(["Request", "util"], function(Request, util) {
 			var satisfied = false;
 			if (want.type === "id") {
 				satisfied = (chunk.id === want.val);
-				if (satisfied) log("-->id makes '" + want.val + "' true");
+				if (satisfied) log(rLevel, "-->id makes '" + want.val + "' true");
 			} else { // type === condition
 				if (chunk.effects) {
 					satisfied = State.wouldAnyMakeTrue(chunk.effects, want.val);
 				}
-				if (satisfied) log("-->an effect makes '" + want.val + "' true");
+				if (satisfied) log(rLevel, "-->an effect makes '" + want.val + "' true");
 			}
 			if (satisfied) {
 				pathToHere = createPathOrAddWant(pathToHere, chunk.id, want);
@@ -116,57 +124,66 @@ define(["Request", "util"], function(Request, util) {
 			}
 		});
 
+		log(rLevel, "after checking for direct satisfies, remaining wants: " + showWants(wants));
 		// Otherwise, see if any outgoing nodes can meet any of our wants. If so, add paths for each that start with this node, noting any satisfied Wants discovered along the way.
 		var reqs = [];
 		if (chunk.request && chunk.request.type === "id") {
-			log("-->request '" + chunk.request.val + "', so will recurse...");
+			log(rLevel, "-->request '" + chunk.request.val + "', so will recurse...");
 			reqs.push(Request.byId(chunk.request.val));
 		}
 		if (chunk.choices) {
-			console.log("chunk.choices", chunk.choices);
 			chunk.choices.forEach(function(choice) {
-				log("-->has choice '" + choice.val + "', so will recurse...");
+				log(rLevel, "-->has choice '" + choice.val + "', so will recurse...");
 				reqs.push(choice);
 			});
 		}
+		log(rLevel, "will now recurse through " + reqs.length + " requests in this chunk.");
 		reqs.forEach(function(req) {
-			log("--------------");
-			log("-->recursing down to find '" + req.val + "'");
-			paths = paths.concat(findValidPaths(chunk, skipList, req, wants, pathToHere));
+			log(rLevel, "-->recursing down to find '" + req.val + "'");
+			var newSkipList = util.clone(skipList);
+			paths = paths.concat(findValidPaths(chunk, newSkipList, req, wants, pathToHere, rLevel));
+			log(rLevel, "-->paths is now " + pathsToStr(paths));
 		});
 
 		// If nothing beneath this chunk led to a successful path, but this chunk satisfied at least one Want, then the only possible path from this point is a single one-step path to here.
 		if (paths.length === 0 && pathToHere) {
-			log("-->no paths from '" + chunk.id + "' led to valid path, but this directly satisfied >= 1 Want, so marking path to here successful");
+			log(rLevel, "-->no paths from '" + chunk.id + "' led to valid path, but this directly satisfied >= 1 Want, so marking path to here successful. pathToHere: " + pathToStr(pathToHere));
 			return [pathToHere];
 		}
 
 		// Otherwise, we either found something and added it to paths, or we didn't and we'll return an empty array to indicate our search was unsuccessful.
-		log("-->returning paths of " + pathsToStr(paths));
+		log(rLevel, "-->We either found something and added it to paths, or we didn't and we'll return an empty array to indicate our search was unsuccessful. Returning " + (paths.length ? pathsToStr(paths) : "empty array"));
 		return paths;
 	}
 
 	// Internal function to setup, recurse, and takedown a restricted search through the chunk library.
-	var findValidPaths = function(chunk, skipList, req, wants, pathToHereRef) {
+	var findValidPaths = function(chunk, skipList, req, wants, pathToHereRef, rLevel) {
 
-		// First we'll revise the list of Wants we're looking for to include the additional search parameter.
-		var newWants = util.clone(wants);
-		newWants.push(req);
-		var okToBeChoice = chunk.choices !== undefined;
+		var validPaths = [];
+		// if (req.type === "id") {
+			// validPaths = [{route: [req.id], satisfies: [req]}];
+		// } else {
 
-		// Then we'll temporarily exclude the current node from the seach space (to avoid infinite loops), and do the search.
-		skipList.push(chunk.id);
-		log("(looking for valid paths from '" + chunk.id + "' satisfying req '" + req.val + "'. wants looking for: " + newWants.map(function(x){return x.val}) + "; skipping " + skipList + ")");
-		var foundPaths = searchLibraryForPaths(newWants, okToBeChoice, skipList);
-		skipList = util.removeFromStringList(skipList, chunk.id);
+			// First we'll revise the list of Wants we're looking for to include the additional search parameter.
+			var newWants = util.clone(wants);
+			newWants.push(req);
+			var okToBeChoice = chunk.choices !== undefined;
 
-		// Remove any paths found that only had the additional search parameter (i.e., we only care about paths from here that satisfied one of our original Wants.)
-		log("(back from looking from '" + chunk.id + "'; found " + foundPaths.length + " paths");
-		var validPaths = pathsWithValidWant(foundPaths, req, wants);
-		log("(" + validPaths.length + " of them valid)");
+			// Then we'll temporarily exclude the current node from the seach space (to avoid infinite loops), and do the search.
+			skipList.push(chunk.id);
+			log(rLevel, "findValidPaths searching to satisfying req '" + req.val + "'. wants looking for: " + showWants(newWants));
+			var foundPaths = searchLibraryForPaths(newWants, okToBeChoice, skipList, rLevel + 1);
+			skipList = util.removeFromStringList(skipList, chunk.id);
+
+			// Remove any paths found that only had the additional search parameter (i.e., we only care about paths from here that satisfied one of our original Wants.)
+			log(rLevel, "found " + foundPaths.length + " paths");
+			validPaths = pathsWithValidWant(foundPaths, req, wants, rLevel);
+			log(rLevel, "(" + validPaths.length + " of them valid)");
+		// }
 
 		// Link each remaining path to the current node, first ensuring we have a pathToHere obj. I.e. if we're at A and we found a path B->C, we want the path to now be A->B->C.
 		if (validPaths.length > 0) {
+			console.log("validPaths", validPaths);
 			if (!pathToHereRef) {
 				pathToHereRef = createPathOrAddWant(pathToHereRef, chunk.id);
 			}
@@ -175,13 +192,13 @@ define(["Request", "util"], function(Request, util) {
 			});
 		}
 
-		log("returning " + pathsToStr(validPaths));
+		log(rLevel, "returning " + pathsToStr(validPaths));
 		return validPaths;
 	}
 
-	var pathsWithValidWant = function(pathList, wantToRemove, wants) {
+	var pathsWithValidWant = function(pathList, wantToRemove, wants, rLevel) {
 		var validList = [];
-		log("pathsWithValidWant: pathList " + pathsToStr(pathList) + ", wantToRemove: " + wantToRemove.val);
+		// log(rLevel, "pathsWithValidWant: pathList " + pathsToStr(pathList) + ", wantToRemove: " + wantToRemove.val);
 		pathList.forEach(function(path) {
 			// scrub "satisfies" of the Want we added.
 			var oldLength = path.satisfies.length;
@@ -191,16 +208,16 @@ define(["Request", "util"], function(Request, util) {
 				validList.push(path);
 			}
 		});
-		log("validList is now " + pathsToStr(validList));
+		// log(rLevel, "validList is now " + pathsToStr(validList));
 		return validList;
 	}
 
 	var linkPathToHere = function(path, pathToHere) {
-		log("linkPathToHere: path is " + pathToStr(path) + ", pathToHere is " + pathToStr(pathToHere));
+		// log(rLevel, "linkPathToHere: path is " + pathToStr(path) + ", pathToHere is " + pathToStr(pathToHere));
 		path.route = pathToHere.route.concat(path.route);
 		// path.satisfies = util.removeArrDuplicates(pathToHere.satisfies.concat(path.satisfies));
 		path.satisfies = pathToHere.satisfies.concat(path.satisfies);
-		log("--> aaaaand now it's " + pathToStr(path));
+		// log(rLevel, "--> aaaaand now it's " + pathToStr(path));
 	}
 
 
@@ -227,7 +244,7 @@ define(["Request", "util"], function(Request, util) {
 	}
 
 	var createPathOrAddWant = function(path, id, want) {
-		// log("createPathOrAddWant: path is " + pathToStr(path));
+		// log(rLevel, "createPathOrAddWant: path is " + pathToStr(path));
 		if (!path) {
 			path = { 
 				route: [id],
@@ -236,7 +253,7 @@ define(["Request", "util"], function(Request, util) {
 		} else if (want) {
 			path.satisfies.push(want);
 		}
-		// log("-->and now it's " + pathToStr(path));
+		// log(rLevel, "-->and now it's " + pathToStr(path));
 		return path;
 	}
 
@@ -247,6 +264,11 @@ define(["Request", "util"], function(Request, util) {
 	var pathsToStr = function(arrOfPaths) {
 		return arrOfPaths.map(pathToStr).join("\n");
 	}
+	var showWants = function(wants) {
+		return wants.map(function(x) {
+			return x.val
+		});
+	}
 
 	var logState = false;
 	var logOn = function() {
@@ -255,8 +277,12 @@ define(["Request", "util"], function(Request, util) {
 	var logOff = function() {
 		logState = false;
 	}
-	var log = function(msg) {
-		if (logState) console.log(msg);
+	var log = function(rLevel, msg) {
+		var spaces = "                                                         ";
+		var spacesPerTab = 5;
+		if (logState) {
+			console.log(spaces.slice(0, rLevel * spacesPerTab) + msg);
+		}
 	}
 
 	return {
