@@ -77,7 +77,7 @@ requirejs(
 		ChunkLibrary.add(data);
 
 		var wishlist = Wishlist.create(example.wishlist, State);
-		wishlist.logOn();
+		// wishlist.logOn();
 
 		document.getElementsByTagName("body")[0].innerHTML = "";
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State);
