@@ -1,12 +1,15 @@
 TODO
+- Path needs to save which nodes satisfied choices, so the UI can display the correct choiceLabel in the menu.
 - Factor Display out of StoryAssembler (shouldn't depend on it)
 - Implement "order" and "mandatory" properties for wishlists.
 - Handle choices where not all options can be satisfied: should it remove those options? crash b/c of bad authoring?
-- Path needs to save which nodes satisfied choices, so the UI can display the correct choiceLabel in the menu.
-
+- ON-screen debugging showing current wishlist, possibly chunk library too.
+- Horrifying inefficiency. [to do with BestPath recursion, specifically when looking for ids it shouldn't need to recurse through stuff, just stop.]
 
 
 Future:
 
 - Figure out a way to allow comments in data format. (i.e. not raw json)
 - Basic editor for JSON
+- What about chunks being reused
+- ALlow commentsi n JSON

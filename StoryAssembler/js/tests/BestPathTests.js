@@ -137,6 +137,18 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["ChoiceNode", "Result2"], "should maximize Wants through choice structures.");
 
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true"}], State);
+			ChunkLibrary.add([
+				{ id: "Choice1", choices: [{chunkId: "answer1"}] },
+				{ id: "answer1", choiceLabel: "..." },
+				{ id: "Choice2", choices: [{chunkId: "answer2"}], effects: ["set x true"] },
+				{ id: "answer2", choiceLabel: "..." }
+			]);
+			nextPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(nextPath.route, ["Choice2"], "when recursing through multiple chunks with choices, skipList shouldn't get corrupted");
+
 			// TODO: A cycle should consider the last node before cycling as a leaf node. (I.e. we want this to be valid, but we don't want to recurse forever down it looking for leaf nodes.
 
 
