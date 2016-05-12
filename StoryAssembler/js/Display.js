@@ -9,6 +9,7 @@ define([], function() {
 	"use strict";
 
 	/* PRIVATE FUNCTIONS AND VARIABLES */
+	var showUnavailableChoices = true;
 
 	var clickHandler;
 
@@ -41,8 +42,13 @@ define([], function() {
 	var addChoice = function(choice) {
 		var el = makeEl("div", choice.text);
 		el.classList.add("choice");
-		el.onclick = function() {
-			clickHandler(choice);
+		if (!choice.cantChoose) {
+			el.onclick = function() {
+				clickHandler(choice);
+			}
+		} else {
+			if (!showUnavailableChoices) return;
+			el.classList.add("unavailableChoice");
 		}
 		document.getElementById("choiceArea").appendChild(el);
 	}

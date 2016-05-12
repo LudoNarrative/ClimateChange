@@ -180,6 +180,10 @@ define(["Request", "util"], function(Request, util) {
 		if (paths.length === 0) {
 			if (pathToHere) {
 				// If nothing beneath this chunk led to a successful path, but this chunk satisfied at least one Want, then the only possible path from this point is a single one-step path to here.
+				if (chunk.choices && numChoicesFound(choiceDetails) === 0) {
+					log(rLevel, "-->no choices of '" + chunk.id + "' were valid, so we can't count this path as successful.");
+					return []; // We can't pick this node because none of the choices were available.
+				}
 				log(rLevel, "-->no valid descendants of '" + chunk.id + "', but it directly satisfied >= 1 Want, so marking path to here successful: " + pathToStr(pathToHere));
 				if (chunk.choices) {
 					pathToHere.choiceDetails = choiceDetails;
@@ -195,6 +199,14 @@ define(["Request", "util"], function(Request, util) {
 			});
 			return paths;
 		}
+	}
+
+	var numChoicesFound = function(choiceDetails) {
+		var count = 0;
+		choiceDetails.forEach(function(d) {
+			if (d.id) count += 1;
+		});
+		return count;
 	}
 
 	// Recurse down into a request (either a direct request or a choice request) and return any unique paths found.
@@ -245,13 +257,16 @@ define(["Request", "util"], function(Request, util) {
 				path.satisfies = pathToHereRef.satisfies.concat(path.satisfies);
 				if (choiceMatch) {
 					path.choiceDetails = [{id: choiceMatch}];
-				}
+				} 
 			});
 			return validPaths;
 		}
-		// AAR: Maybe what we need to do is if isChoice and nothing was found, return choiceMatch anyway.
 		else {
-			return [{choiceDetails: {id: choiceMatch}}];
+			if (choiceMatch) {
+				return [{choiceDetails: {id: choiceMatch}}];
+			} else {
+				return [{choiceDetails: {missing: true, requestVal: req.val}}]
+			}
 		}
 	}
 

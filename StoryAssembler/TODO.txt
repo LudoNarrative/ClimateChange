@@ -1,5 +1,5 @@
 CURRENT
-- Handle choices where not all options can be satisfied: should it remove those options? crash b/c of bad authoring?
+- Running very slow.
 
 
 TODO

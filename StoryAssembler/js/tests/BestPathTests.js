@@ -219,7 +219,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			ChunkLibrary.reset();
 			ChunkLibrary.add([
 				{ id: "Choice1", effects: ["set x true"], choices: [{chunkId: "answerY"}, {condition: "z eq true"}] },
-				{ id: "answerY", choiceLabel: "answerY choiceLabel", choices: [{chunkId: "q eq true"}], effects: ["set y true"] },
+				{ id: "answerY", choiceLabel: "answerY choiceLabel", choices: [{condition: "q eq true"}], effects: ["set y true"] },
 				{ id: "answerZ", choiceLabel: "answerZ choiceLabel", effects: ["set z true"]},
 				{ id: "NodeQ", choiceLabel: "NodeQ choiceLabel", effects: ["set q true"] }
 			]);
@@ -256,6 +256,47 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			allPaths = wl.allPaths(ChunkLibrary);
 			assert.deepEqual(allPaths.length, 1, "setting up test");
 			assert.deepEqual(allPaths[0].satisfies.length, 1, "duplicate effects shouldn't change 'satisfies' size");
+		});
+
+		test("missing choices", function( assert ) {
+			var bestPath, wl;
+			
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{chunkId: "Choice1"}], State);
+			ChunkLibrary.add([
+				{ id: "Choice1", choices: [{condition: "x eq true"}, {condition: "y eq true"}] },
+				{ id: "AnswerX", effects: ["set x true"] }
+			]);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Choice1"], "A missing choice request shouldn't affect a matching path to that choice.");
+			assert.deepEqual(bestPath.choiceDetails.length, 2, "A missing choice request shouldn't affect the number of choiceDetails objects returned.");
+			assert.deepEqual(bestPath.choiceDetails[0].id, "AnswerX", "A missing choice request shouldn't affect the non-missing choice.");
+			assert.deepEqual(bestPath.choiceDetails[1].missing, true, "A missing choice request should have a choiceDetails where missing is true.");
+			assert.notOk(bestPath.choiceDetails[1].id, "A missing choice request should not have an id field.");
+
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{chunkId: "Node1"}], State);
+			ChunkLibrary.add([
+				{ id: "Node2", content: "..." }
+			]);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.notOk(bestPath, "Should return no path if a valid node can't be found by ID.");
+			wl = Wishlist.create([{condition: "x eq true"}], State);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.notOk(bestPath, "Should return no path if a valid node can't be found by condition.");
+
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true"}], State);
+			ChunkLibrary.add([
+				{ id: "Choice1", choices: [{chunkId: "Fake1"}, {chunkId: "Fake2"}], effects: ["set x true"] },
+				{ id: "Choice2", choices: [{chunkId: "NodeP"}], effects: ["set x true"] },
+				{ id: "NodeP", content: "..." }
+			]);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Choice2"], "We should prefer a path with available options over one without.");
 
 		});
 
