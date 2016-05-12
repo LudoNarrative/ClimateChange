@@ -33,6 +33,12 @@ span.chunk {
     padding: 10px;
     margin: 10px 0px;
 }
+.unavailableChoice {
+    color: gray;
+}
+.unavailableChoice:hover {
+    background-color: white !important;
+}
 .choice::before {
 	content: "> ";
 }
