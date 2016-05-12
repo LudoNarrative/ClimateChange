@@ -2,11 +2,7 @@
 %%%%% SOUP OF THINGS TO PULL FROM %%%%%
 
 
-physicsMetaphors(spring;pendulum).
-agentTypes(chase;random;random_chase;flee;random_flee).
-offensiveAgent(chase;random;random_chase).
-defensiveAgent(random;flee; random_flee).
-
+potential_paths(p1;p2;p3;p4;p5).
 
 opposite(north,south).
 opposite(east,west).
