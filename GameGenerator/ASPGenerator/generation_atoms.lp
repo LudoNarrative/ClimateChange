@@ -44,6 +44,7 @@ entityOrdering(A,C) :- entityOrdering(A,B), entityOrdering(B,C).
 
 potentialResources(r1;r2;r3;r4;r5).
 potentialOutcomes(o1;o2;o3;o4;o5).
+potentialEndOutcomes(eo1;eo2;eo3;eo4;eo5).
 outcomeOrder(o1,o2).
 outcomeOrder(o2,o3).
 outcomeOrder(o3,o4).
@@ -68,6 +69,7 @@ lower_than(low,high).
 lower_than(mid,high).
 
 
+spawnTimings(steady;at_a_time(1);at_a_time(2);at_a_time(3);at_a_time(4);poisson;condition).
 
 change(increases;decreases;set_to).
 
