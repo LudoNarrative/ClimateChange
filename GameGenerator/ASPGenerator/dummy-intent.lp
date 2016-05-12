@@ -4,3 +4,6 @@
 #const max_resources = 1.
 #const min_outcomes = 3.
 #const max_outcomes = 5.
+
+#const min_end_outcomes = 1.
+#const max_end_outcomes = 2.
