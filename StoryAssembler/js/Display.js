@@ -14,9 +14,10 @@ define([], function() {
 	var clickHandler;
 
 	// Create and return an HTML element of a given type with the given content.
-	var makeEl = function(type, content) {
+	var makeEl = function(type, content, elClass) {
 		var el = document.createElement(type);
 		el.innerHTML = content;
+		if (elClass) el.classList.add(elClass);
 		return el;
 	}
 
@@ -33,15 +34,13 @@ define([], function() {
 
 	// Add some story text to the story window.
 	var addStoryText = function(text) {
-		var el = makeEl("span", text);
-		el.classList.add("chunk");
+		var el = makeEl("span", text, "chunk");
 		document.getElementById("storyArea").appendChild(el);
 	}
 
 	// Add a choice to the choice window.
 	var addChoice = function(choice) {
-		var el = makeEl("div", choice.text);
-		el.classList.add("choice");
+		var el = makeEl("div", choice.text, "choice");
 		if (!choice.cantChoose) {
 			el.onclick = function() {
 				clickHandler(choice);
@@ -80,9 +79,41 @@ define([], function() {
 			document.getElementsByTagName('body')[0].appendChild(diagEl);
 		}
 		diagEl.innerHTML = "";
-		var pathEl = makeEl("div", "bestPath: " + bestPath);
+
+		var pathEl = makeEl("div", "<div class='dHeader'>Best Path:</div>");
+		var pathSteps = makeEl("div", "", "pathSteps");
+		if (bestPath && bestPath.route) {
+			bestPath.route.forEach(function(node, pos) {
+				var arrow = pos < bestPath.route.length-1 ? " -> " : "";
+				var step = makeEl("span", node + arrow, "pathStep");
+				if (pos === 0) {
+					step.classList.add("firstPathStep");
+				}
+				pathSteps.appendChild(step);
+			});
+		} else {
+			pathSteps.innerHTML = "No Path";
+		}
+		pathEl.appendChild(pathSteps);
 		diagEl.appendChild(pathEl);
-		var wishlistEl = makeEl("div", "wishlist: " + wishlist);
+		var satisfiesList = [];
+		if (bestPath && bestPath.satisfies) {
+			satisfiesList = bestPath.satisfies.map(function(item){
+				return item.val;
+			});
+			var satisfiesEl = makeEl("div", "This path would satisfy the highlighted Wants below.", "pathExpl");
+			pathEl.appendChild(satisfiesEl);
+		}
+
+		var wishlistEl = makeEl("div", "<div class='dHeader'>Wishlist Is Now:</div>");
+		var wishlistArr = wishlist.wantsAsArray();
+		wishlistArr.forEach(function(want) {
+			var wantEl = makeEl("div", want.val, "wlWant");
+			if (satisfiesList.indexOf(want.val) >= 0) {
+				wantEl.classList.add("matchedWant");
+			}
+			wishlistEl.appendChild(wantEl);
+		})
 		diagEl.appendChild(wishlistEl);
 	}
 
