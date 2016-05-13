@@ -20,6 +20,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 	var continueScene = function(optChunkId) {
 		// If optChunkId is undefined, the startAt parameter below will also be undefined and will have no effect.
 		var bestPath = wishlist.bestPath(chunkLibrary, {startAt: optChunkId});
+		Display.showDiagnostics(wishlist.pathToStr(bestPath), wishlist.toStr());
 		if (bestPath) {
 			var nextStep = bestPath.route[0];
 			doChunk(nextStep, bestPath.choiceDetails);

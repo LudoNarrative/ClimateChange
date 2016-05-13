@@ -45,3 +45,15 @@ span.chunk {
 .choice:hover {
 	background-color: #D7FFC7;
 }
+
+#diagnostics {
+    width: 370px;
+    height: 200px;
+    background-color: #FFF1A5;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    border-radius: 10px;
+    padding: 0.5em 1em;
+    font-family: Courier;
+}
