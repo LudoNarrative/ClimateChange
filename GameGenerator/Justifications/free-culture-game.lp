@@ -31,6 +31,7 @@ controlLogic(mouse_cursor, cursor).
 %%%% Mechanics %%%%
 
 %% Mechanic (1): Producers make new ideas
+%% XXX capture producer precondition?
 precondition(slow_timeout, gen_idea).
 result(gen_idea, spawn(new_idea)).
 
