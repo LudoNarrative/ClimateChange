@@ -1,17 +1,5 @@
 CURRENT
 
-- Implement heuristic/max depth to speed up BestPath.
-	- First implement simple max-depth to see if solves slow-down
-	- Then implement heuristic to make this better/more dynamic.
-
-	heuristic of (skip N), where as you're searching, you prune any paths where you have gone N nodes without satisfying a Want from the wishlist.
-		- Means you can't have long chains leading to wishlist items (unless you have a flag that allows?) but speeds up your time a lot.
-		- also a max-depth. 
-		- also, either/both could be dynamic based on time (i.e. best you've found after 2 seconds)
-		- investigate rete nets. 
-
-	- If you are handling a click and you pull up a chunk with its own choices, you need to temporarily add that ID to the wishlist and do a search, so you can fill in the choice labels (and also keep trying to maximize wants.)
-
 
 
 TODO
@@ -21,11 +9,17 @@ TODO
 - Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
 - Fix commented out choiceDetails printing (two places)
 - Possible bug in the case where we're recursing to find a subgoal that's the same as one of our wishlist goals. [Think about what happens in this case.]
+- Find out why StoryAssembler integration unit tests are crashing every other time.
 
 Future:
 
+- Replace flat max_depth with a dynamic heuristic that stops searching any path that has gone more than N nodes without satisfying a Want from the wishlist. (Ben's idea.)
 - Figure out a way to allow comments in data format. (i.e. not raw json)
 - Basic editor for JSON
 - What about chunks being reused
 - ALlow commentsi n JSON
 - Research in unit tests: how to test properties of an object? If you check directly, it'll crash with a "cannot read property x of y." If you check that the object exists first, it just adds a failing test before the crash.
+
+
+Done:
+- Implement a max_depth to speed up BestPath

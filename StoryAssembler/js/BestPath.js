@@ -24,7 +24,7 @@ For reference, a Want object (defined in Want.js) is in the form:
 
 define(["Request", "util"], function(Request, util) {
 
-	var MAX_DEPTH = 4;
+	var MAX_DEPTH = 3;
 
 	// Module-level reference variables
 	var chunkLibrary; 
@@ -70,60 +70,66 @@ define(["Request", "util"], function(Request, util) {
 	}
 
 
-	// Returns paths from searching every valid chunk in the library.
+	// Returns paths from searching in the chunk library.
 	var searchLibraryForPaths = function(wants, okToBeChoice, skipList, params, rLevel) {
+
 		var paths = [];
 		var keys = chunkLibrary.getKeys();
 		log(rLevel, "searchLibraryForPaths. wants is [" + showWants(wants) + "] and we are skipping [" + skipList + "]. rLevel " + rLevel);
 
-		if (params.startAt) {
-			var chunk = chunkLibrary.get(params.startAt);
-			return findAllSatisfyingPathsFrom(chunk, wants, skipList, rLevel);
-		}
-
-		for (var i = 0; i < keys.length; i++) {
-			var chunk = chunkLibrary.get(keys[i]);
-
-			// Verify this chunk is valid:
-			// --> it's not blacklisted.
-			if (skipList.indexOf(chunk.id) >= 0) {
-				log(rLevel, "skipping '" + chunk.id + "'");
-				continue;
-			}
-			// --> the conditions don't disallow it given the current State.
-			if (chunk.conditions) {
-				var shouldContinue = false;
-				for (var j = 0; j < chunk.conditions.length; j++) {
-					if (!State.isTrue(chunk.conditions[j])) {
-						shouldContinue = true;
-					}
-				}
-				if (shouldContinue) {
-					log(rLevel, "skipping '" + chunk.id + "' because a condition contradicts current State.");
-					continue;
-				}
-			}
-			// --> it's not a response to a choice
-			if (chunk.choiceLabel && (!okToBeChoice)) {
-				log(rLevel, "skipping '" + chunk.id + "' b/c has a choiceLabel field");
-				continue;
-			}
-
-			// If we made it, consider this chunk and save any found paths
-			log(rLevel, "--> considering '" + chunk.id + "':");
+		// Small internal function to do a search and add any unique results.
+		var doSearchFromHere = function(chunkId) {
+			var chunk = chunkLibrary.get(chunkId);
 			var result = findAllSatisfyingPathsFrom(chunk, wants, skipList, rLevel);
 			if (result.length > 0) {
-				log(rLevel, "**> found these paths: " + pathsToStr(result));
 				paths = addNewIfUnique(paths, result);
-				// paths = paths.concat(result);
-			} else {
-				log(rLevel, "**> found no paths.");
-			}
+			} 
+		}
+
+		// Either do a search starting from a given chunk, or look through every chunk in the library.
+		if (params.startAt) {
+			doSearchFromHere(params.startAt);
+		} else {
+			keys.forEach(function(key) {
+				if (chunkOkToSearch(key, skipList, okToBeChoice, rLevel)) {
+					doSearchFromHere(key);
+				}
+			});
 		}
 
 		// Return all discovered paths.
 		log(rLevel, "finished searchLibraryForPaths for wants: [" + showWants(wants) + "] and skipList [" + skipList + "].");
 		return paths;
+	}
+
+	// Make sure it's currently OK to recurse into a chunk.
+	var chunkOkToSearch = function(chunkId, skipList, okToBeChoice, rLevel) {
+		var chunk = chunkLibrary.get(chunkId);
+
+		// --> shouldn't be blacklisted.
+		if (skipList.indexOf(chunk.id) >= 0) {
+			log(rLevel, "skipping '" + chunk.id + "'");
+			return false;
+		}
+		// --> conditions should allow it given the current State.
+		if (chunk.conditions) {
+			var shouldContinue = false;
+			for (var j = 0; j < chunk.conditions.length; j++) {
+				if (!State.isTrue(chunk.conditions[j])) {
+					shouldContinue = true;
+				}
+			}
+			if (shouldContinue) {
+				log(rLevel, "skipping '" + chunk.id + "' because a condition contradicts current State.");
+				return false;
+			}
+		}
+		// --> response to a choice only allowed if prior node was a choice.
+		if (chunk.choiceLabel && (!okToBeChoice)) {
+			log(rLevel, "skipping '" + chunk.id + "' b/c has a choiceLabel field");
+			return false;
+		}
+		return true;
 	}
 
 	// Returns paths from searching a single valid chunk in the library.
@@ -192,10 +198,10 @@ define(["Request", "util"], function(Request, util) {
 			if (pathToHere) {
 				// If nothing beneath this chunk led to a successful path, but this chunk satisfied at least one Want, then the only possible path from this point is a single one-step path to here.
 				if (chunk.choices && numChoicesFound(choiceDetails) === 0) {
-					log(rLevel, "-->no choices of '" + chunk.id + "' were valid, so we can't count this path as successful.");
+					log(rLevel, "**>no choices of '" + chunk.id + "' were valid, so we can't count this path as successful.");
 					return []; // We can't pick this node because none of the choices were available.
 				}
-				log(rLevel, "-->no valid descendants of '" + chunk.id + "', but it directly satisfied >= 1 Want, so marking path to here successful: " + pathToStr(pathToHere));
+				log(rLevel, "**>no valid descendants of '" + chunk.id + "', but it directly satisfied >= 1 Want, so marking path to here successful: " + pathToStr(pathToHere));
 				if (chunk.choices) {
 					pathToHere.choiceDetails = choiceDetails;
 				}
@@ -208,6 +214,7 @@ define(["Request", "util"], function(Request, util) {
 			paths.forEach(function(path) {
 				path.choiceDetails = choiceDetails;
 			});
+			log(rLevel, "**> found these paths: " + pathsToStr(paths));	
 			return paths;
 		}
 	}
