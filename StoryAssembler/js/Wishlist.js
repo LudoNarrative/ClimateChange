@@ -33,7 +33,7 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			return Object.keys(_wants).length;
 		}
 
-		var _wantsAsArray = function() {
+		var wantsAsArray = function() {
 			var keys = Object.keys(_wants);
 			var arr = [];
 			keys.forEach(function(key) {
@@ -43,10 +43,10 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 		}
 
 		var bestPath = function(chunkLibrary, params) {
-			return BestPath.bestPath(_wantsAsArray(), params || {}, chunkLibrary, State);
+			return BestPath.bestPath(wantsAsArray(), params || {}, chunkLibrary, State);
 		}
 		var allPaths = function(chunkLibrary, params) {
-			return BestPath.allPaths(_wantsAsArray(), params || {}, chunkLibrary, State);
+			return BestPath.allPaths(wantsAsArray(), params || {}, chunkLibrary, State);
 		}
 
 		var removeSatisfiedWants = function() {
@@ -61,7 +61,7 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 		}
 
 		var toStr = function() {
-			return _wantsAsArray().map(function(want) {
+			return wantsAsArray().map(function(want) {
 				return want.val;
 			}).join(", ");
 		}
@@ -78,7 +78,8 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			pathToStr: BestPath.pathToStr,
 			pathsToStr: BestPath.pathsToStr,
 			toStr: toStr,
-			removeSatisfiedWants: removeSatisfiedWants
+			removeSatisfiedWants: removeSatisfiedWants,
+			wantsAsArray: wantsAsArray
 		}
 	}
 
