@@ -24,6 +24,8 @@ For reference, a Want object (defined in Want.js) is in the form:
 
 define(["Request", "util"], function(Request, util) {
 
+	var MAX_DEPTH = 4;
+
 	// Module-level reference variables
 	var chunkLibrary; 
 	var State;
@@ -174,7 +176,7 @@ define(["Request", "util"], function(Request, util) {
 					paths = addNewIfUnique(paths, validPaths);
 				}
 			});
-			log(rLevel, "After choices, choiceDetails is now " + choiceDetails.map(function(x){return x.id}));
+			// log(rLevel, "After choices, choiceDetails is now " + choiceDetails.map(function(x){return x.id}));
 			log(rLevel, "Search through choice(s) of " + chunk.id + " finished.")
 		}
 		if (paths.length === 0) {
@@ -211,6 +213,17 @@ define(["Request", "util"], function(Request, util) {
 
 	// Recurse down into a request (either a direct request or a choice request) and return any unique paths found.
 	var searchFromHere = function(paths, chunk, skipList, req, wants, pathToHere, rLevel, isChoice) {
+
+		// If we've bottomed out our recursion depth, if we have established that the path to this chunk is valid, then say the set of all valid paths from here is just the path to here. Otherwise, say no valid paths from here.
+		if (rLevel >= MAX_DEPTH) {
+			log(rLevel, "hit MAX_DEPTH " + MAX_DEPTH + "; stopping here for this path.");
+			if (pathToHere === undefined) {
+				return [{id: "skipping", choiceDetails: {missing: true, requestVal: req.val}}];
+			} else {
+				return [pathToHere];
+			}
+		}
+
 		var newSkipList = util.clone(skipList);
 		return findValidPaths(chunk, newSkipList, req, wants, pathToHere, rLevel, isChoice);
 	}
@@ -345,7 +358,7 @@ define(["Request", "util"], function(Request, util) {
 		if (!path) return "undefined";
 		var msg = path.route.join("->") + " [satisfies " + path.satisfies.map(function(x){return x.val}).join("; ");
 		if (path.choiceDetails) {
-			msg += ", choiceDetails: " + path.choiceDetails.map(function(x){return x.id}).join("; ") + "]";
+			// msg += ", choiceDetails: " + path.choiceDetails.map(function(x){return x.id}).join("; ") + "]";
 		} else { 
 			msg += "]"
 		}

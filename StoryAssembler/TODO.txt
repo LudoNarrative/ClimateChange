@@ -1,5 +1,13 @@
 CURRENT
-- Running very slow.
+- Implement heuristic/max depth to speed up BestPath.
+	- First implement simple max-depth to see if solves slow-down
+	- Then implement heuristic to make this better/more dynamic.
+
+	heuristic of (skip N), where as you're searching, you prune any paths where you have gone N nodes without satisfying a Want from the wishlist.
+		- Means you can't have long chains leading to wishlist items (unless you have a flag that allows?) but speeds up your time a lot.
+		- also a max-depth. 
+		- also, either/both could be dynamic based on time (i.e. best you've found after 2 seconds)
+		- investigate rete nets. 
 
 
 TODO
@@ -7,7 +15,7 @@ TODO
 - Implement "order" and "mandatory" properties for wishlists.
 - ON-screen debugging showing current wishlist, possibly chunk library too.
 - Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
-
+- Fix commented out choiceDetails printing (two places)
 
 Future:
 
