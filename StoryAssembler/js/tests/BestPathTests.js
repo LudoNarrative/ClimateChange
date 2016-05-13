@@ -300,6 +300,29 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 		});
 
+		test("max_depth", function( assert ) {
+			var bestPath, wl;
+
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true"}], State);
+			ChunkLibrary.add([
+				{ id: "Chunk1", choices: [{chunkId: "Chunk2"}] },
+				{ id: "Chunk2", choiceLabel: "...", choices: [{chunkId: "Chunk3"}] },
+				{ id: "Chunk3", choiceLabel: "...", effects: ["set x true"] }
+			]);
+			bestPath = wl.bestPath(ChunkLibrary, {max_depth: 4});
+			assert.deepEqual(bestPath.route, ["Chunk1", "Chunk2", "Chunk3"], "Should find route if max_depth is more than required.");
+			bestPath = wl.bestPath(ChunkLibrary, {max_depth: 3});
+			assert.deepEqual(bestPath.route, ["Chunk1", "Chunk2", "Chunk3"], "Should find route if max_depth is exactly enough.");
+			wl.logOn();
+			bestPath = wl.bestPath(ChunkLibrary, {max_depth: 2});
+			wl.logOff();
+			assert.notOk(bestPath, "Should fail to find route if max_depth is not deep enough.");
+
+
+		});
+
 	}
 
 	return {

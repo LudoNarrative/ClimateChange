@@ -36,8 +36,8 @@ define(["Request", "util"], function(Request, util) {
 	}
 
 	// The usual entry function: does setup, calls allPaths to gets the set of all possible paths that satisfy at leat one Want from the list, and returns the best candidate.
-	var bestPath = function(wants, _chunkLibrary, _State) {
-		var paths = allPaths(wants, _chunkLibrary, _State);
+	var bestPath = function(wants, params, _chunkLibrary, _State) {
+		var paths = allPaths(wants, params, _chunkLibrary, _State);
 		if (paths.length > 0) {
 			return chooseFromPotentialPaths(paths, wants);
 		} else {
@@ -46,9 +46,12 @@ define(["Request", "util"], function(Request, util) {
 	}
 
 	// Another possible entry function, for if we want to return the list of all possible paths. (Currently used mostly for unit testing.)
-	var allPaths = function(wants, _chunkLibrary, _State) {
+	var allPaths = function(wants, params, _chunkLibrary, _State) {
 		if (_chunkLibrary) init(_chunkLibrary, _State);
-		return searchLibraryForPaths(wants, false, [], false, 0);
+		if (params.max_depth) {
+			MAX_DEPTH = params.max_depth;
+		}
+		return searchLibraryForPaths(wants, false, [], 1);
 	}
 
 	// Given a set of paths, choose the path that maximally satisfies Wants.
@@ -71,7 +74,7 @@ define(["Request", "util"], function(Request, util) {
 	var searchLibraryForPaths = function(wants, okToBeChoice, skipList, rLevel) {
 		var paths = [];
 		var keys = chunkLibrary.getKeys();
-		log(rLevel, "searchLibraryForPaths. wants is [" + showWants(wants) + "] and we are skipping [" + skipList + "]");
+		log(rLevel, "searchLibraryForPaths. wants is [" + showWants(wants) + "] and we are skipping [" + skipList + "]. rLevel " + rLevel);
 		for (var i = 0; i < keys.length; i++) {
 			var chunk = chunkLibrary.get(keys[i]);
 
@@ -102,7 +105,7 @@ define(["Request", "util"], function(Request, util) {
 
 			// If we made it, consider this chunk and save any found paths
 			log(rLevel, "--> considering '" + chunk.id + "':");
-			var result = findAllSatisfyingPathsFrom(chunk, wants, skipList, rLevel+1);
+			var result = findAllSatisfyingPathsFrom(chunk, wants, skipList, rLevel);
 			if (result.length > 0) {
 				log(rLevel, "**> found these paths: " + pathsToStr(result));
 				paths = addNewIfUnique(paths, result);
@@ -222,7 +225,7 @@ define(["Request", "util"], function(Request, util) {
 			} else {
 				return [pathToHere];
 			}
-		}
+		} 
 
 		var newSkipList = util.clone(skipList);
 		return findValidPaths(chunk, newSkipList, req, wants, pathToHere, rLevel, isChoice);
@@ -384,7 +387,7 @@ define(["Request", "util"], function(Request, util) {
 	var _spacesPerTab = 5;
 	var log = function(rLevel, msg) {
 		if (logState) {
-			console.log(_spaces.slice(0, rLevel * _spacesPerTab) + msg);
+			console.log(_spaces.slice(0, (rLevel-1) * _spacesPerTab) + msg);
 		}
 	}
 
