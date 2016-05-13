@@ -91,26 +91,50 @@ resourceAffects(Resource, Outcome) :-
 resourceAffects(Resource, Outcome) :-
     precondition(lt(Resource, Thresh), Outcome).
 
-outcomeAffects(Resource, Outcome) :-
+
+outcomeAffects(Resource, Outcome, positive) :-
     result(Outcome, increase(Resource, Amount)).
-outcomeAffects(Resource, Outcome) :-
+
+outcomeAffects(Resource, Outcome, negative) :-
+    result(Outcome, decrease(Resource, Amount)).
+
+amplifies(Amplifier, Resource) :-
+    result(Outcome1, increase(Resource, Amplifier)),
+    resource(Amplifier).
+
+attenuates(Attenuator, Resource) :-
+    result(Outcome1, decrease(Resource, Attenuator)),
+    resource(Attenuator).
+
+outcomeAffects(Resource, Outcome, positive) :-
+    result(Outcome, increase(Amplifier, Amount)),
+    amplifies(Amplifier, Resource).
+
+outcomeAffects(Resource, Outcome, negative) :-
+    result(Outcome, increase(Attenuator, Amount)),
+    attenuates(Attenuator, Resource).
+
+outcomeAffects(Resource, Outcome, positive) :-
+    result(Outcome, increase(Resource, Amount)).
+outcomeAffects(Resource, Outcome, negative) :-
     result(Outcome, decrease(Resource, Amount)).
 
 outcomeFavorable(Outcome) :-
-    result(Outcome, increase(Resource, Amount)),
+    outcomeAffects(Resource, Outcome, positive),
     good(Resource).
 outcomeFavorable(Outcome) :-
-    result(Outcome, decrease(Resource, Amount)),
+    outcomeAffects(Resource, Outcome, negative),
     bad(Resource).
 
 outcomeUnfavorable(Outcome) :-
-    result(Outcome, increase(Resource, Amount)),
+    outcomeAffects(Outcome, Resource, positive),
     bad(Resource).
 outcomeUnfavorable(Outcome) :-
-    result(Outcome, decrease(Resource, Amount)),
+    outcomeAffects(Outcome, Resource, negative),
     good(Resource).
 
 condition(CONDITION) :- precondition(CONDITION,OUTCOME).
+outcome(Outcome) :- precondition(_, Outcome).
 
 moreThanOnePrecondition(OUTCOME) :- 
     2 {precondition(CONDITION,OUTCOME) : condition(CONDITION)} , 
@@ -600,8 +624,8 @@ entityDetermines(Entity, Outcome) :-
 
 %% Player influence and determination
 
-playerCreatesCondition(controlEvent(E)) :-
-    precondition(controlEvent(E), Outcome).
+playerCreatesCondition(control_event(E)) :-
+    precondition(control_event(E), Outcome).
 
 playerCreatesCondition(near(Entity, Other)) :-
     playerAgency(Entity),

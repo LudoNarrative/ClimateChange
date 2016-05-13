@@ -1,0 +1,245 @@
+% Only 1 avatar
+:-  avatar(ENTITY), 
+    many(ENTITY).
+
+% avatar precludes movement
+:-  movementScheme(ENTITY,SCHEME),
+    avatar(ENTITY).
+
+% things can have multiple movement - but only 1 way to follow a path
+:-  2 {movementScheme(ENTITY,path(TYPE))}, 
+    entity(ENTITY).
+
+% don't be attracted to yourself
+:- attracted_to(ENTITY,ENTITY).
+
+% don't be repulsed by yourself
+:- repeled_by(ENTITY,ENTITY).
+
+% don't be attracted to and repulsed by at the same time
+:- attracted_to(ENTITY,OTHER), repeled_by(ENTITY,OTHER).
+:- attracted_to(ENTITY,OTHER), repeled_by(OTHER,ENTITY).
+
+% static means it doesn't move
+:- static(ENTITY), avatar(ENTITY).
+:- static(ENTITY), controlScheme(ENTITY,SCHEME).
+:- static(ENTITY), movementScheme(ENTITY,SCHEME).
+:- static(ENTITY), interaction(OTHER,ENTITY,push).
+
+
+{ result(help(ENTITY1,ENTITY2),increases(G_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,help), good(G_RESOURCE).   
+{ result(help(ENTITY1,ENTITY2),decreases(B_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,help), bad(B_RESOURCE).     
+{ result(help(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,help), helpful(ENTITY).
+
+
+actuallyHelps(help(ENTITY1,ENTITY2)) :- 
+    result(help(ENTITY1,ENTITY2),increases(G_RESOURCE)), good(RESOURCE). 
+actuallyHelps(help(ENTITY1,ENTITY2)) :-
+    result(help(ENTITY1,ENTITY2),decreases(B_RESOURCE)), bad(RESOURCE).
+actuallyHelps(help(ENTITY1,ENTITY2)) :-
+    result(help(ENTITY1,ENTITY2),spawn(ENTITY)), helpful(ENTITY).
+
+
+        
+
+actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
+    result(hurt(ENTITY1,ENTITY2),increases(G_RESOURCE)), bad(G_RESOURCE).   
+actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
+    result(hurt(ENTITY1,ENTITY2),decreases(B_RESOURCE)), good(B_RESOURCE).     
+actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
+    result(hurt(ENTITY1,ENTITY2),spawn(ENTITY)),  harmful(ENTITY).
+        
+
+%if something helps it must help in some way
+:- not actuallyHelps(ENTITY1,ENTITY2), interaction(ENTITY1,ENTITY2,help) .
+
+%if something hurts it must hurt in some way
+:- not actuallyHurts(ENTITY1,ENTITY2), interaction(ENTITY1,ENTITY2,hurt) .
+
+%if something is placed on a path must have a valid one.
+:- placement(ENTITY,TYPE,path(TYPE)), not validPathPlacement.
+
+%if goal is to reach end must have a start and end
+:- goal(reach(end)), not placement(ENTITY, path(start)), avatar(ENTITY).  
+:- goal(reach(end)), not placement(ENTITY, path(end)), avatar(ENTITY).   
+
+%don't increase or decrease in more than 2 ways
+:- 2 {result(OUTCOME, decreases(RESOURCE,AMOUNT)): 
+    potentialValues(AMOUNT)}, 
+    resource(RESOURCE), 
+    outcome(OUTCOME). 
+    
+:- 2 {result(OUTCOME, increases(RESOURCE,AMOUNT)): 
+    potentialValues(AMOUNT)}, 
+    resource(RESOURCE), 
+    outcome(OUTCOME). 
+    
+% don't increase and decrease at the same time
+:-  result(OUTCOME,increases(RESOURCE,AMOUNT1)), 
+    result(OUTCOME,decreases(RESOURCE,AMOUNT2)).
+    
+% don't have 2 resources counting the same thing
+:- 2 {resourceLogic(RESOURCE,count(ENTITY)) : resource(RESOURCE)},
+    entity(ENTITY).
+% don't have 2 entities counted by the same thing
+:- 2 {resourceLogic(RESOURCE,count(ENTITY)) : entity(ENTITY)},
+    resource(RESOURCE).
+% don't count and do transactions on a resource
+:-  resourceLogic(RESOURCE,count(ENTITY)), 
+    transaction(RESOURCE,TRANSACTION).
+% don't overlap with itself
+:- precondition(overlaps(ENTITY,ENTITY,POLARITY),OUTCOME).
+
+
+:- max_resource_change_per + 1  {changes(OUTCOME,CHANGE, CV,V) :
+    resource(CV),
+    potentialValues(V), 
+    change(CHANGE)}, 
+        outcome(OUTCOME).
+:-  2 {changes(OUTCOME,CHANGE,CV,V)}, 
+    outcome(OUTCOME), 
+    resource(CV).        
+        
+        
+:- goal(prevent(OUTCOME)), goal(achieve(OUTCOME)).
+
+:- bad(RESOURCE), good(RESOURCE).
+
+
+        
+%tick must occur alone
+:-  precondition(tick,OUTCOME), 
+    2 { precondition(CONDITION,OUTCOME) : condition(CONDITION)}.
+ 
+% no precondition without outcome 
+% :-  precondition(CONDITION,OUTCOME), 
+    % not outcome(OUTCOME).
+% % no result without outcome    
+% :-  result(OUTCOME,EFFECT), 
+    % not outcome(OUTCOME).
+    
+    
+% 2 outcomes are the same if they share a precondition
+same(OUTCOME1, OUTCOME2) :- 
+    precondition(CONDITION,OUTCOME1),
+    precondition(CONDITION,OUTCOME2),
+    outcomeOrder(OUTCOME1,OUTCOME2).
+  
+% 2 outcomes are different if one has a precondition the other doesn't  
+differentL(OUTCOME1,OUTCOME2) :- 
+    precondition(CONDITION,OUTCOME1),
+    not precondition(CONDITION,OUTCOME2),
+    condition(CONDITION),
+    outcomeOrder(OUTCOME1,OUTCOME2),
+    same(OUTCOME1,OUTCOME2).
+  
+%vice versa  
+differentR(OUTCOME1,OUTCOME2) :- 
+    not precondition(CONDITION,OUTCOME1),
+    precondition(CONDITION,OUTCOME2),
+    condition(CONDITION),
+    outcomeOrder(OUTCOME1,OUTCOME2),
+    same(OUTCOME1,OUTCOME2).
+    
+% outcomes must be different - perhaps this is overly strong
+% should subsets be allowed?  
+:-  not differentL(OUTCOME1,OUTCOME2), 
+    outcome(OUTCOME1),outcome(OUTCOME2),
+    outcomeOrder(OUTCOME1,OUTCOME2),
+    same(OUTCOME1,OUTCOME2). 
+ 
+:-  not differentR(OUTCOME1,OUTCOME2), 
+    outcome(OUTCOME1),outcome(OUTCOME2),
+    outcomeOrder(OUTCOME1,OUTCOME2),
+    same(OUTCOME1,OUTCOME2). 
+    
+    
+% don't compare 1 resource for more than 1 value   
+:-  2 {precondition(lt(RESOURCE,VALUE),OUTCOME) :
+            potentialValues(VALUE)}, 
+        outcome(OUTCOME), 
+        resource(RESOURCE).
+        
+% don't compare 1 resource for more than 1 value   
+:-  2 {precondition(ge(RESOURCE,VALUE),OUTCOME) :
+            potentialValues(VALUE)}, 
+        outcome(OUTCOME), 
+        resource(RESOURCE).
+        
+% don't compare 1 resource for more than 1 value   
+:-  2 {precondition(gt(RESOURCE,VALUE),OUTCOME) :
+            potentialValues(VALUE)}, 
+        outcome(OUTCOME), 
+        resource(RESOURCE).
+    
+% don't compare 1 resource for more than 1 value   
+:-  precondition(le(RESOURCE,VALUE),OUTCOME), 
+    precondition(lt(RESOURCE,VALUE2),OUTCOME).
+    
+% don't compare 1 resource for more than 1 value   
+:-  precondition(ge(RESOURCE,VALUE),OUTCOME), 
+    precondition(gt(RESOURCE,VALUE2),OUTCOME).
+
+    
+% sanity check on outcome - only allow it have it has a result and precondition
+% result_outcome(OUTCOME) :-     result(OUTCOME,EFFECT).
+% precondition_outcome(OUTCOME) :-     precondition(CONDITION,OUTCOME).
+% validOutcome(OUTCOME) :- result_outcome(OUTCOME), 
+    % precondition_outcome(OUTCOME).
+% :- outcome(OUTCOME), not validOutcome(OUTCOME).
+
+%generic above below to do interval reasoning 
+below(RESOURCE,VALUE,OUTCOME) :- 
+    precondition(le(RESOURCE,VALUE),OUTCOME).
+
+below(RESOURCE,VALUE,OUTCOME) :-     
+    precondition(lt(RESOURCE,VALUE),OUTCOME).
+    
+above(RESOURCE,VALUE,OUTCOME) :- 
+    precondition(ge(RESOURCE,VALUE),OUTCOME).
+above(RESOURCE,VALUE,OUTCOME) :- 
+    precondition(gt(RESOURCE,VALUE),OUTCOME).
+
+%helpers
+conditionedOnResource(RESOURCE,OUTCOME) :- above(RESOURCE,VALUE,OUTCOME).
+conditionedOnResource(RESOURCE,OUTCOME) :- below(RESOURCE,VALUE,OUTCOME).
+
+
+%it should not be the case that you care about a value being above a high value and below a low value
+:-  below(RESOURCE,VALUE_L,OUTCOME), 
+    above(RESOURCE,VALUE_H,OUTCOME), 
+    lower_than(VALUE_L,VALUE_H).
+    
+    
+:- entity(B), not entity(A), entityOrdering(A,B).
+% cleanliness - choose e1 before e2
+:- condition(overlaps(A,B,POLARITY)), entityOrdering(B,A).
+
+
+
+effect(EFFECT) :- result(OUTCOME,EFFECT).
+
+%an outcome shouldn't result in game win and game loss simultaneously
+:-  result(OUTCOME,mode_change(END)), 
+    end_mode(END),
+    2 {result(OUTCOME,EFFECT) : effect(EFFECT)}.
+    
+%don't tie losing or winning to a button press (press space to lose feels odd)
+:-  precondition(control_event(BUTTON,STATE),OUTCOME),
+    result(OUTCOME,mode_change(END)), 
+    end_mode(END).
+  
+ 
+% certain things tick shouldn't do
+:-  precondition(tick,OUTCOME), 
+    result(OUTCOME,set_to(RESOURCE,VALUE)).
+:-  precondition(tick,OUTCOME), 
+    result(OUTCOME,mode_change(MODE)).
+:-  precondition(tick,OUTCOME), 
+    result(OUTCOME,change_color(ENTITY,COLOR,TIME)).
+:-  precondition(tick,OUTCOME), 
+    result(OUTCOME,set_sprite(ENTITY,SPRITE)). 
+:-  precondition(tick,OUTCOME),
+    changes(OUTCOME,CHANGE,CV,high).
+:-  precondition(tick,OUTCOME),
+    changes(OUTCOME,CHANGE,CV,mid).
