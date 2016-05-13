@@ -51,7 +51,7 @@ define(["Request", "util"], function(Request, util) {
 		if (params.max_depth) {
 			MAX_DEPTH = params.max_depth;
 		}
-		return searchLibraryForPaths(wants, false, [], 1);
+		return searchLibraryForPaths(wants, false, [], params, 1);
 	}
 
 	// Given a set of paths, choose the path that maximally satisfies Wants.
@@ -71,10 +71,16 @@ define(["Request", "util"], function(Request, util) {
 
 
 	// Returns paths from searching every valid chunk in the library.
-	var searchLibraryForPaths = function(wants, okToBeChoice, skipList, rLevel) {
+	var searchLibraryForPaths = function(wants, okToBeChoice, skipList, params, rLevel) {
 		var paths = [];
 		var keys = chunkLibrary.getKeys();
 		log(rLevel, "searchLibraryForPaths. wants is [" + showWants(wants) + "] and we are skipping [" + skipList + "]. rLevel " + rLevel);
+
+		if (params.startAt) {
+			var chunk = chunkLibrary.get(params.startAt);
+			return findAllSatisfyingPathsFrom(chunk, wants, skipList, rLevel);
+		}
+
 		for (var i = 0; i < keys.length; i++) {
 			var chunk = chunkLibrary.get(keys[i]);
 
@@ -245,7 +251,7 @@ define(["Request", "util"], function(Request, util) {
 
 		// Then we'll temporarily exclude the current node from the seach space (to avoid infinite loops/graphs with cycles), and do the search.
 		skipList.push(chunk.id);
-		var foundPaths = searchLibraryForPaths(newWants, okToBeChoice, skipList, rLevel + 1);
+		var foundPaths = searchLibraryForPaths(newWants, okToBeChoice, skipList, {}, rLevel + 1);
 		skipList = util.removeFromStringList(skipList, chunk.id);
 
 		// The only valid paths are those that DID satisfy "req", AND also satisfied at least one original Want.

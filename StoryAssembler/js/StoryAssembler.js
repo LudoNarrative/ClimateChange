@@ -17,9 +17,8 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		continueScene();
 	}
 
-	var continueScene = function() {
-		// Pick an item from the wishlist.
-		var bestPath = wishlist.bestPath(chunkLibrary);
+	var continueScene = function(optChunkId) {
+		var bestPath = wishlist.bestPath(chunkLibrary, {startAt: optChunkId});
 		// var allPaths = wishlist.allPaths(chunkLibrary);
 		// wishlist.pathsToStr(allPaths);
 		if (bestPath) {
@@ -59,7 +58,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 			});
 		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
 		} else if (wishlist.wantsRemaining() > 0) {
-			// doStoryBreak();
+			// We have finished a path. After clicking this button, since we didn't send a chunkId parameter below, the system will search for a new bestPath given the remaining wishlist items.
 			Display.addChoice({text: "Continue"});
 		} else {
 			doStoryBreak();
@@ -80,7 +79,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 	var handleChoiceSelection = function(choice) {
 		Display.clearAll();
 		if (choice.chunkId) {
-			doChunk(choice.chunkId);
+			continueScene(choice.chunkId);
 		} else {
 			continueScene();
 		}
