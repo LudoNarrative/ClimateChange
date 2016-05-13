@@ -409,6 +409,8 @@ define(["Request", "util"], function(Request, util) {
 		bestPath: bestPath,
 		allPaths: allPaths,
 		logOn: logOn,
-		logOff: logOff
+		logOff: logOff,
+		pathToStr: pathToStr,
+		pathsToStr: pathsToStr
 	}
 });

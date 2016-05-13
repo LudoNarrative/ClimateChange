@@ -71,11 +71,27 @@ define([], function() {
 		document.getElementById("choiceArea").innerHTML = "";
 	}
 
+	var showDiagnostics = function(bestPath, wishlist) {
+		console.log("!")
+		var diagEl = document.getElementById("diagnostics");
+		if (!diagEl) {
+			diagEl = makeEl("div", "");
+			diagEl.id = "diagnostics";
+			document.getElementsByTagName('body')[0].appendChild(diagEl);
+		}
+		diagEl.innerHTML = "";
+		var pathEl = makeEl("div", "bestPath: " + bestPath);
+		diagEl.appendChild(pathEl);
+		var wishlistEl = makeEl("div", "wishlist: " + wishlist);
+		diagEl.appendChild(wishlistEl);
+	}
+
 	// PUBLIC INTERFACE
 	return {
 		init: init,
 		clearAll: clearAll,
 		addStoryText: addStoryText,
-		addChoice: addChoice
+		addChoice: addChoice,
+		showDiagnostics: showDiagnostics
 	}
 })

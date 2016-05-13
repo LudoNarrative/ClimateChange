@@ -60,6 +60,12 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			});
 		}
 
+		var toStr = function() {
+			return _wantsAsArray().map(function(want) {
+				return want.val;
+			}).join(", ");
+		}
+
 		// Return the wishlist interface.
 		return {
 			remove: remove,
@@ -71,6 +77,7 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			logOff: BestPath.logOff,
 			pathToStr: BestPath.pathToStr,
 			pathsToStr: BestPath.pathsToStr,
+			toStr: toStr,
 			removeSatisfiedWants: removeSatisfiedWants
 		}
 	}
