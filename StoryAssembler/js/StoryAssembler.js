@@ -18,9 +18,8 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 	}
 
 	var continueScene = function(optChunkId) {
+		// If optChunkId is undefined, the startAt parameter below will also be undefined and will have no effect.
 		var bestPath = wishlist.bestPath(chunkLibrary, {startAt: optChunkId});
-		// var allPaths = wishlist.allPaths(chunkLibrary);
-		// wishlist.pathsToStr(allPaths);
 		if (bestPath) {
 			var nextStep = bestPath.route[0];
 			doChunk(nextStep, bestPath.choiceDetails);
@@ -78,11 +77,9 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 
 	var handleChoiceSelection = function(choice) {
 		Display.clearAll();
-		if (choice.chunkId) {
-			continueScene(choice.chunkId);
-		} else {
-			continueScene();
-		}
+
+		// Continue the scene. If we have a specific chunkId, we'll start our search with that; otherwise if it's undefined, we'll search over the whole library for a new best path.
+		continueScene(choice.chunkId);
 	}
 
 	var handleEffects = function(chunk) {
