@@ -1,4 +1,5 @@
 CURRENT
+
 - Implement heuristic/max depth to speed up BestPath.
 	- First implement simple max-depth to see if solves slow-down
 	- Then implement heuristic to make this better/more dynamic.
@@ -9,6 +10,9 @@ CURRENT
 		- also, either/both could be dynamic based on time (i.e. best you've found after 2 seconds)
 		- investigate rete nets. 
 
+	- If you are handling a click and you pull up a chunk with its own choices, you need to temporarily add that ID to the wishlist and do a search, so you can fill in the choice labels (and also keep trying to maximize wants.)
+
+
 
 TODO
 - Factor Display out of StoryAssembler (shouldn't depend on it)
@@ -16,6 +20,7 @@ TODO
 - ON-screen debugging showing current wishlist, possibly chunk library too.
 - Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
 - Fix commented out choiceDetails printing (two places)
+- Possible bug in the case where we're recursing to find a subgoal that's the same as one of our wishlist goals. [Think about what happens in this case.]
 
 Future:
 
