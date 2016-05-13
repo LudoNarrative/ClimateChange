@@ -42,11 +42,11 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			return arr;
 		}
 
-		var bestPath = function(chunkLibrary) {
-			return BestPath.bestPath(_wantsAsArray(), chunkLibrary, State);
+		var bestPath = function(chunkLibrary, params) {
+			return BestPath.bestPath(_wantsAsArray(), params || {}, chunkLibrary, State);
 		}
-		var allPaths = function(chunkLibrary) {
-			return BestPath.allPaths(_wantsAsArray(), chunkLibrary, State);
+		var allPaths = function(chunkLibrary, params) {
+			return BestPath.allPaths(_wantsAsArray(), params || {}, chunkLibrary, State);
 		}
 
 		var removeSatisfiedWants = function() {
