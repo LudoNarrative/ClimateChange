@@ -6,10 +6,11 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 	var chunkLibrary;
 	var State;
 	var wishlist;
-	var beginScene = function(_wishlist, _chunkLibrary, _State) {
+	var beginScene = function(_wishlist, _chunkLibrary, _State, params) {
 		chunkLibrary = _chunkLibrary;
 		State = _State;
 		wishlist = _wishlist;
+		params = params || {};
 		
 		Display.init(handleChoiceSelection);
 		Templates.init(State);
