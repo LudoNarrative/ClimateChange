@@ -94,7 +94,6 @@ precondition(control_event(pressed(mouse_button)),gain).
 precondition(overlaps(ball,square,true),gain).
 result(gain,increases(confidence,10)).
 result(gain,change_color(square,green,16)).
-
 precondition(control_event(pressed(mouse_button)),loss).
 precondition(overlaps(ball,square,false),loss).
 result(loss,decreases(confidence,10)).
