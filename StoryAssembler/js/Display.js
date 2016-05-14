@@ -12,6 +12,9 @@ define([], function() {
 	var showUnavailableChoices = true;
 
 	var clickHandler;
+	var pathEl;
+	var wishlistEl;
+	var stateEl;
 
 	// Create and return an HTML element of a given type with the given content.
 	var makeEl = function(type, content, elClass) {
@@ -30,6 +33,18 @@ define([], function() {
 		el = makeEl("div", "");
 		el.id = "choiceArea";
 		document.getElementsByTagName('body')[0].appendChild(el);
+
+		// Create Diagnostic container.
+		var diagEl = makeEl("div", "");
+		diagEl.id = "diagnostics";
+		document.getElementsByTagName('body')[0].appendChild(diagEl);
+		pathEl = makeEl("div", "<div class='dHeader'>Best Path:</div><div class='pathArea'></div>");
+		diagEl.appendChild(pathEl);
+		wishlistEl = makeEl("div", "<div class='dHeader'>Wishlist Is Now:</div><div class='wishlistArea'></div>");
+		diagEl.appendChild(wishlistEl);
+		stateEl = makeEl("div", "<div class='dHeader'>State:</div><div class='stateArea'></div>");
+		diagEl.appendChild(stateEl);
+
 	}
 
 	// Add some story text to the story window.
@@ -70,17 +85,11 @@ define([], function() {
 		document.getElementById("choiceArea").innerHTML = "";
 	}
 
-	var showDiagnostics = function(bestPath, wishlist) {
-		console.log("!")
-		var diagEl = document.getElementById("diagnostics");
-		if (!diagEl) {
-			diagEl = makeEl("div", "");
-			diagEl.id = "diagnostics";
-			document.getElementsByTagName('body')[0].appendChild(diagEl);
-		}
-		diagEl.innerHTML = "";
-
-		var pathEl = makeEl("div", "<div class='dHeader'>Best Path:</div>");
+	var satisfiesList;
+	var showPath = function(bestPath) {
+		var area = document.getElementsByClassName("pathArea")[0];
+		area.innerHTML = "";
+		// Show Best Path.
 		var pathSteps = makeEl("div", "", "pathSteps");
 		if (bestPath && bestPath.route) {
 			bestPath.route.forEach(function(node, pos) {
@@ -94,27 +103,47 @@ define([], function() {
 		} else {
 			pathSteps.innerHTML = "No Path";
 		}
-		pathEl.appendChild(pathSteps);
-		diagEl.appendChild(pathEl);
-		var satisfiesList = [];
+		area.appendChild(pathSteps);
+		satisfiesList = [];
 		if (bestPath && bestPath.satisfies) {
 			satisfiesList = bestPath.satisfies.map(function(item){
 				return item.val;
 			});
 			var satisfiesEl = makeEl("div", "This path would satisfy the highlighted Wants below.", "pathExpl");
-			pathEl.appendChild(satisfiesEl);
+			area.appendChild(satisfiesEl);
 		}
+	}
 
-		var wishlistEl = makeEl("div", "<div class='dHeader'>Wishlist Is Now:</div>");
+	var showWishlist = function(wishlist) {
+		var area = document.getElementsByClassName("wishlistArea")[0];
+		area.innerHTML = "";
+		// Show Wishlist.
 		var wishlistArr = wishlist.wantsAsArray();
-		wishlistArr.forEach(function(want) {
-			var wantEl = makeEl("div", want.val, "wlWant");
-			if (satisfiesList.indexOf(want.val) >= 0) {
-				wantEl.classList.add("matchedWant");
+		if (wishlistArr.length > 0) {
+			wishlistArr.forEach(function(want) {
+				var wantEl = makeEl("div", want.val, "wlWant");
+				if (satisfiesList.indexOf(want.val) >= 0) {
+					wantEl.classList.add("matchedWant");
+				}
+				area.appendChild(wantEl);
+			});
+		} else {
+			area.appendChild(makeEl("div", "Wishlist Empty", "pathSteps"));
+		}
+	}
+
+	var showState = function(blackboard) {
+		var area = document.getElementsByClassName("stateArea")[0];
+		area.innerHTML = "";
+		// Show State.
+		console.log("blackboard", blackboard);
+		var stateKeys = Object.keys(blackboard);
+		stateKeys.forEach(function(key) {
+			if (blackboard[key]) {
+				var entryEl = makeEl("div", "<span class='bbKey'>" + key + "</span>: <span class='bbValue'>" + blackboard[key] + "</span>", "blackboardEntry");
+				area.appendChild(entryEl);
 			}
-			wishlistEl.appendChild(wantEl);
 		})
-		diagEl.appendChild(wishlistEl);
 	}
 
 	// PUBLIC INTERFACE
@@ -123,6 +152,8 @@ define([], function() {
 		clearAll: clearAll,
 		addStoryText: addStoryText,
 		addChoice: addChoice,
-		showDiagnostics: showDiagnostics
+		showPath: showPath,
+		showWishlist: showWishlist,
+		showState: showState
 	}
 })

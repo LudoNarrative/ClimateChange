@@ -60,6 +60,7 @@ span.chunk {
     font-variant: small-caps;
     text-decoration: underline;
     padding-top: 0.75em;
+    font-size: 120%;
 }
 .firstPathStep {
     font-weight: bold;
@@ -84,6 +85,17 @@ span.chunk {
     margin-top: 0.75em;
     box-shadow: 1px 1px 4px #aaa;
     margin-bottom: 0.75em;
+}
+.blackboardEntry {
+    padding: 0.25em 0.5em;
+}
+.bbKey {
+    font-weight: bold;
+}
+.bbValue {
+    background-color: #DDDDFF;
+    border-radius: 6px;
+    padding: 0.2em;
 }
 .matchedWant {
     border: thick solid #00981D;
