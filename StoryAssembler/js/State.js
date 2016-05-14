@@ -158,6 +158,10 @@ define(["Condition"], function(Condition) {
 		return false;
 	}
 
+	var getBlackboard = function() {
+		return blackboard;
+	}
+
 	return {
 		get: get,
 		set: set,
@@ -165,6 +169,7 @@ define(["Condition"], function(Condition) {
 		change: change,
 		isTrue: isTrue,
 		wouldMakeTrue: wouldMakeTrue,
-		wouldAnyMakeTrue: wouldAnyMakeTrue
+		wouldAnyMakeTrue: wouldAnyMakeTrue,
+		getBlackboard: getBlackboard
 	}
 });
