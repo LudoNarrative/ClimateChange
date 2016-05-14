@@ -1,18 +1,25 @@
 CURRENT
-- Running very slow.
+- ON-screen debugging showing current wishlist, possibly chunk library too.
+
 
 
 TODO
 - Factor Display out of StoryAssembler (shouldn't depend on it)
 - Implement "order" and "mandatory" properties for wishlists.
-- ON-screen debugging showing current wishlist, possibly chunk library too.
 - Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
-
+- Fix commented out choiceDetails printing (two places)
+- Possible bug in the case where we're recursing to find a subgoal that's the same as one of our wishlist goals. [Think about what happens in this case.]
+- Find out why StoryAssembler integration unit tests are crashing every other time.
 
 Future:
 
+- Replace flat max_depth with a dynamic heuristic that stops searching any path that has gone more than N nodes without satisfying a Want from the wishlist. (Ben's idea.)
 - Figure out a way to allow comments in data format. (i.e. not raw json)
 - Basic editor for JSON
 - What about chunks being reused
 - ALlow commentsi n JSON
 - Research in unit tests: how to test properties of an object? If you check directly, it'll crash with a "cannot read property x of y." If you check that the object exists first, it just adds a failing test before the crash.
+
+
+Done:
+- Implement a max_depth to speed up BestPath
