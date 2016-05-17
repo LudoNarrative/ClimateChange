@@ -3,71 +3,88 @@
  % limited/unlimited
  %
 
+lowThreshold(lt(Resource, Thresh), Resource) :-
+    resource(Resource),
+    threshold(Thresh).
+
+lowThreshold(le(Resource, Thresh), Resource) :-
+    resource(Resource),
+    threshold(Thresh).
+
+highThreshold(gt(Resource, Thresh), Resource) :-
+    resource(Resource),
+    threshold(Thresh).
+
+highThreshold(ge(Resource, Thresh), Resource) :-
+    resource(Resource),
+    threshold(Thresh).
 
 
-good(RESOURCE) :-     
-    precondition(
-        lt(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_loss)).
-    
-good(RESOURCE) :-     
-    precondition(
-        le(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_loss)).
-    
-bad(RESOURCE) :- 
-    precondition(
-        gt(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_loss)).
-    
-bad(RESOURCE) :- 
-    precondition(
-        ge(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_loss)).
+%% Good and bad results
 
-bad(RESOURCE) :-     
-    precondition(
-        lt(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_win)).
-    
-good(RESOURCE) :- 
-    precondition(
-        gt(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_win)).
-    
+goodResult(mode_change(game_win)).
+badResult(mode_change(game_end)). % ?
+badResult(mode_change(game_loss)).
 
-bad(RESOURCE) :-     
-    precondition(
-        lt(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_end)).
-    
-good(RESOURCE) :- 
-    precondition(
-        gt(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_end)).
-    
-    
-    
-bad(RESOURCE) :-     
-    precondition(
-        le(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_win)).
-    
-good(RESOURCE) :- 
-    precondition(
-        ge(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_win)).
-    
+goodResult(increase(Resource, Amount)) :-
+    result(_, increase(Resource, Amount)),
+    good(Resource).
 
-bad(RESOURCE) :-     
-    precondition(
-        le(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_end)).
+goodResult(decrease(Resource, Amount)) :-
+    result(_, decrease(Resource, Amount)),
+    bad(Resource).
+
+badResult(increase(Resource, Amount)) :-
+    result(_, increase(Resource, Amount)),
+    bad(Resource).
+
+badResult(decrease(Resource, Amount)) :-
+    result(_, decrease(Resource, Amount)),
+    good(Resource).
+
+%% Good and bad outcomes
+
+outcomeFavorable(Outcome) :-
+    result(Outcome, Result),
+    goodResult(Result).
+
+outcomeUnfavorable(Outcome) :-
+    result(Outcome, Result),
+    badResult(Result).
+
+hasTradeoff(Outcome) :-
+    outcomeFavorable(Outcome),
+    outcomeUnfavorable(Outcome).
+
+%% Relating outcomes and resources
+
+needsLow(Outcome, Resource) :- 
+    precondition(Pre, Outcome),
+    lowThreshold(Pre, Resource).
+
+needsHigh(Outcome, Resource) :-
+    precondition(Pre, Outcome),
+    highThreshold(Pre, Resource).
+
+
+%% Good and bad resources
+
+good(Resource) :-
+    needsHigh(Outcome, Resource),
+    outcomeFavorable(Outcome).
     
-good(RESOURCE) :- 
-    precondition(
-        ge(RESOURCE,THRESHOLD), OUTCOME),
-    result(OUTCOME,mode_change(game_end)).
+bad(Resource) :- 
+    needsHigh(Outcome, Resource),
+    outcomeUnfavorable(Outcome).
+    
+good(Resource) :- 
+    needsLow(Outcome, Resource),
+    outcomeUnfavorable(Outcome).
+
+bad(Resource) :-     
+    needsLow(Outcome, Resource),
+    outcomeFavorable(Outcome).
+   
 
 good(Resource) :-
     goal(maintain(Resource)).
@@ -78,18 +95,12 @@ bad(Resource) :-
 bad(Resource) :-
     goal(limit(Resource)).
 
-bad(Resource) :-
-    precondition(le(Resource, Thresh), Outcome),
-    outcomeUnfavorable(Outcome).
+
     
 resourceAffects(Resource, Outcome) :-
-    precondition(ge(Resource, Thresh), Outcome).
+    needsHigh(Outcome, Resource).
 resourceAffects(Resource, Outcome) :-
-    precondition(le(Resource, Thresh), Outcome).
-resourceAffects(Resource, Outcome) :-
-    precondition(gt(Resource, Thresh), Outcome).
-resourceAffects(Resource, Outcome) :-
-    precondition(lt(Resource, Thresh), Outcome).
+    needsLow(Outcome, Resource).
 
 
 outcomeAffects(Resource, Outcome, positive) :-
@@ -122,6 +133,7 @@ outcomeAffects(Resource, Outcome, negative) :-
 outcomeFavorable(Outcome) :-
     outcomeAffects(Resource, Outcome, positive),
     good(Resource).
+
 outcomeFavorable(Outcome) :-
     outcomeAffects(Resource, Outcome, negative),
     bad(Resource).
@@ -133,64 +145,66 @@ outcomeUnfavorable(Outcome) :-
     outcomeAffects(Outcome, Resource, negative),
     good(Resource).
 
-condition(CONDITION) :- precondition(CONDITION,OUTCOME).
+condition(CONDITION) :- precondition(CONDITION,Outcome).
 outcome(Outcome) :- precondition(_, Outcome).
 
-moreThanOnePrecondition(OUTCOME) :- 
-    2 {precondition(CONDITION,OUTCOME) : condition(CONDITION)} , 
-    outcome(OUTCOME).
-onlyOnePrecondition(OUTCOME) :- 
-    1 {precondition(CONDITION,OUTCOME) : condition(CONDITION)} 1 , 
-    outcome(OUTCOME).
+moreThanOnePrecondition(Outcome) :- 
+    2 {precondition(CONDITION,Outcome) : condition(CONDITION)} , 
+    outcome(Outcome).
+onlyOnePrecondition(Outcome) :- 
+    1 {precondition(CONDITION,Outcome) : condition(CONDITION)} 1 , 
+    outcome(Outcome).
 
 worseWithTime(RESOURCE) :- 
     good(RESOURCE),
-    precondition(tick,OUTCOME), 
-    onlyOnePrecondition(OUTCOME),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+    precondition(tick,Outcome), 
+    onlyOnePrecondition(Outcome),
+    result(Outcome,decrease(RESOURCE,AMOUNT)).
+
 worseWithTime(RESOURCE) :- 
     bad(RESOURCE),
-    precondition(tick,OUTCOME), 
-    onlyOnePrecondition(OUTCOME),
-    result(OUTCOME,increases(RESOURCE,AMOUNT)).
+    precondition(tick,Outcome), 
+    onlyOnePrecondition(Outcome),
+    result(Outcome,increase(RESOURCE,AMOUNT)).
 
 betterWithTime(RESOURCE) :- 
     bad(RESOURCE),
-    precondition(tick,OUTCOME), 
-    onlyOnePrecondition(OUTCOME),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+    precondition(tick,Outcome), 
+    onlyOnePrecondition(Outcome),
+    result(Outcome,decrease(RESOURCE,AMOUNT)).
+
 betterWithTime(RESOURCE) :- 
     good(RESOURCE),
-    precondition(tick,OUTCOME), 
-    onlyOnePrecondition(OUTCOME),
-    result(OUTCOME,increases(RESOURCE,AMOUNT)).
+    precondition(tick,Outcome), 
+    onlyOnePrecondition(Outcome),
+    result(Outcome,increase(RESOURCE,AMOUNT)).
     
  
 
-thing(OUTCOME,ENTITY,POLARITY) :- 
-    result(OUTCOME,select(ENTITY,POLARITY)).
+thing(Outcome,ENTITY,POLARITY) :- 
+    result(Outcome,select(ENTITY,POLARITY)).
 
 
 % XXX rewrite these to involve more generality than buttons
 playerActionHelps(ControlEvent, Resource) :-
     good(Resource),
     precondition(control_event(ControlEvent), Outcome),
-    result(Outcome, increases(Resource, Amount)).
+    result(Outcome, increase(Resource, Amount)).
 
 playerActionHelps(ControlEvent, Resource) :-
     bad(Resource),
     precondition(control_event(ControlEvent), Outcome),
-    result(Outcome, decreases(Resource, Amount)).
+    result(Outcome, decrease(Resource, Amount)).
     
 playerActionHurts(ControlEvent, Resource) :-
     bad(Resource),
     precondition(control_event(ControlEvent), Outcome),
-    result(Outcome, increases(Resource, Amount)).
+    result(Outcome, increase(Resource, Amount)).
 
 playerActionHurts(ControlEvent, Resource) :-
     good(Resource),
     precondition(control_event(ControlEvent), Outcome),
-    result(Outcome, decreases(Resource, Amount)).
+    result(Outcome, decrease(Resource, Amount)).
 
     
 playerActionAffects(ControlEvent, Resource) :-
@@ -203,52 +217,49 @@ playerInfluences(Outcome) :-
     playerActionAffects(_, _, Resource),
     resourceAffects(Resource, Outcome).
 
+%% XXX TODO: clean up below.
     
-actionHasRiskReward(BUTTON,BUTTON_STATE) :- 
-    playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE1),
-    playerActionHurts(BUTTON,BUTTON_STATE,RESOURCE2).
+actionHasRiskReward(ControlEvent) :- 
+    playerActionHelps(ControlEvent, Resource1),
+    playerActionHurts(ControlEvent, Resource2).
     
-actionNeededForMaintenance(BUTTON,BUTTON_STATE,RESOURCE) :-
-    playerActionHelps(BUTTON,BUTTON_STATE,RESOURCE),
-    worseWithTime(RESOURCE).
+actionNeededForMaintenance(ControlEvent, Resource) :-
+    playerActionHelps(ControlEvent, Resource),
+    worseWithTime(Resource).
     
-timingBasedPhysics(spring;pendulum;chase;random;random_chase;flee;random_flee).
-
-correlated(RESOURCE1,RESOURCE2,positive) :-
-    result(OUTCOME,increases(RESOURCE1, AMOUNT1)),
-    result(OUTCOME,increases(RESOURCE2, AMOUNT2)),
-    RESOURCE1 != RESOURCE2.
+correlated(Resource1,Resource2,positive) :-
+    result(Outcome,increase(Resource1, Amount1)),
+    result(Outcome,increase(Resource2, Amount2)),
+    Resource1 != Resource2.
     
-correlated(RESOURCE1,RESOURCE2,positive) :-
-    result(OUTCOME,decreases(RESOURCE1, AMOUNT1)),
-    result(OUTCOME,decreases(RESOURCE2, AMOUNT2)),
-    RESOURCE1 != RESOURCE2.
+correlated(Resource1,Resource2,positive) :-
+    result(Outcome,decrease(Resource1, Amount1)),
+    result(Outcome,decrease(Resource2, Amount2)),
+    Resource1 != Resource2.
     
-correlated(RESOURCE1,RESOURCE2,negative) :-
-    result(OUTCOME,decreases(RESOURCE1, AMOUNT1)),
-    result(OUTCOME,increases(RESOURCE2, AMOUNT2)).
+correlated(Resource1,Resource2,negative) :-
+    result(Outcome,decrease(Resource1, Amount1)),
+    result(Outcome,increase(Resource2, Amount2)).
         
-timingAffectsEntity(ENTITY) :- 
-    physicsLogic(ENTITY,PHYSICS_TYPE),
-    timingBasedPhysics(PHYSICS_TYPE).
+timingAffectsEntity(Entity) :- 
+    physicsLogic(Entity, PhysicsType),
+    timingBasedPhysics(PhysicsType).
 
     
-consumedBy(RESOURCE,OUTCOME) :-
-    precondition(gt(RESOURCE,THRESHOLD),OUTCOME),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+consumedBy(Resource, Outcome) :-
+    precondition(Condition, Outcome),
+    highThreshold(Condition, Resource),
+    result(Outcome,decrease(Resource, _)).
     
-consumedBy(RESOURCE,OUTCOME) :-
-    precondition(ge(RESOURCE,THRESHOLD),OUTCOME),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
 
 timingAffectsAction(BUTTON,BUTTON_STATE) :- 
-    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
-    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
+    precondition(control_event(BUTTON,BUTTON_STATE),Outcome),
+    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     timingAffectsEntity(ENTITY_A).
 
 timingAffectsAction(BUTTON,BUTTON_STATE) :- 
-    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
-    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
+    precondition(control_event(BUTTON,BUTTON_STATE),Outcome),
+    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     timingAffectsEntity(ENTITY_B).
   
 timingChallenge(BUTTON,BUTTON_STATE) :- 
@@ -257,82 +268,93 @@ timingChallenge(BUTTON,BUTTON_STATE) :-
 
 
     
-goal(achieve(OUTCOME)) :-
-    result(OUTCOME, mode_change(game_win)).
-goal(achieve(OUTCOME)) :-
-    result(OUTCOME, mode_change(game_end)).
+goal(achieve(Outcome)) :-
+    result(Outcome, mode_change(game_win)).
+goal(achieve(Outcome)) :-
+    result(Outcome, mode_change(game_end)).
     
-goal(prevent(OUTCOME)) :-
-    result(OUTCOME, mode_change(game_loss)).
+goal(prevent(Outcome)) :-
+    result(Outcome, mode_change(game_loss)).
 
-result(OUTCOME,decreases(RESOURCE,1)) :-
-    result(OUTCOME,delete(ENTITY)),
-    resourceLogic(RESOURCE,count(ENTITY)).
+result(Outcome, decrease(Resource, 1)) :-
+    result(Outcome, delete(Entity)),
+    resourceLogic(Resource, count(Entity)).
     
-result(OUTCOME,increases(RESOURCE,1)) :-
-    result(OUTCOME,add(ENTITY)),
-    resourceLogic(RESOURCE,count(ENTITY)).
+result(Outcome, increase(Resource,1)) :-
+    result(Outcome,add(Entity)),
+    resourceLogic(Resource,count(Entity)).
     
     
-requiredBy(OUTCOME,ENTITY) :-
-    precondition(overlaps(ENTITY,ENTITY_B,POLARITY),OUTCOME).
+requiredBy(Outcome, Entity) :-
+    precondition(overlaps(Entity,Entity_B,POLARITY),Outcome).
     
-requiredBy(OUTCOME,ENTITY) :-
-    precondition(overlaps(ENTITY_B,ENTITY,POLARITY),OUTCOME).
+requiredBy(Outcome, Entity) :-
+    precondition(overlaps(Entity_B,Entity,POLARITY),Outcome).
     
 
 %% Relationships between outcomes
 
-enables(OUTCOME,OUTCOME2) :-
-    result(OUTCOME,add(ENTITY)), 
-    requiredBy(OUTCOME2,ENTITY),
-    OUTCOME != OUTCOME2 .
+enables(Enabler, Enabled) :-
+    outcome_enables(Enabler, Result),
+    result_enables(Result, Enabled),
+    Enabler != Enabled.
+
+
+%% XXX rewrite the below.
+enables(Outcome,Outcome2) :-
+    result(Outcome,add(ENTITY)), 
+    requiredBy(Outcome2,ENTITY),
+    Outcome != Outcome2 .
  
-hinders(OUTCOME,OUTCOME2) :-
-    result(OUTCOME,delete(ENTITY)), 
-    requiredBy(OUTCOME2,ENTITY),
-    OUTCOME != OUTCOME2 .   
+hinders(Outcome,Outcome2) :-
+    result(Outcome,delete(ENTITY)), 
+    requiredBy(Outcome2,ENTITY),
+    Outcome != Outcome2 .   
     
-enables(OUTCOME,OUTCOME2) :- 
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
-    precondition(lt(RESOURCE,THRESHOLD),OUTCOME2),
-    OUTCOME != OUTCOME2 .
+% XXX duplicated by result_enables, I think?
+% enables(Outcome1, Outcome2) :- 
+%     result(Outcome1, decrease(Resource, Amound)), 
+%     precondition(Condition, Outcome2),
+%     highThreshold(Conditon, Resource),
+%     Outcome1 != Outcome2.
+%     
+% enables(Outcome,Outcome2) :- 
+%     result(Outcome,increase(RESOURCE,AMOUNT)), 
+%     precondition(gt(RESOURCE,THRESHOLD),Outcome2),
+%     Outcome != Outcome2 .
+% 
+% enables(Outcome,Outcome2) :- 
+%     result(Outcome,decrease(RESOURCE,AMOUNT)), 
+%     precondition(le(RESOURCE,THRESHOLD),Outcome2),
+%     Outcome != Outcome2 .
+%  
+% enables(Outcome1, Outcome2) :- 
+%     result(Outcome1, increase(Resource, Amount)),
+%     precondition(C, Outcome2),
+%     highThreshold(C, Resource),
+%     Outcome1 != Outcome2).
+   
     
-enables(OUTCOME,OUTCOME2) :- 
-    result(OUTCOME,increases(RESOURCE,AMOUNT)), 
-    precondition(gt(RESOURCE,THRESHOLD),OUTCOME2),
-    OUTCOME != OUTCOME2 .
+hinders(Outcome,Outcome2) :- 
+    result(Outcome,increase(RESOURCE,AMOUNT)), 
+    precondition(lt(RESOURCE,THRESHOLD),Outcome2),
+    Outcome != Outcome2 .
     
-hinders(OUTCOME,OUTCOME2) :- 
-    result(OUTCOME,increases(RESOURCE,AMOUNT)), 
-    precondition(lt(RESOURCE,THRESHOLD),OUTCOME2),
-    OUTCOME != OUTCOME2 .
+hinders(Outcome,Outcome2) :- 
+    result(Outcome,decrease(RESOURCE,AMOUNT)), 
+    precondition(gt(RESOURCE,THRESHOLD),Outcome2),
+    Outcome != Outcome2 .
     
-hinders(OUTCOME,OUTCOME2) :- 
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
-    precondition(gt(RESOURCE,THRESHOLD),OUTCOME2),
-    OUTCOME != OUTCOME2 .
     
-       
-enables(OUTCOME,OUTCOME2) :- 
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
-    precondition(le(RESOURCE,THRESHOLD),OUTCOME2),
-    OUTCOME != OUTCOME2 .
+hinders(Outcome,Outcome2) :- 
+    result(Outcome,increase(RESOURCE,AMOUNT)), 
+    precondition(le(RESOURCE,THRESHOLD),Outcome2),
+    Outcome != Outcome2 .
     
-enables(OUTCOME,OUTCOME2) :- 
-    result(OUTCOME,increases(RESOURCE,AMOUNT)), 
-    precondition(ge(RESOURCE,THRESHOLD),OUTCOME2),
-    OUTCOME != OUTCOME2 .
-    
-hinders(OUTCOME,OUTCOME2) :- 
-    result(OUTCOME,increases(RESOURCE,AMOUNT)), 
-    precondition(le(RESOURCE,THRESHOLD),OUTCOME2),
-    OUTCOME != OUTCOME2 .
-    
-hinders(OUTCOME,OUTCOME2) :- 
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)), 
-    precondition(ge(RESOURCE,THRESHOLD),OUTCOME2),
-    OUTCOME != OUTCOME2 .
+hinders(Outcome,Outcome2) :- 
+    result(Outcome,decrease(RESOURCE,AMOUNT)), 
+    precondition(ge(RESOURCE,THRESHOLD),Outcome2),
+    Outcome != Outcome2 .
 
 %% Collision and movement
 collide_precond(E1, E2, Outcome)
@@ -340,143 +362,175 @@ collide_precond(E1, E2, Outcome)
 collide_precond(E2, E1, Outcome)
   :- precondition(collide(E1, E2), Outcome).
 
-enables(O1, O2) :-
-    result(O1, move_toward(E1, E2)),
-    collide_precond(E1, E2, O2).
+result_enables_condition(move_toward(E1, E2), collide(E1, E2))
+    :- condition(collide(E1, E2)),
+       result(_, move_toward(E1, E2)).
 
-enables(Pushing, Collision) :-
-    result(Pushing, move_away(E1, E2)),
-    collide_precond(E1, Other, Collision),
-    Other != E2.
+result_enables_condition(move_toward(E1, E2), collide(E2, E1))
+    :- condition(collide(E1, E2)),
+       result(_, move_toward(E1, E2)).
 
-condition_enables(C, O) :-
+result_enables_condition(move_away(E1, E2), collide(E1, E3))
+    :- condition(collide(E1, E3)),
+       result(_, move_away(E1, E2)).
+
+result_enables_condition(increase(Resource), Condition)
+    :- highThreshold(Condition, Resource).
+
+result_enables_condition(decrease(Resource), Condition)
+    :- lowThreshold(Condition, Resource).
+
+result_enables(Result, Outcome) :-
+    result_enables_condition(Result, Condition),
+    precondition(Condition, Outcome).
+
+outcome_enables(Outcome, Result) :-
+    result(Outcome, Result).
+
+outcome_enables(Outcome, Result) :-
+    result(Outcome, Result'),
+    result_enables(Result', Outcome'),
+    outcome_enables(Outcome', Result).
+
+conditionEnables(C, O) :-
     precondition(C, O).
 
-condition_enables(C, O) :-
-    condition_enables(C, O'),
+conditionEnables(C, O) :-
+    conditionEnables(C, O'),
     enables(O', O).
 
 %% Transitivity of enablement
-enables(OUTCOME,OUTCOME3) :-
-    enables(OUTCOME,OUTCOME2),
-    enables(OUTCOME2,OUTCOME3).
+enables(Outcome1, Outcome3) :-
+    enables(Outcome1, Outcome2),
+    enables(Outcome2, Outcome3).
 
+%% More outcome favorability
+outcomeFavorable(Outcome) :-
+    enables(Outcome, Outcome'),
+    outcomeFavorable(Outcome').
+
+outcomeUnfavorable(Outcome) :-
+    enables(Outcome, Outcome'),
+    outcomeUnfavorable(Outcome').
  
-selection(OUTCOME) :-
-    result(OUTCOME,select(ENTITY,CONDITION)).
+selection(Outcome) :-
+    result(Outcome,select(ENTITY,CONDITION)).
 
 allocation(RESOURCE) :- 
-    consumedBy(RESOURCE,OUTCOME),
-    selection(OUTCOME).
+    consumedBy(RESOURCE,Outcome),
+    selection(Outcome).
     
     
-subGoal(prevent(OUTCOME_PRIME),1) :-
-    enables(OUTCOME_PRIME,OUTCOME),
-    goal(prevent(OUTCOME)),
-    not subGoal(achieve(OUTCOME_PRIME),1),
-    humanAffected(OUTCOME_PRIME). 
+subGoal(prevent(Outcome_PRIME),1) :-
+    enables(Outcome_PRIME,Outcome),
+    goal(prevent(Outcome)),
+    not subGoal(achieve(Outcome_PRIME),1),
+    humanAffected(Outcome_PRIME). 
     
-subGoal(achieve(OUTCOME_PRIME),1) :-
-    hinders(OUTCOME_PRIME,OUTCOME),
-    goal(prevent(OUTCOME)),
-    humanAffected(OUTCOME_PRIME).
+subGoal(achieve(Outcome_PRIME),1) :-
+    hinders(Outcome_PRIME,Outcome),
+    goal(prevent(Outcome)),
+    humanAffected(Outcome_PRIME).
     
 
-subGoal(achieve(OUTCOME_PRIME),1) :-
-    enables(OUTCOME_PRIME,OUTCOME),
-    goal(achieve(OUTCOME)),
-    humanAffected(OUTCOME_PRIME).
+subGoal(achieve(Outcome_PRIME),1) :-
+    enables(Outcome_PRIME,Outcome),
+    goal(achieve(Outcome)),
+    humanAffected(Outcome_PRIME).
 
-subGoal(prevent(OUTCOME_PRIME),I+1) :-
-    enables(OUTCOME_PRIME,OUTCOME),
-    subGoal(prevent(OUTCOME),I),
-    humanAffected(OUTCOME_PRIME),
+subGoal(prevent(Outcome_PRIME),I+1) :-
+    enables(Outcome_PRIME,Outcome),
+    subGoal(prevent(Outcome),I),
+    humanAffected(Outcome_PRIME),
     I < 1. 
     
-subGoal(achieve(OUTCOME_PRIME),I+1) :-
-    hinders(OUTCOME_PRIME,OUTCOME),
-    goal(prevent(OUTCOME),I),
-    humanAffected(OUTCOME_PRIME),
+subGoal(achieve(Outcome_PRIME),I+1) :-
+    hinders(Outcome_PRIME,Outcome),
+    goal(prevent(Outcome),I),
+    humanAffected(Outcome_PRIME),
     I < 1.
     
 
-goal(relates(OUTCOME)) :- 
-    goal(achieve(OUTCOME)).
+goal(relates(Outcome)) :- 
+    goal(achieve(Outcome)).
     
-goal(relates(OUTCOME)) :-
-    goal(prevent(OUTCOME)).
+goal(relates(Outcome)) :-
+    goal(prevent(Outcome)).
 
-goal(achieve(OUTCOME)) :- 
-    subGoal(achieve(OUTCOME),DEPTH).
+goal(achieve(Outcome)) :- 
+    subGoal(achieve(Outcome),DEPTH).
     
-goal(prevent(OUTCOME)) :-
-    subGoal(prevent(OUTCOME),DEPTH).
+goal(prevent(Outcome)) :-
+    subGoal(prevent(Outcome),DEPTH).
     
 timingChallengeGoal :- 
-    goal(achieve(OUTCOME)),
-    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
+    goal(achieve(Outcome)),
+    precondition(control_event(BUTTON,BUTTON_STATE),Outcome),
     timingChallenge(BUTTON,BUTTON_STATE).
     
 
 timingChallengeGoal :- 
-    goal(achieve(OUTCOME)),
-    precondition(control_event(BUTTON,BUTTON_STATE),OUTCOME),
+    goal(achieve(Outcome)),
+    precondition(control_event(BUTTON,BUTTON_STATE),Outcome),
     timingChallenge(BUTTON,BUTTON_STATE).
 
 goal(limit(Resource)) :-
-    precondition(gt(Resource, Threshold), Outcome),
+    precondition(Condition, Outcome),
+    highThreshold(Condition, Resource),
     goal(prevent(Outcome)).
     
-goal(maintain(RESOURCE)) :-
-    precondition(lt(RESOURCE,THRESHOLD),OUTCOME),
-    goal(prevent(OUTCOME)).
+goal(maintain(Resource)) :-
+    precondition(Condition, Outcome),
+    lowThreshold(Condition, Resource),
+    goal(prevent(Outcome)).
  
-goal(eliminate(RESOURCE)) :-
-    precondition(lt(RESOURCE,THRESHOLD),OUTCOME),
-    goal(achieve(OUTCOME)).
+goal(eliminate(Resource)) :-
+    precondition(Condition, Outcome),
+    lowThreshold(Condition, Resource),
+    goal(achieve(Outcome)).
    
-easy(OUTCOME) :-
-    unrestricted(OUTCOME).
+easy(Outcome) :-
+    unrestricted(Outcome).
 
-easy(OUTCOME) :-
-    precondition(overlaps(ENTITY_A,ENTITY_B,false),OUTCOME),
+easy(Outcome) :-
+    precondition(overlaps(ENTITY_A,ENTITY_B,false),Outcome),
     not agent(ENTITY_A),
     not agent(ENTITY_B).
     
 goal(maintain(RESOURCE)) :-
-    precondition(le(RESOURCE,THRESHOLD),OUTCOME),
-    goal(prevent(OUTCOME)).
+    precondition(le(RESOURCE,THRESHOLD),Outcome),
+    goal(prevent(Outcome)).
  
 goal(eliminate(RESOURCE)) :-
-    precondition(le(RESOURCE,THRESHOLD),OUTCOME),
-    goal(achieve(OUTCOME)).
+    precondition(le(RESOURCE,THRESHOLD),Outcome),
+    goal(achieve(Outcome)).
    
 isEasy :-
-    goal(achieve(OUTCOME)),
-    easy(OUTCOME).
+    goal(achieve(Outcome)),
+    easy(Outcome).
     
-nonMonotonic(RESOURCE) :-
-    result(OUTCOME1,decreases(RESOURCE,AMOUNT1)),
-    result(OUTCOME2, increases(RESOURCE,AMOUNT2)).
+nonMonotonic(Resource) :-
+    result(Outcome1, decrease(Resource, _)),
+    result(Outcome2, increase(Resource, _)).
 
 nonMonotonic(Resource) :-
     result(Outcome, set_to(Resource, Value)).
     
-monotonicallyDecreases(RESOURCE) :- 
-    result(OUTCOME1,decreases(RESOURCE,AMOUNT)),
-    not nonMonotonic(RESOURCE).
+monotonicallyDecreases(Resource) :- 
+    result(Outcome1, decrease(Resource, Amount)),
+    not nonMonotonic(Resource).
  
-monotonicallyIncreases(RESOURCE) :- 
-    result(OUTCOME1,increases(RESOURCE,AMOUNT)),
-    not nonMonotonic(RESOURCE).
+monotonicallyIncreases(Resource) :- 
+    result(Outcome1, increase(Resource, Amount)),
+    not nonMonotonic(Resource).
 
 
     
 
 %% XXX revisit these
 
-humanAffected(OUTCOME) :-
-    precondition(control_event(BUTTON,STATE),OUTCOME).
+humanAffected(Outcome) :-
+    precondition(control_event(BUTTON,STATE),Outcome).
     
     
 humanControlled(ENTITY) :-        
@@ -485,29 +539,29 @@ humanControlled(ENTITY) :-
 humanControlled(ENTITY) :-        
     physicsLogic(ENTITY, follows(cursor)).
 
-humanAffected(OUTCOME) :-
-    requiredBy(OUTCOME,ENTITY),
+humanAffected(Outcome) :-
+    requiredBy(Outcome,ENTITY),
     humanControlled(ENTITY).
     
-humanAffected(OUTCOME2) :-
-    enables(OUTCOME1,OUTCOME2),
-    humanAffected(OUTCOME1).
+humanAffected(Outcome2) :-
+    enables(Outcome1,Outcome2),
+    humanAffected(Outcome1).
 
 restrictedEntity(ENTITY) :- 
     entity(ENTITY),
     not humanControlled(ENTITY).
     
 restrictedEntity(ENTITY) :-
-    result(OUTCOME,applyRestitution(ENTITY)).
+    result(Outcome,applyRestitution(ENTITY)).
     
 restrictedEntity(ENTITY) :-
-    precondition(overlaps(ENTITY,OTHER,POLARITY),OUTCOME),
-    result(OUTCOME,delete(ENTITY)).
+    precondition(overlaps(ENTITY,OTHER,POLARITY),Outcome),
+    result(Outcome,delete(ENTITY)).
     
     
 restrictedEntity(ENTITY) :-
-    precondition(overlaps(OTHER,ENTITY,POLARITY),OUTCOME),
-    result(OUTCOME,delete(ENTITY)).
+    precondition(overlaps(OTHER,ENTITY,POLARITY),Outcome),
+    result(Outcome,delete(ENTITY)).
 
 unrestrictedEntity(ENTITY) :-
     entity(ENTITY), 
@@ -515,70 +569,70 @@ unrestrictedEntity(ENTITY) :-
     
     
 restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
-    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
+    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     restrictedEntity(ENTITY_A).
 
 restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
-    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
+    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     restrictedEntity(ENTITY_B).
 
 unrestrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
-    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),OUTCOME),
+    precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     not restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)).
     
-restricted(OUTCOME) :-
-    precondition(CONDITION, OUTCOME),
+restricted(Outcome) :-
+    precondition(CONDITION, Outcome),
     not unrestrictedCondition(CONDITION).
   
     
-unrestricted(OUTCOME) :-
-    outcome(OUTCOME),
-    not restricted(OUTCOME).
+unrestricted(Outcome) :-
+    outcome(Outcome),
+    not restricted(Outcome).
 
 unrestrictedCondition(lt(RESOURCE,THRESHOLD)) :-
     monotonicallyDecreases(RESOURCE),
-    precondition(lt(RESOURCE,THRESHOLD),SOME_OUTCOME),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)),
-    unrestricted(OUTCOME).
+    precondition(lt(RESOURCE,THRESHOLD),SOME_Outcome),
+    result(Outcome,decrease(RESOURCE,AMOUNT)),
+    unrestricted(Outcome).
   
 
     
 unrestrictedCondition(gt(RESOURCE,THRESHOLD)) :-
     monotonicallyIncreases(RESOURCE),
-    precondition(gt(RESOURCE,THRESHOLD),SOME_OUTCOME),
-    result(OUTCOME,increases(RESOURCE,AMOUNT)),
-    unrestricted(OUTCOME).
+    precondition(gt(RESOURCE,THRESHOLD),SOME_Outcome),
+    result(Outcome,increase(RESOURCE,AMOUNT)),
+    unrestricted(Outcome).
 
     
 unrestrictedCondition(le(RESOURCE,THRESHOLD)) :-
     monotonicallyDecreases(RESOURCE),
-    precondition(le(RESOURCE,THRESHOLD),SOME_OUTCOME),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)),
-    unrestricted(OUTCOME).
+    precondition(le(RESOURCE,THRESHOLD),SOME_Outcome),
+    result(Outcome,decrease(RESOURCE,AMOUNT)),
+    unrestricted(Outcome).
   
 
     
 unrestrictedCondition(ge(RESOURCE,THRESHOLD)) :-
     monotonicallyIncreases(RESOURCE),
-    precondition(ge(RESOURCE,THRESHOLD),SOME_OUTCOME),
-    result(OUTCOME,increases(RESOURCE,AMOUNT)),
-    unrestricted(OUTCOME).
+    precondition(ge(RESOURCE,THRESHOLD),SOME_Outcome),
+    result(Outcome,increase(RESOURCE,AMOUNT)),
+    unrestricted(Outcome).
 
     
-gradual(OUTCOME) :-
-    precondition(tick,OUTCOME).
-gradual(OUTCOME_PRIME) :-
-    gradual(OUTCOME),
-    enables(OUTCOME,OUTCOME_PRIME).
+gradual(Outcome) :-
+    precondition(tick,Outcome).
+gradual(Outcome_PRIME) :-
+    gradual(Outcome),
+    enables(Outcome,Outcome_PRIME).
 
 amount(AMOUNT) :-
-    result(OUTCOME,increases(RESOURCE,AMOUNT)).
+    result(Outcome,increase(RESOURCE,AMOUNT)).
 amount(AMOUNT) :- 
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+    result(Outcome,decrease(RESOURCE,AMOUNT)).
    
 medium_stakes :-
-    enables(GOOD_STEP,GOAL_OUTCOME),
-    goal(achieve(GOAL_OUTCOME)),
+    enables(GOOD_STEP,GOAL_Outcome),
+    goal(achieve(GOAL_Outcome)),
     hinders(BAD_STEP,GOOD_STEP),
     gradual(GOOD_STEP).
     
@@ -590,15 +644,15 @@ thoughtful :-
 
     
 replenishible(RESOURCE) :-
-    2 {result(OUTCOME1,increases(RESOURCE,AMOUNT1));
-    result(OUTCOME2,decreases(RESOURCE,AMOUNT2));
-    result(OUTCOME3,set_to(RESOURCE,AMOUNT3))}, resource(RESOURCE).
+    2 {result(Outcome1,increase(RESOURCE,AMOUNT1));
+    result(Outcome2,decrease(RESOURCE,AMOUNT2));
+    result(Outcome3,set_to(RESOURCE,AMOUNT3))}, resource(RESOURCE).
 
     
 
 limited(RESOURCE) :-
     not replenishible(RESOURCE),
-    result(OUTCOME,decreases(RESOURCE,AMOUNT)).
+    result(Outcome,decrease(RESOURCE,AMOUNT)).
       
     
 playerAgency(ENTITY) :- 
@@ -649,27 +703,34 @@ playerDetermines(Outcome) :-
 
 %% Player prediction/lightweight modeling
 
-% playerWillDo(Cond, Outcome) :-
-%   playerCreatesCondition(Cond),
-%   precondition(Cond, Outcome),
-%   outcomeFavorable(Outcome).
-%% More general:
-
 playerWillDo(Cond, Outcome) :-
   playerCreatesCondition(Cond),
-  condition_enables(Cond, Outcome),
+  conditionEnables(Cond, Outcome),
   outcomeFavorable(Outcome).
+
+  
 
 % %% KNOWLEGE BASE
 
-unrestrictedCondition(control_event(BUTTON,BUTTON_STATE)) :- buttons(BUTTON), buttonStates(BUTTON_STATE).
+% XXX what is the below needed for?
+% unrestrictedCondition(control_event(BUTTON,BUTTON_STATE) :- buttons(BUTTON), buttonStates(BUTTON_STATE).
+
+unrestrictedCondition(control_event(click(BUTTON))) :- buttons(BUTTON). 
+
 unrestrictedCondition(tick).
+
 unrestrictedGame :- 
-    unrestricted(OUTCOME),
-    result(OUTCOME,mode_change(story_progression)).
+    unrestricted(Outcome),
+    result(Outcome,mode_change(story_progression)).
+
 unrestrictedGame :- 
-    unrestricted(OUTCOME),
-    result(OUTCOME,mode_change(game_win)).
+    unrestricted(Outcome),
+    result(Outcome,mode_change(game_win)).
     
+
+timingBasedPhysics(spring;pendulum;chase;random;random_chase;flee;random_flee).
+threshold(mid;high;low).
+threshold(R) :-
+    resource(R).
 
     
