@@ -25,7 +25,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		Display.showState(State.getBlackboard());
 		if (bestPath) {
 			var nextStep = bestPath.route[0];
-			doChunk(nextStep, bestPath.choiceDetails);
+			doChunk(nextStep, bestPath.choiceDetails, bestPath);
 		} else {
 			Display.addStoryText("[Ran out of chunks early!]");
 			doStoryBreak();
@@ -33,7 +33,7 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		}
 	}
 
-	var doChunk = function(chunkId, choiceDetails) {
+	var doChunk = function(chunkId, choiceDetails, bestPath) {
 		var chunk = chunkLibrary.get(chunkId);
 
 		// Handle effects
@@ -41,7 +41,18 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 
 		// Get and show text for that item.
 		// var text = Request.getText(nextItem.content);
-		var text = Templates.render(chunk);
+		var chunkForText = chunk;
+		var routePos = 0;
+		while (!chunkForText.content) {
+			routePos += 1;
+			chunkForText = chunkLibrary.get(bestPath.route[routePos]);
+			if (chunkForText) {
+				handleEffects(chunkForText);
+			} else {
+				throw new Error("We started with chunk '" + chunkId + "' and it had no content, so we tried to recurse through bestPath, but did not find anything in the path with content. bestPath was:", bestPath);
+			}
+		}
+		var text = Templates.render(chunkForText);
 		Display.addStoryText(text);
 		// TODO: We shouldn't display "undefined" if there's no content field.
 
