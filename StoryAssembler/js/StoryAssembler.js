@@ -45,13 +45,20 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		var routePos = 0;
 		while (!chunkForText.content) {
 			routePos += 1;
-			chunkForText = chunkLibrary.get(bestPath.route[routePos]);
+			var nextChunkId = bestPath.route[routePos];
+			chunkForText = chunkLibrary.get(nextChunkId);
 			if (chunkForText) {
-				handleEffects(chunkForText);
+				if (chunkForText.choices) {
+					continueScene(nextChunkId);
+					return;
+				} else {
+					handleEffects(chunkForText);
+				}
 			} else {
 				throw new Error("We started with chunk '" + chunkId + "' and it had no content, so we tried to recurse through bestPath, but did not find anything in the path with content. bestPath was:", bestPath);
 			}
 		}
+
 		var text = Templates.render(chunkForText);
 		Display.addStoryText(text);
 		// TODO: We shouldn't display "undefined" if there's no content field.
