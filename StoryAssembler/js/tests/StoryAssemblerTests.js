@@ -26,6 +26,15 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist"], func
 	var contentForChoice = function(num) {
 		return html(child(num, getChoiceEl()));
 	}
+	var cleanUpDom = function() {
+		console.log("!")	
+		var el = document.getElementById("storyArea");
+		el.parentNode.removeChild(el);
+		el = document.getElementById("choiceArea");
+		el.parentNode.removeChild(el);
+		el = document.getElementById("diagnostics");
+		el.parentNode.removeChild(el);
+	}
 	
 	var run = function() {
 
@@ -79,12 +88,12 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist"], func
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Chain through condition request: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Chain through condition request: initially only 1 choice");
 			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Chain through condition request: single choice is to Chunk2");
-			console.log("!!!!!");
-			wl.logOn();
 			clickChoice(1);
-			wl.logOff();
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Chain through condition request: after click, should chain through.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Chain through condition request: no options when finished.");
+
+
+			cleanUpDom();
 
 		});
 	}
