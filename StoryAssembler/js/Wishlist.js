@@ -33,7 +33,7 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			return Object.keys(_wants).length;
 		}
 
-		var _wantsAsArray = function() {
+		var wantsAsArray = function() {
 			var keys = Object.keys(_wants);
 			var arr = [];
 			keys.forEach(function(key) {
@@ -42,22 +42,26 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			return arr;
 		}
 
-		var bestPath = function(chunkLibrary) {
-			return BestPath.bestPath(_wantsAsArray(), chunkLibrary, State);
+		var bestPath = function(chunkLibrary, params) {
+			return BestPath.bestPath(wantsAsArray(), params || {}, chunkLibrary, State);
 		}
-		var allPaths = function(chunkLibrary) {
-			return BestPath.allPaths(_wantsAsArray(), chunkLibrary, State);
+		var allPaths = function(chunkLibrary, params) {
+			return BestPath.allPaths(wantsAsArray(), params || {}, chunkLibrary, State);
 		}
 
 		var removeSatisfiedWants = function() {
 			var keys = Object.keys(_wants);
-			console.log("_wants", _wants);
 			keys.forEach(function(key) {
-				console.log("considering " + _wants[key].request.val);
 				if (State.isTrue(_wants[key].request.val)) {
 					delete _wants[key];
 				}
 			});
+		}
+
+		var toStr = function() {
+			return wantsAsArray().map(function(want) {
+				return want.val;
+			}).join(", ");
 		}
 
 		// Return the wishlist interface.
@@ -71,7 +75,9 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			logOff: BestPath.logOff,
 			pathToStr: BestPath.pathToStr,
 			pathsToStr: BestPath.pathsToStr,
-			removeSatisfiedWants: removeSatisfiedWants
+			toStr: toStr,
+			removeSatisfiedWants: removeSatisfiedWants,
+			wantsAsArray: wantsAsArray
 		}
 	}
 

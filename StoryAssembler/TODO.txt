@@ -1,18 +1,31 @@
 CURRENT
-- Running very slow.
 
 
 TODO
-- Factor Display out of StoryAssembler (shouldn't depend on it)
-- Implement "order" and "mandatory" properties for wishlists.
-- ON-screen debugging showing current wishlist, possibly chunk library too.
-- Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
+- Implement "order", and "persistent" properties for wishlists.
+- Possible bug in the case where we're recursing to find a subgoal that's the same as one of our wishlist goals. [Think about what happens in this case.]
+- Figure out a way to allow comments in data format. (i.e. not raw json)
+- Add a "repeatable" field to chunks: if false, removes from ChunkLibrary after displaying.
+- Research: ease of authoring (JSON editor, DSL, etc.)
+- Defining ways in which content might be varied, i.e. format vs informal, discussion vs monologue, defensive vs aggressive. [Rather than having static flags like "lecture scene", "dinner scene"]
+- Implementing the ability for mix-ins to satisfy wishlist items. [like using a mixin ShowPersonality satisfies a Want of "has shown personality"]
+- Implementing the idea of lines of dialog being said by particular speakers, who can have attributes that might affect mix-ins, etc. [old system had some of this already]
 
 
 Future:
+- If you have a chunk with a request (instead of content) which changes the conditions such that the original chunk matching that request can no longer appear, the system will show it anyway, when what it should do is some kind of replan (which might not find a matching chunk).
+- When recursing down, should flag as an error if we have a chunk with choices that requests a chunk w/choices (or requests a chunk that requests a chunk w/choices, etc.)
+- Replace flat max_depth with a dynamic heuristic that stops searching any path that has gone more than N nodes without satisfying a Want from the wishlist. (Ben's idea.)
 
-- Figure out a way to allow comments in data format. (i.e. not raw json)
-- Basic editor for JSON
-- What about chunks being reused
-- ALlow commentsi n JSON
+Maintenance / Cleanup
+- Factor Display out of StoryAssembler (shouldn't depend on it)
+- Fix commented out choiceDetails printing (two places)
 - Research in unit tests: how to test properties of an object? If you check directly, it'll crash with a "cannot read property x of y." If you check that the object exists first, it just adds a failing test before the crash.
+
+
+
+
+Done:
+X Implement a max_depth to speed up BestPath
+X ON-screen debugging showing current wishlist, possibly chunk library too.
+X Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
