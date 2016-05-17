@@ -338,7 +338,7 @@ result(bounce(ENTITY1,ENTITY2),
 outcome(OUTCOME) :- precondition(CONDITION,OUTCOME).
 outcome(OUTCOME) :- result(OUTCOME,EFFECT).
 
-interactions(help;collide;harm;help;make_invulnerable).
+interactions(help;collide;harm;help).
 
 1 {interaction(ENTITY1,ENTITY2,INTERACTION) : interactions(INTERACTION)} 
     :-  entity(ENTITY1), 
@@ -479,6 +479,7 @@ precondition(overlaps(cursor,ENTITY,true),select(ENTITY,double)) :-
 {precondition(lt(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
 {precondition(le(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
 
+{precondition(control_event(BUTTON,STATE),OUTCOME) : buttons(BUTTON),buttonStates(STATE), potentialOutcomes(OUTCOME)}.
 
 {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) :potentialOutcomes(OUTCOME)} :- 
     entity(ENTITY1),
