@@ -88,6 +88,7 @@ define(["Request", "util"], function(Request, util) {
 
 		// Either do a search starting from a given chunk, or look through every chunk in the library.
 		if (params.startAt) {
+			log(rLevel, "b/c params.startAt, starting at " + params.startAt);
 			doSearchFromHere(params.startAt);
 		} else {
 			keys.forEach(function(key) {
@@ -167,8 +168,13 @@ define(["Request", "util"], function(Request, util) {
 		var choiceDetails = [];
 		if (wants.length > 0) { 
 			// See if any outgoing nodes can meet any of our wants. If so, add paths for each that start with this node, noting any satisfied Wants discovered along the way.
-			if (chunk.request && chunk.request.type === "id") {
-				var req = Request.byId(chunk.request.val);
+			if (chunk.request) {
+				var req;
+				if (chunk.request.type === "id") {
+					req = Request.byId(chunk.request.val);
+				} else {
+					req = Request.byCondition(chunk.request.val);
+				}
 				log(rLevel, "We will now search for the request in chunk " + chunk.id + ".");
 				var validPaths = searchFromHere(paths, chunk, skipList, req, wants, pathToHere, rLevel, false);
 				if (validPaths.length > 0 && validPaths[0].route) {

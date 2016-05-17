@@ -66,6 +66,26 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist"], func
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "In multi-choice chain, no options when finished.");
 
 
+			ChunkLibrary.reset();
+			State.reset();
+			State.set("beat", 1);
+			wl = Wishlist.create([{condition: "beat eq 3"}, {condition: "beat eq 2"}], State);
+			ChunkLibrary.add([
+				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}], effects: ["set beat 2"] },
+				{ id: "Chunk2", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
+				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", effects: ["set beat 3", "set x true"] }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State);
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Chain through condition request: first node HTML correct");
+			assert.deepEqual(countChildren(getChoiceEl()), 1, "Chain through condition request: initially only 1 choice");
+			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Chain through condition request: single choice is to Chunk2");
+			console.log("!!!!!");
+			wl.logOn();
+			clickChoice(1);
+			wl.logOff();
+			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Chain through condition request: after click, should chain through.");
+			assert.deepEqual(countChildren(getChoiceEl()), 0, "Chain through condition request: no options when finished.");
+
 		});
 	}
 

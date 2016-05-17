@@ -16,6 +16,8 @@ Future:
 - What about chunks being reused
 - ALlow commentsi n JSON
 - Research in unit tests: how to test properties of an object? If you check directly, it'll crash with a "cannot read property x of y." If you check that the object exists first, it just adds a failing test before the crash.
+- If you have a chunk with a request (instead of content) which changes the conditions such that the original chunk matching that request can no longer appear, the system will show it anyway, when what it should do is some kind of replan (which might not find a matching chunk).
+- When recursing down, should flag as an error if we have a chunk with choices that requests a chunk w/choices (or requests a chunk that requests a chunk w/choices, etc.)
 
 
 Done:
