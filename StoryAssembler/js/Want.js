@@ -31,6 +31,15 @@ define(["Request", "Validate", "util"], function(Request, Validate, util) {
 		}
 
 		want.id = util.iterator("wants");
+		if (want.order) {
+			if (want.order === "first") {
+				want.order = Number.NEGATIVE_INFINITY;
+			} else if (want.order === "last") {
+				want.order = Number.POSITIVE_INFINITY;
+			} else if ((typeof want.order === "number" && want.order < 0) || typeof want.order !== "number") {
+				throw new Error("Could not create Want with invalid order '" + want.order + "': must be 'first', 'last', or an integer >= 0.");
+			}
+		}
 
 		return want;
 	}

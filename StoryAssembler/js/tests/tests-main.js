@@ -25,7 +25,8 @@ requirejs.config({
       "Display": "../../js/Display",
       "Templates": "../../js/Templates",
       "BestPath": "../../js/BestPath",
-    	"util": "../../js/util"
+    	"util": "../../js/util",
+      "underscore": "../../lib/underscore-1.8.3.min"
 	},
 	shim: {
        "QUnit": {
