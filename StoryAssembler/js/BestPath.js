@@ -51,6 +51,7 @@ define(["Request", "util"], function(Request, util) {
 	var allPaths = function(wants, params, _chunkLibrary, _State) {
 		if (_chunkLibrary) init(_chunkLibrary, _State);
 		curr_max_depth = params.max_depth ? params.max_depth : DEFAULT_MAX_DEPTH;
+		var orderedWants = getHighestPriorityWants(wants);
 		return searchLibraryForPaths(wants, false, [], params, 1);
 	}
 
@@ -67,6 +68,14 @@ define(["Request", "util"], function(Request, util) {
 			}
 		});
 		return paths[bestPos];
+	}
+
+	// Cull wants based on "order" field, if:
+	//    any want has order "first"
+	//    there are least two wants with different numeric orders
+	//	  for order "last" get rid unless it's the only thing left.    
+	var getHighestPriorityWants = function(wants) {
+
 	}
 
 

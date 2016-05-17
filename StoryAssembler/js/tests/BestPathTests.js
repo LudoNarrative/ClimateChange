@@ -321,6 +321,50 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 		});
 
+		test("order", function( assert ) {
+			var bestPath, allPaths, wl;
+
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true", order: "first"}, {condition: "z eq true"}], State);
+			ChunkLibrary.add([
+				{ id: "Chunk1", content: "...", effects: ["set x true"] },
+				{ id: "Chunk2", content: "...", effects: ["set y true"] },
+				{ id: "Chunk3", content: "...", effects: ["set z true"] }
+			]);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Chunk2"], "Should satisfy an order: first Want before any others.");
+
+			wl = Wishlist.create([{condition: "x eq true", order: "last"}, {condition: "y eq true"}], State);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Chunk2"], "Should satisfy an order: last Want after any others.");
+
+			wl = Wishlist.create([{condition: "x eq true", order: 2}, {condition: "y eq true", order: 1}], State);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Chunk2"], "Should satisfy numerical orders with lower values first.");
+
+			wl = Wishlist.create([{condition: "x eq true", order: 1}, {condition: "y eq true", order: 2}, {condition: "z eq true", order: "first"}], State);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Chunk3"], "Should satisfy order: first before any numeric orders.");
+
+			wl = Wishlist.create([{condition: "x eq true", order: "last"}, {condition: "y eq true", order: 1}], State);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Chunk2"], "Should satisfy order: last after any numeric orders.");
+
+			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true", order: 5}], State);
+			allPaths = wl.allPaths(ChunkLibrary);
+			assert.deepEqual(allPaths.length, 2, "If only one numeric order, no preference between that and a standard Want.");
+
+			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true", order: 5}, {condition: "z eq true", order: 5}], State);
+			allPaths = wl.allPaths(ChunkLibrary);
+			assert.deepEqual(allPaths.length, 3, "If multiple numeric orders with same value, no preference between those and a standard Want.");
+
+			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true", order: 1}, {condition: "y eq true", order: 2}], State);
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["Chunk2"], "If multiple different numeric orders, prioritize lowest-valued one.");
+
+		});
+
 	}
 
 	return {

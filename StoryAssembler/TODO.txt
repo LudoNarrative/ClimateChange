@@ -2,7 +2,8 @@ CURRENT
 
 
 TODO
-- Implement "order", and "persistent" properties for wishlists.
+- Implement "order" for wishlists
+- Implement "persistent" for wishlists.
 - Possible bug in the case where we're recursing to find a subgoal that's the same as one of our wishlist goals. [Think about what happens in this case.]
 - Figure out a way to allow comments in data format. (i.e. not raw json)
 - Add a "repeatable" field to chunks: if false, removes from ChunkLibrary after displaying.
