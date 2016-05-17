@@ -81,12 +81,11 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 			// We have finished a path. After clicking this button, since we didn't send a chunkId parameter below, the system will search for a new bestPath given the remaining wishlist items.
 			Display.addChoice({text: "Continue"});
 		} else {
-			Display.showWishlist(wishlist);
-			Display.showState(State.getBlackboard());
 			doStoryBreak();
 			endScene();
 		}
-
+		Display.showWishlist(wishlist);
+		Display.showState(State.getBlackboard());
 	}
 
 	var getChoiceText = function(choiceDetail) {
