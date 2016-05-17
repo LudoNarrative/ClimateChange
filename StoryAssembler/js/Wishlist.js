@@ -41,12 +41,20 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			});
 			return arr;
 		}
+		var fullWantsAsArray = function() {
+			var keys = Object.keys(_wants);
+			var arr = [];
+			keys.forEach(function(key) {
+				arr.push(_wants[key]);
+			});
+			return arr;
+		}
 
 		var bestPath = function(chunkLibrary, params) {
-			return BestPath.bestPath(wantsAsArray(), params || {}, chunkLibrary, State);
+			return BestPath.bestPath(fullWantsAsArray(), params || {}, chunkLibrary, State);
 		}
 		var allPaths = function(chunkLibrary, params) {
-			return BestPath.allPaths(wantsAsArray(), params || {}, chunkLibrary, State);
+			return BestPath.allPaths(fullWantsAsArray(), params || {}, chunkLibrary, State);
 		}
 
 		var removeSatisfiedWants = function() {
