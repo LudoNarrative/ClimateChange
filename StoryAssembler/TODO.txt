@@ -1,15 +1,12 @@
 CURRENT
-- ON-screen debugging showing current wishlist, possibly chunk library too.
-
+- Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
 
 
 TODO
 - Factor Display out of StoryAssembler (shouldn't depend on it)
 - Implement "order" and "mandatory" properties for wishlists.
-- Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
 - Fix commented out choiceDetails printing (two places)
 - Possible bug in the case where we're recursing to find a subgoal that's the same as one of our wishlist goals. [Think about what happens in this case.]
-- Find out why StoryAssembler integration unit tests are crashing every other time.
 
 Future:
 
@@ -23,3 +20,4 @@ Future:
 
 Done:
 - Implement a max_depth to speed up BestPath
+- ON-screen debugging showing current wishlist, possibly chunk library too.

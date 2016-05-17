@@ -93,7 +93,6 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 			State.change(effect);
 		});
 		wishlist.removeSatisfiedWants();
-		console.log("wants remaining:", wishlist.wantsRemaining());
 	}
 
 	var doStoryBreak = function() {

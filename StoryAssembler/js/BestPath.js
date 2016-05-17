@@ -24,7 +24,9 @@ For reference, a Want object (defined in Want.js) is in the form:
 
 define(["Request", "util"], function(Request, util) {
 
-	var MAX_DEPTH = 3;
+	var DEFAULT_MAX_DEPTH = 3;
+
+	var curr_max_depth;
 
 	// Module-level reference variables
 	var chunkLibrary; 
@@ -48,9 +50,7 @@ define(["Request", "util"], function(Request, util) {
 	// Another possible entry function, for if we want to return the list of all possible paths. (Currently used mostly for unit testing.)
 	var allPaths = function(wants, params, _chunkLibrary, _State) {
 		if (_chunkLibrary) init(_chunkLibrary, _State);
-		if (params.max_depth) {
-			MAX_DEPTH = params.max_depth;
-		}
+		curr_max_depth = params.max_depth ? params.max_depth : DEFAULT_MAX_DEPTH;
 		return searchLibraryForPaths(wants, false, [], params, 1);
 	}
 
@@ -231,8 +231,8 @@ define(["Request", "util"], function(Request, util) {
 	var searchFromHere = function(paths, chunk, skipList, req, wants, pathToHere, rLevel, isChoice) {
 
 		// If we've bottomed out our recursion depth, if we have established that the path to this chunk is valid, then say the set of all valid paths from here is just the path to here. Otherwise, say no valid paths from here.
-		if (rLevel >= MAX_DEPTH) {
-			log(rLevel, "hit MAX_DEPTH " + MAX_DEPTH + "; stopping here for this path.");
+		if (rLevel >= curr_max_depth) {
+			log(rLevel, "hit curr_max_depth " + curr_max_depth + "; stopping here for this path.");
 			if (pathToHere === undefined) {
 				return [{id: "skipping", choiceDetails: {missing: true, requestVal: req.val}}];
 			} else {
