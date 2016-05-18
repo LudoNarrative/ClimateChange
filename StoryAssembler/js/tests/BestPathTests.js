@@ -315,9 +315,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			assert.deepEqual(bestPath.route, ["Chunk1", "Chunk2", "Chunk3"], "Should find route if max_depth is more than required.");
 			bestPath = wl.bestPath(ChunkLibrary, {max_depth: 3});
 			assert.deepEqual(bestPath.route, ["Chunk1", "Chunk2", "Chunk3"], "Should find route if max_depth is exactly enough.");
-			wl.logOn();
 			bestPath = wl.bestPath(ChunkLibrary, {max_depth: 2});
-			wl.logOff();
 			assert.notOk(bestPath, "Should fail to find route if max_depth is not deep enough.");
 
 

@@ -136,7 +136,6 @@ define([], function() {
 		var area = document.getElementsByClassName("stateArea")[0];
 		area.innerHTML = "";
 		// Show State.
-		console.log("blackboard", blackboard);
 		var stateKeys = Object.keys(blackboard);
 		stateKeys.forEach(function(key) {
 			if (blackboard[key]) {

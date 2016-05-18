@@ -51,9 +51,7 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 
 		var removeSatisfiedWants = function() {
 			var keys = Object.keys(_wants);
-			console.log("_wants", _wants);
 			keys.forEach(function(key) {
-				console.log("considering " + _wants[key].request.val);
 				if (State.isTrue(_wants[key].request.val)) {
 					delete _wants[key];
 				}
