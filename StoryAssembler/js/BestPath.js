@@ -22,7 +22,7 @@ For reference, a Want object (defined in Want.js) is in the form:
 }
 */
 
-define(["Request", "util"], function(Request, util) {
+define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 	var DEFAULT_MAX_DEPTH = 3;
 
@@ -51,7 +51,10 @@ define(["Request", "util"], function(Request, util) {
 	var allPaths = function(wants, params, _chunkLibrary, _State) {
 		if (_chunkLibrary) init(_chunkLibrary, _State);
 		curr_max_depth = params.max_depth ? params.max_depth : DEFAULT_MAX_DEPTH;
-		return searchLibraryForPaths(wants, false, [], params, 1);
+		var requests = wants.map(function(want) {
+			return want.request;
+		});
+		return searchLibraryForPaths(requests, false, [], params, 1);
 	}
 
 	// Given a set of paths, choose the path that maximally satisfies Wants.
@@ -59,6 +62,7 @@ define(["Request", "util"], function(Request, util) {
 	var chooseFromPotentialPaths = function(paths, wants) {
 		var bestScore = -1;
 		var bestPos = -1;
+		paths = cullByWantOrder(paths, wants);
 		paths.forEach(function(path, pos) {
 			var thisScore = path.satisfies.length;
 			if (thisScore > bestScore) {
@@ -67,6 +71,54 @@ define(["Request", "util"], function(Request, util) {
 			}
 		});
 		return paths[bestPos];
+	}
+
+	// Cull wants based on "order" field, if:
+	//    any want has order "first"
+	//    there are least two wants with different numeric orders
+	//	  for order "last" get rid unless it's the only thing left.    
+	var cullByWantOrder = function(paths, wants) {
+		// If there are any wants with "first", return just paths satisfying those. Done!
+		var firstWants = underscore.where(wants, {order: Number.NEGATIVE_INFINITY});
+		if (firstWants.length > 0) {
+			return pathsPrunedToWants(paths, firstWants.map(function(want){
+				return want.request;
+			}));
+		}
+		
+		// If there are at least two wants with different defined orders, return only the wants with the lowest numeric order. Done!
+		var orderIndex = {};
+		wants.forEach(function(want, pos) {
+			if (typeof want.order === "number" && want.order >= 0 && want.order !== Number.POSITIVE_INFINITY) {
+				if (!orderIndex[want.order]) {
+					orderIndex[want.order] = [];
+				}
+				orderIndex[want.order].push(pos);
+			}
+		});
+		var uniqueOrderNumsFound = Object.keys(orderIndex).sort();
+		if (uniqueOrderNumsFound.length >= 2) {
+			var culledWants = [];
+			orderIndex[uniqueOrderNumsFound[0]].forEach(function(wantsPos) {
+				culledWants.push(wants[wantsPos]);
+			});
+			return pathsPrunedToWants(paths, culledWants.map(function(want){
+				return want.request;
+			}));
+		}
+
+		// If there are any wants with "last" and any other wants, cull all the lasts. Done!
+		var nonLastWants = underscore.filter(wants, function(want) {
+			return want.order !== Number.POSITIVE_INFINITY;
+		});
+		if (nonLastWants.length > 0) {
+			return pathsPrunedToWants(paths, nonLastWants.map(function(want){
+				return want.request;
+			}));
+		}
+
+		// No order-based culling necessary.
+		return paths;
 	}
 
 
@@ -279,7 +331,7 @@ define(["Request", "util"], function(Request, util) {
 			log(rLevel, "setting choiceMatch to " + choiceMatch);
 		}
 
-		validPaths = pathsPrunedToOriginalWants(validPaths, wants);
+		validPaths = pathsPrunedToWants(validPaths, wants);
 		log(rLevel, "(" + validPaths.length + " are valid)");
 
 		// Link each remaining path to the current node, first ensuring we have a pathToHere obj. I.e. if we're at A and we found a path B->C, we want the path to now be A->B->C.
@@ -318,7 +370,7 @@ define(["Request", "util"], function(Request, util) {
 	}
 
 	// From pathList, remove any wants in the 'satisfies' field that are not in the given 'wants' list. If this removes all wants from a path's 'satisfies' field, remove that path entirely.
-	var pathsPrunedToOriginalWants = function(pathList, wants) {
+	var pathsPrunedToWants = function(pathList, wants) {
 		var validPaths = [];
 		pathList.forEach(function(path) {
 			path.satisfies = restrictWantsTo(path.satisfies, wants);

@@ -4,6 +4,7 @@ requirejs.config({
 	paths: {
 		"domReady": "../lib/domReady",
 		"text": "../lib/text",
+		"underscore": "../lib/underscore-1.8.3.min",
 
 		"util": "util",
 
