@@ -94,7 +94,7 @@
 	{
 		"id": "wellmaybe",
 		"choiceLabel": "Well, maybe...",
-		"request": {"condition": "goto_loveocean eq true"}
+		"request": {"condition": "beat eq 4"}
 	},
 	{
 		"id": "loveocean",
@@ -102,8 +102,9 @@
 		"choices" : [
 			{"chunkId": "wantedToBePerfect"}
 		],
-		"effects" : ["set beat 4", "set goto_loveocean true"],
-		"conditions": ["beat eq 3"]
+		"conditions": ["beat eq 3"],
+		"effects" : ["set beat 4"]
+		
 	},
 	{
 		"id": "wantedToBePerfect",
@@ -150,12 +151,12 @@
 	{
 		"id": "howufeelChoicetext1",
 		"choiceLabel" : "Don't blame me, I just work here.",
-		"request": {"condition": "beat eq 2"}
+		"request": {"condition": "beat eq 5"}
 	},
 	{
 		"id": "howufeelChoicetext2",
 		"choiceLabel" : "Very funny.",
-		"request": {"condition": "beat eq 2"}
+		"request": {"condition": "beat eq 5"}
 	},
 	{
 		"id": "howufeel",
@@ -213,7 +214,7 @@
 		"id" : "haveSomeWine",
 		"content" : "Now seriously. I am not joking about this. Have some damn wine. Relax with your friends. The future can take care of itself.",
 		"choices" : [
-			{"chunkId" : "result"}
+			{"chunkId" : "results"}
 		],
 		"conditions" : ["beat eq 5"],
 		"effects" : ["set beat 6"]
