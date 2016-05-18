@@ -245,84 +245,92 @@ effect(EFFECT) :- result(OUTCOME,EFFECT).
     changes(OUTCOME,CHANGE,CV,mid).
     
     
+:- 2 { precondition(le(RESOURCE,VALUE1),OUTCOME) ; precondition(lt(RESOURCE,VALUE2),OUTCOME) : potentialValues(VALUE1),potentialValues(VALUE2)} , resource(RESOURCE), outcome(OUTCOME).
+:- 2 { precondition(ge(RESOURCE,VALUE1),OUTCOME) ; precondition(gt(RESOURCE,VALUE2),OUTCOME) : potentialValues(VALUE1),potentialValues(VALUE2)} , resource(RESOURCE), outcome(OUTCOME).
+
+:- 2 {precondition(control_event(BUTTON,STATE),OUTCOME)
+ : buttons(BUTTON), buttonStates(STATE)}, outcome(OUTCOME).
+    
+:- 2{result(OUTCOME,moves(ENTITY,DIRECTION,AMOUNT)) :direction(DIRECTION), potentialValues(AMOUNT)}, outcome(OUTCOME),entity(ENTITY).
+
 %%%%% Go the reverse direction:
 
 
-avatarMoveUp(ENTITY) :- 
-    precondition(control_event(up_arrow, held),OUTCOME),
-    precondition(empty(ENTITY,up,low),OUTCOME),
-    result(OUTCOME,moves(ENTITY, up, low)).
+% avatarMoveUp(ENTITY) :- 
+    % precondition(control_event(up_arrow, held),OUTCOME),
+    % precondition(empty(ENTITY,up,low),OUTCOME),
+    % result(OUTCOME,moves(ENTITY, up, low)).
     
-avatarMoveDown(ENTITY) :- 
-    precondition(control_event(down_arrow, held),OUTCOME),
-    precondition(empty(ENTITY,down,low),OUTCOME),
-    result(OUTCOME,moves(ENTITY,down, low)).
+% avatarMoveDown(ENTITY) :- 
+    % precondition(control_event(down_arrow, held),OUTCOME),
+    % precondition(empty(ENTITY,down,low),OUTCOME),
+    % result(OUTCOME,moves(ENTITY,down, low)).
     
-avatarMoveLeft(ENTITY) :- 
-    precondition(control_event(left_arrow, held),OUTCOME),
-    precondition(empty(ENTITY,left,low),OUTCOME),
-    result(OUTCOME,moves(ENTITY, left, low)).
+% avatarMoveLeft(ENTITY) :- 
+    % precondition(control_event(left_arrow, held),OUTCOME),
+    % precondition(empty(ENTITY,left,low),OUTCOME),
+    % result(OUTCOME,moves(ENTITY, left, low)).
     
-avatarMoveRight(ENTITY) :- 
-    precondition(control_event(right_arrow, held),OUTCOME),
-    precondition(empty(ENTITY,right,low),OUTCOME),
-    result(OUTCOME,moves(ENTITY,right, low)).
+% avatarMoveRight(ENTITY) :- 
+    % precondition(control_event(right_arrow, held),OUTCOME),
+    % precondition(empty(ENTITY,right,low),OUTCOME),
+    % result(OUTCOME,moves(ENTITY,right, low)).
     
-avatarMoveForward(ENTITY) :-
-    precondition(control_event(up_arrow, held),OUTCOME),
-    precondition(empty(ENTITY,forward,low),OUTCOME),
-    result(OUTCOME,moves(ENTITY, forward, low)).
+% avatarMoveForward(ENTITY) :-
+    % precondition(control_event(up_arrow, held),OUTCOME),
+    % precondition(empty(ENTITY,forward,low),OUTCOME),
+    % result(OUTCOME,moves(ENTITY, forward, low)).
     
-avatarMoveBackward(ENTITY) :-
-    precondition(control_event(down_arrow, held),OUTCOME),
-    precondition(empty(ENTITY,behind,low),OUTCOME),
-    result(OUTCOME,moves(ENTITY, behind, low)).
+% avatarMoveBackward(ENTITY) :-
+    % precondition(control_event(down_arrow, held),OUTCOME),
+    % precondition(empty(ENTITY,behind,low),OUTCOME),
+    % result(OUTCOME,moves(ENTITY, behind, low)).
     
-avatarRotateCCW(ENTITY) :-
-    precondition(control_event(left_arrow, held),OUTCOME),
-    result(OUTCOME,rotates(ENTITY, ccw, low)).
-avatarRotateCW(ENTITY) :-
-    precondition(control_event(right_arrow, held),OUTCOME),
-    result(OUTCOME,rotates(ENTITY, cw, low)).
+% avatarRotateCCW(ENTITY) :-
+    % precondition(control_event(left_arrow, held),OUTCOME),
+    % result(OUTCOME,rotates(ENTITY, ccw, low)).
+% avatarRotateCW(ENTITY) :-
+    % precondition(control_event(right_arrow, held),OUTCOME),
+    % result(OUTCOME,rotates(ENTITY, cw, low)).
 
-avatarJump(ENTITY) :-
-    precondition(control_event(up_arrow, pressed),OUTCOME),
-    result(OUTCOME,moves(ENTITY, up, high)).
+% avatarJump(ENTITY) :-
+    % precondition(control_event(up_arrow, pressed),OUTCOME),
+    % result(OUTCOME,moves(ENTITY, up, high)).
         
-clickAndDrag(ENTITY) :-
-    precondition(control_event(mouse_button, pressed),OUTCOME_CLICK),
-    precondition(overlaps(cursor,ENTITY,true),OUTCOME_CLICK),
-    resource(ENTITY,dragged),
-    result(OUTCOME_CLICK, set(dragged,true)),
-    precondition(eq(dragged,true),OUTCOME_DRAG),
-    result(OUTCOME_DRAG, move_towards(ENTITY,cursor)),
-    precondition(control_event(mouse_button, released),OUTCOME_END_DRAG),
-    %result(OUTCOME_END_DRAG, select(ENTITY)),
-    result(OUTCOME_END_DRAG, set(dragged,false)).
+% clickAndDrag(ENTITY) :-
+    % precondition(control_event(mouse_button, pressed),OUTCOME_CLICK),
+    % precondition(overlaps(cursor,ENTITY,true),OUTCOME_CLICK),
+    % resource(ENTITY,dragged),
+    % result(OUTCOME_CLICK, set(dragged,true)),
+    % precondition(eq(dragged,true),OUTCOME_DRAG),
+    % result(OUTCOME_DRAG, move_towards(ENTITY,cursor)),
+    % precondition(control_event(mouse_button, released),OUTCOME_END_DRAG),
+    % %result(OUTCOME_END_DRAG, select(ENTITY)),
+    % result(OUTCOME_END_DRAG, set(dragged,false)).
   
-%cursor is electromagnet
-attractedToOnClick(ENTITY,OTHER) :-
-    precondition(control_event(mouse_button, held),OUTCOME),
-    result(OUTCOME, move_towards(ENTITY,OTHER)).
+% %cursor is electromagnet
+% attractedToOnClick(ENTITY,OTHER) :-
+    % precondition(control_event(mouse_button, held),OUTCOME),
+    % result(OUTCOME, move_towards(ENTITY,OTHER)).
 
-repeledByOnClick(ENTITY,OTHER) :-
-    precondition(control_event(mouse_button, held),OUTCOME),
-    result(OUTCOME, move_away(ENTITY,OTHER)).
+% repeledByOnClick(ENTITY,OTHER) :-
+    % precondition(control_event(mouse_button, held),OUTCOME),
+    % result(OUTCOME, move_away(ENTITY,OTHER)).
     
 
-%click on something, then move it
-%simplest version, click on something
-moveAfterSelectedOnClick(ENTITY) :- 
-    precondition(control_event(mouse_button, pressed),OUTCOME_SELECT),
-    precondition(overlaps(cursor,ENTITY,true),OUTCOME_SELECT),
-    resource(ENTITY,selected),
-    resource(ENTITY,target),
-    result(OUTCOME_SELECT, set(selected,true)),
-    precondition(control_event(mouse_button, pressed),OUTCOME_SET_TARGET),
-    precondition( eq(selected,true),OUTCOME_SET_TARGET),
-    result(OUTCOME_SET_TARGET, set(selected,false)),
-    result(OUTCOME_SET_TARGET, set(target,cursor)),
-    result(tick,move_towards(ENTITY,target)).
+% %click on something, then move it
+% %simplest version, click on something
+% moveAfterSelectedOnClick(ENTITY) :- 
+    % precondition(control_event(mouse_button, pressed),OUTCOME_SELECT),
+    % precondition(overlaps(cursor,ENTITY,true),OUTCOME_SELECT),
+    % resource(ENTITY,selected),
+    % resource(ENTITY,target),
+    % result(OUTCOME_SELECT, set(selected,true)),
+    % precondition(control_event(mouse_button, pressed),OUTCOME_SET_TARGET),
+    % precondition( eq(selected,true),OUTCOME_SET_TARGET),
+    % result(OUTCOME_SET_TARGET, set(selected,false)),
+    % result(OUTCOME_SET_TARGET, set(target,cursor)),
+    % result(tick,move_towards(ENTITY,target)).
 %%%%%%%%%% NPC   %%%%%%%%%%%%%%%%%%
 
 
