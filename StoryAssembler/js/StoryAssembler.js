@@ -23,17 +23,26 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		Display.showPath(bestPath);
 		Display.showWishlist(wishlist);
 		Display.showState(State.getBlackboard());
-		if (bestPath) {
-			var nextStep = bestPath.route[0];
-			doChunk(nextStep, bestPath.choiceDetails, bestPath);
-		} else {
+
+		if (!bestPath) {		//if we can't find a path from our starting chunk, failover to a general search
+			console.log("specific search failed, starting general search");
+			bestPath = wishlist.bestPath(chunkLibrary);
+			console.log("bestPath",bestPath);
+		}
+
+		if (bestPath) {	
+			var chunkWithText = optChunkId ? optChunkId : bestPath.route[0];
+			doChunkText(chunkWithText, bestPath);
+			doChunkChoices(chunkWithText, bestPath.choiceDetails);
+		}
+		else {
 			Display.addStoryText("[Ran out of chunks early!]");
 			doStoryBreak();
 			endScene();
 		}
 	}
 
-	var doChunk = function(chunkId, choiceDetails, bestPath) {
+	var doChunkText = function(chunkId, bestPath) {
 		var chunk = chunkLibrary.get(chunkId);
 
 		// Handle effects
@@ -62,6 +71,11 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 		var text = Templates.render(chunkForText);
 		Display.addStoryText(text);
 		// TODO: We shouldn't display "undefined" if there's no content field.
+	}
+
+	var doChunkChoices = function(chunkId, choiceDetails) {
+
+		var chunk = chunkLibrary.get(chunkId);
 
 		// Handle choices
 		if (chunk.choices) {
