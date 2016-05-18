@@ -17,13 +17,14 @@ requirejs.config({
 		"Validate": "Validate",
 		"ChunkLibrary": "ChunkLibrary",
 		"BestPath": "BestPath",
-		"Templates": "Templates"
+		"Templates": "Templates",
+		"Character": "Character"
 	}
 });
 
 requirejs(
-	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "util", "domReady!"],
-	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Example1Data, Example2Data) {
+	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "text!../data/exampleData/charExampleData.json", "util", "domReady!"],
+	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Character, Example1Data, Example2Data, charExampleData) {
 
 	// To Add A New Example:
 	// - Create new definition in "examples" dictionary below
@@ -55,6 +56,17 @@ requirejs(
 				"set career 0",
 
 			]
+		},
+		"Characters Example": {
+			wishlist: [
+				{ condition: "demonstratedTrait eq 1" }
+			],
+			startState: [ "set demonstratedTrait 0", "set speaker elika" ],
+			dataFile: charExampleData,
+			characters: {
+				"anna": {name: "Anna", confident: true},
+				"elika": {name: "Élika", forceful: true}
+			}
 		}
 	};
 
@@ -81,9 +93,15 @@ requirejs(
 
 		var wishlist = Wishlist.create(example.wishlist, State);
 		// wishlist.logOn();
+		if (example.characters) {
+			Character.init(State);
+			for (var key in example.characters) {
+				Character.add(key, example.characters[key]);
+			}
+		}
 
 		document.getElementsByTagName("body")[0].innerHTML = "";
-		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, Display);
+		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, Display, Character);
 	}
 
 	// For each example, make a link to start it.
@@ -93,22 +111,5 @@ requirejs(
 		body.appendChild(el);
 	};
 
-
-
-
-	// // TODO: Remove old StoryAssembler
-	
-	// console.log("SA2 main.js loaded.");
-
-
-	// var testChunks = JSON.parse(TestChunksFile);
-	// ChunkLibrary.add(testChunks);
-
-	// var testWishlist = Wishlist.create([
-	// 	{ condition: "greetedElika eq true" },
-	// 	{ condition: "demonstratedTrait eq true" },
-	// ], State);
-	// // testWishlist.logOn();
-	// StoryAssembler.beginScene(testWishlist, ChunkLibrary, State);
 
 });

@@ -10,8 +10,10 @@ define(["util"], function(util) {
 	"use strict";
 
 	var State;
-	var init = function(_State) {
+	var Character;
+	var init = function(_State, _Character) {
 		State = _State;
+		Character = _Character;
 	}
 
 	var templates = {
@@ -42,6 +44,16 @@ define(["util"], function(util) {
 			} else {
 				return textIfFalse;
 			}
+		},
+		"speaker": function(params, text) {
+			if (params.length !== 0) {
+				console.error("Template command 'speaker' must not have any params, in text '" + text + "'.");
+				return "(speaker)";
+			}
+
+			var speaker = State.get("speaker");
+			var speakerChar = Character.get(speaker);
+			return speakerChar.name || speaker;
 		},
 		// "attr": function(params, text) {
 		// 	if (params.length !== 3) {
