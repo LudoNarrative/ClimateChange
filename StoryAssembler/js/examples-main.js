@@ -4,6 +4,7 @@ requirejs.config({
 	paths: {
 		"domReady": "../lib/domReady",
 		"text": "../lib/text",
+		"underscore": "../lib/underscore-1.8.3.min",
 
 		"util": "util",
 
@@ -21,8 +22,8 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "util", "domReady!"],
-	function(State, ChunkLibrary, Wishlist, StoryAssembler, Example1Data, Example2Data) {
+	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "util", "domReady!"],
+	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Example1Data, Example2Data) {
 
 	// To Add A New Example:
 	// - Create new definition in "examples" dictionary below
@@ -80,7 +81,7 @@ requirejs(
 		// wishlist.logOn();
 
 		document.getElementsByTagName("body")[0].innerHTML = "";
-		StoryAssembler.beginScene(wishlist, ChunkLibrary, State);
+		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, Display);
 	}
 
 	// For each example, make a link to start it.

@@ -1,14 +1,18 @@
 /* Main StoryAssembler Module.
+
+When beginScene is called, we need to pass in a defined ChunkLibrary, State, and Display module. 
 */
 
-define(["Display", "Request", "Templates"], function(Display, Request, Templates) {
+define(["Request", "Templates"], function(Request, Templates) {
 
 	var chunkLibrary;
 	var State;
 	var wishlist;
-	var beginScene = function(_wishlist, _chunkLibrary, _State, params) {
+	var Display;
+	var beginScene = function(_wishlist, _chunkLibrary, _State, _Display, params) {
 		chunkLibrary = _chunkLibrary;
 		State = _State;
+		Display = _Display;
 		wishlist = _wishlist;
 		params = params || {};
 		
@@ -20,9 +24,11 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 	var continueScene = function(optChunkId) {
 		// If optChunkId is undefined, the startAt parameter below will also be undefined and will have no effect.
 		var bestPath = wishlist.bestPath(chunkLibrary, {startAt: optChunkId});
-		Display.showPath(bestPath);
-		Display.showWishlist(wishlist);
-		Display.showState(State.getBlackboard());
+		Display.diagnose({
+			path: bestPath,
+			wishlist: wishlist,
+			state: State.getBlackboard()
+		});
 		if (bestPath) {
 			var nextStep = bestPath.route[0];
 			doChunk(nextStep, bestPath.choiceDetails, bestPath);
@@ -84,8 +90,10 @@ define(["Display", "Request", "Templates"], function(Display, Request, Templates
 			doStoryBreak();
 			endScene();
 		}
-		Display.showWishlist(wishlist);
-		Display.showState(State.getBlackboard());
+		Display.diagnose({
+			wishlist: wishlist,
+			state: State.getBlackboard()
+		});
 	}
 
 	var getChoiceText = function(choiceDetail) {
