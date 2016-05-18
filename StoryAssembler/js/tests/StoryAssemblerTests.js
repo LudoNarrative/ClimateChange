@@ -27,7 +27,6 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist"], func
 		return html(child(num, getChoiceEl()));
 	}
 	var cleanUpDom = function() {
-		console.log("!")	
 		var el = document.getElementById("storyArea");
 		el.parentNode.removeChild(el);
 		el = document.getElementById("choiceArea");
@@ -91,6 +90,21 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist"], func
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Chain through condition request: after click, should chain through.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Chain through condition request: no options when finished.");
+
+			// Test "persistent" wishlist parameter.
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true", persistent: true}], State);
+			ChunkLibrary.add([
+				{ id: "Chunk1", content: "Chunk1 Content", effects: ["set x true"] }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State);
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work first time (1/2)");
+			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work first time (2/2)");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work second time (1/2)");
+			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work second time (2/2)");
+
+
 
 
 			cleanUpDom();
