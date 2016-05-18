@@ -52,9 +52,27 @@ define(["util"], function(util) {
 			}
 
 			var speaker = State.get("speaker");
+			if (!speaker) return "(speaker)";
 			var speakerChar = Character.get(speaker);
+			if (!speakerChar) return "(speaker)";
 			return speakerChar.name || speaker;
 		},
+		"showSpeakerTrait": function(params, text) {
+			if (params.length !== 0) {
+				console.error("Template command 'showSpeakerTrait' must not have any params, in text '" + text + "'.");
+				return "(showSpeakerTrait)";
+			}
+
+			var speakerId = State.get("speaker");
+			var char = Character.get(speakerId);
+			if (char.confident) {
+				return char.name + " flashes a confident smile. ";
+			} else if (char.forceful) {
+				return char.name + " leans forward forcefully. ";
+			} else {
+				return "";
+			}
+		}
 		// "attr": function(params, text) {
 		// 	if (params.length !== 3) {
 		// 		console.error("Template command 'attr' must have three params: attribute to check for current speaker, text if true, text if false: in text '" + text + "'.");
