@@ -60,7 +60,7 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 		var removeSatisfiedWants = function() {
 			var keys = Object.keys(_wants);
 			keys.forEach(function(key) {
-				if (State.isTrue(_wants[key].request.val)) {
+				if (State.isTrue(_wants[key].request.val) && !_wants[key].persistent) {
 					delete _wants[key];
 				}
 			});
