@@ -2,6 +2,7 @@
 %%%%% SOUP OF THINGS TO PULL FROM %%%%%
 
 
+pools(inventory).
 potential_paths(p1;p2;p3;p4;p5).
 
 opposite(north,south).

@@ -95,11 +95,53 @@ def parse_json_result(out):
         parsed,dummy = parse_terms(atom)
         preds[parsed[0]['predicate']].append(parsed)
     return preds
+def prettify(atom):
+    
+    s = atom['predicate']
+    if 'terms' in atom:
+        s += '('
+        ts = [prettify(t) for t in atom['terms']]
+        s += ','.join(ts)
+        s += ')'
+    return s
+import collections
 
+def hashable(obj):
+    if isinstance(obj, collections.Hashable):
+        items = obj
+    elif isinstance(obj, collections.Mapping):
+        items = frozenset((k, hashable(v)) for k, v in obj.iteritems())
+    elif isinstance(obj, collections.Iterable):
+        items = tuple(hashable(item) for item in obj)
+    else:
+        raise TypeError(type(obj))
+
+    return items
+    
 if __name__ == '__main__':
     out = solve_randomly(sys.argv[1:])
     
-    for o in out:
+    for o in ['entity','resource','singlular','many','overlapLogic','initialize']:
         for oo in out[o]:
-            
-            print o,oo
+            for ooo in oo:
+                print prettify(ooo)
+        print ''
+    outcome2precond = {}
+    for precond in out['precondition']:
+        outcome = hashable(precond[0]['terms'][1])
+        if outcome not in outcome2precond:
+            outcome2precond[outcome] = []
+        outcome2precond[outcome].append(precond[0])
+    outcome2result = {}
+    for result in out['result']:
+        outcome = hashable(result[0]['terms'][0])
+        if outcome not in outcome2result:
+            outcome2result[outcome] = []
+        outcome2result[outcome].append(result[0])
+    for outcome in sorted(outcome2precond):
+        for precond in outcome2precond[outcome]:
+            print prettify(precond)
+        for result in outcome2result[outcome]:
+            print prettify(result)
+        print ''
+    
