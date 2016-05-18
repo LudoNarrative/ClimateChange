@@ -80,9 +80,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 	var cullByWantOrder = function(paths, wants) {
 		// If there are any wants with "first", return just paths satisfying those. Done!
 		var firstWants = underscore.where(wants, {order: Number.NEGATIVE_INFINITY});
-		console.log("firstWants", firstWants);
 		if (firstWants.length > 0) {
-			console.log("cullByWantOrder: returning just firsts!", firstWants);
 			return pathsPrunedToWants(paths, firstWants.map(function(want){
 				return want.request;
 			}));
@@ -104,7 +102,6 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 			orderIndex[uniqueOrderNumsFound[0]].forEach(function(wantsPos) {
 				culledWants.push(wants[wantsPos]);
 			});
-			console.log("cullByWantOrder: returning just lowest-ordered wants!", culledWants);
 			return pathsPrunedToWants(paths, culledWants.map(function(want){
 				return want.request;
 			}));
@@ -114,9 +111,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		var nonLastWants = underscore.filter(wants, function(want) {
 			return want.order !== Number.POSITIVE_INFINITY;
 		});
-		console.log("nonLastWants", nonLastWants);
 		if (nonLastWants.length > 0) {
-			console.log("cullByWantOrder: returning non-lasts!", nonLastWants);
 			return pathsPrunedToWants(paths, nonLastWants.map(function(want){
 				return want.request;
 			}));
