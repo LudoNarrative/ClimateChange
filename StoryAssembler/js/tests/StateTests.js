@@ -16,7 +16,7 @@ define(["../State"], function(State) {
 			assert.deepEqual(State.get("testNum"), 12, "updating number value");
 
 			State.set("testNum", "12");
-			assert.deepEqual(State.get("testNum"), "12", "strings that look like numbers stay strings");
+			assert.deepEqual(State.get("testNum"), 12, "strings that look like numbers should become numbers");
 
 			State.set("testBool", true);
 			assert.deepEqual(State.get("testBool"), true, "true booleans");
