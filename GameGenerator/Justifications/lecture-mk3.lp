@@ -85,18 +85,18 @@ result(good_face,set_sprite(face, happy_face)).
 
 
 precondition(tick,drain).
-result(drain,decreases(confidence,frac(1,600))).
+result(drain,decrease(confidence,frac(1,600))).
 
 % I think it's actually mouse_button,released? 
 % this is me capturing how I would design it, not how it is
 
 precondition(control_event(pressed(mouse_button)),gain).
 precondition(overlaps(ball,square,true),gain).
-result(gain,increases(confidence,10)).
+result(gain,increase(confidence,10)).
 result(gain,change_color(square,green,16)).
 precondition(control_event(pressed(mouse_button)),loss).
 precondition(overlaps(ball,square,false),loss).
-result(loss,decreases(confidence,10)).
+result(loss,decrease(confidence,10)).
 result(loss,change_color(square,red,16)).
 
 
