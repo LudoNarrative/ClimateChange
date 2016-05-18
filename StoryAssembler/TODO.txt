@@ -1,4 +1,5 @@
 CURRENT
+- Implementing the idea of lines of dialog being said by particular speakers, who can have attributes that might affect mix-ins, etc. [old system had some of this already]
 
 
 TODO
@@ -7,8 +8,7 @@ TODO
 - Research: ease of authoring (JSON editor, DSL, etc.)
 - Defining ways in which content might be varied, i.e. format vs informal, discussion vs monologue, defensive vs aggressive. [Rather than having static flags like "lecture scene", "dinner scene"]
 - Implementing the ability for mix-ins to satisfy wishlist items. [like using a mixin ShowPersonality satisfies a Want of "has shown personality"]
-- Implementing the idea of lines of dialog being said by particular speakers, who can have attributes that might affect mix-ins, etc. [old system had some of this already]
-
+- Effects that make incremental progress towards goals. I.e. the request is "x gt 5" and an effect of "incr x 1" when x is 2
 
 Future:
 - If you have a chunk with a request (instead of content) which changes the conditions such that the original chunk matching that request can no longer appear, the system will show it anyway, when what it should do is some kind of replan (which might not find a matching chunk).

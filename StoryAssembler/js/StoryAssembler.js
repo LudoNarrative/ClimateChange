@@ -9,7 +9,7 @@ define(["Request", "Templates"], function(Request, Templates) {
 	var State;
 	var wishlist;
 	var Display;
-	var beginScene = function(_wishlist, _chunkLibrary, _State, _Display, params) {
+	var beginScene = function(_wishlist, _chunkLibrary, _State, _Display, _Character, params) {
 		chunkLibrary = _chunkLibrary;
 		State = _State;
 		Display = _Display;
@@ -17,7 +17,7 @@ define(["Request", "Templates"], function(Request, Templates) {
 		params = params || {};
 		
 		Display.init(handleChoiceSelection);
-		Templates.init(State);
+		Templates.init(State, _Character);
 		continueScene();
 	}
 

@@ -1,0 +1,7 @@
+[
+	{
+		"id": "SpeakerTalks",
+		"content": "The speaker is {speaker}.",
+		"effects": ["set demonstratedTrait 1"]
+	}
+]
