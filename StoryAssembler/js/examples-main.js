@@ -45,6 +45,8 @@ requirejs(
 				{ condition: "beat eq 2" },
 				{ condition: "beat eq 3" },
 				{ condition: "beat eq 4" },
+				{ condition: "beat eq 5" },
+				{ condition: "beat eq 6" },
 			],
 			dataFile: Example2Data,
 			startState: [
