@@ -10,7 +10,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	var _library = {};
 
 	var requiredFields = [];
-	var optionalFields = ["id", "choices", "choiceLabel", "effects", "conditions", "request", "content"];
+	var optionalFields = ["id", "choices", "choiceLabel", "effects", "conditions", "request", "content", "comment"];
 
 	// Validates and adds a chunk to the library.
 	var addChunk = function(chunk) {
