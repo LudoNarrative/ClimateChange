@@ -14,9 +14,9 @@ Future:
 - If you have a chunk with a request (instead of content) which changes the conditions such that the original chunk matching that request can no longer appear, the system will show it anyway, when what it should do is some kind of replan (which might not find a matching chunk).
 - When recursing down, should flag as an error if we have a chunk with choices that requests a chunk w/choices (or requests a chunk that requests a chunk w/choices, etc.)
 - Replace flat max_depth with a dynamic heuristic that stops searching any path that has gone more than N nodes without satisfying a Want from the wishlist. (Ben's idea.)
+- Weight a chunk with choices that can satisfy multiple wants higher than one that can only satisfy a single one.
 
 Maintenance / Cleanup
-- Factor Display out of StoryAssembler (shouldn't depend on it)
 - Fix commented out choiceDetails printing (two places)
 - Research in unit tests: how to test properties of an object? If you check directly, it'll crash with a "cannot read property x of y." If you check that the object exists first, it just adds a failing test before the crash.
 
@@ -30,3 +30,4 @@ X Implement a max_depth to speed up BestPath
 X ON-screen debugging showing current wishlist, possibly chunk library too.
 X Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
 X Added an allowed "comment" field to chunks.
+X Factor Display out of StoryAssembler (shouldn't depend on it)

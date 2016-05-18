@@ -151,29 +151,6 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Choice2"], "Multiple choices should be handled correctly.");
 
-
-			// Possible Future Functionality (below test): Store enough info that bestPath can know to pick a choice that can potentially satisfy a broader range of Wants.
-			// ChunkLibrary.reset();
-			// State.reset();
-			// wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true"}, {condition: "z eq true"}], State);
-			// ChunkLibrary.add([
-			// 	{ id: "Choice1", choices: [{chunkId: "answerX"}, {chunkId: "answerY"}] },
-			// 	{ id: "Choice2", choices: [{chunkId: "answerX"}, {chunkId: "answerY"}, {chunkId: "answerZ"}] },
-			// 	{ id: "Choice3", choices: [{chunkId: "answerY"}, {chunkId: "answerZ"}] },
-			// 	{ id: "answerX", choiceLabel: "...", effects: ["set x true"] },
-			// 	{ id: "answerY", choiceLabel: "...", effects: ["set y true"] },
-			// 	{ id: "answerZ", choiceLabel: "...", effects: ["set z true"] }
-			// ]);
-			// nextPath = wl.bestPath(ChunkLibrary);
-			// assert.deepEqual(nextPath.route[0], "Choice2", "Should move through choice that has maximum potential to satisfy wants.");
-
-
-			// TODO: A cycle should consider the last node before cycling as a leaf node. (I.e. we want this to be valid, but we don't want to recurse forever down it looking for leaf nodes.
-
-
-			// TODO: Write test (and determine correct behavior) for case where something requires something where the condition is not true. [what if this is in a choice?]
-
-
 		});
 
 		test("choice labels", function( assert ) {

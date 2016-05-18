@@ -86,7 +86,7 @@ define([], function() {
 	}
 
 	var satisfiesList;
-	var showPath = function(bestPath) {
+	var _showPath = function(bestPath) {
 		var area = document.getElementsByClassName("pathArea")[0];
 		area.innerHTML = "";
 		// Show Best Path.
@@ -114,7 +114,7 @@ define([], function() {
 		}
 	}
 
-	var showWishlist = function(wishlist) {
+	var _showWishlist = function(wishlist) {
 		var area = document.getElementsByClassName("wishlistArea")[0];
 		area.innerHTML = "";
 		// Show Wishlist.
@@ -132,7 +132,7 @@ define([], function() {
 		}
 	}
 
-	var showState = function(blackboard) {
+	var _showState = function(blackboard) {
 		var area = document.getElementsByClassName("stateArea")[0];
 		area.innerHTML = "";
 		// Show State.
@@ -145,14 +145,24 @@ define([], function() {
 		})
 	}
 
+	var diagnose = function(params) {
+		if (params.path) {
+			_showPath(params.path);
+		}
+		if (params.wishlist) {
+			_showWishlist(params.wishlist);
+		}
+		if (params.state) {
+			_showState(params.state);
+		}
+	}
+
 	// PUBLIC INTERFACE
 	return {
 		init: init,
 		clearAll: clearAll,
 		addStoryText: addStoryText,
 		addChoice: addChoice,
-		showPath: showPath,
-		showWishlist: showWishlist,
-		showState: showState
+		diagnose: diagnose
 	}
 })
