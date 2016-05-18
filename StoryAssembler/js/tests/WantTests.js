@@ -9,11 +9,11 @@ define(["../Want"], function(Want) {
 			var want = Want.create({
 				condition: "introduceFriend eq true",
 				order: "first",
-				mandatory: true
+				persistent: true
 			});
 			assert.deepEqual(want.request.val, "introduceFriend eq true", "request-based want should have a valid request value");
 			assert.deepEqual(want.request.type, "condition", "request-based want should have a valid request type");
-			assert.deepEqual(want.mandatory, true, "want should preserve creation parameters");
+			assert.deepEqual(want.persistent, true, "want should preserve creation parameters");
 
 			var want2 = Want.create({
 				chunkId: "epilogue",

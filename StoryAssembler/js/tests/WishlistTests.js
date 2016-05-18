@@ -9,7 +9,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				{
 					condition: "introduceFriend eq true",
 					order: "first",
-					mandatory: true
+					persistent: true
 				},{
 					chunkId: "epilogue",
 					order: 2
