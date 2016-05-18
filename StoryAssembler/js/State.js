@@ -15,7 +15,15 @@ define(["Condition"], function(Condition) {
 	}
 
 	var set = function(key, value) {
+		var tryNum = parseFloat(value);
+		if (!isNaN(tryNum)) {
+			value = tryNum;
+		}
 		blackboard[key] = value;
+	}
+
+	var remove = function(key) {
+		delete blackboard[key];
 	}
 
 	var reset = function() {
@@ -165,6 +173,7 @@ define(["Condition"], function(Condition) {
 	return {
 		get: get,
 		set: set,
+		remove: remove,
 		reset: reset,
 		change: change,
 		isTrue: isTrue,

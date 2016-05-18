@@ -117,7 +117,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 			}));
 		}
 
-		// No order-based culling necessary.
+		// No order-based culling necessary. If we have a mixture of wants with a single numeric order and unordered wants, the numeric order is not prioritized above or below the unlabeled ones. (Numbers can only be compared to each other.)
 		return paths;
 	}
 
