@@ -212,3 +212,5 @@ interactions(push).%;collide;harm;help;make_invulnerable).
 precondition(overlaps(ENTITY1,ENTITY2,true), push(ENTITY1,ENTITY2)) :- interaction(ENTITY1,ENTITY2,push).
 result(push(ENTITY1,ENTITY2),apply_force(ENTITY2,direction_from(ENTITY1,ENTITY2))) :- interaction(ENTITY1,ENTITY2,push).
 
+
+:- 2 {precondition(control_event(BUTTON,STATE),OUTCOME) : buttons(BUTTON), button_states(STATE)}, outcome(OUTCOME).
