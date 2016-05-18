@@ -22,6 +22,7 @@ define(["../ChunkLibrary"], function(ChunkLibrary) {
 			
 			var chunk3 = {
 				id: "SpurnHost",
+				comment: "Test of a chunk comment.",
 				choiceLabel: "Be mean to the host.",
 				content: "Screw you!",
 				effects: ["set host angry"],
