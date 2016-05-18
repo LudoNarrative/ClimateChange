@@ -16,6 +16,9 @@ multiple(new_idea).
 resource(ideasAbsorbed, producer).
 resource(ideasFed, consumer).
 resource(old_ideas).
+resourceLogic(producer_count, count(producer)).
+resourceLogic(consumer_count, count(consumer)).
+resourceLogic(idea_count, count(new_idea)).
 
 physicsLogic(cursor, follows(mouse_cursor)).
 physicsLogic(cursor, pushing).
@@ -33,7 +36,7 @@ controlLogic(mouse_cursor, cursor).
 %% Mechanic (1): Producers make new ideas
 %% XXX capture producer precondition?
 precondition(slow_timeout, gen_idea).
-result(gen_idea, spawn(new_idea)).
+result(gen_idea, add(new_idea)).
 
 %% Mechanic (2): The cursor exerts force on ideas.
 precondition(near(cursor, new_idea), push_idea(cursor)).
@@ -67,7 +70,23 @@ result(tick, decrease(ideasAbsorbed, low)).
 %% Mechanic (8): If ideasAbsorbed goes to 0, producer turns into consumer.
 precondition(le(ideasAbsorbed, 0), convert_producer).
 result(convert_producer, delete(producer)).
-result(convert_producer, spawn(consumer)).
+result(convert_producer, add(consumer)).
+
+%% Mechanic (9) (only referred to later than 1st example):
+%%  If ideasConsumed goes to 0, consumer turns into producer.
+precondition(le(ideasConsumed, 0), convert_consumer).
+result(convert_consumer, delete(consumer)).
+result(convert_consumer, add(producer)).
+
+%% Mechanic (10) (only referred to later than 1st example):
+%% Vectorialist provides consumers with old_ideas
+precondition(gt(old_ideas, 0), feed_consumer).
+precondition(near(vectorialist, consumer), feed_consumer).
+result(feed_consumer, decrease(old_ideas, low)).
+result(feed_consumer, increase(ideasConsumed, low)).
+precondition(tick, forget_old).
+result(forget_old, decrease(ideasConsumed, low)).
+
 
 %% Initializations
 % XXX ???
