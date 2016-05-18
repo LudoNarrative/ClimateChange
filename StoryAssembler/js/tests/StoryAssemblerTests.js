@@ -105,6 +105,28 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work second time (2/2)");
 
 
+			//test whether it can find the next want from wishlist if current choice-thread ends
+			ChunkLibrary.reset();
+			State.reset();
+			State.set("beat", 1);
+			wl = Wishlist.create([{condition: "beat eq 2"}, {condition: "beat eq 3"}], State);
+			ChunkLibrary.add([
+				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2b"}], effects: ["set beat 2"] },
+				{ id: "Chunk2b", choiceLabel: "Chunk2 Label", content: "Chunk2 content" },
+				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", effects: ["set beat 3"] }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Move to different want after thread ends: first node HTML correct");
+			assert.deepEqual(countChildren(getChoiceEl()), 1, "Move to different want after thread ends: initially only 1 choice");
+			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Move to different want after thread ends: single choice is to Chunk2");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "Chunk2 content", "Move to different want after thread ends: after click, should chain through.");
+			assert.deepEqual(contentForChoice(1), "Continue", "Move to different want after thread ends: single choice is to Chunk2");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Move to different want after thread ends: second node HTML correct");
+
+
+
 
 
 			cleanUpDom();
