@@ -50,3 +50,20 @@ dark(gray;black;blue;purple;brown).
 %Other concepts
 better_than(good,evil).
 better_than(natural,manmade).
+
+
+
+%
+connotationAt(initial,ENTITY,CONNOTATION) :-
+    initialize(set_color(ENTITY,COLOR)), 
+    connotation(COLOR,CONNOTATION).
+    
+connotationAt(OUTCOME,ENTITY,CONNOTATION) :-
+    result(OUTCOME,set_color(ENTITY,COLOR)), 
+    connotation(COLOR,CONNOTATION).
+
+outcomeBetterThan(ENTITY,OUTCOME1,OUTCOME2) :-
+    connotationAt(OUTCOME1,ENTITY,CONNOTATION1),
+    connotationAt(OUTCOME2,ENTITY,CONNOTATION2),
+    better_than(CONNOTATION1,CONNOTATION2).
+    

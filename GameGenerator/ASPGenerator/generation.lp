@@ -377,7 +377,7 @@ precondition(overlaps(ENTITY1,ENTITY2,true), hurt(ENTITY1,ENTITY2)) :-
 
 placements(field(random);field(uniform);field(corner);path(center);path(random);path(endpoints);path(uniform);path(start)).
 placementModality(one_shot;spawn).
-
+spawnTimings(one_shot;constant;exponential_increase;exponential_decay).
 1 {placement(ENTITY,TYPE,MODE) : placements(TYPE), placementModality(MODE)} 1 :- entity(ENTITY).
 
 validPathPlacement :- placement(ENTITY,TYPE,path(TYPE)), path(PATH,PTYPE).
