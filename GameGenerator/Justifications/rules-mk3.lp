@@ -3,19 +3,20 @@
  % limited/unlimited
  %
 
-lowThreshold(lt(Resource, Thresh), Resource) :-
+lowThreshold(lt(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
     threshold(Thresh).
 
-lowThreshold(le(Resource, Thresh), Resource) :-
+lowThreshold(le(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
     threshold(Thresh).
 
-highThreshold(gt(Resource, Thresh), Resource) :-
+
+highThreshold(gt(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
     threshold(Thresh).
 
-highThreshold(ge(Resource, Thresh), Resource) :-
+highThreshold(ge(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
     threshold(Thresh).
 
@@ -60,11 +61,11 @@ hasTradeoff(Outcome) :-
 
 needsLow(Outcome, Resource) :- 
     precondition(Pre, Outcome),
-    lowThreshold(Pre, Resource).
+    lowThreshold(Pre, Resource,Thresh).
 
 needsHigh(Outcome, Resource) :-
     precondition(Pre, Outcome),
-    highThreshold(Pre, Resource).
+    highThreshold(Pre, Resource,Thresh).
 
 
 %% Good and bad resources
@@ -248,7 +249,7 @@ timingAffectsEntity(Entity) :-
     
 consumedBy(Resource, Outcome) :-
     precondition(Condition, Outcome),
-    highThreshold(Condition, Resource),
+    highThreshold(Condition, Resource,Thresh),
     result(Outcome,decrease(Resource, _)).
     
 
@@ -291,6 +292,8 @@ requiredBy(Outcome, Entity) :-
 requiredBy(Outcome, Entity) :-
     precondition(overlaps(Entity_B,Entity,POLARITY),Outcome).
     
+requiredBy(Outcome, Entity) :-
+    precondition(control_event(click(Entity)),Outcome).
 
 %% Relationships between outcomes
 
@@ -310,7 +313,8 @@ hinders(Outcome,Outcome2) :-
     result(Outcome,delete(ENTITY)), 
     requiredBy(Outcome2,ENTITY),
     Outcome != Outcome2 .   
-    
+ 
+
 % XXX duplicated by result_enables, I think?
 % enables(Outcome1, Outcome2) :- 
 %     result(Outcome1, decrease(Resource, Amound)), 
@@ -375,14 +379,43 @@ result_enables_condition(move_away(E1, E2), collide(E1, E3))
        result(_, move_away(E1, E2)).
 
 result_enables_condition(increase(Resource), Condition)
-    :- highThreshold(Condition, Resource).
+    :- highThreshold(Condition, Resource,Thresh).
 
 result_enables_condition(decrease(Resource), Condition)
-    :- lowThreshold(Condition, Resource).
+    :- lowThreshold(Condition, Resource,Thresh).
+
+
 
 result_enables(Result, Outcome) :-
     result_enables_condition(Result, Condition),
     precondition(Condition, Outcome).
+
+result_amplifies(increase(Amplifier), Outcome) :-
+    result_enables(increase(Resource),Outcome),
+    amplifies(Amplifier, Resource).
+
+increasing_costs(Outcome,Cost) :-
+    precondition(ge(Money,Cost), Outcome),
+    result(Outcome, increase(Cost, Amount)).
+
+increasing_costs(Outcome,Cost) :-
+    precondition(gt(Money,Cost), Outcome),
+    result(Outcome, increase(Cost, Amount)).
+
+decreasing_costs(Outcome,Cost) :-
+    precondition(ge(Money,Cost), Outcome),
+    result(Outcome, decrease(Cost, Amount)).
+
+decreasing_costs(Outcome,Cost) :-
+    precondition(gt(Money,Cost), Outcome),
+    result(Outcome, decrease(Cost, Amount)).
+
+
+
+
+positive_feedback(Resource) :-
+    result_amplifies(increase(Resource),Outcome),
+    result(Outcome,increase(Resource,Amount)).
 
 outcome_enables(Outcome, Result) :-
     result(Outcome, Result).
@@ -476,17 +509,17 @@ timingChallengeGoal :-
 
 goal(limit(Resource)) :-
     precondition(Condition, Outcome),
-    highThreshold(Condition, Resource),
+    highThreshold(Condition, Resource,Thresh),
     goal(prevent(Outcome)).
     
 goal(maintain(Resource)) :-
     precondition(Condition, Outcome),
-    lowThreshold(Condition, Resource),
+    lowThreshold(Condition, Resource,Thresh),
     goal(prevent(Outcome)).
  
 goal(eliminate(Resource)) :-
     precondition(Condition, Outcome),
-    lowThreshold(Condition, Resource),
+    lowThreshold(Condition, Resource,Thresh),
     goal(achieve(Outcome)).
    
 easy(Outcome) :-
@@ -524,6 +557,12 @@ monotonicallyIncreases(Resource) :-
     result(Outcome1, increase(Resource, Amount)),
     not nonMonotonic(Resource).
 
+constant(Resource) :-
+    resource(Resource),
+    not nonMonotonic(Resource),
+    not monotonicallyDecreases(Resource),
+    not monotonicallyIncreases(Resource).
+    
 
     
 
@@ -583,7 +622,7 @@ unrestrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
 restricted(Outcome) :-
     precondition(CONDITION, Outcome),
     not unrestrictedCondition(CONDITION).
-  
+
     
 unrestricted(Outcome) :-
     outcome(Outcome),
@@ -693,10 +732,19 @@ playerInfluences(Outcome) :-
     playerAgency(Entity),
     entityInfluences(Entity, Outcome).
 
+
+systemInfluences(Outcome) :-
+    not playerCreatesCondition(C),
+    precondition(C, Outcome).
+
+systemInfluences(Outcome) :-
+    not playerAgency(Entity),
+    entityInfluences(Entity, Outcome).
+    
 playerDetermines(Outcome) :-
     playerInfluences(Outcome),
-    onlyOnePrecondition(Outcome).
-
+    not systemInfluences(Outcome).
+    
 % XXX: to make this more general we should have some way of stating
 % that all preconditions have some property.
 
@@ -708,8 +756,68 @@ playerWillDo(Cond, Outcome) :-
   conditionEnables(Cond, Outcome),
   outcomeFavorable(Outcome).
 
-  
 
+
+%% Resource flow modeling
+
+%result(OUTCOME, increase(RESOURCE, RESOURCE_VALUE)),
+%result(ENABLING_OUTCOME, increase(RESOURCE_VALUE, VALUE)).
+
+bootstrapping(Bootstrapped,Outcome) :-
+    playerDetermines(Bootstrapped),
+    result(Bootstrapped,increase(Resource,Amount)),
+    result_enables(increase(Resource), Outcome).
+
+allocation_choice(Outcome1,Outcome2,Resource) :-
+    playerInfluences(Outcome1),
+    playerInfluences(Outcome2),
+    Outcome1 != Outcome2,
+    highThreshold(Cond1,Resource,Thresh1),
+    highThreshold(Cond2,Resource,Thresh2),
+    consumedBy(Resource,Outcome1),
+    consumedBy(Resource,Outcome2),
+    precondition(Cond1,Outcome1),
+    precondition(Cond2,Outcome2).
+
+lower_cost(initial,Outcome1,Outcome2) :-
+    allocation_choice(Outcome1,Outcome2,Resource),
+    highThreshold(Cond1,Resource,Thresh1),
+    highThreshold(Cond2,Resource,Thresh2),
+    precondition(Cond1,Outcome1),
+    precondition(Cond2,Outcome2),
+    lower_than(Thresh1,Thresh2).
+    
+lower_cost(always,Outcome1,Outcome2) :-
+    allocation_choice(Outcome1,Outcome2,Resource),
+    highThreshold(Cond1,Resource,Thresh1),
+    highThreshold(Cond2,Resource,Thresh2),
+    precondition(Cond1,Outcome1),
+    precondition(Cond2,Outcome2),
+    lower_than(Thresh1,Thresh2).
+
+outcome_entity_cost(Outcome,Entity,Thresh) :-
+    highThreshold(Cond,Resource,Thresh),
+    precondition(Cond,Outcome),
+    requiredBy(Outcome,Entity).
+    
+outcome_costs(Outcome,Resource) :-
+    highThreshold(Cond,Resource,Thresh),
+    precondition(Cond,Outcome).
+
+lower_cost(initial,Outcome1,Outcome2) :-
+    allocation_choice(Outcome1,Outcome2,Resource),
+    outcome_entity_cost(Outcome1,Entity1,Thresh1),
+    outcome_entity_cost(Outcome2,Entity2,Thresh2),
+    initialize(set(Entity1,Thresh1,Value1)),
+    initialize(set(Entity2,Thresh2,Value2)),
+    lower_than(Value1,Value2).
+
+
+investment(Outcome) :-
+    positive_feedback(Amplifier),
+    result(Outcome,increase(Amplifier,Amount)),
+    outcome_costs(Outcome,Resource),
+    amplifies(Amplifier,Resource).
 % %% KNOWLEGE BASE
 
 % XXX what is the below needed for?
@@ -732,5 +840,7 @@ timingBasedPhysics(spring;pendulum;chase;random;random_chase;flee;random_flee).
 threshold(mid;high;low).
 threshold(R) :-
     resource(R).
+threshold(R) :-
+    resource(E,R).
 
     
