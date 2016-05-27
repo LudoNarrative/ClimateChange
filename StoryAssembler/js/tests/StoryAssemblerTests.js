@@ -92,18 +92,45 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Chain through condition request: after click, should chain through.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Chain through condition request: no options when finished.");
 
-			// Test "persistent" wishlist parameter.
+			// Test "persistent" wishlist parameter and "repeatable" chunk parameter.
 			State.reset();
 			wl = Wishlist.create([{condition: "x eq true", persistent: true}], State);
 			ChunkLibrary.add([
-				{ id: "Chunk1", content: "Chunk1 Content", effects: ["set x true"] }
+				{ id: "Chunk1", content: "Chunk1 Content", effects: ["set x true"], repeatable: true }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
-			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work first time (1/2)");
-			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work first time (2/2)");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work first time (1/3)");
+			assert.deepEqual(countChildren(getChoiceEl()), 1, "Persistent chunks work first time (2/3)");
+			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work first time (3/3)");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work second time (1/2)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work second time (2/2)");
+
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true", persistent: true}], State);
+			ChunkLibrary.add([
+				{ id: "Chunk1", content: "Chunk1 Content", effects: ["set x true"], repeatable: false }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Non-repeatable chunks work first time (1/2)");
+			assert.deepEqual(contentForChoice(1), "Continue", "Non-repeatable chunks work first time (2/2)");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "[No path found!]", "Non-repeatable chunks: if a used non-repeatable chunk is the only thing satisfying a wishlist item, fail to find a path");
+
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true", persistent: true}], State);
+			ChunkLibrary.add([
+				{ id: "Chunk1", content: "...", effects: ["set x true"], repeatable: false },
+				{ id: "Chunk2", content: "...", effects: ["set x true"], repeatable: false },
+				{ id: "Chunk3", content: "...", effects: ["set x true"], repeatable: false }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			clickChoice(1);
+			clickChoice(1);
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "[No path found!]", "Non-repeatable chunks: should run out when we've exhausted supply.");
 
 
 			//test whether it can find the next want from wishlist if current choice-thread ends
@@ -149,6 +176,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			assert.deepEqual(html(getStoryEl()), "Chunk4 Content", "Choices also chain from requests: after click, should chain through again.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Choices also chain from requests: no options when finished.");
 			console.log(wl.wantsAsArray());
+
 
 
 			cleanUpDom();
