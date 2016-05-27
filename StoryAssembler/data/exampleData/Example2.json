@@ -64,8 +64,9 @@
 			{"chunkId": "quals"},
 			{"chunkId": "stilljealous"}
 		],
-		"effects": ["set beat 2"],
-		"conditions": ["beat eq 1"]
+		"conditions": ["beat eq 1"],
+		"effects": ["set beat 2"]
+		
 	},
 	{
 		"id": "wishcouldgo",
@@ -115,9 +116,7 @@
 		"id": 	"whatspecialty",
 		"content": "You're kind of still working on it. It's just a 400 page brick of a dissertation now. What are they called again, your little buddies?",
 		"choices": 	[
-			{ "chunkId" : "pickShrimp"},
-			{ "chunkId" : "pickLobsters"},
-			{ "chunkId" : "pickCoral"}
+			{ "chunkId" : "pickShrimp"}
 		],
 		"effects": ["set goto_whatspeciality true"]
 	},
@@ -125,28 +124,7 @@
 		"id": 	"pickShrimp",
 		"choiceLabel" : "<i>Lysmata amboinensis.</i> Pacific cleaner shrimp.",
 		"content": 	"Right. Lysmata amoeba ninnies. Thingies. I invited some to dinner, but turned out they're a more expensive date than I thought. Seafood is ex<i>pennnn</i>sive.",
-		"choices": 	[
-			{ "chunkId" : "howufeelChoicetext1" }
-		],
 		"effects" : ["set career 0"]
-	},
-	{
-		"id": 	"pickLobsters",
-		"content": 	"Right. I tried to invite old Homarus to dinner, but turns out he's a more expensive date than I thought. Seafood's getting ex<i>pennnn</i>sive.",
-		"choiceLabel" : "<i>Homarus americanus.</i> Lobsters.",
-		"choices": 	[
-			{ "chunkId" : "howufeelChoicetext1" }
-		],
-		"effects" : ["set career 1"]
-	},
-	{
-		"id": 	"pickCoral",
-		"choiceLabel" : "<i>Octocorallia.</i> Backbone of the coral reefs.",
-		"content": 	"Right. Octo-coro-lala-rama-dingdong. I tried to invite ol' Octo Lala to dinner, but turns out he was too busy getting registered on the endangered species list to attend.",
-		"choices": 	[
-			{ "chunkId" : "howufeelChoicetext2" }
-		],
-		"effects" : ["set career 2"]
 	},
 	{
 		"id": "howufeelChoicetext1",
