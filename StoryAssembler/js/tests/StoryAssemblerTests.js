@@ -73,20 +73,21 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "In multi-choice chain, last chunk should show correctly.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "In multi-choice chain, no options when finished.");
 
-
+			// Test chaining through condition-based request (condition is different than initial wishlist goals)
 			ChunkLibrary.reset();
 			State.reset();
 			State.set("beat", 1);
 			wl = Wishlist.create([{condition: "beat eq 3"}, {condition: "beat eq 2"}], State);
 			ChunkLibrary.add([
-				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}], effects: ["set beat 2"] },
-				{ id: "Chunk2", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
-				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", effects: ["set beat 3", "set x true"] }
+				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2x"}], effects: ["set beat 2"] },
+				{ id: "Chunk2x", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
+				{ id: "Chunk3x", conditions: ["beat eq 2"], content: "Chunk3 Content", effects: ["set beat 3", "set x true"] }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Chain through condition request: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Chain through condition request: initially only 1 choice");
 			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Chain through condition request: single choice is to Chunk2");
+			console.log("clicking choice in Chunk1");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Chain through condition request: after click, should chain through.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Chain through condition request: no options when finished.");
@@ -125,8 +126,29 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Move to different want after thread ends: second node HTML correct");
 
-
-
+			//write unit test for pulling in chunk with choices into chunk making request that has no content
+			ChunkLibrary.reset();
+			State.reset();
+			State.set("beat", 1);
+			wl = Wishlist.create([{condition: "beat eq 3"}, {condition: "beat eq 2"}], State);
+			ChunkLibrary.add([
+				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}], effects: ["set beat 2"] },
+				{ id: "Chunk2", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
+				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", choices: [{chunkId: "Chunk4"}], effects: ["set beat 3", "set x true"] },
+				{ id: "Chunk4", choiceLabel: "Chunk4 Label", content: "Chunk4 Content" },
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Choices also chain from requests: first node HTML correct");
+			assert.deepEqual(countChildren(getChoiceEl()), 1, "Choices also chain from requests: initially only 1 choice");
+			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Choices also chain from requests: single choice is to Chunk2");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Choices also chain from requests: after click, should chain through.");
+			assert.deepEqual(contentForChoice(1), "Chunk4 Label", "Choices also chain from requests: single choice is to Chunk4");
+			assert.deepEqual(countChildren(getChoiceEl()), 1, "Choices also chain from requests: second screen only 1 choice");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "Chunk4 Content", "Choices also chain from requests: after click, should chain through again.");
+			assert.deepEqual(countChildren(getChoiceEl()), 0, "Choices also chain from requests: no options when finished.");
+			console.log(wl.wantsAsArray());
 
 
 			cleanUpDom();
