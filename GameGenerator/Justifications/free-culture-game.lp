@@ -62,10 +62,12 @@ result(commodify, increase(old_ideas, med)).
 %                ideasAbsorbed.
 precondition(collide(new_idea, producer), learn).
 result(learn, increase(ideasAbsorbed, mid)).
+result(learn, set_color(producer,green)).
 
 %% Mechanic (7): ideasAbsorbed decreases with time.
 precondition(tick, forget).
 result(tick, decrease(ideasAbsorbed, low)).
+result(tick, set_color(producer,gray)).
 
 %% Mechanic (8): If ideasAbsorbed goes to 0, producer turns into consumer.
 precondition(le(ideasAbsorbed, 0), convert_producer).
@@ -93,10 +95,14 @@ result(forget_old, decrease(ideasConsumed, low)).
 initialize(set_to(ideasAbsorbed,10)).
 
 
-initialize(set_sprite(producer, green_person)).
-initialize(set_sprite(consumer, grey_person)).
+initialize(set_sprite(producer, person)).
+initialize(set_color(producer,green)).
+initialize(set_sprite(consumer, person)).
+initialize(set_color(consumer,gray)).
 initialize(set_sprite(vectorialist, evil_robot)).
+initialize(set_color(vectorialist,black)).
 
 %% The goal is to prevent producers turning into consumers.
 goal(prevent(convert_producer)).
+
 
