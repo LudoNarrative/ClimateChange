@@ -18,7 +18,8 @@ entity(producer_sprite(P))
 multiple(producer_sprite(P))
   :- producer(P).
   
-spawnLogic(producer_sprite(P),field(uniform),spawn,one_shot).
+spawnLogic(producer_sprite(P),field(uniform),spawn,one_shot)
+  :- producer(P).
 
 resource(producer, production_rate).
 resource(producer, cost).
@@ -62,8 +63,8 @@ precondition(ge(cookies, cost), buy_producer(P))
 precondition(control_event(click(buy_button(P))), buy_producer(P))
   :- producer(P).
 
-result(buy_producer(P), add(producer_sprite))
-  :- production_rate(P, R).
+result(buy_producer(P), add(S))
+  :- sprite_mapping(P, S).
 result(buy_producer(P), increase(cps, R))
   :- production_rate(P, R).
 result(buy_producer(P), increase(cost, cost))
