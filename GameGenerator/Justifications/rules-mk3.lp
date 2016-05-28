@@ -2,6 +2,7 @@
  % repeatable
  % limited/unlimited
  %
+ entity(screen_top;screen_left;screen_bottom;screen_right).
 
 lowThreshold(lt(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
@@ -575,6 +576,10 @@ humanAffected(Outcome) :-
 humanControlled(ENTITY) :-        
      physicsLogic(ENTITY, mapping(control_event(_), DIR, AMOUNT)).
     
+    
+humanControlled(Entity) :-        
+     playerAgency(Entity).
+     
 humanControlled(ENTITY) :-        
     physicsLogic(ENTITY, follows(cursor)).
 
@@ -618,6 +623,10 @@ restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
 unrestrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     not restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)).
+    
+unrestrictedCondition(control_event(BUTTON,STATE)) :-
+    precondition(control_event(BUTTON,STATE),Outcome) .
+    
     
 restricted(Outcome) :-
     precondition(CONDITION, Outcome),
@@ -703,23 +712,48 @@ playerAgency(ENTITY) :-
 playerAgency(ENTITY) :-    
     physicsLogic(ENTITY,mapping(control_event(BUTTON,STATE),DIRECTION,AMOUNT)).
 
+    
+playerAgency(ENTITY) :-    
+    precondition(control_event(BUTTON,STATE),OUTCOME),
+    result(OUTCOME,moves(ENTITY,  DIRECTION , AMOUNT)).
+    
+    
 %% Entity influence and determination
 entityInfluences(Entity, Outcome) :-
     precondition(near(Entity, _), Outcome).
 
+entityInfluences(Entity, Outcome) :-
+    precondition(overlaps(Entity, _), Outcome).
+entityInfluences(Entity, Outcome) :-
+    precondition(overlaps(_,Entity), Outcome).
 % XXX there should be more rules here for more entity preconditions
 
 entityDetermines(Entity, Outcome) :-
     entityInfluences(Entity, Outcome),
     onlyOnePrecondition(Outcome).
+    
+entityInfluencesOther(EntityA,EntityB) :-
+    precondition(overlaps(EntityA,EntityB),OUTCOME),
+    result(OUTCOME,reflect_velocity(EntityB,Normal)).
 
+entityInfluencesOther(EntityA,EntityB) :-
+    precondition(overlaps(EntityB,EntityA),OUTCOME),
+    result(OUTCOME,reflect_velocity(EntityB,Normal)).
 
-
+    
+% entityInfluences(Entity,Outcome) :-
+    % entityInfluencesOther(Entity,Entity'),
+    % entityInfluences(Entity',Outcome).
+    
+    
 %% Player influence and determination
 
 playerCreatesCondition(control_event(E)) :-
     precondition(control_event(E), Outcome).
 
+playerCreatesCondition(control_event(B,S)) :-
+    precondition(control_event(B,S), Outcome).
+    
 playerCreatesCondition(near(Entity, Other)) :-
     playerAgency(Entity),
     precondition(near(Entity, Other), Outcome).
@@ -756,6 +790,13 @@ playerWillDo(Cond, Outcome) :-
   conditionEnables(Cond, Outcome),
   outcomeFavorable(Outcome).
 
+playerWillAttemptToCreate(Cond,Outcome) :-
+    entityDetermines(Determinant,Outcome),
+    entityInfluencesOther(Influencer,Determinant),
+    playerAgency(Influencer),
+    conditionEnables(Cond, Outcome),
+    outcomeFavorable(Outcome).
+    
 
 
 %% Resource flow modeling
