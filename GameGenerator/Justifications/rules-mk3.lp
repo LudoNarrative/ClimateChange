@@ -741,6 +741,13 @@ entityInfluencesOther(EntityA,EntityB) :-
     result(OUTCOME,reflect_velocity(EntityB,Normal)).
 
     
+entityInfluencesOther(EntityA,EntityB) :-
+    precondition(overlaps(EntityA,EntityB),OUTCOME),
+    result(OUTCOME,delete(EntityB)).
+
+entityInfluencesOther(EntityA,EntityB) :-
+    precondition(overlaps(EntityB,EntityA),OUTCOME),
+    result(OUTCOME,delete(EntityB)).
 % entityInfluences(Entity,Outcome) :-
     % entityInfluencesOther(Entity,Entity'),
     % entityInfluences(Entity',Outcome).
@@ -796,9 +803,24 @@ playerWillAttemptToCreate(Cond,Outcome) :-
     playerAgency(Influencer),
     conditionEnables(Cond, Outcome),
     outcomeFavorable(Outcome).
+
     
 
+playerWillAttemptToAvoid(Cond,Outcome) :-
+    entityDetermines(Determinant,Outcome),
+    entityInfluencesOther(Influencer,Determinant),
+    playerAgency(Influencer),
+    conditionEnables(Cond, Outcome),
+    outcomeUnfavorable(Outcome).
 
+harmful(Entity) :- 
+    entityDetermines(Entity,Outcome),
+    outcomeUnfavorable(Outcome).
+
+
+outcomeFavorable(Outcome) :-
+    harmful(Entity),
+    result(Outcome,delete(Entity)).
 %% Resource flow modeling
 
 %result(OUTCOME, increase(RESOURCE, RESOURCE_VALUE)),
@@ -863,6 +885,11 @@ investment(Outcome) :-
 
 % XXX what is the below needed for?
 % unrestrictedCondition(control_event(BUTTON,BUTTON_STATE) :- buttons(BUTTON), buttonStates(BUTTON_STATE).
+
+antagonist(Antagonist) :-
+    precondition(timerElapsed(Antagonist,TimerName), Outcome),
+    result(Outcome, add(Entity)),
+    harmful(Entity).
 
 unrestrictedCondition(control_event(click(BUTTON))) :- buttons(BUTTON). 
 
