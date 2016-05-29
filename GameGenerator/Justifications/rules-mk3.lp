@@ -20,7 +20,8 @@ highThreshold(ge(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
     threshold(Thresh).
 
-
+resource(Resource) :-
+    resource(Resource,Entity).
 %% Good and bad results
 
 goodResult(mode_change(game_win)).
@@ -295,12 +296,29 @@ requiredBy(Outcome, Entity) :-
 requiredBy(Outcome, Entity) :-
     precondition(control_event(click(Entity)),Outcome).
 
+requiredBy(Outcome, Entity) :-
+    precondition(near(Entity,EntityB),Outcome).
+requiredBy(Outcome, Entity) :-
+    precondition(near(EntityB,Entity),Outcome).
+requiredBy(Outcome, Entity) :-
+    precondition(near(EntityB,Entity),Outcome).
+
+requiredBy(Outcome, Entity) :-
+    lowThreshold(Condition, Resource,Thresh),
+    precondition(Condition,Outcome),
+    resourceLogic(Resource, count(Entity)).
+requiredBy(Outcome, Entity) :-
+    highThreshold(Condition, Resource,Thresh),
+    precondition(Condition,Outcome),
+    resourceLogic(Resource, count(Entity)).
+
 %% Relationships between outcomes
 
 enables(Enabler, Enabled) :-
     outcome_enables(Enabler, Result),
     result_enables(Result, Enabled),
     Enabler != Enabled.
+
 
 
 %% XXX rewrite the below.
@@ -495,7 +513,22 @@ goal(achieve(Outcome)) :-
     
 goal(prevent(Outcome)) :-
     subGoal(prevent(Outcome),DEPTH).
-    
+
+
+destroys(Destroyer,Destroyed) :-
+    precondition(collide(Destroyed, Destroyer), Outcome),
+    result(Outcome, delete(Destroyed)).
+
+destroys(Destroyer,Destroyed) :-
+    precondition(collide(Destroyer, Destroyed), Outcome),
+    result(Outcome, delete(Destroyed)).
+
+antagonist(Destroyer) :-
+    destroys(Destroyer,Destroyed),
+    requiredBy(Outcome,Destroyed),
+    playerWillDo(Condition,Outcome).
+
+
 timingChallengeGoal :- 
     goal(achieve(Outcome)),
     precondition(control_event(BUTTON,BUTTON_STATE),Outcome),
@@ -837,7 +870,7 @@ unrestrictedGame :-
     
 
 timingBasedPhysics(spring;pendulum;chase;random;random_chase;flee;random_flee).
-threshold(mid;high;low).
+threshold(0;mid;high;low).
 threshold(R) :-
     resource(R).
 threshold(R) :-
