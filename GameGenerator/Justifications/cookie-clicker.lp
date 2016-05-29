@@ -21,8 +21,8 @@ multiple(producer_sprite(P))
 spawnLogic(producer_sprite(P),field(uniform),spawn,one_shot)
   :- producer(P).
 
-resource(producer, production_rate).
-resource(producer, cost).
+resource(buy_button(P), production_rate) :- producer(P).
+resource(buy_button(P), cost) :- producer(P).
 
 entity(giant_cookie).
 singular(giant_cookie).
@@ -32,6 +32,12 @@ entity(buy_button(P))
 
 singular(buy_button(P))
   :- producer(P).
+
+initialize(set(buy_button(P),production_rate,R)) :-
+    production_rate(P,R).
+initialize(set(buy_button(P),cost,C)) :-
+    cost(P,C).
+						   
 
 initialize(set_sprite(buy_button(P),button)) 
     :- producer(P).
@@ -63,9 +69,13 @@ precondition(ge(cookies, cost), buy_producer(P))
 precondition(control_event(click(buy_button(P))), buy_producer(P))
   :- producer(P).
 
-result(buy_producer(P), add(S))
-  :- sprite_mapping(P, S).
-result(buy_producer(P), increase(cps, R))
+% result(buy_producer(P), add(S))
+%   :- sprite_mapping(P, S).
+% result(buy_producer(P), increase(cps, R))
+
+result(buy_producer(P), add(producer_sprite))
+  :- production_rate(P, R).
+result(buy_producer(P), increase(cps, production_rate))
   :- production_rate(P, R).
 result(buy_producer(P), increase(cost, cost))
   :- production_rate(P, R).
