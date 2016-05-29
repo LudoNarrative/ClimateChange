@@ -3,7 +3,7 @@
 When beginScene is called, we need to pass in a defined ChunkLibrary, State, and Display module. 
 */
 
-define(["Request", "Templates"], function(Request, Templates) {
+define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	var chunkLibrary;
 	var State;
@@ -22,29 +22,104 @@ define(["Request", "Templates"], function(Request, Templates) {
 	}
 
 	var continueScene = function(optChunkId) {
-		// If optChunkId is undefined, the startAt parameter below will also be undefined and will have no effect.
-		var bestPath = wishlist.bestPath(chunkLibrary, {startAt: optChunkId});
-		Display.diagnose({
+		
+		var bestPath;
+
+		//this function should be re-factored to follow the below logic...this will help with the current broken test (and handle edge cases with recursive requests)
+		//some code from doChunkChoices will need to be moved up here as part of refactoring (continue button and end scene code)
+
+		//Cases:
+		if (optChunkId) {		//optchunkid is defined
+		
+			//display content field, or ground out request and display that content field (all this should happen in doChunkText)
+			displayChunkText(optChunkId);
+
+			bestPath = wishlist.bestPath(chunkLibrary, {startAt: optChunkId});		//then look for path from here
+
+			Display.diagnose({
 			path: bestPath,
 			wishlist: wishlist,
 			state: State.getBlackboard()
-		});
+			});
 
-		if (!bestPath) {		//if we can't find a path from our starting chunk, failover to a general search
-			console.log("specific search failed, starting general search");
-			bestPath = wishlist.bestPath(chunkLibrary);
-			console.log("bestPath",bestPath);
+			if (bestPath) {		//if we found one, say "Continue."
+				//Display.addChoice({text: "Continue"});
+				handleFoundPath(optChunkId, bestPath);
+			}
+			
+			else {		// otherwise do a blind search
+				console.log("specific search failed, starting general search");
+				bestPath = wishlist.bestPath(chunkLibrary);		//do a blind search
+
+				if (bestPath) {
+					handleFoundPath(optChunkId, bestPath);
+				}
+
+				else {
+					handleNoPathFound(wishlist.wantsAsArray());
+				}
+			}
+			
 		}
 
-		if (bestPath) {
-			var chunkWithText = optChunkId ? optChunkId : bestPath.route[0];
-			doChunkText(chunkWithText, bestPath);
-			doChunkChoices(chunkWithText, bestPath.choiceDetails);
-		} else {
-			Display.addStoryText("[Ran out of chunks early!]");
-			doStoryBreak();
+		else {	//optchunkid is undefined, so we're trying to continue the scene
+			
+			bestPath = wishlist.bestPath(chunkLibrary);		//do a blind search
+
+			Display.diagnose({
+				path: bestPath,
+				wishlist: wishlist,
+				state: State.getBlackboard()
+			});
+
+			if (bestPath) {		//if we find bestPath, then we want to handle the found path (show text, show choices)
+				
+				displayChunkText(bestPath.route[0]);
+				handleFoundPath(bestPath.route[0], bestPath);
+				
+			}
+			else {
+				handleNoPathFound(wishlist.wantsAsArray());
+			}
+			
+		}
+
+	}
+
+	var displayChunkText = function(chunkId) {
+		var chunk = chunkLibrary.get(chunkId);
+		var text = Templates.render(chunk);
+		if (text !== undefined) { 
+			Display.addStoryText(text); 
+		}
+		else {
+			console.log("undefined for " + chunkId);
+			
+			bestPath = wishlist.bestPath(chunkLibrary, {startAt: chunkId});
+			if (!bestPath) {
+				bestPath = wishlist.bestPath(chunkLibrary);		//do a blind search
+			}
+			doChunkText(chunkId, bestPath);
+			
+		}
+
+	}
+
+	var handleNoPathFound = function(wishlist) {
+		if (wishlist.length > 0) {
+			Display.addStoryText("[No path found!]");
+		}
+		else {
 			endScene();
 		}
+	}
+
+	var handleFoundPath = function(optChunkId, bestPath) {
+	
+		//var chunkWithText = optChunkId ? optChunkId : bestPath.route[0];
+		doChunkText(optChunkId, bestPath);
+		doChunkChoices(optChunkId, bestPath.choiceDetails);
+		
 	}
 
 	var doChunkText = function(chunkId, bestPath) {
@@ -57,15 +132,16 @@ define(["Request", "Templates"], function(Request, Templates) {
 		// var text = Request.getText(nextItem.content);
 		var chunkForText = chunk;
 		var routePos = 0;
-		while (!chunkForText.content) {
+		while (!chunkForText.content) {		//find content to display for the chunk
 			routePos += 1;
 			var nextChunkId = bestPath.route[routePos];
 			chunkForText = chunkLibrary.get(nextChunkId);
 			if (chunkForText) {
 				if (chunkForText.choices) {
-					continueScene(nextChunkId);
+					continueScene(nextChunkId);		//TODO: verify this is still correct after above re-factoring
 					return;
 				} else {
+					displayChunkText(chunkForText.id);
 					handleEffects(chunkForText);
 				}
 			} else {
@@ -73,8 +149,8 @@ define(["Request", "Templates"], function(Request, Templates) {
 			}
 		}
 
-		var text = Templates.render(chunkForText);
-		Display.addStoryText(text);
+		//var text = Templates.render(chunkForText);
+		//Display.addStoryText(text);
 		// TODO: We shouldn't display "undefined" if there's no content field.
 		}
 
@@ -94,6 +170,7 @@ define(["Request", "Templates"], function(Request, Templates) {
 					chunkId: choice.val,
 					cantChoose: choiceDetails[pos].missing === true
 				});
+
 			});
 		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
 		} else if (wishlist.wantsRemaining() > 0) {
