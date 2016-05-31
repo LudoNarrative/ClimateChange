@@ -2,6 +2,10 @@
  % repeatable
  % limited/unlimited
  %
+ entity(screen_top;screen_left;screen_bottom;screen_right).
+oppositeSides(screen_top,screen_bottom).
+oppositeSides(screen_left,screen_right).
+oppositeSides(A,B) :- oppositeSides(B,A).
 
 lowThreshold(lt(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
@@ -20,7 +24,8 @@ highThreshold(ge(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
     threshold(Thresh).
 
-
+resource(Resource) :-
+    resource(Resource,Entity).
 %% Good and bad results
 
 goodResult(mode_change(game_win)).
@@ -43,6 +48,13 @@ badResult(decrease(Resource, Amount)) :-
     result(_, decrease(Resource, Amount)),
     good(Resource).
 
+badResult(add(Entity)) :-
+    result(_, add(Entity)),
+    harmful(Entity).
+
+badResult(decrease(Resource, Amount)) :-
+    result(_, decrease(Resource, Amount)),
+    good(Resource).
 %% Good and bad outcomes
 
 outcomeFavorable(Outcome) :-
@@ -295,12 +307,29 @@ requiredBy(Outcome, Entity) :-
 requiredBy(Outcome, Entity) :-
     precondition(control_event(click(Entity)),Outcome).
 
+requiredBy(Outcome, Entity) :-
+    precondition(near(Entity,EntityB),Outcome).
+requiredBy(Outcome, Entity) :-
+    precondition(near(EntityB,Entity),Outcome).
+requiredBy(Outcome, Entity) :-
+    precondition(near(EntityB,Entity),Outcome).
+
+requiredBy(Outcome, Entity) :-
+    lowThreshold(Condition, Resource,Thresh),
+    precondition(Condition,Outcome),
+    resourceLogic(Resource, count(Entity)).
+requiredBy(Outcome, Entity) :-
+    highThreshold(Condition, Resource,Thresh),
+    precondition(Condition,Outcome),
+    resourceLogic(Resource, count(Entity)).
+
 %% Relationships between outcomes
 
 enables(Enabler, Enabled) :-
     outcome_enables(Enabler, Result),
     result_enables(Result, Enabled),
     Enabler != Enabled.
+
 
 
 %% XXX rewrite the below.
@@ -314,6 +343,18 @@ hinders(Outcome,Outcome2) :-
     requiredBy(Outcome2,ENTITY),
     Outcome != Outcome2 .   
  
+tiedToDifficulty(Resource) :-
+    result(Outcome,moves(Entity,Direction,Resource)),
+    antagonist(Entity).
+
+increasingDifficulty :-
+    tiedToDifficulty(Resource),
+    monotonicallyIncreases(Resource).
+
+futileOutcome :-
+    increasingDifficulty,
+    not decreasingDifficulty.
+
 
 % XXX duplicated by result_enables, I think?
 % enables(Outcome1, Outcome2) :- 
@@ -495,7 +536,22 @@ goal(achieve(Outcome)) :-
     
 goal(prevent(Outcome)) :-
     subGoal(prevent(Outcome),DEPTH).
-    
+
+
+destroys(Destroyer,Destroyed) :-
+    precondition(overlaps(Destroyed, Destroyer), Outcome),
+    result(Outcome, delete(Destroyed)).
+
+destroys(Destroyer,Destroyed) :-
+    precondition(overlaps(Destroyer, Destroyed), Outcome),
+    result(Outcome, delete(Destroyed)).
+
+antagonist(Destroyer) :-
+    destroys(Destroyer,Destroyed),
+    requiredBy(Outcome,Destroyed),
+    playerWillDo(Condition,Outcome).
+
+
 timingChallengeGoal :- 
     goal(achieve(Outcome)),
     precondition(control_event(BUTTON,BUTTON_STATE),Outcome),
@@ -517,6 +573,11 @@ goal(maintain(Resource)) :-
     lowThreshold(Condition, Resource,Thresh),
     goal(prevent(Outcome)).
  
+goal(gain(Resource)) :-
+    precondition(Condition, Outcome),
+    highThreshold(Condition, Resource,Thresh),
+    goal(achieve(Outcome)).
+
 goal(eliminate(Resource)) :-
     precondition(Condition, Outcome),
     lowThreshold(Condition, Resource,Thresh),
@@ -575,6 +636,10 @@ humanAffected(Outcome) :-
 humanControlled(ENTITY) :-        
      physicsLogic(ENTITY, mapping(control_event(_), DIR, AMOUNT)).
     
+    
+humanControlled(Entity) :-        
+     playerAgency(Entity).
+     
 humanControlled(ENTITY) :-        
     physicsLogic(ENTITY, follows(cursor)).
 
@@ -618,6 +683,10 @@ restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
 unrestrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     not restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)).
+    
+unrestrictedCondition(control_event(BUTTON,STATE)) :-
+    precondition(control_event(BUTTON,STATE),Outcome) .
+    
     
 restricted(Outcome) :-
     precondition(CONDITION, Outcome),
@@ -703,23 +772,57 @@ playerAgency(ENTITY) :-
 playerAgency(ENTITY) :-    
     physicsLogic(ENTITY,mapping(control_event(BUTTON,STATE),DIRECTION,AMOUNT)).
 
+    
+playerAgency(ENTITY) :-    
+    precondition(control_event(BUTTON,STATE),OUTCOME),
+    result(OUTCOME,moves(ENTITY,  DIRECTION , AMOUNT)).
+    
+    
 %% Entity influence and determination
 entityInfluences(Entity, Outcome) :-
     precondition(near(Entity, _), Outcome).
 
+entityInfluences(Entity, Outcome) :-
+    precondition(overlaps(Entity, _), Outcome).
+entityInfluences(Entity, Outcome) :-
+    precondition(overlaps(_,Entity), Outcome).
+entityInfluences(Entity, Outcome) :-
+    precondition(timerElapsed(Entity,_), Outcome).
 % XXX there should be more rules here for more entity preconditions
 
 entityDetermines(Entity, Outcome) :-
     entityInfluences(Entity, Outcome),
     onlyOnePrecondition(Outcome).
+    
+entityInfluencesOther(EntityA,EntityB) :-
+    precondition(overlaps(EntityA,EntityB),OUTCOME),
+    result(OUTCOME,reflect_velocity(EntityB,Normal)).
 
+entityInfluencesOther(EntityA,EntityB) :-
+    precondition(overlaps(EntityB,EntityA),OUTCOME),
+    result(OUTCOME,reflect_velocity(EntityB,Normal)).
 
+    
+entityInfluencesOther(EntityA,EntityB) :-
+    precondition(overlaps(EntityA,EntityB),OUTCOME),
+    result(OUTCOME,delete(EntityB)).
 
+entityInfluencesOther(EntityA,EntityB) :-
+    precondition(overlaps(EntityB,EntityA),OUTCOME),
+    result(OUTCOME,delete(EntityB)).
+% entityInfluences(Entity,Outcome) :-
+    % entityInfluencesOther(Entity,Entity'),
+    % entityInfluences(Entity',Outcome).
+    
+    
 %% Player influence and determination
 
 playerCreatesCondition(control_event(E)) :-
     precondition(control_event(E), Outcome).
 
+playerCreatesCondition(control_event(B,S)) :-
+    precondition(control_event(B,S), Outcome).
+    
 playerCreatesCondition(near(Entity, Other)) :-
     playerAgency(Entity),
     precondition(near(Entity, Other), Outcome).
@@ -756,8 +859,30 @@ playerWillDo(Cond, Outcome) :-
   conditionEnables(Cond, Outcome),
   outcomeFavorable(Outcome).
 
+playerWillAttemptToCreate(Cond,Outcome) :-
+    entityDetermines(Determinant,Outcome),
+    entityInfluencesOther(Influencer,Determinant),
+    playerAgency(Influencer),
+    conditionEnables(Cond, Outcome),
+    outcomeFavorable(Outcome).
+
+    
+
+playerWillAttemptToAvoid(Cond,Outcome) :-
+    entityDetermines(Determinant,Outcome),
+    entityInfluencesOther(Influencer,Determinant),
+    playerAgency(Influencer),
+    conditionEnables(Cond, Outcome),
+    outcomeUnfavorable(Outcome).
+
+harmful(Entity) :- 
+    entityDetermines(Entity,Outcome),
+    outcomeUnfavorable(Outcome).
 
 
+outcomeFavorable(Outcome) :-
+    harmful(Entity),
+    result(Outcome,delete(Entity)).
 %% Resource flow modeling
 
 %result(OUTCOME, increase(RESOURCE, RESOURCE_VALUE)),
@@ -820,8 +945,59 @@ investment(Outcome) :-
     amplifies(Amplifier,Resource).
 % %% KNOWLEGE BASE
 
+sameRepresentation(EntityA,EntityB) :-
+    initialize(set_sprite(EntityA,Sprite)),
+    initialize(set_sprite(EntityB,Sprite)),
+    EntityA != EntityB.
+
+symmetricMotion(EntityA,EntityB) :-
+    result(OutcomeA,moves(EntityA,  Direction , Amount)),
+    result(OutcomeB,moves(EntityB,  Direction , Amount)),
+    EntityA != EntityB.
+
+symmetricOutcome(OutcomeA,OutcomeB) :-    
+    precondition(ge(ResourceA,Thresh),OutcomeA),
+    outcomeFavorable(OutcomeA),
+    precondition(ge(ResourceB,Thresh), OutcomeB),
+    outcomeUnfavorable(OutcomeB).
+
+screenSymmetric(OutcomeA,OutcomeB) :-
+    precondition(overlaps(EntityA,SideA),OutcomeA),
+    precondition(overlaps(EntityB,SideB),OutcomeB),
+    oppositeSides(SideA,SideB).
+
+symmetricResources(ResourceA,ResourceB) :-
+    screenSymmetric(OutcomeA,OutcomeB),
+    result(OutcomeA,increase(ResourceA,Amount)),
+    result(OutcomeB,increase(ResourceB,Amount)).
+
+symmetricResources(ResourceA,ResourceB) :-
+    screenSymmetric(OutcomeA,OutcomeB),
+    result(OutcomeA,decrease(ResourceA,Amount)),
+    result(OutcomeB,decrease(ResourceB,Amount)).
+
+symmetricOutcome(OutcomeA,OutcomeB) :-    
+    precondition(ge(ResourceA,Thresh),OutcomeA),
+    outcomeFavorable(OutcomeA),
+    precondition(ge(ResourceB,Thresh), OutcomeB),
+    outcomeUnfavorable(OutcomeB).
+
+symmetricGoals :-
+    goal(limit(ResourceB)),
+    goal(gain(ResourceA)),
+    symmetricResources(ResourceA,ResourceB).
+
+symmetricCompetition :- 
+    sameRepresentation(EntityA,EntityB),
+    symmetricMotion(EntityA,EntityB),
+    symmetricGoals.
 % XXX what is the below needed for?
 % unrestrictedCondition(control_event(BUTTON,BUTTON_STATE) :- buttons(BUTTON), buttonStates(BUTTON_STATE).
+
+antagonist(Antagonist) :-
+    entityInfluences(Antagonist,Outcome),
+    badResult(Result),
+    result(Outcome, Result).
 
 unrestrictedCondition(control_event(click(BUTTON))) :- buttons(BUTTON). 
 
@@ -837,7 +1013,7 @@ unrestrictedGame :-
     
 
 timingBasedPhysics(spring;pendulum;chase;random;random_chase;flee;random_flee).
-threshold(mid;high;low).
+threshold(0;mid;high;low).
 threshold(R) :-
     resource(R).
 threshold(R) :-

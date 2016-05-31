@@ -10,7 +10,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	var _library = {};
 
 	var requiredFields = [];
-	var optionalFields = ["id", "choices", "choiceLabel", "effects", "conditions", "request", "content", "comment"];
+	var optionalFields = ["id", "choices", "choiceLabel", "effects", "conditions", "request", "content", "comment", "repeatable"];
 
 	// Validates and adds a chunk to the library.
 	var addChunk = function(chunk) {
@@ -68,6 +68,10 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 		return _library[chunkId];
 	}
 
+	var remove = function(chunkId) {
+		delete _library[chunkId];
+	}
+
 	var keys = []
 	var keyPos = 0;
 	var first = function() {
@@ -99,6 +103,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	return {
 		add: add,
 		get: get,
+		remove: remove,
 		first: first,
 		next: next,
 		reset: reset,
