@@ -162,7 +162,6 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		if (chunk.choices) {
 			chunk.choices.forEach(function(choice, pos) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
-				// TODO: Our path needs to save which node we found that met the conditions for a choice, so we know what text to print here.
 				var choiceText = getChoiceText(choiceDetails[pos]);
 				// if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
 				Display.addChoice({
