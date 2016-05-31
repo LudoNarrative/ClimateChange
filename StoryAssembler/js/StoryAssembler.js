@@ -114,11 +114,16 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		}
 	}
 
-	var handleFoundPath = function(optChunkId, bestPath) {
+	var handleFoundPath = function(chunkId, bestPath) {
 	
-		//var chunkWithText = optChunkId ? optChunkId : bestPath.route[0];
-		doChunkText(optChunkId, bestPath);
-		doChunkChoices(optChunkId, bestPath.choiceDetails);
+		//var chunkWithText = chunkId ? chunkId : bestPath.route[0];
+		doChunkText(chunkId, bestPath);
+		doChunkChoices(chunkId, bestPath.choiceDetails);
+
+		// Remove this chunk from consideration, unless it has the 'repeatable' flag.
+		if (!chunkLibrary.get(chunkId).repeatable) {
+			chunkLibrary.remove(chunkId);
+		}
 		
 	}
 
