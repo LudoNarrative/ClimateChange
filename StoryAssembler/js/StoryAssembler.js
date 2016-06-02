@@ -88,12 +88,18 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	var getBestPath = function(chunkLibrary, startingPoint) {		
 	//this function gets best path from the starting point, or if that's not specified, does a blind search 
+		console.log("called getBestPath with chunkLibrary: " + chunkLibrary.getKeys() + " and startingPoint: " + startingPoint);
 		if (startingPoint) {
-			return wishlist.bestPath(chunkLibrary, {startAt: startingPoint});
+			var temp = wishlist.bestPath(chunkLibrary, {startAt: startingPoint});
+			console.log("bestPath is: " , temp);
+			return temp;
 		}
 
 		else {
-			return wishlist.bestPath(chunkLibrary);
+			var temp = wishlist.bestPath(chunkLibrary);
+			console.log("bestPath is: ", temp);
+			return temp;
+			//return wishlist.bestPath(chunkLibrary);
 		}
 	}
 
@@ -104,7 +110,6 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			Display.addStoryText(text); 
 		}
 		else {
-			console.log("undefined for " + chunkId);
 			
 			bestPath = getBestPath(chunkLibrary, chunkId);
 			if (!bestPath) {
@@ -152,13 +157,18 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			chunkForText = chunkLibrary.get(nextChunkId);
 			if (chunkForText) {
 				if (chunkForText.choices) {
+					/*
 					displayChunkText(chunkForText.id);
 					handleEffects(chunkForText);
 
 					bestPath = getBestPath(chunkLibrary, nextChunkId);
+					if (!bestPath) { bestPath = getBestPath(chunkLibrary);}
+					
+					//sometimes there are no choiceDetails because the choice has content that is the end of the experience...need to refactor doChunkChocies so that you don't need choiceDetails, but it will let you render the choice
 					doChunkChoices(nextChunkId, bestPath.choiceDetails);
-					//continueScene(nextChunkId);		//TODO: verify this is still correct after above re-factoring
-					return;
+					*/
+
+					continueScene(nextChunkId);		//TODO: verify this is still correct after above re-factoring
 				} else {
 					displayChunkText(chunkForText.id);
 					handleEffects(chunkForText);

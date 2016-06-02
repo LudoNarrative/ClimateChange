@@ -164,6 +164,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", choices: [{chunkId: "Chunk4"}], effects: ["set beat 3", "set x true"] },
 				{ id: "Chunk4", choiceLabel: "Chunk4 Label", content: "Chunk4 Content" },
 			]);
+			console.log("aw yeah problem child");
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Choices also chain from requests: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Choices also chain from requests: initially only 1 choice");
@@ -177,7 +178,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Choices also chain from requests: no options when finished.");
 			console.log(wl.wantsAsArray());
 
-			//make sure options aren't being displayed that shouldn't
+			//make sure options aren't being displayed that shouldn't be displayed
 			ChunkLibrary.reset();
 			State.reset();
 			State.set("beat", 1);
