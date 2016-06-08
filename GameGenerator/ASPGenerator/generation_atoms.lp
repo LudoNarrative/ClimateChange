@@ -40,6 +40,11 @@ entityOrdering(e4,e5).
 entityOrdering(A,C) :- entityOrdering(A,B), entityOrdering(B,C).
 
 potentialResources(r1;r2;r3;r4;r5).
+resourceOrdering(r1,r2).
+resourceOrdering(r2,r3).
+resourceOrdering(r3,r4).
+resourceOrdering(r4,r5).
+resourceOrdering(A,C) :- resourceOrdering(A,B), resourceOrdering(B,C).
 potentialOutcomes(o1;o2;o3;o4;o5).
 potentialEndOutcomes(eo1;eo2;eo3;eo4;eo5).
 outcomeOrder(o1,o2).
@@ -47,8 +52,14 @@ outcomeOrder(o2,o3).
 outcomeOrder(o3,o4).
 outcomeOrder(o4,o5).
 outcomeOrder(A,C) :- outcomeOrder(A,B), outcomeOrder(B,C).
+outcomeOrder(eo1,o1).
+outcomeOrder(eo2,eo1).
+outcomeOrder(eo3,eo2).
+outcomeOrder(eo4,eo3).
 
-constants(low;mid;high).
+outcomeOrder(eo5,eo4).
+
+constants(low).
 potentialValues(V) :- constants(V).
 
 %potentialValues(R) :-  potentialResources(R).
@@ -70,3 +81,10 @@ spawnTimings(steady;at_a_time(1);at_a_time(2);at_a_time(3);at_a_time(4);poisson;
 
 change(increases;decreases;set_to).
 
+:-  monotonicallyIncreases(Resource), 
+    precondition(Condition,Outcome),
+    lowThreshold(Condition,Resource,Threshold).
+    
+:-  monotonicallyDecreases(Resource), 
+    precondition(Condition,Outcome),
+    highThreshold(Condition,Resource,Threshold).
