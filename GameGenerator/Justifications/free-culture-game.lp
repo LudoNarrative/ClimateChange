@@ -90,6 +90,7 @@ precondition(tick, forget_old).
 result(forget_old, decrease(ideasConsumed, low)).
 
 
+
 %% Initializations
 % XXX ???
 initialize(set_to(ideasAbsorbed,10)).

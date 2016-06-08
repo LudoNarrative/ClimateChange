@@ -8,7 +8,7 @@
 #const max_end_outcomes = 2.
 #const max_resource_change_per = 4.
 #const max_conditions_per = 4.
-:- not good(r1).
+
 :- not timingChallenge(mouse_button,pressed).
 % :- not condition(tick).
 % denotes(r1,confidence).

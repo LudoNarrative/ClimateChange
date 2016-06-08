@@ -2,7 +2,8 @@
  % repeatable
  % limited/unlimited
  %
- entity(screen_top;screen_left;screen_bottom;screen_right).
+screen(screen_top;screen_left;screen_bottom;screen_right).
+% entity(E) :- screen(E).
 oppositeSides(screen_top,screen_bottom).
 oppositeSides(screen_left,screen_right).
 oppositeSides(A,B) :- oppositeSides(B,A).
@@ -24,6 +25,11 @@ highThreshold(ge(Resource, Thresh), Resource,Thresh) :-
     resource(Resource),
     threshold(Thresh).
 
+lhThreshold(COND,Resource,Thresh) :-
+    lowThreshold(COND,Resource,Thresh).
+
+lhThreshold(COND,Resource,Thresh) :-
+    highThreshold(COND,Resource,Thresh).
 resource(Resource) :-
     resource(Resource,Entity).
 %% Good and bad results
@@ -265,19 +271,19 @@ consumedBy(Resource, Outcome) :-
     result(Outcome,decrease(Resource, _)).
     
 
-timingAffectsAction(BUTTON,BUTTON_STATE) :- 
-    precondition(control_event(BUTTON,BUTTON_STATE),Outcome),
+timingAffectsAction(control_event(Control)) :- 
+    precondition(control_event(Control),Outcome),
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     timingAffectsEntity(ENTITY_A).
 
-timingAffectsAction(BUTTON,BUTTON_STATE) :- 
-    precondition(control_event(BUTTON,BUTTON_STATE),Outcome),
+timingAffectsAction(control_event(Control)) :- 
+    precondition(control_event(Control),Outcome),
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     timingAffectsEntity(ENTITY_B).
   
-timingChallenge(BUTTON,BUTTON_STATE) :- 
-    actionHasRiskReward(BUTTON,BUTTON_STATE),
-    timingAffectsAction(BUTTON,BUTTON_STATE).
+timingChallenge(control_event(Control)) :- 
+    actionHasRiskReward(Control),
+    timingAffectsAction(control_event(Control)).
 
 
     
@@ -458,25 +464,33 @@ positive_feedback(Resource) :-
     result_amplifies(increase(Resource),Outcome),
     result(Outcome,increase(Resource,Amount)).
 
-outcome_enables(Outcome, Result) :-
+outcome_enablesN(Outcome, Result,0) :-
     result(Outcome, Result).
 
-outcome_enables(Outcome, Result) :-
+outcome_enablesN(Outcome, Result,N+1) :-
     result(Outcome, Result'),
     result_enables(Result', Outcome'),
-    outcome_enables(Outcome', Result).
+    outcome_enablesN(Outcome', Result,N),
+    N < 1.
 
-conditionEnables(C, O) :-
+outcome_enables(C,O) :-
+    outcome_enablesN(C,O,N).
+    
+conditionEnables(C,O) :-
+    conditionEnablesN(C,O,N).
+conditionEnablesN(C, O,0) :-
     precondition(C, O).
 
-conditionEnables(C, O) :-
-    conditionEnables(C, O'),
-    enables(O', O).
-
+conditionEnablesN(C, O,N+1) :-
+    conditionEnablesN(C, O',N),
+    enables(O', O),
+    N < 1.
+conditionEnables(C,O) :-
+    conditionEnablesN(C,O,N).
 %% Transitivity of enablement
-enables(Outcome1, Outcome3) :-
-    enables(Outcome1, Outcome2),
-    enables(Outcome2, Outcome3).
+% enables(Outcome1, Outcome3) :-
+    % enables(Outcome1, Outcome2),
+    % enables(Outcome2, Outcome3).
 
 %% More outcome favorability
 outcomeFavorable(Outcome) :-

@@ -2,19 +2,29 @@
 #const max_entities = 2.
 #const min_resources = 1.
 #const max_resources = 1.
-#const min_outcomes = 3.
+#const min_outcomes = 1.
 #const max_outcomes = 5.
-:- not good(r1).
-:- not condition(tick).
-denotes(r1,confidence).
 
-:- not timingChallengeGoal.
+#const min_end_outcomes = 1.
+#const max_end_outcomes = 1.
+#const max_resource_change_per = 2.
+#const max_conditions_per = 2.
+ :- not good(r1).
 :- not worseWithTime(r1).
-:- isEasy.
+:- not nonMonotonic(r1).
+:- effect(mode_change(game_win)).
+:- not effect(mode_change(game_loss)).
 
-:- physicsLogic(e1,mapping(control_event(left_arrow,pressed),east,low)).
 
-% Something something cultural knowledge about confidence
+
+%:- not condition(tick).
+
+%:- not timingChallengeGoal.
+% :- isEasy.
+
+% :- physicsLogic(e1,mapping(control_event(left_arrow,pressed),east,low)).
+
+% % Something something cultural knowledge about confidence
 % face communicates confidence
 
 
