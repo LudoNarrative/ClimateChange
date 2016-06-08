@@ -25,38 +25,38 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		
 		var bestPath;
 
-		//this function should be re-factored to follow the below logic...this will help with the current broken test (and handle edge cases with recursive requests)
-		//some code from doChunkChoices will need to be moved up here as part of refactoring (continue button and end scene code)
-
 		//Cases:
 		if (optChunkId) {		//optchunkid is defined
 		
 			//display content field, or ground out request and display that content field (all this should happen in doChunkText)
 			displayChunkText(optChunkId);
 
-			bestPath = wishlist.bestPath(chunkLibrary, {startAt: optChunkId});		//then look for path from here
+			var chunk = chunkLibrary.get(optChunkId);	//get data on our chunk to do the check below
 
-			Display.diagnose({
-			path: bestPath,
-			wishlist: wishlist,
-			state: State.getBlackboard()
-			});
+			if (chunk.content) {	//if there was no chunk content, it already grounded out recursively and displayed with displayChunkText(), so we shouldn't redo that here
+				bestPath = getBestPath(chunkLibrary, optChunkId);		//look for path from here
 
-			if (bestPath) {		//if we found one, say "Continue."
-				//Display.addChoice({text: "Continue"});
-				handleFoundPath(optChunkId, bestPath);
-			}
-			
-			else {		// otherwise do a blind search
-				console.log("specific search failed, starting general search");
-				bestPath = wishlist.bestPath(chunkLibrary);		//do a blind search
+				Display.diagnose({
+				path: bestPath,
+				wishlist: wishlist,
+				state: State.getBlackboard()
+				});
 
-				if (bestPath) {
+				if (bestPath) {		//if we found one, handle it
 					handleFoundPath(optChunkId, bestPath);
 				}
+				
+				else {		// otherwise do a blind search
+					//console.log("specific search failed, starting general search");
+					bestPath = getBestPath(chunkLibrary);		//do a blind search
 
-				else {
-					handleNoPathFound(wishlist.wantsAsArray());
+					if (bestPath) {
+						handleFoundPath(optChunkId, bestPath);
+					}
+
+					else {
+						handleNoPathFound(wishlist.wantsAsArray());
+					}
 				}
 			}
 			
@@ -64,7 +64,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 		else {	//optchunkid is undefined, so we're trying to continue the scene
 			
-			bestPath = wishlist.bestPath(chunkLibrary);		//do a blind search
+			bestPath = getBestPath(chunkLibrary);		//do a blind search
 
 			Display.diagnose({
 				path: bestPath,
@@ -86,6 +86,23 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	}
 
+	var getBestPath = function(chunkLibrary, startingPoint) {		
+	//this function gets best path from the starting point, or if that's not specified, does a blind search 
+		console.log("called getBestPath with chunkLibrary: " + chunkLibrary.getKeys() + " and startingPoint: " + startingPoint);
+		if (startingPoint) {
+			var temp = wishlist.bestPath(chunkLibrary, {startAt: startingPoint});
+			console.log("bestPath is: " , temp);
+			return temp;
+		}
+
+		else {
+			var temp = wishlist.bestPath(chunkLibrary);
+			console.log("bestPath is: ", temp);
+			return temp;
+			//return wishlist.bestPath(chunkLibrary);
+		}
+	}
+
 	var displayChunkText = function(chunkId) {
 		var chunk = chunkLibrary.get(chunkId);
 		var text = Templates.render(chunk);
@@ -93,11 +110,10 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			Display.addStoryText(text); 
 		}
 		else {
-			console.log("undefined for " + chunkId);
 			
-			bestPath = wishlist.bestPath(chunkLibrary, {startAt: chunkId});
+			bestPath = getBestPath(chunkLibrary, chunkId);
 			if (!bestPath) {
-				bestPath = wishlist.bestPath(chunkLibrary);		//do a blind search
+				bestPath = getBestPath(chunkLibrary);		//do a blind search
 			}
 			doChunkText(chunkId, bestPath);
 			
@@ -114,11 +130,16 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		}
 	}
 
-	var handleFoundPath = function(optChunkId, bestPath) {
+	var handleFoundPath = function(chunkId, bestPath) {
 	
-		//var chunkWithText = optChunkId ? optChunkId : bestPath.route[0];
-		doChunkText(optChunkId, bestPath);
-		doChunkChoices(optChunkId, bestPath.choiceDetails);
+		//var chunkWithText = chunkId ? chunkId : bestPath.route[0];
+		doChunkText(chunkId, bestPath);
+		doChunkChoices(chunkId, bestPath.choiceDetails);
+
+		// Remove this chunk from consideration, unless it has the 'repeatable' flag.
+		if (!chunkLibrary.get(chunkId).repeatable) {
+			chunkLibrary.remove(chunkId);
+		}
 		
 	}
 
@@ -128,8 +149,6 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		// Handle effects
 		handleEffects(chunk);
 
-		// Get and show text for that item.
-		// var text = Request.getText(nextItem.content);
 		var chunkForText = chunk;
 		var routePos = 0;
 		while (!chunkForText.content) {		//find content to display for the chunk
@@ -138,8 +157,18 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			chunkForText = chunkLibrary.get(nextChunkId);
 			if (chunkForText) {
 				if (chunkForText.choices) {
+					/*
+					displayChunkText(chunkForText.id);
+					handleEffects(chunkForText);
+
+					bestPath = getBestPath(chunkLibrary, nextChunkId);
+					if (!bestPath) { bestPath = getBestPath(chunkLibrary);}
+					
+					//sometimes there are no choiceDetails because the choice has content that is the end of the experience...need to refactor doChunkChocies so that you don't need choiceDetails, but it will let you render the choice
+					doChunkChoices(nextChunkId, bestPath.choiceDetails);
+					*/
+
 					continueScene(nextChunkId);		//TODO: verify this is still correct after above re-factoring
-					return;
 				} else {
 					displayChunkText(chunkForText.id);
 					handleEffects(chunkForText);
@@ -149,8 +178,6 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			}
 		}
 
-		//var text = Templates.render(chunkForText);
-		//Display.addStoryText(text);
 		// TODO: We shouldn't display "undefined" if there's no content field.
 		}
 
@@ -162,7 +189,6 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		if (chunk.choices) {
 			chunk.choices.forEach(function(choice, pos) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
-				// TODO: Our path needs to save which node we found that met the conditions for a choice, so we know what text to print here.
 				var choiceText = getChoiceText(choiceDetails[pos]);
 				// if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
 				Display.addChoice({
