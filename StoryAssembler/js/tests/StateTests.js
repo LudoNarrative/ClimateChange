@@ -82,27 +82,50 @@ define(["../State"], function(State) {
 
 		});
 
-		test("wouldMakeTrue", function(assert) {
+		test("wouldMakeMoreTrue (exact matches)", function(assert) {
 			State.reset();
 			State.set("x", 5);
-			assert.ok(State.wouldMakeTrue("incr x 1", "x eq 6"), "wouldMakeTrue for inc");
-			assert.deepEqual(State.get("x"), 5, "wouldMakeTrue should not change values");
-			assert.notOk(State.wouldMakeTrue("incr x 1", "x lte 5"), "wouldMakeTrue for inc, negated");
-			assert.notOk(State.wouldMakeTrue("decr x 1", "x eq 5"), "wouldMakeTrue for decr, checking old value");
-			assert.ok(State.wouldMakeTrue("set x -1", "x lt 0"), "wouldMakeTrue for set");
-			assert.notOk(State.wouldMakeTrue("set x -1", "x gt 0"), "wouldMakeTrue for set, negated");
-			assert.deepEqual(State.get("x"), 5, "wouldMakeTrue should not change values (2)");
+			assert.ok(State.wouldMakeMoreTrue("incr x 1", "x eq 6"), "wouldMakeMoreTrue for inc");
+			assert.deepEqual(State.get("x"), 5, "wouldMakeMoreTrue should not change values");
+			assert.notOk(State.wouldMakeMoreTrue("incr x 1", "x lte 5"), "wouldMakeMoreTrue for inc, negated");
+			assert.notOk(State.wouldMakeMoreTrue("decr x 1", "x eq 5"), "wouldMakeMoreTrue for decr, checking old value");
+			assert.ok(State.wouldMakeMoreTrue("set x -1", "x lt 0"), "wouldMakeMoreTrue for set");
+			assert.notOk(State.wouldMakeMoreTrue("set x -1", "x gt 0"), "wouldMakeMoreTrue for set, negated");
+			assert.deepEqual(State.get("x"), 5, "wouldMakeMoreTrue should not change values (2)");
 			State.set("y", false);
-			assert.ok(State.wouldMakeTrue("set x true", "x eq true"), "wouldMakeTrue for booleans (1)");
-			assert.notOk(State.wouldMakeTrue("set x true", "x eq false"), "wouldMakeTrue for booleans (2)");
+			assert.ok(State.wouldMakeMoreTrue("set x true", "x eq true"), "wouldMakeMoreTrue for booleans (1)");
+			assert.notOk(State.wouldMakeMoreTrue("set x true", "x eq false"), "wouldMakeMoreTrue for booleans (2)");
 			State.set("y", true);
-			assert.ok(State.wouldMakeTrue("set y false", "y eq false"), "wouldMakeTrue for booleans (3)");
-			assert.notOk(State.wouldMakeTrue("set y false", "y eq true"), "wouldMakeTrue for booleans (4)");
+			assert.ok(State.wouldMakeMoreTrue("set y false", "y eq false"), "wouldMakeMoreTrue for booleans (3)");
+			assert.notOk(State.wouldMakeMoreTrue("set y false", "y eq true"), "wouldMakeMoreTrue for booleans (4)");
 
-			assert.notOk(State.wouldMakeTrue("incr z 1", "z eq 1"), "can't relatively change value of non-existent entry");
-			assert.ok(State.wouldMakeTrue("set a 2", "a eq 2"), "ok to assign values that don't exist yet");
+			assert.notOk(State.wouldMakeMoreTrue("incr z 1", "z eq 1"), "can't relatively change value of non-existent entry");
+			assert.ok(State.wouldMakeMoreTrue("set a 2", "a eq 2"), "ok to assign values that don't exist yet");
+		});
+
+		test("wouldMakeMoreTrue (incremental change)", function(assert) {
+			// Test incremental effects: i.e. when searching for "x gt 3" the effect "incr x 1" should match.
+			State.reset();
+
+			// Quick function to simplify testing the truth table defined below. Pass in a condition, and a collection of arrays with an operation to perform and a truth state to expect.
+			var check = function() {
+				var cond = arguments[0];
+				for (var x = 1; x < arguments.length; x++) {
+					var op = arguments[x][0];
+					var truthState = arguments[x][1];
+					assert.deepEqual(State.wouldMakeMoreTrue(op, cond), truthState, "incremental wouldMakeMoreTrue for condition " + cond + ", op " + op);
+				}
+			}
+
+			State.set("x", 5);
+
+			check("x eq 15", ["incr x 1", true], ["mult x 3", true], ["mult x 4", false], ["decr x 1", false]);
+			check("x gt 15", ["incr x 1", true], ["mult x 3", true], ["mult x 4", true], ["decr x 1", false]);
+			check("x lt 15", ["incr x 1", true], ["mult x 3", false], ["mult x 4", false], ["decr x 1", true]);
+			check("x eq -15", ["incr x 1", false], ["mult x 3", false], ["mult x 4", false], ["decr x 1", true]);
 
 		});
+
 	}
 
 	return {
