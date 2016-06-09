@@ -1,3 +1,7 @@
+
+:- precondition(overlaps(B,A,Polarity),Outcome),
+   entityOrdering(A,B).
+
 % Only 1 avatar
 :-  avatar(ENTITY), 
     many(ENTITY).
@@ -25,29 +29,31 @@
 :- static(ENTITY), controlScheme(ENTITY,SCHEME).
 :- static(ENTITY), movementScheme(ENTITY,SCHEME).
 :- static(ENTITY), interaction(OTHER,ENTITY,push).
+:- static(ENTITY), interaction(OTHER,ENTITY,bounce).
+:- static(ENTITY), interaction(OTHER,ENTITY,collide).
+:- static(ENTITY), result(Outcome,moves(ENTITY,AMOUNT)).
+:- static(ENTITY), result(Outcome,apply_restitution(ENTITY,AMOUNT)).
 
-
-{ result(help(ENTITY1,ENTITY2),increases(G_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,help), good(G_RESOURCE).   
-{ result(help(ENTITY1,ENTITY2),decreases(B_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,help), bad(B_RESOURCE).     
-{ result(help(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,help), helpful(ENTITY).
+:- entity(E2), not entity(E1), entityOrdering(E1,E2).
+:- resource(E2), not resource(E1), resourceOrdering(E1,E2).
 
 
 actuallyHelps(help(ENTITY1,ENTITY2)) :- 
-    result(help(ENTITY1,ENTITY2),increases(G_RESOURCE)), good(RESOURCE). 
+    result(help(ENTITY1,ENTITY2),increase(G_RESOURCE)), good(RESOURCE). 
 actuallyHelps(help(ENTITY1,ENTITY2)) :-
-    result(help(ENTITY1,ENTITY2),decreases(B_RESOURCE)), bad(RESOURCE).
-actuallyHelps(help(ENTITY1,ENTITY2)) :-
-    result(help(ENTITY1,ENTITY2),spawn(ENTITY)), helpful(ENTITY).
+    result(help(ENTITY1,ENTITY2),decrease(B_RESOURCE)), bad(RESOURCE).
+% actuallyHelps(help(ENTITY1,ENTITY2)) :-
+    % result(help(ENTITY1,ENTITY2),spawn(ENTITY)), helpful(ENTITY).
 
 
         
 
 actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
-    result(hurt(ENTITY1,ENTITY2),increases(G_RESOURCE)), bad(G_RESOURCE).   
+    result(hurt(ENTITY1,ENTITY2),increase(G_RESOURCE)), bad(G_RESOURCE).   
 actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
-    result(hurt(ENTITY1,ENTITY2),decreases(B_RESOURCE)), good(B_RESOURCE).     
-actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
-    result(hurt(ENTITY1,ENTITY2),spawn(ENTITY)),  harmful(ENTITY).
+    result(hurt(ENTITY1,ENTITY2),decrease(B_RESOURCE)), good(B_RESOURCE).     
+% actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
+    % result(hurt(ENTITY1,ENTITY2),spawn(ENTITY)),  harmful(ENTITY).
         
 
 %if something helps it must help in some way
@@ -64,19 +70,19 @@ actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
 :- goal(reach(end)), not placement(ENTITY, path(end)), avatar(ENTITY).   
 
 %don't increase or decrease in more than 2 ways
-:- 2 {result(OUTCOME, decreases(RESOURCE,AMOUNT)): 
+:- 2 {result(OUTCOME, decrease(RESOURCE,AMOUNT)): 
     potentialValues(AMOUNT)}, 
     resource(RESOURCE), 
     outcome(OUTCOME). 
     
-:- 2 {result(OUTCOME, increases(RESOURCE,AMOUNT)): 
+:- 2 {result(OUTCOME, increase(RESOURCE,AMOUNT)): 
     potentialValues(AMOUNT)}, 
     resource(RESOURCE), 
     outcome(OUTCOME). 
     
 % don't increase and decrease at the same time
-:-  result(OUTCOME,increases(RESOURCE,AMOUNT1)), 
-    result(OUTCOME,decreases(RESOURCE,AMOUNT2)).
+:-  result(OUTCOME,increase(RESOURCE,AMOUNT1)), 
+    result(OUTCOME,decrease(RESOURCE,AMOUNT2)).
     
 % don't have 2 resources counting the same thing
 :- 2 {resourceLogic(RESOURCE,count(ENTITY)) : resource(RESOURCE)},
@@ -152,7 +158,15 @@ differentR(OUTCOME1,OUTCOME2) :-
     outcome(OUTCOME1),outcome(OUTCOME2),
     outcomeOrder(OUTCOME1,OUTCOME2),
     same(OUTCOME1,OUTCOME2). 
+ 
+
+modeChanging(Outcome) :-
+    result(Outcome,mode_change(MODE)).
     
+moreSevere(OutcomeA,OutcomeB) :- 
+    modeChanging(OutcomeA),
+    outcome(OutcomeB),
+    not modeChanging(OutcomeB). 
     
 % don't compare 1 resource for more than 1 value   
 :-  2 {precondition(lt(RESOURCE,VALUE),OUTCOME) :
@@ -228,7 +242,9 @@ effect(EFFECT) :- result(OUTCOME,EFFECT).
 :-  precondition(control_event(BUTTON,STATE),OUTCOME),
     result(OUTCOME,mode_change(END)), 
     end_mode(END).
-  
+:-  precondition(control_event(EVENT),OUTCOME),
+    result(OUTCOME,mode_change(END)), 
+    end_mode(END).
  
 % certain things tick shouldn't do
 :-  precondition(tick,OUTCOME), 
@@ -243,6 +259,9 @@ effect(EFFECT) :- result(OUTCOME,EFFECT).
     changes(OUTCOME,CHANGE,CV,high).
 :-  precondition(tick,OUTCOME),
     changes(OUTCOME,CHANGE,CV,mid).
+
+    
+
     
     
 :- 2 { precondition(le(RESOURCE,VALUE1),OUTCOME) ; precondition(lt(RESOURCE,VALUE2),OUTCOME) : potentialValues(VALUE1),potentialValues(VALUE2)} , resource(RESOURCE), outcome(OUTCOME).
@@ -253,341 +272,110 @@ effect(EFFECT) :- result(OUTCOME,EFFECT).
     
 :- 2{result(OUTCOME,moves(ENTITY,DIRECTION,AMOUNT)) :direction(DIRECTION), potentialValues(AMOUNT)}, outcome(OUTCOME),entity(ENTITY).
 
-%%%%% Go the reverse direction:
-
-
-% avatarMoveUp(ENTITY) :- 
-    % precondition(control_event(up_arrow, held),OUTCOME),
-    % precondition(empty(ENTITY,up,low),OUTCOME),
-    % result(OUTCOME,moves(ENTITY, up, low)).
-    
-% avatarMoveDown(ENTITY) :- 
-    % precondition(control_event(down_arrow, held),OUTCOME),
-    % precondition(empty(ENTITY,down,low),OUTCOME),
-    % result(OUTCOME,moves(ENTITY,down, low)).
-    
-% avatarMoveLeft(ENTITY) :- 
-    % precondition(control_event(left_arrow, held),OUTCOME),
-    % precondition(empty(ENTITY,left,low),OUTCOME),
-    % result(OUTCOME,moves(ENTITY, left, low)).
-    
-% avatarMoveRight(ENTITY) :- 
-    % precondition(control_event(right_arrow, held),OUTCOME),
-    % precondition(empty(ENTITY,right,low),OUTCOME),
-    % result(OUTCOME,moves(ENTITY,right, low)).
-    
-% avatarMoveForward(ENTITY) :-
-    % precondition(control_event(up_arrow, held),OUTCOME),
-    % precondition(empty(ENTITY,forward,low),OUTCOME),
-    % result(OUTCOME,moves(ENTITY, forward, low)).
-    
-% avatarMoveBackward(ENTITY) :-
-    % precondition(control_event(down_arrow, held),OUTCOME),
-    % precondition(empty(ENTITY,behind,low),OUTCOME),
-    % result(OUTCOME,moves(ENTITY, behind, low)).
-    
-% avatarRotateCCW(ENTITY) :-
-    % precondition(control_event(left_arrow, held),OUTCOME),
-    % result(OUTCOME,rotates(ENTITY, ccw, low)).
-% avatarRotateCW(ENTITY) :-
-    % precondition(control_event(right_arrow, held),OUTCOME),
-    % result(OUTCOME,rotates(ENTITY, cw, low)).
-
-% avatarJump(ENTITY) :-
-    % precondition(control_event(up_arrow, pressed),OUTCOME),
-    % result(OUTCOME,moves(ENTITY, up, high)).
-        
-% clickAndDrag(ENTITY) :-
-    % precondition(control_event(mouse_button, pressed),OUTCOME_CLICK),
-    % precondition(overlaps(cursor,ENTITY,true),OUTCOME_CLICK),
-    % resource(ENTITY,dragged),
-    % result(OUTCOME_CLICK, set(dragged,true)),
-    % precondition(eq(dragged,true),OUTCOME_DRAG),
-    % result(OUTCOME_DRAG, move_towards(ENTITY,cursor)),
-    % precondition(control_event(mouse_button, released),OUTCOME_END_DRAG),
-    % %result(OUTCOME_END_DRAG, select(ENTITY)),
-    % result(OUTCOME_END_DRAG, set(dragged,false)).
-  
-% %cursor is electromagnet
-% attractedToOnClick(ENTITY,OTHER) :-
-    % precondition(control_event(mouse_button, held),OUTCOME),
-    % result(OUTCOME, move_towards(ENTITY,OTHER)).
-
-% repeledByOnClick(ENTITY,OTHER) :-
-    % precondition(control_event(mouse_button, held),OUTCOME),
-    % result(OUTCOME, move_away(ENTITY,OTHER)).
-    
-
-% %click on something, then move it
-% %simplest version, click on something
-% moveAfterSelectedOnClick(ENTITY) :- 
-    % precondition(control_event(mouse_button, pressed),OUTCOME_SELECT),
-    % precondition(overlaps(cursor,ENTITY,true),OUTCOME_SELECT),
-    % resource(ENTITY,selected),
-    % resource(ENTITY,target),
-    % result(OUTCOME_SELECT, set(selected,true)),
-    % precondition(control_event(mouse_button, pressed),OUTCOME_SET_TARGET),
-    % precondition( eq(selected,true),OUTCOME_SET_TARGET),
-    % result(OUTCOME_SET_TARGET, set(selected,false)),
-    % result(OUTCOME_SET_TARGET, set(target,cursor)),
-    % result(tick,move_towards(ENTITY,target)).
-%%%%%%%%%% NPC   %%%%%%%%%%%%%%%%%%
-
-
-% %pick a speed for a projectile
-% 1 {speed(ENTITY,AMOUNT) : constants(AMOUNT)} 1 :- 
-    % movementScheme(ENTITY,projectile).
-% %projectiles go straight
-% result(tick,moves(ENTITY, forward, AMOUNT)) :- 
-    % movementScheme(ENTITY,projectile), speed(ENTITY,AMOUNT). 
-
-% %Random walkers walk in a given direction for a given amount of time    
-% outcome(change_direction(ENTITY)) :- 
-    % movementScheme(ENTITY,random_walk).
-% timerLogic(ENTITY,change_direction,duration) :- 
-    % movementScheme(ENTITY,random_walk).
-% %time's up - change direction
-% precondition(timerElapsed(ENTITY,change_direction), change_direction(ENTITY)) :-
-    % movementScheme(ENTITY,random_walk).
-% result(change_direction(ENTITY), rotate(ENTITY,random_int(0,360))) :- 
-    % movementScheme(ENTITY,random_walk).
-% %normally, just walk forwards ?slowly?
-% result(tick,moves(ENTITY, forward, low)) :- 
-    % movementScheme(ENTITY,random_walk). 
-
-% %random pathfinder - changes target every once in a while
-% outcome(change_target(ENTITY)) :- 
-    % movementScheme(ENTITY,random_pathfind).
-% timerLogic(ENTITY,change_target,duration) :- 
-    % movementScheme(ENTITY,random_pathfind).
-% precondition(timerElapsed(ENTITY,change_target), change_target(ENTITY)) :-
-    % movementScheme(ENTITY,random_pathfind).
-    
-% resource(ENTITY,target) :- movementScheme(ENTITY,random_pathfind).
-% result(change_target(ENTITY), set(target,random_point)) :- 
-    % movementScheme(ENTITY,random_pathfind).
-% result(tick,move_towards(ENTITY,target)) :- 
-    % movementScheme(ENTITY,random_pathfind). 
-
-
-% outcome(get_next_point(ENTITY)) :- 
-    % movementScheme(ENTITY,path(TYPE)).
-% precondition(overlaps(ENTITY,next_point,true), get_next_point(ENTITY)) :-
-    % movementScheme(ENTITY,path(TYPE)).
-    
-% result(get_next_point(ENTITY), set(next_point,pop(waypoints))) :- 
-    % movementScheme(ENTITY,path(TYPE)).
-% resource(ENTITY,waypoints) :- movementScheme(ENTITY,path(TYPE)). 
-% resource(ENTITY,next_point) :- movementScheme(ENTITY,path(TYPE)). 
-% result(tick,move_towards(ENTITY,next_point)) :- 
-    % movementScheme(ENTITY,path(TYPE)). 
-    
-    
-    
-% outcome(tick) :- result(tick,ELSE).
-% precondition(tick,tick) :- outcome(tick).
-
-% attractions(ENTITY) :- entity(ENTITY).
-% attractions(cursor).
-% 1 {attracted_to(ENTITY,OTHER) : attractions(OTHER) } :- 
-    % movementScheme(ENTITY,attract).
-    
-
-% result(tick,move_towards(ENTITY,OTHER)) :- 
-    % movementScheme(ENTITY,attract), 
-    % attracted_to(ENTITY,OTHER). 
-    
-    
-% 1 {repeled_by(ENTITY,OTHER) : attractions(OTHER) } :- movementScheme(ENTITY,repel).
-
-
-% result(tick,move_away(ENTITY,OTHER)) :- 
-    % movementScheme(ENTITY,repel),
-    % repeled_by(ENTITY,OTHER). 
+thresholded(RESOURCE) :-
+    1{ precondition(ge(RESOURCE,THRESH),OUTCOME);
+       precondition(le(RESOURCE,THRESH),OUTCOME);
+       precondition(gt(RESOURCE,THRESH),OUTCOME);
+       precondition(lt(RESOURCE,THRESH),OUTCOME)}, resource(RESOURCE).
        
+       
+changes(RESOURCE) :-
+    1{ result(OUTCOME,increase(RESOURCE,AMOUNT));
+        result(OUTCOME,decrease(RESOURCE,AMOUNT))}, resource(RESOURCE).
 
-% resource(ENTITY,target) :- movementScheme(ENTITY,patrol).
-% precondition(overlaps(ENTITY,target,true), next_target(ENTITY)) :-
-    % movementScheme(ENTITY,patrol).
-% result(next_target(ENTITY), set_next_patrol_point(ENTITY)) :-
-    % movementScheme(ENTITY,patrol).
+meaningfulResource(RESOURCE) :- 
+    changes(RESOURCE),
+    thresholded(RESOURCE).
+:- resource(RESOURCE),
+    not meaningfulResource(RESOURCE).
     
-% result(tick,move_to(ENTITY,target)) :-
-    % movementScheme(ENTITY,patrol).
+:-  result(Outcome,add(Entity)),
+    result(Outcome,delete(Entity)).
     
-
-% {physicsLogic(ENTITY,gravity) : entity(ENTITY)}  :- controlScheme(AVATAR,platformer).
-% physicsLogic(AVATAR,gravity) :- controlScheme(AVATAR,platformer).
-
-% result(tick,apply_force(ENTITY,down,middle)) :-
-    % physicsLogic(ENTITY,gravity).
     
+required(Entity) :- precondition(overlaps(Entity,_,_), Outcome).
+required(Entity) :- precondition(overlaps(_,Entity,_), Outcome).
 
-% 1 {bounceLogic(ENTITY1,ENTITY2) : entity(ENTITY2)} :- movementScheme(ENTITY1,bounce).
-% :- bounceLogic(ENTITY1,ENTITY2), ENTITY1 = ENTITY2.
-
-% precondition(overlaps(ENTITY1,ENTITY2,true),bounce(ENTITY1,ENTITY2)) :-
-    % bounceLogic(ENTITY1,ENTITY2).
-% result(bounce(ENTITY1,ENTITY2),
-    % reflect_velocity(ENTITY1,collision_normal(ENTITY1,ENTITY2))) :-
-    % bounceLogic(ENTITY1,ENTITY2).
+:- entity(Entity), not required(Entity).
+:- 
+    required(Entity),
+    effect(delete(Entity)),
+    not effect(add(Entity)).
+:- many(E), screen(E).
+:- precondition(overlaps(E1,E2,Polarity),Outcome), screen(E1),screen(E2).
+% :- spawnLogic(E,_,_,_), screen(E).
     
-% outcome(OUTCOME) :- precondition(CONDITION,OUTCOME).
-% outcome(OUTCOME) :- result(OUTCOME,EFFECT).
+:- result(tick, increase(Resource,Amount)),
+   not effect(decrease(Resource,Amt)),
+   potentialValues(Amt).
 
-% interactions(help;collide;harm;help;make_invulnerable).
+:- effect(delete(E)), screen(E).
+:- effect(add(E)), screen(E).
+:- interaction(E1,E2,TYPE), screen(E1), screen(E2).
+:- placement(E,_,_), screen(E).
 
-% 1 {interaction(ENTITY1,ENTITY2,INTERACTION) : interactions(INTERACTION)} 
-    % :-  entity(ENTITY1), 
-        % entity(ENTITY2), 
-        % ENTITY1 != ENTITY2 .
+
+:-   
+  2{precondition(COND,Outcome) : lhThreshold(COND,Resource,Thresh)},
+  outcome(Outcome).
+  
+:- resourceLogic(Resource,count(Entity)), 
+    {effect(delete(Entity));
+    effect(add(Entity))} 0.
+
+:- resourceLogic(Resource,count(Entity)), 
+    1 {effect(increase(Resource,Amount));
+        effect(decrease(Resource,Amount))}.
         
-% precondition(overlaps(ENTITY1,ENTITY2,true), push(ENTITY1,ENTITY2)) :- interaction(ENTITY1,ENTITY2,push).
-% result(push(ENTITY1,ENTITY2),apply_force(ENTITY2,direction_from(ENTITY1,ENTITY2))) :- interaction(ENTITY1,ENTITY2,push).
-
-
-
-
-% precondition(overlaps(ENTITY1,ENTITY2,true), collide(ENTITY1,ENTITY2)) :- 
-    % interaction(ENTITY1,ENTITY2,collide).
-% result(collide(ENTITY1,ENTITY2),apply_restitution(ENTITY1,ENTITY2)) :- 
-    % interaction(ENTITY1,ENTITY2,collide).
-
-% {static(ENTITY) : entity(ENTITY)}.
-
-
-% precondition(overlaps(ENTITY1,ENTITY2,true), help(ENTITY1,ENTITY2)) :- 
-    % interaction(ENTITY1,ENTITY2,help).
-% { result(help(ENTITY1,ENTITY2),increases(G_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,help), good(G_RESOURCE).   
-% { result(help(ENTITY1,ENTITY2),decreases(B_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,help), bad(B_RESOURCE).     
-% { result(help(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,help), helpful(ENTITY).
-
-
         
-
-% precondition(overlaps(ENTITY1,ENTITY2,true), hurt(ENTITY1,ENTITY2)) :- 
-    % interaction(ENTITY1,ENTITY2,hurt).
-% { result(hurt(ENTITY1,ENTITY2),increases(G_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), bad(G_RESOURCE).   
-% { result(hurt(ENTITY1,ENTITY2),decreases(B_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), good(B_RESOURCE).     
-% { result(hurt(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,hurt), harmful(ENTITY).
-
-
-% placements(field(random);field(uniform);field(corner);path(center);path(random);path(endpoints);path(uniform);path(start)).
-% placementModality(one_shot;spawn).
-
-% 1 {placement(ENTITY,TYPE,MODE) : placements(TYPE), placementModality(MODE)} 1 :- entity(ENTITY).
-
-% validPathPlacement :- placement(ENTITY,TYPE,path(TYPE)), path(PATH,PTYPE).
-
-% 1 {spawnLogic(ENTITY,TYPE,spawn,RATE) : spawnTimings(RATE)} 1 :- placement(ENTITY,TYPE,spawn).
-
-
-
-
-% movementProfiles(constant;logarithmic;ease_in;ease_out;ease_in_out;teleport).
-
-% 1 {movementLogic(ENTITY,PROFILE) : movementProfiles(PROFILE)} 1 :- entity(ENTITY), not static(ENTITY).
-
-% 1 {result(OUTCOME,spawn(ENTITY)) : potentialOutcomes(OUTCOME) } :- spawnLogic(ENTITY,TYPE,MODE,condition).
-
-
-% %%% RESOURCES %%%
-% initialResourceValues(0;low;medium;high).
-
-
-% 1 {initialize(set(RESOURCE,VALUE)) : initialResourceValues(VALUE)} 1 :- resource(RESOURCE).
-
-% resourceTransactions(convert;pay_cost;gain;lose).
-
-% {transaction(RESOURCE,TRANSACTION) : resourceTransactions(TRANSACTION)} :-
-    % resource(RESOURCE).
-
-% 1 {result(OUTCOME, decreases(RESOURCE,AMOUNT)): potentialOutcomes(OUTCOME), potentialValues(AMOUNT) } :- 
-    % transaction(RESOURCE,convert).
-
-
-% 1 { result(OUTCOME,increases(RESOURCE2,AMOUNT2)) : resource(RESOURCE2), potentialValues(AMOUNT2) }:- 
-    % result(OUTCOME, decreases(RESOURCE,AMOUNT)), 
-    % transaction(RESOURCE,convert).
- 
-
-
+effect(EFFECT) :- 
+    result(OUTCOME,EFFECT).
     
-% 1 {precondition(gt(RESOURCE,AMOUNT),OUTCOME);precondition(ge(RESOURCE,AMOUNT),OUTCOME) } 1 :- 
-    % result(OUTCOME, decreases(RESOURCE,AMOUNT)), 
-    % transaction(RESOURCE,convert).
- 
+completeOutcome(OUTCOME) :- 
+    result(OUTCOME,EFFECT),
+    precondition(CONDITION,OUTCOME).
+:- outcome(OUTCOME), not completeOutcome(OUTCOME).
 
-% %PAY COST
-% 1 {result(OUTCOME, decreases(RESOURCE,AMOUNT)): potentialOutcomes(OUTCOME), potentialValues(AMOUNT) } :- 
-    % transaction(RESOURCE,pay_cost). 
-% 1 {precondition(gt(RESOURCE,AMOUNT),OUTCOME);precondition(ge(RESOURCE,AMOUNT),OUTCOME) } 1 :- 
-    % result(OUTCOME, decreases(RESOURCE,AMOUNT)), 
-    % transaction(RESOURCE,pay_cost).
+:- precondition(overlaps(ENTITY1,ENTITY2,POLARITY), OUTCOME),
+   precondition(overlaps(ENTITY2,ENTITY1,OTHER), OUTCOME).
+
+:- 2 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)}, outcome(OUTCOME).
 
 
+:- 3 {precondition(CONDITION,Outcome)}, outcome(Outcome).
 
-% %LOSE
-% 1 {result(OUTCOME, decreases(RESOURCE,AMOUNT)): potentialOutcomes(OUTCOME), potentialValues(AMOUNT) } :- 
-    % transaction(RESOURCE,lose). 
-% 1 {precondition(gt(RESOURCE,AMOUNT),OUTCOME);precondition(ge(RESOURCE,AMOUNT),OUTCOME) } 1 :- 
-    % result(OUTCOME, decreases(RESOURCE,AMOUNT)), 
-    % transaction(RESOURCE,lose).
+freeResource(Resource) :- 
+    resource(Resource), 
+    1{result(Outcome,increase(Resource,Amount));
+      result(Outcome,decrease(Resource,Amount))},
+    not conditionedOnResource(Resource,Outcome),
+    outcome(Outcome).
+:- resource(Resource), not freeResource(Resource).
+
+:- result(Outcome,increase(Resource,Amount)),
+   precondition(ge(Resource,Other),Outcome).
+   
+:- result(Outcome,decrease(Resource,Amount)),
+   precondition(le(Resource,Other),Outcome).
+
+:-  result(Outcome,delete(Entity)), 
+    {precondition(overlaps(Entity,Other),Outcome);
+     precondition(overlaps(Other,Entity),Outcome)} 0.
+     
+:- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
+     
+     
+outcomes(N) :- N = #count{completeOutcome(Outcome) : completeOutcome(Outcome)}.
+
+playerControls :- precondition(control_event(EVENT),OUTCOME).
+:- not playerControls.
+% :- outcomes(N), N > 4.
+ #minimize { N@1 : outcomes(N)}.
+  % #minimize{K@1: results(K)}.
+ % #minimize{ I@3: preconditions(I)}.
+
+
+results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
+
+preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
     
-    
-% %GAIN
-% 1 {result(OUTCOME, increases(RESOURCE,AMOUNT)): potentialOutcomes(OUTCOME), potentialValues(AMOUNT) } :- 
-    % transaction(RESOURCE,gain). 
-    
-% {resourceLogic(RESOURCE,count(ENTITY)) : resource(RESOURCE), entity(ENTITY)}.
-
-
-
-    
-% {result(tick,increases(RESOURCE,AMOUNT)) : resource(RESOURCE), potentialValues(AMOUNT)}.
-% {result(tick,decreases(RESOURCE,AMOUNT)) : resource(RESOURCE), potentialValues(AMOUNT)}.
-
-% pools(inventory).
-% selectionType(single;double).
-% {selection(ENTITY,TYPE) : entity(ENTITY), selectionType(TYPE)}.
-
-% precondition(control_event(mouse_button,pressed),select(ENTITY,single)) :- 
-    % selection(ENTITY,single).
-% precondition(overlaps(cursor,ENTITY,true),select(ENTITY,single)) :- 
-    % outcome(select(ENTITY,single)).
-% 1 {result(outcome(select(ENTITY,TYPE)),move_to(ENTITY,POOL)) :pools(POOL)} 1 :- selection(ENTITY,TYPE).
-
-
-% precondition(control_event(mouse_button,double_pressed),select(ENTITY,double)) :- 
-    % selection(ENTITY,double).
-% precondition(overlaps(cursor,ENTITY,true),select(ENTITY,double)) :- 
-    % outcome(select(ENTITY,double)).
-    
-% {precondition(ge(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
-% {precondition(gt(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
-% {precondition(lt(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
-% {precondition(le(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
-
-
-% {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) :potentialOutcomes(OUTCOME)} :- 
-    % entity(ENTITY1),
-    % entity(ENTITY2).
-
-
-% {result(OUTCOME,delete(ENTITY)) : entity(ENTITY), potentialOutcomes(OUTCOME)}.
-% {result(OUTCOME,add(ENTITY)) : entity(ENTITY), potentialOutcomes(OUTCOME)}.
-% {result(OUTCOME,increases(RESOURCE,VALUE)) : potentialOutcomes(OUTCOME),resource(RESOURCE), potentialValues(VALUE)}.
-% {result(OUTCOME,decreases(RESOURCE,VALUE)) : potentialOutcomes(OUTCOME),resource(RESOURCE), potentialValues(VALUE)}.
-
-
-% modes(narrative_progress;game_win;game_loss;game_over).
-% 1 {result(END_OUTCOME,mode_change(MODE)) : modes(MODE)} 1 :- 
-    % end_outcome(END_OUTCOME).
-
-% {precondition(le(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE),potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
-
-% {precondition(ge(RESOURCE,VALUE),OUTCOME,potentialValues(VALUE)) : resource(RESOURCE), potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
-
-
-
-% {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : entity(ENTITY1),entity(ENTITY2)} :- result(OUTCOME,mode_change(MODE)).

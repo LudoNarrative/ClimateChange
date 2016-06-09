@@ -125,7 +125,8 @@ if __name__ == '__main__':
         for oo in out[o]:
             for ooo in oo:
                 print prettify(ooo)
-        print ''
+        if len(out[o]) > 0:
+            print ''
     outcome2precond = {}
     for precond in out['precondition']:
         outcome = hashable(precond[0]['terms'][1])

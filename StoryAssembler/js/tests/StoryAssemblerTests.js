@@ -153,17 +153,18 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Move to different want after thread ends: second node HTML correct");
 
-			//write unit test for pulling in chunk with choices into chunk making request that has no content
+			//unit test for pulling in chunk with choices into chunk making request that has no content
 			ChunkLibrary.reset();
 			State.reset();
 			State.set("beat", 1);
-			wl = Wishlist.create([{condition: "beat eq 3"}, {condition: "beat eq 2"}], State);
+			wl = Wishlist.create([{condition: "beat eq 2"}, {condition: "beat eq 3"}], State);
 			ChunkLibrary.add([
 				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}], effects: ["set beat 2"] },
 				{ id: "Chunk2", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
 				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", choices: [{chunkId: "Chunk4"}], effects: ["set beat 3", "set x true"] },
 				{ id: "Chunk4", choiceLabel: "Chunk4 Label", content: "Chunk4 Content" },
 			]);
+			console.log("aw yeah problem child");
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Choices also chain from requests: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Choices also chain from requests: initially only 1 choice");
@@ -176,6 +177,34 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			assert.deepEqual(html(getStoryEl()), "Chunk4 Content", "Choices also chain from requests: after click, should chain through again.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Choices also chain from requests: no options when finished.");
 			console.log(wl.wantsAsArray());
+
+			//make sure options aren't being displayed that shouldn't be displayed
+			ChunkLibrary.reset();
+			State.reset();
+			State.set("beat", 1);
+			wl = Wishlist.create([{condition: "beat eq 1"}, {condition: "beat eq 2"}], State);
+			ChunkLibrary.add([
+				{ id: "Text1", 
+				content: "Text1 Content", 
+				choices: [{chunkId: "normalChoice"}],
+				effects: ["set beat 1"] },
+				{ id: "normalChoice", 
+				choiceLabel: "normalChoice Label", 
+				content: "normalChoice Content"
+				},
+				{ id: "orphanChoice", 
+				choiceLabel: "orphanChoice Label", 
+				request: {condition: "beat eq 2"} },
+				{ id: "orphanChoiceContent", 
+				conditions: ["beat eq 1"], 
+				content: "orphanChoiceContent Content", 
+				choices: [{chunkId: "Chunk4"}], 
+				effects: ["set beat 2"] }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			assert.deepEqual(html(getStoryEl()), "Text1 Content", "No extra options: first node HTML correct");
+			assert.deepEqual(countChildren(getChoiceEl()), 1, "No extra options: no initial options");
+			assert.deepEqual(contentForChoice(1), "normalChoice Label", "No extra options: normalChoice displays");
 
 			// Test incremental progress towards wishlist items.
 			ChunkLibrary.reset();
