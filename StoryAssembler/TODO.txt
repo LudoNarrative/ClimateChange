@@ -1,14 +1,26 @@
 CURRENT
-- Implementing the idea of lines of dialog being said by particular speakers, who can have attributes that might affect mix-ins, etc. [old system had some of this already]
 
 
 TODO
 - Possible bug in the case where we're recursing to find a subgoal that's the same as one of our wishlist goals. [Think about what happens in this case.]
-- Add a "repeatable" field to chunks: if false, removes from ChunkLibrary after displaying.
 - Research: ease of authoring (JSON editor, DSL, etc.)
-- Defining ways in which content might be varied, i.e. format vs informal, discussion vs monologue, defensive vs aggressive. [Rather than having static flags like "lecture scene", "dinner scene"]
+- Defining ways in which content might be varied, i.e. formal vs informal, discussion vs monologue, defensive vs aggressive. [Rather than having static flags like "lecture scene", "dinner scene"]
+	- Formal vs. informal. (based on speaker). Informal will add mix-ins establishing connection and loosening syntax.
+		"Climate change is already having a very real impact on marine life. We might start to see major population drop-offs in the next decade."
+		"Marsha, I have to tell you that climate change is already having a very real impact on marine life. You see? I mean, we might start to see major population drop-offs in the next decade. Pass the soup."
+	- Aggressive: can be positive, neutral, negative. If negative, adds hedges and belief markers. If positive, adds aggressive insistence, markers of surety.
+		Neutral: "Climate change is already having a very real impact on marine life. We will start to see major population drop-offs in the next decade."
+		Negative: "I'm worried that climate change is already having a very real impact on marine life. It's possible we might start to see major population drop-offs in the next decade. At least, that's what I think."
+		Positive: "Look, don't you get it? Climate change is already having a very real impact on marine life. It's beyond a shadow of a doubt that we will start to see major population drop-offs in the next decade. That's an undisputable fact."
+	- Confident vs Unsure. Unsure adds hedges, weakens words.
+		Confident: "Climate change is already having a very real impact on marine life. We will start to see major population drop-offs in the next decade."
+		Unsure: "Climate change... uh, might be already having a very real impact on marine... er, marine life. We might start to see... excuse me, uhm... we might start to see major population drop-offs in the next... the next decade."
+	- mixins:
+		- Prediction: "{X,will} happen." --> "I think X will happen", "X might happen", "X will definitely happen."
+		- {reassure}: --> "Are you with me?" "Right?" "Does that make sense?"
+		
+
 - Implementing the ability for mix-ins to satisfy wishlist items. [like using a mixin ShowPersonality satisfies a Want of "has shown personality"]
-- Effects that make incremental progress towards goals. I.e. the request is "x gt 5" and an effect of "incr x 1" when x is 2
 
 Future:
 - If you have a chunk with a request (instead of content) which changes the conditions such that the original chunk matching that request can no longer appear, the system will show it anyway, when what it should do is some kind of replan (which might not find a matching chunk).
@@ -31,3 +43,6 @@ X ON-screen debugging showing current wishlist, possibly chunk library too.
 X Test that if a chunk has "request" instead of content, displaying it will jump forward until it finds something with content.
 X Added an allowed "comment" field to chunks.
 X Factor Display out of StoryAssembler (shouldn't depend on it)
+X Add a "repeatable" field to chunks: if false, removes from ChunkLibrary after displaying.
+X Lines of dialog being said by particular speakers, who can have attributes that might affect mix-ins, etc
+X Effects that make incremental progress towards goals. I.e. the request is "x gt 5" and an effect of "incr x 1" when x is 2

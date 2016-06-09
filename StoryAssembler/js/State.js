@@ -139,27 +139,60 @@ define(["Condition"], function(Condition) {
 	}
 
 	// Check if a given effect would make the given condition true, by storing the current blackboard value, running the effect, checking the condition, then restoring the original value. 
-	var wouldMakeTrue = function(effect, condition) {
+	var wouldMakeMoreTrue = function(effect, condition) {
 		var fields = _getEffectFields(effect);
 		var param = fields.param;
 		var currVal = get(param);
+		var isNumOp = ["incr", "decr", "mult"].indexOf(fields.op) >= 0;
+		var conditionParts = condition.split(" ");
+		var conditionParam = conditionParts[0];
+		var conditionOp = conditionParts[1];
+		var conditionTarget = parseInt(conditionParts[2]);
 
 		// Don't allow relative operations on a value that doesn't exist.
-		if (currVal === undefined && ["incr", "decr", "mult"].indexOf(fields.op) >= 0) {
+		if (currVal === undefined && isNumOp) {
 			return false;
 		}
 		
 		change(effect);
 		var wouldBeTrue = isTrue(condition);
+		var valAfterEffect = get(param);
 		set(param, currVal);
+
+		if (!wouldBeTrue && conditionParam === param && isNumOp) {
+			// Check if this operation would move the state closer to the condition we're looking for. i.e. if effect is "incr x 1", condition is "x eq 5", and get(x) is 1, we should also return true.
+
+			var lrgrOp = fields.op === "incr" || fields.op === "mult";
+			var fieldsVal = parseInt(fields.val);
+			var conditionOpLteOrEq = conditionOp === "lte" || conditionOp === "eq";
+
+			// If this operation will make the value larger...
+			if ((lrgrOp && fieldsVal > 0) || (!lrgrOp && fieldsVal < 0)) {
+				// ... and we're not exceeding the constraint specified in the conditional operator, we're closer.
+				if ((valAfterEffect <= conditionTarget && conditionOpLteOrEq) || (valAfterEffect < conditionTarget && conditionOp === "lt")) {
+					wouldBeTrue = true;
+				} else if (conditionOp === "gte" || conditionOp === "gt") {
+					wouldBeTrue = true;
+				}
+			// If this operation will make the value smaller...
+			} else {
+				// ... and we're not smaller than the constraint specified in the conditional operator, we're closer.
+				if ((valAfterEffect >= conditionTarget && conditionOpLteOrEq) || (valAfterEffect > conditionTarget && conditionOp === "lt")) {
+					wouldBeTrue = true;
+				} else if (conditionOp === "lte" || conditionOp === "lt") {
+					wouldBeTrue = true;
+				}
+			}
+		}
+
 		return wouldBeTrue;
 	}
 
 	// Same as above, except returns true of any effects in the passed in array would make the given condition true
-	var wouldAnyMakeTrue = function(effectArray, condition) {
+	var wouldAnyMakeMoreTrue = function(effectArray, condition) {
 		if (!condition) return false; // TODO: fix so never called this way.
 		for (var i = 0; i < effectArray.length; i++) {
-			if (wouldMakeTrue(effectArray[i], condition)) {
+			if (wouldMakeMoreTrue(effectArray[i], condition)) {
 				return true;
 			}
 		}
@@ -177,8 +210,8 @@ define(["Condition"], function(Condition) {
 		reset: reset,
 		change: change,
 		isTrue: isTrue,
-		wouldMakeTrue: wouldMakeTrue,
-		wouldAnyMakeTrue: wouldAnyMakeTrue,
+		wouldMakeMoreTrue: wouldMakeMoreTrue,
+		wouldAnyMakeMoreTrue: wouldAnyMakeMoreTrue,
 		getBlackboard: getBlackboard
 	}
 });

@@ -109,7 +109,7 @@ define([], function() {
 			satisfiesList = bestPath.satisfies.map(function(item){
 				return item.val;
 			});
-			var satisfiesEl = makeEl("div", "This path would satisfy the highlighted Wants below.", "pathExpl");
+			var satisfiesEl = makeEl("div", "This path would satisfy (or make progress towards satisfying) the highlighted Wants below.", "pathExpl");
 			area.appendChild(satisfiesEl);
 		}
 	}
