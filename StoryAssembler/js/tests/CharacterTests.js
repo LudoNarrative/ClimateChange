@@ -24,15 +24,15 @@ define(["../Character", "../State"], function(Character, State) {
 			assert.deepEqual(allChars.length, 2, "getAll should return correct number of added chars");
 			assert.ok(["mposi", "ndege"].indexOf(allChars[0]) >= 0, "keys from all passed-in characters should exist in allChars");
 
-			Character.set("mposi", {"formal": "set 1"});
-			assert.deepEqual(Character.get("mposi", "formal"), 1, "Setting and getting stats should work.");
-			assert.deepEqual(Character.get("mposi").formal, 1, "Should also return each stats as a param.");
-			Character.set("mposi", {"formal": "incr 2"});
-			assert.deepEqual(Character.get("mposi", "formal"), 3, "Standard State operators should work.");
+			Character.set("mposi", {"health": "set 1"});
+			assert.deepEqual(Character.get("mposi", "health"), 1, "Setting and getting stats should work.");
+			assert.deepEqual(Character.get("mposi").health, 1, "Should also return each stats as a param.");
+			Character.set("mposi", {"health": "incr 2"});
+			assert.deepEqual(Character.get("mposi", "health"), 3, "Standard State operators should work.");
 			Character.set("ndege", {"strength": "set 5", "wisdom": "set 3"});
 			assert.deepEqual(Character.get("ndege", "strength"), 5, "Setting multiple stats should work (1/2).");
 			assert.deepEqual(Character.get("ndege", "wisdom"), 3, "Setting multiple stats should work (2/2).");
-			// The below two tests don't work because State's syntax currently only handles spaces in a "set" command, not change.
+			// The below test doesn't work because State's syntax currently only handles spaces in a "set" command, not change.
 			// Character.set("ndege", {"comment": "set really quite amazing"});
 			// assert.deepEqual(Character.get("ndege", "comment"), "really quite amazing", "Set with strings should work.");
 

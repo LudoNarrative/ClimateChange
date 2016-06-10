@@ -1,9 +1,10 @@
-/* Validator for StoryAssembler.
+/* Validation code for StoryAssembler.
+  Helper functions to verify that loaded-in data is in the right format.
 */
 
 define(["util"], function(util) {
 
-	// Verifies that an object has the fields specified and only those fields; throws a descriptive error otherwise.
+	// The "check" function is a simple object validator. When given an object and arrays of required and optional fields, will throw an error if the object violates the given specifications, or contains unrecognized fields.
 	var check = function(_obj, reqFields, optFields) {
 		var obj = util.clone(_obj) || {};
 		var missingFields = [];

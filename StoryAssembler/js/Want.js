@@ -8,6 +8,19 @@ define(["Request", "Validate", "util"], function(Request, Validate, util) {
 	var requiredFields = [];
 	var optionalFields = ["condition", "chunkId", "order", "persistent"];
 
+	/* When passed a specification for a Want object, returns a valid Want or throws an error if the specification is invalid.
+
+	A Want specification should look like either this...
+	{
+		condition: "x gt 5"
+	}
+	...or this...
+	{
+		chunkId: "someSpecificChunk"
+	}
+	... and in either case can optionally have an "order" field (which can be numeric, "first", or "last").
+	Note that this is the same format as valid Wants, except that instead of condition or chunkId there will be a 'request' field that is a Request object (see the Request module).
+	*/
 	var create = function(want) {
 		Validate.check(want, requiredFields, optionalFields);
 

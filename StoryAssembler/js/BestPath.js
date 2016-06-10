@@ -1,43 +1,40 @@
-/* Implements the BestPath algorithm for StoryAssembler.
+/* BestPath module for StoryAssembler.
 
-bestpath takes an array of wants and pointers to the chunk library and state, and return a single path through the chunk library that potentially satisfies the most wants from the list.
+Find the path through a library of chunks that maximally satisfies Wants on the wishlist. The two primary functions are allPaths (for every path satisfying any wishlist item) and bestPath (for the single best path).
+
+Note that not everything in "satisfies" will necessarily come to pass: our path might lead through a choice, for instance, but at run time the player selects a different choice. We will really only use the first node in "route" to move the state forward, but we return the whole path in case the rest of the system wants it for some other purpose (such as diagnostics).
 
 The returned path will be an object in the form:
 {
 	route: [], // array of strings (chunkIDs), each step of the path
-	satisfies: [] // set of every Want object that this path makes true. order is not important.
+	satisfies: [] // every Want object that this path satisfies. order is not important.
+	choiceDetails: [] // optional: see below
 }
 
-We need to modify this so that if route[0] is a choice, we know the first step of each choice we recursed into, so we can print the choice labels. An additional field:
-	choiceDetails: [
-		{ id: string chunkId } OR {} (could not be satisfied)
-	] // in same order as Requests.
+** choiceDetails **
+If route[0] has a choice, we need to preserve the ID of a chunk that was found to satisfy each possible choice, so when we're displaying route[0] we know how to label each choice and what it should lead to. The order in the choiceDetails array will match the order that choices are declared in route[0]. 
 
-Note that not everything in "satisfies" will necessarily come to pass: our path might lead through a choice, for instance, but at run time the player selects a different choice. We will really only use the first node in "route" to move the state forward, but we return the whole path in case the rest of the system wants it for some other purpose.
+Each entry in a choiceDetails array will be an object with either the field 'id' (storing the name of a matching chunk), or the fields 'missing' with value true, and 'requestVal' with the choice's request that was unable to be satisfied (i.e. "x gt 5" if we could find no path to a chunk with an effect satisfying that request).
 
 For reference, a Want object (defined in Want.js) is in the form:
 {
-	request: a Request object, with fields type ("id" or "condition") and val
+	request: a Request object, with fields 'type' ("id" or "condition") and 'val'
 	optional other fields such as order, mandatory
 }
+
+The "logOn" and "logOff" functions can be called to turn on detailed console logging of the pathfinding process.
 */
 
 define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
-	var DEFAULT_MAX_DEPTH = 3;
-
-	var curr_max_depth;
+	var DEFAULT_MAX_DEPTH = 3; // The maximum length of a path, unless "max_depth" is passed in to a function below as a parameter. Raising this too high has severe performance impacts.
 
 	// Module-level reference variables
+	var curr_max_depth;
 	var chunkLibrary; 
 	var State;
 
-	var init = function(_chunkLibrary, _State) {
-		State = _State;
-		chunkLibrary = _chunkLibrary;
-	}
-
-	// The usual entry function: does setup, calls allPaths to gets the set of all possible paths that satisfy at leat one Want from the list, and returns the best candidate.
+	// The usual entry function: does setup, calls allPaths to gets the set of all possible paths that satisfy at leat one Want from the list, and returns the best candidate, or undefined if no paths found.
 	var bestPath = function(wants, params, _chunkLibrary, _State) {
 		var paths = allPaths(wants, params, _chunkLibrary, _State);
 		if (paths.length > 0) {
@@ -47,13 +44,17 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		}
 	}
 
-	// Another possible entry function, for if we want to return the list of all possible paths. (Currently used mostly for unit testing.)
+	// Another possible entry function, for if we want to return the list of all possible paths. (And used internally by bestPath above.)
 	var allPaths = function(wants, params, _chunkLibrary, _State) {
-		if (_chunkLibrary) init(_chunkLibrary, _State);
+		if (_chunkLibrary) chunkLibrary = _chunkLibrary;
+		if (_State) State = _State;
 		curr_max_depth = params.max_depth ? params.max_depth : DEFAULT_MAX_DEPTH;
+
+		// Turn each object in the wants array into just the object for the actual request: the search doesn't need to know about metadata like order etc. 
 		var requests = wants.map(function(want) {
 			return want.request;
 		});
+
 		return searchLibraryForPaths(requests, false, [], params, 1);
 	}
 
@@ -62,7 +63,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 	var chooseFromPotentialPaths = function(paths, wants) {
 		var bestScore = -1;
 		var bestPos = -1;
-		paths = cullByWantOrder(paths, wants);
+		paths = cullByWantOrder(paths, wants); // eliminate paths that ordering constraints make impossible
 		paths.forEach(function(path, pos) {
 			var thisScore = path.satisfies.length;
 			if (thisScore > bestScore) {
@@ -73,12 +74,10 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		return paths[bestPos];
 	}
 
-	// Cull wants based on "order" field, if:
-	//    any want has order "first"
-	//    there are least two wants with different numeric orders
-	//	  for order "last" get rid unless it's the only thing left.    
+	// Cull paths based on the "order" field of wishlist wants. 
 	var cullByWantOrder = function(paths, wants) {
-		// If there are any wants with "first", return just paths satisfying those. Done!
+
+		// If there are any wants with order "first", we simply return only those paths.
 		var firstWants = underscore.where(wants, {order: Number.NEGATIVE_INFINITY});
 		if (firstWants.length > 0) {
 			return pathsPrunedToWants(paths, firstWants.map(function(want){
@@ -86,7 +85,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 			}));
 		}
 		
-		// If there are at least two wants with different defined orders, return only the wants with the lowest numeric order. Done!
+		// If there are at least two wants with different numeric orders, return only the wants with the lowest defined order number. Done!
 		var orderIndex = {};
 		wants.forEach(function(want, pos) {
 			if (typeof want.order === "number" && want.order >= 0 && want.order !== Number.POSITIVE_INFINITY) {
@@ -107,7 +106,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 			}));
 		}
 
-		// If there are any wants with "last" and any other wants, cull all the lasts. Done!
+		// If there are some (but not all) wants with order "last", return everything that's not "last".
 		var nonLastWants = underscore.filter(wants, function(want) {
 			return want.order !== Number.POSITIVE_INFINITY;
 		});
@@ -122,12 +121,12 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 	}
 
 
-	// Returns paths from searching in the chunk library.
+	// Returns paths from searching in the chunk library. allPaths above calls this to begin the search, and it's also called in findValidPaths to begin recursion.
 	var searchLibraryForPaths = function(wants, okToBeChoice, skipList, params, rLevel) {
 
 		var paths = [];
 		var keys = chunkLibrary.getKeys();
-		log(rLevel, "searchLibraryForPaths. wants is [" + showWants(wants) + "] and we are skipping [" + skipList + "]. rLevel " + rLevel);
+		log(rLevel, "searchLibraryForPaths. wants is [" + getWantVals(wants) + "] and we are skipping [" + skipList + "]. rLevel " + rLevel);
 
 		// Small internal function to do a search and add any unique results.
 		var doSearchFromHere = function(chunkId) {
@@ -151,7 +150,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		}
 
 		// Return all discovered paths.
-		log(rLevel, "finished searchLibraryForPaths for wants: [" + showWants(wants) + "] and skipList [" + skipList + "].");
+		log(rLevel, "finished searchLibraryForPaths for wants: [" + getWantVals(wants) + "] and skipList [" + skipList + "].");
 		return paths;
 	}
 
@@ -189,7 +188,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 	var findAllSatisfyingPathsFrom = function(chunk, originalWants, skipList, rLevel) {
 		var paths = [];
 		var pathToHere;
-		log(rLevel, "findAllSatisfyingPaths starting from '" + chunk.id + "' and satisfying wants: " + showWants(originalWants));
+		log(rLevel, "findAllSatisfyingPaths starting from '" + chunk.id + "' and satisfying wants: " + getWantVals(originalWants));
 		
 		// Does this chunk directly make one or more Wants true, or make progress towards one of them being true?
 		var wants = [];
@@ -212,7 +211,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		});
 
 		if (wants.length !== originalWants.length) {
-			log(rLevel, "--> remaining wants: " + (wants.length ? showWants(wants) : "none"));
+			log(rLevel, "--> remaining wants: " + (wants.length ? getWantVals(wants) : "none"));
 		} else {
 			log(rLevel, "nothing in " + chunk.id + " directly made any Wants true");
 		}
@@ -321,7 +320,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 		// The only valid paths are those that DID satisfy "req", AND also satisfied at least one original Want.
 		log(rLevel, "found " + foundPaths.length + " paths");
-		log(rLevel, "We only want paths that satisfy " + req.val + " AND satisfy at least one of these Wants: " + showWants(wants));
+		log(rLevel, "We only want paths that satisfy " + req.val + " AND satisfy at least one of these Wants: " + getWantVals(wants));
 		validPaths = pathsThatSatisfyReq(foundPaths, req);
 
 		// If we have any paths at this point, pick one and save the id of the first step in its route, so if this is a choice we'll know what chunk matched.
@@ -416,6 +415,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		})
 	}
 
+	// At various points in the search, we may have either a) found a successful path, or b) discovered that an existing path satisfies an additional want. This function handles either case so we don't have to worry about whether the path variable we pass in has been initialized yet.
 	var createPathOrAddWant = function(path, id, want) {
 		if (!path) {
 			path = { 
@@ -428,25 +428,18 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		return path;
 	}
 
+	// Two quick functions to pretty-print paths and lists of paths.
 	var pathToStr = function(path) {
 		if (!path) return "undefined";
 		var msg = path.route.join("->") + " [satisfies " + path.satisfies.map(function(x){return x.val}).join("; ");
-		if (path.choiceDetails) {
-			// msg += ", choiceDetails: " + path.choiceDetails.map(function(x){return x.id}).join("; ") + "]";
-		} else { 
-			msg += "]"
-		}
+		msg += "]";
 		return msg;
 	}
 	var pathsToStr = function(arrOfPaths) {
 		return arrOfPaths.map(pathToStr).join(" | ");
 	}
-	var showWants = function(wants) {
-		return wants.map(function(x) {
-			return x.val
-		});
-	}
 
+	// Basic console logging, handling indentation to track recursion levels.
 	var logState = false;
 	var logOn = function() {
 		logState = true;
@@ -462,12 +455,15 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		}
 	}
 
+
+	// Public interface for BestPath module.
 	return {
-		init: init,
 		bestPath: bestPath,
 		allPaths: allPaths,
+
 		logOn: logOn,
 		logOff: logOff,
+		
 		pathToStr: pathToStr,
 		pathsToStr: pathsToStr
 	}
