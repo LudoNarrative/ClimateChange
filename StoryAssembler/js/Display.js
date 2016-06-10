@@ -16,6 +16,58 @@ define([], function() {
 	var wishlistEl;
 	var stateEl;
 
+	/* PUBLIC-FACING FUNCTIONS */
+
+	// Set up the Display module to begin showing stories.
+	var init = function(_clickHandler) {
+		clickHandler = _clickHandler;
+		if (!document.getElementById("storyArea")) {
+			makeUI();
+		} else {
+			clearAll();
+		}
+	}
+
+	// Add some story text to the story window.
+	var addStoryText = function(text) {
+		var el = makeEl("span", text, "chunk");
+		document.getElementById("storyArea").appendChild(el);
+	}
+
+	// Add a choice to the choice window.
+	var addChoice = function(choice) {
+		var el = makeEl("div", choice.text, "choice");
+		if (!choice.cantChoose) {
+			el.onclick = function() {
+				clickHandler(choice);
+			}
+		} else {
+			if (!showUnavailableChoices) return;
+			el.classList.add("unavailableChoice");
+		}
+		document.getElementById("choiceArea").appendChild(el);
+	}
+
+	// Remove all content from the UI.
+	var clearAll = function() {
+		document.getElementById("storyArea").innerHTML = "";
+		document.getElementById("choiceArea").innerHTML = "";
+	}
+
+	var diagnose = function(params) {
+		if (params.path) {
+			_showPath(params.path);
+		}
+		if (params.wishlist) {
+			_showWishlist(params.wishlist);
+		}
+		if (params.state) {
+			_showState(params.state);
+		}
+	}
+
+	// Private functions
+
 	// Create and return an HTML element of a given type with the given content.
 	var makeEl = function(type, content, elClass) {
 		var el = document.createElement(type);
@@ -47,44 +99,7 @@ define([], function() {
 
 	}
 
-	// Add some story text to the story window.
-	var addStoryText = function(text) {
-		var el = makeEl("span", text, "chunk");
-		document.getElementById("storyArea").appendChild(el);
-	}
-
-	// Add a choice to the choice window.
-	var addChoice = function(choice) {
-		var el = makeEl("div", choice.text, "choice");
-		if (!choice.cantChoose) {
-			el.onclick = function() {
-				clickHandler(choice);
-			}
-		} else {
-			if (!showUnavailableChoices) return;
-			el.classList.add("unavailableChoice");
-		}
-		document.getElementById("choiceArea").appendChild(el);
-	}
-
-	/* PUBLIC-FACING FUNCTIONS */
-
-	// Set up the Display module to begin showing stories.
-	var init = function(_clickHandler) {
-		clickHandler = _clickHandler;
-		if (!document.getElementById("storyArea")) {
-			makeUI();
-		} else {
-			clearAll();
-		}
-	}
-
-	// Remove all content from the UI.
-	var clearAll = function() {
-		document.getElementById("storyArea").innerHTML = "";
-		document.getElementById("choiceArea").innerHTML = "";
-	}
-
+	// Diagnostic functions (to display status of system)
 	var satisfiesList;
 	var _showPath = function(bestPath) {
 		var area = document.getElementsByClassName("pathArea")[0];
@@ -145,17 +160,6 @@ define([], function() {
 		})
 	}
 
-	var diagnose = function(params) {
-		if (params.path) {
-			_showPath(params.path);
-		}
-		if (params.wishlist) {
-			_showWishlist(params.wishlist);
-		}
-		if (params.state) {
-			_showState(params.state);
-		}
-	}
 
 	// PUBLIC INTERFACE
 	return {

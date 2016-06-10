@@ -9,6 +9,9 @@ define([], function() {
 
 	var ops = ["eq", "neq", "gte", "lte", "gt", "lt"];
 
+	/* Return a condition string as an object with keys param, op, and value.
+	"x gt 5" becomes -> { param: "x", op: "gt", val: "5" }
+	*/
 	var parts = function(condition) {
 		// coerce to string
 		condition = "" + condition; 
@@ -46,6 +49,7 @@ define([], function() {
 		}
 	}
 
+	// When given a condition object parsed by parts() above, and a value, return true or false depending on how the condition evaluates with the given value.
 	var test = function(conditionParts, value) {
 		switch(conditionParts.op) {
 			case "forceTrue":

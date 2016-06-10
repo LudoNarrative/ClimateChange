@@ -1,3 +1,5 @@
+/* Utility functions for StoryAssembler. */
+
 define([], function() {
 	"use strict";
 	var _iterators = {};
@@ -82,10 +84,12 @@ define([], function() {
 	    throw new Error("Unable to copy obj! Its type isn't supported.");
 	}
 
+	// Returns true if the given object is an array.
 	var isArray = function(obj) {
 		return toString.call(obj) === "[object Array]";
 	}
 
+	// Remove a given string from a list of strings.
 	var removeFromStringList = function(list, itemToRemove) {
 		var newList = clone(list);
 		var pos = newList.indexOf(itemToRemove);
@@ -94,6 +98,7 @@ define([], function() {
 		return newList;
 	}
 
+	// Return the given array stripped of any duplicate entries.
 	var removeArrDuplicates = function(arr) {
 		var newArr = [];
 		var keys = {};

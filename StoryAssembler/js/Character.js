@@ -12,10 +12,6 @@ define([], function() {
 		State = _State;
 	}
 
-	var stateKey = function(charId, key) {
-		return charId + "_" + key;
-	}
-
 	var add = function(key, charDef) {
 		if (characters[key]) {
 			return undefined;
@@ -72,6 +68,12 @@ define([], function() {
 		return Object.keys(characters);
 	}
 
+	var stateKey = function(charId, key) {
+		return charId + "_" + key;
+	}
+
+
+	// Public interface for Character module.
 	return {
 		init: init,
 		add: add,

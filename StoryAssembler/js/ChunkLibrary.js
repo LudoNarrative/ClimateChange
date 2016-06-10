@@ -72,28 +72,8 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 		delete _library[chunkId];
 	}
 
-	var keys = []
-	var keyPos = 0;
-	var first = function() {
-		keys = Object.keys(_library);
-		keyPos = 0;
-		if (keys.length === 0) return undefined;
-		return next();
-	}
-
-	var next = function() {
-		if (keyPos >= keys.length) return undefined;
-		return _library[keys[keyPos++]];
-	}
-
 	var reset = function() {
 		_library = {};
-		keys = [];
-		keyPos = 0;
-	}
-
-	var size = function() {
-		return Object.keys(_library).length;
 	}
 
 	var getKeys = function() {
@@ -104,10 +84,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 		add: add,
 		get: get,
 		remove: remove,
-		first: first,
-		next: next,
 		reset: reset,
-		size: size,
 		getKeys: getKeys
 	}
 });		
