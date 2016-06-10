@@ -191,7 +191,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		var pathToHere;
 		log(rLevel, "findAllSatisfyingPaths starting from '" + chunk.id + "' and satisfying wants: " + showWants(originalWants));
 		
-		// Does this chunk directly make one or more Wants true?
+		// Does this chunk directly make one or more Wants true, or make progress towards one of them being true?
 		var wants = [];
 		originalWants.forEach(function(want) {
 			var satisfied = false;
@@ -200,7 +200,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 				if (satisfied) log(rLevel, "-->id makes '" + want.val + "' true");
 			} else { // type === condition
 				if (chunk.effects) {
-					satisfied = State.wouldAnyMakeTrue(chunk.effects, want.val);
+					satisfied = State.wouldAnyMakeMoreTrue(chunk.effects, want.val);
 				}
 				if (satisfied) log(rLevel, "-->an effect makes '" + want.val + "' true");
 			}

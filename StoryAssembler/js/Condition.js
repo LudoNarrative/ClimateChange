@@ -46,8 +46,32 @@ define([], function() {
 		}
 	}
 
+	var test = function(conditionParts, value) {
+		switch(conditionParts.op) {
+			case "forceTrue":
+				return true;
+			case "forceFalse":
+				return false;
+			case "eq":
+				return value == conditionParts.value;
+			case "neq":
+				return value != conditionParts.value;
+			case "gte":
+				return value >= conditionParts.value;
+			case "lte":
+				return value <= conditionParts.value;
+			case "gt":
+				return value > conditionParts.value;
+			case "lt":
+				return value < conditionParts.value;
+			default:
+				throw new Error("Tried to test condition with op '" + conditionParts.op + "' but this did not seem to be a valid operator.");
+		}
+	}
+
 
 	return {
-		parts: parts
+		parts: parts,
+		test: test
 	}
 });	
