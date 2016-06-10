@@ -16,14 +16,14 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 				}
 			]);
 			assert.deepEqual(wl.wantsRemaining(), 2, "should have correct number of wants");
-			var next = wl.selectNext();
+			var next = wl.getRandom();
 			assert.deepEqual(typeof next.request, "object", "should return a want with a request field.");
 			wl.remove(next.id);
 			assert.deepEqual(wl.wantsRemaining(), 1, "should have correct number of wants after a remove");
-			next = wl.selectNext();
+			next = wl.getRandom();
 			wl.remove(next.id);
 			assert.deepEqual(wl.wantsRemaining(), 0, "should have no wants after removing everything");
-			assert.deepEqual(wl.selectNext(), undefined, "should return undefined if no wants left");
+			assert.deepEqual(wl.getRandom(), undefined, "should return undefined if no wants left");
 
 			var badListOfWishes = [
 				{

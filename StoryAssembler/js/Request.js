@@ -16,8 +16,8 @@ define(["Condition"], function(Condition) {
 	}
 
 	var byCondition = function(condition) {
-		// If an invalid condition is passed in, will throw an error.
-		// We don't actually care about the parsed result in this case.
+		// If an invalid condition is passed in, calling the Condition.parts() function below will throw an error.
+		// We don't actually care about the value of the parsed result in this case, however; just that it's not invalid.
 		Condition.parts(condition);
 		return {
 			type: "condition",
