@@ -47,6 +47,12 @@ bright(white;red;yellow;green;pink).
 dark(gray;black;blue;purple;brown).
 
 
+%graphical depictions
+
+connotation(bomb,danger).
+
+
+
 %Other concepts
 better_than(good,evil).
 better_than(natural,manmade).
@@ -61,6 +67,15 @@ connotationAt(initial,ENTITY,CONNOTATION) :-
 connotationAt(OUTCOME,ENTITY,CONNOTATION) :-
     result(OUTCOME,set_color(ENTITY,COLOR)), 
     connotation(COLOR,CONNOTATION).
+    
+    
+connotationAt(initial,ENTITY,CONNOTATION) :-
+    initialize(set_sprite(ENTITY,SPRITE)), 
+    connotation(SPRITE,CONNOTATION).
+    
+connotationAt(OUTCOME,ENTITY,CONNOTATION) :-
+    result(OUTCOME,set_sprite(ENTITY,SPRITE)), 
+    connotation(SPRITE,CONNOTATION).
 
 outcomeBetterThan(ENTITY,OUTCOME1,OUTCOME2) :-
     connotationAt(OUTCOME1,ENTITY,CONNOTATION1),

@@ -1,7 +1,7 @@
 [
 	{
 		"id": "SpeakerTalks",
-		"content": "The speaker is {speaker}.",
+		"content": "The speaker is {speaker}. {showSpeakerTrait}",
 		"effects": ["set demonstratedTrait 1"]
 	}
 ]
