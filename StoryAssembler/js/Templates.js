@@ -16,7 +16,18 @@ define(["util"], function(util) {
 		Character = _Character;
 	}
 
+	/* The built-in list of templates and how they should be processed is defined in this object. addTemplateCommand() can also be called to add new ones at run-time.
+
+	Each template command is give a function to process it, that expects two variables: an array of parameters the template was called with, and the full original template command (mostly useful for debugging if something goes wrong). 
+
+	eg. for "{ifState|career|3|text if true|text if false}", 
+	'params' will be ["career", "3", "text if true", "text if false"]
+	and 'text' will be the quoted string above.
+
+	A template function should verify that its receiving the correct params and output an error if it's not.
+	*/ 
 	var templates = {
+		// Template to randomly print one of the given params.
 		"rnd": function(params, text) {
 			// {rnd|one|of|these}
 			if (params.length === 0) {
@@ -26,6 +37,7 @@ define(["util"], function(util) {
 			var rNum = util.randomNumber(params.length) - 1;
 			return params[rNum];
 		},
+		// Template to conditionally print text.
 		"ifState": function(params, text) {
 			// {ifState|career|3|text if true|text if false}
 			if (params.length !== 4) {
@@ -45,6 +57,7 @@ define(["util"], function(util) {
 				return textIfFalse;
 			}
 		},
+		// Template to print the name of the current speaker (which is stored in the "speaker" variable on the blackboard), using the expected 'name' property. 
 		"speaker": function(params, text) {
 			if (params.length !== 0) {
 				console.error("Template command 'speaker' must not have any params, in text '" + text + "'.");
@@ -57,6 +70,7 @@ define(["util"], function(util) {
 			if (!speakerChar) return "(speaker)";
 			return speakerChar.name || speaker;
 		},
+		// Template stub demonstrating how you might show a random character trait. Look up the current speaker, and print something based on the first found property we have code for.
 		"showSpeakerTrait": function(params, text) {
 			if (params.length !== 0) {
 				console.error("Template command 'showSpeakerTrait' must not have any params, in text '" + text + "'.");
@@ -73,24 +87,16 @@ define(["util"], function(util) {
 				return "";
 			}
 		}
-		// "attr": function(params, text) {
-		// 	if (params.length !== 3) {
-		// 		console.error("Template command 'attr' must have three params: attribute to check for current speaker, text if true, text if false: in text '" + text + "'.");
-		// 		return "(attr)";
-		// 	}
-
-		// 	var attToCheck = params[0];
-		// 	var textIfTrue = params[1];
-		// 	var textIfFalse = params[2];
-		// }
 	}
 
+	// Add a new template command at run-time. (Probably mostly only useful for testing, or to load in template commands from an external definition file. Normally, you would add them to the "templates" object above.)
 	var addTemplateCommand = function(cmd, func) {
 		templates[cmd] = func;
 	}
 
 	// Process a single templated string in the form {command|param1|param2}
 	// (Parameters are optional)
+	// Identify the command, isolate the parameters, and call the appropriate function.
 	var processTemplate = function(text) {
 		// Check format is correct
 		console.assert(text[0] === "{", "template '" + text + "' does not begin with curly brace.");
@@ -106,7 +112,7 @@ define(["util"], function(util) {
 
 		var texts = strippedText.split("|");
 
-		// If we just have a single word, and it's not a recognized command, assume we want to print a value from the state.
+		// If we just have a single word, and it's not a recognized command, assume we want to print a value by this name from the State.
 		if (texts.length === 1 && !templates[texts[0]]) {
 			return State.get(texts[0]);
 		}
@@ -129,8 +135,7 @@ define(["util"], function(util) {
 		return templates[cmd](params, text);
 	}
 
-	// Returns text that's had all templates replaced by fully realized versions.
-	// Format: {command|opt1|opt2|...}
+	// Main public interface. Given a chunk, return its content with any templates rendered into fully realized text.
 	var render = function(chunk) {
 		var txt = chunk.content;
 		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
@@ -145,12 +150,7 @@ define(["util"], function(util) {
 			re = /{[^}]*}/g;
 		}
 
-		// Now that all templates have been replaced, modify the text based on state. (NLG techniques.)
-		// if (speaker && speaker.attributes) {
-		// 	if (speaker.attributes.indexOf("shy") >= 0) {
-		// 		txt = TextChanger.shy(txt);
-		// 	}
-		// }
+		// If you wanted to do additional NLG-style processing here like analyzing a sentence and adding hedges, etc., this would be the place to modify 'txt' further before returning it.
 
 		return txt;
 	}
