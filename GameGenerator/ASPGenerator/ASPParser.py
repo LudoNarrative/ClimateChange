@@ -127,7 +127,7 @@ if __name__ == '__main__':
         print args
     out = solve_randomly(args)
     
-    for o in ['entity','resource','singlular','many','overlapLogic','initialize']:
+    for o in ['entity','resource','singular','many','overlapLogic','initialize']:
         for oo in out[o]:
             for ooo in oo:
                 print prettify(ooo)
