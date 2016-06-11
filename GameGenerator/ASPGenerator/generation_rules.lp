@@ -360,26 +360,30 @@ freeResource(Resource) :-
 :- result(Outcome,decrease(Resource,Amount)),
    precondition(le(Resource,Other),Outcome).
 
-%
+% only allow an entity to be deleted if it was involved in a collision
+% don't want things popping away because of other things (although maybe clicking is ok?
 :-  result(Outcome,delete(Entity)), 
     {precondition(overlaps(Entity,Other),Outcome);
      precondition(overlaps(Other,Entity),Outcome)} 0.
-     
+
+% don't have more than 1 control event per outcome
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
      
-     
+% count the number of outcomes
 outcomes(N) :- N = #count{completeOutcome(Outcome) : completeOutcome(Outcome)}.
 
+%minimize the number of outcomes
+#minimize { N@1 : outcomes(N)}.
+
+%players must have controls or it's just a weird movie
 playerControls :- precondition(control_event(EVENT),OUTCOME).
 :- not playerControls.
-% :- outcomes(N), N > 4.
- #minimize { N@1 : outcomes(N)}.
-  % #minimize{K@1: results(K)}.
- % #minimize{ I@3: preconditions(I)}.
 
-
+% count number of results
 results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
 
+%count number of preconditions
 preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
-    
+
+%singular entities can't be added 
 :- result(OUTCOME,add(ENTITY)), singular(ENTITY).
