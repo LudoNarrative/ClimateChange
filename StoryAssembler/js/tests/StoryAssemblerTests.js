@@ -206,8 +206,25 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "No extra options: no initial options");
 			assert.deepEqual(contentForChoice(1), "normalChoice Label", "No extra options: normalChoice displays");
 
+			// Test incremental progress towards wishlist items.
+			ChunkLibrary.reset();
+			State.reset();
+			State.set("stress", 0);
+			wl = Wishlist.create([{condition: "stress gte 3"}], State);
+			ChunkLibrary.add([
+				{ id: "StressChunk", content: "StressChunk Content", effects: ["incr stress 1"], repeatable: true }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			assert.deepEqual(html(getStoryEl()), "StressChunk Content", "Testing incremental progress (1)");
+			assert.deepEqual(contentForChoice(1), "Continue", "Testing incremental progress (2)");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "StressChunk Content", "Testing incremental progress (3)");
+			clickChoice(1);
+			assert.deepEqual(countChildren(getChoiceEl()), 0, "Testing incremental progress (4)");
+
 
 			cleanUpDom();
+
 
 		});
 	}

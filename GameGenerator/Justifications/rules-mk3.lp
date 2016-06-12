@@ -339,15 +339,15 @@ enables(Enabler, Enabled) :-
 
 
 %% XXX rewrite the below.
-enables(Outcome,Outcome2) :-
-    result(Outcome,add(ENTITY)), 
-    requiredBy(Outcome2,ENTITY),
+enables(Outcome, Outcome2) :-
+    result(Outcome, add(Entity)), 
+    requiredBy(Outcome2, Entity),
     Outcome != Outcome2 .
  
-hinders(Outcome,Outcome2) :-
-    result(Outcome,delete(ENTITY)), 
-    requiredBy(Outcome2,ENTITY),
-    Outcome != Outcome2 .   
+hinders(Outcome, Outcome2) :-
+    result(Outcome, delete(Entity)), 
+    requiredBy(Outcome2, Entity),
+    Outcome != Outcome2.   
  
 tiedToDifficulty(Resource) :-
     result(Outcome,moves(Entity,Direction,Resource)),

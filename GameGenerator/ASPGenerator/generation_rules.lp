@@ -1,7 +1,3 @@
-
-:- precondition(overlaps(B,A,Polarity),Outcome),
-   entityOrdering(A,B).
-
 % Only 1 avatar
 :-  avatar(ENTITY), 
     many(ENTITY).
@@ -34,20 +30,17 @@
 :- static(ENTITY), result(Outcome,moves(ENTITY,AMOUNT)).
 :- static(ENTITY), result(Outcome,apply_restitution(ENTITY,AMOUNT)).
 
+% cleanliness
 :- entity(E2), not entity(E1), entityOrdering(E1,E2).
 :- resource(E2), not resource(E1), resourceOrdering(E1,E2).
 
-
+% so, if it says it helps/hurts, it actually should
 actuallyHelps(help(ENTITY1,ENTITY2)) :- 
     result(help(ENTITY1,ENTITY2),increase(G_RESOURCE)), good(RESOURCE). 
 actuallyHelps(help(ENTITY1,ENTITY2)) :-
     result(help(ENTITY1,ENTITY2),decrease(B_RESOURCE)), bad(RESOURCE).
 % actuallyHelps(help(ENTITY1,ENTITY2)) :-
     % result(help(ENTITY1,ENTITY2),spawn(ENTITY)), helpful(ENTITY).
-
-
-        
-
 actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
     result(hurt(ENTITY1,ENTITY2),increase(G_RESOURCE)), bad(G_RESOURCE).   
 actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
@@ -96,19 +89,20 @@ actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
 % don't overlap with itself
 :- precondition(overlaps(ENTITY,ENTITY,POLARITY),OUTCOME).
 
-
+% can only change at most N resources per outcome
 :- max_resource_change_per + 1  {changes(OUTCOME,CHANGE, CV,V) :
-    resource(CV),
-    potentialValues(V), 
-    change(CHANGE)}, 
-        outcome(OUTCOME).
+				 resource(CV),
+				 potentialValues(V), 
+				 change(CHANGE)}, 
+   outcome(OUTCOME).
 :-  2 {changes(OUTCOME,CHANGE,CV,V)}, 
     outcome(OUTCOME), 
     resource(CV).        
         
-        
+% can't try to prevent and achieve an outcome        
 :- goal(prevent(OUTCOME)), goal(achieve(OUTCOME)).
 
+% same - can't be good and bad
 :- bad(RESOURCE), good(RESOURCE).
 
 
@@ -117,14 +111,6 @@ actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
 :-  precondition(tick,OUTCOME), 
     2 { precondition(CONDITION,OUTCOME) : condition(CONDITION)}.
  
-% no precondition without outcome 
-% :-  precondition(CONDITION,OUTCOME), 
-    % not outcome(OUTCOME).
-% % no result without outcome    
-% :-  result(OUTCOME,EFFECT), 
-    % not outcome(OUTCOME).
-    
-    
 % 2 outcomes are the same if they share a precondition
 same(OUTCOME1, OUTCOME2) :- 
     precondition(CONDITION,OUTCOME1),
@@ -159,7 +145,9 @@ differentR(OUTCOME1,OUTCOME2) :-
     outcomeOrder(OUTCOME1,OUTCOME2),
     same(OUTCOME1,OUTCOME2). 
  
-
+% not sure if these are needed
+% was trying to have something about how certain outcomes
+% are more important
 modeChanging(Outcome) :-
     result(Outcome,mode_change(MODE)).
     
@@ -195,12 +183,6 @@ moreSevere(OutcomeA,OutcomeB) :-
     precondition(gt(RESOURCE,VALUE2),OUTCOME).
 
     
-% sanity check on outcome - only allow it have it has a result and precondition
-% result_outcome(OUTCOME) :-     result(OUTCOME,EFFECT).
-% precondition_outcome(OUTCOME) :-     precondition(CONDITION,OUTCOME).
-% validOutcome(OUTCOME) :- result_outcome(OUTCOME), 
-    % precondition_outcome(OUTCOME).
-% :- outcome(OUTCOME), not validOutcome(OUTCOME).
 
 %generic above below to do interval reasoning 
 below(RESOURCE,VALUE,OUTCOME) :- 
@@ -225,11 +207,11 @@ conditionedOnResource(RESOURCE,OUTCOME) :- below(RESOURCE,VALUE,OUTCOME).
     lower_than(VALUE_L,VALUE_H).
     
     
-:- entity(B), not entity(A), entityOrdering(A,B).
 % cleanliness - choose e1 before e2
+:- entity(B), not entity(A), entityOrdering(A,B).
 :- condition(overlaps(A,B,POLARITY)), entityOrdering(B,A).
 
-
+:- outcome(B), not outcome(A), outcomeOrder(A,B).
 
 effect(EFFECT) :- result(OUTCOME,EFFECT).
 
@@ -263,13 +245,16 @@ effect(EFFECT) :- result(OUTCOME,EFFECT).
     
 
     
-    
+% don't check resources against multiple things per outcome per direction    
 :- 2 { precondition(le(RESOURCE,VALUE1),OUTCOME) ; precondition(lt(RESOURCE,VALUE2),OUTCOME) : potentialValues(VALUE1),potentialValues(VALUE2)} , resource(RESOURCE), outcome(OUTCOME).
+% don't check resources against multiple things per outcome per direction
 :- 2 { precondition(ge(RESOURCE,VALUE1),OUTCOME) ; precondition(gt(RESOURCE,VALUE2),OUTCOME) : potentialValues(VALUE1),potentialValues(VALUE2)} , resource(RESOURCE), outcome(OUTCOME).
 
+% don't have complex button pressing states
 :- 2 {precondition(control_event(BUTTON,STATE),OUTCOME)
  : buttons(BUTTON), buttonStates(STATE)}, outcome(OUTCOME).
-    
+
+% don't move in multiple ways per outcome
 :- 2{result(OUTCOME,moves(ENTITY,DIRECTION,AMOUNT)) :direction(DIRECTION), potentialValues(AMOUNT)}, outcome(OUTCOME),entity(ENTITY).
 
 thresholded(RESOURCE) :-
@@ -283,67 +268,82 @@ changes(RESOURCE) :-
     1{ result(OUTCOME,increase(RESOURCE,AMOUNT));
         result(OUTCOME,decrease(RESOURCE,AMOUNT))}, resource(RESOURCE).
 
+%resources should both change and be compared against
 meaningfulResource(RESOURCE) :- 
     changes(RESOURCE),
     thresholded(RESOURCE).
 :- resource(RESOURCE),
     not meaningfulResource(RESOURCE).
-    
+
+% don't add and delete an entity as part of outcome
 :-  result(Outcome,add(Entity)),
     result(Outcome,delete(Entity)).
     
-    
+
+%an entity only matters if something wants to collide against it/click it
+required(Entity) :- precondition(click(Entity),Outcome).
 required(Entity) :- precondition(overlaps(Entity,_,_), Outcome).
 required(Entity) :- precondition(overlaps(_,Entity,_), Outcome).
 
+% require entities
 :- entity(Entity), not required(Entity).
-:- 
-    required(Entity),
+% only destroy that which you can create
+:-  required(Entity),
     effect(delete(Entity)),
     not effect(add(Entity)).
+
+%screen stuff
 :- many(E), screen(E).
 :- precondition(overlaps(E1,E2,Polarity),Outcome), screen(E1),screen(E2).
-% :- spawnLogic(E,_,_,_), screen(E).
-    
+
+% perhaps should be bidirectional - but that excludes score
+% but only allow something to increase on tick if it can be decreased
 :- result(tick, increase(Resource,Amount)),
    not effect(decrease(Resource,Amt)),
    potentialValues(Amt).
 
+% more screen stuff
 :- effect(delete(E)), screen(E).
 :- effect(add(E)), screen(E).
 :- interaction(E1,E2,TYPE), screen(E1), screen(E2).
 :- placement(E,_,_), screen(E).
 
-
-:-   
-  2{precondition(COND,Outcome) : lhThreshold(COND,Resource,Thresh)},
+% don't threshold an outcome on 2 things
+:-  2{precondition(COND,Outcome) : lhThreshold(COND,Resource,Thresh)},
   outcome(Outcome).
-  
+
+% don't care about counting something if it's count can't change
 :- resourceLogic(Resource,count(Entity)), 
     {effect(delete(Entity));
     effect(add(Entity))} 0.
-
+% counting something means it can only be changed by addition/deletion
 :- resourceLogic(Resource,count(Entity)), 
     1 {effect(increase(Resource,Amount));
         effect(decrease(Resource,Amount))}.
         
-        
+% helper
 effect(EFFECT) :- 
     result(OUTCOME,EFFECT).
-    
+% probably overly strong - but don't have the same effect pop up multiple places
+:- 2 {result(OUTCOME,EFFECT)}, effect(EFFECT).
+
+% an outcome needs result and precondition
 completeOutcome(OUTCOME) :- 
     result(OUTCOME,EFFECT),
     precondition(CONDITION,OUTCOME).
 :- outcome(OUTCOME), not completeOutcome(OUTCOME).
 
+% don't have 2 separate ways of overlapping for an outcome
 :- precondition(overlaps(ENTITY1,ENTITY2,POLARITY), OUTCOME),
    precondition(overlaps(ENTITY2,ENTITY1,OTHER), OUTCOME).
 
+% don't check more than 1 collision
 :- 2 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)}, outcome(OUTCOME).
 
-
+% simply don't have more than 2 preconditions
 :- 3 {precondition(CONDITION,Outcome)}, outcome(Outcome).
 
+% a resource is free if there is a way to decrease/increase not conditioned on the same reource - i.e. some way to change things
 freeResource(Resource) :- 
     resource(Resource), 
     1{result(Outcome,increase(Resource,Amount));
@@ -352,30 +352,38 @@ freeResource(Resource) :-
     outcome(Outcome).
 :- resource(Resource), not freeResource(Resource).
 
+% simple feedback loop exclusion
+% don't increase a resource on a positive check of it
 :- result(Outcome,increase(Resource,Amount)),
    precondition(ge(Resource,Other),Outcome).
-   
+% dont' decrease a resource on negative check of it
 :- result(Outcome,decrease(Resource,Amount)),
    precondition(le(Resource,Other),Outcome).
 
+% only allow an entity to be deleted if it was involved in a collision
+% don't want things popping away because of other things (although maybe clicking is ok?
 :-  result(Outcome,delete(Entity)), 
     {precondition(overlaps(Entity,Other),Outcome);
      precondition(overlaps(Other,Entity),Outcome)} 0.
-     
+
+% don't have more than 1 control event per outcome
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
      
-     
+% count the number of outcomes
 outcomes(N) :- N = #count{completeOutcome(Outcome) : completeOutcome(Outcome)}.
 
+%minimize the number of outcomes
+#minimize { N@1 : outcomes(N)}.
+
+%players must have controls or it's just a weird movie
 playerControls :- precondition(control_event(EVENT),OUTCOME).
 :- not playerControls.
-% :- outcomes(N), N > 4.
- #minimize { N@1 : outcomes(N)}.
-  % #minimize{K@1: results(K)}.
- % #minimize{ I@3: preconditions(I)}.
 
-
+% count number of results
 results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
 
+%count number of preconditions
 preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
-    
+
+%singular entities can't be added 
+:- result(OUTCOME,add(ENTITY)), singular(ENTITY).
