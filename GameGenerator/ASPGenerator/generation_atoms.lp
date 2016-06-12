@@ -52,12 +52,7 @@ outcomeOrder(o2,o3).
 outcomeOrder(o3,o4).
 outcomeOrder(o4,o5).
 outcomeOrder(A,C) :- outcomeOrder(A,B), outcomeOrder(B,C).
-outcomeOrder(eo1,o1).
-outcomeOrder(eo2,eo1).
-outcomeOrder(eo3,eo2).
-outcomeOrder(eo4,eo3).
 
-outcomeOrder(eo5,eo4).
 
 constants(low).
 potentialValues(V) :- constants(V).
