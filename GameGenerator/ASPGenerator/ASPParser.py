@@ -119,9 +119,15 @@ def hashable(obj):
     return items
     
 if __name__ == '__main__':
-    out = solve_randomly(sys.argv[1:])
+
+    args = sys.argv[1:]
+    if '-s' in args:
+        random.seed(int(args[args.index('-s')+1]))
+        args = args[:args.index('-s')] + args[args.index('-s')+2:]
+        print args
+    out = solve_randomly(args)
     
-    for o in ['entity','resource','singlular','many','overlapLogic','initialize']:
+    for o in ['entity','resource','singular','many','overlapLogic','initialize']:
         for oo in out[o]:
             for ooo in oo:
                 print prettify(ooo)

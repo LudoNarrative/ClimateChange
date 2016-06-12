@@ -5,11 +5,17 @@ A wishlist is an unordered set of Wants.
 
 define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 
-	// Note: We need to pass in a reference to State, rather than including it here, so we don't create a duplicate State by requiring it above.
+	/* Create a new wishlist from the given array of Wants, with its own interface for accessing and modifying the values within. I.e. we'll use it something like this:
+		var wl = Wishlist.create(listOfWants, State);
+		var path = wl.bestPath();
+
+	Note: We need to pass in a reference to State, rather than including it here, so we don't create a duplicate State by requiring it above.
+	*/
 	var create = function(items, _State) {
 		var State = _State;
 		items = items || [];
 		var _wants = {};
+
 		// Add the wants passed in to the constructor.
 		var want;
 		items.forEach(function(item) {
@@ -18,11 +24,13 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 		});
 
 		// Interface functions for the Wishlist.
+
 		var remove = function(id) {
 			delete _wants[id];
 		}
 
-		var selectNext = function() {
+		// Get a random Want from the wishlist. (this is not especially useful except maybe for testing.)
+		var getRandom = function() {
 			if (wantsRemaining() > 0) {
 				return _wants[util.oneOf(Object.keys(_wants))];
 			}
@@ -75,17 +83,20 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 		// Return the wishlist interface.
 		return {
 			remove: remove,
-			selectNext: selectNext,
-			bestPath: bestPath,
-			allPaths: allPaths,
+			getRandom: getRandom,
 			wantsRemaining: wantsRemaining,
-			logOn: BestPath.logOn,
-			logOff: BestPath.logOff,
-			pathToStr: BestPath.pathToStr,
-			pathsToStr: BestPath.pathsToStr,
 			toStr: toStr,
 			removeSatisfiedWants: removeSatisfiedWants,
-			wantsAsArray: wantsAsArray
+			wantsAsArray: wantsAsArray,
+
+			bestPath: bestPath,
+			allPaths: allPaths,
+			// Let us call BestPath functions on this wishlist.
+			pathToStr: BestPath.pathToStr,
+			pathsToStr: BestPath.pathsToStr,
+			logOn: BestPath.logOn,
+			logOff: BestPath.logOff
+
 		}
 	}
 
