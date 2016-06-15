@@ -50,12 +50,10 @@ actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
         
 
 %if something helps it must help in some way
-% CRM 6/15/2016 commented out for debugging
-% :- not actuallyHelps(ENTITY1,ENTITY2), interaction(ENTITY1,ENTITY2,help) .
+:- not actuallyHelps(ENTITY1,ENTITY2), interaction(ENTITY1,ENTITY2,help) .
 
 %if something hurts it must hurt in some way
-% CRM 6/15/2016 commented out for debugging
-%:- not actuallyHurts(ENTITY1,ENTITY2), interaction(ENTITY1,ENTITY2,hurt) .
+:- not actuallyHurts(ENTITY1,ENTITY2), interaction(ENTITY1,ENTITY2,hurt) .
 
 %if something is placed on a path must have a valid one.
 :- placement(ENTITY,TYPE,path(TYPE)), not validPathPlacement.
@@ -65,16 +63,15 @@ actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
 :- goal(reach(end)), not placement(ENTITY, path(end)), avatar(ENTITY).   
 
 % don't increase or decrease in more than 2 ways
-% XXX revisit - CRM 6/15/2016
-%:- 2 {result(OUTCOME, decrease(RESOURCE,AMOUNT)): 
-%    potentialValues(AMOUNT)}, 
-%    resource(RESOURCE), 
-%    outcome(OUTCOME). 
+:- 2 {result(OUTCOME, decrease(RESOURCE,AMOUNT)): 
+    potentialValues(AMOUNT)}, 
+    resource(RESOURCE), 
+    outcome(OUTCOME). 
     
-%:- 2 {result(OUTCOME, increase(RESOURCE,AMOUNT)): 
-%    potentialValues(AMOUNT)}, 
-%    resource(RESOURCE), 
-%    outcome(OUTCOME). 
+:- 2 {result(OUTCOME, increase(RESOURCE,AMOUNT)): 
+    potentialValues(AMOUNT)}, 
+    resource(RESOURCE), 
+    outcome(OUTCOME). 
     
 % don't increase and decrease at the same time
 :-  result(OUTCOME,increase(RESOURCE,AMOUNT1)), 
@@ -138,15 +135,16 @@ differentR(OUTCOME1,OUTCOME2) :-
     
 % outcomes must be different - perhaps this is overly strong
 % should subsets be allowed?  
-:-  not differentL(OUTCOME1,OUTCOME2), 
-    outcome(OUTCOME1),outcome(OUTCOME2),
-    outcomeOrder(OUTCOME1,OUTCOME2),
-    same(OUTCOME1,OUTCOME2). 
+% CRM 6/15/2016 commented out for debugging
+% :-  not differentL(OUTCOME1,OUTCOME2), 
+%    outcome(OUTCOME1),outcome(OUTCOME2),
+%    outcomeOrder(OUTCOME1,OUTCOME2),
+%    same(OUTCOME1,OUTCOME2). 
  
-:-  not differentR(OUTCOME1,OUTCOME2), 
-    outcome(OUTCOME1),outcome(OUTCOME2),
-    outcomeOrder(OUTCOME1,OUTCOME2),
-    same(OUTCOME1,OUTCOME2). 
+%:-  not differentR(OUTCOME1,OUTCOME2), 
+%    outcome(OUTCOME1),outcome(OUTCOME2),
+%    outcomeOrder(OUTCOME1,OUTCOME2),
+%    same(OUTCOME1,OUTCOME2). 
  
 % not sure if these are needed
 % was trying to have something about how certain outcomes
@@ -328,7 +326,7 @@ required(Entity) :- precondition(overlaps(_,Entity,_), Outcome).
 effect(EFFECT) :- 
     result(OUTCOME,EFFECT).
 % probably overly strong - but don't have the same effect pop up multiple places
-:- 2 {result(OUTCOME,EFFECT)}, effect(EFFECT).
+% :- 2 {result(OUTCOME,EFFECT)}, effect(EFFECT).
 
 % an outcome needs result and precondition
 completeOutcome(OUTCOME) :- 
@@ -353,17 +351,15 @@ freeResource(Resource) :-
       result(Outcome,decrease(Resource,Amount'))},
     not conditionedOnResource(Resource,Outcome),
     outcome(Outcome).
-% XXX commented out by CRM 6/15/16
-% :- resource(Resource), not freeResource(Resource).
+:- resource(Resource), not freeResource(Resource).
 
 % simple feedback loop exclusion
-% XXX commented out for debugging - CRM 6/15/2016
 % don't increase a resource on a positive check of it
-% :- result(Outcome,increase(Resource,Amount)),
-%   precondition(ge(Resource,Other),Outcome).
+:- result(Outcome,increase(Resource,Amount)),
+  precondition(ge(Resource,Other),Outcome).
 % dont' decrease a resource on negative check of it
-% :- result(Outcome,decrease(Resource,Amount)),
-%   precondition(le(Resource,Other),Outcome).
+ :- result(Outcome,decrease(Resource,Amount)),
+   precondition(le(Resource,Other),Outcome).
 
 % only allow an entity to be deleted if it was involved in a collision
 % don't want things popping away because of other things (although maybe clicking is ok?
