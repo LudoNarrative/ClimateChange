@@ -354,10 +354,13 @@ result(collide(ENTITY1,ENTITY2),apply_restitution(ENTITY1,ENTITY2)) :-
 %helping means adding a good resource, removing a bad one, or adding a good entity
 precondition(overlaps(ENTITY1,ENTITY2,true), help(ENTITY1,ENTITY2)) :- 
     interaction(ENTITY1,ENTITY2,help).
+
 { result(help(ENTITY1,ENTITY2),increase(G_RESOURCE)) } :-
     interaction(ENTITY1,ENTITY2,help), good(G_RESOURCE).   
-{ result(help(ENTITY1,ENTITY2),decrease(B_RESOURCE)) } :-
-    interaction(ENTITY1,ENTITY2,help), bad(B_RESOURCE).     
+
+{ result(help(ENTITY1,ENTITY2), decrease(B_RESOURCE)) } :-
+    interaction(ENTITY1,ENTITY2,help), bad(B_RESOURCE).
+
 % { result(help(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,help), helpful(ENTITY).
 
 
@@ -468,29 +471,43 @@ resourceTransactions(convert;pay_cost;gain;lose).
     % selection(ENTITY,single).
 
 
-%you can click on things to make things happen
-{precondition(control_event(click(ENTITY)),OUTCOME): entity(ENTITY), potentialOutcomes(OUTCOME)}.
-% or check resource values
-{precondition(ge(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
-% {precondition(gt(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
-% {precondition(lt(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
-{precondition(le(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
-%or look for button presses
-{precondition(control_event(button(BUTTON,STATE)),OUTCOME) : buttons(BUTTON),buttonStates(STATE), potentialOutcomes(OUTCOME)}.
-%or see if things are overlapping
-{precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) :potentialOutcomes(OUTCOME)} :- 
-    entity(ENTITY1),
-    entity(ENTITY2).
+% You can click on things to make things happen
+{precondition(control_event(click(ENTITY)),OUTCOME)
+  : entity(ENTITY), potentialOutcomes(OUTCOME)}.
+
+% Or check resource values
+{precondition(ge(RESOURCE,VALUE),OUTCOME) 
+  : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
+
+% {precondition(gt(RESOURCE,VALUE),OUTCOME) 
+%  : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
+
+% {precondition(lt(RESOURCE,VALUE),OUTCOME) 
+%  : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
+
+{precondition(le(RESOURCE,VALUE),OUTCOME) 
+  : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
+
+% or look for button presses
+{precondition(control_event(button(BUTTON,STATE)),OUTCOME) 
+  : buttons(BUTTON),buttonStates(STATE), potentialOutcomes(OUTCOME)}.
+
+% or see if things are overlapping
+{precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : potentialOutcomes(OUTCOME)} 
+  :- entity(ENTITY1), entity(ENTITY2).
 
 
 %entities can be deleted
 {result(OUTCOME,delete(ENTITY)) : entity(ENTITY), potentialOutcomes(OUTCOME)}.
 %or added
-%{result(OUTCOME,add(ENTITY)) : entity(ENTITY), potentialOutcomes(OUTCOME)}.
-%or resources can increase
-{result(OUTCOME,increase(RESOURCE,VALUE)) : potentialOutcomes(OUTCOME),resource(RESOURCE), potentialValues(VALUE)}.
-%or not
-{result(OUTCOME,decrease(RESOURCE,VALUE)) : potentialOutcomes(OUTCOME),resource(RESOURCE), potentialValues(VALUE)}.
+{result(OUTCOME,add(ENTITY)) : entity(ENTITY), potentialOutcomes(OUTCOME)}.
+
+% resources can increase
+{result(OUTCOME,increase(RESOURCE,VALUE)) 
+  : potentialOutcomes(OUTCOME),resource(RESOURCE), potentialValues(VALUE)}.
+% or decrease
+{result(OUTCOME,decrease(RESOURCE,VALUE)) 
+  : potentialOutcomes(OUTCOME),resource(RESOURCE), potentialValues(VALUE)}.
 
 % modes can change
 modes(narrative_progress;game_win;game_loss).
