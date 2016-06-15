@@ -15,12 +15,11 @@
 :- not nonMonotonic(r1).
 :- effect(mode_change(game_win)).
 :- not effect(mode_change(game_loss)).
-
+% :- not exists_counterforce(r1).
 
 %:- not condition(tick).
 
 %:- not timingChallengeGoal.
-:- isEasy.
 
 % :- physicsLogic(e1,mapping(control_event(left_arrow,pressed),east,low)).
 

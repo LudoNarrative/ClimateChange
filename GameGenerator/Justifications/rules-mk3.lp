@@ -1,7 +1,17 @@
-%%% Rules I want to encode
- % repeatable
+%%% Rules to encode
  % limited/unlimited
- %
+
+notImmediatelyRepeatable(O) :-
+  result(O, R),
+  result_hinders(R, O).
+
+exists_counterforce(Resource) :-
+  notImmediatelyRepeatable(O),
+  outcomeFavorable(O),
+  outcomeAffect(Resource, O, positive),
+  good(Resource).
+
+  
 screen(screen_top;screen_left;screen_bottom;screen_right).
 % entity(E) :- screen(E).
 oppositeSides(screen_top,screen_bottom).
@@ -17,7 +27,7 @@ lowThreshold(le(Resource, Thresh), Resource,Thresh) :-
     threshold(Thresh).
 
 
-highThreshold(gt(Resource, Thresh), Resource,Thresh) :-
+highThreshold(gt(Resource, Thresh), Resource, Thresh) :-
     resource(Resource),
     threshold(Thresh).
 
@@ -30,8 +40,11 @@ lhThreshold(COND,Resource,Thresh) :-
 
 lhThreshold(COND,Resource,Thresh) :-
     highThreshold(COND,Resource,Thresh).
+
 resource(Resource) :-
     resource(Resource,Entity).
+
+
 %% Good and bad results
 
 goodResult(mode_change(game_win)).
@@ -267,8 +280,8 @@ timingAffectsEntity(Entity) :-
     
 consumedBy(Resource, Outcome) :-
     precondition(Condition, Outcome),
-    highThreshold(Condition, Resource,Thresh),
-    result(Outcome,decrease(Resource, _)).
+    highThreshold(Condition, Resource, Thresh),
+    result(Outcome, decrease(Resource, _)).
     
 
 timingAffectsAction(control_event(Control)) :- 
@@ -337,6 +350,23 @@ enables(Enabler, Enabled) :-
     Enabler != Enabled.
 
 
+sharedResource(R, Outcome1, Outcome2) :-
+    consumedBy(R, Outcome1),
+    consumedBy(R, Outcome2),
+    % outcome(Outcome1), outcome(Outcome2), resource(R),
+    Outcome1 != Outcome2.
+
+sharedEntity(E, Outcome1, Outcome2) :-
+    requiredBy(Outcome1, E),
+    requiredBy(Outcome2, E),
+    result(_, delete(E)).
+
+sharing(O1, O2) :-
+    sharedResource(R, O1, O2).
+sharing(O1, O2) :-
+    sharedEntity(E, O1, O2).
+
+hasSharing :- sharing(O1, O2).
 
 %% XXX rewrite the below.
 enables(Outcome, Outcome2) :-
@@ -441,6 +471,43 @@ result_amplifies(increase(Amplifier), Outcome) :-
     result_enables(increase(Resource),Outcome),
     amplifies(Amplifier, Resource).
 
+%% Prevents/inhibits/hinders
+
+learnedCondition(C)
+  :- condition(C).
+learnedCondition(C)
+  :- learnedCondition(C'),
+     implies(C', C).
+
+implies(collide(E1, E2), overlaps(E1, E2))
+  :- condition(collide(E1, E2)).
+
+implies(overlaps(E1, E2), present(E1))
+  :- learnedCondition(overlaps(E1, E2)).
+
+implies(overlaps(E1, E2), present(E2))
+  :- learnedCondition(overlaps(E1, E2)).
+
+implies(X, Z)
+  :- implies(X, Y),
+     implies(Y, Z).
+implies(X, X)
+  :- condition(X).
+
+inhibits(Result, Condition) :-
+  negates(Result, Condition'),
+  implies(Condition, Condition').
+
+negates(delete(E), present(E))
+  :- result(_, delete(E)),
+     learnedCondition(present(E)).
+
+result_hinders(R, O) :-
+  inhibits(R, Condition),
+  precondition(Condition, O).
+
+
+% XXX rewrite with thresholds.
 increasing_costs(Outcome,Cost) :-
     precondition(ge(Money,Cost), Outcome),
     result(Outcome, increase(Cost, Amount)).
@@ -1028,9 +1095,19 @@ unrestrictedGame :-
 
 timingBasedPhysics(spring;pendulum;chase;random;random_chase;flee;random_flee).
 threshold(0;mid;high;low).
+
 threshold(R) :-
     resource(R).
 threshold(R) :-
     resource(E,R).
 
     
+%% Narrative gating
+
+narrative_gating
+:-
+  result(O, mode_change(narrative_progress)),
+  precondition(C, O),
+  lowThreshold(C, R, _),
+  result(O', decrease(R, _)).
+
