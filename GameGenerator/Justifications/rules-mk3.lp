@@ -653,6 +653,8 @@ goal(maintain(Resource)) :-
     precondition(Condition, Outcome),
     lowThreshold(Condition, Resource,Thresh),
     goal(prevent(Outcome)).
+
+good(Resource) :- goal(gain(Resource)).
  
 goal(gain(Resource)) :-
     precondition(Condition, Outcome),

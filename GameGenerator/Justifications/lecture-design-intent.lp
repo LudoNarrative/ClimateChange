@@ -1,7 +1,7 @@
 #const min_entities = 2.
 #const max_entities = 2.
 #const min_resources = 1.
-#const max_resources = 1.
+#const max_resources = 3.
 #const min_outcomes = 0.
 #const max_outcomes = 7.
 
@@ -15,6 +15,7 @@
 :- not nonMonotonic(r1).
 :- effect(mode_change(game_win)).
 :- not effect(mode_change(game_loss)).
+
 % :- not exists_counterforce(r1).
 
 %:- not condition(tick).
