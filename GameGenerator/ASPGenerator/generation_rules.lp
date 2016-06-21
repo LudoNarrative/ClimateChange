@@ -63,13 +63,13 @@ actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
 :- goal(reach(end)), not placement(ENTITY, path(end)), avatar(ENTITY).   
 
 % don't increase or decrease in more than 2 ways
-:- 2 {result(OUTCOME, decrease(RESOURCE,AMOUNT)): 
-    potentialValues(AMOUNT)}, 
+% CRM and MM 6/20/2016: We could turn this into a proceduralist reading
+% constraint with a notion of "confusingness."
+:- 2 {result(OUTCOME, decrease(RESOURCE,AMOUNT)) : potentialValues(AMOUNT)}, 
     resource(RESOURCE), 
     outcome(OUTCOME). 
     
-:- 2 {result(OUTCOME, increase(RESOURCE,AMOUNT)): 
-    potentialValues(AMOUNT)}, 
+:- 2 {result(OUTCOME, increase(RESOURCE,AMOUNT)): potentialValues(AMOUNT)}, 
     resource(RESOURCE), 
     outcome(OUTCOME). 
     
@@ -282,7 +282,7 @@ meaningfulResource(RESOURCE) :-
     
 
 %an entity only matters if something wants to collide against it/click it
-required(Entity) :- precondition(click(Entity),Outcome).
+required(Entity) :- precondition(control_event(click(Entity)), Outcome).
 required(Entity) :- precondition(overlaps(Entity,_,_), Outcome).
 required(Entity) :- precondition(overlaps(_,Entity,_), Outcome).
 
@@ -362,7 +362,8 @@ freeResource(Resource) :-
    precondition(le(Resource,Other),Outcome).
 
 % only allow an entity to be deleted if it was involved in a collision
-% don't want things popping away because of other things (although maybe clicking is ok?
+% don't want things popping away because of other things (although maybe
+% clicking is ok?)
 :-  result(Outcome,delete(Entity)), 
     {precondition(overlaps(Entity,Other),Outcome);
      precondition(overlaps(Other,Entity),Outcome)} 0.
@@ -388,3 +389,6 @@ preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CO
 
 %singular entities can't be added 
 :- result(OUTCOME,add(ENTITY)), singular(ENTITY).
+
+
+
