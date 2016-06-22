@@ -53,6 +53,8 @@ outcomeOrder(o3,o4).
 outcomeOrder(o4,o5).
 outcomeOrder(A,C) :- outcomeOrder(A,B), outcomeOrder(B,C).
 
+potentialTimer(t1;t2;t3;t4).
+% XXX add ordering
 
 constants(low).
 potentialValues(V) :- constants(V).
