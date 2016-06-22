@@ -183,21 +183,21 @@ precondition(control_event(click(ENTITY)),select(ENTITY)) :-
     % outcome(select(ENTITY)). 
 % resource(ENTITY,target) :- 
     % outcome(select(ENTITY)). 
-result(select(ENTITY), set(selected,true)) :- 
-    outcome(select(ENTITY)). 
+result(select(ENTITY), set(selected(ENTITY), true)) :- 
+    outcome(select(ENTITY)).
 
 %if selected, choose where to go to
 precondition(control_event(button(mouse_button, pressed)),move_selected(ENTITY)) :- 
     outcome(move_selected(ENTITY)).   
-precondition( eq(selected,true),move_selected(ENTITY)) :- 
+precondition(check(selected(ENTITY), eq(true)), move_selected(ENTITY)) :- 
     outcome(move_selected(ENTITY)).
 % resource(ENTITY,selected) :- 
     % outcome(move_selected(ENTITY)). 
-result(move_selected(ENTITY), set(selected,false)) :- 
+result(move_selected(ENTITY), set(selected(ENTITY),false)) :- 
     outcome(move_selected(ENTITY)).     
-result(move_selected(ENTITY), set(target,cursor)) :- 
+result(move_selected(ENTITY), set(target(ENTITY),cursor)) :- 
     outcome(move_selected(ENTITY)). 
-result(tick,move_towards(ENTITY,target)) :- 
+result(tick, move_towards(ENTITY,target)) :- 
     outcome(move_selected(ENTITY)). 
 precondition(tick,tick) :- 
     outcome(move_selected(ENTITY)). 
@@ -207,7 +207,8 @@ precondition(tick,tick) :-
 npcMovements(projectile;random_walk;random_pathfind;attract;repel).%;patrol;bounce;path(ping_pong);path(loop)).
 
 %pick ways something can move
-{movementScheme(ENTITY,SCHEME) : entity(ENTITY), npcMovements(SCHEME)} 0.
+% CRM 6/21/2016 - changed max from 0 to 2.
+{movementScheme(ENTITY,SCHEME) : entity(ENTITY), npcMovements(SCHEME)} 2.
 
 
 %path shapes
@@ -471,6 +472,8 @@ resourceTransactions(convert;pay_cost;gain;lose).
     % selection(ENTITY,single).
 
 
+%%% Preconditions and Results for arbitrary outcomes %%%
+
 % You can click on things to make things happen
 {precondition(control_event(click(ENTITY)),OUTCOME)
   : entity(ENTITY), potentialOutcomes(OUTCOME)}.
@@ -488,14 +491,44 @@ resourceTransactions(convert;pay_cost;gain;lose).
 {precondition(le(RESOURCE,VALUE),OUTCOME) 
   : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
 
+% XXX CRM 6/21: is this right?
+% check property values
+{precondition(check(Property, eq(Value)), Outcome)
+  : result(Other, set(Property, Value)), 
+    potentialOutcomes(Outcome),
+    potentialOutcomes(Other)}.
+
 % or look for button presses
 {precondition(control_event(button(BUTTON,STATE)),OUTCOME) 
   : buttons(BUTTON),buttonStates(STATE), potentialOutcomes(OUTCOME)}.
 
 % or see if things are overlapping
 {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : potentialOutcomes(OUTCOME)} 
-  :- entity(ENTITY1), entity(ENTITY2).
+  :- entity(ENTITY1), entity(ENTITY2), ENTITY1 != ENTITY2.
 
+% other spatial predicates
+{precondition(near(E1, E2), Outcome) : potentialOutcomes(Outcome)}
+  :- entity(E1), entity(E2), E1 != E2.
+
+{precondition(far(E1, E2), Outcome) : potentialOutcomes(Outcome)}
+  :- entity(E1), entity(E2), E1 != E2.
+
+% check presence/absece of entities
+
+{precondition(present(E), Outcome) : potentialOutcomes(Outcome)}
+  :- singular(E).
+
+{precondition(absent(E), Outcome) : potentialOutcomes(Outcome)}
+  :- singular(E).
+
+% check timer signals
+% CRM 6/21/2016: not consistent with prior use of timers e.g. in
+% Kaboom encoding and game-rules.lp
+{precondition(timerElapsed(Timer), Outcome)
+  : potentialOutcomes(Outcome)}
+  :- entity(Entity), potentialTimer(Timer).
+
+%%% Possible Results %%%
 
 %entities can be deleted
 {result(OUTCOME,delete(ENTITY)) : entity(ENTITY), potentialOutcomes(OUTCOME)}.
@@ -508,6 +541,11 @@ resourceTransactions(convert;pay_cost;gain;lose).
 % or decrease
 {result(OUTCOME,decrease(RESOURCE,VALUE)) 
   : potentialOutcomes(OUTCOME),resource(RESOURCE), potentialValues(VALUE)}.
+  % XXX eventually make typed
+
+% properties can be set
+%% {result(Outcome, set(Property, Value))
+%%  : potentialOutcomes(Outcome), potentialValues(Value)}.
 
 % modes can change
 modes(narrative_progress;game_win;game_loss).

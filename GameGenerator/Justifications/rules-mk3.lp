@@ -1,6 +1,82 @@
 %%% Rules to encode
  % limited/unlimited
 
+
+%%% The core semantics of programs %%%
+
+
+%% Collision and movement
+
+closeness_condition(collide(E1, E2), E1, E2)
+  :- condition(collide(E1, E2)).
+
+closeness_condition(overlaps(E1, E2, true), E1, E2)
+  :- condition(overlaps(E1, E2, true)).
+
+closeness_condition(near(E1, E2), E1, E2)
+  :- condition(near(E1, E2)).
+
+closeness_condition(C, E1, E2)
+  :- closeness_condition(C, E2, E1).
+
+
+closeness_condition(overlaps(E1, E2, false), E1, E2)
+  :- condition(overlap(E1, E2)).
+
+farness_condition(far(E1, E2), E1, E2)
+  :- condition(far(E1, E2)).
+
+farness_condition(C, E1, E2)
+  :- farness_condition(C, E2, E1).
+
+spatial_condition(C, E1, E2)
+  :- closeness_condition(C, E1, E2).
+  
+spatial_condition(C, E1, E2)
+  :- farness_condition(C, E1, E2).
+
+result_enables_condition(move_toward(E1, E2), Cond)
+    :- closeness_condition(Cond, E1, E2),
+       result(_, move_toward(E1, E2)).
+
+result_enables_condition(move_away(E1, E2), Cond)
+    :- closeness_condition(Cond, E1, E3),
+       result(_, move_away(E1, E2)).
+
+%% Resources
+
+result_enables_condition(increase(Resource), Condition)
+    :- highThreshold(Condition, Resource,Thresh).
+
+result_enables_condition(decrease(Resource), Condition)
+    :- lowThreshold(Condition, Resource,Thresh).
+
+%% Properties
+
+result_enables_condition(set(Property, Value), check(Property, eq(Value)))
+    :- condition(check(Property, eq(Value))),
+       effect(set(Property, Value)).
+
+result_enables_condition
+  (set(Property, Value), check(Property, neq(Value'))) :-
+      condition(check(Property, neq(Value'))),
+      effect(set(Property, Value)),
+      Value != Value'.
+
+%% Entities
+
+result_enables_condition(add(Entity), present(Entity)) :-
+      condition(present(Entity)),
+      effect(add(Entity)).
+
+result_enables_condition(delete(Entity), absent(Entity)) :-
+      conditon(absent(Entity)),
+      effect(delete(Entity)),
+      singular(Entity).
+
+
+%%% Other meaning %%%
+
 notImmediatelyRepeatable(O) :-
   result(O, R),
   result_hinders(R, O).
@@ -41,8 +117,13 @@ lhThreshold(COND,Resource,Thresh) :-
 lhThreshold(COND,Resource,Thresh) :-
     highThreshold(COND,Resource,Thresh).
 
-resource(Resource) :-
-    resource(Resource,Entity).
+% resource(Resource) :-
+%    resource(Resource,Entity).
+% CRM 6/21/2016 - rewriting this may mean game specs need to be rewritten.
+
+resource(property(Entity, Resource)) :-
+    resource(Resource),
+    has_property(Entity, Resource).
 
 
 %% Good and bad results
@@ -436,32 +517,6 @@ hinders(Outcome,Outcome2) :-
     result(Outcome,decrease(RESOURCE,AMOUNT)), 
     precondition(ge(RESOURCE,THRESHOLD),Outcome2),
     Outcome != Outcome2 .
-
-%% Collision and movement
-collide_precond(E1, E2, Outcome)
-  :- precondition(collide(E1, E2), Outcome).
-collide_precond(E2, E1, Outcome)
-  :- precondition(collide(E1, E2), Outcome).
-
-result_enables_condition(move_toward(E1, E2), collide(E1, E2))
-    :- condition(collide(E1, E2)),
-       result(_, move_toward(E1, E2)).
-
-result_enables_condition(move_toward(E1, E2), collide(E2, E1))
-    :- condition(collide(E1, E2)),
-       result(_, move_toward(E1, E2)).
-
-result_enables_condition(move_away(E1, E2), collide(E1, E3))
-    :- condition(collide(E1, E3)),
-       result(_, move_away(E1, E2)).
-
-result_enables_condition(increase(Resource), Condition)
-    :- highThreshold(Condition, Resource,Thresh).
-
-result_enables_condition(decrease(Resource), Condition)
-    :- lowThreshold(Condition, Resource,Thresh).
-
-
 
 result_enables(Result, Outcome) :-
     result_enables_condition(Result, Condition),
