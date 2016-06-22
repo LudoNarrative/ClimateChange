@@ -1,0 +1,14 @@
+[
+	{
+		"id": "Start",		//riiiiight?
+		"content": "Keep the dishes moving around the table, or conversation will stop. Click a dish passed to you to pass it on, or the down arrow to add food to your plate.",
+		"conditions": ["introMechanics neq true"],
+		"effects": ["set introMechanics true", "set career 0", "set confidence 0"]
+	},
+	{
+		"id": "Start",
+		"content": "Keep the dishes moving around the table, or conversation will stop. Click a dish passed to you to pass it on, or the down arrow to add food to your plate.",
+		"conditions": ["introMechanics neq true"],
+		"effects": ["set introMechanics true", "set career 0", "set confidence 0"]
+	}
+]
