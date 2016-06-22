@@ -18,20 +18,34 @@ requirejs.config({
 		"ChunkLibrary": "ChunkLibrary",
 		"BestPath": "BestPath",
 		"Templates": "Templates",
-		"Character": "Character"
+		"Character": "Character",
+		"Hanson": "Hanson"
 	}
 });
 
 requirejs(
-	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "text!../data/exampleData/charExampleData.json", "util", "domReady!"],
-	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Character, Example1Data, Example2Data, charExampleData) {
+	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Hanson", "text!../data/exampleData/lecture.json", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "text!../data/exampleData/charExampleData.json", "util", "domReady!"],
+	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Character, Hanson, lectureData, Example1Data, Example2Data, charExampleData) {
 
 	// To Add A New Example:
 	// - Create new definition in "examples" dictionary below
 	// - Add data file to requirejs call above (both the filename and the variable name)
 
 	var examples = {
-		"Example 1": {
+		"Lecture scene": {
+			wishlist: [
+				{ condition: "reinforceSpecialty eq true" },
+				{ condition: "demonstrateConfidence eq true" },
+				{ condition: "establishSpecialtyInfo eq true" },
+				{ condition: "establishLecture eq true" },
+				{ condition: "callOnStudent eq true"},
+				{ condition: "respondToQuestion eq true" },
+				{ condition: "classOver eq true" }
+			],
+			dataFile: lectureData,
+			startState: ["set initialized true", "set friendName Elika"]
+		},
+		"Example: Simple Trait Demonstration": {
 			wishlist: [
 				{ condition: "greetedElika eq true" },
 				{ condition: "demonstratedTrait eq true" },
@@ -39,7 +53,7 @@ requirejs(
 			dataFile: Example1Data,
 			startState: ["set initialized true", "set friendName Elika"]
 		},
-		"Example 2": {
+		"Example: Dinner Scene (set DEFAULT_MAX_DEPTH to 5)": {
 			wishlist: [
 				{ condition: "introMechanics eq true" },
 				{ condition: "beat eq 1" },
@@ -57,7 +71,7 @@ requirejs(
 
 			]
 		},
-		"Characters Example": {
+		"Example: Character Mixins": {
 			wishlist: [
 				{ condition: "demonstratedTrait eq 1" }
 			],
@@ -87,8 +101,7 @@ requirejs(
 		example.startState.forEach(function(command) {
 			State.change(command);
 		});
-
-		var data = JSON.parse(example.dataFile);
+		var data = HanSON.parse(example.dataFile);
 		ChunkLibrary.add(data);
 
 		var wishlist = Wishlist.create(example.wishlist, State);
