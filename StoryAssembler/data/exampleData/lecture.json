@@ -1,14 +1,94 @@
 [
-	{
-		"id": "Start",		//riiiiight?
-		"content": "Keep the dishes moving around the table, or conversation will stop. Click a dish passed to you to pass it on, or the down arrow to add food to your plate.",
-		"conditions": ["introMechanics neq true"],
-		"effects": ["set introMechanics true", "set career 0", "set confidence 0"]
-	},
+	/*
+		{ condition: "reinforceSpecialty eq true" },
+				{ condition: "demonstrateConfidence eq true" },
+				{ condition: "establishSpecialtyInfo eq true" },
+				{ condition: "establishLecture eq true" },
+				{ condition: "callOnStudent eq true"},
+				{ condition: "respondToQuestion eq true" },
+				{ condition: "classOver eq true" }
+	*/
+
 	{
 		"id": "Start",
-		"content": "Keep the dishes moving around the table, or conversation will stop. Click a dish passed to you to pass it on, or the down arrow to add food to your plate.",
-		"conditions": ["introMechanics neq true"],
-		"effects": ["set introMechanics true", "set career 0", "set confidence 0"]
-	}
+		"content": "It's your first class, and it's been going well so far, like you knew it would. If you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson, who's here to evaluate you.",
+		"conditions": ["establishLecture neq true"],
+		"effects": [
+			"set establishLecture true", 
+			"set setting lecture",
+			"set calledFranklin false",
+			"set calledElika false",
+			"set calledShy false",
+			"set difficulty 1"
+		]
+	},
+	{
+		"id": "slide1",
+		"content": "\"So you can see that as CO2 levels rise, the ocean becomes more acidic. Already 25% more acidic than in the 1800s.\"",
+		"conditions": [],
+		"effects": ["set giveLecture true", "set lectureContent 1"]
+	},
+	{
+		"id": "slide2",
+		"content": "\"And we know that more acidic seawater makes it harder for shell-forming sea creatures like corals, oysters, and of course my own favorite life form, {ifState|specialty|shrimp|the shrimp|}{ifState|specialty|lobster|the lobster|}{ifState|specialty|coral|the coral|}.\"",
+		"conditions": ["lectureContent eq 1"],
+		"effects": ["set giveLecture true", "set lectureContent 2"]
+	},
+	{
+		"id": "slide3",
+		"content": "\"Even plankton, which is the base of the food chain for most ocean life, is affected. So there's a direct link between a rise in CO2 and the survival of most life in the oceans.\"",
+		"conditions": ["lectureContent eq 2"],
+		"effects": ["set giveLecture true", "set lectureContent 3"]
+	},
+	{
+		"id": "questions",
+		"content": "{ifState|questionsLeft|0|You're out of time for questions.|}{ifState|questionsLeft|1|You have time for one more question.|}{ifState|questionsLeft|2|You have time for a few more questions.|}{ifState|questionsLeft|3|You have time for a few questions.|}",
+		"choices": 	[
+			{ "chunkId" : "Elika1" },
+			{ "chunkId" : "Franklin1" },
+			{ "chunkId" : "Shy1" }
+		],
+		"repeatable": "true",
+		"conditions": ["lectureContent eq 3"],
+		"effects": ["set callOnStudent true"]
+	},
+	{
+		"id": "Elika1",
+		"choiceLabel": "Call on Élika: she's smart and passionate.",
+		"content": "\"Doctor Banks, if the pH is changing, why aren't species adapting to those changes?\"<br><br>A smart question, and you know the answer-- letting you calm down a little.",
+		"choices": [
+			{ "chunkId" : "Elika2"}
+		],
+		"conditions": ["questionsLeft gt 0"],
+		"effects": ["decr questionsLeft 1", "decr difficulty 1", "set elika1 true"]
+	}/*,
+	{
+		"id": "Elika2",
+		"choiceLabel": "Answer Élika",
+		"content": "\"Good question, Élika. The reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.\"<br><br>\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and those catastrophes usually triggered mass extinctions.",
+		"choices": [
+			{ "chunkId" : "Elika3" },
+			{ "chunkId" : "questionBridge" }
+		],
+		"conditions": [],
+		"effects": []
+	},
+	{
+		"id": "Elika3",
+		"choiceLabel": "Élika looks like she has a follow-up.",
+		"content": "You go back and forth with Élika for the next few minutes, which is pleasant, but you see some of the other students growing resentful that she's dominating the converation.",
+		"choices": [
+			{ "chunkId" : "questionBridge"}
+		],
+		"conditions": [],
+		"effects": ["decr questionsLeft 1", "decr difficulty 1"]
+	},
+	{
+		"id": "questionBridge",
+		"choiceLabel": "Take another question.",
+		"content": "You look around the room, weighing the raised hands against the remaining class time.",
+		"conditions": [],
+		"effects": []
+	},*/
+
 ]
