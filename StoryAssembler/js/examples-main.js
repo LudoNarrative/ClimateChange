@@ -34,16 +34,17 @@ requirejs(
 	var examples = {
 		"Lecture scene": {
 			wishlist: [
+				{ condition: "callOnStudent eq true", persistent: true},
+				{ condition: "establishLecture eq true"},
+				{ condition: "giveLecture eq true", persistent: true },
 				{ condition: "reinforceSpecialty eq true" },
 				{ condition: "demonstrateConfidence eq true" },
 				{ condition: "establishSpecialtyInfo eq true" },
-				{ condition: "establishLecture eq true" },
-				{ condition: "callOnStudent eq true"},
 				{ condition: "respondToQuestion eq true" },
 				{ condition: "classOver eq true" }
 			],
 			dataFile: lectureData,
-			startState: ["set initialized true", "set friendName Elika"]
+			startState: ["set specialty shrimp", "set questionsLeft 3"]
 		},
 		"Example: Simple Trait Demonstration": {
 			wishlist: [
@@ -105,7 +106,7 @@ requirejs(
 		ChunkLibrary.add(data);
 
 		var wishlist = Wishlist.create(example.wishlist, State);
-		// wishlist.logOn();
+		wishlist.logOn();
 		if (example.characters) {
 			Character.init(State);
 			for (var key in example.characters) {

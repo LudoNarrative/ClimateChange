@@ -1,7 +1,12 @@
-CURRENT
 
+Macro (by July 9th)
 
-TODO
+- translate over all the scenes deterministically
+- implement grammar-based changes based on variables (game interface)
+- dynamic wishlist items (specialty: lobster)
+- make versions of scenes with more variability
+
+CURRENT TODO
 - Possible bug in the case where we're recursing to find a subgoal that's the same as one of our wishlist goals. [Think about what happens in this case.]
 - Research: ease of authoring (JSON editor, DSL, etc.)
 - Defining ways in which content might be varied, i.e. formal vs informal, discussion vs monologue, defensive vs aggressive. [Rather than having static flags like "lecture scene", "dinner scene"]
