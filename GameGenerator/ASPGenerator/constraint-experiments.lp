@@ -66,4 +66,5 @@ moves(E)
 % :- result(repeled_from_cursor(E),_).
 % :- result(drawn_to_cursor(E),_).
 
+% :- not precondition
 
