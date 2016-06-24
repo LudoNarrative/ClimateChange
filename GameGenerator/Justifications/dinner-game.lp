@@ -31,4 +31,4 @@
 
 entity(right_side). singular(right_side).
 precondition(control_event(click(right_side)), pass_platter).
-result(serve_self, add(food)).
+% result(pass_platter, add(food)).
