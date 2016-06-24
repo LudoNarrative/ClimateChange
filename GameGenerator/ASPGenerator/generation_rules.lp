@@ -276,15 +276,19 @@ meaningfulResource(RESOURCE) :-
 :- resource(RESOURCE),
     not meaningfulResource(RESOURCE).
 
+% CRM 6/23/2016 - what about deleting it and then adding it in a new place?
 % don't add and delete an entity as part of outcome
-:-  result(Outcome,add(Entity)),
-    result(Outcome,delete(Entity)).
+% :-  result(Outcome,add(Entity)),
+%    result(Outcome,delete(Entity)).
     
 
 %an entity only matters if something wants to collide against it/click it
 required(Entity) :- precondition(control_event(click(Entity)), Outcome).
 required(Entity) :- precondition(overlaps(Entity,_,_), Outcome).
 required(Entity) :- precondition(overlaps(_,Entity,_), Outcome).
+% CRM 6/23/2016 - or if something requires it to be present
+required(Entity) :- precondition(present(Entity), Outcome).
+% CRM 6/23/2016 - or if something generates it, maybe?
 
 % require entities
 :- entity(Entity), not required(Entity).
