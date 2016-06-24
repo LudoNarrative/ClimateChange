@@ -15,6 +15,13 @@ define(["Condition"], function(Condition) {
 		}
 	}
 
+	var byGoto = function(id) {
+		return {
+			type: "goto",
+			val: id
+		}
+	}
+
 	var byCondition = function(condition) {
 		// If an invalid condition is passed in, calling the Condition.parts() function below will throw an error.
 		// We don't actually care about the value of the parsed result in this case, however; just that it's not invalid.
@@ -27,6 +34,7 @@ define(["Condition"], function(Condition) {
 
 	return {
 		byId: byId,
+		byGoto: byGoto,
 		byCondition: byCondition
 	}
 });	

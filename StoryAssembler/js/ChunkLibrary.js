@@ -29,6 +29,8 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 					chunk.choices[i] = Request.byCondition(c.condition);
 				} else if (c.chunkId) {
 					chunk.choices[i] = Request.byId(c.chunkId);
+				} else if (c.gotoId) {
+					chunk.choices[i] = Request.byGoto(c.gotoId);
 				} else {
 					console.log(c)
 					throw new Error("choice not specified in right format", c);
@@ -40,6 +42,8 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 				chunk.request = Request.byCondition(chunk.request.condition);
 			} else if (chunk.request.chunkId) {
 				chunk.request = Request.byId(chunk.request.chunkId);
+			} else if (chunk.request.gotoId) {
+				chunk.request = Request.byGoto(chunk.request.gotoId);
 			} else {
 				throw new Error("chunk request not specified in right format", chunk.request);
 			}
