@@ -27,7 +27,7 @@ The "logOn" and "logOff" functions can be called to turn on detailed console log
 
 define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
-	var DEFAULT_MAX_DEPTH = 2; // The maximum length of a path, unless "max_depth" is passed in to a function below as a parameter. Raising this too high has severe performance impacts.
+	var DEFAULT_MAX_DEPTH = 5; // The maximum length of a path, unless "max_depth" is passed in to a function below as a parameter. Raising this too high has severe performance impacts.
 
 	// Module-level reference variables
 	var curr_max_depth;
@@ -36,6 +36,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 	// The usual entry function: does setup, calls allPaths to gets the set of all possible paths that satisfy at leat one Want from the list, and returns the best candidate, or undefined if no paths found.
 	var bestPath = function(wants, params, _chunkLibrary, _State) {
+
 		var paths = allPaths(wants, params, _chunkLibrary, _State);
 		if (paths.length > 0) {
 			return chooseFromPotentialPaths(paths, wants);
@@ -194,7 +195,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		var wants = [];
 		originalWants.forEach(function(want) {
 			var satisfied = false;
-			if (want.type === "id") {
+			if (want.type === "id" || want.type === "goto") {
 				satisfied = (chunk.id === want.val);
 				if (satisfied) log(rLevel, "-->id makes '" + want.val + "' true");
 			} else { // type === condition
@@ -223,7 +224,8 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 				var req;
 				if (chunk.request.type === "id") {
 					req = Request.byId(chunk.request.val);
-				} else {
+				}
+				else {
 					req = Request.byCondition(chunk.request.val);
 				}
 				log(rLevel, "We will now search for the request in chunk " + chunk.id + ".");
@@ -237,16 +239,21 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 			// Even if we've satisfied all our wants, we need to recurse so we know what nodes this choice leads to.
 			log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
 			chunk.choices.forEach(function(choice) {
-				var validPaths = searchFromHere(paths, chunk, skipList, choice, wants, pathToHere, rLevel, true);
-				// Each path in validPaths should have a choiceDetails field, even if it didn't meet the Want requirements (so we know what choice labels to print when displaying the choice).
-				if (!util.isArray(validPaths[0].choiceDetails)) {
-					choiceDetails.push(validPaths[0].choiceDetails);
-				} else {
-					choiceDetails.push(validPaths[0].choiceDetails[0]);
+				/*if (choice.type == "goto") {		//if it's a direct link, just do it
+					console.log("made it!");
 				}
-				if (validPaths.length > 0 && validPaths[0].route) {
-					paths = addNewIfUnique(paths, validPaths);
-				}
+				else {			//otherwise, find valid paths*/
+					var validPaths = searchFromHere(paths, chunk, skipList, choice, wants, pathToHere, rLevel, true);
+					// Each path in validPaths should have a choiceDetails field, even if it didn't meet the Want requirements (so we know what choice labels to print when displaying the choice).
+					if (!util.isArray(validPaths[0].choiceDetails)) {
+						choiceDetails.push(validPaths[0].choiceDetails);
+					} else {
+						choiceDetails.push(validPaths[0].choiceDetails[0]);
+					}
+					if (validPaths.length > 0 && validPaths[0].route) {
+						paths = addNewIfUnique(paths, validPaths);
+					}
+				//}
 			});
 			// log(rLevel, "After choices, choiceDetails is now " + choiceDetails.map(function(x){return x.id}));
 			log(rLevel, "Search through choice(s) of " + chunk.id + " finished.")
@@ -313,7 +320,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 		var okToBeChoice = chunk.choices !== undefined;
 
-		// Then we'll temporarily exclude the current node from the seach space (to avoid infinite loops/graphs with cycles), and do the search.
+		// Then we'll temporarily exclude the current node from the search space (to avoid infinite loops/graphs with cycles), and do the search.
 		skipList.push(chunk.id);
 		var foundPaths = searchLibraryForPaths(newWants, okToBeChoice, skipList, {}, rLevel + 1);
 		skipList = util.removeFromStringList(skipList, chunk.id);

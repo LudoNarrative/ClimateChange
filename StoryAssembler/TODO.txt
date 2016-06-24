@@ -1,6 +1,7 @@
 
 Macro (by July 9th)
 
+- startState can't handle false as a value
 - translate over all the scenes deterministically
 - implement grammar-based changes based on variables (game interface)
 - dynamic wishlist items (specialty: lobster)

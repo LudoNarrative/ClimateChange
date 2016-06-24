@@ -222,6 +222,27 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			clickChoice(1);
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Testing incremental progress (4)");
 
+			// Test gotoId as a Twine-like deterministic link
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "theChunk eq 1"}, {condition: "theChunk eq 4"}], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{ id: "LinkTest1", 
+				content: "Text1 Content", 
+				choices: [{gotoId: "LinkTest2"}],
+				effects: ["set theChunk 1"] },
+				{ id: "LinkTest2", 
+				choiceLabel: "linkChoice link", 
+				content: "linkTest2 Content"
+				}
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			assert.deepEqual(html(getStoryEl()), "Text1 Content", "Testing goto-style links (1)");
+			assert.deepEqual(contentForChoice(1), "linkChoice link", "Testing goto-style links (2)");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "linkTest2 Content", "Testing goto-style links (3)");
+			
 
 			cleanUpDom();
 

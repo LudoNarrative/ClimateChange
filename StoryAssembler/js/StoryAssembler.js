@@ -34,6 +34,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			var chunk = chunkLibrary.get(optChunkId);	//get data on our chunk to do the check below
 
 			if (chunk.content) {	//if there was no chunk content, it already grounded out recursively and displayed with displayChunkText(), so we shouldn't redo that here
+
 				bestPath = getBestPath(chunkLibrary, optChunkId);		//look for path from here
 
 				Display.diagnose({
@@ -41,6 +42,10 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 				wishlist: wishlist,
 				state: State.getBlackboard()
 				});
+
+				if (allChoicesGotos(chunk.choices)) {			//if it's just goto links, just do those
+					console.log("we're in");
+				}
 
 				if (bestPath) {		//if we found one, handle it
 					handleFoundPath(optChunkId, bestPath);
@@ -63,7 +68,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		}
 
 		else {	//optchunkid is undefined, so we're trying to continue the scene
-			
+
 			bestPath = getBestPath(chunkLibrary);		//do a blind search
 
 			Display.diagnose({
@@ -75,6 +80,12 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			if (bestPath) {		//if we find bestPath, then we want to handle the found path (show text, show choices)
 				
 				displayChunkText(bestPath.route[0]);
+
+				var chunk = chunkLibrary.get(bestPath.route[0]);
+				if (allChoicesGotos(chunk.choices)) {			//if it's just goto links, just do those
+					console.log("we're in");
+				}
+
 				handleFoundPath(bestPath.route[0], bestPath);
 				
 			}
@@ -106,16 +117,20 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	var displayChunkText = function(chunkId) {
 		var chunk = chunkLibrary.get(chunkId);
 		var text = Templates.render(chunk);
-		if (text !== undefined) { 
+		if (text !== undefined) { 							//if the chunk has text, display it
 			Display.addStoryText(text); 
 		}
-		else {
+		else {												//if it's making a request for text to display...
 			
-			bestPath = getBestPath(chunkLibrary, chunkId);
-			if (!bestPath) {
+			bestPath = getBestPath(chunkLibrary, chunkId);	//grab text from request
+			if (!bestPath) {								//if it still isn't known...
 				bestPath = getBestPath(chunkLibrary);		//do a blind search
 			}
-			doChunkText(chunkId, bestPath);
+			if (!bestPath) {								//if it's still empty, throw an error
+				throw new Error("Tried to get text for '" + chunkId + "' and it had no content, so we tried to recurse through bestPath, but did not find anything.");
+			}
+
+			doChunkText(chunkId, bestPath);		//display text from search
 			
 		}
 
@@ -210,6 +225,16 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			wishlist: wishlist,
 			state: State.getBlackboard()
 		});
+	}
+
+	var allChoicesGotos = function(choices) {		//returns boolean of whether a chunk's choices are all gotos
+
+		if (!choices) { return false }
+		var passed = true;
+		choices.forEach(function(choice) {
+			if (choice.type !== "goto") { passed = false; }
+		});
+		return passed;
 	}
 
 	var getChoiceText = function(choiceDetail) {
