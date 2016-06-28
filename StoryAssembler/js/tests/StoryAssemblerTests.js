@@ -57,6 +57,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			ChunkLibrary.reset();
 			State.reset();
 			wl = Wishlist.create([{condition: "x eq true"}], State);
+			wl.logOn();
 			ChunkLibrary.add([
 				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}] },
 				{ id: "Chunk2", choiceLabel: "Chunk2 Label", content: "Chunk2 Content", choices: [{chunkId: "Chunk3"}] },

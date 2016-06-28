@@ -44,7 +44,7 @@ requirejs(
 				{ condition: "classOver eq true" }
 			],
 			dataFile: lectureData,
-			startState: ["set specialty shrimp", "set questionsLeft 2"]
+			startState: ["set specialty shrimp", "set questionsLeft 3"]
 		},
 		"Example: Simple Trait Demonstration": {
 			wishlist: [
