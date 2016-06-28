@@ -27,7 +27,7 @@ The "logOn" and "logOff" functions can be called to turn on detailed console log
 
 define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
-	var DEFAULT_MAX_DEPTH = 5; // The maximum length of a path, unless "max_depth" is passed in to a function below as a parameter. Raising this too high has severe performance impacts.
+	var DEFAULT_MAX_DEPTH = 3; // The maximum length of a path, unless "max_depth" is passed in to a function below as a parameter. Raising this too high has severe performance impacts.
 
 	// Module-level reference variables
 	var curr_max_depth;
@@ -165,11 +165,11 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 			return false;
 		}
 		// --> conditions should allow it given the current State.
-		if (chunk.conditions) {
+		if (chunk.conditions && chunk.conditions.length > 0) {
 			var shouldContinue = false;
 			for (var j = 0; j < chunk.conditions.length; j++) {
 				if (!State.isTrue(chunk.conditions[j])) {
-					shouldContinue = true;
+					shouldContinue = true;				
 				}
 			}
 			if (shouldContinue) {
@@ -191,25 +191,38 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		var pathToHere;
 		log(rLevel, "findAllSatisfyingPaths starting from '" + chunk.id + "' and satisfying wants: " + getWantVals(originalWants));
 		
-		// Does this chunk directly make one or more Wants true, or make progress towards one of them being true?
 		var wants = [];
-		originalWants.forEach(function(want) {
-			var satisfied = false;
-			if (want.type === "id" || want.type === "goto") {
-				satisfied = (chunk.id === want.val);
-				if (satisfied) log(rLevel, "-->id makes '" + want.val + "' true");
-			} else { // type === condition
-				if (chunk.effects) {
-					satisfied = State.wouldAnyMakeMoreTrue(chunk.effects, want.val);
-				}
-				if (satisfied) log(rLevel, "-->an effect makes '" + want.val + "' true");
-			}
-			if (satisfied) {
+		var gotoFlag = false;
+		
+		//if there's a goto want, fulfill that and ignore all other wants
+		originalWants.forEach(function(want) { 	
+			if (want.type === "goto" && chunk.id === want.val) { 
+				gotoFlag = true;
 				pathToHere = createPathOrAddWant(pathToHere, chunk.id, want);
-			} else {
-				wants.push(want);
+				log(rLevel, "-->goto matches '" + want.val + "' so going with that and stopping.");
 			}
-		});
+		});	
+
+		// Does this chunk directly make one or more Wants true, or make progress towards one of them being true?
+		if (!gotoFlag) {
+			originalWants.forEach(function(want) {
+				var satisfied = false;
+				if (want.type === "id") {
+					satisfied = (chunk.id === want.val);
+					if (satisfied) log(rLevel, "-->id makes '" + want.val + "' true");
+				} else { // type === condition
+					if (chunk.effects) {
+						satisfied = State.wouldAnyMakeMoreTrue(chunk.effects, want.val);
+					}
+					if (satisfied) log(rLevel, "-->an effect makes '" + want.val + "' true");
+				}
+				if (satisfied) {
+					pathToHere = createPathOrAddWant(pathToHere, chunk.id, want);
+				} else {
+					wants.push(want);
+				}
+			});
+		}
 
 		if (wants.length !== originalWants.length) {
 			log(rLevel, "--> remaining wants: " + (wants.length ? getWantVals(wants) : "none"));
@@ -239,11 +252,19 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 			// Even if we've satisfied all our wants, we need to recurse so we know what nodes this choice leads to.
 			log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
 			chunk.choices.forEach(function(choice) {
-				/*if (choice.type == "goto") {		//if it's a direct link, just do it
-					console.log("made it!");
-				}
-				else {			//otherwise, find valid paths*/
-					var validPaths = searchFromHere(paths, chunk, skipList, choice, wants, pathToHere, rLevel, true);
+					var validPaths;
+					if (choice.type == "goto") {	//if it's a goto choice, we don't need to recurse, just return
+						var missingVal = !chunkOkToSearch(choice.val, skipList, true, rLevel)
+						validPaths = [{ 
+							route: [chunk.id],
+							satisfies: [{type:"goto", val:choice.val}],
+							choiceDetails: { missing:missingVal, requestVal: choice.val, id: choice.val }
+						}];
+					}
+					else {
+						validPaths = searchFromHere(paths, chunk, skipList, choice, wants, pathToHere, rLevel, true);
+					}
+
 					// Each path in validPaths should have a choiceDetails field, even if it didn't meet the Want requirements (so we know what choice labels to print when displaying the choice).
 					if (!util.isArray(validPaths[0].choiceDetails)) {
 						choiceDetails.push(validPaths[0].choiceDetails);
@@ -253,7 +274,6 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 					if (validPaths.length > 0 && validPaths[0].route) {
 						paths = addNewIfUnique(paths, validPaths);
 					}
-				//}
 			});
 			// log(rLevel, "After choices, choiceDetails is now " + choiceDetails.map(function(x){return x.id}));
 			log(rLevel, "Search through choice(s) of " + chunk.id + " finished.")
@@ -320,6 +340,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 		var okToBeChoice = chunk.choices !== undefined;
 
+
 		// Then we'll temporarily exclude the current node from the search space (to avoid infinite loops/graphs with cycles), and do the search.
 		skipList.push(chunk.id);
 		var foundPaths = searchLibraryForPaths(newWants, okToBeChoice, skipList, {}, rLevel + 1);
@@ -337,7 +358,9 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 			log(rLevel, "setting choiceMatch to " + choiceMatch);
 		}
 
-		validPaths = pathsPrunedToWants(validPaths, wants);
+		if (req.type !== "goto") {		//if the path is a goto we don't care, otherwise try to prune to wants
+			validPaths = pathsPrunedToWants(validPaths, wants);
+		}
 		log(rLevel, "(" + validPaths.length + " are valid)");
 
 		// Link each remaining path to the current node, first ensuring we have a pathToHere obj. I.e. if we're at A and we found a path B->C, we want the path to now be A->B->C.
@@ -379,8 +402,15 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 	var pathsPrunedToWants = function(pathList, wants) {
 		var validPaths = [];
 		pathList.forEach(function(path) {
+
+			//determine if one of the wants is a goto (we accept paths from these by default)
+			var gotoFlag = false;
+			path.satisfies.forEach(function(satisfaction) {
+				if (satisfaction.type == "goto") { gotoFlag = true; }
+			});
+
 			path.satisfies = restrictWantsTo(path.satisfies, wants);
-			if (path.satisfies.length > 0) {
+			if (path.satisfies.length > 0 || gotoFlag) {		//if it satisfies a want or a goto, add it
 				validPaths.push(path);
 			} 
 		});

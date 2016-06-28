@@ -43,10 +43,6 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 				state: State.getBlackboard()
 				});
 
-				if (allChoicesGotos(chunk.choices)) {			//if it's just goto links, just do those
-					console.log("we're in");
-				}
-
 				if (bestPath) {		//if we found one, handle it
 					handleFoundPath(optChunkId, bestPath);
 				}
@@ -82,9 +78,6 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 				displayChunkText(bestPath.route[0]);
 
 				var chunk = chunkLibrary.get(bestPath.route[0]);
-				if (allChoicesGotos(chunk.choices)) {			//if it's just goto links, just do those
-					console.log("we're in");
-				}
 
 				handleFoundPath(bestPath.route[0], bestPath);
 				
