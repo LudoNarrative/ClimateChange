@@ -394,7 +394,7 @@ movementProfiles(constant;logarithmic;ease_in;ease_out;ease_in_out).
 
 
 %%% RESOURCES %%%
-initialResourceValues(0;low;medium;high).
+initialResourceValues(R) :- constants(R).
 
 
 1 {initialize(set(RESOURCE,VALUE)) : initialResourceValues(VALUE)} 1 :- resource(RESOURCE).
