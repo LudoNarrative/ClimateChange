@@ -214,7 +214,6 @@ conditionedOnResource(RESOURCE,OUTCOME) :- below(RESOURCE,VALUE,OUTCOME).
 
 :- outcome(B), not outcome(A), outcomeOrder(A,B).
 
-effect(EFFECT) :- result(OUTCOME,EFFECT).
 
 %an outcome shouldn't result in game win and game loss simultaneously
 :-  result(OUTCOME,mode_change(END)), 
@@ -278,8 +277,8 @@ meaningfulResource(RESOURCE) :-
 
 % CRM 6/23/2016 - what about deleting it and then adding it in a new place?
 % don't add and delete an entity as part of outcome
-% :-  result(Outcome,add(Entity)),
-%    result(Outcome,delete(Entity)).
+:-  result(Outcome,add(Entity)),
+    result(Outcome,delete(Entity)).
     
 
 %an entity only matters if something wants to collide against it/click it
@@ -289,6 +288,8 @@ required(Entity) :- precondition(overlaps(_,Entity,_), Outcome).
 % CRM 6/23/2016 - or if something requires it to be present
 required(Entity) :- precondition(present(Entity), Outcome).
 % CRM 6/23/2016 - or if something generates it, maybe?
+% CRM 6/27/2016 - or if it's requiredBy according to rules
+required(Entity) :- requiredBy(_, Entity).
 
 % require entities
 :- entity(Entity), not required(Entity).
@@ -365,12 +366,13 @@ freeResource(Resource) :-
  :- result(Outcome,decrease(Resource,Amount)),
    precondition(le(Resource,Other),Outcome).
 
-% only allow an entity to be deleted if it was involved in a collision
+% CRM 6/27/2016
+% Removing this constraint for now:
 % don't want things popping away because of other things (although maybe
 % clicking is ok?)
-:-  result(Outcome,delete(Entity)), 
-    {precondition(overlaps(Entity,Other),Outcome);
-     precondition(overlaps(Other,Entity),Outcome)} 0.
+% :-  result(Outcome,delete(Entity)), 
+%     {precondition(overlaps(Entity,Other),Outcome);
+%      precondition(overlaps(Other,Entity),Outcome)} 0.
 
 % don't have more than 1 control event per outcome
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
@@ -392,7 +394,65 @@ results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
 preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
 
 %singular entities can't be added 
-:- result(OUTCOME,add(ENTITY)), singular(ENTITY).
+% :- result(OUTCOME,add(ENTITY)), singular(ENTITY).
+% CRM 6/27/2016 - we can add it as long as it's absent beforehand
+% first.
+maintains_singular(Outcome, Entity)
+  :- precondition(absent(Entity), Outcome).
+% maintains_singular(Outcome, Entity)
+%  :- result(Outcome, delete(Entity)).
+% instead of delete-then-add we should have a "teleport" operator maybe.
+:- result(Outcome, add(Entity)), not maintains_singular(Outcome, Entity).
 
+% require something to be present before deleting it
+:- result(Outcome, delete(Entity)), not requiredBy(Outcome, Entity).
 
+%%%% CRM 6/28/2016 - moved these over from constraint-experiments
+%% Implication and contradiction
+:- precondition(X, O), precondition(Y, O), implies(X, Y), X != Y.
+:- precondition(X, O), precondition(Y, O), contradictory(X, Y).
+
+%% Don't condition on presence/absence unless the entity is deleted.
+:- condition(present(E)), not effect(delete(E)).
+:- condition(absent(E)), not effect(delete(E)).
+
+%% Can't test for a spatial condition unless at least one of the entities
+%% can move.
+
+:- condition(C), spatial_condition(C, E1, E2), not one_moves(E1, E2).
+
+one_moves(E1, E2)
+  :- moves(E1), entity(E2).
+
+one_moves(E1, E2)
+  :- moves(E2), entity(E1).
+
+moves(E)
+  :- effect(move_toward(E, X)).
+
+moves(E)
+  :- effect(move_away(E, X)).
+
+moves(E)
+  :- controlScheme(E, Scheme).
+
+moves(E)
+  :- effect(move_selected(E)).
+
+moves(E)
+  :- effect(moves(E, Direction, Amount)).
+%%%%
+
+%% Don't initialize things in a way that could end the game right away
+:- precondition(C, O), result(O, mode_change(game_loss)),
+    initialize(R), result_enables_condition(R, C). 
+
+:- result(O, mode_change(game_loss)), not onlyOnePrecondition(O).
+
+%% Don't decrease an entity by itself
+:- effect(decrease(R, R)).
+
+%% Don't decrease or increase by 0
+:- effect(increase(R, 0)).
+:- effect(decrease(R, 0)).
 
