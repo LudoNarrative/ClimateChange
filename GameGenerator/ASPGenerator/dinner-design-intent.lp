@@ -26,7 +26,7 @@
 % XXX why is this inconsistent?
 :- not effect(delete(e1)).
 
-% :- effect(mode_change(game_loss)). % shouldn't be a way to lose
-% :- not result(tick, decrease(r1, low)).
-% :- not effect(increase(r1, _)).
+:- effect(mode_change(game_loss)). % shouldn't be a way to lose
+:- not result(tick, decrease(r1, low)).
+:- not effect(increase(r1, _)).
 
