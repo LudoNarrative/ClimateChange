@@ -159,6 +159,8 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 	var chunkOkToSearch = function(chunkId, skipList, okToBeChoice, rLevel) {
 		var chunk = chunkLibrary.get(chunkId);
 
+		if (!chunk) { return false; }	//if it's not in the chunkLibrary, it's not valid
+
 		// --> shouldn't be blacklisted.
 		if (skipList.indexOf(chunk.id) >= 0) {
 			log(rLevel, "skipping '" + chunk.id + "'");

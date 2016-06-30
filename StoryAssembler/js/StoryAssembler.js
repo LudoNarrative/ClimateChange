@@ -130,8 +130,14 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	}
 
 	var handleNoPathFound = function(wishlist) {
-		if (wishlist.length > 0) {
-			Display.addStoryText("[No path found!]");
+		if (wishlist.length > 0) {				//if we still have Wants...
+			var unsatisfiedWants = false;
+			wishlist.forEach(function(wish) {	//and they aren't persistent Wants...
+				if (!wish.persistent) { unsatisfiedWants = true; }
+			});
+
+			if (unsatisfiedWants) {	Display.addStoryText("[No path found!]"); }			//we ended too soon, show error
+			else { endScene(); }			//otherwise end the scene
 		}
 		else {
 			endScene();
@@ -231,10 +237,13 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	}
 
 	var getChoiceText = function(choiceDetail) {
+		var chunk;
+
 		if (choiceDetail.id) {
-			var chunk = chunkLibrary.get(choiceDetail.id);
-			return chunk.choiceLabel;
-		} else {
+			var chunk = chunkLibrary.get(choiceDetail.id);			
+		} 
+		if (chunk) { return chunk.choiceLabel; }
+		else {
 			return "Unavailable choice request: \"" + choiceDetail.requestVal + "\"";
 		}
 	}

@@ -117,7 +117,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Non-repeatable chunks work first time (1/2)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Non-repeatable chunks work first time (2/2)");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "[No path found!]", "Non-repeatable chunks: if a used non-repeatable chunk is the only thing satisfying a wishlist item, fail to find a path");
+			assert.deepEqual(html(getStoryEl()), "[End of scene.]", "Non-repeatable chunks: if a used non-repeatable chunk is the only thing satisfying a wishlist item, fail to find a path");
 
 			ChunkLibrary.reset();
 			State.reset();
@@ -131,7 +131,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			clickChoice(1);
 			clickChoice(1);
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "[No path found!]", "Non-repeatable chunks: should run out when we've exhausted supply.");
+			assert.deepEqual(html(getStoryEl()), "[End of scene.]", "Non-repeatable chunks: should run out when we've exhausted supply.");
 
 
 			//test whether it can find the next want from wishlist if current choice-thread ends
