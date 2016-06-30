@@ -7,13 +7,11 @@
 % :- 2 {result(Outcome, decrease(R, Amount))}.
 
 exists_add_result
-  :- result(Outcome, add(E)).
-:- not exists_add_result.
+  :- effect(add(E)).
 
-% Don't add or delete an entity unless it's because of (a) collision or (b)
-% control event
-controlled(O) :- precondition(control_event(_), O).
-controlled(O) :- precondition(overlaps(_,_, true), O).
-:- result(O, add(E)), not controlled(O).
-:- result(O, delete(E)), not controlled(O).
+exists_delete_result
+  :- effect(delete(E)).
+
+% :- not exists_add_result.
+:- not exists_delete_result.
 

@@ -275,6 +275,7 @@ meaningfulResource(RESOURCE) :-
 :- resource(RESOURCE),
     not meaningfulResource(RESOURCE).
 
+
 % CRM 6/23/2016 - what about deleting it and then adding it in a new place?
 % don't add and delete an entity as part of outcome
 :-  result(Outcome,add(Entity)),
@@ -288,8 +289,8 @@ required(Entity) :- precondition(overlaps(_,Entity,_), Outcome).
 % CRM 6/23/2016 - or if something requires it to be present
 required(Entity) :- precondition(present(Entity), Outcome).
 % CRM 6/23/2016 - or if something generates it, maybe?
-% CRM 6/27/2016 - or if it's requiredBy according to rules
-required(Entity) :- requiredBy(_, Entity).
+% CRM 6/27/2016 - or if it's required according to rules
+required(Entity) :- requires(_, Entity).
 
 % require entities
 :- entity(Entity), not required(Entity).
@@ -399,13 +400,14 @@ preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CO
 % first.
 maintains_singular(Outcome, Entity)
   :- precondition(absent(Entity), Outcome).
-% maintains_singular(Outcome, Entity)
-%  :- result(Outcome, delete(Entity)).
-% instead of delete-then-add we should have a "teleport" operator maybe.
-:- result(Outcome, add(Entity)), not maintains_singular(Outcome, Entity).
+maintains_singular(Outcome, Entity)
+  :- result(Outcome, delete(Entity)).
+
+:- result(Outcome, add(Entity)), singular(Entity), 
+    not maintains_singular(Outcome, Entity).
 
 % require something to be present before deleting it
-:- result(Outcome, delete(Entity)), not requiredBy(Outcome, Entity).
+:- result(Outcome, delete(Entity)), not requires(Outcome, Entity).
 
 %%%% CRM 6/28/2016 - moved these over from constraint-experiments
 %% Implication and contradiction
@@ -443,10 +445,12 @@ moves(E)
   :- effect(moves(E, Direction, Amount)).
 %%%%
 
-%% Don't initialize things in a way that could end the game right away
-:- precondition(C, O), result(O, mode_change(game_loss)),
+%% Don't initialize things in a way that could change themode right away
+:- precondition(C, O), result(O, mode_change(Mode)),
     initialize(R), result_enables_condition(R, C). 
 
+% Game loss should have just one precond - simplifies things.
+% Could be relaxed.
 :- result(O, mode_change(game_loss)), not onlyOnePrecondition(O).
 
 %% Don't decrease an entity by itself
@@ -456,3 +460,55 @@ moves(E)
 :- effect(increase(R, 0)).
 :- effect(decrease(R, 0)).
 
+
+%%%% Reachability %%%%
+
+reachableResult(R)
+  :- initialize(R).
+
+reachableCondition(C)
+  :- result_enables_condition(R, C),
+      reachableResult(R).
+
+reachableCondition(control_event(E))
+  :- condition(control_event(E)).
+
+reachableCondition(tick)
+  :- condition(tick).
+
+reachableOutcome(O)
+  :- precondition(_, O), not unreachableOutcome(O).
+
+unreachableOutcome(O)
+  :- precondition(C, O), not reachableCondition(C).
+
+reachableResult(R)
+  :- result(O, R), reachableOutcome(O).
+
+% constraint on reachability
+:- precondition(_, O), unreachableOutcome(O).
+
+%%%%
+
+%%%% Adding and deleting entities %%%%
+% Don't add or delete an entity unless it's because of (a) collision or (b)
+% control event
+controlled(O) :- precondition(control_event(_), O).
+controlled(O) :- precondition(overlaps(_,_, true), O).
+:- result(O, add(E)), not controlled(O).
+:- result(O, delete(E)), not controlled(O).
+
+%%%% Misc - should be organized at some point.
+
+%% Don't have a result that's also a result of tick
+:- result(O, R), result(tick, R), O != tick.
+
+%% Don't precondition on something being compared to itself.
+:- condition(C), lhThreshold(C, R, R).
+
+%% Outcomes should have at least one precondition that's not shared with
+%%  another outcome
+shared_precondition(P, O1, O2) :- precondition(P, O1), precondition(P, O2).
+% for every O, exists a P that's not shared(P, O1, O2)
+differentiated(O1) :- precondition(P, O2), outcome(O1), not shared_precondition(P, O1, O2).
+:- outcome(O), not differentiated(O).
