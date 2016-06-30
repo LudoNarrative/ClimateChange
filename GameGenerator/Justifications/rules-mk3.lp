@@ -410,6 +410,11 @@ consumedBy(Resource, Outcome) :-
     highThreshold(Condition, Resource, Thresh),
     result(Outcome, decrease(Resource, _)).
     
+decreases(Outcome, Resource) :-
+    result(Outcome, decrease(Resource, Amount)).
+
+increases(Outcome, Resource) :-
+    result(Outcome, increase(Resource, Amount)).
 
 timingAffectsAction(control_event(Control)) :- 
     precondition(control_event(Control),Outcome),
@@ -444,27 +449,27 @@ result(Outcome, increase(Resource,1)) :-
     resourceLogic(Resource,count(Entity)).
     
     
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(overlaps(Entity,Entity_B,POLARITY),Outcome).
     
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(overlaps(Entity_B,Entity,POLARITY),Outcome).
     
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(control_event(click(Entity)),Outcome).
 
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(near(Entity,EntityB),Outcome).
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(near(EntityB,Entity),Outcome).
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(near(EntityB,Entity),Outcome).
 
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     lowThreshold(Condition, Resource,Thresh),
     precondition(Condition,Outcome),
     resourceLogic(Resource, count(Entity)).
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     highThreshold(Condition, Resource,Thresh),
     precondition(Condition,Outcome),
     resourceLogic(Resource, count(Entity)).
@@ -484,12 +489,14 @@ sharedResource(R, Outcome1, Outcome2) :-
     Outcome1 != Outcome2.
 
 sharedEntity(E, Outcome1, Outcome2) :-
-    requiredBy(Outcome1, E),
-    requiredBy(Outcome2, E),
-    result(_, delete(E)).
+    requires(Outcome1, E),
+    requires(Outcome2, E),
+    Outcome1 != Outcome2, 
+    effect(delete(E)).
 
-sharing(O1, O2) :-
-    sharedResource(R, O1, O2).
+% XXX commented out experimentally 6/30/2016 CRM.
+% sharing(O1, O2) :-
+%    sharedResource(R, O1, O2).
 sharing(O1, O2) :-
     sharedEntity(E, O1, O2).
 
@@ -498,12 +505,12 @@ hasSharing :- sharing(O1, O2).
 %% XXX rewrite the below.
 enables(Outcome, Outcome2) :-
     result(Outcome, add(Entity)), 
-    requiredBy(Outcome2, Entity),
+    requires(Outcome2, Entity),
     Outcome != Outcome2 .
  
 hinders(Outcome, Outcome2) :-
     result(Outcome, delete(Entity)), 
-    requiredBy(Outcome2, Entity),
+    requires(Outcome2, Entity),
     Outcome != Outcome2.   
  
 tiedToDifficulty(Resource) :-
@@ -761,7 +768,7 @@ destroys(Destroyer,Destroyed) :-
 
 antagonist(Destroyer) :-
     destroys(Destroyer,Destroyed),
-    requiredBy(Outcome,Destroyed),
+    requires(Outcome,Destroyed),
     playerWillDo(Condition,Outcome).
 
 
@@ -859,7 +866,7 @@ humanControlled(ENTITY) :-
     physicsLogic(ENTITY, follows(cursor)).
 
 humanAffected(Outcome) :-
-    requiredBy(Outcome,ENTITY),
+    requires(Outcome,ENTITY),
     humanControlled(ENTITY).
     
 humanAffected(Outcome2) :-
@@ -1138,7 +1145,7 @@ lower_cost(always,Outcome1,Outcome2) :-
 outcome_entity_cost(Outcome,Entity,Thresh) :-
     highThreshold(Cond,Resource,Thresh),
     precondition(Cond,Outcome),
-    requiredBy(Outcome,Entity).
+    requires(Outcome,Entity).
     
 outcome_costs(Outcome,Resource) :-
     highThreshold(Cond,Resource,Thresh),
