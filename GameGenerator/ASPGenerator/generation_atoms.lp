@@ -56,10 +56,11 @@ outcomeOrder(A,C) :- outcomeOrder(A,B), outcomeOrder(B,C).
 potentialTimer(t1;t2;t3;t4).
 % XXX add ordering
 
-constants(low).
+constants(0;low;medium;high).
 potentialValues(V) :- constants(V).
 
-%potentialValues(R) :-  potentialResources(R).
+% CRM 6/28/2016
+potentialValues(R) :- resource(R).
 
 potentialModes(playing;story_progression;game_loss;game_win).
 polarity(true;false).

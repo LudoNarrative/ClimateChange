@@ -1,6 +1,8 @@
 %%% Rules to encode
  % limited/unlimited
 
+effect(EFFECT) :- result(OUTCOME,EFFECT).
+effect(E) :- initialize(E).
 
 %%% The core semantics of programs %%%
 
@@ -45,11 +47,13 @@ result_enables_condition(move_away(E1, E2), Cond)
 
 %% Resources
 
-result_enables_condition(increase(Resource), Condition)
-    :- highThreshold(Condition, Resource,Thresh).
+result_enables_condition(increase(Resource, Amount), Condition)
+    :- highThreshold(Condition, Resource, Thresh),
+        effect(increase(Resource, Amount)).
 
-result_enables_condition(decrease(Resource), Condition)
-    :- lowThreshold(Condition, Resource,Thresh).
+result_enables_condition(decrease(Resource, Amount), Condition)
+    :- lowThreshold(Condition, Resource, Thresh),
+        effect(decrease(Resource, Amount)).
 
 %% Properties
 
@@ -57,11 +61,53 @@ result_enables_condition(set(Property, Value), check(Property, eq(Value)))
     :- condition(check(Property, eq(Value))),
        effect(set(Property, Value)).
 
+% setting a resource to something makes it gt/ge/lt/le other things.
+result_enables_condition(set(Resource, Value), le(Resource, Value'))
+  :- less_than_or_equal(Value, Value'),
+      effect(set(Resource, Value)).
+result_enables_condition(set(R, V), lt(R, V'))
+  :- less_than(V, V'),
+      effect(set(R, V)).
+result_enables_condition(set(R, V), ge(R, V'))
+  :- greater_than_or_equal(V, V'),
+      effect(set(R, V)).
+result_enables_condition(set(R, V), gt(R, V'))
+  :- greater_than(V, V'),
+      effect(set(R,V)).
+
+less_than_or_equal(Value, Value) 
+  :- potentialValues(Value), potentialValues(Value').
+less_than_or_equal(Value, Value')
+  :- less_than(Value, Value').
+
+less_than(0, low).
+less_than(low, medium).
+less_than(medium, high).
+less_than(X, Z) 
+  :- less_than(X, Y), less_than(Y, Z).
+
+greater_than(X, Y)
+  :- less_than(Y, X).
+greater_than_or_equal(X, Y)
+  :- greater_than(X, Y).
+greater_than_or_equal(X, X)
+  :- potentialValues(X), potentialValues(X).
+
+result_enables_condition(set(Resource, Value), C)
+  :- lhThreshold(C, Resource, T), resource(T),
+      effect(set(Resource, Value)).
+
 result_enables_condition
   (set(Property, Value), check(Property, neq(Value'))) :-
       condition(check(Property, neq(Value'))),
       effect(set(Property, Value)),
       Value != Value'.
+
+
+%% Implication
+result_enables_condition(R, C')
+  :- result_enables_condition(R, C),
+      implies(C, C').
 
 %% Entities
 
@@ -364,6 +410,11 @@ consumedBy(Resource, Outcome) :-
     highThreshold(Condition, Resource, Thresh),
     result(Outcome, decrease(Resource, _)).
     
+decreases(Outcome, Resource) :-
+    result(Outcome, decrease(Resource, Amount)).
+
+increases(Outcome, Resource) :-
+    result(Outcome, increase(Resource, Amount)).
 
 timingAffectsAction(control_event(Control)) :- 
     precondition(control_event(Control),Outcome),
@@ -398,27 +449,27 @@ result(Outcome, increase(Resource,1)) :-
     resourceLogic(Resource,count(Entity)).
     
     
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(overlaps(Entity,Entity_B,POLARITY),Outcome).
     
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(overlaps(Entity_B,Entity,POLARITY),Outcome).
     
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(control_event(click(Entity)),Outcome).
 
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(near(Entity,EntityB),Outcome).
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(near(EntityB,Entity),Outcome).
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     precondition(near(EntityB,Entity),Outcome).
 
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     lowThreshold(Condition, Resource,Thresh),
     precondition(Condition,Outcome),
     resourceLogic(Resource, count(Entity)).
-requiredBy(Outcome, Entity) :-
+requires(Outcome, Entity) :-
     highThreshold(Condition, Resource,Thresh),
     precondition(Condition,Outcome),
     resourceLogic(Resource, count(Entity)).
@@ -438,12 +489,14 @@ sharedResource(R, Outcome1, Outcome2) :-
     Outcome1 != Outcome2.
 
 sharedEntity(E, Outcome1, Outcome2) :-
-    requiredBy(Outcome1, E),
-    requiredBy(Outcome2, E),
-    result(_, delete(E)).
+    requires(Outcome1, E),
+    requires(Outcome2, E),
+    Outcome1 != Outcome2, 
+    effect(delete(E)).
 
-sharing(O1, O2) :-
-    sharedResource(R, O1, O2).
+% XXX commented out experimentally 6/30/2016 CRM.
+% sharing(O1, O2) :-
+%    sharedResource(R, O1, O2).
 sharing(O1, O2) :-
     sharedEntity(E, O1, O2).
 
@@ -452,12 +505,12 @@ hasSharing :- sharing(O1, O2).
 %% XXX rewrite the below.
 enables(Outcome, Outcome2) :-
     result(Outcome, add(Entity)), 
-    requiredBy(Outcome2, Entity),
+    requires(Outcome2, Entity),
     Outcome != Outcome2 .
  
 hinders(Outcome, Outcome2) :-
     result(Outcome, delete(Entity)), 
-    requiredBy(Outcome2, Entity),
+    requires(Outcome2, Entity),
     Outcome != Outcome2.   
  
 tiedToDifficulty(Resource) :-
@@ -526,13 +579,7 @@ result_amplifies(increase(Amplifier), Outcome) :-
     result_enables(increase(Resource),Outcome),
     amplifies(Amplifier, Resource).
 
-%% Prevents/inhibits/hinders
-
-learnedCondition(C)
-  :- condition(C).
-learnedCondition(C)
-  :- learnedCondition(C'),
-     implies(C', C).
+%%%% Implicationa and Contradiction %%%%
 
 implies(collide(E1, E2), overlaps(E1, E2))
   :- condition(collide(E1, E2)).
@@ -548,6 +595,43 @@ implies(X, Z)
      implies(Y, Z).
 implies(X, X)
   :- condition(X).
+
+
+implies(C, near(E1, E2))
+  :- closeness_condition(C, E1, E2).
+
+implies(C, far(E1, E2))
+  :- farness_condition(C, E1, E2).
+
+implies(C, present(E))
+  :- spatial_condition(C, E, E').
+
+implies(control_event(click(E)), present(E))
+  :- condition(control_event(click(E))).
+
+contradictory(present(E), absent(E))
+  :- entity(E).
+
+contradictory(C, F)
+  :- closeness_condition(C, E1, E2),
+     farness_condition(F, E1, E2).
+
+contradictory(X, Y)
+  :- contradictory(Y, X).
+
+contradictory(X, Z)
+  :- implies(X, Y), contradictory(Y, Z).
+
+
+
+%%%% Prevents/inhibits/hinders %%%%
+
+learnedCondition(C)
+  :- condition(C).
+learnedCondition(C)
+  :- learnedCondition(C'),
+     implies(C', C).
+
 
 inhibits(Result, Condition) :-
   negates(Result, Condition'),
@@ -684,7 +768,7 @@ destroys(Destroyer,Destroyed) :-
 
 antagonist(Destroyer) :-
     destroys(Destroyer,Destroyed),
-    requiredBy(Outcome,Destroyed),
+    requires(Outcome,Destroyed),
     playerWillDo(Condition,Outcome).
 
 
@@ -782,7 +866,7 @@ humanControlled(ENTITY) :-
     physicsLogic(ENTITY, follows(cursor)).
 
 humanAffected(Outcome) :-
-    requiredBy(Outcome,ENTITY),
+    requires(Outcome,ENTITY),
     humanControlled(ENTITY).
     
 humanAffected(Outcome2) :-
@@ -1061,7 +1145,7 @@ lower_cost(always,Outcome1,Outcome2) :-
 outcome_entity_cost(Outcome,Entity,Thresh) :-
     highThreshold(Cond,Resource,Thresh),
     precondition(Cond,Outcome),
-    requiredBy(Outcome,Entity).
+    requires(Outcome,Entity).
     
 outcome_costs(Outcome,Resource) :-
     highThreshold(Cond,Resource,Thresh),
