@@ -37,14 +37,18 @@ requirejs(
 				{ condition: "callOnStudent eq true", persistent: true},
 				{ condition: "establishLecture eq true"},
 				{ condition: "giveLecture eq true", persistent: true },
-				{ condition: "reinforceSpecialty eq true" },
-				{ condition: "demonstrateConfidence eq true" },
+				//{ condition: "reinforceSpecialty eq true" },		//this is triggered by grammars
+				//{ condition: "demonstrateConfidence eq true" },	//need to write some confidence-hinging options
 				{ condition: "establishSpecialtyInfo eq true" },
 				{ condition: "respondToQuestion eq true" },
 				{ condition: "classOver eq true" }
 			],
 			dataFile: lectureData,
-			startState: ["set specialty shrimp", "set questionsLeft 3"]
+			startState: [
+				"set specialty shrimp", 
+				"set questionsLeft 3",
+				"set confidence 3"
+			]
 		},
 		"Example: Simple Trait Demonstration": {
 			wishlist: [
