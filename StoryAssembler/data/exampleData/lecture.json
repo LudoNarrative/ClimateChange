@@ -1,14 +1,9 @@
 [
 	/*
-		{ condition: "reinforceSpecialty eq true" },
-				{ condition: "demonstrateConfidence eq true" },
-				{ condition: "establishSpecialtyInfo eq true" },
-				{ condition: "establishLecture eq true" },
-				{ condition: "callOnStudent eq true"},
-				{ condition: "respondToQuestion eq true" },
-				{ condition: "classOver eq true" }
+	TODO:
+		-put in confidence-dependent text
+		-author confidence-dependent branches
 	*/
-
 	{
 		"id": "Start",
 		"content": "It's your first class, and it's been going well so far, like you knew it would. If you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson, who's here to evaluate you.",
@@ -32,7 +27,11 @@
 		"id": "slide2",
 		"content": "\"And we know that more acidic seawater makes it harder for shell-forming sea creatures like corals, oysters, and of course my own favorite life form, {ifState|specialty|shrimp|the shrimp|}{ifState|specialty|lobster|the lobster|}{ifState|specialty|coral|the coral|}.\"",
 		"conditions": ["lectureContent eq 1"],
-		"effects": ["set giveLecture true", "set lectureContent 2"]
+		"effects": [
+			"set giveLecture true", 
+			"set lectureContent 2",
+			"set establishSpecialtyInfo true"
+		]
 	},
 	{
 		"id": "slide3",
@@ -49,7 +48,7 @@
 			{ "gotoId" : "Shy1" }
 		],
 		"repeatable": "true",
-		"conditions": ["lectureContent eq 3"],
+		"conditions": ["lectureContent eq 3", "questionsLeft gt 0"],
 		"effects": []
 	},
 
@@ -57,8 +56,7 @@
 		"id": "questionBridge",
 		"choiceLabel": "Take another question.",
 		"content": "You look around the room, weighing the raised hands against the remaining class time.",
-		"conditions": [],
-		"effects": []
+		"repeatable": "true"
 	},
 
 	//-------------ELIKA-----------------------------------------------------
@@ -131,10 +129,10 @@
 		"choiceLabel": "Appeal to logic.",
 		"content": "\"That's a good point, Franklin, but it's not applicable in this case. There are dozens of independent studies using many different techniques, that all suggest a causal link between increased CO2 and increased ocean acidity.",
 		"choices": [
-			{ "gotoId" : "FranklinLogic" }
+			{ "gotoId" : "FranklinLogic2" }
 		],
 		"conditions": [],
-		"effects": ["incr difficulty 1"]
+		"effects": ["incr difficulty 1", "set respondToQuestion true"]
 	},
 	{
 		"id": "FranklinLogic2",
@@ -165,7 +163,8 @@
 			{ "gotoId" : "FranklinMore" },
 			{ "gotoId" : "questionBridge" }
 		],
-		"conditions": []
+		"conditions": [],
+		"effects": ["set respondToQuestion true"]
 	},
 	{
 		"id": "FranklinDodge",
@@ -176,7 +175,7 @@
 			{ "gotoId" : "questionBridge" }
 		],
 		"conditions": [],
-		"effects": ["decr difficulty 1"]
+		"effects": ["decr difficulty 1", "set respondToQuestion true"]
 	},
 
 
@@ -201,6 +200,7 @@
 		"id": "ShyStraight",
 		"choiceLabel": "Explain with a straightforward answer.",
 		"content": "You briefly explain that the calcium carbonate minerals these creatures use to make their shells have a harder time calcifying as acidity goes up: if it's high enough, the shells are eaten away faster than they can form.<br><br>The class seems satisfied, but not particularly engaged.",
+		"effects": ["set respondToQuestion true"]
 	},
 	{
 		"id": "ShyExample",
@@ -208,7 +208,8 @@
 		"content": "You think this might be a great opportunity to use that new chemistry visualization package you've got on your laptop. It should let you show visually how calcium carbonate is affected by higher acidity.",
 		"choices": [
 			{ "gotoId" : "ShyExample2" }
-		]
+		],
+		"effects": ["set respondToQuestion true"]
 	},
 	{
 		"id": "ShyExample2",
@@ -222,11 +223,28 @@
 		"choices": [
 			{ "gotoId" : "ShyPersonal2" }
 		],
-		"effects": ["incr difficulty 1"]
+		"effects": ["incr difficulty 1", "set respondToQuestion true"]
 	},
 	{
 		"id": "ShyPersonal2",
 		"choiceLabel": "More.",
 		"content": "The story seems to go over well... you get a couple smiles and laughs, and at the end when you tie it into the question, the shy student (Justin! You remember now) seems more engaged."
 	},
+
+	//------CLASS OVER------------------------------------------------
+	{
+		"id": "ClassFinished",
+		"content": "You remind everyone about the Friday reading, and dismiss the class. You feel great-- you kept your cool together, and pulled it off.<br><br>Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. Your confidence really shines through. I think you're going to make a wonderful professor.\"",
+		"conditions": ["questionsLeft eq 0", "confidence gt 0"],
+		"effects": ["set classOver true"]
+	},
+
+	{
+		"id": "ClassFail",
+		"content": "You stammer to a halt. You're so nervous your hands are shaking, and you can feel the sweat on your forehead.<br><br>Wretchedly, you manage to remind the students about their homework and dismiss the class.<br><br>Dr. Tennerson steps forward from the back of the room, where he's been observing. \"Don't worry, Emma. You'll find that confidence again. I know you will.\"",
+		"conditions": ["questionsLeft eq 0", "confidence eq 0"],
+		"effects": ["set classOver true"]
+	},
+
+
 ]

@@ -26,7 +26,7 @@ define(["Request", "Validate", "util"], function(Request, Validate, util) {
 
 		if (want.condition) {
 			try {
-				want.request = Request.byCondition(want.condition);
+				want.request = Request.byCondition(want.condition, want.persistent);
 				delete want.condition;
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid condition: " + e);
@@ -34,7 +34,7 @@ define(["Request", "Validate", "util"], function(Request, Validate, util) {
 		}
 		else if (want.chunkId) {
 			try {
-				want.request = Request.byId(want.chunkId);
+				want.request = Request.byId(want.chunkId, want.persistent);
 				delete want.chunkId;
 			} catch(e) {
 				throw new Error("Could not create a Want with invalid chunkId: " + e);

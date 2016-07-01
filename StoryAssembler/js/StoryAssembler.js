@@ -109,7 +109,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	var displayChunkText = function(chunkId) {
 		var chunk = chunkLibrary.get(chunkId);
-		var text = Templates.render(chunk);
+		var text = Templates.render(chunk.content);
 		if (text !== undefined) { 							//if the chunk has text, display it
 			Display.addStoryText(text); 
 		}
@@ -130,8 +130,14 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	}
 
 	var handleNoPathFound = function(wishlist) {
-		if (wishlist.length > 0) {
-			Display.addStoryText("[No path found!]");
+		if (wishlist.length > 0) {				//if we still have Wants...
+			var unsatisfiedWants = false;
+			wishlist.forEach(function(wish) {	//and they aren't persistent Wants...
+				if (!wish.persistent) { unsatisfiedWants = true; }
+			});
+
+			if (unsatisfiedWants) {	Display.addStoryText("[No path found!]"); }			//we ended too soon, show error
+			else { endScene(); }			//otherwise end the scene
 		}
 		else {
 			endScene();
@@ -160,9 +166,9 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		var chunkForText = chunk;
 		var routePos = 0;
 		while (!chunkForText.content) {		//find content to display for the chunk
-			routePos += 1;
 			var nextChunkId = bestPath.route[routePos];
 			chunkForText = chunkLibrary.get(nextChunkId);
+			//routePos += 1;		//JG: do we still need this?
 			if (chunkForText) {
 				if (chunkForText.choices) {
 					/*
@@ -198,6 +204,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			chunk.choices.forEach(function(choice, pos) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
 				var choiceText = getChoiceText(choiceDetails[pos]);
+				choiceText = Templates.render(choiceText);				//render any grammars in there
 				// if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
 				Display.addChoice({
 					text: choiceText,
@@ -231,10 +238,13 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	}
 
 	var getChoiceText = function(choiceDetail) {
+		var chunk;
+
 		if (choiceDetail.id) {
-			var chunk = chunkLibrary.get(choiceDetail.id);
-			return chunk.choiceLabel;
-		} else {
+			var chunk = chunkLibrary.get(choiceDetail.id);			
+		} 
+		if (chunk) { return chunk.choiceLabel; }
+		else {
 			return "Unavailable choice request: \"" + choiceDetail.requestVal + "\"";
 		}
 	}
