@@ -240,6 +240,9 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 				if (chunk.request.type === "id") {
 					req = Request.byId(chunk.request.val);
 				}
+				else if (chunk.request.type === "goto") {
+					req = Request.byGoto(chunk.request.val);
+				}
 				else {
 					req = Request.byCondition(chunk.request.val);
 				}
