@@ -1,3 +1,10 @@
+%% Prose version:
+% Should be an easy/background task game
+% Should be about sharing
+% Resource r1 should represent patience
+% -- supplants 'decreases with time'
+
+
 #const min_entities = 1.
 #const max_entities = 3.
 #const min_resources = 1.
@@ -9,24 +16,29 @@
 #const max_resource_change_per = 2.
 #const max_conditions_per = 2.
 
-
-%% Prose version:
-% Should be an easy/background task game
-% Should be about sharing
-% Resource r1 should represent patience
-% -- supplants 'decreases with time'
-
-% Should gate the narrative, i.e. mode_change(narrative_progress) should exist.
+% At most 2 control events
+:- {condition(control_event(X))} 2.
 
 % :- not unrestrictedGame.
 
 :- not narrative_gating.
 % :- not hasSharing.
-
-% XXX why is this inconsistent?
-:- not effect(delete(e1)).
+:- not hasEntitySharing.
+:- many(E).
 
 :- effect(mode_change(game_loss)). % shouldn't be a way to lose
-:- not result(tick, decrease(r1, low)).
-:- not effect(increase(r1, _)).
+:- not slowlyDrains(r1).
+
+%% hacky things that should maybe be generalized
+:- effect(increase(X, X)).
+
+%% no buttons except mouse
+nonMouseControls
+  :- condition(control_event(button(B, Action))), B != mouse_button.
+
+:- nonMouseControls.
+
+%% At least one entity is static
+:- not static(_).
+
 
