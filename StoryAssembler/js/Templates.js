@@ -5,14 +5,13 @@ Allows including inline templating to vary text based on the State.
 */
 
 /* global define */
-
-define(["util"], function(util) {
+define(["util", "Condition", "State"], function(util, Condition, State) {
 	"use strict";
 
-	var State;
+	//var State;
 	var Character;
 	var init = function(_State, _Character) {
-		State = _State;
+		//State = _State;
 		Character = _Character;
 	}
 
@@ -55,6 +54,19 @@ define(["util"], function(util) {
 				return textIfTrue;
 			} else {
 				return textIfFalse;
+			}
+		},
+		"ifStateCondition": function(params, text) {
+			// {ifStateCondition|career lte 3|text if true|text if false}
+			if (params.length !== 3) {
+				console.error("Template command 'ifState' must have three params: statement, text if true, text if false: in text '" + text + "'.");
+				return "(ifStateCondition)";
+			}
+
+			if (State.isTrue(params[0])) {
+				return params[1];
+			} else {
+				return params[2];
 			}
 		},
 		// Template to print the name of the current speaker (which is stored in the "speaker" variable on the blackboard), using the expected 'name' property. 
@@ -135,9 +147,9 @@ define(["util"], function(util) {
 		return templates[cmd](params, text);
 	}
 
-	// Main public interface. Given a chunk, return its content with any templates rendered into fully realized text.
-	var render = function(chunk) {
-		var txt = chunk.content;
+	// Main public interface. Given text with grammars, return its content with any templates rendered into fully realized text.
+	var render = function(rawText) {
+		var txt = rawText;
 		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
 		var match;
 		while ((match = re.exec(txt)) !== null) {

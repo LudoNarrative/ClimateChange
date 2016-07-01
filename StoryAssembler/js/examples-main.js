@@ -24,14 +24,29 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Hanson", "text!../data/exampleData/lecture.json", "text!../data/exampleData/Example1.json", "text!../data/exampleData/Example2.json", "text!../data/exampleData/charExampleData.json", "util", "domReady!"],
-	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Character, Hanson, lectureData, Example1Data, Example2Data, charExampleData) {
+	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Hanson", "text!../data/exampleData/worker.json", "text!../data/exampleData/lecture.json", "text!../data/exampleData/dinner.json", "text!../data/exampleData/Example1.json",  "text!../data/exampleData/charExampleData.json", "util", "domReady!"],
+	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Character, Hanson, workerData, lectureData, dinnerData, Example1Data, charExampleData) {
 
 	// To Add A New Example:
 	// - Create new definition in "examples" dictionary below
 	// - Add data file to requirejs call above (both the filename and the variable name)
 
 	var examples = {
+		"Worker Scene": {
+			wishlist: [
+				//{ condition: "reinforceSpecialty eq true" },		//this is triggered by grammars
+				{ condition: "establishSpeciesMigration eq true" },
+				{ condition: "confrontPlayerBeliefs eq true" },
+				{ condition: "establishScene eq true", persistent: true },
+				{ condition: "endScene eq true" }
+			],
+			dataFile: workerData,
+			startState: [
+				"set specialty shrimp",
+				"set confidence 1"
+			]
+		},
+
 		"Lecture scene": {
 			wishlist: [
 				{ condition: "callOnStudent eq true", persistent: true},
@@ -50,15 +65,18 @@ requirejs(
 				"set confidence 3"
 			]
 		},
-		"Example: Simple Trait Demonstration": {
-			wishlist: [
-				{ condition: "greetedElika eq true" },
-				{ condition: "demonstratedTrait eq true" },
-			],
-			dataFile: Example1Data,
-			startState: ["set initialized true", "set friendName Elika"]
-		},
-		"Example: Dinner Scene (set DEFAULT_MAX_DEPTH to 5)": {
+
+		"Dinner Scene": {
+			/*
+				redo to be this:
+				• Establish specialization
+				• Establish dinner / friend
+				• Establish friend backstory
+				• Est. Emma regrets
+				• Est. Emma backstory
+				• Prompt choice modifying confidence value
+				• Friend reassures Emma
+			*/
 			wishlist: [
 				{ condition: "introMechanics eq true" },
 				{ condition: "beat eq 1" },
@@ -68,14 +86,22 @@ requirejs(
 				{ condition: "beat eq 5" },
 				{ condition: "beat eq 6" },
 			],
-			dataFile: Example2Data,
+			dataFile: dinnerData,
 			startState: [
 				"set initialized true", 
 				"set friendName Emma",
-				"set career 0",
-
+				"set career 0"
 			]
 		},
+		"Example: Simple Trait Demonstration": {
+			wishlist: [
+				{ condition: "greetedElika eq true" },
+				{ condition: "demonstratedTrait eq true" },
+			],
+			dataFile: Example1Data,
+			startState: ["set initialized true", "set friendName Elika"]
+		},
+
 		"Example: Character Mixins": {
 			wishlist: [
 				{ condition: "demonstratedTrait eq 1" }

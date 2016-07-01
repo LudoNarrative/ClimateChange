@@ -109,7 +109,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	var displayChunkText = function(chunkId) {
 		var chunk = chunkLibrary.get(chunkId);
-		var text = Templates.render(chunk);
+		var text = Templates.render(chunk.content);
 		if (text !== undefined) { 							//if the chunk has text, display it
 			Display.addStoryText(text); 
 		}
@@ -166,9 +166,9 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		var chunkForText = chunk;
 		var routePos = 0;
 		while (!chunkForText.content) {		//find content to display for the chunk
-			routePos += 1;
 			var nextChunkId = bestPath.route[routePos];
 			chunkForText = chunkLibrary.get(nextChunkId);
+			//routePos += 1;		//JG: do we still need this?
 			if (chunkForText) {
 				if (chunkForText.choices) {
 					/*
@@ -204,6 +204,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			chunk.choices.forEach(function(choice, pos) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
 				var choiceText = getChoiceText(choiceDetails[pos]);
+				choiceText = Templates.render(choiceText);				//render any grammars in there
 				// if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
 				Display.addChoice({
 					text: choiceText,

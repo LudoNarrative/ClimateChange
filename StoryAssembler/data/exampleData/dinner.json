@@ -1,4 +1,7 @@
 [
+	/*
+		TODO: redo wants list from beats to design intent wishlist (remember you can use gotoId for requests now)
+	*/
 	{
 		"id": "Start",
 		"content": "Keep the dishes moving around the table, or conversation will stop. Click a dish passed to you to pass it on, or the down arrow to add food to your plate.",
@@ -9,9 +12,9 @@
 		"id": "dinnerStart",
 		"content": ["Emma. Seriously, girl. This stew is not going to eat itself."],
 		"choices": [
-			{"chunkId": "whatscalled"},
-			{"chunkId": "thanksbringing"},
-			{"chunkId": "stuffed"}
+			{"gotoId": "whatscalled"},
+			{"gotoId": "thanksbringing"},
+			{"gotoId": "stuffed"}
 		]
 	},
 	{
@@ -19,7 +22,7 @@
 		"choiceLabel": "Thanks. What's it called again?",
 		"content": "<i>Cocido</i>, chica. Figured comfort food would be good the night before my best friend's dissertation defense.",
 		"choices": [
-			{"chunkId": "iknowright"}
+			{"gotoId": "iknowright"}
 		],
 		"effects": ["set beat 1"]
 	},
@@ -28,7 +31,7 @@
 		"choiceLabel": "It's so good. You made this?",
 		"content": "Don't look at me like that! I'm a better cook than you. And it's not like I'm going to let my best friend defend her dissertation after a night of takeout.",
 		"choices": [
-			{"chunkId": "youreamazing"}
+			{"gotoId": "youreamazing"}
 		],
 		"effects": ["set beat 1"]
 	},
@@ -37,14 +40,15 @@
 		"choiceLabel": "No thanks, Z. I'm stuffed.",
 		"content": "Are you kidding me? You've hardly had anything. Nervous about your dissertation defense tomorrow, huh?",
 		"choices": [
-			{"chunkId": "iguess"}
+			{"gotoId": "iguess"}
 		],
 		"effects": ["set beat 1"]
 	},
 	{
 		"id": "iknowright",
 		"choiceLabel": "I know, right?",
-		"request": {"condition": "beat eq 2"}
+		//"request": {"condition": "beat eq 2"}
+		"request": {"gotoId": "inSpain"}
 	},
 	{
 		"id": "youreamazing",
@@ -60,9 +64,9 @@
 		"id": "inSpain",
 		"content": "You would not believe how much of this stuff I ate in Spain. This recipe's okay, if I do say so myself, but only half as good as when you get it there.",
 		"choices" : [
-			{"chunkId": "wishcouldgo"},
-			{"chunkId": "quals"},
-			{"chunkId": "stilljealous"}
+			{"gotoId": "wishcouldgo"},
+			{"gotoId": "quals"},
+			{"gotoId": "stilljealous"}
 		],
 		"conditions": ["beat eq 1"],
 		"effects": ["set beat 2"]
@@ -87,7 +91,7 @@
 		"id": "regrets",
 		"content": "Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. And I'll just be some chick who ate too much <i>cocido</i>.",
 		"choices" : [
-			{"chunkId": "wellmaybe"}
+			{"gotoId": "wellmaybe"}
 		],
 		"conditions" : ["beat eq 2"],
 		"effects": ["decr confidence 1", "set beat 3"]
@@ -101,7 +105,7 @@
 		"id": "loveocean",
 		"content": "Look, Em. I've known you as long as anyone. And you've <i>always</i> wanted this. You've been in love with the oceans since we were kids. Remember 4th grade? Mrs. Anderson? Oh my god, that diorama. You spent <i>ages</i> on that.",
 		"choices" : [
-			{"chunkId": "wantedToBePerfect"}
+			{"gotoId": "wantedToBePerfect"}
 		],
 		"conditions": ["beat eq 3"],
 		"effects" : ["set beat 4"]
@@ -116,9 +120,9 @@
 		"id": 	"whatspecialty",
 		"content": "You're kind of still working on it. It's just a 400 page brick of a dissertation now. What are they called again, your little buddies?",
 		"choices": 	[
-			{ "chunkId" : "pickShrimp"},
-			{ "chunkId" : "pickLobsters"},
-			{ "chunkId" : "pickCoral"}
+			{ "gotoId" : "pickShrimp"},
+			{ "gotoId" : "pickLobsters"},
+			{ "gotoId" : "pickCoral"}
 		],
 		"effects": ["set goto_whatspeciality true"]
 	},
@@ -127,7 +131,7 @@
 		"choiceLabel" : "<i>Lysmata amboinensis.</i> Pacific cleaner shrimp.",
 		"content": 	"Right. Lysmata amoeba ninnies. Thingies. I invited some to dinner, but turned out they're a more expensive date than I thought. Seafood is ex<i>pennnn</i>sive.",
 		"choices": 	[
-			{ "chunkId" : "howufeelChoicetext1" }
+			{ "gotoId" : "howufeelChoicetext1" }
 		],
 		"effects" : ["set career shrimp"]
 	},
@@ -136,7 +140,7 @@
 		"content": 	"Right. I tried to invite old Homarus to dinner, but turns out he's a more expensive date than I thought. Seafood's getting ex<i>pennnn</i>sive.",
 		"choiceLabel" : "<i>Homarus americanus.</i> Lobsters.",
 		"choices": 	[
-			{ "chunkId" : "howufeelChoicetext1" }
+			{ "gotoId" : "howufeelChoicetext1" }
 		],
 		"effects" : ["set career lobster"]
 	},
@@ -145,7 +149,7 @@
 		"choiceLabel" : "<i>Octocorallia.</i> Backbone of the coral reefs.",
 		"content": 	"Right. Octo-coro-lala-rama-dingdong. I tried to invite ol' Octo Lala to dinner, but turns out he was too busy getting registered on the endangered species list to attend.",
 		"choices": 	[
-			{ "chunkId" : "howufeelChoicetext2" }
+			{ "gotoId" : "howufeelChoicetext2" }
 		],
 		"effects" : ["set career coral"]
 	},
@@ -163,9 +167,9 @@
 		"id": "howufeel",
 		"content" : "Hey. What's up? Oh, don't give me that look. You're quiet, and it's not just nerves. What's on your mind?",
 		"choices": 	[
-			{ "chunkId" : "surePath" },
-			{ "chunkId" : "unsurePath" },
-			{ "chunkId" : "futureWorry" }
+			{ "gotoId" : "surePath" },
+			{ "gotoId" : "unsurePath" },
+			{ "gotoId" : "futureWorry" }
 		],
 		"conditions" : ["beat eq 4"],
 		"effects" : ["set beat 5"]
@@ -177,7 +181,7 @@
 		"content" : "Heh. You're gonna knock 'em out of the park, Em. {ifState|career|shrimp|Those amoeba shrimp|}{ifState|career|lobster|Your Homarus Lobstarus buddies|}{ifState|career|coral|Your octo-coral-reefie pals|} have got a new superhero.",
 		"effects" : ["incr confidence 1"],
 		"choices" : [
-			{ "chunkId" : "more_haveSomeWine" }
+			{ "gotoId" : "more_haveSomeWine" }
 		]
 	},
 	{
@@ -186,7 +190,7 @@
 		"content" : "Worth it? Are you kidding? You're about to start a career doing everything you love. Emma Richards, defender of {ifState|career|shrimp|the amoeba shrimp!|}{ifState|career|lobster|Homarus Lobstarus!|}{ifState|career|coral|the octo-coral-reefies!|} You're going places. I can feel it.",
 		"effects" : ["decr confidence 1"],
 		"choices" : [
-			{ "chunkId" : "more_haveSomeWine" }
+			{ "gotoId" : "more_haveSomeWine" }
 		]
 	},
 	{
@@ -195,7 +199,7 @@
 		"content" : "Look at you, always freaking out when things go too well. Look, Emma. You've fought hard to get here. From what I've seen, you're an amazing scientist and a good teacher. Now if I can just get you to take an evening off and go on a date, you'll pretty much have it all.",
 		"effects" : ["decr confidence 1"],
 		"choices" : [
-			{ "chunkId" : "thanks_haveSomeWine" }
+			{ "gotoId" : "thanks_haveSomeWine" }
 		]
 	},
 
@@ -215,7 +219,7 @@
 		"id" : "haveSomeWine",
 		"content" : "Now seriously. I am not joking about this. Have some damn wine. Relax with your friends. The future can take care of itself.",
 		"choices" : [
-			{"chunkId" : "results"}
+			{"gotoId" : "results"}
 		],
 		"conditions" : ["beat eq 5"],
 		"effects" : ["set beat 6"]

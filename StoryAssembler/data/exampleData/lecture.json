@@ -1,4 +1,9 @@
 [
+	/*
+	TODO:
+		-put in confidence-dependent text
+		-author confidence-dependent branches
+	*/
 	{
 		"id": "Start",
 		"content": "It's your first class, and it's been going well so far, like you knew it would. If you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson, who's here to evaluate you.",
