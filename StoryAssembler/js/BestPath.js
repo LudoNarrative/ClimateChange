@@ -159,6 +159,8 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 	var chunkOkToSearch = function(chunkId, skipList, okToBeChoice, rLevel) {
 		var chunk = chunkLibrary.get(chunkId);
 
+		if (!chunk) { return false; }	//if it's not in the chunkLibrary, it's not valid
+
 		// --> shouldn't be blacklisted.
 		if (skipList.indexOf(chunk.id) >= 0) {
 			log(rLevel, "skipping '" + chunk.id + "'");
@@ -237,6 +239,9 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 				var req;
 				if (chunk.request.type === "id") {
 					req = Request.byId(chunk.request.val);
+				}
+				else if (chunk.request.type === "goto") {
+					req = Request.byGoto(chunk.request.val);
 				}
 				else {
 					req = Request.byCondition(chunk.request.val);
