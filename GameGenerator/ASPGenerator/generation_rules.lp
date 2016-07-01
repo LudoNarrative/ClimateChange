@@ -28,7 +28,9 @@
 :- static(ENTITY), interaction(OTHER,ENTITY,bounce).
 :- static(ENTITY), interaction(OTHER,ENTITY,collide).
 :- static(ENTITY), result(Outcome,moves(ENTITY,AMOUNT)).
-:- static(ENTITY), result(Outcome,apply_restitution(ENTITY,AMOUNT)).
+:- static(Entity), effect(move_away(E, E')).
+:- static(Entity), effect(move_towards(E, E')).
+:- static(ENTITY), effect(apply_restitution(ENTITY,AMOUNT)).
 
 % cleanliness
 :- entity(E2), not entity(E1), entityOrdering(E1,E2).
@@ -278,8 +280,8 @@ meaningfulResource(RESOURCE) :-
 
 % CRM 6/23/2016 - what about deleting it and then adding it in a new place?
 % don't add and delete an entity as part of outcome
-:-  result(Outcome,add(Entity)),
-    result(Outcome,delete(Entity)).
+:- result(Outcome,add(Entity)),
+   result(Outcome,delete(Entity)).
     
 
 %an entity only matters if something wants to collide against it/click it
@@ -294,20 +296,29 @@ required(Entity) :- requires(_, Entity).
 
 % require entities
 :- entity(Entity), not required(Entity).
+
 % only destroy that which you can create
 :-  required(Entity),
-    effect(delete(Entity)),
-    not effect(add(Entity)).
+   effect(delete(Entity)),
+   not effect(add(Entity)).
 
 %screen stuff
 :- many(E), screen(E).
 :- precondition(overlaps(E1,E2,Polarity),Outcome), screen(E1),screen(E2).
 
-% perhaps should be bidirectional - but that excludes score
-% but only allow something to increase on tick if it can be decreased
-:- result(tick, increase(Resource,Amount)),
-   not effect(decrease(Resource,Amt)),
-   potentialValues(Amt).
+% only allow something to increase on tick if it can be decreased
+% :- result(tick, increase(Resource,Amount)),
+%    not effect(decrease(Resource,Amt)),
+%    potentialValues(Amt).
+% Define the above as a "score" value.
+score(R)
+  :- effect(increase(R, Amount)),
+     not effect(decrease(R, _)),
+     not lhThreshold(_, R).
+
+% only allow something to decrease on tick if it can be increased
+:- result(tick, decrease(R, A)),
+   not effect(increase(R, _)).
 
 % more screen stuff
 :- effect(delete(E)), screen(E).
@@ -394,7 +405,7 @@ results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
 %count number of preconditions
 preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
 
-%singular entities can't be added 
+% "singular entities can't be added":
 % :- result(OUTCOME,add(ENTITY)), singular(ENTITY).
 % CRM 6/27/2016 - we can add it as long as it's absent beforehand
 % first.
@@ -404,7 +415,7 @@ maintains_singular(Outcome, Entity)
   :- result(Outcome, delete(Entity)).
 
 :- result(Outcome, add(Entity)), singular(Entity), 
-    not maintains_singular(Outcome, Entity).
+   not maintains_singular(Outcome, Entity).
 
 % require something to be present before deleting it
 :- result(Outcome, delete(Entity)), not requires(Outcome, Entity).
@@ -508,7 +519,21 @@ controlled(O) :- precondition(overlaps(_,_, true), O).
 
 %% Outcomes should have at least one precondition that's not shared with
 %%  another outcome
-shared_precondition(P, O1, O2) :- precondition(P, O1), precondition(P, O2).
+preconditionCovered(P, O) :- precondition(P', O), implies(P', P).
+
+duplicatesPrecondition(O1, P) :- 
+  precondition(P, O1), preconditionCovered(P, O2), O1 != O2.
+
 % for every O, exists a P that's not shared(P, O1, O2)
-differentiated(O1) :- precondition(P, O2), outcome(O1), not shared_precondition(P, O1, O2).
+differentiated(O) :- 
+  precondition(P, O), not duplicatesPrecondition(O, P).
+
 :- outcome(O), not differentiated(O).
+
+
+%%%% Controls
+%% Don't check for "mouse button pressed" and "clicking" and entity in the
+%same game
+:- condition(control_event(button(mouse_button,pressed))),
+   condition(control_event(click(_))).
+

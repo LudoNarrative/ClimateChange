@@ -116,7 +116,7 @@ result_enables_condition(add(Entity), present(Entity)) :-
       effect(add(Entity)).
 
 result_enables_condition(delete(Entity), absent(Entity)) :-
-      conditon(absent(Entity)),
+      condition(absent(Entity)),
       effect(delete(Entity)),
       singular(Entity).
 
@@ -448,7 +448,9 @@ result(Outcome, increase(Resource,1)) :-
     result(Outcome,add(Entity)),
     resourceLogic(Resource,count(Entity)).
     
-    
+requires(Outcome, Entity) :-
+    precondition(present(Entity), Outcome).
+
 requires(Outcome, Entity) :-
     precondition(overlaps(Entity,Entity_B,POLARITY),Outcome).
     
@@ -495,12 +497,13 @@ sharedEntity(E, Outcome1, Outcome2) :-
     effect(delete(E)).
 
 % XXX commented out experimentally 6/30/2016 CRM.
-% sharing(O1, O2) :-
-%    sharedResource(R, O1, O2).
+sharing(O1, O2) :-
+   sharedResource(R, O1, O2).
 sharing(O1, O2) :-
     sharedEntity(E, O1, O2).
 
 hasSharing :- sharing(O1, O2).
+hasEntitySharing :- sharedEntity(E, O1, O2).
 
 %% XXX rewrite the below.
 enables(Outcome, Outcome2) :-
@@ -622,7 +625,10 @@ contradictory(X, Y)
 contradictory(X, Z)
   :- implies(X, Y), contradictory(Y, Z).
 
-
+contradictory(lt(R, Low), gt(R, High))
+  :- less_than(Low, High), resource(R).
+contradictory(le(R, Low), ge(R, High))
+  :- less_than(Low, High), resource(R).
 
 %%%% Prevents/inhibits/hinders %%%%
 
@@ -1251,4 +1257,10 @@ narrative_gating
   precondition(C, O),
   lowThreshold(C, R, _),
   result(O', decrease(R, _)).
+
+
+%% Time stuff
+slowlyDrains(R) :- result(tick, decrease(R, low)).
+
+slowDrainGame :- good(R), slowlyDrains(R).
 
