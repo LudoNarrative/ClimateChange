@@ -456,7 +456,7 @@ moves(E)
   :- effect(moves(E, Direction, Amount)).
 %%%%
 
-%% Don't initialize things in a way that could change themode right away
+%% Don't initialize things in a way that could change the mode right away
 :- precondition(C, O), result(O, mode_change(Mode)),
     initialize(R), result_enables_condition(R, C). 
 
@@ -532,8 +532,33 @@ differentiated(O) :-
 
 
 %%%% Controls
-%% Don't check for "mouse button pressed" and "clicking" and entity in the
-%same game
+%% Don't check for "mouse button pressed" and "clicking" an entity in the
+%  same game
 :- condition(control_event(button(mouse_button,pressed))),
    condition(control_event(click(_))).
+
+
+%%%% Immediacy %%%%
+
+immediate_condition(C)
+  :- initialize(R), result_enables_condition(C).
+
+intermediate_outcome(O)
+  :- precondition(C, O), not immediate_condition(C).
+
+:- outcome(O), not intermediate_outcome(O).
+
+%%%% The below are not necessarily definitive, but seem to rule out weird
+%cases %%%%
+%% no controls except mouse. Button can be held; otherwise it should be
+%% clicking an entity.
+nonMouseControls
+  :- condition(control_event(button(B, Action))), 
+      B != mouse_button, Action != held.
+
+:- nonMouseControls.
+
+% misc
+:- effect(increase(R,R)).
+:- effect(decrease(R,R)).
 

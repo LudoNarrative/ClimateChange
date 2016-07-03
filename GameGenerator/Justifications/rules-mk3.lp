@@ -406,9 +406,10 @@ timingAffectsEntity(Entity) :-
 
     
 consumedBy(Resource, Outcome) :-
-    precondition(Condition, Outcome),
-    highThreshold(Condition, Resource, Thresh),
-    result(Outcome, decrease(Resource, _)).
+    % precondition(Condition, Outcome),
+    % highThreshold(Condition, Resource, Thresh),
+    precondition(ge(Resource, Amount), Outcome),
+    result(Outcome, decrease(Resource, Amount)).
     
 decreases(Outcome, Resource) :-
     result(Outcome, decrease(Resource, Amount)).
@@ -496,11 +497,21 @@ sharedEntity(E, Outcome1, Outcome2) :-
     Outcome1 != Outcome2, 
     effect(delete(E)).
 
-% XXX commented out experimentally 6/30/2016 CRM.
+
 sharing(O1, O2) :-
    sharedResource(R, O1, O2).
 sharing(O1, O2) :-
     sharedEntity(E, O1, O2).
+
+
+% CRM 7/2/2016: including this predicate makes the whole program run
+% arbitrarily long!
+% representsSharing(Outcome) :-
+%   sharing(O1, O2),
+%   result(Outcome, R1),
+%   result(Outcome, R2),
+%   result_enables(R1, O1),
+%   result_enables(R2, O2).
 
 hasSharing :- sharing(O1, O2).
 hasEntitySharing :- sharedEntity(E, O1, O2).
@@ -751,10 +762,10 @@ subGoal(achieve(Outcome_PRIME),I+1) :-
     I < 1.
     
 
-goal(relates(Outcome)) :- 
+goal_relates(Outcome) :- 
     goal(achieve(Outcome)).
     
-goal(relates(Outcome)) :-
+goal_relates(Outcome) :-
     goal(prevent(Outcome)).
 
 goal(achieve(Outcome)) :- 
@@ -1063,7 +1074,6 @@ playerInfluences(Outcome) :-
     playerAgency(Entity),
     entityInfluences(Entity, Outcome).
 
-
 systemInfluences(Outcome) :-
     not playerCreatesCondition(C),
     precondition(C, Outcome).
@@ -1125,12 +1135,8 @@ allocation_choice(Outcome1,Outcome2,Resource) :-
     playerInfluences(Outcome1),
     playerInfluences(Outcome2),
     Outcome1 != Outcome2,
-    highThreshold(Cond1,Resource,Thresh1),
-    highThreshold(Cond2,Resource,Thresh2),
     consumedBy(Resource,Outcome1),
-    consumedBy(Resource,Outcome2),
-    precondition(Cond1,Outcome1),
-    precondition(Cond2,Outcome2).
+    consumedBy(Resource,Outcome2).
 
 lower_cost(initial,Outcome1,Outcome2) :-
     allocation_choice(Outcome1,Outcome2,Resource),
@@ -1251,8 +1257,7 @@ threshold(R) :-
     
 %% Narrative gating
 
-narrative_gating
-:-
+narrative_gating :-
   result(O, mode_change(narrative_progress)),
   precondition(C, O),
   lowThreshold(C, R, _),
@@ -1263,4 +1268,16 @@ narrative_gating
 slowlyDrains(R) :- result(tick, decrease(R, low)).
 
 slowDrainGame :- good(R), slowlyDrains(R).
+
+
+%%% Representation/connotation
+
+representsMoney(R)
+  :- allocation_choice(O1, O2, R).
+
+% existsMoney :- representsMoney(_).
+% 
+% sink(R)
+%   :- not lhThreshold(_, R, _).
+
 
