@@ -548,11 +548,15 @@ resourceTransactions(convert;pay_cost;gain;lose).
 %%  : potentialOutcomes(Outcome), potentialValues(Value)}.
 
 % modes can change
-modes(narrative_progress;game_win;game_loss).
-1 {result(END_OUTCOME,mode_change(MODE)) : modes(MODE)} 1 :- 
-    end_outcome(END_OUTCOME).
+% modes(narrative_progress;game_win;game_loss).
+% 1 {result(END_OUTCOME,mode_change(MODE)) : modes(MODE)} 1
+% :- end_outcome(END_OUTCOME).
+%%
+%% CRM 7/2/2016 trying to relax this constraint
+{result(OUTCOME,mode_change(MODE))
+  : potentialOutcomes(OUTCOME), potentialModes(MODE)}.
 
-% say that the only reason why is a recource being above/below/collision
-{precondition(le(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE),potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
-{precondition(ge(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
-{precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : entity(ENTITY1),entity(ENTITY2)} :- result(OUTCOME,mode_change(MODE)).
+% % say that the only reason why is a recource being above/below/collision
+% {precondition(le(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE),potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
+% {precondition(ge(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
+% {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : entity(ENTITY1),entity(ENTITY2)} :- result(OUTCOME,mode_change(MODE)).
