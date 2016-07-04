@@ -308,11 +308,15 @@ condition(CONDITION) :- precondition(CONDITION,Outcome).
 outcome(Outcome) :- precondition(_, Outcome).
 
 moreThanOnePrecondition(Outcome) :- 
-    2 {precondition(CONDITION,Outcome) : condition(CONDITION)} , 
-    outcome(Outcome).
+    precondition(C1, Outcome),
+    precondition(C2, Outcome),
+    C1 != C2.
+%    2 {precondition(CONDITION,Outcome) : condition(CONDITION)} , 
+%    outcome(Outcome).
 onlyOnePrecondition(Outcome) :- 
-    1 {precondition(CONDITION,Outcome) : condition(CONDITION)} 1 , 
-    outcome(Outcome).
+    not moreThanOnePrecondition(Outcome), outcome(Outcome).
+%    1 {precondition(C, Outcome)} 1 , 
+%    outcome(Outcome).
 
 worseWithTime(RESOURCE) :- 
     good(RESOURCE),
@@ -1062,7 +1066,8 @@ playerCreatesCondition(control_event(E)) :-
 playerCreatesCondition(control_event(B,S)) :-
     precondition(control_event(B,S), Outcome).
     
-playerCreatesCondition(near(Entity, Other)) :-
+playerCreatesCondition(C) :-
+    spatial_condition(C, Entity, Other),
     playerAgency(Entity),
     precondition(near(Entity, Other), Outcome).
 
@@ -1074,9 +1079,20 @@ playerInfluences(Outcome) :-
     playerAgency(Entity),
     entityInfluences(Entity, Outcome).
 
-systemInfluences(Outcome) :-
-    not playerCreatesCondition(C),
-    precondition(C, Outcome).
+%% system influences
+systemCreatesCondition(tick).
+
+systemInfluences(Outcome)
+  :- systemCreatesCondition(C),
+      precondition(C, Outcome).
+
+systemInfluences(O2)
+  :- systemInfluences(O1),
+     enables(O1, O2).
+
+% systemInfluences(Outcome) :-
+%    not playerCreatesCondition(C),
+%    precondition(C, Outcome).
 
 systemInfluences(Outcome) :-
     not playerAgency(Entity),
@@ -1131,12 +1147,19 @@ bootstrapping(Bootstrapped,Outcome) :-
     result(Bootstrapped,increase(Resource,Amount)),
     result_enables(increase(Resource), Outcome).
 
+multipleResults(Outcome) :-
+    result(Outcome, R1),
+    result(Outcome, R2),
+    R1 != R2.
+
 allocation_choice(Outcome1,Outcome2,Resource) :-
     playerInfluences(Outcome1),
     playerInfluences(Outcome2),
     Outcome1 != Outcome2,
     consumedBy(Resource,Outcome1),
-    consumedBy(Resource,Outcome2).
+    consumedBy(Resource,Outcome2),
+    multipleResults(Outcome1),
+    multipleResults(Outcime2).
 
 lower_cost(initial,Outcome1,Outcome2) :-
     allocation_choice(Outcome1,Outcome2,Resource),
@@ -1247,7 +1270,7 @@ unrestrictedGame :-
     
 
 timingBasedPhysics(spring;pendulum;chase;random;random_chase;flee;random_flee).
-threshold(0;mid;high;low).
+threshold(0;medium;high;low).
 
 threshold(R) :-
     resource(R).
