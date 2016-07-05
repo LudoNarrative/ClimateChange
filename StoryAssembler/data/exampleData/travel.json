@@ -1,0 +1,67 @@
+[
+	{
+		"id": "Intro",
+		"content": "As the plane takes flight, you read today's news headlines.",
+		"conditions": ["establishScene neq true"],
+		"effects": [
+			"set establishScene true"
+		]
+	},
+	{
+		"id": "frontpage",
+		"content": "THE DAILY TRAVELER",
+		"repeatable" : "true",
+		"choices": [
+			{ "gotoId" : "food" },
+			{ "gotoId" : "airport" },
+			{ "gotoId" : "species" },
+			{ "gotoId" : "refugees" }
+		],
+		"conditions": ["establishScene eq true"],
+		"effects": [
+			"set reading 0",
+		],
+	},
+
+	{
+		"id": "food",
+		"choiceLabel" : "FOOD PRICES CREEP HIGHER",
+		"content": "FOOD PRICES CREEP HIGHER<br><br>DES MOINES - Americans are taking bigger and bigger hits at the grocery store, as cycles of extreme weather continue to intensify, driving up prices for food across the board.<br><br>\"Last year was the worst drought on record,\" a third-generation farmer here said at an emergency agriculture summit. \"And this year the worst flooding the state's ever seen. I don't know anyone who's had a good crop in years now.\"<br><br>While it has been well-established since the 1990s that a warming planet would produce more and more extreme cycles of weather, the specifics are only now becoming clear, with no end in sight.\"",
+		"conditions": ["readFood eq false"],
+		"effects": [ "set readFood true", "set reading true", "incr articlesRead 1" ]
+	},
+
+	{
+		"id": "airport",
+		"choiceLabel" : "CLIMATE PROTESTERS SHUT DOWN AIRPORT",
+		"content": "CLIMATE PROTESTERS SHUT DOWN AIRPORT<br><br>LOS ANGELES - Thousands of protesters swarmed LAX this morning, blocking two major runways and shutting down traffic at the major international air hub for six hours.<br><br>\"Air travel is one of the biggest remaining contributors to global warming,\" a protester told reporters. \"We have to change our way of life to survive, and we can't wait any longer.\"<br><br>The chief of police expressed sympathy with the protesters concerns, but said the proper way to change policy is through the political and legislative process. Most protesters here today, however, say it's too late to wait any longer for change.",
+		"conditions": ["readAirport eq false"],
+		"effects": [ "set readAirport true", "set reading true", "incr articlesRead 1" ]
+	},
+
+	{
+		"id": "species",
+		"choiceLabel" : "{ifState|specialty|shrimp|SHRIMP|}{ifState|specialty|lobster|LOBSTERS|}{ifState|specialty|coral|CORAL REEFS|} THREATENED BY CHANGING OCEANS",
+		"content": "{ifState|specialty|shrimp|SHRIMP THREATENED BY CHANGING OCEANS<br><br>SEATTLE - The once-thriving shrimp population off the west coast has been reduced to less than 5% of the 1990 population, researchers now say.<br><br>A vital part of the food chain for all marine life, a new study shows the drastic die-off is in part caused by the inability of young shrimp to build hard enough shells to survive attacks from predators.|}{ifState|specialty|lobster|LOBSTERS THREATENED BY CHANGING OCEANS<br><br>BANGOR, MAINE - The once-thriving lobster population off the eastern seaboard has been reduced to less than 5% of the 1990 population, researchers now say.<br><br>Though strict overfishing laws have been in place for nearly a decade, a new study shows the drastic die-off is in part caused by the inability of young lobsters to build hard enough shells to survive attacks from predators.|}{ifState|specialty|coral|CORAL REEFS THREATENED BY CHANGING OCEANS<br><br>BRISBANE, AUSTRALIA - The once-thriving coral reefs of Australia have been reduced to less than 5% of the 1990 population, researchers now say.<br><br>A bellwether for the state of all oceanic life, a new study shows the drastic die-off is in part caused by the inability of young coral to build hard enough shells to survive attacks from predators.|}<br><br>Dr. Emma Richards, a leading expert on the species, {ifStateCondition|confidence gt 0|is boldly pushing to categorize them|has cautiously recommended they be categorized} as endangered, which would help fund futher studies to try and save them.",
+		"conditions": ["readSpecies eq false"],
+		"effects": [ "set readSpecies true", "set reading true", "incr articlesRead 1" ]
+	},
+
+	{
+		"id": "refugees",
+		"choiceLabel" : "CLIMATE REFUGEES FLOOD CITIES",
+		"content": "CLIMATE REFUGEES FLOOD CITIES<br><br>PHILADELPHIA - In what has become a familiar sight across the country, ramshackle tent cities filled to capacity with desperate refugees are taking over Philly's empty lots and abandoned neighborhoods.<br><br>\"We bribed our way onto a container ship heading for America,\" one refugee from the collapsed state of Mauritania said. \"There was no food or fresh water there any more. My family almost starved.\"<br><br>The warming climate has disrupted agriculture and access to fresh water across the globe, and the threat of rising oceans has led to mass migrations away from low-lying coastal regions, still home to over one billion people.<br><br>While the mayor expressed sympathy with the refugees in a statement, he also stated firmly that they could not stay in Philadelphia.",
+		"conditions": ["readRefugees eq false"],
+		"effects": [ "set readRefugees true", "set reading true", "incr articlesRead 1" ]
+	},
+
+	{
+		"id": 	"end",
+		"content": 	"You gain fame for attending the conference!",
+		"conditions": ["articlesRead eq 4"],
+		"effects": [
+			"set endScene true"
+		]
+	}
+
+]
