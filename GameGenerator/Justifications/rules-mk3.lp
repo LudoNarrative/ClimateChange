@@ -111,9 +111,9 @@ result_enables_condition(R, C')
 
 %% Entities
 
-result_enables_condition(add(Entity), present(Entity)) :-
+result_enables_condition(add(Entity, Place), present(Entity)) :-
       condition(present(Entity)),
-      effect(add(Entity)).
+      effect(add(Entity, Place)).
 
 result_enables_condition(delete(Entity), absent(Entity)) :-
       condition(absent(Entity)),
@@ -194,8 +194,8 @@ badResult(decrease(Resource, Amount)) :-
     result(_, decrease(Resource, Amount)),
     good(Resource).
 
-badResult(add(Entity)) :-
-    result(_, add(Entity)),
+badResult(add(Entity, Place)) :-
+    result(_, add(Entity, Place)),
     harmful(Entity).
 
 badResult(decrease(Resource, Amount)) :-
@@ -450,7 +450,7 @@ result(Outcome, decrease(Resource, 1)) :-
     resourceLogic(Resource, count(Entity)).
     
 result(Outcome, increase(Resource,1)) :-
-    result(Outcome,add(Entity)),
+    result(Outcome,add(Entity, Place)),
     resourceLogic(Resource,count(Entity)).
     
 requires(Outcome, Entity) :-
@@ -522,7 +522,7 @@ hasEntitySharing :- sharedEntity(E, O1, O2).
 
 %% XXX rewrite the below.
 enables(Outcome, Outcome2) :-
-    result(Outcome, add(Entity)), 
+    result(Outcome, add(Entity, Place)), 
     requires(Outcome2, Entity),
     Outcome != Outcome2 .
  
@@ -614,6 +614,14 @@ implies(X, Z)
 implies(X, X)
   :- condition(X).
 
+implies(equal(X, Y), le(X, Y))
+  :- condition(le(X, Y)).
+implies(equal(X, Y), ge(X, Y))
+  :- condition(ge(X, Y)).
+implies(lt(X, Y), le(X, Y))
+  :- condition(le(X, Y)).
+implies(gt(X, Y), ge(X, Y))
+  :- condition(ge(X, Y)).
 
 implies(C, near(E1, E2))
   :- closeness_condition(C, E1, E2).

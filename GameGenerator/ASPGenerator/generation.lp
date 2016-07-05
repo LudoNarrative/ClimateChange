@@ -392,6 +392,8 @@ movementProfiles(constant;logarithmic;ease_in;ease_out;ease_in_out).
 
 % {result(OUTCOME,spawn(ENTITY)) : potentialOutcomes(OUTCOME) }  1 :- spawnLogic(ENTITY,TYPE,MODE,condition).
 
+%% Adding entities to the screen
+1 {initialize(add(Entity,Place)) : place(Place)} 1 :- entity(Entity).
 
 %%% RESOURCES %%%
 initialResourceValues(R) :- constants(R).
@@ -532,8 +534,9 @@ resourceTransactions(convert;pay_cost;gain;lose).
 
 %entities can be deleted
 {result(OUTCOME,delete(ENTITY)) : entity(ENTITY), potentialOutcomes(OUTCOME)}.
-%or added
-{result(OUTCOME,add(ENTITY)) : entity(ENTITY), potentialOutcomes(OUTCOME)}.
+% or added to a location
+0 {result(Outcome, add(Entity, Place)) : place(Place)} 1
+:- entity(Entity), potentialOutcomes(Outcome).
 
 % resources can increase
 {result(OUTCOME,increase(RESOURCE,VALUE)) 

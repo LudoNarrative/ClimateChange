@@ -6,6 +6,7 @@ singular(e1).
 many(e2).
 
 initialize(set(r1, low)).
+initialize(add(e1, center)).
 
 precondition(control_event(click(e1)), o1).
 result(o1, add(e2, random)).
