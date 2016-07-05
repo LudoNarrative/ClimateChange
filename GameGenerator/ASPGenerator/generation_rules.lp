@@ -221,6 +221,11 @@ conditionedOnResource(RESOURCE,OUTCOME) :- below(RESOURCE,VALUE,OUTCOME).
 :-  result(OUTCOME,mode_change(END)), 
     end_mode(END),
     2 {result(OUTCOME,EFFECT) : effect(EFFECT)}.
+
+% CRM 7/4/2016: Actually, let's not have a mode change outcome create any
+% results other than the mode change.
+:- result(Outcome, mode_change(M)), result(Outcome, R'),
+    R' != mode_change(M).
     
 %don't tie losing or winning to a button press (press space to lose feels odd)
 :-  precondition(control_event(BUTTON,STATE),OUTCOME),
@@ -243,7 +248,6 @@ conditionedOnResource(RESOURCE,OUTCOME) :- below(RESOURCE,VALUE,OUTCOME).
     changes(OUTCOME,CHANGE,CV,high).
 :-  precondition(tick,OUTCOME),
     changes(OUTCOME,CHANGE,CV,mid).
-
     
 
     
@@ -456,7 +460,7 @@ moves(E)
   :- effect(moves(E, Direction, Amount)).
 %%%%
 
-%% Don't initialize things in a way that could change themode right away
+%% Don't initialize things in a way that could change the mode right away
 :- precondition(C, O), result(O, mode_change(Mode)),
     initialize(R), result_enables_condition(R, C). 
 
@@ -506,6 +510,10 @@ reachableResult(R)
 % control event
 controlled(O) :- precondition(control_event(_), O).
 controlled(O) :- precondition(overlaps(_,_, true), O).
+% 7/4/2016 - maybe we want things added/deleted with time?
+% Future work: use timer instead.
+controlled(tick).
+
 :- result(O, add(E)), not controlled(O).
 :- result(O, delete(E)), not controlled(O).
 
@@ -532,8 +540,38 @@ differentiated(O) :-
 
 
 %%%% Controls
-%% Don't check for "mouse button pressed" and "clicking" and entity in the
-%same game
+%% Don't check for "mouse button pressed" and "clicking" an entity in the
+%  same game
 :- condition(control_event(button(mouse_button,pressed))),
    condition(control_event(click(_))).
+
+
+%%%% Immediacy %%%%
+
+immediate_condition(C)
+  :- initialize(R), result_enables_condition(C).
+
+intermediate_outcome(O)
+  :- precondition(C, O), not immediate_condition(C).
+
+:- outcome(O), not intermediate_outcome(O).
+
+%%%% The below are not necessarily definitive, but seem to rule out weird
+%cases %%%%
+%% no controls except mouse. Button can be held; otherwise it should be
+nonMouseControls
+  :- condition(control_event(button(B, Action))), 
+      B != mouse_button. 
+:- condition(control_event(button(mouse_button, Action))), Action != held.
+:- nonMouseControls.
+
+% misc
+:- effect(increase(R,R)).
+:- effect(decrease(R,R)).
+
+% Don't let something move away from the cursor if we need to click on it.
+:- result(tick, move_away(E, cursor)), condition(control_event(click(E))).
+
+
+
 
