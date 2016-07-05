@@ -9,6 +9,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	var State;
 	var wishlist;
 	var Display;
+	
 	var beginScene = function(_wishlist, _chunkLibrary, _State, _Display, _Character, params) {
 		chunkLibrary = _chunkLibrary;
 		State = _State;
@@ -16,7 +17,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		wishlist = _wishlist;
 		params = params || {};
 		
-		Display.init(handleChoiceSelection);
+		Display.init(handleChoiceSelection, handleVarChanger);
 		Templates.init(State, _Character);
 		continueScene();
 	}
@@ -254,6 +255,13 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 		// Continue the scene. If we have a specific chunkId, we'll start our search with that; otherwise if it's undefined, we'll search over the whole library for a new best path.
 		continueScene(choice.chunkId);
+	}
+
+	/*
+		Diagnostic button clicked to change variable in the state.
+	*/
+	var handleVarChanger = function() {
+		console.log("it worked!");
 	}
 
 	var handleEffects = function(chunk) {

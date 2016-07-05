@@ -12,6 +12,7 @@ define([], function() {
 	var showUnavailableChoices = true;
 
 	var clickHandler;
+	var varClickChanger;		//this changes variables in the game when clicked
 	var pathEl;
 	var wishlistEl;
 	var stateEl;
@@ -19,8 +20,9 @@ define([], function() {
 	/* PUBLIC-FACING FUNCTIONS */
 
 	// Set up the Display module to begin showing stories.
-	var init = function(_clickHandler) {
+	var init = function(_clickHandler, _varClickChanger) {
 		clickHandler = _clickHandler;
+		varClickChanger = _varClickChanger;
 		if (!document.getElementById("storyArea")) {
 			makeUI();
 		} else {
@@ -46,6 +48,14 @@ define([], function() {
 			el.classList.add("unavailableChoice");
 		}
 		document.getElementById("choiceArea").appendChild(el);
+	}
+
+		// Add a choice to the choice window.
+	var addVarClickChanger = function() {
+		var el = document.getElementsByClassName("varClickChanger")[0];
+		el.onclick = function() {
+			varClickChanger(changeFunction);
+		}
 	}
 
 	// Remove all content from the UI.
@@ -96,6 +106,10 @@ define([], function() {
 		diagEl.appendChild(wishlistEl);
 		stateEl = makeEl("div", "<div class='dHeader'>State:</div><div class='stateArea'></div>");
 		diagEl.appendChild(stateEl);
+
+		varClickChanger = makeEl("div", "lower confidence", "varClickChanger");
+		diagEl.appendChild(varClickChanger);
+		addVarClickChanger();
 
 	}
 
