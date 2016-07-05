@@ -16,6 +16,7 @@ horizontal(east;west;left;right).
 direction(north;south;east;west;forward;backward;left;right).
 cardinal(north;south;east;west).
 local(forward;backward;left;right).
+place(center;random;upper_left;upper_right;lower_left;lower_right).
 
 
 buttons(mouse_button;space;up_arrow;down_arrow;left_arrow;right_arrow).

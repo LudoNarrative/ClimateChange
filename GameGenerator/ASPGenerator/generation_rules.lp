@@ -283,8 +283,9 @@ meaningfulResource(RESOURCE) :-
 
 
 % CRM 6/23/2016 - what about deleting it and then adding it in a new place?
+%   maybe that should be a distinct "set location" result.
 % don't add and delete an entity as part of outcome
-:- result(Outcome,add(Entity)),
+:- result(Outcome,add(Entity, Place)),
    result(Outcome,delete(Entity)).
     
 
@@ -304,7 +305,7 @@ required(Entity) :- requires(_, Entity).
 % only destroy that which you can create
 :-  required(Entity),
    effect(delete(Entity)),
-   not effect(add(Entity)).
+   not effect(add(Entity, _)).
 
 %screen stuff
 :- many(E), screen(E).
@@ -326,7 +327,7 @@ score(R)
 
 % more screen stuff
 :- effect(delete(E)), screen(E).
-:- effect(add(E)), screen(E).
+:- effect(add(E, Place)), screen(E).
 :- interaction(E1,E2,TYPE), screen(E1), screen(E2).
 :- placement(E,_,_), screen(E).
 
@@ -337,7 +338,7 @@ score(R)
 % don't care about counting something if it's count can't change
 :- resourceLogic(Resource,count(Entity)), 
     {effect(delete(Entity));
-    effect(add(Entity))} 0.
+    effect(add(Entity, Place))} 0.
 % counting something means it can only be changed by addition/deletion
 :- resourceLogic(Resource,count(Entity)), 
     1 {effect(increase(Resource,Amount));
@@ -409,16 +410,13 @@ results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
 %count number of preconditions
 preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
 
-% "singular entities can't be added":
-% :- result(OUTCOME,add(ENTITY)), singular(ENTITY).
-% CRM 6/27/2016 - we can add it as long as it's absent beforehand
-% first.
+% CRM 6/27/2016 - only add a singular entity if it's absent beforehand.
 maintains_singular(Outcome, Entity)
   :- precondition(absent(Entity), Outcome).
 maintains_singular(Outcome, Entity)
   :- result(Outcome, delete(Entity)).
 
-:- result(Outcome, add(Entity)), singular(Entity), 
+:- result(Outcome, add(Entity, Place)), singular(Entity), 
    not maintains_singular(Outcome, Entity).
 
 % require something to be present before deleting it
@@ -514,7 +512,7 @@ controlled(O) :- precondition(overlaps(_,_, true), O).
 % Future work: use timer instead.
 controlled(tick).
 
-:- result(O, add(E)), not controlled(O).
+:- result(O, add(E, P)), not controlled(O).
 :- result(O, delete(E)), not controlled(O).
 
 %%%% Misc - should be organized at some point.
@@ -549,7 +547,14 @@ differentiated(O) :-
 %%%% Immediacy %%%%
 
 immediate_condition(C)
-  :- initialize(R), result_enables_condition(C).
+  :- initialize(R), result_enables_condition(R, C).
+
+immediate_condition(C)
+  :- immediate_condition(C'), implies(C', C).
+
+immediate_condition(equal(R1, R2))
+  :- initialize(R1, X), initialize(R2, X).
+
 
 intermediate_outcome(O)
   :- precondition(C, O), not immediate_condition(C).

@@ -20,6 +20,7 @@ hasProgress :- monotonicallyIncreases(Resource).
 :- not hasProgress.
 
 %% Task represents a caring/helpful action
+%% Task represents a *gradual* action
 
 %% Narrative stops at certain points if progress is under a threshold
 
