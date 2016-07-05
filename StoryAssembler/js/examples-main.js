@@ -24,26 +24,47 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Hanson", "text!../data/exampleData/worker.json", "text!../data/exampleData/lecture.json", "text!../data/exampleData/dinner.json", "text!../data/exampleData/Example1.json",  "text!../data/exampleData/charExampleData.json", "util", "domReady!"],
-	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Character, Hanson, workerData, lectureData, dinnerData, Example1Data, charExampleData) {
+	["State", "Display", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Hanson", "text!../data/exampleData/travel.json", "text!../data/exampleData/worker.json", "text!../data/exampleData/lecture.json", "text!../data/exampleData/dinner.json", "text!../data/exampleData/Example1.json",  "text!../data/exampleData/charExampleData.json", "util", "domReady!"],
+	function(State, Display, ChunkLibrary, Wishlist, StoryAssembler, Character, Hanson, travelData, workerData, lectureData, dinnerData, Example1Data, charExampleData) {
 
 	// To Add A New Example:
 	// - Create new definition in "examples" dictionary below
 	// - Add data file to requirejs call above (both the filename and the variable name)
 
 	var examples = {
+		"Travel Scene": {
+			wishlist: [
+				{ condition: "establishScene eq true"},
+				{ condition: "articlesRead eq 4" },
+				{ condition: "endScene eq true" }
+			],
+			dataFile: travelData,
+			startState: [
+				"set specialty shrimp",
+				"set cueOuttro false",
+				"set articlesRead 0",
+				"set confidence 0",
+				"set reading 0",
+				"set readFood 0",			//set by game
+				"set readAirport 0",		//set by game
+				"set readSpecies 0",		//set by game
+				"set readRefugees 0"		//set by game
+			]
+		},
+
 		"Worker Scene": {
 			wishlist: [
 				//{ condition: "reinforceSpecialty eq true" },		//this is triggered by grammars
 				{ condition: "establishSpeciesMigration eq true" },
 				{ condition: "confrontPlayerBeliefs eq true" },
-				{ condition: "establishScene eq true", persistent: true },
+				{ condition: "establishScene eq true"},
 				{ condition: "endScene eq true" }
 			],
 			dataFile: workerData,
 			startState: [
 				"set specialty shrimp",
-				"set confidence 1"
+				"set confidence 1",
+				"set optimism 0"
 			]
 		},
 
@@ -68,23 +89,17 @@ requirejs(
 
 		"Dinner Scene": {
 			/*
-				redo to be this:
-				• Establish specialization
-				• Establish dinner / friend
-				• Establish friend backstory
-				• Est. Emma regrets
-				• Est. Emma backstory
-				• Prompt choice modifying confidence value
-				• Friend reassures Emma
+				currently these wishlist items all proceed sequentially
 			*/
 			wishlist: [
 				{ condition: "introMechanics eq true" },
-				{ condition: "beat eq 1" },
-				{ condition: "beat eq 2" },
-				{ condition: "beat eq 3" },
-				{ condition: "beat eq 4" },
-				{ condition: "beat eq 5" },
-				{ condition: "beat eq 6" },
+				{ condition: "establishSpecialtyInfo eq true" },
+				{ condition: "establishDinnerWithFriend eq true" },
+				{ condition: "establishFriendBackstory eq true" },
+				{ condition: "establishEmmaRegrets eq true" },
+				{ condition: "establishEmmaBackstory eq true" },
+				{ condition: "provokeConfidenceChoice eq true" },
+				{ condition: "friendReassuresEmma eq true" },
 			],
 			dataFile: dinnerData,
 			startState: [
@@ -93,6 +108,9 @@ requirejs(
 				"set career 0"
 			]
 		},
+
+		//---------------------------------------------------------
+		
 		"Example: Simple Trait Demonstration": {
 			wishlist: [
 				{ condition: "greetedElika eq true" },

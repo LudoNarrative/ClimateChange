@@ -24,7 +24,7 @@
 		"choices": [
 			{"gotoId": "iknowright"}
 		],
-		"effects": ["set establishDinnerWithFriend true"]
+		"effects": ["set beat 1"]
 	},
 	{
 		"id": "thanksbringing",
@@ -33,7 +33,7 @@
 		"choices": [
 			{"gotoId": "youreamazing"}
 		],
-		"effects": ["set establishDinnerWithFriend true"]
+		"effects": ["set beat 1"]
 	},
 	{
 		"id": "stuffed",
@@ -42,22 +42,23 @@
 		"choices": [
 			{"gotoId": "iguess"}
 		],
-		"effects": ["set establishDinnerWithFriend true"]
+		"effects": ["set beat 1"]
 	},
 	{
 		"id": "iknowright",
 		"choiceLabel": "I know, right?",
+		//"request": {"condition": "beat eq 2"}
 		"request": {"gotoId": "inSpain"}
 	},
 	{
 		"id": "youreamazing",
 		"choiceLabel": "You're amazing.",
-		"request": {"condition": "establishFriendBackstory eq true"}
+		"request": {"condition": "beat eq 2"}
 	},
 	{
 		"id": "iguess",
 		"choiceLabel": "I guess.",
-		"request": {"condition": "establishFriendBackstory eq true"}
+		"request": {"condition": "beat eq 2"}
 	},
 	{
 		"id": "inSpain",
@@ -67,14 +68,14 @@
 			{"gotoId": "quals"},
 			{"gotoId": "stilljealous"}
 		],
-		"conditions": ["establishDinnerWithFriend eq true"],
-		"effects": ["set establishFriendBackstory true"]
+		"conditions": ["beat eq 1"],
+		"effects": ["set beat 2"]
 		
 	},
 	{
 		"id": "wishcouldgo",
 		"choiceLabel": "Wish I could have come with you.",
-		"request": {"condition": "establishEmmaRegrets eq true"}
+		"request": {"condition": "beat eq 3"}
 	},
 	{
 		"id": "quals",
@@ -84,7 +85,7 @@
 	{
 		"id": "stilljealous",
 		"choiceLabel": "Still jealous you got to spend six months there.",
-		"request": {"condition": "establishEmmaRegrets eq true"}
+		"request": {"condition": "beat eq 3"}
 	},
 	{
 		"id": "regrets",
@@ -92,13 +93,13 @@
 		"choices" : [
 			{"gotoId": "wellmaybe"}
 		],
-		"conditions" : ["establishFriendBackstory eq true"],
-		"effects": ["decr confidence 1", "set establishEmmaRegrets true"]
+		"conditions" : ["beat eq 2"],
+		"effects": ["decr confidence 1", "set beat 3"]
 	},
 	{
 		"id": "wellmaybe",
 		"choiceLabel": "Well, maybe...",
-		"request": {"condition": "establishEmmaBackstory eq true"}
+		"request": {"condition": "beat eq 4"}
 	},
 	{
 		"id": "loveocean",
@@ -106,8 +107,8 @@
 		"choices" : [
 			{"gotoId": "wantedToBePerfect"}
 		],
-		"conditions": ["establishEmmaRegrets eq true"],
-		"effects" : ["set establishEmmaBackstory true"]
+		"conditions": ["beat eq 3"],
+		"effects" : ["set beat 4"]
 		
 	},
 	{
@@ -132,7 +133,7 @@
 		"choices": 	[
 			{ "gotoId" : "howufeelChoicetext1" }
 		],
-		"effects" : ["set career shrimp", "set establishSpecialtyInfo true" ]
+		"effects" : ["set career shrimp"]
 	},
 	{
 		"id": 	"pickLobsters",
@@ -141,7 +142,7 @@
 		"choices": 	[
 			{ "gotoId" : "howufeelChoicetext1" }
 		],
-		"effects" : ["set career lobster", "set establishSpecialtyInfo true"]
+		"effects" : ["set career lobster"]
 	},
 	{
 		"id": 	"pickCoral",
@@ -150,17 +151,17 @@
 		"choices": 	[
 			{ "gotoId" : "howufeelChoicetext2" }
 		],
-		"effects" : ["set career coral", "set establishSpecialtyInfo true"]
+		"effects" : ["set career coral"]
 	},
 	{
 		"id": "howufeelChoicetext1",
 		"choiceLabel" : "Don't blame me, I just work here.",
-		"request": {"condition": "provokeConfidenceChoice eq true"}
+		"request": {"condition": "beat eq 5"}
 	},
 	{
 		"id": "howufeelChoicetext2",
 		"choiceLabel" : "Very funny.",
-		"request": {"condition": "provokeConfidenceChoice eq true"}
+		"request": {"condition": "beat eq 5"}
 	},
 	{
 		"id": "howufeel",
@@ -170,8 +171,8 @@
 			{ "gotoId" : "unsurePath" },
 			{ "gotoId" : "futureWorry" }
 		],
-		"conditions" : ["establishEmmaBackstory eq true"],
-		"effects" : ["set provokeConfidenceChoice true"]
+		"conditions" : ["beat eq 4"],
+		"effects" : ["set beat 5"]
 	},
 
 	{
@@ -205,13 +206,13 @@
 	{
 		"id" : "more_haveSomeWine",
 		"choiceLabel" : "More",
-		"request": {"condition": "friendReassuresEmma eq true"}
+		"request": {"condition": "beat eq 6"}
 	},
 
 	{
 		"id" : "thanks_haveSomeWine",
 		"choiceLabel" : "Thanks, Cupid.",
-		"request": {"condition": "friendReassuresEmma eq true"}
+		"request": {"condition": "beat eq 6"}
 	},
 
 	{
@@ -220,8 +221,8 @@
 		"choices" : [
 			{"gotoId" : "results"}
 		],
-		"conditions" : ["provokeConfidenceChoice eq true"],
-		"effects" : ["set friendReassuresEmma true"]
+		"conditions" : ["beat eq 5"],
+		"effects" : ["set beat 6"]
 	},
 
 	{
