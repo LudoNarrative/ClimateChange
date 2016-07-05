@@ -62,7 +62,7 @@ potentialValues(V) :- constants(V).
 % CRM 6/28/2016
 potentialValues(R) :- resource(R).
 
-potentialModes(playing;story_progression;game_loss;game_win).
+potentialModes(playing;narrative_progress;game_loss;game_win).
 polarity(true;false).
 
 

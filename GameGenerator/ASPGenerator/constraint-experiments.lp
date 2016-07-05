@@ -12,8 +12,16 @@ exists_add_result
 exists_delete_result
   :- effect(delete(E)).
 
-:- not exists_add_result.
-:- not exists_delete_result.
+% :- not exists_add_result.
+% :- not exists_delete_result.
 
-:- not static(_).
-:- many(E).
+% :- not static(_).
+% :- many(E).
+
+% playerEndsGame :- result(O, mode_change(M)), playerDetermines(O).
+playerEndsGame 
+  :-  result(O, mode_change(M)), 
+      precondition(control_event(X), O).
+:- not playerEndsGame.
+
+

@@ -548,11 +548,25 @@ resourceTransactions(convert;pay_cost;gain;lose).
 %%  : potentialOutcomes(Outcome), potentialValues(Value)}.
 
 % modes can change
+% modes(M) :- potentialModes(M).
+% XXX should reconcile this with "potentialModes" in generation_atoms.lp
 modes(narrative_progress;game_win;game_loss).
-1 {result(END_OUTCOME,mode_change(MODE)) : modes(MODE)} 1 :- 
-    end_outcome(END_OUTCOME).
 
-% say that the only reason why is a recource being above/below/collision
-{precondition(le(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE),potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
-{precondition(ge(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
-{precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : entity(ENTITY1),entity(ENTITY2)} :- result(OUTCOME,mode_change(MODE)).
+%% CRM 7/2/2016 trying to relax this constraint
+% 1 {result(END_OUTCOME,mode_change(MODE)) : modes(MODE)} 
+%  :- end_outcome(END_OUTCOME).
+%   :- outcome(END_OUTCOME).
+
+%% this works but is too lax
+% {result(OUTCOME,mode_change(MODE))
+%  : potentialOutcomes(OUTCOME), modes(MODE)}.
+
+min_end_outcomes 
+{result(OUTCOME,mode_change(MODE)) : modes(MODE), outcome(OUTCOME)}
+max_end_outcomes.
+
+
+% % say that the only reason why is a recource being above/below/collision
+% {precondition(le(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE),potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
+% {precondition(ge(RESOURCE,VALUE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
+% {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : entity(ENTITY1),entity(ENTITY2)} :- result(OUTCOME,mode_change(MODE)).
