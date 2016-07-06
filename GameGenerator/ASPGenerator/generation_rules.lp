@@ -563,7 +563,7 @@ intermediate_outcome(O)
 
 %%%% The below are not necessarily definitive, but seem to rule out weird
 %cases %%%%
-%% no controls except mouse. Button can be held; otherwise it should be
+%% no controls except mouse.
 nonMouseControls
   :- condition(control_event(button(B, Action))), 
       B != mouse_button. 
@@ -575,7 +575,7 @@ nonMouseControls
 :- effect(decrease(R,R)).
 
 % Don't let something move away from the cursor if we need to click on it.
-:- result(tick, move_away(E, cursor)), condition(control_event(click(E))).
+:- result(O, move_away(E, cursor)), condition(control_event(click(E))).
 
 
 
