@@ -12,7 +12,7 @@ define([], function() {
 	var showUnavailableChoices = true;
 
 	var clickHandler;
-	var varClickChanger;		//this changes variables in the game when clicked
+	var varClickChangerFunc;		//this changes variables in the game when clicked
 	var pathEl;
 	var wishlistEl;
 	var stateEl;
@@ -22,7 +22,7 @@ define([], function() {
 	// Set up the Display module to begin showing stories.
 	var init = function(_clickHandler, _varClickChanger) {
 		clickHandler = _clickHandler;
-		varClickChanger = _varClickChanger;
+		varClickChangerFunc = _varClickChanger;
 		if (!document.getElementById("storyArea")) {
 			makeUI();
 		} else {
@@ -54,14 +54,18 @@ define([], function() {
 	var addVarClickChanger = function() {
 		var el = document.getElementsByClassName("varClickChanger")[0];
 		el.onclick = function() {
-			varClickChanger(changeFunction);
+			varClickChangerFunc();
 		}
 	}
 
 	// Remove all content from the UI.
 	var clearAll = function() {
-		document.getElementById("storyArea").innerHTML = "";
+		clearText();
 		document.getElementById("choiceArea").innerHTML = "";
+	}
+
+	var clearText = function() {
+		document.getElementById("storyArea").innerHTML = "";
 	}
 
 	var diagnose = function(params) {
@@ -107,8 +111,8 @@ define([], function() {
 		stateEl = makeEl("div", "<div class='dHeader'>State:</div><div class='stateArea'></div>");
 		diagEl.appendChild(stateEl);
 
-		varClickChanger = makeEl("div", "lower confidence", "varClickChanger");
-		diagEl.appendChild(varClickChanger);
+		var varChangerDiv = makeEl("div", "lower confidence", "varClickChanger");
+		diagEl.appendChild(varChangerDiv);
 		addVarClickChanger();
 
 	}
@@ -179,6 +183,7 @@ define([], function() {
 	return {
 		init: init,
 		clearAll: clearAll,
+		clearText: clearText,
 		addStoryText: addStoryText,
 		addChoice: addChoice,
 		diagnose: diagnose

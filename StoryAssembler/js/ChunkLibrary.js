@@ -10,7 +10,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	var _library = {};
 
 	var requiredFields = [];
-	var optionalFields = ["id", "choices", "choiceLabel", "effects", "conditions", "request", "content", "comment", "repeatable"];
+	var optionalFields = ["id", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "comment", "repeatable"];
 
 	// Validates and adds a chunk to the library.
 	var addChunk = function(chunk) {
@@ -20,6 +20,9 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 		if (chunk.id === undefined) {
 			chunk.id = "unnamedChunk" + util.iterator("chunks");
 		}
+
+		chunk.available = true;
+
 		// If choice in raw form, convert to processed form.
 		if (chunk.choices) {
 			for (var i = 0; i < chunk.choices.length; i++) {
@@ -67,13 +70,29 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 		}
 	}
 
-	// return a chunk from a given id.
-	var get = function(chunkId) {
-		return _library[chunkId];
+	/* 
+		Returns a chunk for a given id.
+		-chunkId: the id of the chunk being requested
+		-mode: "normal" = we check for it being available, "refresh" = we do not
+	*/
+
+	var get = function(chunkId, mode) {
+
+		mode = mode || "normal";
+
+		if (mode == "normal") {
+			if (_library[chunkId].available) {
+				return _library[chunkId];
+			}
+		}
+		else {
+			return _library[chunkId];
+		}
 	}
 
 	var remove = function(chunkId) {
-		delete _library[chunkId];
+		//delete _library[chunkId];				//changed this so that we can re-render chunks if need be
+		_library[chunkId].available = false;
 	}
 
 	var reset = function() {
