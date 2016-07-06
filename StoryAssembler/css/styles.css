@@ -101,3 +101,13 @@ span.chunk {
     border: thick solid #00981D;
     background-color: #9CF992;
 }
+
+.varClickChanger {
+    background-color: #81D0FF;
+    padding: 7px 13px;
+    border-radius: 13px;
+    width: 112px;
+    margin-top: 20px;
+    text-shadow: 1px 1px 1px #206086;
+    color:white;
+}

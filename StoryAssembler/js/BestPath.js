@@ -131,7 +131,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 		// Small internal function to do a search and add any unique results.
 		var doSearchFromHere = function(chunkId) {
-			var chunk = chunkLibrary.get(chunkId);
+			var chunk = chunkLibrary.get(chunkId, "refresh");
 			var result = findAllSatisfyingPathsFrom(chunk, wants, skipList, rLevel);
 			if (result.length > 0) {
 				paths = addNewIfUnique(paths, result);

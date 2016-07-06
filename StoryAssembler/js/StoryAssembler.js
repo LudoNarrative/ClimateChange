@@ -22,6 +22,11 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		continueScene();
 	}
 
+	/*
+		Continues the scene.
+			-optChunkId: a chunk id
+			-mode: boolean, will be false if refreshing the view (to pull from whole library)
+	*/
 	var continueScene = function(optChunkId) {
 		
 		var bestPath;
@@ -108,8 +113,11 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		}
 	}
 
-	var displayChunkText = function(chunkId) {
-		var chunk = chunkLibrary.get(chunkId);
+	var displayChunkText = function(chunkId, mode) {
+
+		mode = mode || "normal";
+
+		var chunk = chunkLibrary.get(chunkId, mode);
 		var text = Templates.render(chunk.content);
 		if (text !== undefined) { 							//if the chunk has text, display it
 			Display.addStoryText(text); 
@@ -160,6 +168,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	var doChunkText = function(chunkId, bestPath) {
 		var chunk = chunkLibrary.get(chunkId);
+		State.set("currentTextId", chunkId);			//set current text id so we can reference it later
 
 		// Handle effects
 		handleEffects(chunk);
@@ -242,11 +251,16 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		var chunk;
 
 		if (choiceDetail.id) {
-			var chunk = chunkLibrary.get(choiceDetail.id);			
+			var chunk = chunkLibrary.get(choiceDetail.id, "refresh");			
 		} 
-		if (chunk) { return chunk.choiceLabel; }
+		if (chunk.available) { return chunk.choiceLabel; }
 		else {
-			return "Unavailable choice request: \"" + choiceDetail.requestVal + "\"";
+			if (chunk.choiceUnavailableLabel) {
+				return unavailableChoiceLabel;
+			}
+			else {
+				return chunk.choiceLabel;
+			}
 		}
 	}
 
@@ -261,7 +275,9 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		Diagnostic button clicked to change variable in the state.
 	*/
 	var handleVarChanger = function() {
-		console.log("it worked!");
+		State.change("set confidence 10");
+		Display.clearText();
+		displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
 	}
 
 	var handleEffects = function(chunk) {
