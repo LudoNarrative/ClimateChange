@@ -394,6 +394,8 @@ movementProfiles(constant;logarithmic;ease_in;ease_out;ease_in_out).
 
 %% Adding entities to the screen
 1 {initialize(add(Entity,Place)) : place(Place)} 1 :- entity(Entity).
+1 {initialize(set_sprite(Entity, Sprite)) : sprite(Sprite)} 1
+    :- entity(Entity).
 
 %%% RESOURCES %%%
 initialResourceValues(R) :- constants(R).

@@ -30,7 +30,18 @@ buttonStates(pressed;held;released).
 controls(cursor). % OTHERS?
 controls(BUTTON) :- buttons(BUTTON).
 
-sprites(square;circle;upset_face;anxious_face;happy_face).
+% sprites(square;circle;upset_face;anxious_face;happy_face).
+% CRM 7/6/2016: adding things that correspond to phaser assets
+sprite(purple_square; pink_square; red_A; aqua_ball; right_arrow; green_B;
+  wooden_block; blue_ball; car; car_turned; carrot; diamond; eggplant;
+  health_kit; green_ball; giant_hotdog; long_right_arrow;
+  long_left_arrow; trefoil_knot; melon; mushroom; onion; orb_blue; orb_green;
+  orb_red; big_orb_blue; pepper; pineapple; plane; platform; red_ball;
+  purple_ball; shiny_ball; rocket_ship; slime; glowing_panda;
+  glowing_rainbow; glowing_unicorn; glowing_smiley; glowing_guitar;
+  glowing_candy; glowing_watermelon; glowing_radio; tetris_t; tetris_z;
+  tetris_L; tomato; ufo; rabbit; yellow_ball).
+
 colors(red;green;blue;yellow;magenta;cyan;white;light_grey;dark_grey;black).
 
 potentialEntities(e1;e2;e3;e4;e5).
