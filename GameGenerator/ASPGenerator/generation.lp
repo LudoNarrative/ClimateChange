@@ -376,7 +376,9 @@ precondition(overlaps(ENTITY1,ENTITY2,true), hurt(ENTITY1,ENTITY2)) :-
 
 %things need to be placed on the screen
 placements(field(random);field(uniform);field(corner);path(center);path(random);path(endpoints);path(uniform);path(start)).
+
 placementModality(one_shot;spawn).
+
 spawnTimings(one_shot;constant;exponential_increase;exponential_decay).
 1 {placement(ENTITY,TYPE,MODE) : placements(TYPE), placementModality(MODE)} 1 :- entity(ENTITY), not screen(ENTITY).
 
@@ -530,7 +532,7 @@ resourceTransactions(convert;pay_cost;gain;lose).
 % Kaboom encoding and game-rules.lp
 {precondition(timerElapsed(Timer), Outcome)
   : potentialOutcomes(Outcome)}
-  :- entity(Entity), potentialTimer(Timer).
+  :- potentialTimer(Timer).
 
 %%% Possible Results %%%
 
