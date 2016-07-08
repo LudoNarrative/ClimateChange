@@ -62,9 +62,12 @@ requirejs(
 			],
 			dataFile: workerData,
 			startState: [
-				"set specialty shrimp",
 				"set confidence 1",
-				"set optimism 0"
+				"set optimism 0",
+				"set specialty shrimp",
+				"set emotional 0",
+				"set serious chill",
+				"set requiredPercent 0",
 			]
 		},
 
@@ -105,7 +108,8 @@ requirejs(
 			startState: [
 				"set initialized true", 
 				"set friendName Emma",
-				"set career 0"
+				"set career 0",
+				"set confidence 0"
 			]
 		},
 

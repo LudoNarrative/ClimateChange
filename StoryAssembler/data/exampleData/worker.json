@@ -11,10 +11,6 @@ TODO: integrate posting to blackboard?
 		],
 		"conditions": ["establishScene neq true"],
 		"effects": [
-			"set optimism 0",
-			"set emotional 0",
-			"set serious chill",
-			"set requiredPercent 0",
 			"set establishScene true",
 			"set cueOuttro false"
 		]
