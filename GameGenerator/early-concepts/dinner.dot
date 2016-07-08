@@ -1,0 +1,17 @@
+digraph G{
+concentrate=true
+serves3 [label="serves",shape = box]
+serves1 [label="serves",shape = box]
+gives2 [label="gives",shape = box]
+plate5 [label="plate",shape = circle]
+banana4 [label="banana",shape = circle]
+player1 [label="player",shape = circle]
+food7 [label="food",shape = circle]
+plate5 -> serves3 [color="red"]
+gives2 -> player1 [color="black"]
+serves3 -> food7 [color="green"]
+banana4 -> gives2 [color="red"]
+player1 -> gives2 [color="black"]
+plate5 -> serves1 [color="red"]
+serves1 -> banana4 [color="green"]
+}

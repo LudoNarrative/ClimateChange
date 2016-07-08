@@ -398,7 +398,8 @@ freeResource(Resource) :-
 outcomes(N) :- N = #count{completeOutcome(Outcome) : completeOutcome(Outcome)}.
 
 %minimize the number of outcomes
-#minimize { N@1 : outcomes(N)}.
+% 7/7/2016 CRM and AS: red herring?
+% #minimize { N@1 : outcomes(N)}.
 
 %players must have controls or it's just a weird movie
 playerControls :- precondition(control_event(EVENT),OUTCOME).

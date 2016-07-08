@@ -1,0 +1,95 @@
+
+thing : type.
+player : thing.
+system : thing.
+friend : thing.
+yes : thing.
+no : thing.
+plate : thing.
+food : thing.
+satiety : thing.
+hunger : thing.
+movement : thing.
+bullet : thing.
+gun : thing.
+target : thing.
+hit : thing.
+miss : thing.
+sand : thing.
+person : thing.
+razor : thing.
+cut : thing.
+time : thing.
+ignore : thing.
+patience : thing.
+
+generates thing thing : bwd.
+generates player ignore.
+generates system friend.
+generates system hunger.
+generates friend plate.
+generates plate food.
+generates food satiety.
+generates time movement.
+generates movement target.
+generates bullet hit.
+generates bullet miss.
+generates player gun.
+generates player razor.
+generates player movement.
+generates system movement.
+generates razor cut.
+
+cancels thing thing : bwd.
+cancels food hunger.
+cancels ignore food.
+cancels ignore patience.
+
+gen_edge thing thing : pred.
+cancel_edge thing thing : pred.
+
+unused thing : pred.
+entity thing : pred.
+needs_generator thing : pred.
+
+stage main = {
+
+find_gen :
+  needs_generator Thing * generates Thing' Thing
+    * unused Thing'
+  -o entity Thing' * needs_generator Thing'
+      * gen_edge Thing' Thing.
+
+duplicate : 
+  needs_generator Thing * $entity Thing' * generates Thing' Thing
+      -o gen_edge Thing' Thing.
+
+gen_new :
+  $entity Thing * generates Thing Thing'
+    * unused Thing'
+    -o entity Thing' * gen_edge Thing Thing'.
+
+}
+
+context init = {
+entity player,
+entity system,
+unused friend,
+unused plate,
+unused food,
+unused satiety,
+unused hunger,
+unused movement,
+unused bullet,
+unused target,
+unused person,
+unused razor,
+unused time,
+unused hit,
+unused miss,
+unused gun,
+unused sand,
+unused cut
+}
+
+#trace _ main init.
