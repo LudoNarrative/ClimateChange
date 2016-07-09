@@ -5,7 +5,7 @@ define(["Game"], function(Game) {
 		el.href = target;
 		el.onclick = function() {
 			_coordinator.loadStoryMaterials(id);
-			_coordinator.startGame();
+			_coordinator.startGame(id);
 		}
 		el.innerHTML = content;
 		var p = document.createElement("p");
