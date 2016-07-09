@@ -27,7 +27,7 @@ requirejs.config({
 		"Coordinator" : "../Coordinator/Coordinator",
 		"Display" : "Display",
 
-		"Phaser" : "../GameGenerator/js/phaser",
+		"Phaser" : "../lib/phaser",
 		"Game" : "../GameGenerator/js/game"
 	}
 });

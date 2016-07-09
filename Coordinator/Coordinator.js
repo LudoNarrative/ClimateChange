@@ -133,9 +133,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		This will eventually be replaced with more complex stuff before passing
 		off to game.js
 	*/
-	var startGame = function() {
+	var startGame = function(id) {
 		var Game = require("Game");
-		Game.init();
+		Game.init(id);
 	}
 
 	return {
