@@ -32,7 +32,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			}
 		}
 
-		document.getElementsByTagName("body")[0].innerHTML = "";		//clear screen
 		//TODO: display intro screen
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Character);
 	}
@@ -50,7 +49,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "articlesRead eq 4" },
 				{ condition: "endScene eq true" }
 			],
-			dataFile: require("text!dinnerData"),
+			dataFile: require("text!travelData"),
 			startState: [
 				"set specialty shrimp",
 				"set cueOuttro false",
