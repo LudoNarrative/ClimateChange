@@ -17,7 +17,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		wishlist = _wishlist;
 		params = params || {};
 		
-		Display.init(handleChoiceSelection, refreshNarrative);
+		Display.init(handleChoiceSelection, State.refreshNarrative);
 		Templates.init(State, _Character);
 		continueScene();
 	}
@@ -111,6 +111,12 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			return temp;
 			//return wishlist.bestPath(chunkLibrary);
 		}
+	}
+
+	//used to tell the narrative system to refresh
+	var refreshNarrative = function() {
+		Display.clearText();
+		displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
 	}
 
 	var displayChunkText = function(chunkId, mode) {
@@ -273,13 +279,13 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	/*
 		Diagnostic button clicked to change variable in the state.
-	*/
+	
 	var refreshNarrative = function() {
 		State.change("set confidence 10");
 		Display.clearText();
 		displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
 	}
-
+*/
 	var handleEffects = function(chunk) {
 		if (!chunk.effects) return;
 		chunk.effects.forEach(function(effect) {
@@ -298,6 +304,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	}
 
 	return {
-		beginScene: beginScene
+		beginScene: beginScene,
+		refreshNarrative : refreshNarrative
 	}
 });		

@@ -599,7 +599,7 @@ result_amplifies(increase(Amplifier), Outcome) :-
     result_enables(increase(Resource),Outcome),
     amplifies(Amplifier, Resource).
 
-%%%% Implicationa and Contradiction %%%%
+%%%% Implications and Contradiction %%%%
 
 implies(collide(E1, E2), overlaps(E1, E2))
   :- condition(collide(E1, E2)).

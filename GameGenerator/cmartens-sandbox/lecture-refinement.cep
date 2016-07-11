@@ -1,0 +1,70 @@
+nat : type.
+z : nat.
+s nat : nat.
+
+position : type.
+left : position.
+middle : position.
+right : position.
+
+nonmiddle position : bwd.
+nonmiddle left.
+nonmiddle right.
+
+direction : type.
+moving_left : direction.
+moving_right : direction.
+
+successor position direction position direction : bwd.
+successor left moving_right middle moving_right.
+successor left moving_left left moving_right.
+successor middle moving_left left moving_left.
+successor middle moving_right right moving_right.
+successor right moving_right right moving_left.
+successor right moving_left middle moving_left.
+
+ball_position position : pred.
+ball_direction direction : pred.
+
+confidence nat : pred.
+game_end : pred.
+
+click : pred.
+timer_tick : pred.
+
+system : pred.
+player : pred.
+
+stage game = {
+
+successful_click
+: click * $ball_position middle * confidence C
+    -o confidence (s C).
+
+unsuccessful_click
+: click * $ball_position P * nonmiddle P * confidence (s C)
+  -o confidence C.
+
+ball_move
+: timer_tick * ball_position P * ball_direction D
+  * successor P D P' D'
+    -o ball_position P' * ball_direction D'.
+
+drain_confidence
+: timer_tick * confidence (s C) -o confidence C.
+
+end_condition
+: confidence z -o game_end.
+
+clock : system -o timer_tick.
+player_click : player -o click.
+
+} #interactive game.
+
+context init =
+{ ball_position left,  ball_direction moving_left, 
+  confidence (s (s (s z))), !system, !player }.
+
+
+
+#trace _ game init.

@@ -1,0 +1,18 @@
+digraph G{
+concentrate=true
+cook1 [label="cook",shape = box]
+remove_early3 [label="remove_early",shape = box]
+remove_cooked2 [label="remove_cooked",shape = box]
+cooking_bacon3 [label="cooking_bacon",shape = circle]
+cooked_bacon4 [label="cooked_bacon",shape = circle]
+edible_bacon5 [label="edible_bacon",shape = circle]
+raw_bacon2 [label="raw_bacon",shape = circle]
+time1 [label="time",shape = circle]
+remove_early3 -> raw_bacon2 [color="green"]
+time1 -> cook1 [color="red"]
+cooking_bacon3 -> remove_early3 [color="red"]
+cook1 -> cooked_bacon4 [color="green"]
+cooking_bacon3 -> cook1 [color="red"]
+cooked_bacon4 -> remove_cooked2 [color="red"]
+remove_cooked2 -> edible_bacon5 [color="green"]
+}

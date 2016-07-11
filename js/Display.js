@@ -1,4 +1,6 @@
-define(["Game","jQuery", "jQueryUI"], function(Game) {
+define(["Game", "jQuery", "jQueryUI"], function(Game) {
+
+	var State;
 
 	var makeLink = function(_coordinator, id, content, target) {
 		
@@ -13,13 +15,16 @@ define(["Game","jQuery", "jQueryUI"], function(Game) {
 				initSceneScreen();
 				_coordinator.loadStoryMaterials(id);
 				_coordinator.startGame(id);
+				_coordinator.loadAvatars(id);
 			}
 		}).appendTo(pTag);
 
 		return pTag;
 	}
 
-	var initTitleScreen = function(_coordinator, scenes) {
+	var initTitleScreen = function(_coordinator, _State, scenes) {
+
+		State = _State;
 		
 		$('<h1/>', {
 		    text: 'Climate Change Game',
@@ -30,9 +35,10 @@ define(["Game","jQuery", "jQueryUI"], function(Game) {
 			text: 'Begin',
 			id: 'begin',
 			click: function() {
-				initSceneScreen();
+				initSceneScreen(State);
 				_coordinator.loadStoryMaterials(scenes[0]);
 				_coordinator.startGame(scenes[0]);
+				_coordinator.loadAvatars(scenes[0]);
 			}
 		}).appendTo('body');
 
@@ -48,7 +54,7 @@ define(["Game","jQuery", "jQueryUI"], function(Game) {
 		});
 	}
 
-	var initSceneScreen = function() {
+	var initSceneScreen = function(State) {
 
 		$('body').html('');
 		$('<div/>', {
@@ -66,10 +72,10 @@ define(["Game","jQuery", "jQueryUI"], function(Game) {
 		    //text: ''
 		}).appendTo('body');
 
-		initStatsUI();
+		initStatsUI(State);
 	}
 
-	var initStatsUI = function() {
+	var initStatsUI = function(State) {
 		$('<div/>', {
 		    id: 'charPic'
 		    //text: ''
@@ -89,6 +95,15 @@ define(["Game","jQuery", "jQueryUI"], function(Game) {
 		    id: 'sharedStats'
 		    //text: ''
 		}).appendTo('#statsContainer');
+	}
+
+	/*
+		Sets avatar on-screen based on state
+	*/
+	var setAvatar = function(State) {
+		//TODO: evaluate which state holds for the avatar
+		var avatar = State.avatars[0];
+		$('#charPic').css("background-image", "url(/assets/avatar/"+ avatar.src +")"); 
 	}
 
 	/*
@@ -112,6 +127,7 @@ define(["Game","jQuery", "jQueryUI"], function(Game) {
 	}
 
 	return {
-		initTitleScreen : initTitleScreen	
+		initTitleScreen : initTitleScreen,
+		setAvatar : setAvatar
 	} 
 });
