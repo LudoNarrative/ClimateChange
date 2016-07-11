@@ -1,7 +1,7 @@
 [
 	{
 		"id": "Intro",
-		"content": "As the plane takes flight, you read today's news headlines.<br><br>{ifStateCondition|confidence gt 5|Confident!|Not so confident}",
+		"content": "As the plane takes flight, you read today's news headlines.",
 		"conditions": ["establishScene neq true"],
 		"effects": [
 			"set establishScene true"

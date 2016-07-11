@@ -209,7 +209,7 @@ conditionedOnResource(RESOURCE,OUTCOME) :- below(RESOURCE,VALUE,OUTCOME).
     above(RESOURCE,VALUE_H,OUTCOME), 
     lower_than(VALUE_L,VALUE_H).
     
-    
+outcome(A) :- result(A,E).    
 % cleanliness - choose e1 before e2
 :- entity(B), not entity(A), entityOrdering(A,B).
 :- condition(overlaps(A,B,POLARITY)), entityOrdering(B,A).
@@ -366,7 +366,7 @@ completeOutcome(OUTCOME) :-
 % simply don't have more than 2 preconditions
 :- 3 {precondition(CONDITION,Outcome)}, outcome(Outcome).
 
-% a resource is free if there is a way to decrease/increase not conditioned on the same reource - i.e. some way to change things
+% a resource is free if there is a way to decrease/increase not conditioned on the same resource - i.e. some way to change things
 freeResource(Resource) :- 
     resource(Resource), 
     1{result(Outcome,increase(Resource,Amount));
@@ -393,13 +393,6 @@ freeResource(Resource) :-
 
 % don't have more than 1 control event per outcome
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
-     
-% count the number of outcomes
-outcomes(N) :- N = #count{completeOutcome(Outcome) : completeOutcome(Outcome)}.
-
-%minimize the number of outcomes
-% 7/7/2016 CRM and AS: red herring?
-% #minimize { N@1 : outcomes(N)}.
 
 %players must have controls or it's just a weird movie
 playerControls :- precondition(control_event(EVENT),OUTCOME).
@@ -432,8 +425,8 @@ maintains_singular(Outcome, Entity)
 :- condition(present(E)), not effect(delete(E)).
 :- condition(absent(E)), not effect(delete(E)).
 
-%% Can't test for a spatial condition unless at least one of the entities
-%% can move.
+% Can't test for a spatial condition unless at least one of the entities
+% can move.
 
 :- condition(C), spatial_condition(C, E1, E2), not one_moves(E1, E2).
 
@@ -490,6 +483,9 @@ reachableCondition(control_event(E))
 reachableCondition(tick)
   :- condition(tick).
 
+reachableCondition(timerElapsed(T))
+  :- condition(timerElapsed(T)).
+  
 reachableOutcome(O)
   :- precondition(_, O), not unreachableOutcome(O).
 
@@ -502,7 +498,7 @@ reachableResult(R)
 % constraint on reachability
 :- precondition(_, O), unreachableOutcome(O).
 
-%%%%
+%%%
 
 %%%% Adding and deleting entities %%%%
 % Don't add or delete an entity unless it's because of (a) collision or (b)
@@ -562,14 +558,14 @@ intermediate_outcome(O)
 
 :- outcome(O), not intermediate_outcome(O).
 
-%%%% The below are not necessarily definitive, but seem to rule out weird
-%cases %%%%
-%% no controls except mouse.
-nonMouseControls
-  :- condition(control_event(button(B, Action))), 
-      B != mouse_button. 
-:- condition(control_event(button(mouse_button, Action))), Action != held.
-:- nonMouseControls.
+% %%%% The below are not necessarily definitive, but seem to rule out weird
+% %cases %%%%
+% %% no controls except mouse.
+% nonMouseControls
+  % :- condition(control_event(button(B, Action))), 
+      % B != mouse_button. 
+% :- condition(control_event(button(mouse_button, Action))), Action != held.
+% :- nonMouseControls.
 
 % misc
 :- effect(increase(R,R)).
@@ -577,7 +573,3 @@ nonMouseControls
 
 % Don't let something move away from the cursor if we need to click on it.
 :- result(O, move_away(E, cursor)), condition(control_event(click(E))).
-
-
-
-

@@ -17,7 +17,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		wishlist = _wishlist;
 		params = params || {};
 		
-		Display.init(handleChoiceSelection, handleVarChanger);
+		Display.init(handleChoiceSelection, refreshNarrative);
 		Templates.init(State, _Character);
 		continueScene();
 	}
@@ -274,7 +274,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	/*
 		Diagnostic button clicked to change variable in the state.
 	*/
-	var handleVarChanger = function() {
+	var refreshNarrative = function() {
 		State.change("set confidence 10");
 		Display.clearText();
 		displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
