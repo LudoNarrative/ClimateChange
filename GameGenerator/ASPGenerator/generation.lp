@@ -51,9 +51,9 @@ outcome(avatar_move_right) :-
 precondition(control_event(button(up_arrow, held)),avatar_move_up) :- 
     avatar(ENTITY), 
     outcome(avatar_move_up).
-precondition(empty(ENTITY,north,low),avatar_move_up) :- 
-    avatar(ENTITY), 
-    outcome(avatar_move_up).
+% precondition(empty(ENTITY,north,low),avatar_move_up) :- 
+    % avatar(ENTITY), 
+    % outcome(avatar_move_up).
 result(avatar_move_up,moves(ENTITY,  north , low))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_up).
@@ -61,9 +61,9 @@ result(avatar_move_up,moves(ENTITY,  north , low))  :-
 precondition(control_event(button(down_arrow, held)),avatar_move_down) :- 
     avatar(ENTITY), 
     outcome(avatar_move_down).
-precondition(empty(ENTITY, south ,low),avatar_move_down) :- 
-    avatar(ENTITY), 
-    outcome(avatar_move_down).
+% precondition(empty(ENTITY, south ,low),avatar_move_down) :- 
+    % avatar(ENTITY), 
+    % outcome(avatar_move_down).
 result(avatar_move_down,moves(ENTITY,  south , low))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_down).
@@ -71,9 +71,9 @@ result(avatar_move_down,moves(ENTITY,  south , low))  :-
 precondition(control_event(button(right_arrow, held)),avatar_move_right) :- 
     avatar(ENTITY), 
     outcome(avatar_move_right).
-precondition(empty(ENTITY, east ,low),avatar_move_right) :- 
-    avatar(ENTITY), 
-    outcome(avatar_move_right).
+% precondition(empty(ENTITY, east ,low),avatar_move_right) :- 
+    % avatar(ENTITY), 
+    % outcome(avatar_move_right).
 result(avatar_move_right,moves(ENTITY,  east , low))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_right).
@@ -81,9 +81,9 @@ result(avatar_move_right,moves(ENTITY,  east , low))  :-
 precondition(control_event(button(left_arrow, held)),avatar_move_left) :- 
     avatar(ENTITY), 
     outcome(avatar_move_left).
-precondition(empty(ENTITY, west ,low),avatar_move_left) :- 
-    avatar(ENTITY), 
-    outcome(avatar_move_left).
+% precondition(empty(ENTITY, west ,low),avatar_move_left) :- 
+    % avatar(ENTITY), 
+    % outcome(avatar_move_left).
 result(avatar_move_left,moves(ENTITY,  west , low))  :- 
     avatar(ENTITY), outcome(avatar_move_left).
 
@@ -107,9 +107,9 @@ outcome(avatar_rotate_left) :-
 precondition(control_event(button(up_arrow, held)),avatar_move_forward) :- 
     avatar(ENTITY), 
     outcome(avatar_move_forward).
-precondition(empty(ENTITY,forward,low),avatar_move_forward) :- 
-    avatar(ENTITY), 
-    outcome(avatar_move_forward).
+% precondition(empty(ENTITY,forward,low),avatar_move_forward) :- 
+    % avatar(ENTITY), 
+    % outcome(avatar_move_forward).
 result(avatar_move_forward,moves(ENTITY, forward, low))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_forward).
@@ -117,9 +117,9 @@ result(avatar_move_forward,moves(ENTITY, forward, low))  :-
 precondition(control_event(button(down_arrow, held)),avatar_move_backward) :- 
     avatar(ENTITY), 
     outcome(avatar_move_backward).
-precondition(empty(ENTITY,behind,low),avatar_move_backward) :- 
-    avatar(ENTITY), 
-    outcome(avatar_move_backward).
+% precondition(empty(ENTITY,behind,low),avatar_move_backward) :- 
+    % avatar(ENTITY), 
+    % outcome(avatar_move_backward).
 result(avatar_move_backward,moves(ENTITY, behind, low))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_backward).
@@ -147,21 +147,21 @@ result(avatar_jump,moves(ENTITY,  north , high))  :-
     outcome(avatar_jump).
 
 %INDIRECT CONTROLS
-outcome(click_and_drag(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
-outcome(drag(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
-outcome(end_drag(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
+% outcome(click_and_drag(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
+% outcome(drag(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
+% outcome(end_drag(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
 
 controlLogic(draggable(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
 
 
-outcome(click_and_click(ENTITY)) :- controlScheme(ENTITY,click_and_click).
-outcome(click_and_aim(ENTITY)) :- controlScheme(ENTITY,click_and_aim). 
-outcome(drawn_to_cursor(ENTITY)) :- controlScheme(ENTITY,drawn_to_cursor).
-outcome(repeled_from_cursor(ENTITY)) :- controlScheme(ENTITY,repeled_from_cursor).      
+% outcome(click_and_click(ENTITY)) :- controlScheme(ENTITY,click_and_click).
+% outcome(click_and_aim(ENTITY)) :- controlScheme(ENTITY,click_and_aim). 
+% outcome(drawn_to_cursor(ENTITY)) :- controlScheme(ENTITY,drawn_to_cursor).
+% outcome(repeled_from_cursor(ENTITY)) :- controlScheme(ENTITY,repeled_from_cursor).      
    
 %clicking and dragging
-graphicalLogic(draggable(ENTITY)) :- 
-     outcome(click_and_drag(ENTITY)). 
+% graphicalLogic(draggable(ENTITY)) :- 
+     % outcome(click_and_drag(ENTITY)). 
   
 %cursor is electromagnet
 precondition(control_event(button(mouse_button, held)),drawn_to_cursor(ENTITY)) :- 
@@ -204,7 +204,7 @@ precondition(tick,tick) :-
 %%%%%%%%%% NPC   %%%%%%%%%%%%%%%%%%
 
 %npcs can move in a couple of ways
-npcMovements(projectile;random_walk;random_pathfind;attract;repel).%;patrol;bounce;path(ping_pong);path(loop)).
+npcMovements(projectile;random_walk;random_pathfind;attract;repel;bounce).%;patrol;bounce;path(ping_pong);path(loop)).
 
 %pick ways something can move
 % CRM 6/21/2016 - changed max from 0 to 2.
@@ -232,10 +232,10 @@ result(tick,moves(ENTITY, forward, AMOUNT)) :-
 %Random walkers walk in a given direction for a given amount of time    
 outcome(change_direction(ENTITY)) :- 
     movementScheme(ENTITY,random_walk).
-timerLogic(ENTITY,change_direction,duration) :- 
+timer(change_direction(ENTITY),duration) :- 
     movementScheme(ENTITY,random_walk).
 %time's  north  - change direction
-precondition(timerElapsed(ENTITY,change_direction), change_direction(ENTITY)) :-
+precondition(timerElapsed(change_direction(ENTITY)), change_direction(ENTITY)) :-
     movementScheme(ENTITY,random_walk).
 result(change_direction(ENTITY), rotate(ENTITY,random_int(0,360))) :- 
     movementScheme(ENTITY,random_walk).
@@ -246,9 +246,9 @@ result(tick,moves(ENTITY, forward, low)) :-
 %random pathfinder - changes target every once in a while
 outcome(change_target(ENTITY)) :- 
     movementScheme(ENTITY,random_pathfind).
-timerLogic(ENTITY,change_target,duration) :- 
+timerLogic(change_target(ENTITY),duration) :- 
     movementScheme(ENTITY,random_pathfind).
-precondition(timerElapsed(ENTITY,change_target), change_target(ENTITY)) :-
+precondition(timerElapsed(change_target(ENTITY)), change_target(ENTITY)) :-
     movementScheme(ENTITY,random_pathfind).
     
 % resource(ENTITY,target) :- movementScheme(ENTITY,random_pathfind).
@@ -303,19 +303,18 @@ result(tick,move_towards(ENTITY,target)) :-
     movementScheme(ENTITY,patrol).
     
 %if you have gravity, you fall
-{physicsLogic(ENTITY,gravity) : entity(ENTITY)}  :-
-    controlScheme(AVATAR,platformer).
+{physicsLogic(ENTITY,gravity) : entity(ENTITY)}.
 physicsLogic(AVATAR,gravity) :- controlScheme(AVATAR,platformer).
 
-result(tick,apply_force(ENTITY, south ,middle)) :-
+result(tick,apply_force(ENTITY, south ,mid)) :-
     physicsLogic(ENTITY,gravity).
     
 % bouncing
-1 {bounceLogic(ENTITY1,ENTITY2) : entity(ENTITY2)} :-
-    movementScheme(ENTITY1,bounce), entityOrdering(ENTITY1,ENTITY2).
+1 {bounceLogic(ENTITY1,ENTITY2) :entity(ENTITY2)} :-
+    movementScheme(ENTITY1,bounce).
 
 % can't bounce off yourself
-:- bounceLogic(ENTITY1,ENTITY2), ENTITY1 = ENTITY2.
+:- bounceLogic(ENTITY1,ENTITY1).
 
 %bounce when you hit the other thing - and reflect your velocity
 precondition(overlaps(ENTITY1,ENTITY2,true),bounce(ENTITY1,ENTITY2)) :-

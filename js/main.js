@@ -27,8 +27,18 @@ requirejs.config({
 		"Coordinator" : "../Coordinator/Coordinator",
 		"Display" : "Display",
 
-		"Phaser" : "../GameGenerator/js/phaser",
+		"Phaser" : "../lib/phaser",
+		"jQuery": "../lib/jquery-3.0.0.min",
+		"jQueryUI": "../lib/jquery-ui.min",
+		
 		"Game" : "../GameGenerator/js/game"
+	},
+
+	shim: {
+		"jQueryUI": {
+			export: "$",
+			deps: ["jQuery"]
+		}
 	}
 });
 

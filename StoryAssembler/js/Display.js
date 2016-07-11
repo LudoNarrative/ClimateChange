@@ -10,6 +10,7 @@ define([], function() {
 
 	/* PRIVATE FUNCTIONS AND VARIABLES */
 	var showUnavailableChoices = true;
+	var showDiagnostics = false;
 
 	var clickHandler;
 	var varClickChangerFunc;		//this changes variables in the game when clicked
@@ -69,14 +70,16 @@ define([], function() {
 	}
 
 	var diagnose = function(params) {
-		if (params.path) {
-			_showPath(params.path);
-		}
-		if (params.wishlist) {
-			_showWishlist(params.wishlist);
-		}
-		if (params.state) {
-			_showState(params.state);
+		if (showDiagnostics) {
+			if (params.path) {
+				_showPath(params.path);
+			}
+			if (params.wishlist) {
+				_showWishlist(params.wishlist);
+			}
+			if (params.state) {
+				_showState(params.state);
+			}
 		}
 	}
 
@@ -95,25 +98,28 @@ define([], function() {
 		var el;
 		el = makeEl("div", "");
 		el.id = "storyArea";
-		document.getElementsByTagName('body')[0].appendChild(el);
+		document.getElementById('storyContainer').appendChild(el);
 		el = makeEl("div", "");
 		el.id = "choiceArea";
-		document.getElementsByTagName('body')[0].appendChild(el);
+		document.getElementById('storyContainer').appendChild(el);
+
 
 		// Create Diagnostic container.
-		var diagEl = makeEl("div", "");
-		diagEl.id = "diagnostics";
-		document.getElementsByTagName('body')[0].appendChild(diagEl);
-		pathEl = makeEl("div", "<div class='dHeader'>Best Path:</div><div class='pathArea'></div>");
-		diagEl.appendChild(pathEl);
-		wishlistEl = makeEl("div", "<div class='dHeader'>Wishlist Is Now:</div><div class='wishlistArea'></div>");
-		diagEl.appendChild(wishlistEl);
-		stateEl = makeEl("div", "<div class='dHeader'>State:</div><div class='stateArea'></div>");
-		diagEl.appendChild(stateEl);
+		if (showDiagnostics) {
+			var diagEl = makeEl("div", "");
+			diagEl.id = "diagnostics";
+			document.getElementsByTagName('body')[0].appendChild(diagEl);
+			pathEl = makeEl("div", "<div class='dHeader'>Best Path:</div><div class='pathArea'></div>");
+			diagEl.appendChild(pathEl);
+			wishlistEl = makeEl("div", "<div class='dHeader'>Wishlist Is Now:</div><div class='wishlistArea'></div>");
+			diagEl.appendChild(wishlistEl);
+			stateEl = makeEl("div", "<div class='dHeader'>State:</div><div class='stateArea'></div>");
+			diagEl.appendChild(stateEl);
 
-		var varChangerDiv = makeEl("div", "lower confidence", "varClickChanger");
-		diagEl.appendChild(varChangerDiv);
-		addVarClickChanger();
+			var varChangerDiv = makeEl("div", "lower confidence", "varClickChanger");
+			diagEl.appendChild(varChangerDiv);
+			addVarClickChanger();
+		}
 
 	}
 
