@@ -398,7 +398,6 @@ freeResource(Resource) :-
 % don't have more than 1 control event per outcome
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
 
-
 %players must have controls or it's just a weird movie
 playerControls :- precondition(control_event(EVENT),OUTCOME).
 :- not playerControls.

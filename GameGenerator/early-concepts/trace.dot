@@ -1,0 +1,21 @@
+digraph {
+x1 [style=filled,fillcolor=skyblue,label="(connect log lilypad)"];
+x0 [style=filled,fillcolor=skyblue,label="(stage generate)"];
+t0 [shape=box,style=filled,fillcolor=green,label="make/connect\nlog lilypad"];
+x3 [style=filled,fillcolor=skyblue,label="(node lilypad)"];
+x2 [style=filled,fillcolor=skyblue,label="(node log)"];
+x1 -> t0;
+t0 -> x3;
+t0 -> x2;
+t1 [shape=box,style=filled,fillcolor=green,label="connect/indirect/subject\nlog carries frog"];
+x5 [style=filled,fillcolor=skyblue,label="(node frog)"];
+x4 [style=filled,fillcolor=skyblue,label="(connected log carries frog)"];
+x2 -> t1;
+t1 -> x5;
+t1 -> x4;
+t2 [shape=box,style=filled,fillcolor=green,label="connect/direct\nfrog lilypad hits"];
+x6 [style=filled,fillcolor=skyblue,label="(connected frog hits lilypad)"];
+x5 -> t2;
+x3 -> t2;
+t2 -> x6;
+}

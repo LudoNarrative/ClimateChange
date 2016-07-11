@@ -14,6 +14,8 @@ body {
 
 #gameContainer {
     float:right;
+    width:560px !important;
+    height:550px;
 }
 
 h1#title {
