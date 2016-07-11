@@ -28,6 +28,9 @@
 
 % :- not sharingAndCamaraderie.
 
+has_sharing :- sharing(_, _).
+:- not has_sharing.
+
 :- not narrative_gating.
 
 :- effect(mode_change(game_loss)). % shouldn't be a way to lose

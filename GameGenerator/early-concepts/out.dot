@@ -1,0 +1,22 @@
+digraph G{
+concentrate=true
+serves3 [label="serves",shape = box]
+get_hungry1 [label="get_hungry",shape = box]
+get_hungry2 [label="get_hungry",shape = box]
+hunger12 [label="hunger",shape = circle]
+hunger6 [label="hunger",shape = circle]
+friend2 [label="friend",shape = circle]
+player1 [label="player",shape = circle]
+plate5 [label="plate",shape = circle]
+banana4 [label="banana",shape = circle]
+hunger12 -> get_hungry2 [color="black"]
+get_hungry2 -> hunger12 [color="black"]
+plate5 -> serves3 [color="red"]
+get_hungry1 -> hunger6 [color="black"]
+get_hungry2 -> friend2 [color="black"]
+hunger6 -> get_hungry1 [color="black"]
+friend2 -> get_hungry2 [color="black"]
+get_hungry1 -> player1 [color="black"]
+player1 -> get_hungry1 [color="black"]
+serves3 -> banana4 [color="green"]
+}

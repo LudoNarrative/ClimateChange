@@ -1,0 +1,25 @@
+% Ceptre encoding of scrubbing game
+
+meter : type.
+sand : meter.
+
+nat : type.
+z : nat.
+s nat : nat.
+
+has_value meter nat : pred.
+
+action : type.
+scrub : action.
+player_does action : pred.
+
+context init =
+{ has_value sand (s (s (s (s z)))) }.
+
+stage scrubbing = {
+
+scrub :
+  player_does scrub * has_value sand (s N)
+  -o has_value sand N.
+
+}

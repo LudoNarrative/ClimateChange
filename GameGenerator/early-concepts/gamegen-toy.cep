@@ -1,0 +1,38 @@
+
+friend : pred.
+plate : pred.
+player : pred.
+impatience : pred.
+hunger : pred.
+food : pred.
+fullness : pred.
+
+razor : pred.
+beard : pred.
+slow : pred.
+fast : pred.
+cuts : pred.
+contemplation : pred.
+
+stage main = {
+
+% dinner game
+offer : $friend -o plate.
+eat : $hunger * food -o fullness.
+get_hungry : $player -o hunger.
+accept : $player * plate -o food.
+ignore : $player * $plate -o impatience.
+
+% shaving game
+speed_up : $player * $razor * slow -o fast.
+slow_down : $player * $razor * fast -o slow.
+shave_quickly : $player * $razor * $fast * beard -o cuts.
+shave_slowly : $player * $razor * $slow * beard -o ().
+think : $beard -o contemplation.
+
+} #interactive main.
+
+context init =
+{player, razor, slow, beard, beard, beard, beard}.
+
+#trace _ main init.

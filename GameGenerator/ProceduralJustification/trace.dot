@@ -1,0 +1,10 @@
+digraph {
+x7 [style=filled,fillcolor=skyblue,label="(choosing z)"];
+x6 [style=filled,fillcolor=skyblue,label="money"];
+x5 [style=filled,fillcolor=skyblue,label="money"];
+x4 [style=filled,fillcolor=skyblue,label="money"];
+x3 [style=filled,fillcolor=skyblue,label="money"];
+x2 [style=filled,fillcolor=skyblue,label="money"];
+x1 [style=filled,fillcolor=skyblue,label="money"];
+x0 [style=filled,fillcolor=skyblue,label="(stage build_itinerary)"];
+}
