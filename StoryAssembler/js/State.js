@@ -19,6 +19,7 @@ define(["Condition"], function(Condition) {
 			value = tryNum;
 		}
 		_blackboard[key] = value;
+		console.log(key + " is now " + value);
 	}
 
 	var remove = function(key) {

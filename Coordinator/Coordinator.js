@@ -8,7 +8,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 		
 		var scenes = ["dinner", "lecture", "travel", "worker" ];
-		Display.initTitleScreen(this, scenes);		//start up UI
+		Display.initTitleScreen(this, State, scenes);		//start up UI
 
 	}
 
@@ -129,17 +129,46 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	}
 
 	/*
+		Eventually this should return something different for each scene...for now we just use this
+	*/
+	var loadAvatars = function(id) {
+
+		var avatars = [
+			{
+				id: "happy",
+				src: "happy.png",
+				state: ["confidence gt 2"]
+			},
+			{
+				id: "worried",
+				src: "worried.png",
+				state: ["confidence eq 1"]
+			},
+			{
+				id: "stressed",
+				src: "worried.png",
+				state: ["confidence eq 0"]
+			},
+		];
+
+		State.avatars = avatars;
+
+		Display.setAvatar(State);
+	}
+
+	/*
 		This will eventually be replaced with more complex stuff before passing
 		off to game.js
 	*/
 	var startGame = function(id) {
 		var Game = require("Game");
-		Game.init(id);
+		Game.init(id, State, StoryDisplay);
 	}
 
 	return {
 		init : init,
 		loadStoryMaterials : loadStoryMaterials,
+		loadAvatars : loadAvatars,
 		startGame : startGame
 	}
 });
