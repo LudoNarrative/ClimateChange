@@ -55,3 +55,4 @@ result(lose_life,set(paused,true)).
 
 precondition(le(lives,0),lose).
 result(lose, mode_change(game_loss)).
+

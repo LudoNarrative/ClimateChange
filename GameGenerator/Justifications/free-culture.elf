@@ -1,0 +1,145 @@
+
+entity : type.
+producer : entity.
+new_idea : entity.
+consumer : entity.
+vectorialist : entity.
+cursor : entity.
+
+resource : type.
+ideasAbsorbed : resource.
+old_ideas : resource.
+
+amount : type.
+low : amount.
+med : amount.
+high : amount.
+rsrc : resource -> amount.
+
+condition : type.
+outcome : type.
+behavior : type.
+
+precondition : condition -> outcome -> type.
+result : outcome -> behavior -> type.
+
+%%% Conditions and Behaviors for OLs %%%
+%% time
+slow_timeout : condition.
+tick : condition.
+
+%% entity spawning/deleting
+add : entity -> behavior.
+delete : entity -> behavior.
+
+%% spatial relationships, physics, and collision
+near : entity -> entity -> condition.
+far : entity -> entity -> condition.
+collide : entity -> entity -> condition.
+
+move_toward : entity -> entity -> behavior.
+move_away   : entity -> entity -> behavior.
+
+%% resource logic
+increase : resource -> amount -> behavior.
+decrease : resource -> amount -> behavior.
+
+le : resource -> amount -> condition.
+lt : resource -> amount -> condition.
+ge : resource -> amount -> condition.
+gt : resource -> amount -> condition.
+
+%%% Goals %%%
+goal_type : type.
+prevent : outcome -> goal_type.
+enable : outcome -> goal_type.
+achieve : condition -> goal_type.
+avoid : condition -> goal_type.
+maintain : resource -> goal_type.
+limit : resource -> goal_type.
+
+goal : goal_type -> type.
+
+%%%% Mechanics %%%%
+
+%% Mechanic (1): Producers make new ideas
+gen_idea : outcome.
+gen_idea/requires_timeout : precondition slow_timeout gen_idea.
+gen_idea/adds_new_idea    : result gen_idea (add new_idea).
+
+%% Mechanic (2): The cursor exerts force on ideas.
+push_idea : outcome.
+push_idea/requires_near    : precondition (near cursor new_idea) push_idea.
+push_idea/causes_move_away : result push_idea (move_away new_idea cursor).
+
+
+%% Mechanic (3): The vectorialist moves toward groups of new ideas.
+scan : outcome.
+scan/requires_far        : precondition (far vectorialist new_idea) scan.
+scan/causes_move_toward  : result scan (move_toward vectorialist new_idea).
+
+%% Mechanic (4): The vectorialist pulls in new ideas.
+pull_idea : outcome.
+pull_idea/requires_near       : precondition (near vectorialist new_idea) pull_idea.
+pull_idea/causes_move_toward  : result pull_idea (move_toward new_idea vectorialist).
+
+%% Mechanic (5): Collision between new ideas and vectorialist
+%%                kills new idea & increases old ideas.
+commodify : outcome.
+commodify/requires_collide : precondition (collide new_idea vectorialist) commodify.
+commodify/causes_delete    : result commodify (delete new_idea).
+commodify/causes_increase  : result commodify (increase old_ideas med).
+
+%% Mechanic (6): Collision between new idea & producer increases
+%                ideasAbsorbed.
+inspire : outcome.
+inspire/requires_collide : precondition (collide new_idea producer) inspire.
+inspire/causes_increase  : result inspire (increase ideasAbsorbed med).
+% XXX? result(learn, set_color(producer,green)).
+
+
+% %% Mechanic (7): ideasAbsorbed decreases with time.
+forget : outcome.
+forget/requires_tick : precondition tick forget.
+forget/causes_decrease : result forget (decrease ideasAbsorbed low).
+% XXX result(tick, set_color(producer,gray)).
+
+
+% %% Mechanic (8): If ideasAbsorbed goes to 0, producer turns into consumer.
+convert_producer : outcome.
+convert_producer/requires_le : precondition (le ideasAbsorbed low) convert_producer.
+convert_producer/causes_delete : result convert_producer (delete producer).
+convert_producer/causes_add    : result convert_producer (add consumer).
+
+% %% Mechanic (9) (only referred to later than 1st example):
+% %%  If ideasConsumed goes to 0, consumer turns into producer.
+% precondition(le(ideasConsumed, 0), convert_consumer).
+% result(convert_consumer, delete(consumer)).
+% result(convert_consumer, add(producer)).
+% 
+% %% Mechanic (10) (only referred to later than 1st example):
+% %% Vectorialist provides consumers with old_ideas
+% precondition(gt(old_ideas, 0), feed_consumer).
+% precondition(near(vectorialist, consumer), feed_consumer).
+% result(feed_consumer, decrease(old_ideas, low)).
+% result(feed_consumer, increase(ideasConsumed, low)).
+% precondition(tick, forget_old).
+% result(forget_old, decrease(ideasConsumed, low)).
+% 
+% 
+% %% Initializations
+% % XXX ???
+% initialize(set_to(ideasAbsorbed,10)).
+% 
+% 
+% initialize(set_sprite(producer, person)).
+% initialize(set_color(producer,green)).
+% initialize(set_sprite(consumer, person)).
+% initialize(set_color(consumer,gray)).
+% initialize(set_sprite(vectorialist, evil_robot)).
+% initialize(set_color(vectorialist,black)).
+  
+% %% The goal is to prevent producers turning into consumers.
+stated_goal : goal (prevent convert_producer).
+
+

@@ -1,0 +1,68 @@
+
+---- {!player, !system, (confidence (s (s (s z)))), (ball_direction moving_left), (ball_position left), (stage game)}
+
+Applying transition player_click
+---- {click, !player, !system, (confidence (s (s (s z)))), (ball_direction moving_left), (ball_position left), (stage game)}
+
+Applying transition (unsuccessful_click left (s (s z)))
+---- {(confidence (s (s z))), (ball_position left), !player, !system, (ball_direction moving_left), (stage game)}
+
+Applying transition clock
+---- {timer_tick, (confidence (s (s z))), (ball_position left), !player, !system, (ball_direction moving_left), (stage game)}
+
+Applying transition (drain_confidence (s z))
+---- {(confidence (s z)), (ball_position left), !player, !system, (ball_direction moving_left), (stage game)}
+
+Applying transition clock
+---- {timer_tick, (confidence (s z)), (ball_position left), !player, !system, (ball_direction moving_left), (stage game)}
+
+Applying transition (ball_move left moving_left left moving_right)
+---- {(ball_direction moving_right), (ball_position left), (confidence (s z)), !player, !system, (stage game)}
+
+Applying transition player_click
+---- {click, (ball_direction moving_right), (ball_position left), (confidence (s z)), !player, !system, (stage game)}
+
+Applying transition (unsuccessful_click left z)
+---- {(confidence z), (ball_position left), (ball_direction moving_right), !player, !system, (stage game)}
+
+Applying transition clock
+---- {timer_tick, (confidence z), (ball_position left), (ball_direction moving_right), !player, !system, (stage game)}
+
+Applying transition clock
+---- {timer_tick, timer_tick, (confidence z), (ball_position left), (ball_direction moving_right), !player, !system, (stage game)}
+
+Applying transition clock
+---- {timer_tick, timer_tick, timer_tick, (confidence z), (ball_position left), (ball_direction moving_right), !player, !system, (stage game)}
+
+Applying transition clock
+---- {timer_tick, timer_tick, timer_tick, timer_tick, (confidence z), (ball_position left), (ball_direction moving_right), !player, !system, (stage game)}
+
+Applying transition player_click
+---- {click, timer_tick, timer_tick, timer_tick, timer_tick, (confidence z), (ball_position left), (ball_direction moving_right), !player, !system, (stage game)}
+
+Applying transition player_click
+---- {click, click, timer_tick, timer_tick, timer_tick, timer_tick, (confidence z), (ball_position left), (ball_direction moving_right), !player, !system, (stage game)}
+
+Applying transition (ball_move left moving_right middle moving_right)
+---- {(ball_direction moving_right), (ball_position middle), click, click, timer_tick, timer_tick, timer_tick, (confidence z), !player, !system, (stage game)}
+
+Applying transition (successful_click z)
+---- {(confidence (s z)), (ball_position middle), (ball_direction moving_right), click, timer_tick, timer_tick, timer_tick, !player, !system, (stage game)}
+
+Applying transition (ball_move middle moving_right right moving_right)
+---- {(ball_direction moving_right), (ball_position right), (confidence (s z)), click, timer_tick, timer_tick, !player, !system, (stage game)}
+
+Applying transition (unsuccessful_click right z)
+---- {(confidence z), (ball_position right), (ball_direction moving_right), timer_tick, timer_tick, !player, !system, (stage game)}
+
+Applying transition (ball_move right moving_right right moving_left)
+---- {(ball_direction moving_left), (ball_position right), (confidence z), timer_tick, !player, !system, (stage game)}
+
+Applying transition (ball_move right moving_left middle moving_left)
+---- {(ball_direction moving_left), (ball_position middle), (confidence z), !player, !system, (stage game)}
+
+Applying transition player_click
+---- {click, (ball_direction moving_left), (ball_position middle), (confidence z), !player, !system, (stage game)}
+
+Applying transition (successful_click z)
+---- {(confidence (s z)), (ball_position middle), (ball_direction moving_left), !player, !system, (stage game)}

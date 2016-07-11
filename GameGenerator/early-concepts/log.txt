@@ -1,0 +1,11 @@
+
+---- {(connect log lilypad), (stage generate)}
+
+Applying transition (make/connect log lilypad)
+---- {(node lilypad), (node log), (stage generate)}
+
+Applying transition (connect/indirect/subject log carries frog)
+---- {(node frog), (connected log carries frog), (node lilypad), (stage generate)}
+
+Applying transition (connect/direct frog lilypad hits)
+---- {(connected frog hits lilypad), (connected log carries frog), (stage generate)}

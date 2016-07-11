@@ -1,0 +1,18 @@
+
+lowThreshold : condition -> resource -> type.
+low/lt : lowThreshold (lt R _) R.
+low/le : lowThreshold (le R _) R.
+
+good : resource -> type.
+
+good/goal_is_to_maintain
+: good R
+  <- goal (maintain R).
+
+goal/maintain_to_prevent
+: goal (maintain Resource)
+  <- precondition Condition Outcome
+  <- lowThreshold Condition Resource
+  <- goal (prevent Outcome).
+
+%solve - : goal (maintain R).
