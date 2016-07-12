@@ -137,16 +137,16 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id: "happy",
 				src: "happy.png",
-				state: ["confidence gt 2"]
+				state: ["confidence gt 4"]
 			},
 			{
 				id: "worried",
 				src: "worried.png",
-				state: ["confidence eq 1"]
+				state: ["confidence eq 2"]
 			},
 			{
 				id: "stressed",
-				src: "worried.png",
+				src: "stressed.png",
 				state: ["confidence eq 0"]
 			},
 		];
@@ -162,7 +162,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var startGame = function(id) {
 		var Game = require("Game");
-		Game.init(id, State, StoryDisplay);
+		Game.init(id, State, Display);
 	}
 
 	return {

@@ -45,6 +45,7 @@ var init = function(id, _State, _Display) {
 		variables[varName]=value;
 		State.set(varName, value);
 		StoryAssembler.refreshNarrative();
+		Display.setAvatar(State);
 	};
 	function getVariable(varName){
 		return variables[varName];

@@ -101,9 +101,17 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		Sets avatar on-screen based on state
 	*/
 	var setAvatar = function(State) {
-		//TODO: evaluate which state holds for the avatar
-		var avatar = State.avatars[0];
-		$('#charPic').css("background-image", "url(/assets/avatar/"+ avatar.src +")"); 
+		var theAvatar = false;
+
+		State.avatars.forEach(function(avatar, pos) {
+			var correctAvatar = State.isTrue(avatar.state);
+			if (correctAvatar) {
+				theAvatar = avatar;
+			}
+		});
+		if (theAvatar) {
+			$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
+		}
 	}
 
 	/*
