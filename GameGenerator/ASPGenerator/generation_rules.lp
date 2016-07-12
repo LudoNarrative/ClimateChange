@@ -112,7 +112,11 @@ actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
 %tick must occur alone
 :-  precondition(tick,OUTCOME), 
     2 { precondition(CONDITION,OUTCOME) : condition(CONDITION)}.
- 
+
+priority(Outcome,high) :- precondition(control_event(E),Outcome).
+
+:- priority(OUTCOME1,high), not priority(OUTCOME2), outcomeOrder(OUTCOME2,OUTCOME1).
+    
 % 2 outcomes are the same if they share a precondition
 same(OUTCOME1, OUTCOME2) :- 
     precondition(CONDITION,OUTCOME1),
@@ -399,10 +403,16 @@ playerControls :- precondition(control_event(EVENT),OUTCOME).
 :- not playerControls.
 
 % count number of results
-results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
 
-%count number of preconditions
-preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
+% outcomes(N) :- N = #count{outcome(OUTCOME) : outcome(OUTCOME)}.
+
+% results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
+
+% %count number of preconditions
+% preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
+
+% :- outcomes(N), N > 4.
+
 
 % CRM 6/27/2016 - only add a singular entity if it's absent beforehand.
 maintains_singular(Outcome, Entity)
