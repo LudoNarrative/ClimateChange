@@ -78,6 +78,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set specialty shrimp",
 				"set emotional 0",
 				"set serious chill",
+				"set percent 0",			/*this is what percent is current uncovered*/
 				"set requiredPercent 0",
 			]
 		},
@@ -132,26 +133,90 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		Eventually this should return something different for each scene...for now we just use this
 	*/
 	var loadAvatars = function(id) {
-
-		var avatars = [
+		var avatarSpec= [
 			{
-				id: "happy",
-				src: "happy.png",
-				state: ["confidence gt 4"]
+				id : "dinner",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
 			},
 			{
-				id: "worried",
-				src: "worried.png",
-				state: ["confidence eq 2"]
+				id : "lecture",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
 			},
 			{
-				id: "stressed",
-				src: "stressed.png",
-				state: ["confidence eq 0"]
+				id : "worker",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
 			},
+			{
+				id : "travel",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
+			}
 		];
 
-		State.avatars = avatars;
+		State.avatars = avatarSpec.filter(function(v) { return v.id === id; })[0].avatars;
 
 		Display.setAvatar(State);
 	}
