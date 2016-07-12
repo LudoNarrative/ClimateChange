@@ -62,23 +62,23 @@ result_enables_condition(set(Property, Value), check(Property, eq(Value)))
        effect(set(Property, Value)).
 
 % setting a resource to something makes it gt/ge/lt/le other things.
-result_enables_condition(set(Resource, Value), le(Resource, Value'))
-  :- less_than_or_equal(Value, Value'),
+result_enables_condition(set(Resource, Value), le(Resource, Value_prime))
+  :- less_than_or_equal(Value, Value_prime),
       effect(set(Resource, Value)).
-result_enables_condition(set(R, V), lt(R, V'))
-  :- less_than(V, V'),
+result_enables_condition(set(R, V), lt(R, V_prime))
+  :- less_than(V, V_prime),
       effect(set(R, V)).
-result_enables_condition(set(R, V), ge(R, V'))
-  :- greater_than_or_equal(V, V'),
+result_enables_condition(set(R, V), ge(R, V_prime))
+  :- greater_than_or_equal(V, V_prime),
       effect(set(R, V)).
-result_enables_condition(set(R, V), gt(R, V'))
-  :- greater_than(V, V'),
+result_enables_condition(set(R, V), gt(R, V_prime))
+  :- greater_than(V, V_prime),
       effect(set(R,V)).
 
 less_than_or_equal(Value, Value) 
-  :- potentialValues(Value), potentialValues(Value').
-less_than_or_equal(Value, Value')
-  :- less_than(Value, Value').
+  :- potentialValues(Value), potentialValues(Value_prime).
+less_than_or_equal(Value, Value_prime)
+  :- less_than(Value, Value_prime).
 
 less_than(0, low).
 less_than(low, medium).
@@ -98,16 +98,16 @@ result_enables_condition(set(Resource, Value), C)
       effect(set(Resource, Value)).
 
 result_enables_condition
-  (set(Property, Value), check(Property, neq(Value'))) :-
-      condition(check(Property, neq(Value'))),
+  (set(Property, Value), check(Property, neq(Value_prime))) :-
+      condition(check(Property, neq(Value_prime))),
       effect(set(Property, Value)),
-      Value != Value'.
+      Value != Value_prime.
 
 
 %% Implication
-result_enables_condition(R, C')
+result_enables_condition(R, C_prime)
   :- result_enables_condition(R, C),
-      implies(C, C').
+      implies(C, C_prime).
 
 %% Entities
 
@@ -308,9 +308,11 @@ condition(CONDITION) :- precondition(CONDITION,Outcome).
 outcome(Outcome) :- precondition(_, Outcome).
 
 moreThanOnePrecondition(Outcome) :- 
-    precondition(C1, Outcome),
-    precondition(C2, Outcome),
-    C1 != C2.
+    2 {precondition(C, Outcome) : condition(C)}, outcome(Outcome).
+% moreThanOnePrecondition(Outcome) :- 
+    % precondition(C1, Outcome),
+    % precondition(C2, Outcome),
+    % C1 != C2.
 %    2 {precondition(CONDITION,Outcome) : condition(CONDITION)} , 
 %    outcome(Outcome).
 onlyOnePrecondition(Outcome) :- 
@@ -630,7 +632,7 @@ implies(C, far(E1, E2))
   :- farness_condition(C, E1, E2).
 
 implies(C, present(E))
-  :- spatial_condition(C, E, E').
+  :- spatial_condition(C, E, E_prime).
 
 implies(control_event(click(E)), present(E))
   :- condition(control_event(click(E))).
@@ -658,13 +660,13 @@ contradictory(le(R, Low), ge(R, High))
 learnedCondition(C)
   :- condition(C).
 learnedCondition(C)
-  :- learnedCondition(C'),
-     implies(C', C).
+  :- learnedCondition(C_prime),
+     implies(C_prime, C).
 
 
 inhibits(Result, Condition) :-
-  negates(Result, Condition'),
-  implies(Condition, Condition').
+  negates(Result, Condition_prime),
+  implies(Condition, Condition_prime).
 
 negates(delete(E), present(E))
   :- result(_, delete(E)),
@@ -702,11 +704,33 @@ positive_feedback(Resource) :-
 outcome_enablesN(Outcome, Result,0) :-
     result(Outcome, Result).
 
+    
 outcome_enablesN(Outcome, Result,N+1) :-
-    result(Outcome, Result'),
-    result_enables(Result', Outcome'),
-    outcome_enablesN(Outcome', Result,N),
+    result(Outcome, Result_prime),
+    result_enables(Result_prime, Outcome_prime),
+    outcome_enablesN(Outcome_prime, Result,N),
+    outcomeOrder(Outcome,Outcome_prime),
+    not outcome_enablesN(Outcome,Result,N),
     N < 1.
+    
+    
+outcome_enablesN(Outcome, Result,N+1) :-
+    result(Outcome, Result_prime),
+    result_enables(Result_prime, Outcome_prime),
+    outcome_enablesN(Outcome_prime, Result,N),
+    unordered(Outcome),
+    not outcome_enablesN(Outcome,Result,N),
+    N < 1.
+    
+      
+outcome_enablesN(Outcome, Result,N+1) :-
+    result(Outcome, Result_prime),
+    result_enables(Result_prime, Outcome_prime),
+    outcome_enablesN(Outcome_prime, Result,N),
+    unordered(Outcome_prime),
+    not outcome_enablesN(Outcome,Result,N),
+    N < 1.
+unordered(Outcome) :- outcome(Outcome), not outcomeOrder(_,Outcome), not outcomeOrder(Outcome,_).
 
 outcome_enables(C,O) :-
     outcome_enablesN(C,O,N).
@@ -717,8 +741,8 @@ conditionEnablesN(C, O,0) :-
     precondition(C, O).
 
 conditionEnablesN(C, O,N+1) :-
-    conditionEnablesN(C, O',N),
-    enables(O', O),
+    conditionEnablesN(C, O_prime,N),
+    enables(O_prime, O),
     N < 1.
 conditionEnables(C,O) :-
     conditionEnablesN(C,O,N).
@@ -729,12 +753,12 @@ conditionEnables(C,O) :-
 
 %% More outcome favorability
 outcomeFavorable(Outcome) :-
-    enables(Outcome, Outcome'),
-    outcomeFavorable(Outcome').
+    enables(Outcome, Outcome_prime),
+    outcomeFavorable(Outcome_prime).
 
 outcomeUnfavorable(Outcome) :-
-    enables(Outcome, Outcome'),
-    outcomeUnfavorable(Outcome').
+    enables(Outcome, Outcome_prime),
+    outcomeUnfavorable(Outcome_prime).
  
 selection(Outcome) :-
     result(Outcome,select(ENTITY,CONDITION)).
@@ -1062,8 +1086,8 @@ entityInfluencesOther(EntityA,EntityB) :-
     precondition(overlaps(EntityB,EntityA),OUTCOME),
     result(OUTCOME,delete(EntityB)).
 % entityInfluences(Entity,Outcome) :-
-    % entityInfluencesOther(Entity,Entity'),
-    % entityInfluences(Entity',Outcome).
+    % entityInfluencesOther(Entity,Entity_prime),
+    % entityInfluences(Entity_prime,Outcome).
     
     
 %% Player influence and determination
@@ -1292,7 +1316,7 @@ narrative_gating :-
   result(O, mode_change(narrative_progress)),
   precondition(C, O),
   lowThreshold(C, R, _),
-  result(O', decrease(R, _)).
+  result(O_prime, decrease(R, _)).
 
 
 %% Time stuff
