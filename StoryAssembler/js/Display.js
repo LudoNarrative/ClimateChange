@@ -10,7 +10,7 @@ define([], function() {
 
 	/* PRIVATE FUNCTIONS AND VARIABLES */
 	var showUnavailableChoices = true;
-	var showDiagnostics = false;
+	var showDiagnostics = true;
 
 	var clickHandler;
 	var varClickChangerFunc;		//this changes variables in the game when clicked
@@ -106,6 +106,14 @@ define([], function() {
 
 		// Create Diagnostic container.
 		if (showDiagnostics) {
+
+			$('<div/>', {
+				id: "diagnosticsButton",
+				click: function() {
+					$("#diagnostics").toggle();;
+			}
+			}).appendTo("body");
+
 			var diagEl = makeEl("div", "");
 			diagEl.id = "diagnostics";
 			document.getElementsByTagName('body')[0].appendChild(diagEl);

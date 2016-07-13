@@ -7,7 +7,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var init = function() {
 		
-		var scenes = ["dinner", "lecture", "travel", "worker" ];
+		var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
+		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
 	}
@@ -16,6 +17,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		Loads the necessary materials for the story
 	*/
 	var loadStoryMaterials = function(id) {
+
+		State.set("currentScene", id);
 		var example = getStorySpec(id);
 		example.startState.forEach(function(command) {
 			State.change(command);
@@ -33,7 +36,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		}
 
 		//TODO: display intro screen
-		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Character);
+		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 	}
 
 	var getStorySpec = function(id) {
@@ -129,8 +132,33 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		return storySpec.filter(function(v) { return v.id === id; })[0];
 	}
 
+	var loadSceneIntro = function(id) {
+
+		var sceneScreens = [
+			{
+				id : "dinner",
+				text : "<p>You are Emma Richards, a PhD student who studies the ocean.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
+			},
+			{
+				id : "lecture",
+				text : "<p>You were able to secure a job as an adjunct professor in Environmental Sciences.</p><p>Dr. Tennerson, a senior faculty member, as been sent to evaluate how the class is going.</p><p>Choose what Emma says, but make sure to keep your cool!</p>"
+			},
+			{
+				id : "worker",
+				text : "<p>After a few years struggling as a professor, you decided to apply your expertise to make a difference in a different way.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
+			},
+			{
+				id : "travel",
+				text : "<p>As one of the foremost experts in your field, you spend much of your time traveling to conferences. You never dreamed you'd come so far, or your impact would be so great.</p>"
+			},
+
+		]
+		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
+		Display.setSceneIntro(sceneText);
+	}
+
 	/*
-		Eventually this should return something different for each scene...for now we just use this
+		Returns pre-defined list of avatars...hypothetically in the future we could use some metric to pull avatars based on their state gating...
 	*/
 	var loadAvatars = function(id) {
 		var avatarSpec= [
@@ -234,6 +262,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		init : init,
 		loadStoryMaterials : loadStoryMaterials,
 		loadAvatars : loadAvatars,
+		loadSceneIntro : loadSceneIntro,
 		startGame : startGame
 	}
 });

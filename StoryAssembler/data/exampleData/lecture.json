@@ -1,12 +1,11 @@
 [
 	/*
-	TODO:
-		-put in confidence-dependent text
-		-author confidence-dependent branches
+	Notes:
+		This is predicated on confidence of 0 being neutral, confidence of 5 being amazing, and confidence of -5 being terrible
 	*/
 	{
 		"id": "Start",
-		"content": "It's your first class, and it's been going well so far, like you knew it would. If you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson, who's here to evaluate you.",
+		"content": "{ifStateCondition|confidence gt 0|Class has been going well so far, like you knew it would. But if you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson.|You didn't expect teaching to be anything near so stressful. Your heart's pounding and sweat's beading on your forehead. Dr. Tennerson's here evaluating you today-- keep it together, Emma!} Five more minutes. You can do this.",
 		"conditions": ["establishLecture neq true"],
 		"effects": [
 			"set establishLecture true", 
@@ -14,18 +13,19 @@
 			"set calledFranklin false",
 			"set calledElika false",
 			"set calledShy false",
-			"set difficulty 1"
+			"set difficulty 1",
+			"set confidence -5"	/*just a test value*/
 		]
 	},
 	{
 		"id": "slide1",
-		"content": "\"So you can see that as CO2 levels rise, the ocean becomes more acidic. Already 25% more acidic than in the 1800s.\"",
+		"content": "\"So{ifStateCondition|confidence lt 0|, uh,|} you can see that as CO2 levels {ifStateCondition|confidence lt 0|fall-- er, no, I mean |}rise, the ocean becomes more acidic. Already 25% more acidic than in the 1800s.\"",
 		//"conditions": [],
 		"effects": ["set giveLecture true", "set lectureContent 1"]
 	},
 	{
 		"id": "slide2",
-		"content": "\"And we know that more acidic seawater makes it harder for shell-forming sea creatures like corals, oysters, and of course my own favorite life form, {ifState|specialty|shrimp|the shrimp|}{ifState|specialty|lobster|the lobster|}{ifState|specialty|coral|the coral|}.\"",
+		"content": "\"And we know that more acidic seawater makes it {ifStateCondition|confidence lt 0|\"--you trail off, losing your train of thought for a moment, then regroup--\"|}harder for shell-forming sea creatures like corals, oysters, and of course my own favorite life form, {ifState|specialty|shrimp|the shrimp|}{ifState|specialty|lobster|the lobster|}{ifState|specialty|coral|the coral|}.\"",
 		"conditions": ["lectureContent eq 1"],
 		"effects": [
 			"set giveLecture true", 
@@ -35,7 +35,7 @@
 	},
 	{
 		"id": "slide3",
-		"content": "\"Even plankton, which is the base of the food chain for most ocean life, is affected. So there's a direct link between a rise in CO2 and the survival of most life in the oceans.\"",
+		"content": "\"Even plankton, which is the base of the food chain for most ocean life, is affected. So there's{ifStateCondition|confidence lt 0|, um, a link, a direct link, you see,| a direct link} between a rise in CO2 and the survival of most life in the oceans.\"",
 		"conditions": ["lectureContent eq 2"],
 		"effects": ["set giveLecture true", "set lectureContent 3"]
 	},
@@ -78,7 +78,7 @@
 	{
 		"id": "Elika2",
 		"choiceLabel": "Answer Élika",
-		"content": "\"Good question, Élika. The reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.\"<br><br>\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and those catastrophes usually triggered mass extinctions.",
+		"content": "\"Good question, Élika. The reason is that the current change is happening far faster than historical changes-- too fast for natural selection to react.\"<br><br>\"Only catastrophes like meteor strikes have changed the environment so quickly before-- and {ifStateCondition|confidence lt 0|er, those, um, |}those catastrophes usually triggered mass extinctions.",
 		"choices": [
 			{ "gotoId" : "Elika3" },
 			{ "gotoId" : "questionBridge" }
@@ -127,7 +127,7 @@
 	{
 		"id": "FranklinLogic1",
 		"choiceLabel": "Appeal to logic.",
-		"content": "\"That's a good point, Franklin, but it's not applicable in this case. There are dozens of independent studies using many different techniques, that all suggest a causal link between increased CO2 and increased ocean acidity.",
+		"content": "\"That's {ifStateCondition|confidence lt 0|um, |}a good point, Franklin, but it's not applicable in this case. There are {ifStateCondition|confidence lt 0|um, thousands...well maybe not that many, but definitely dozens at least,|dozens} of independent studies using many different techniques, that all suggest a causal link between increased CO2 and increased ocean acidity.",
 		"choices": [
 			{ "gotoId" : "FranklinLogic2" }
 		],
@@ -137,7 +137,7 @@
 	{
 		"id": "FranklinLogic2",
 		"choiceLabel": "Continue.",
-		"content": "\"When we see a recurring pattern, validated by independent techniques, the scientific method tells us our model of a system is useful.\"<br><br>He doesn't seem especially happy, but seems to accept the point. Good: that makes you feel a little better.",
+		"content": "\"When we see a recurring pattern, validated by independent techniques, the scientific method {ifStateCondition|confidence lt 0|, um...it, er, |}tells us our model of a system is useful.\"<br><br>He doesn't seem especially happy, but seems to accept the point. Good: that makes you feel a little better.",
 		"choices": [
 			{ "gotoId" : "FranklinMore" },
 			{ "gotoId" : "questionBridge" }
@@ -158,7 +158,7 @@
 	{
 		"id": "FranklinValues",
 		"choiceLabel": "Appeal to values.",
-		"content": "\"Don't you think we have an ethical obligation to investigate this and take action, even if things aren't entirely settled?\" you reply. \"If there was a 97% chance your child was ill, wouldn't you act to protect her rather than wait?\"<br><br>Franklin seems annoyed by this response, but there are some positive murmurs from the rest of the class.",
+		"content": "{ifStateCondition|confidence lt 0|\"What you <i>deniers</i> don't seem to understand is that there's no uncertainty about this,\" you snap. \"The science is solid, and sticking your head in the sand won't make the problem go away.<br><br>There's some uncertain muttering. That came out harsher than you intended. Maybe if you weren't so nervous...|\"Don't you think we have an ethical obligation to investigate this and take action, even if things aren't entirely settled?\" you reply. \"If there was a 97% chance your child was ill, wouldn't you act to protect her rather than wait?\"<br><br>Franklin seems annoyed by this response, but there are some positive murmurs from the rest of the class.}",
 		"choices": [
 			{ "gotoId" : "FranklinMore" },
 			{ "gotoId" : "questionBridge" }
@@ -214,7 +214,7 @@
 	{
 		"id": "ShyExample2",
 		"choiceLabel": "More.",
-		"content": "It works! Within a few minutes, you've set up an example that shows higher and higher levels of acidity slowing down and eventually reversing the slow build-up of calcium carbonate that so many ocean creatures use to make their shells. Good thing you were able to keep your cool and do the demo so well."
+		"content": "{ifStateCondition|confidence lt 0|It doesn't go over so well. Due to your high stress level, you fumble around forever trying to get the program launched and set up. By the time you get it working, half the class are checking their phones. Maybe this stressed, you shouldn't have tried something unusual...|It works! Within a few minutes, you've set up an example that shows higher and higher levels of acidity slowing down and eventually reversing the slow build-up of calcium carbonate that so many ocean creatures use to make their shells. Good thing you were able to keep your cool and do the demo so well.}"
 	},
 	{
 		"id": "ShyPersonal",
@@ -228,13 +228,13 @@
 	{
 		"id": "ShyPersonal2",
 		"choiceLabel": "More.",
-		"content": "The story seems to go over well... you get a couple smiles and laughs, and at the end when you tie it into the question, the shy student (Justin! You remember now) seems more engaged."
+		"content": "{ifStateCondition|confidence lt 0|But you're so stressed the story just comes out weird and overly personal. By the time you finally stammer your way to the answer, you feel like an idiot.|The story seems to go over well... you get a couple smiles and laughs, and at the end when you tie it into the question, the shy student (Justin! You remember now) seems more engaged.}"
 	},
 
 	//------CLASS OVER------------------------------------------------
 	{
 		"id": "ClassFinished",
-		"content": "You remind everyone about the Friday reading, and dismiss the class. You feel great-- you kept your cool together, and pulled it off.<br><br>Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. Your confidence really shines through. I think you're going to make a wonderful professor.\"",
+		"content": "You remind everyone about the Friday reading, and dismiss the class. {ifStateCondition|confidence lt 0|You're shaking, still nervous as hell, but you made it.|You feel great-- you kept your cool together, and pulled it off.}<br><br>Dr. Tennerson steps forward with a smile from his seat in the back, where he's been observing. \"You handled that well, Emma. {ifStateCondition|confidence lt 0|Your confidence is building every day.|Your confidence really shines through.} I think you're going to make a wonderful professor.\"",
 		"conditions": ["questionsLeft eq 0", "confidence gt 0"],
 		"effects": ["set classOver true"]
 	},

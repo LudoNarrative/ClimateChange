@@ -1,6 +1,7 @@
 define(["Game", "jQuery", "jQueryUI"], function(Game) {
 
 	var State;
+	var Coordinator;
 
 	var makeLink = function(_coordinator, id, content, target) {
 		
@@ -12,19 +13,27 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		    href: target,
 		    text: content,
 		    click: function() {
-				initSceneScreen();
-				_coordinator.loadStoryMaterials(id);
-				_coordinator.startGame(id);
-				_coordinator.loadAvatars(id);
+				$( "#blackout" ).fadeIn( "slow", function() {
+	    			startScene(_coordinator,id);
+  				});
 			}
 		}).appendTo(pTag);
 
 		return pTag;
 	}
 
+	var startScene = function(_coordinator, id, loadIntro) {
+		initSceneScreen(State);
+		if (loadIntro) { _coordinator.loadSceneIntro(id); }
+		_coordinator.loadStoryMaterials(id);
+		_coordinator.loadAvatars(id);
+		_coordinator.startGame(id);
+	}
+
 	var initTitleScreen = function(_coordinator, _State, scenes) {
 
 		State = _State;
+		Coordinator = _coordinator;
 		
 		$('<h1/>', {
 		    text: 'Climate Change Game',
@@ -35,10 +44,9 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 			text: 'Begin',
 			id: 'begin',
 			click: function() {
-				initSceneScreen(State);
-				_coordinator.loadStoryMaterials(scenes[0]);
-				_coordinator.startGame(scenes[0]);
-				_coordinator.loadAvatars(scenes[0]);
+				$( "#blackout" ).fadeIn( "slow", function() {
+	    			startScene(_coordinator, scenes[0], true);
+  				});
 			}
 		}).appendTo('body');
 
@@ -52,6 +60,11 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 			var el = makeLink(_coordinator, scene, scene, "#");
 			$('body').append(el);
 		});
+
+		$('<div/>', {
+		    id: 'blackout'
+		    //text: ''
+		}).appendTo('body');
 	}
 
 	var initSceneScreen = function(State) {
@@ -69,6 +82,16 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 
 		$('<div/>', {
 		    id: 'statsContainer'
+		    //text: ''
+		}).appendTo('body');
+
+		$('<div/>', {
+		    id: 'sceneIntro'
+		    //text: ''
+		}).appendTo('body');
+
+		$('<div/>', {
+		    id: 'blackout'
 		    //text: ''
 		}).appendTo('body');
 
@@ -134,8 +157,43 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		})
 	}
 
+	//sets the intro screen for each scene
+	var setSceneIntro = function(sceneText) {
+		$("#blackout").show();
+		$("#sceneIntro").html(sceneText);
+		var begin = $('<h2/>', {
+			text: 'Begin',
+			click: function() {
+				$("#sceneIntro").fadeOut( "slow" );
+				$("#blackout").fadeOut( "slow" );
+			}
+		}).appendTo("#sceneIntro");
+		$("#sceneIntro").fadeIn( "slow" );
+	}
+
+	var setSceneOutro = function(endText) {
+
+		var nextIndex = State.get("scenes").findIndex(function(scene) {
+			return (scene == State.get("currentScene"));
+		}) + 1;
+		$( "#blackout" ).fadeIn( "slow", function() {
+	    	$("#sceneIntro").html(endText);
+	    	var begin = $('<h2/>', {
+			text: 'Next',
+			click: function() {
+				startScene(Coordinator, State.get("scenes")[nextIndex], true);
+			}
+			}).appendTo("#sceneIntro");
+
+	    	$( "#sceneIntro" ).fadeIn();
+	    });
+	}
+
 	return {
 		initTitleScreen : initTitleScreen,
-		setAvatar : setAvatar
+		setAvatar : setAvatar,
+		setSceneIntro : setSceneIntro,
+		setSceneOutro : setSceneOutro,
+		startScene : startScene
 	} 
 });
