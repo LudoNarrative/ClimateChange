@@ -387,7 +387,7 @@ validPathPlacement :- placement(ENTITY,TYPE,path(TYPE)), path(PATH,PTYPE).
 
 
 
-movementProfiles(constant;logarithmic;ease_in;ease_out;ease_in_out).
+movementProfiles(constant;linear;logarithmic;ease_in;ease_out;ease_in_out).
 
 1 {movementLogic(ENTITY,PROFILE) : movementProfiles(PROFILE)} 1 :- entity(ENTITY), not static(ENTITY).
 

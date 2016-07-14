@@ -15,9 +15,12 @@
 :- not nonMonotonic(r1).
 :- effect(mode_change(game_win)).
 :- not effect(mode_change(game_loss)).
-
+:- result(O,mode_change(game_loss)), not resourceAffects(r1,O).
 % :- not exists_counterforce(r1).
+riskReward :- actionHasRiskReward(ControlEvent).
+:- not riskReward.
 
+:- hinders(O,O2), result(O2,mode_change(game_loss)), easy(O).
 %:- not condition(tick).
 
 %:- not timingChallengeGoal.

@@ -45,6 +45,13 @@ result_enables_condition(move_away(E1, E2), Cond)
     :- closeness_condition(Cond, E1, E3),
        result(_, move_away(E1, E2)).
 
+result_enables_condition(move(E1, D), Cond)
+    :- closeness_condition(Cond, E1, E2),
+       result(_, move(E1, D)).
+       
+result_enables_condition(move(E2, D), Cond)
+    :- closeness_condition(Cond, E1, E2),
+       result(_, move(E2, D)).
 %% Resources
 
 result_enables_condition(increase(Resource, Amount), Condition)
@@ -344,6 +351,30 @@ betterWithTime(RESOURCE) :-
     onlyOnePrecondition(Outcome),
     result(Outcome,increase(RESOURCE,AMOUNT)).
     
+    
+    
+worseWithTime(RESOURCE) :- 
+    good(RESOURCE),
+    precondition(timerElapsed(T),Outcome), 
+    result(Outcome,decrease(RESOURCE,AMOUNT)).
+
+worseWithTime(RESOURCE) :- 
+    bad(RESOURCE),
+    precondition(timerElapsed(T),Outcome), 
+    onlyOnePrecondition(Outcome),
+    result(Outcome,increase(RESOURCE,AMOUNT)).
+
+betterWithTime(RESOURCE) :- 
+    bad(RESOURCE),
+    precondition(timerElapsed(T),Outcome), 
+    onlyOnePrecondition(Outcome),
+    result(Outcome,decrease(RESOURCE,AMOUNT)).
+
+betterWithTime(RESOURCE) :- 
+    good(RESOURCE),
+    precondition(timerElapsed(T),Outcome), 
+    onlyOnePrecondition(Outcome),
+    result(Outcome,increase(RESOURCE,AMOUNT)).
  
 
 thing(Outcome,ENTITY,POLARITY) :- 
@@ -415,6 +446,12 @@ consumedBy(Resource, Outcome) :-
     % precondition(Condition, Outcome),
     % highThreshold(Condition, Resource, Thresh),
     precondition(ge(Resource, Amount), Outcome),
+    result(Outcome, decrease(Resource, Amount)).
+    
+consumedBy(Resource, Outcome) :-
+    % precondition(Condition, Outcome),
+    % highThreshold(Condition, Resource, Thresh),
+    precondition(gt(Resource, Amount), Outcome),
     result(Outcome, decrease(Resource, Amount)).
     
 decreases(Outcome, Resource) :-
@@ -959,8 +996,8 @@ unrestrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     not restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)).
     
-unrestrictedCondition(control_event(BUTTON,STATE)) :-
-    precondition(control_event(BUTTON,STATE),Outcome) .
+unrestrictedCondition(control_event(C)) :-
+    precondition(control_event(C),Outcome) .
     
     
 restricted(Outcome) :-
