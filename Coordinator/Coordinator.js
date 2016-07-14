@@ -24,6 +24,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			State.change(command);
 		});
 		var data = HanSON.parse(story.dataFile);
+		ChunkLibrary.reset();
 		ChunkLibrary.add(data);
 
 		var wishlist = Wishlist.create(story.wishlist, State);
@@ -104,7 +105,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				//{ condition: "demonstrateConfidence eq true" },	//need to write some confidence-hinging options
 				{ condition: "establishSpecialtyInfo eq true" },
 				{ condition: "respondToQuestion eq true" },
-				{ condition: "classOver eq true" }
+				{ condition: "classOver eq true", persistent: true }
 			],
 			dataFile: require("text!lectureData"),
 			startState: [
