@@ -19,23 +19,25 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var loadStoryMaterials = function(id) {
 
 		State.set("currentScene", id);
-		var example = getStorySpec(id);
-		example.startState.forEach(function(command) {
+		var story = getStorySpec(id);
+		story.startState.forEach(function(command) {
 			State.change(command);
 		});
-		var data = HanSON.parse(example.dataFile);
+		var data = HanSON.parse(story.dataFile);
 		ChunkLibrary.add(data);
 
-		var wishlist = Wishlist.create(example.wishlist, State);
+		var wishlist = Wishlist.create(story.wishlist, State);
 		wishlist.logOn();
-		if (example.characters) {
+		if (story.characters) {
 			Character.init(State);
-			for (var key in example.characters) {
-				Character.add(key, example.characters[key]);
+			for (var key in story.characters) {
+				Character.add(key, story.characters[key]);
 			}
 		}
 
-		//TODO: display intro screen
+		State.set("storyUIvars", story.UIvars);
+		Display.setStats("storyStats");
+
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 	}
 
@@ -63,6 +65,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set readAirport 0",		//set by game
 				"set readSpecies 0",		//set by game
 				"set readRefugees 0"		//set by game
+			],
+			UIvars: [
+				"articlesRead"
 			]
 		},
 		{
@@ -83,6 +88,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set serious chill",
 				"set percent 0",			/*this is what percent is current uncovered*/
 				"set requiredPercent 0",
+			],
+			UIvars: [
+				"confidence",
+				"optimism"
 			]
 		},
 		{
@@ -102,6 +111,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set specialty shrimp", 
 				"set questionsLeft 3",
 				"set confidence 3"
+			],
+			UIvars: [
+				"confidence"
 			]
 		},
 		{
@@ -125,6 +137,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set friendName Emma",
 				"set career 0",
 				"set confidence 0"
+			],
+			UIvars: [
+				"confidence",
+				"career"
 			]
 		}
 		]
@@ -155,6 +171,31 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		]
 		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
 		Display.setSceneIntro(sceneText);
+	};
+
+	//loads background, for now this is based on scene id
+	var loadBackground = function(id) {
+		var sceneBgs = [
+			{
+				id : "dinner",
+				src : "dinner.png"
+			},
+			{
+				id : "lecture",
+				src : "lecture.png"
+			},
+			{
+				id : "worker",
+				src : "beach.png"
+			},
+			{
+				id : "travel",
+				src : "travel.png"
+			},
+
+		]
+		var sceneBg = sceneBgs.filter(function(v) { return v.id === id; })[0].src;
+		return sceneBg;
 	}
 
 	/*
@@ -263,6 +304,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		loadStoryMaterials : loadStoryMaterials,
 		loadAvatars : loadAvatars,
 		loadSceneIntro : loadSceneIntro,
+		loadBackground : loadBackground,
 		startGame : startGame
 	}
 });

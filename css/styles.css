@@ -59,6 +59,7 @@ Stats CSS
     width:19%;
     display: inline-block;
     background-color:brown;
+    background-size:100%;
 }
 
 #charPic {
@@ -80,7 +81,7 @@ Stats CSS
     z-index:2;
 }
 
-#sharedStats {
+#stats {
     min-height: 100px;
     background-color: #363636;
     width: 50%;
@@ -95,11 +96,23 @@ Stats CSS
 }
 
 #storyStats {
-
+    position: relative;
+    left: 20px;
+    top: 20px;
 }
 
 #gameStats {
 
+}
+
+.statLabel {
+    text-transform: capitalize;
+    color:#43d9ff;
+}
+
+.statValue {
+    font-weight:bold;
+    color:#ffe400;
 }
 
 /*

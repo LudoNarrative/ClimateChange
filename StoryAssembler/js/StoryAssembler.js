@@ -294,6 +294,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			State.change(effect);
 		});
 		wishlist.removeSatisfiedWants();
+		Display.setStats("storyStats");
 	}
 
 	var doStoryBreak = function() {
@@ -302,7 +303,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	// Show the scene is over.
 	var endScene = function() {
-		var text = "Here are some pertinent stats: 999"; 		//TODO: we need stats here
+		var text = "Chapter complete!"; 		//TODO: we need stats here
 		Display.setSceneOutro(text);
 	}
 
