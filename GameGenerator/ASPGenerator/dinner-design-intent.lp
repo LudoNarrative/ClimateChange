@@ -10,11 +10,11 @@
 #const min_resources = 1.
 #const max_resources = 1.
 #const min_outcomes = 0.
-#const max_outcomes = 3.
+#const max_outcomes = 5.
 #const min_end_outcomes = 1.
 #const max_end_outcomes = 1.
-#const max_resource_change_per = 2.
-#const max_conditions_per = 2.
+#const max_resource_change_per = 3.
+#const max_conditions_per = 3.
 
 
 % There is an event that represents sharing and the player influences it
@@ -28,7 +28,7 @@
 
 % :- not sharingAndCamaraderie.
 
-has_sharing :- sharing(_, _).
+has_sharing :- sharing(O1, O2).
 :- not has_sharing.
 
 :- not narrative_gating.

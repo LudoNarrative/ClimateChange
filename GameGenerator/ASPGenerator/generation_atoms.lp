@@ -57,12 +57,17 @@ resourceOrdering(r2,r3).
 resourceOrdering(r3,r4).
 resourceOrdering(r4,r5).
 resourceOrdering(A,C) :- resourceOrdering(A,B), resourceOrdering(B,C).
-potentialOutcomes(o1;o2;o3;o4;o5).
+potentialOutcomes(o1;o2;o3;o4;o5;o6;o7;o8;o9;o10).
 potentialEndOutcomes(eo1;eo2;eo3;eo4;eo5).
 outcomeOrder(o1,o2).
 outcomeOrder(o2,o3).
 outcomeOrder(o3,o4).
 outcomeOrder(o4,o5).
+outcomeOrder(o5,o6).
+outcomeOrder(o6,o7).
+outcomeOrder(o7,o8).
+outcomeOrder(o8,o9).
+outcomeOrder(o9,o10).
 outcomeOrder(A,C) :- outcomeOrder(A,B), outcomeOrder(B,C).
 
 potentialTimer(t1;t2;t3;t4).
