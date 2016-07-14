@@ -6,18 +6,20 @@ When beginScene is called, we need to pass in a defined ChunkLibrary, State, and
 define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	var chunkLibrary;
-	var State;
+	//var State;
 	var wishlist;
+	var StoryDisplay;
 	var Display;
 	
-	var beginScene = function(_wishlist, _chunkLibrary, _State, _Display, _Character, params) {
+	var beginScene = function(_wishlist, _chunkLibrary, _State, _StoryDisplay, _Display, _Character, params) {
 		chunkLibrary = _chunkLibrary;
 		State = _State;
+		StoryDisplay = _StoryDisplay;
 		Display = _Display;
 		wishlist = _wishlist;
 		params = params || {};
 		
-		Display.init(handleChoiceSelection, State.refreshNarrative);
+		StoryDisplay.init(handleChoiceSelection, State.refreshNarrative);
 		Templates.init(State, _Character);
 		continueScene();
 	}
@@ -43,7 +45,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 				bestPath = getBestPath(chunkLibrary, optChunkId);		//look for path from here
 
-				Display.diagnose({
+				StoryDisplay.diagnose({
 				path: bestPath,
 				wishlist: wishlist,
 				state: State.getBlackboard()
@@ -73,7 +75,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 			bestPath = getBestPath(chunkLibrary);		//do a blind search
 
-			Display.diagnose({
+			StoryDisplay.diagnose({
 				path: bestPath,
 				wishlist: wishlist,
 				state: State.getBlackboard()
@@ -115,7 +117,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	//used to tell the narrative system to refresh
 	var refreshNarrative = function() {
-		Display.clearText();
+		StoryDisplay.clearText();
 		displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
 	}
 
@@ -126,7 +128,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		var chunk = chunkLibrary.get(chunkId, mode);
 		var text = Templates.render(chunk.content);
 		if (text !== undefined) { 							//if the chunk has text, display it
-			Display.addStoryText(text); 
+			StoryDisplay.addStoryText(text); 
 		}
 		else {												//if it's making a request for text to display...
 			
@@ -151,7 +153,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 				if (!wish.persistent) { unsatisfiedWants = true; }
 			});
 
-			if (unsatisfiedWants) {	Display.addStoryText("[No path found!]"); }			//we ended too soon, show error
+			if (unsatisfiedWants) {	StoryDisplay.addStoryText("[No path found!]"); }			//we ended too soon, show error
 			else { endScene(); }			//otherwise end the scene
 		}
 		else {
@@ -222,7 +224,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 				var choiceText = getChoiceText(choiceDetails[pos]);
 				choiceText = Templates.render(choiceText);				//render any grammars in there
 				// if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
-				Display.addChoice({
+				StoryDisplay.addChoice({
 					text: choiceText,
 					chunkId: choice.val,
 					cantChoose: choiceDetails[pos].missing === true
@@ -232,12 +234,12 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
 		} else if (wishlist.wantsRemaining() > 0) {
 			// We have finished a path. After clicking this button, since we didn't send a chunkId parameter below, the system will search for a new bestPath given the remaining wishlist items.
-			Display.addChoice({text: "Continue"});
+			StoryDisplay.addChoice({text: "Continue"});
 		} else {
 			doStoryBreak();
 			endScene();
 		}
-		Display.diagnose({
+		StoryDisplay.diagnose({
 			wishlist: wishlist,
 			state: State.getBlackboard()
 		});
@@ -271,7 +273,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	}
 
 	var handleChoiceSelection = function(choice) {
-		Display.clearAll();
+		StoryDisplay.clearAll();
 
 		// Continue the scene. If we have a specific chunkId, we'll start our search with that; otherwise if it's undefined, we'll search over the whole library for a new best path.
 		continueScene(choice.chunkId);
@@ -292,15 +294,17 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			State.change(effect);
 		});
 		wishlist.removeSatisfiedWants();
+		Display.setStats("storyStats");
 	}
 
 	var doStoryBreak = function() {
-		Display.addStoryText("<br><br>");
+		StoryDisplay.addStoryText("<br><br>");
 	}
 
-	// Show an indicator that the scene is over.
+	// Show the scene is over.
 	var endScene = function() {
-		Display.addStoryText("[End of scene.]");
+		var text = "Chapter complete!"; 		//TODO: we need stats here
+		Display.setSceneOutro(text);
 	}
 
 	return {

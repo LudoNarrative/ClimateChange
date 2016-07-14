@@ -18,7 +18,7 @@ TODO: integrate posting to blackboard?
 
 	{
 		"id": "Intro2",
-		"choiceLabel" : "Used to be.",
+		"choiceLabel" : "Used to be. {ifStateCondition|percent gt 1|Man, finding these little guys is hard work.|}",
 		"content": "\"Name's Rick. Nice meeting you.\"<br><br>\"How'd you get conscripted into this?\"",
 		"choices": [
 			{ "gotoId" : "academicBridge" },

@@ -1,6 +1,7 @@
 define(["Game", "jQuery", "jQueryUI"], function(Game) {
 
 	var State;
+	var Coordinator;
 
 	var makeLink = function(_coordinator, id, content, target) {
 		
@@ -12,19 +13,28 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		    href: target,
 		    text: content,
 		    click: function() {
-				initSceneScreen();
-				_coordinator.loadStoryMaterials(id);
-				_coordinator.startGame(id);
-				_coordinator.loadAvatars(id);
+				$( "#blackout" ).fadeIn( "slow", function() {
+	    			startScene(_coordinator,id);
+  				});
 			}
 		}).appendTo(pTag);
 
 		return pTag;
 	}
 
+	var startScene = function(_coordinator, id, loadIntro) {
+		var bg = _coordinator.loadBackground(id);
+		initSceneScreen(State, bg);
+		if (loadIntro) { _coordinator.loadSceneIntro(id); }
+		_coordinator.loadStoryMaterials(id);
+		_coordinator.loadAvatars(id);
+		_coordinator.startGame(id);
+	}
+
 	var initTitleScreen = function(_coordinator, _State, scenes) {
 
 		State = _State;
+		Coordinator = _coordinator;
 		
 		$('<h1/>', {
 		    text: 'Climate Change Game',
@@ -35,10 +45,9 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 			text: 'Begin',
 			id: 'begin',
 			click: function() {
-				initSceneScreen(State);
-				_coordinator.loadStoryMaterials(scenes[0]);
-				_coordinator.startGame(scenes[0]);
-				_coordinator.loadAvatars(scenes[0]);
+				$( "#blackout" ).fadeIn( "slow", function() {
+	    			startScene(_coordinator, scenes[0], true);
+  				});
 			}
 		}).appendTo('body');
 
@@ -52,9 +61,14 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 			var el = makeLink(_coordinator, scene, scene, "#");
 			$('body').append(el);
 		});
+
+		$('<div/>', {
+		    id: 'blackout'
+		    //text: ''
+		}).appendTo('body');
 	}
 
-	var initSceneScreen = function(State) {
+	var initSceneScreen = function(State, bg) {
 
 		$('body').html('');
 		$('<div/>', {
@@ -68,7 +82,18 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		}).appendTo('body');
 
 		$('<div/>', {
-		    id: 'statsContainer'
+		    id: 'statsContainer',
+		    style: "background-image:url('/assets/bgs/"+ bg +"')"
+		    //text: ''
+		}).appendTo('body');
+
+		$('<div/>', {
+		    id: 'sceneIntro'
+		    //text: ''
+		}).appendTo('body');
+
+		$('<div/>', {
+		    id: 'blackout'
 		    //text: ''
 		}).appendTo('body');
 
@@ -82,52 +107,125 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		}).appendTo('#statsContainer');
 
 		$('<div/>', {
-		    id: 'storyStats'
+		    id: 'stats'
 		    //text: ''
 		}).appendTo('#statsContainer');
+
+		$('<div/>', {
+		    id: 'storyStats'
+		    //text: ''
+		}).appendTo('#stats');
 
 		$('<div/>', {
 		    id: 'gameStats'
 		    //text: ''
-		}).appendTo('#statsContainer');
-
-		$('<div/>', {
-		    id: 'sharedStats'
-		    //text: ''
-		}).appendTo('#statsContainer');
+		}).appendTo('#stats');
 	}
 
 	/*
 		Sets avatar on-screen based on state
 	*/
 	var setAvatar = function(State) {
-		//TODO: evaluate which state holds for the avatar
-		var avatar = State.avatars[0];
-		$('#charPic').css("background-image", "url(/assets/avatar/"+ avatar.src +")"); 
+		var theAvatar = false;
+
+		State.avatars.forEach(function(avatar, pos) {
+			var correctAvatar = State.isTrue(avatar.state);
+			if (correctAvatar) {
+				theAvatar = avatar;
+			}
+		});
+		if (theAvatar) {
+			$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
+		}
 	}
 
 	/*
 	Called by story and game systems to change stat displayed, or add it
 	*/
 
-	var setStat = function(statContainer, statName, statValue) {
+	var setStats = function(containerId) {
+		var stats = State.get("storyUIvars");
+		$("#"+containerId).html('');
 
-		var container = $(statContainer);
-		var exists = false;
+		stats.forEach(function(stat, pos) {
+			$('<div/>', {
+				id: stat+'Container',
+		    	class: 'stat'
+			}).appendTo("#"+containerId);
 
-		$(statContainer).forEach(function(statSpan, pos) {
+			$('<span/>', {
+		    	class: 'statLabel',
+		    	text: stat + ": "
+			}).appendTo('#'+stat+'Container');
 
+			$('<span/>', {
+		    	class: 'statValue',
+		    	text: State.get(stat)
+			}).appendTo('#'+stat+'Container');
 		});
+	};
 
-		$('span',"#" + statContainer).each(function(){
-			if (this.html() == statName) {
-				this.html(statValue);
+	//sets the intro screen for each scene
+	var setSceneIntro = function(sceneText) {
+		$("#blackout").show();
+		$("#sceneIntro").html(sceneText);
+		var begin = $('<h2/>', {
+			text: 'Begin',
+			click: function() {
+				$("#sceneIntro").fadeOut( "slow" );
+				$("#blackout").fadeOut( "slow" );
 			}
-		})
+		}).appendTo("#sceneIntro");
+		$("#sceneIntro").fadeIn( "slow" );
+	}
+
+	var setSceneOutro = function(endText) {
+
+		var nextIndex = State.get("scenes").findIndex(function(scene) {
+			return (scene == State.get("currentScene"));
+		}) + 1;
+		$( "#blackout" ).fadeIn( "slow", function() {
+	    	$("#sceneIntro").html(endText);
+
+	    	$('<h3/>', {
+	    		text : 'Stats',
+	    	}).appendTo("#sceneIntro");
+	    	var stats = State.get("storyUIvars");
+	    	stats.forEach(function(stat, pos) {
+				$('<div/>', {
+					id: stat+'ContainerOutro',
+			    	class: 'stat'
+				}).appendTo("#sceneIntro");
+
+				$('<span/>', {
+			    	class: 'statLabel',
+			    	text: stat + ": "
+				}).appendTo('#'+stat+'ContainerOutro');
+
+				$('<span/>', {
+			    	class: 'statValue',
+			    	text: State.get(stat)
+				}).appendTo('#'+stat+'ContainerOutro');
+			});
+
+
+	    	var begin = $('<h2/>', {
+			text: 'Next',
+			click: function() {
+				startScene(Coordinator, State.get("scenes")[nextIndex], true);
+			}
+			}).appendTo("#sceneIntro");
+
+	    	$( "#sceneIntro" ).fadeIn();
+	    });
 	}
 
 	return {
 		initTitleScreen : initTitleScreen,
-		setAvatar : setAvatar
+		setAvatar : setAvatar,
+		setStats : setStats,
+		setSceneIntro : setSceneIntro,
+		setSceneOutro : setSceneOutro,
+		startScene : startScene
 	} 
 });

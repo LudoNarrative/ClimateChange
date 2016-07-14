@@ -7,7 +7,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var init = function() {
 		
-		var scenes = ["dinner", "lecture", "travel", "worker" ];
+		var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
+		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
 	}
@@ -16,24 +17,29 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		Loads the necessary materials for the story
 	*/
 	var loadStoryMaterials = function(id) {
-		var example = getStorySpec(id);
-		example.startState.forEach(function(command) {
+
+		State.set("currentScene", id);
+		var story = getStorySpec(id);
+		story.startState.forEach(function(command) {
 			State.change(command);
 		});
-		var data = HanSON.parse(example.dataFile);
+		var data = HanSON.parse(story.dataFile);
+		ChunkLibrary.reset();
 		ChunkLibrary.add(data);
 
-		var wishlist = Wishlist.create(example.wishlist, State);
+		var wishlist = Wishlist.create(story.wishlist, State);
 		wishlist.logOn();
-		if (example.characters) {
+		if (story.characters) {
 			Character.init(State);
-			for (var key in example.characters) {
-				Character.add(key, example.characters[key]);
+			for (var key in story.characters) {
+				Character.add(key, story.characters[key]);
 			}
 		}
 
-		//TODO: display intro screen
-		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Character);
+		State.set("storyUIvars", story.UIvars);
+		Display.setStats("storyStats");
+
+		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 	}
 
 	var getStorySpec = function(id) {
@@ -60,6 +66,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set readAirport 0",		//set by game
 				"set readSpecies 0",		//set by game
 				"set readRefugees 0"		//set by game
+			],
+			UIvars: [
+				"articlesRead"
 			]
 		},
 		{
@@ -78,7 +87,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set specialty shrimp",
 				"set emotional 0",
 				"set serious chill",
+				"set percent 0",			/*this is what percent is current uncovered*/
 				"set requiredPercent 0",
+			],
+			UIvars: [
+				"confidence",
+				"optimism"
 			]
 		},
 		{
@@ -91,13 +105,16 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				//{ condition: "demonstrateConfidence eq true" },	//need to write some confidence-hinging options
 				{ condition: "establishSpecialtyInfo eq true" },
 				{ condition: "respondToQuestion eq true" },
-				{ condition: "classOver eq true" }
+				{ condition: "classOver eq true", persistent: true }
 			],
 			dataFile: require("text!lectureData"),
 			startState: [
 				"set specialty shrimp", 
 				"set questionsLeft 3",
 				"set confidence 3"
+			],
+			UIvars: [
+				"confidence"
 			]
 		},
 		{
@@ -121,6 +138,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set friendName Emma",
 				"set career 0",
 				"set confidence 0"
+			],
+			UIvars: [
+				"confidence",
+				"career"
 			]
 		}
 		]
@@ -128,30 +149,144 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		return storySpec.filter(function(v) { return v.id === id; })[0];
 	}
 
+	var loadSceneIntro = function(id) {
+
+		var sceneScreens = [
+			{
+				id : "dinner",
+				text : "<p>You are Emma Richards, a PhD student who studies the ocean.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
+			},
+			{
+				id : "lecture",
+				text : "<p>You were able to secure a job as an adjunct professor in Environmental Sciences.</p><p>Dr. Tennerson, a senior faculty member, as been sent to evaluate how the class is going.</p><p>Choose what Emma says, but make sure to keep your cool!</p>"
+			},
+			{
+				id : "worker",
+				text : "<p>After a few years struggling as a professor, you decided to apply your expertise to make a difference in a different way.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
+			},
+			{
+				id : "travel",
+				text : "<p>As one of the foremost experts in your field, you spend much of your time traveling to conferences. You never dreamed you'd come so far, or your impact would be so great.</p>"
+			},
+
+		]
+		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
+		Display.setSceneIntro(sceneText);
+	};
+
+	//loads background, for now this is based on scene id
+	var loadBackground = function(id) {
+		var sceneBgs = [
+			{
+				id : "dinner",
+				src : "dinner.png"
+			},
+			{
+				id : "lecture",
+				src : "lecture.png"
+			},
+			{
+				id : "worker",
+				src : "beach.png"
+			},
+			{
+				id : "travel",
+				src : "travel.png"
+			},
+
+		]
+		var sceneBg = sceneBgs.filter(function(v) { return v.id === id; })[0].src;
+		return sceneBg;
+	}
+
 	/*
-		Eventually this should return something different for each scene...for now we just use this
+		Returns pre-defined list of avatars...hypothetically in the future we could use some metric to pull avatars based on their state gating...
 	*/
 	var loadAvatars = function(id) {
-
-		var avatars = [
+		var avatarSpec= [
 			{
-				id: "happy",
-				src: "happy.png",
-				state: ["confidence gt 2"]
+				id : "dinner",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
 			},
 			{
-				id: "worried",
-				src: "worried.png",
-				state: ["confidence eq 1"]
+				id : "lecture",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
 			},
 			{
-				id: "stressed",
-				src: "worried.png",
-				state: ["confidence eq 0"]
+				id : "worker",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
 			},
+			{
+				id : "travel",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
+			}
 		];
 
-		State.avatars = avatars;
+		State.avatars = avatarSpec.filter(function(v) { return v.id === id; })[0].avatars;
 
 		Display.setAvatar(State);
 	}
@@ -162,13 +297,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var startGame = function(id) {
 		var Game = require("Game");
-		Game.init(id, State, StoryDisplay);
+		Game.init(id, State, Display);
 	}
 
 	return {
 		init : init,
 		loadStoryMaterials : loadStoryMaterials,
 		loadAvatars : loadAvatars,
+		loadSceneIntro : loadSceneIntro,
+		loadBackground : loadBackground,
 		startGame : startGame
 	}
 });

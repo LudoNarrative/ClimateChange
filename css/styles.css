@@ -1,11 +1,15 @@
+html { height:100%; }
+
 body {
     background: black;
     font-family: 'Droid Sans', 'Arial', sans-serif;
     color: white;
+    height:100%;
 }
 
-#storyContainer, #gameContainer {
-    width:47%;
+#storyContainer, #gameContainer, #statsContainer {
+    width:40%;
+    height:100%;
 }
 
 #storyContainer {
@@ -14,8 +18,6 @@ body {
 
 #gameContainer {
     float:right;
-    width:560px !important;
-    height:550px;
 }
 
 h1#title {
@@ -54,42 +56,63 @@ Stats CSS
 */
 
 #statsContainer {
-    position:absolute;
-    bottom:0px;
-    width:100%;
-    height:200px;
+    width:19%;
+    display: inline-block;
+    background-color:brown;
+    background-size:100%;
 }
 
 #charPic {
+    height: 200px;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    bottom: 0px;
     position:absolute;
     background-color:white;
     box-sizing: border-box; /*makes sure border is on the inside */
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     border: 5px solid #959595;
-    height: 200px;
-    width: 200px;
     border-top-right-radius: 28px;
     border-top-left-radius: 28px;
-    margin-left: 42%;
+    z-index:2;
 }
 
-#sharedStats {
+#stats {
     min-height: 100px;
     background-color: #363636;
     width: 50%;
-    margin: auto;
     margin-top: 100px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 #storyStats {
-
+    position: relative;
+    left: 20px;
+    top: 20px;
 }
 
 #gameStats {
 
+}
+
+.statLabel {
+    text-transform: capitalize;
+    color:#43d9ff;
+}
+
+.statValue {
+    font-weight:bold;
+    color:#ffe400;
 }
 
 /*
@@ -97,7 +120,6 @@ Story CSS
 */
 
 #storyArea, #choiceArea {
-	width: 100%;
 	margin-top: 10px;
     border-radius: 20px;
     font-size: 120%;
@@ -117,7 +139,6 @@ Story CSS
     margin: 10px 0px;
     color: #43d9ff;
     border-radius: 20px;
-    width: 100%;
 }
 .unavailableChoice {
     color: gray;
@@ -128,11 +149,13 @@ Story CSS
 
 .choice:hover {
 	color: yellow;
+    background-color: #929292;
 }
 
 #diagnostics {
+    display:none;
     width: 370px;
-    /*height: 200px;*/
+    color:black;
     background-color: #FFF1A5;
     position: fixed;
     top: 10px;
@@ -194,4 +217,40 @@ Story CSS
     margin-top: 20px;
     text-shadow: 1px 1px 1px #206086;
     color:white;
+}
+
+#blackout { 
+    display:none; 
+    width:100%;
+    height:100%;
+    background-color:black;
+    position:absolute;
+    top:0;
+    left:0;
+    z-index:99;
+}
+
+#sceneIntro {
+    display:none;
+    font-size:20px;
+    position:absolute;
+    left:25%;
+    top:25%;
+    width:50%;
+    height:50%;
+    color:white;
+    z-index:100;
+}
+
+#sceneIntro h2 { color: #43d9ff; }
+#sceneIntro h2:hover { color: yellow; }
+
+#diagnosticsButton {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: url('/assets/UI/gear.png');
+    background-size:100%;
+    bottom: 10px;
+    left: 10px;
 }

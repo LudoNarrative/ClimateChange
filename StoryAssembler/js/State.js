@@ -20,6 +20,7 @@ define(["Condition"], function(Condition) {
 		}
 		_blackboard[key] = value;
 		console.log(key + " is now " + value);
+		
 	}
 
 	var remove = function(key) {
