@@ -23,7 +23,8 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 	}
 
 	var startScene = function(_coordinator, id, loadIntro) {
-		initSceneScreen(State);
+		var bg = _coordinator.loadBackground(id);
+		initSceneScreen(State, bg);
 		if (loadIntro) { _coordinator.loadSceneIntro(id); }
 		_coordinator.loadStoryMaterials(id);
 		_coordinator.loadAvatars(id);
@@ -67,7 +68,7 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		}).appendTo('body');
 	}
 
-	var initSceneScreen = function(State) {
+	var initSceneScreen = function(State, bg) {
 
 		$('body').html('');
 		$('<div/>', {
@@ -81,7 +82,8 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		}).appendTo('body');
 
 		$('<div/>', {
-		    id: 'statsContainer'
+		    id: 'statsContainer',
+		    style: "background-image:url('/assets/bgs/"+ bg +"')"
 		    //text: ''
 		}).appendTo('body');
 
@@ -105,19 +107,19 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		}).appendTo('#statsContainer');
 
 		$('<div/>', {
-		    id: 'storyStats'
+		    id: 'stats'
 		    //text: ''
 		}).appendTo('#statsContainer');
+
+		$('<div/>', {
+		    id: 'storyStats'
+		    //text: ''
+		}).appendTo('#stats');
 
 		$('<div/>', {
 		    id: 'gameStats'
 		    //text: ''
-		}).appendTo('#statsContainer');
-
-		$('<div/>', {
-		    id: 'sharedStats'
-		    //text: ''
-		}).appendTo('#statsContainer');
+		}).appendTo('#stats');
 	}
 
 	/*
@@ -141,21 +143,27 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 	Called by story and game systems to change stat displayed, or add it
 	*/
 
-	var setStat = function(statContainer, statName, statValue) {
+	var setStats = function(containerId) {
+		var stats = State.get("storyUIvars");
+		$("#"+containerId).html('');
 
-		var container = $(statContainer);
-		var exists = false;
+		stats.forEach(function(stat, pos) {
+			$('<div/>', {
+				id: stat+'Container',
+		    	class: 'stat'
+			}).appendTo("#"+containerId);
 
-		$(statContainer).forEach(function(statSpan, pos) {
+			$('<span/>', {
+		    	class: 'statLabel',
+		    	text: stat + ": "
+			}).appendTo('#'+stat+'Container');
 
+			$('<span/>', {
+		    	class: 'statValue',
+		    	text: State.get(stat)
+			}).appendTo('#'+stat+'Container');
 		});
-
-		$('span',"#" + statContainer).each(function(){
-			if (this.html() == statName) {
-				this.html(statValue);
-			}
-		})
-	}
+	};
 
 	//sets the intro screen for each scene
 	var setSceneIntro = function(sceneText) {
@@ -178,6 +186,29 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 		}) + 1;
 		$( "#blackout" ).fadeIn( "slow", function() {
 	    	$("#sceneIntro").html(endText);
+
+	    	$('<h3/>', {
+	    		text : 'Stats',
+	    	}).appendTo("#sceneIntro");
+	    	var stats = State.get("storyUIvars");
+	    	stats.forEach(function(stat, pos) {
+				$('<div/>', {
+					id: stat+'ContainerOutro',
+			    	class: 'stat'
+				}).appendTo("#sceneIntro");
+
+				$('<span/>', {
+			    	class: 'statLabel',
+			    	text: stat + ": "
+				}).appendTo('#'+stat+'ContainerOutro');
+
+				$('<span/>', {
+			    	class: 'statValue',
+			    	text: State.get(stat)
+				}).appendTo('#'+stat+'ContainerOutro');
+			});
+
+
 	    	var begin = $('<h2/>', {
 			text: 'Next',
 			click: function() {
@@ -192,6 +223,7 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 	return {
 		initTitleScreen : initTitleScreen,
 		setAvatar : setAvatar,
+		setStats : setStats,
 		setSceneIntro : setSceneIntro,
 		setSceneOutro : setSceneOutro,
 		startScene : startScene
