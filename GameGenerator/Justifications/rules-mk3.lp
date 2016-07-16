@@ -40,14 +40,79 @@ spatial_condition(C, E1, E2)
 spatial_condition(C, E1, E2)
   :- farness_condition(C, E1, E2).
 
-result_enables_condition(move_toward(E1, E2), near(E1,E2))
-    :- closeness_condition(near(E1,E2), E1, E2),
-       result(_, move_toward(E1, E2)).
 
-result_enables_condition(move_toward(E1, E2), overlaps(E1,E2,true))
+result_enables_condition(moves(E2, D,A), overlaps(E1,E2,true))
     :- closeness_condition( overlaps(E1,E2,true), E1, E2),
-       result(_, move_toward(E1, E2)).
+       result(_, moves(E2, D,A)),
+       2 {result(_,moves(E2,D_,A_))}.
+
+result_enables_condition(moves(E1, D,A), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, moves(E1, D,A)),
+       2 {result(_,moves(E1,D_,A_))}.
+
+result_enables_condition(moves(E1, D,A), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, moves(E1, D,A)),
+       result(_,rotate_to(E1,D2)).
+
+result_enables_condition(moves(E2, D,A), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, moves(E2, D,A)),
+       result(_,rotate_to(E2,D2)).
+
+result_enables_condition(moves(E1, D,A), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, moves(E1, D,A)),
+       result(_,rotates(E1,D2,A2)).
+
+result_enables_condition(moves(E2, D,A), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, moves(E2, D,A)),
+       result(_,rotates(E2,D2,A2)).
+
+result_enables_condition(tick, overlaps(E1,E2,P))
+:- closeness_condition( overlaps(E1,E2,P), E1, E2),
+   controlLogic(draggable(E1)).
+
+result_enables_condition(tick, overlaps(E1,E2,P))
+:- closeness_condition( overlaps(E1,E2,P), E1, E2),
+   controlLogic(draggable(E2)).
+
+result_enables_condition(move_towards(E1, target), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, move_towards(E1, target)).
+
+result_enables_condition(move_towards(E2, target), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, move_towards(E2, target)).
+
+result_enables_condition(move_towards(E1, E2), near(E1,E2))
+    :- closeness_condition(near(E1,E2), E1, E2),
+       result(_, move_towards(E1, E2)).
+
+result_enables_condition(move_towards(E1, cursor), near(E1,E2))
+    :- closeness_condition(near(E1,E2), E1, E2),
+       result(_, move_towards(E1, cursor)).
+result_enables_condition(move_towards(E1, cursor), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, move_towards(E1, cursor)).
        
+
+result_enables_condition(move_towards(E2, cursor), near(E1,E2))
+    :- closeness_condition(near(E1,E2), E1, E2),
+       result(_, move_towards(E2, cursor)).
+result_enables_condition(move_towards(E2, cursor), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, move_towards(E2, cursor)).
+       
+result_enables_condition(move_towards(E1, E2), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, move_towards(E1, E2)).
+       
+result_enables_condition(move_towards(E1, E2), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, move_towards(E1, E2)).
 result_enables_condition(move_away(E1, E2), far(E1,E2))
     :- closeness_condition(far(E1,E2), E1, E3),
        result(_, move_away(E1, E2)).

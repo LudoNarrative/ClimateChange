@@ -515,7 +515,17 @@ similar(timerElapsed(T1),O1,O2) :-
     O1 != O2,
     outcomeOrder(O1,O2).
   
+similar(timerElapsed(T1),O1,O2) :- 
+    precondition(tick(T1),O1),
+    precondition(timerElapsed(T2),O2),
+    O1 != O2,
+    outcomeOrder(O1,O2).
     
+similar(timerElapsed(T1),O1,O2) :- 
+    precondition(timerElapsed(T1),O1),
+    precondition(tick(T2),O2),
+    O1 != O2,
+    outcomeOrder(O1,O2).
 similar(above(RESOURCE,VALUE1),O1,O2) :- 
     above(RESOURCE,VALUE1,O1),
     above(RESOURCE,VALUE2,O2),
@@ -742,3 +752,10 @@ move(move_towards(E,T),E) :-
 :- speed(E,0).
 
 :- 2 {result(O,add(E,L))}, outcome(O).
+
+
+clickOnOverlap(E1,E2,O) :- precondition(overlaps(E1,E2,true),O),
+			   precondition(control_event(click(E1)),O).
+clickOnOverlap(E1,E2,O) :- precondition(overlaps(E1,E2,true),O),
+			   precondition(control_event(click(E2)),O).
+:- 2 { clickOnOverlap(E1,E2,O)}, entity(E1),entity(E2).

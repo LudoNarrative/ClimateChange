@@ -155,9 +155,9 @@ controlLogic(draggable(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
 
 
 % outcome(click_and_click(ENTITY)) :- controlScheme(ENTITY,click_and_click).
-% outcome(click_and_aim(ENTITY)) :- controlScheme(ENTITY,click_and_aim). 
-% outcome(drawn_to_cursor(ENTITY)) :- controlScheme(ENTITY,drawn_to_cursor).
-% outcome(repeled_from_cursor(ENTITY)) :- controlScheme(ENTITY,repeled_from_cursor).      
+% outcome(click_and_aim(ENTITY)) :- controlScheme(ENTITY,click_and_aim).
+outcome(drawn_to_cursor(ENTITY)) :- controlScheme(ENTITY,drawn_to_cursor).
+outcome(repeled_from_cursor(ENTITY)) :- controlScheme(ENTITY,repeled_from_cursor).      
    
 %clicking and dragging
 % graphicalLogic(draggable(ENTITY)) :- 
@@ -237,7 +237,7 @@ timer(change_direction(ENTITY),duration) :-
 %time's  north  - change direction
 precondition(timerElapsed(change_direction(ENTITY)), change_direction(ENTITY)) :-
     movementScheme(ENTITY,random_walk).
-result(change_direction(ENTITY), rotate(ENTITY,random_int(0,360))) :- 
+result(change_direction(ENTITY), rotate_to(ENTITY,random_int(0,360))) :- 
     movementScheme(ENTITY,random_walk).
 %normally, just walk forwards ?slowly?
 result(tick,moves(ENTITY, forward, low)) :- 
@@ -248,13 +248,15 @@ outcome(change_target(ENTITY)) :-
     movementScheme(ENTITY,random_pathfind).
 timerLogic(change_target(ENTITY),duration) :- 
     movementScheme(ENTITY,random_pathfind).
+initialize(target(ENTITY),random_point) :- 
+    movementScheme(ENTITY,random_pathfind).
 precondition(timerElapsed(change_target(ENTITY)), change_target(ENTITY)) :-
     movementScheme(ENTITY,random_pathfind).
     
 % resource(ENTITY,target) :- movementScheme(ENTITY,random_pathfind).
-result(change_target(ENTITY), set(target,random_point)) :- 
+result(change_target(ENTITY), set(target(ENTITY),random_point)) :- 
     movementScheme(ENTITY,random_pathfind).
-result(tick,move_towards(ENTITY,target)) :- 
+result(tick,move_towards(ENTITY,target(ENTITY))) :- 
     movementScheme(ENTITY,random_pathfind). 
 
 
@@ -303,7 +305,7 @@ result(tick,move_towards(ENTITY,target)) :-
     movementScheme(ENTITY,patrol).
     
 %if you have gravity, you fall
-{physicsLogic(ENTITY,gravity) : entity(ENTITY)}.
+%{physicsLogic(ENTITY,gravity) : entity(ENTITY)}.
 physicsLogic(AVATAR,gravity) :- controlScheme(AVATAR,platformer).
 
 result(tick,apply_force(ENTITY, south ,mid)) :-
@@ -512,11 +514,12 @@ resourceTransactions(convert;pay_cost;gain;lose).
   :- entity(ENTITY1), entity(ENTITY2), ENTITY1 != ENTITY2.
 
 % other spatial predicates
-{precondition(near(E1, E2), Outcome) : potentialOutcomes(Outcome)}
-  :- entity(E1), entity(E2), E1 != E2.
+% AJS - 7/16 - Not a fan
+%{precondition(near(E1, E2), Outcome) : potentialOutcomes(Outcome)}
+%  :- entity(E1), entity(E2), E1 != E2.
 
-{precondition(far(E1, E2), Outcome) : potentialOutcomes(Outcome)}
-  :- entity(E1), entity(E2), E1 != E2.
+%{precondition(far(E1, E2), Outcome) : potentialOutcomes(Outcome)}
+%  :- entity(E1), entity(E2), E1 != E2.
 
 % check presence/absece of entities
 
