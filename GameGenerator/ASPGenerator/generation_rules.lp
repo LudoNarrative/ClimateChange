@@ -501,7 +501,8 @@ similar(below(RESOURCE,VALUE1),O1,O2) :-
     below(RESOURCE,VALUE2,O2),
     O1 != O2,
     outcomeOrder(O1,O2).
-    
+   
+   
 similar(below(RESOURCE,VALUE2),O1,O2) :- 
     below(RESOURCE,VALUE1,O1),
     below(RESOURCE,VALUE2,O2),
@@ -527,6 +528,26 @@ similar(above(RESOURCE,VALUE2),O1,O2) :-
     O1 != O2,
     outcomeOrder(O1,O2).
     
+similar(near(E1,E2),O1,O2) :-
+    precondition(near(E1,E2),O1),
+    precondition(overlaps(E1,E2,true),O2),
+    outcomeOrder(O1,O2).
+    
+similar(overlaps(E1,E2,true),O1,O2) :-
+    precondition(near(E1,E2),O1),
+    precondition(overlaps(E1,E2,true),O2),
+    outcomeOrder(O1,O2).
+ 
+similar(far(E1,E2),O1,O2) :-
+    precondition(far(E1,E2),O1),
+    precondition(overlaps(E1,E2,false),O2),
+    outcomeOrder(O1,O2).
+    
+similar(overlaps(E1,E2,false),O1,O2) :-
+    precondition(far(E1,E2),O1),
+    precondition(overlaps(E1,E2,false),O2),
+    outcomeOrder(O1,O2).
+    
     
 similar(ge(R,V),O1,O2) :- similar(above(R,V),O1,O2).
 similar(gt(R,V),O1,O2) :- similar(above(R,V),O1,O2).
@@ -543,10 +564,10 @@ disjunction(O1,O2) :-
     not similar(C,O1,O2),
     precondition(C,O2),
     outcome(O1).
-% :- not disjunction(O1,O2), 
-    % outcome(O1),
-    % outcome(O2), 
-    % outcomeOrder(O1,O2).
+:- not disjunction(O1,O2), 
+    outcome(O1),
+    outcome(O2), 
+    outcomeOrder(O1,O2).
     
 similarResult(increase(R,A1),O1,O2) :-
     result(O1,increase(R,A1)),
@@ -576,10 +597,10 @@ disjunctionResult(O1,O2) :-
     not similarResult(R,O1,O2),
     result(O2,R),
     outcome(O1).
-% :- not disjunctionResult(O1,O2), 
-    % outcome(O1),
-    % outcome(O2), 
-    % outcomeOrder(O1,O2).
+:- not disjunctionResult(O1,O2), 
+    outcome(O1),
+    outcome(O2), 
+    outcomeOrder(O1,O2).
     
     
     
@@ -655,7 +676,7 @@ intermediate_outcome(O)
 nonMouseControls  :- 
     condition(control_event(button(B, Action))), 
     B != mouse_button. 
-:- condition(copolarityntrol_event(button(mouse_button, Action))), Action != held.
+:- condition(control_event(button(mouse_button, Action))), Action != held.
 :- nonMouseControls.
 
 :- near(E2,E1), entityOrdering(E1,E2).
@@ -694,29 +715,30 @@ nonMouseControls  :-
     above(R,V,O),
     result(O,decrease(R2,A)).
           
-% :-  onlyOnePrecondition(O),
-    % below(R,V,O),
-    % result(O,increase(R2,A)).
+:-  onlyOnePrecondition(O),
+    below(R,V,O),
+    result(O,increase(R2,A)).
     
-% :-  onlyOnePrecondition(O),
-    % below(R,V,O),
-    % result(O,decrease(R2,A)).
+:-  onlyOnePrecondition(O),
+    below(R,V,O),
+    result(O,decrease(R2,A)).
     
-% :-  result(O,move_away(E2,E1)),
-    % result(O2,move_away(E1,E2)).
+:-  result(O,move_away(E2,E1)),
+    result(O2,move_away(E1,E2)).
 
-% :-  result(O,increase(R1,R2)),
-    % result(O,increase(R2,R1)).
-    
+:-  result(O,increase(R1,R2)),
+    result(O,increase(R2,R1)).
 
-% :-  result(O,decrease(R1,R2)),
-    % result(O,decrease(R2,R1)).
+:-  result(O,decrease(R1,R2)),
+    result(O,decrease(R2,R1)).
     
-% move(move_away(E,T),E) :-
-    % result(O,move_away(E,T)).
-% move(move_towards(E,T),E) :-
-    % result(O,move_towards(E,T)).
+move(move_away(E,T),E) :-
+    result(O,move_away(E,T)).
+move(move_towards(E,T),E) :-
+    result(O,move_towards(E,T)).
 
-% :- 3 {move(T,E)}, entity(E).
+:- 3 {move(T,E)}, entity(E).
 
 :- speed(E,0).
+
+:- 2 {result(O,add(E,L))}, outcome(O).

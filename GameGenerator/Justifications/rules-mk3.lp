@@ -15,6 +15,9 @@ closeness_condition(collide(E1, E2), E1, E2)
 closeness_condition(overlaps(E1, E2, true), E1, E2)
   :- condition(overlaps(E1, E2, true)).
 
+closeness_condition(overlaps(E1, E2, false), E1, E2)
+  :- condition(overlaps(E1, E2, false)).
+  
 closeness_condition(near(E1, E2), E1, E2)
   :- condition(near(E1, E2)).
 
@@ -37,12 +40,19 @@ spatial_condition(C, E1, E2)
 spatial_condition(C, E1, E2)
   :- farness_condition(C, E1, E2).
 
-result_enables_condition(move_toward(E1, E2), Cond)
-    :- closeness_condition(Cond, E1, E2),
+result_enables_condition(move_toward(E1, E2), near(E1,E2))
+    :- closeness_condition(near(E1,E2), E1, E2),
        result(_, move_toward(E1, E2)).
 
-result_enables_condition(move_away(E1, E2), Cond)
-    :- closeness_condition(Cond, E1, E3),
+result_enables_condition(move_toward(E1, E2), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, move_toward(E1, E2)).
+       
+result_enables_condition(move_away(E1, E2), far(E1,E2))
+    :- closeness_condition(far(E1,E2), E1, E3),
+       result(_, move_away(E1, E2)).
+result_enables_condition(move_away(E1, E2), overlaps(E1,E2,false))
+    :- closeness_condition(overlaps(E1,E2,false), E1, E3),
        result(_, move_away(E1, E2)).
 
 result_enables_condition(move(E1, D), Cond)
@@ -538,7 +548,8 @@ sharedEntity(E, Outcome1, Outcome2) :-
     requires(Outcome1, E),
     requires(Outcome2, E),
     Outcome1 != Outcome2, 
-    effect(delete(E)).
+    result(Outcome1,delete(E)), 
+    result(Outcome2,delete(E)).
 
 
 sharing(O1, O2) :-
