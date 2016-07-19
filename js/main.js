@@ -30,8 +30,13 @@ requirejs.config({
 		"Phaser" : "../lib/phaser",
 		"jQuery": "../lib/jquery-3.0.0.min",
 		"jQueryUI": "../lib/jquery-ui.min",
-		
-		"Game" : "../GameGenerator/js/game"
+
+		"Game" : "../GameGenerator/js/game",
+		"AspPhaserGenerator" : "../asp-phaser-generator/index",
+		"translateAsp" : '../asp-phaser-generator/src/asp-to-cygnus',
+		"rensa" : '../asp-phaser-generator/src/brain',
+		"ctp" : '../asp-phaser-generator/src/cygnus-to-phaser-brain',
+		"translatePhaserBrain" : '../asp-phaser-generator/src/phaser-brain-to-code'
 	},
 
 	shim: {
@@ -43,8 +48,8 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "StoryDisplay", "Display", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Game", "util", "domReady!"],
-	function(State, StoryDisplay, Display, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Game) {
+	["State", "StoryDisplay", "Display", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Game", "AspPhaserGenerator", "util", "domReady!"],
+	function(State, StoryDisplay, Display, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, AspPhaserGenerator) {
 
 	Coordinator.init();
 
