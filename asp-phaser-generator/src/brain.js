@@ -379,6 +379,7 @@ function intersect(a, b) {
 
 return {
   makeBrain : makeBrain,
-  arraysEqual : arraysEqual
+  arraysEqual : arraysEqual,
+  _prettyprint : _prettyprint
 }
 });
