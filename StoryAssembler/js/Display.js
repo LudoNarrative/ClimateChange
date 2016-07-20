@@ -10,7 +10,7 @@ define([], function() {
 
 	/* PRIVATE FUNCTIONS AND VARIABLES */
 	var showUnavailableChoices = true;
-	var enableDiagnostics = true;
+	var enableDiagnostics = true;				//whether to show the gear or not
 
 	var clickHandler;
 	var varClickChangerFunc;		//this changes variables in the game when clicked
@@ -108,14 +108,14 @@ define([], function() {
 		if (enableDiagnostics) {
 
 			$('<div/>', {
-				id: "diagnosticsButton",
+				id: "storyDiagnosticsButton",
 				click: function() {
-					$("#diagnostics").toggle();;
-			}
+					$("#storyDiagnostics").toggle();
+				}
 			}).appendTo("body");
 
 			var diagEl = makeEl("div", "");
-			diagEl.id = "diagnostics";
+			diagEl.id = "storyDiagnostics";
 			document.getElementsByTagName('body')[0].appendChild(diagEl);
 			pathEl = makeEl("div", "<div class='dHeader'>Best Path:</div><div class='pathArea'></div>");
 			diagEl.appendChild(pathEl);

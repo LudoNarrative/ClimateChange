@@ -220,12 +220,49 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 	    });
 	}
 
+	var addGameDiagnostics = function(gameSpec, aspFilepath, aspGame, initialPhaserFile) {
+		
+		$('<div/>', {
+			id: "gameDiagnostics"
+		}).appendTo("body");
+
+		$('<p/>', {
+			text: "ASP code from: " + aspFilepath
+		}).appendTo("#gameDiagnostics");
+
+		$('<textarea/>', {
+			id: 'ASPinput',
+			rows: "4",
+			cols: "75",
+			text: aspGame
+		}).appendTo("#gameDiagnostics");
+
+		$('<div/>', {
+			id: "evaluateASPButton",
+			class: "diagButton",
+			text: "Run ASP",
+			click: function() {
+				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, initialPhaserFile, false);
+			}
+		})
+		.attr('spellcheck',false)
+		.appendTo("#gameDiagnostics");
+
+		$('<div/>', {
+			id: "gameDiagnosticsButton",
+			click: function() {
+				$("#gameDiagnostics").toggle();
+			}
+		}).appendTo("body");
+	}
+
 	return {
 		initTitleScreen : initTitleScreen,
 		setAvatar : setAvatar,
 		setStats : setStats,
 		setSceneIntro : setSceneIntro,
 		setSceneOutro : setSceneOutro,
-		startScene : startScene
+		startScene : startScene,
+		addGameDiagnostics : addGameDiagnostics
 	} 
 });

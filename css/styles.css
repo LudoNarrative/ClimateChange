@@ -152,7 +152,7 @@ Story CSS
     background-color: #929292;
 }
 
-#diagnostics {
+#storyDiagnostics {
     display:none;
     width: 370px;
     color:black;
@@ -163,6 +163,19 @@ Story CSS
     border-radius: 10px;
     padding: 0.5em 1em;
 }
+
+#gameDiagnostics {
+    display:none;
+    width: 500px;
+    color:black;
+    background-color: #FFF1A5;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    border-radius: 10px;
+    padding: 0.5em 1em;
+}
+
 .dHeader {
     font-variant: small-caps;
     text-decoration: underline;
@@ -209,7 +222,7 @@ Story CSS
     background-color: #9CF992;
 }
 
-.varClickChanger {
+.varClickChanger, .diagButton {
     background-color: #81D0FF;
     padding: 7px 13px;
     border-radius: 13px;
@@ -217,6 +230,7 @@ Story CSS
     margin-top: 20px;
     text-shadow: 1px 1px 1px #206086;
     color:white;
+    text-align: center;
 }
 
 #blackout { 
@@ -245,12 +259,18 @@ Story CSS
 #sceneIntro h2 { color: #43d9ff; }
 #sceneIntro h2:hover { color: yellow; }
 
-#diagnosticsButton {
+#storyDiagnosticsButton, #gameDiagnosticsButton {
     position: absolute;
     width: 20px;
     height: 20px;
     background-image: url('/assets/UI/gear.png');
     background-size:100%;
     bottom: 10px;
-    left: 10px;
+}
+
+#gameDiagnosticsButton { right:10px; }
+#storyDiagnosticsButton { left: 10px; }
+
+#gameDiagnostics textarea {
+    min-height:500px;
 }
