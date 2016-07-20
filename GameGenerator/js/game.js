@@ -29,13 +29,13 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 		jQuery.get(aspFilepath, function(data) {
 	    	aspGame = data;
-	    	jQuery.get('asp-phaser-generator/test/fixtures/initial-phaser-file-generated.json', function(data2) {
+	    	jQuery.get('asp-phaser-generator/test/fixtures/initial-phaser-file.json', function(data2) {
 	    		initialPhaserFile = data2;
 	    		runGenerator(gameSpec, aspGame, initialPhaserFile, useGamestring);
 	    		Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, initialPhaserFile);		//create game diagnostics
 			});
 		});
-		
+
 		//var initialPhaserFile = fs.readFileSync('./test/fixtures/initial-phaser-file-generated.json', 'utf8');
 
 	}
