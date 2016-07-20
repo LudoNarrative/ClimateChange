@@ -217,7 +217,7 @@
     "relation":"is_a",
     "r":["function"],
     "params":["newMode"],
-    "lines":["if(newMode==='game_win'){mode = 'win'; game.world.removeAll(); displayText('CLEARED');}","else if(newMode==='game_loss'){mode='loss'; game.world.removeAll(); displayText('GAME OVER');}"]
+    "lines":["if(newMode==='game_win'){mode = 'win'; game.world.removeAll(); displayText('CLEARED');}","else if(newMode==='game_loss'){mode='loss'; game.stage.backgroundColor = '#400';}"]
   },
   {
     "l":["displayText"],
