@@ -554,7 +554,7 @@ var updateAspGoals = function(b, a){
         preconds = assert["l"];
         realizedGoal = goalType.charAt(0).toUpperCase() + goalType.substr(1).toLowerCase() + ":"
         for (var k=0; k<preconds.length; k++){
-          var pre = rensa.prettyprint(preconds[k],false);
+          var pre = rensa._prettyprint(preconds[k],false);
           pre = pre.replace(/['"]+/g, '');
           realizedGoal += pre;
           if (k<preconds.length-1){
