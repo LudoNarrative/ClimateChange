@@ -10,19 +10,13 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		Display = _Display;
 		State = _State;
 
-		var useGamestring = true;		//if true, will use the gameString variable in the gameSpec as the game code to eval
+		var useGamestring = false;		//if true, will use the gameString variable in the gameSpec as the game code to eval
 
 		var aspFilepath = gameSpec.aspFilepaths[Math.floor(Math.random()*gameSpec.aspFilepaths.length)];		//pick a random aspfile if there are 1+
 
 		//var fs = require('fs');
 		//var AspPhaserGenerator = require('asp-phaser-generator/index');
-		/*
-		All with generated- prefixes:
-		Dinner: 2
-		Worker: 3
-		Travel: 5
-		Lecture: 4
-		*/
+
 		//var aspGame = fs.readFileSync('./test/fixtures/asp-game-4.lp', 'utf8');
 		var aspGame = "";
 		var initialPhaserFile ="";
