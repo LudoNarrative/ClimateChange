@@ -9,8 +9,8 @@ var addWhitespace = false;
 // Contains realized goals from the ASP code.
 var goals = [];
 
-//var ctp = require('./cygnus-to-phaser-brain');
-//var rensa = require('./brain');
+// var ctp = require('./cygnus-to-phaser-brain');
+// var rensa = require('./brain');
 
 // Input: Phaser abstract syntax (brain).
 // Output: Phaser program (string).
@@ -107,7 +107,7 @@ var writePhaserProgram = function(brain){
                   else if (ctp.isRelationType(brain.assertions[j][p][c][a], "set_mode")){
                     programText += translateSetMode(brain, brain.assertions[j][p][c][a]);
                   }
-                  else if (ctp.isRelationType(brain.assertions[j][p][c][a], "move_toward") || ctp.isRelationType(brain.assertions[j][p][c][a], "move_away")|| ctp.isRelationType(brain.assertions[j][p][c][a], "move")){
+                  else if (ctp.isRelationType(brain.assertions[j][p][c][a], "move_towards") || ctp.isRelationType(brain.assertions[j][p][c][a], "move_away")|| ctp.isRelationType(brain.assertions[j][p][c][a], "move")){
                     programText += translateMove(brain.assertions[j][p][c][a],brain.assertions[j][p][c][a]["relation"]);
                   }
                   else if (ctp.isRelationType(brain.assertions[j][p][c][a], "apply_force")){
@@ -133,7 +133,7 @@ var writePhaserProgram = function(brain){
               if(addWhitespace){programText+="\n\t\t"};
               programText += "var entity = addedEntities[k];";
               if(addWhitespace){programText+="\n\t\t"};
-              programText += "entity.directionChange.clamp(0,1);";
+              programText += "entity.directionChange.clamp(-1,1);";
               if(addWhitespace){programText+="\n\t\t"};
               programText += "entity.x+=entity.directionChange.x;";
               if(addWhitespace){programText+="\n\t\t"};
@@ -312,7 +312,7 @@ var translateConditionalAssertion = function(b,a){
     else if (a["r"][j]["relation"]==="set_mode"){
       str+=translateSetMode(b,a["r"][j]);
     }
-    else if (a["r"][j]["relation"]==="move_toward" || a["r"][j]["relation"]==="move_away" || a["r"][j]["relation"]==="move"){
+    else if (a["r"][j]["relation"]==="move_towards" || a["r"][j]["relation"]==="move_away" || a["r"][j]["relation"]==="move"){
       str += translateMove(a["r"][j],a["r"][j]["relation"]);
     }
     if (addWhitespace){str+="\t";}
@@ -427,7 +427,7 @@ var translateFunctionAssertion=function(a){
 var translateMove = function(a, move_type){
   str = "";
   // if move_toward(entity, other) or move_away(entity, other)
-  if (move_type==="move_toward" || move_type==="move_away"){
+  if (move_type==="move_towards" || move_type==="move_away"){
     // if a["r"][0]==="cursor", change it to to "game.input.mousePointer"
     var other = a["r"][0];
     if (other==="cursor"){
@@ -576,6 +576,7 @@ var updateAspGoals = function(b, a){
     }
   }
 }
+
 
 return {
   writePhaserProgram : writePhaserProgram
