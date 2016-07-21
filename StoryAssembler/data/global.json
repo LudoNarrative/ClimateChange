@@ -1,0 +1,11 @@
+[
+	/*
+		These are the global chunks that can be brought into any level
+	*/
+	{
+		"id": "test",
+		"content": "This is a test. Does it display?",
+		"conditions": ["test neq true"],
+		"effects": ["set test true"]
+	}
+]

@@ -157,7 +157,7 @@ Story CSS
     width: 370px;
     color:black;
     background-color: #FFF1A5;
-    position: fixed;
+    position: absolute;
     top: 10px;
     right: 10px;
     border-radius: 10px;
@@ -273,4 +273,20 @@ Story CSS
 
 #gameDiagnostics textarea {
     min-height:500px;
+}
+
+.varChangerRow {
+    margin-bottom: 5px;
+}
+
+.varIncrease, .varDecrease {
+    margin: 0px 5px;
+    background-color: #3D9CE2;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 1px #114165;
 }
