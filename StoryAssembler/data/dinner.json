@@ -1,6 +1,31 @@
 [
 	/*
-		TODO: redo wants list from beats to design intent wishlist (remember you can use gotoId for requests now)
+		archived Coordinator params:
+
+		{
+			id: "dinner",
+			wishlist: [
+				{ condition: "introMechanics eq true" },
+				{ condition: "establishSpecialtyInfo eq true" },
+				{ condition: "establishDinnerWithFriend eq true" },
+				{ condition: "establishFriendBackstory eq true" },
+				{ condition: "establishEmmaRegrets eq true" },
+				{ condition: "establishEmmaBackstory eq true" },
+				{ condition: "provokeConfidenceChoice eq true" },
+				{ condition: "friendReassuresEmma eq true" },
+			],
+			dataFile: require("text!dinnerData"),
+			startState: [
+				"set initialized true",
+				"set friendName Emma",
+				"set career 0",
+				"set confidence 0"
+			],
+			UIvars: [
+				"confidence",
+				"career"
+			]
+		}
 	*/
 	{
 		"id": "Start",

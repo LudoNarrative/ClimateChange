@@ -19,10 +19,11 @@ requirejs.config({
 		"Character": "../StoryAssembler/js/Character",
 		"Hanson": "../StoryAssembler/js/Hanson",
 
-		"travelData" : "../StoryAssembler/data/exampleData/travel.json", 
-		"workerData" : "../StoryAssembler/data/exampleData/worker.json", 
-		"lectureData" : "../StoryAssembler/data/exampleData/lecture.json", 
-		"dinnerData" : "../StoryAssembler/data/exampleData/dinner.json",
+		"globalData" : "../StoryAssembler/data/global.json",
+		"travelData" : "../StoryAssembler/data/travel.json", 
+		"workerData" : "../StoryAssembler/data/worker.json", 
+		"lectureData" : "../StoryAssembler/data/lecture.json", 
+		"dinnerData" : "../StoryAssembler/data/dinner.json",
 
 		"Coordinator" : "../Coordinator/Coordinator",
 		"Display" : "Display",
