@@ -124,11 +124,43 @@ define([], function() {
 			stateEl = makeEl("div", "<div class='dHeader'>State:</div><div class='stateArea'></div>");
 			diagEl.appendChild(stateEl);
 
-			var varChangerDiv = makeEl("div", "lower confidence", "varClickChanger");
-			diagEl.appendChild(varChangerDiv);
-			addVarClickChanger();
+			$('<div/>', {
+				id: "varChangers"
+			}).appendTo("#storyDiagnostics");
+
+			$('<div/>', {
+				class: "dHeader",
+				text: "Change State Vars"
+			}).appendTo("#varChangers");
+
 		}
 
+	}
+
+	var addVarChangers = function(varList, setStateFunction) {
+		varList.forEach(function(storyVar, pos) {
+			var row = $('<div/>', {
+				class: 'varChangerRow'
+			}).appendTo("#varChangers");
+			$('<span/>', {
+				class: "varLabel",
+				text: storyVar + ": "
+			}).appendTo(row);
+			$('<span/>', {
+				class: "varIncrease",
+				text: "+1",
+				click: function() {
+					setStateFunction(storyVar, "+1");
+				}
+			}).appendTo(row);
+			$('<span/>', {
+				class: "varDecrease",
+				text: "-1",
+				click: function() {
+					setStateFunction(storyVar, "-1");
+				}
+			}).appendTo(row);
+		});
 	}
 
 	// Diagnostic functions (to display status of system)
@@ -200,6 +232,7 @@ define([], function() {
 		clearText: clearText,
 		addStoryText: addStoryText,
 		addChoice: addChoice,
-		diagnose: diagnose
+		diagnose: diagnose,
+		addVarChangers : addVarChangers
 	}
 })
