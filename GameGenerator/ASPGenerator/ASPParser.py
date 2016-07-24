@@ -134,16 +134,31 @@ if __name__ == '__main__':
         if len(out[o]) > 0:
             print ''
     outcome2precond = {}
+    
+    
     for precond in out['precondition']:
         outcome = hashable(precond[0]['terms'][1])
         if outcome not in outcome2precond:
             outcome2precond[outcome] = []
         outcome2precond[outcome].append(precond[0])
     outcome2result = {}
+    every_frames = set()
+    for every_frame in out['every_frame']:
+        every_frame = every_frame[0]
+        every_frames.add(every_frame['terms'][0]['predicate'])
+        
     for result in out['result']:
         outcome = hashable(result[0]['terms'][0])
         if outcome not in outcome2result:
             outcome2result[outcome] = []
+        print result[0]['terms'][0] 
+        if result[0]['terms'][1]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
+            result[0]['terms'][1]['predicate'] = 'increase_over_time'
+            print ':',result[0]
+        if result[0]['terms'][1]['predicate'] ==  'decrease' and result[0]['terms'][0]['predicate'] in every_frames:
+            result[0]['terms'][1]['predicate'] = 'decrease_over_time'
+            
+            print ':',result[0]
         outcome2result[outcome].append(result[0])
     for outcome in sorted(outcome2precond):
         for precond in outcome2precond[outcome]:

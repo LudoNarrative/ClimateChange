@@ -759,3 +759,41 @@ clickOnOverlap(E1,E2,O) :- precondition(overlaps(E1,E2,true),O),
 clickOnOverlap(E1,E2,O) :- precondition(overlaps(E1,E2,true),O),
 			   precondition(control_event(click(E2)),O).
 :- 2 { clickOnOverlap(E1,E2,O)}, entity(E1),entity(E2).
+
+perEntity(health(E)) :- entity(E).
+perEntity(target(E)) :- entity(E).
+
+% Nested for loops are weird
+:- 2{   precondition(ge(PE,V),O);precondition(le(PE,V),O);
+        precondition(gt(PE,V),O);precondition(lt(PE,V),O)},
+    outcome(O).
+% for simplicity - don't allow perEntity things on the right hand side
+:- 1 {precondition(ge(V,PE),O);precondition(le(V,PE),O);
+        precondition(gt(V,PE),O);precondition(lt(V,PE),O)},
+    perEntity(PE).
+        
+%only have per entity checks if it affects the given entity
+:-  1 { precondition(ge(PV,V),O); precondition(gt(PV,V),O);
+        precondition(lt(PV,V),O); precondition(le(PV,V),O) },
+    {result(O,increases(PV2,A));result(O,decreases(PV2,A))} 0,
+    perEntity(PV),
+    perEntity(PV2).
+    
+    
+every_frame(O) :- precondition(tick,O).
+    
+not_every_frame(O) :- precondition(ge(R,V),O), result(O,decreases(R,V2)).
+not_every_frame(O) :- precondition(gt(R,V),O), result(O,decreases(R,V2)).
+not_every_frame(O) :- precondition(le(R,V),O), result(O,increases(R,V2)).
+not_every_frame(O) :- precondition(lt(R,V),O), result(O,increases(R,V2)).
+
+every_frame(O) :- not not_every_frame(O), precondition(C,O).
+
+not_every_frame(O) :- precondition(control_event(click(E)),O).
+not_every_frame(O) :- precondition(overlaps(E1,E2,true),O).
+not_every_frame(O) :- precondition(control_event(button(B,pressed)),O).
+not_every_frame(O) :- precondition(control_event(button(B,released)),O).
+not_every_frame(O) :- precondition(timerElapsed(T),O) .
+
+:- result(O,delete(E)), every_frame(O).
+:- result(O,add(E)), every_frame(O).
