@@ -111,3 +111,7 @@ span.chunk {
     text-shadow: 1px 1px 1px #206086;
     color:white;
 }
+
+.varIncrease, .varDecrease {
+    margin: 0px 20px;
+}

@@ -19,7 +19,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		wishlist = _wishlist;
 		params = params || {};
 		
-		StoryDisplay.init(handleChoiceSelection, State.refreshNarrative);
+		StoryDisplay.init(handleChoiceSelection, refreshNarrative);
 		Templates.init(State, _Character);
 		continueScene();
 	}
@@ -119,6 +119,18 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	var refreshNarrative = function() {
 		StoryDisplay.clearText();
 		displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
+	}
+
+	//used in Diagnostics panel buttons to change a UI var (theVar) by some amount like +1 or -1 (theMod)
+	var clickChangeState = function(theVar, theMod) {
+		if (theMod[0] == "+") {
+			State.set(theVar, State.get(theVar) + 1);
+		}
+		if (theMod[0] == "-") {
+			State.set(theVar, State.get(theVar) - 1);
+		}
+		Display.setStats("storyStats");			//refresh UI stat display
+		refreshNarrative();					//refresh currently displayed chunk in case it's different
 	}
 
 	var displayChunkText = function(chunkId, mode) {
@@ -279,15 +291,6 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		continueScene(choice.chunkId);
 	}
 
-	/*
-		Diagnostic button clicked to change variable in the state.
-	
-	var refreshNarrative = function() {
-		State.change("set confidence 10");
-		Display.clearText();
-		displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
-	}
-*/
 	var handleEffects = function(chunk) {
 		if (!chunk.effects) return;
 		chunk.effects.forEach(function(effect) {
@@ -309,6 +312,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 	return {
 		beginScene: beginScene,
-		refreshNarrative : refreshNarrative
+		refreshNarrative : refreshNarrative,
+		clickChangeState : clickChangeState
 	}
 });		

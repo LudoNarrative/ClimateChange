@@ -1,6 +1,6 @@
 console.log(window.location.pathname);
 
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData) {
 
 	/*
 		Initializing function
@@ -23,9 +23,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		story.startState.forEach(function(command) {
 			State.change(command);
 		});
-		var data = HanSON.parse(story.dataFile);
+		var levelData = HanSON.parse(story.dataFile);
+		var globalDataFile = require("text!globalData");
+		var globalData = HanSON.parse(globalDataFile);
 		ChunkLibrary.reset();
-		ChunkLibrary.add(data);
+		ChunkLibrary.add(levelData);
+		ChunkLibrary.add(globalData);
 
 		var wishlist = Wishlist.create(story.wishlist, State);
 		wishlist.logOn();
@@ -38,9 +41,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		State.set("storyUIvars", story.UIvars);
 		Display.setStats("storyStats");
-
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
+		StoryDisplay.addVarChangers(story.UIvars, StoryAssembler.clickChangeState);		//add controls to change variable values in story (in diagnostics panel)
 	}
+
+
 
 	var getStorySpec = function(id) {
 
