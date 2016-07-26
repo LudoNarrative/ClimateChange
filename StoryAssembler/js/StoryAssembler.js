@@ -235,10 +235,12 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
 				var choiceText = getChoiceText(choiceDetails[pos]);
 				choiceText = Templates.render(choiceText);				//render any grammars in there
-				// if (choice.type == "id") { choiceText = getChoiceText(choice.val); }
+				var choiceId = choice.val;
+				if (choice.type == "condition") { choiceId = choiceDetails[pos].id }	//if it's a condition, use the id of the one we fetched
+				
 				StoryDisplay.addChoice({
 					text: choiceText,
-					chunkId: choice.val,
+					chunkId: choiceId,
 					cantChoose: choiceDetails[pos].missing === true
 				});
 
