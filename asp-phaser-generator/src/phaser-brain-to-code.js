@@ -7,8 +7,7 @@ define(["ctp", "rensa"], function(ctp, rensa) {
 var addWhitespace = false;
 
 // Contains realized goals from the ASP code.
-var goals = [];
-
+var goals;
 // var ctp = require('./cygnus-to-phaser-brain');
 // var rensa = require('./brain');
 
@@ -16,6 +15,8 @@ var goals = [];
 // Output: Phaser program (string).
 var writePhaserProgram = function(brain){
   var programText = "";
+
+  goals = [];
 
   // Grab variable assertions so we can store their values in create.
   var variableValues = [];
