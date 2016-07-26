@@ -6,8 +6,6 @@
 
 define([], function() {
 
-var doneKeywords = [];
-
 // X(Y). --> Y is_a X.
 // Example: entity(ball).
 function translateIsA(str){
@@ -349,6 +347,7 @@ function translateNested(x){
 function translateASP(lines){
   var assertions = [];
   var doneLines = [];
+  var doneKeywords = [];
   // For each line,
   for (var i in lines){
     var assertionsToAdd = null;
