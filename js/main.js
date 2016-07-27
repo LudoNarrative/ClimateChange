@@ -23,7 +23,7 @@ requirejs.config({
 		"travelData" : "../StoryAssembler/data/travel.json", 
 		"workerData" : "../StoryAssembler/data/worker.json", 
 		"lectureData" : "../StoryAssembler/data/lecture.json", 
-		"dinnerData" : "../StoryAssembler/data/dinner.json",
+		"dinnerData" : "../StoryAssembler/data/dinner2.json",
 
 		"Coordinator" : "../Coordinator/Coordinator",
 		"Display" : "Display",
@@ -31,6 +31,7 @@ requirejs.config({
 		"Phaser" : "../lib/phaser",
 		"jQuery": "../lib/jquery-3.0.0.min",
 		"jQueryUI": "../lib/jquery-ui.min",
+		"jsonEditor": "../lib/jsonEditor/jsoneditor.min",
 
 		"Game" : "../GameGenerator/js/game",
 		"AspPhaserGenerator" : "../asp-phaser-generator/index",
