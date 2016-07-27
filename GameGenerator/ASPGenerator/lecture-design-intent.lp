@@ -1,9 +1,9 @@
 #const min_entities = 2.
 #const max_entities = 2.
 #const min_resources = 1.
-#const max_resources = 2.
+#const max_resources = 1.
 #const min_outcomes = 0.
-#const max_outcomes = 7.
+#const max_outcomes = 4.
 
 #const min_end_outcomes = 1.
 #const max_end_outcomes = 1.
@@ -18,16 +18,6 @@
 :- result(O,mode_change(game_loss)), not resourceAffects(r1,O).
 % :- not exists_counterforce(r1).
 riskReward :- actionHasRiskReward(ControlEvent).
-:- not riskReward.
+%:- not riskReward.
 
 :- hinders(O,O2), result(O2,mode_change(game_loss)), easy(O).
-%:- not condition(tick).
-
-%:- not timingChallengeGoal.
-
-% :- physicsLogic(e1,mapping(control_event(left_arrow,pressed),east,low)).
-
-% % Something something cultural knowledge about confidence
-% face communicates confidence
-
-
