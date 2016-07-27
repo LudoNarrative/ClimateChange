@@ -130,7 +130,7 @@ if __name__ == '__main__':
     for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic']:
         for oo in out[o]:
             for ooo in oo:
-                print prettify(ooo),'.'
+                print prettify(ooo)+'.'
         if len(out[o]) > 0:
             print ''
     outcome2precond = {}
@@ -151,19 +151,19 @@ if __name__ == '__main__':
         outcome = hashable(result[0]['terms'][0])
         if outcome not in outcome2result:
             outcome2result[outcome] = []
-        print result[0]['terms'][0] 
         if result[0]['terms'][1]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
-            result[0]['terms'][1]['predicate'] = 'increase_over_time'
-            print ':',result[0]
+            #result[0]['terms'][1]['predicate'] = 'increase_over_time'
+            #print ':',result[0]
+            pass
         if result[0]['terms'][1]['predicate'] ==  'decrease' and result[0]['terms'][0]['predicate'] in every_frames:
-            result[0]['terms'][1]['predicate'] = 'decrease_over_time'
-            
-            print ':',result[0]
+            #result[0]['terms'][1]['predicate'] = 'decrease_over_time'
+            pass
+            #print ':',result[0]
         outcome2result[outcome].append(result[0])
     for outcome in sorted(outcome2precond):
         for precond in outcome2precond[outcome]:
-            print prettify(precond),'.'
+            print prettify(precond)+'.'
         for result in outcome2result[outcome]:
-            print prettify(result),'.'
+            print prettify(result)+'.'
         print ''
     

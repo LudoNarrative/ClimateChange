@@ -88,47 +88,42 @@ actuallyHurts(hurt(ENTITY1,ENTITY2)) :-
 % Don't count and do transactions on a resource
 :-  resourceLogic(RESOURCE,count(ENTITY)), 
     transaction(RESOURCE,TRANSACTION).
-% Don't overlap with itself
-:- precondition(overlaps(ENTITY,ENTITY,POLARITY),OUTCOME).
-
+    
 % can only change at most N resources per outcome
 :- max_resource_change_per + 1  {changes(OUTCOME,CHANGE, CV,V) :
 				 resource(CV),
 				 potentialValues(V), 
 				 change(CHANGE)}, 
    outcome(OUTCOME).
-:-  2 {changes(OUTCOME,CHANGE,CV,V)}, 
-    outcome(OUTCOME), 
-    resource(CV).        
+% :-  2 {changes(OUTCOME,CHANGE,CV,V)}, 
+    % outcome(OUTCOME), 
+    % resource(CV).        
         
 % can't try to prevent and achieve an outcome        
 :- goal(prevent(OUTCOME)), goal(achieve(OUTCOME)).
 
-% same - can't be good and bad
-:- bad(RESOURCE), good(RESOURCE).
+% % same - can't be good and bad
+% :- bad(RESOURCE), good(RESOURCE).
 
 
         
 %tick must occur alone
 :-  precondition(tick,OUTCOME), 
     2 { precondition(CONDITION,OUTCOME) : condition(CONDITION)}.
-
-%priority(Outcome,high) :- precondition(control_event(E),Outcome).
-%:- priority(OUTCOME1,high), not priority(OUTCOME2), outcomeOrder(OUTCOME2,OUTCOME1).
-  
-    
-% outcomes must be different - perhaps this is overly strong
-% should subsets be allowed?  
-% CRM 6/15/2016 commented out for debugging
-% :-  not differentL(OUTCOME1,OUTCOME2), 
-%    outcome(OUTCOME1),outcome(OUTCOME2),
-%    outcomeOrder(OUTCOME1,OUTCOME2),
-%    same(OUTCOME1,OUTCOME2). 
  
-%:-  not differentR(OUTCOME1,OUTCOME2), 
-%    outcome(OUTCOME1),outcome(OUTCOME2),
-%    outcomeOrder(OUTCOME1,OUTCOME2),
-%    same(OUTCOME1,OUTCOME2). 
+    
+% % % outcomes must be different - perhaps this is overly strong
+% % % should subsets be allowed?  
+% % % CRM 6/15/2016 commented out for debugging
+% % % :-  not differentL(OUTCOME1,OUTCOME2), 
+% % %    outcome(OUTCOME1),outcome(OUTCOME2),
+% % %    outcomeOrder(OUTCOME1,OUTCOME2),
+% % %    same(OUTCOME1,OUTCOME2). 
+ 
+% % %:-  not differentR(OUTCOME1,OUTCOME2), 
+% % %    outcome(OUTCOME1),outcome(OUTCOME2),
+% % %    outcomeOrder(OUTCOME1,OUTCOME2),
+% % %    same(OUTCOME1,OUTCOME2). 
  
 % not sure if these are needed
 % was trying to have something about how certain outcomes
@@ -278,7 +273,7 @@ required(Entity) :- precondition(overlaps(_,Entity,_), Outcome).
 % CRM 6/23/2016 - or if something requires it to be present
 required(Entity) :- precondition(present(Entity), Outcome).
 % CRM 6/23/2016 - or if something generates it, maybe?
-% CRM 6/27/2016 - or if it_primes required according to rules
+% CRM 6/27/2016 - or if it's required according to rules
 required(Entity) :- requires(_, Entity).
 
 % require entities
@@ -317,7 +312,7 @@ score(R)
 :-  2{precondition(COND,Outcome) : lhThreshold(COND,Resource,Thresh)},
   outcome(Outcome).
 
-% Don't care about counting something if it_primes count can't change
+% Don't care about counting something if its count can't change
 :- resourceLogic(Resource,count(Entity)), 
     {effect(delete(Entity));
     effect(add(Entity, Place))} 0.
@@ -339,8 +334,6 @@ completeOutcome(OUTCOME) :-
 :- outcome(OUTCOME), not completeOutcome(OUTCOME).
 
 % Don't have 2 separate ways of overlapping for an outcome
-:- precondition(overlaps(ENTITY1,ENTITY2,POLARITY), OUTCOME),
-   precondition(overlaps(ENTITY2,ENTITY1,OTHER), OUTCOME).
 
 % Don't check more than 1 collision
 :- 2 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)}, outcome(OUTCOME).
@@ -361,8 +354,8 @@ freeResource(Resource) :-
 % Don't increase a resource on a positive check of it
 :- result(Outcome,increase(Resource,Amount)),
   precondition(ge(Resource,Other),Outcome).
-% dont_prime decrease a resource on negative check of it
- :- result(Outcome,decrease(Resource,Amount)),
+% don't decrease a resource on negative check of it
+:- result(Outcome,decrease(Resource,Amount)),
    precondition(le(Resource,Other),Outcome).
 
 % CRM 6/27/2016
@@ -376,26 +369,23 @@ freeResource(Resource) :-
 % Don't have more than 1 control event per outcome
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
 
-%players must have controls or it_primes just a weird movie
+%players must have controls or it's just a weird movie
 playerControls :- precondition(control_event(EVENT),OUTCOME).
 :- not playerControls.
 
 % count number of results
 
-% outcomes(N) :- N = #count{outcome(OUTCOME) : outcome(OUTCOME)}.
+outcomes(N) :- N = #count{outcome(OUTCOME) : outcome(OUTCOME)}.
 
-% results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
+results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
 
-% %count number of preconditions
-% preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
+%count number of preconditions
+preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
 
-% :- outcomes(N), N > 4.
+:- outcomes(N), N > 4.
 
-:- singular(E), 
-    result(Outcome, delete(Entity)), 
-    not result(Outcome, add(Entity)).
 
-% CRM 6/27/2016 - only add a singular entity if it_primes absent beforehand.
+% CRM 6/27/2016 - only add a singular entity if it's absent beforehand.
 maintains_singular(Outcome, Entity)
   :- precondition(absent(Entity), Outcome).
 maintains_singular(Outcome, Entity)
@@ -413,8 +403,9 @@ maintains_singular(Outcome, Entity)
 :- precondition(X, O), precondition(Y, O), contradictory(X, Y).
 
 %% Don't condition on presence/absence unless the entity is deleted.
-:- condition(present(E)), not effect(delete(E)).
-:- condition(absent(E)), not effect(delete(E)).
+% REEXAMINE THESE LATER XXX
+% :- condition(present(E)), not effect(delete(E)).
+% :- condition(absent(E)), not effect(delete(E)).
 
 % can't test for a spatial condition unless at least one of the entities
 % can move.
@@ -432,7 +423,8 @@ moves(E)
 
 moves(E)
   :- effect(move_away(E, X)).
-
+moves(E) :-
+    effect(moves(E,D)).
 moves(E)
   :- controlScheme(E, Scheme).
 
@@ -459,7 +451,7 @@ moves(E)
 :- effect(decrease(R, 0)).
 
 
-%%%% Reachability %%%%
+%%% Reachability %%%%
 
 reachableResult(R)
   :- initialize(R).
@@ -619,7 +611,7 @@ disjunctionResult(O1,O2) :-
 %%%
 
 %%%% Adding and deleting entities %%%%
-% Don't add or delete an entity unless it_primes because of (a) collision or (b)
+% Don't add or delete an entity unless it's because of (a) collision or (b)
 % control event
 controlled(O) :- precondition(control_event(_), O).
 controlled(O) :- precondition(overlaps(_,_, true), O).
@@ -714,8 +706,6 @@ nonMouseControls  :-
 
 :- precondition(timerElapsed(T),Outcome), 2 { precondition(C,Outcome)}.
 
-:-  betterWithTime(R1),
-    worseWithTime(R1).
     
 :-  onlyOnePrecondition(O),
     above(R,V,O),
@@ -777,8 +767,7 @@ perEntity(target(E)) :- entity(E).
         precondition(lt(PV,V),O); precondition(le(PV,V),O) },
     {result(O,increases(PV2,A));result(O,decreases(PV2,A))} 0,
     perEntity(PV),
-    perEntity(PV2).
-    
+    perEntity(PV2).    
     
 every_frame(O) :- precondition(tick,O).
     
@@ -796,4 +785,4 @@ not_every_frame(O) :- precondition(control_event(button(B,released)),O).
 not_every_frame(O) :- precondition(timerElapsed(T),O) .
 
 :- result(O,delete(E)), every_frame(O).
-:- result(O,add(E)), every_frame(O).
+:- result(O,add(E,L)), every_frame(O).

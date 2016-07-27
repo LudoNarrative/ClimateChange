@@ -54,7 +54,7 @@ precondition(control_event(button(up_arrow, held)),avatar_move_up) :-
 % precondition(empty(ENTITY,north,low),avatar_move_up) :- 
     % avatar(ENTITY), 
     % outcome(avatar_move_up).
-result(avatar_move_up,moves(ENTITY,  north , low))  :- 
+result(avatar_move_up,moves(ENTITY,  north))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_up).
 %moving  south 
@@ -64,7 +64,7 @@ precondition(control_event(button(down_arrow, held)),avatar_move_down) :-
 % precondition(empty(ENTITY, south ,low),avatar_move_down) :- 
     % avatar(ENTITY), 
     % outcome(avatar_move_down).
-result(avatar_move_down,moves(ENTITY,  south , low))  :- 
+result(avatar_move_down,moves(ENTITY,  south))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_down).
 %moving  east 
@@ -74,7 +74,7 @@ precondition(control_event(button(right_arrow, held)),avatar_move_right) :-
 % precondition(empty(ENTITY, east ,low),avatar_move_right) :- 
     % avatar(ENTITY), 
     % outcome(avatar_move_right).
-result(avatar_move_right,moves(ENTITY,  east , low))  :- 
+result(avatar_move_right,moves(ENTITY,  east ))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_right).
 %moving  west 
@@ -84,7 +84,7 @@ precondition(control_event(button(left_arrow, held)),avatar_move_left) :-
 % precondition(empty(ENTITY, west ,low),avatar_move_left) :- 
     % avatar(ENTITY), 
     % outcome(avatar_move_left).
-result(avatar_move_left,moves(ENTITY,  west , low))  :- 
+result(avatar_move_left,moves(ENTITY,  west ))  :- 
     avatar(ENTITY), outcome(avatar_move_left).
 
 %asteroids/combat tank moving forward
@@ -110,7 +110,7 @@ precondition(control_event(button(up_arrow, held)),avatar_move_forward) :-
 % precondition(empty(ENTITY,forward,low),avatar_move_forward) :- 
     % avatar(ENTITY), 
     % outcome(avatar_move_forward).
-result(avatar_move_forward,moves(ENTITY, forward, low))  :- 
+result(avatar_move_forward,moves(ENTITY, forward))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_forward).
 %moving backwards
@@ -120,21 +120,21 @@ precondition(control_event(button(down_arrow, held)),avatar_move_backward) :-
 % precondition(empty(ENTITY,behind,low),avatar_move_backward) :- 
     % avatar(ENTITY), 
     % outcome(avatar_move_backward).
-result(avatar_move_backward,moves(ENTITY, behind, low))  :- 
+result(avatar_move_backward,moves(ENTITY, behind))  :- 
     avatar(ENTITY), 
     outcome(avatar_move_backward).
 %rotate counter clockwise
 precondition(control_event(button(left_arrow, held)),avatar_rotate_left) :- 
     avatar(ENTITY), 
     outcome(avatar_rotate_left).
-result(avatar_rotate_left,rotates(ENTITY, ccw, low))  :- 
+result(avatar_rotate_left,rotates(ENTITY, ccw))  :- 
     avatar(ENTITY), 
     outcome(avatar_rotate_left).
 %rotate clockwise
 precondition(control_event(button(right_arrow, held)),avatar_rotate_right) :- 
     avatar(ENTITY), 
     outcome(avatar_rotate_right).
-result(avatar_rotate_right,rotates(ENTITY, cw, low))  :- 
+result(avatar_rotate_right,rotates(ENTITY, cw))  :- 
     avatar(ENTITY), 
     outcome(avatar_rotate_right).
 
@@ -226,8 +226,8 @@ path_shapes(horizontal;vertical;circle;racetrack;star;spoke;polygon(3);polygon(4
 1 {speed(ENTITY,AMOUNT) : constants(AMOUNT)} 1 :- 
     movementScheme(ENTITY,projectile).
 %projectiles go straight
-result(tick,moves(ENTITY, forward, AMOUNT)) :- 
-    movementScheme(ENTITY,projectile), speed(ENTITY,AMOUNT). 
+result(tick,moves(ENTITY, forward)) :- 
+    movementScheme(ENTITY,projectile). 
 
 %Random walkers walk in a given direction for a given amount of time    
 outcome(change_direction(ENTITY)) :- 
@@ -240,7 +240,7 @@ precondition(timerElapsed(change_direction(ENTITY)), change_direction(ENTITY)) :
 result(change_direction(ENTITY), rotate_to(ENTITY,random_int(0,360))) :- 
     movementScheme(ENTITY,random_walk).
 %normally, just walk forwards ?slowly?
-result(tick,moves(ENTITY, forward, low)) :- 
+result(tick,moves(ENTITY, forward)) :- 
     movementScheme(ENTITY,random_walk). 
 
 %random pathfinder - changes target every once in a while
@@ -522,12 +522,12 @@ resourceTransactions(convert;pay_cost;gain;lose).
 %  :- entity(E1), entity(E2), E1 != E2.
 
 % check presence/absece of entities
+%%%NEED TO REEXAMINE THESE  - WEIRD STUFF XXX
+% {precondition(present(E), Outcome) : potentialOutcomes(Outcome)}
+  % :- singular(E).
 
-{precondition(present(E), Outcome) : potentialOutcomes(Outcome)}
-  :- singular(E).
-
-{precondition(absent(E), Outcome) : potentialOutcomes(Outcome)}
-  :- singular(E).
+% {precondition(absent(E), Outcome) : potentialOutcomes(Outcome)}
+  % :- singular(E).
 
 % check timer signals
 % CRM 6/21/2016: not consistent with prior use of timers e.g. in
