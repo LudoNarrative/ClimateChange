@@ -51,14 +51,6 @@ define([], function() {
 		document.getElementById("choiceArea").appendChild(el);
 	}
 
-		// Add a choice to the choice window.
-	var addVarClickChanger = function() {
-		var el = document.getElementsByClassName("varClickChanger")[0];
-		el.onclick = function() {
-			varClickChangerFunc();
-		}
-	}
-
 	// Remove all content from the UI.
 	var clearAll = function() {
 		clearText();
