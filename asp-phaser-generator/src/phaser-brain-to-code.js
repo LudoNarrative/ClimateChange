@@ -7,8 +7,7 @@ define(["ctp", "rensa"], function(ctp, rensa) {
 var addWhitespace = false;
 
 // Contains realized goals from the ASP code.
-var goals = [];
-
+var goals;
 // var ctp = require('./cygnus-to-phaser-brain');
 // var rensa = require('./brain');
 
@@ -16,6 +15,8 @@ var goals = [];
 // Output: Phaser program (string).
 var writePhaserProgram = function(brain){
   var programText = "";
+
+  goals = [];
 
   // Grab variable assertions so we can store their values in create.
   var variableValues = [];
@@ -141,7 +142,8 @@ var writePhaserProgram = function(brain){
               if(addWhitespace){programText+="\n\t"};
               programText += "if(entity.x>game.width){entity.x=game.width;}if (entity.x<0){entity.x=0;} if (entity.y>game.height){entity.y=game.height;}if (entity.y<0){entity.y=0;}"
               if(addWhitespace){programText+="\n\t"};
-              programText += "}}\n";
+              programText += "}}";
+              if(addWhitespace){programText+="\n"};
             }
 
             programText += "};";
