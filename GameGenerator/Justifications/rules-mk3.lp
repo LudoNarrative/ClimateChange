@@ -417,13 +417,11 @@ worseWithTime(RESOURCE) :-
 betterWithTime(RESOURCE) :- 
     bad(RESOURCE),
     precondition(tick,Outcome), 
-    onlyOnePrecondition(Outcome),
     result(Outcome,decrease(RESOURCE,AMOUNT)).
 
 betterWithTime(RESOURCE) :- 
     good(RESOURCE),
-    precondition(tick,Outcome), 
-    onlyOnePrecondition(Outcome),
+    precondition(tick,Outcome),
     result(Outcome,increase(RESOURCE,AMOUNT)).
     
     
