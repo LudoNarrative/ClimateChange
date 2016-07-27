@@ -1,0 +1,56 @@
+[
+	{
+		"id": "eatFood",
+		"content": ["Emma. Seriously, girl. This stew is not going to eat itself."],
+		"choices": [
+			{"condition": "establishFriendBackstory eq true"},
+			{"condition": "provokeConfidenceChoice eq true"},
+			{"condition": "establishFriendBackstory eq true"}
+		]
+	},
+	{
+		"id": "eatFood2",
+		"content": ["Hey, mind passing the dish next to you? Thanks."],
+		"choices": [
+			{"condition": "establishFriendBackstory eq true"},
+			{"condition": "provokeConfidenceChoice eq true"},
+			{"condition": "establishFriendBackstory eq true"}
+		]
+	},
+
+	{
+		"id": "whatscalled",
+		"choiceLabel": "Thanks. What's it called again?",
+		"content": "<i>Cocido</i>, chica. Figured comfort food would be good the night before my best friend's dissertation defense.",
+		"effects": ["set establishFriendBackstory true"]
+	},
+
+	{
+		"id": "thanksbringing",
+		"choiceLabel": "It's so good. You made this?",
+		"content": "Don't look at me like that! I'm a better cook than you. And it's not like I'm going to let my best friend defend her dissertation after a night of takeout.",
+		"effects": ["set establishFriendBackstory true"]
+	},
+
+	{
+		"id": "stuffed",
+		"choiceLabel": "No thanks, Z. I'm stuffed.",
+		"content": "Are you kidding me? You've hardly had anything. Nervous about your dissertation defense tomorrow, huh?",
+		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
+	},
+
+	{
+		"id": "stomachNerves",
+		"choiceLabel": "Sorry, no appetite. Guess it must be my nerves.",
+		"content": "C'mon. Don't let your intellectual pursuits interfere with enjoying some of my famous <i>cocido</i>.",
+		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
+	},
+
+	{
+		"id": "tooMuchTrouble",
+		"choiceLabel": "I can't believe this spread. You went to too much trouble for me.",
+		"content": "Are you kidding me? What are friends for? <br><br>Sounds like something else is going on here.",
+		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
+	},
+
+]

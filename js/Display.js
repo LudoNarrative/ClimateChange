@@ -1,4 +1,4 @@
-define(["Game", "jQuery", "jQueryUI"], function(Game) {
+define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) {
 
 	var State;
 	var Coordinator;
@@ -223,30 +223,12 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 	var addGameDiagnostics = function(gameSpec, aspFilepath, aspGame, initialPhaserFile) {
 		
 		$('<div/>', {
-			id: "gameDiagnostics"
+			id: "gameDiagnostics",
+			html: '<ul><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditor">JSON Editor</a></li></ul><div id="ASPEditor"></div><div id="JSONEditor"></div>'
 		}).appendTo("body");
 
-		$('<p/>', {
-			text: "ASP code from: " + aspFilepath
-		}).appendTo("#gameDiagnostics");
-
-		$('<textarea/>', {
-			id: 'ASPinput',
-			rows: "4",
-			cols: "75",
-			text: aspGame
-		}).appendTo("#gameDiagnostics");
-
-		$('<div/>', {
-			id: "evaluateASPButton",
-			class: "diagButton",
-			text: "Run ASP",
-			click: function() {
-				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, initialPhaserFile, false);
-			}
-		})
-		.attr('spellcheck',false)
-		.appendTo("#gameDiagnostics");
+		addJSONEditor(gameSpec, initialPhaserFile);
+		addASPEditor(gameSpec, aspFilepath, aspGame);
 
 		$('<div/>', {
 			id: "gameDiagnosticsButton",
@@ -254,6 +236,132 @@ define(["Game", "jQuery", "jQueryUI"], function(Game) {
 				$("#gameDiagnostics").toggle();
 			}
 		}).appendTo("body");
+
+		$( "#gameDiagnostics" ).tabs();
+	}
+
+	//adds a JSON editor to the game diagnostics panel
+	var addJSONEditor = function(gameSpec, initialPhaserFile) {
+		
+		var container = document.getElementById('JSONEditor');
+		var schema = {					// The schema for the editor
+          type: "array",
+          title: "Phaser Rules",
+          format: "tabs",
+          items: {
+            title: "Rule",
+            headerTemplate: "Rule {{i}}",
+            oneOf: ruleSchemas
+          }
+        };
+
+        var ruleSchemas = [
+        	{
+        		"properties": {
+				    "l": {
+				      "type": "array",
+				      "format": "table",
+				      "title": "Left",
+				      "items": {
+				        "type": "string"
+				      }
+				    },
+				    "r": {
+				      "type": "array",
+				      "format": "table",
+				      "title": "Right",
+				      "items": {
+				        "type": "string"
+				      }
+				    },
+				    "relation": {
+				      "type": "string",
+				      "title": "Relation",
+				      "enum": [
+				        "is_a",
+				      ],
+				    }
+				}
+			}
+		];
+
+		var options = {
+    		schema: schema,
+    		startval: initialPhaserFile,
+  		};
+
+  		editor = new JSONEditor(container, options);		//create editor (make it global so other buttons can pass it [hacky])
+
+  		$('<div/>', {
+			id: "JSONDumpDiv",
+		})
+		.appendTo("#JSONEditor");
+		$('<textarea/>', {			//add JSON dump field
+			id: 'JSONDump',
+			rows: "4",
+			cols: "75",
+			text: ""
+		}).attr('spellcheck',false)
+		.appendTo("#JSONDumpDiv");
+
+		$('<div/>', {
+			id: "closeDump",
+			class: "diagButton",
+			text: "Close",
+			click: function() { $("#JSONDumpDiv").toggle(); }
+		})
+		.appendTo("#JSONDumpDiv");
+
+
+  		$('<div/>', {
+			id: "evaluateJSONButton",
+			class: "diagButton",
+			text: "Run new JSON",
+			click: function() {
+				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, editor.get(), false);
+			}
+		})
+		.appendTo("#JSONEditor");
+
+		$('<div/>', {
+			id: "dumpJSONButton",
+			class: "diagButton",
+			text: "Dump JSON",
+			click: function() {
+				$("#JSONDump")[0].value = JSON.stringify(editor.get(), null, 2);
+    			$("#JSONDumpDiv").toggle();
+			}
+		})
+		.appendTo("#JSONEditor");
+
+		editor.set(initialPhaserFile);
+
+	}
+
+	//adds an ASP editor to the game diagnostics panel
+	var addASPEditor = function(gameSpec, aspFilepath, aspGame) {
+
+		$('<p/>', {					//add header
+			text: "ASP code from: " + aspFilepath
+		}).appendTo("#ASPEditor");
+
+		$('<textarea/>', {			//add editing field
+			id: 'ASPinput',
+			rows: "4",
+			cols: "75",
+			text: aspGame
+		}).attr('spellcheck',false)
+		.appendTo("#ASPEditor");
+
+		$('<div/>', {				//add evaluate ASP button
+			id: "evaluateASPButton",
+			class: "diagButton",
+			text: "Run ASP",
+			click: function() {
+				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, editor.get(), false);
+			}
+		})
+		.appendTo("#ASPEditor");
 	}
 
 	return {
