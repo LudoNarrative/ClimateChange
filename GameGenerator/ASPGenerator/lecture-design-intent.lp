@@ -18,6 +18,6 @@
 :- result(O,mode_change(game_loss)), not resourceAffects(r1,O).
 % :- not exists_counterforce(r1).
 riskReward :- actionHasRiskReward(ControlEvent).
-%:- not riskReward.
+:- not riskReward.
 
 :- hinders(O,O2), result(O2,mode_change(game_loss)), easy(O).

@@ -135,7 +135,7 @@ moreSevere(OutcomeA,OutcomeB) :-
     modeChanging(OutcomeA),
     outcome(OutcomeB),
     not modeChanging(OutcomeB). 
-    
+:- bad(R), good(R).
 % Don't compare 1 resource for more than 1 value   
 :-  2 {precondition(lt(RESOURCE,VALUE),OUTCOME) :
             potentialValues(VALUE)}, 
@@ -373,17 +373,6 @@ freeResource(Resource) :-
 playerControls :- precondition(control_event(EVENT),OUTCOME).
 :- not playerControls.
 
-% count number of results
-
-outcomes(N) :- N = #count{outcome(OUTCOME) : outcome(OUTCOME)}.
-
-results(N) :- N = #count{result(OUTCOME,EFFECT) : result(OUTCOME,EFFECT)}.
-
-%count number of preconditions
-preconditions(N) :- N = #count{precondition(CONDITION,OUTCOME) : precondition(CONDITION,OUTCOME)}.
-
-:- outcomes(N), N > 4.
-
 
 % CRM 6/27/2016 - only add a singular entity if it's absent beforehand.
 maintains_singular(Outcome, Entity)
@@ -599,10 +588,11 @@ disjunctionResult(O1,O2) :-
     not similarResult(R,O1,O2),
     result(O2,R),
     outcome(O1).
-:- not disjunctionResult(O1,O2), 
-    outcome(O1),
-    outcome(O2), 
-    outcomeOrder(O1,O2).
+% % NEED TO REASSESS XXXX 
+% % :- not disjunctionResult(O1,O2), 
+    % % outcome(O1),
+    % % outcome(O2), 
+    % % outcomeOrder(O1,O2).
     
     
     
@@ -786,3 +776,68 @@ not_every_frame(O) :- precondition(timerElapsed(T),O) .
 
 :- result(O,delete(E)), every_frame(O).
 :- result(O,add(E,L)), every_frame(O).
+
+moreSevereRestriction(O1,O2) :- 
+    precondition(ge(R,A1),O1),
+    precondition(ge(R,A2),O2),
+    outcome(O1),
+    outcome(O2),
+    resource(R),
+    lower_than(A2,A1).
+moreSevereRestriction(O1,O2) :- 
+    precondition(gt(R,A1),O1),
+    precondition(ge(R,A2),O2),
+    outcome(O1),
+    outcome(O2),
+    resource(R),
+    lower_than(A2,A1).
+
+moreSevereRestriction(O1,O2) :- 
+    precondition(ge(R,A1),O1),
+    precondition(gt(R,A2),O2),
+    outcome(O1),
+    outcome(O2),
+    resource(R),
+    lower_than(A2,A1).
+    
+moreSevereRestriction(O1,O2) :- 
+    precondition(gt(R,A1),O1),
+    precondition(gt(R,A2),O2),
+    outcome(O1),
+    outcome(O2),
+    resource(R),
+    lower_than(A2,A1).
+moreSevereRestriction(O1,O2) :- 
+    precondition(le(R,A1),O1),
+    precondition(le(R,A2),O2),
+    outcome(O1),
+    outcome(O2),
+    resource(R),
+    lower_than(A1,A2).
+moreSevereRestriction(O1,O2) :- 
+    precondition(lt(R,A1),O1),
+    precondition(le(R,A2),O2),
+    outcome(O1),
+    outcome(O2),
+    resource(R),
+    lower_than(A1,A2).
+moreSevereRestriction(O1,O2) :- 
+    precondition(le(R,A1),O1),
+    precondition(lt(R,A2),O2),
+    outcome(O1),
+    outcome(O2),
+    resource(R),
+    lower_than(A1,A2).
+moreSevereRestriction(O1,O2) :- 
+    precondition(lt(R,A1),O1),
+    precondition(lt(R,A2),O2),
+    outcome(O1),
+    outcome(O2),
+    resource(R),
+    lower_than(A1,A2).
+    
+:- result(O1,mode_change(M)),
+    moreSevereRestriction(O1,O2).
+
+
+    

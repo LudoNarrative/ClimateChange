@@ -260,29 +260,29 @@ goodResult(mode_change(game_win)).
 badResult(mode_change(game_end)). % ?
 badResult(mode_change(game_loss)).
 
-goodResult(increase(Resource, Amount)) :-
-    result(_, increase(Resource, Amount)),
-    good(Resource).
+% goodResult(increase(Resource, Amount)) :-
+    % result(_, increase(Resource, Amount)),
+    % good(Resource).
 
-goodResult(decrease(Resource, Amount)) :-
-    result(_, decrease(Resource, Amount)),
-    bad(Resource).
+% goodResult(decrease(Resource, Amount)) :-
+    % result(_, decrease(Resource, Amount)),
+    % bad(Resource).
 
-badResult(increase(Resource, Amount)) :-
-    result(_, increase(Resource, Amount)),
-    bad(Resource).
+% badResult(increase(Resource, Amount)) :-
+    % result(_, increase(Resource, Amount)),
+    % bad(Resource).
 
-badResult(decrease(Resource, Amount)) :-
-    result(_, decrease(Resource, Amount)),
-    good(Resource).
+% badResult(decrease(Resource, Amount)) :-
+    % result(_, decrease(Resource, Amount)),
+    % good(Resource).
 
-badResult(add(Entity, Place)) :-
-    result(_, add(Entity, Place)),
-    harmful(Entity).
+% badResult(add(Entity, Place)) :-
+    % result(_, add(Entity, Place)),
+    % harmful(Entity).
 
-badResult(decrease(Resource, Amount)) :-
-    result(_, decrease(Resource, Amount)),
-    good(Resource).
+% badResult(decrease(Resource, Amount)) :-
+    % result(_, decrease(Resource, Amount)),
+    % good(Resource).
 %% Good and bad outcomes
 
 outcomeFavorable(Outcome) :-
@@ -310,21 +310,21 @@ needsHigh(Outcome, Resource) :-
 
 %% Good and bad resources
 
-good(Resource) :-
-    needsHigh(Outcome, Resource),
-    outcomeFavorable(Outcome).
+% good(Resource) :-
+    % needsHigh(Outcome, Resource),
+    % outcomeFavorable(Outcome).
     
-bad(Resource) :- 
-    needsHigh(Outcome, Resource),
-    outcomeUnfavorable(Outcome).
+% bad(Resource) :- 
+    % needsHigh(Outcome, Resource),
+    % outcomeUnfavorable(Outcome).
     
-good(Resource) :- 
-    needsLow(Outcome, Resource),
-    outcomeUnfavorable(Outcome).
+% good(Resource) :- 
+    % needsLow(Outcome, Resource),
+    % outcomeUnfavorable(Outcome).
 
-bad(Resource) :-     
-    needsLow(Outcome, Resource),
-    outcomeFavorable(Outcome).
+% bad(Resource) :-     
+    % needsLow(Outcome, Resource),
+    % outcomeFavorable(Outcome).
    
 
 good(Resource) :-
@@ -865,11 +865,13 @@ conditionEnables(C,O) :-
 %% More outcome favorability
 outcomeFavorable(Outcome) :-
     enables(Outcome, Outcome_prime),
-    outcomeFavorable(Outcome_prime).
+    outcomeFavorable(Outcome_prime),
+    not outcomeUnfavorable(Outcome).
 
 outcomeUnfavorable(Outcome) :-
     enables(Outcome, Outcome_prime),
-    outcomeUnfavorable(Outcome_prime).
+    outcomeUnfavorable(Outcome_prime),
+    not outcomeFavorable(Outcome).
  
 selection(Outcome) :-
     result(Outcome,select(ENTITY,CONDITION)).
