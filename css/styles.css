@@ -164,18 +164,6 @@ Story CSS
     padding: 0.5em 1em;
 }
 
-#gameDiagnostics {
-    display:none;
-    width: 500px;
-    color:black;
-    background-color: #FFF1A5;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    border-radius: 10px;
-    padding: 0.5em 1em;
-}
-
 .dHeader {
     font-variant: small-caps;
     text-decoration: underline;
@@ -268,12 +256,44 @@ Story CSS
     bottom: 10px;
 }
 
-#gameDiagnosticsButton { right:10px; }
-#storyDiagnosticsButton { left: 10px; }
+/* Game Diagnostic Panel Styles */
+
+#gameDiagnostics {
+    display:none;
+    font-size: 14px;
+    color:black;
+    background-color: #FFF1A5;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    border-radius: 10px;
+    padding: 0.5em 1em;
+    position: absolute;
+    z-index: 3;
+}
 
 #gameDiagnostics textarea {
     min-height:500px;
 }
+
+#JSONEditor {
+    min-width: 500px;
+}
+
+#evaluateJSONButton, #dumpJSONButton { float:left; margin-left:20px; }
+
+#JSONDumpDiv { 
+    display:none; 
+    position: fixed;
+    top: 13%;
+    left: 25%;
+    background-color: #efefef;
+    padding: 25px;
+    border-radius: 17px;
+}
+
+#gameDiagnosticsButton { right:10px; }
+#storyDiagnosticsButton { left: 10px; }
 
 .varChangerRow {
     margin-bottom: 5px;
