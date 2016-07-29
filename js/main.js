@@ -31,7 +31,7 @@ requirejs.config({
 		"Phaser" : "../lib/phaser",
 		"jQuery": "../lib/jquery-3.0.0.min",
 		"jQueryUI": "../lib/jquery-ui.min",
-		"jsonEditor": "../lib/jsonEditor/jsoneditor.min",
+		"jsonEditor": "../lib/jsonEditor/jsoneditor",
 
 		"Game" : "../GameGenerator/js/game",
 		"AspPhaserGenerator" : "../asp-phaser-generator/index",
