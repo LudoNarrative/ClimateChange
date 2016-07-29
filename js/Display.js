@@ -285,6 +285,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 
 		var options = {
     		//schema: schema,
+    		mode: 'text',
     		modes: ['tree', 'text'],
     		theme: 'html'
   		};
