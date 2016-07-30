@@ -32,6 +32,19 @@
 :- static(Entity), effect(move_towards(E, E_prime)).
 :- static(ENTITY), effect(apply_restitution(ENTITY,AMOUNT)).
 
+moving(ENTITY) :-   entity(ENTITY),
+                    1{avatar(ENTITY) ;
+                    controlScheme(ENTITY,SCHEME);
+                    movementScheme(ENTITY,SCHEME);
+                    interaction(OTHER,ENTITY,push);
+                    interaction(OTHER,ENTITY,bounce);
+                    interaction(OTHER,ENTITY,collide);
+                    result(Outcome,moves(ENTITY,AMOUNT));
+                    effect(move_away(E, E_prime));
+                    effect(move_towards(E, E_prime));
+                    effect(apply_restitution(ENTITY,AMOUNT))}.
+static(ENTITY) :- entity(ENTITY), not moving(ENTITY).
+
 % cleanliness
 :- entity(E2), not entity(E1), entityOrdering(E1,E2).
 :- resource(E2), not resource(E1), resourceOrdering(E1,E2).
@@ -662,14 +675,6 @@ intermediate_outcome(O)
 
 :- outcome(O), not intermediate_outcome(O).
 
-% %%%% The below are not necessarily definitive, but seem to rule out weird
-% %cases %%%%
-% %% no controls except mouse.
-nonMouseControls  :- 
-    condition(control_event(button(B, Action))), 
-    B != mouse_button. 
-:- condition(control_event(button(mouse_button, Action))), Action != held.
-:- nonMouseControls.
 
 :- near(E2,E1), entityOrdering(E1,E2).
 
@@ -839,5 +844,9 @@ moreSevereRestriction(O1,O2) :-
 :- result(O1,mode_change(M)),
     moreSevereRestriction(O1,O2).
 
+:- result(O,move_towards(E1,E3)),
+   result(O,move_towards(E2,E3)),
+   result(O,move_towards(E1,E2)).
+   
 
     
