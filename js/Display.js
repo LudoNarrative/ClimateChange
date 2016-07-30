@@ -224,7 +224,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 		
 		$('<div/>', {
 			id: "gameDiagnostics",
-			html: '<ul><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditor">JSON Editor</a></li></ul><div id="ASPEditor"></div><div id="JSONEditor"></div>'
+			html: '<ul><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditorDiv">JSON Editor</a></li></ul><div id="ASPEditor"></div><div id="JSONEditorDiv"></div>'
 		}).appendTo("body");
 
 		addJSONEditor(gameSpec, initialPhaserFile);
@@ -242,18 +242,6 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 
 	//adds a JSON editor to the game diagnostics panel
 	var addJSONEditor = function(gameSpec, initialPhaserFile) {
-		
-		var container = document.getElementById('JSONEditor');
-		var schema = {					// The schema for the editor
-          type: "array",
-          title: "Phaser Rules",
-          format: "tabs",
-          items: {
-            title: "Rule",
-            headerTemplate: "Rule {{i}}",
-            oneOf: ruleSchemas
-          }
-        };
 
         var ruleSchemas = [
         	{
@@ -285,17 +273,30 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 			}
 		];
 
+		var schema = {					// The schema for the editor
+          type: "array",
+          title: "Phaser Rules",
+          items: {
+            title: "Rule",
+            headerTemplate: "Rule {{i}}",
+            oneOf: ruleSchemas
+          }
+        };
+
 		var options = {
-    		schema: schema,
-    		startval: initialPhaserFile,
+    		//schema: schema,
+    		mode: 'text',
+    		modes: ['tree', 'text'],
+    		theme: 'html'
   		};
 
-  		editor = new JSONEditor(container, options);		//create editor (make it global so other buttons can pass it [hacky])
+  		var container = document.getElementById('JSONEditorDiv');
+  		var editor = new JSONEditor(container, options);		//create editor (make it global so other buttons can pass it [hacky])
 
   		$('<div/>', {
 			id: "JSONDumpDiv",
 		})
-		.appendTo("#JSONEditor");
+		.appendTo("#JSONEditorDiv");
 		$('<textarea/>', {			//add JSON dump field
 			id: 'JSONDump',
 			rows: "4",
@@ -321,7 +322,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, editor.get(), false);
 			}
 		})
-		.appendTo("#JSONEditor");
+		.appendTo("#JSONEditorDiv");
 
 		$('<div/>', {
 			id: "dumpJSONButton",
@@ -332,7 +333,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
     			$("#JSONDumpDiv").toggle();
 			}
 		})
-		.appendTo("#JSONEditor");
+		.appendTo("#JSONEditorDiv");
 
 		editor.set(initialPhaserFile);
 

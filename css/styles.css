@@ -270,6 +270,7 @@ Story CSS
     padding: 0.5em 1em;
     position: absolute;
     z-index: 3;
+    width:55%;
 }
 
 #gameDiagnostics textarea {
