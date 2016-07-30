@@ -1,0 +1,28 @@
+{
+  "$ref": "phaserEditorSchema.json",
+  "properties": {
+    "l": {
+      "type": "array",
+      "format": "table",
+      "title": "Left",
+      "items": {
+        "type": "string"
+      }
+    },
+    "r": {
+      "type": "array",
+      "format": "table",
+      "title": "Right",
+      "items": {
+        "type": "string"
+      }
+    },
+    "relation": {
+      "type": "string",
+      "title": "Relation",
+      "enum": [
+        "is_a",
+      ],
+    }
+  }
+}
