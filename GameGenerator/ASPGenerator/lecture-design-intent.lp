@@ -20,4 +20,6 @@
 riskReward :- actionHasRiskReward(ControlEvent).
 :- not riskReward.
 
+entitiesDoSomething :- precondition(overlaps(E1,E2,POL),O).
+:- not entitiesDoSomething.
 :- hinders(O,O2), result(O2,mode_change(game_loss)), easy(O).

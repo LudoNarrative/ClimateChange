@@ -1,8 +1,15 @@
 
-:- precondition(overlaps(E1,E2,POL),O).
-:- precondition(control_event(button(B,held)),O).
-:-  result(O,moves(E,D)).
-:- controlLogic(draggable(ENTITY)).
 :- precondition(timerElapsed(T),O) .
 :- result(O,add(E,L)).
 :- result(O,delete(E)).
+
+% %cases %%%%
+% %% no controls except mouse.
+nonMouseControls  :- 
+    condition(control_event(button(B, Action))), 
+    B != mouse_button. 
+:- nonMouseControls.
+
+:- result(O,apply_restitution(E1,E2)).
+:- result(O,reflect_velocity(E,collision_normal(_,_))).
+
