@@ -122,7 +122,14 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 	}
 
 
-	// Returns paths from searching in the chunk library. allPaths above calls this to begin the search, and it's also called in findValidPaths to begin recursion.
+	/* 
+	Returns paths from searching in the chunk library. allPaths calls this to begin the search, and it's also called in findValidPaths to begin recursion.
+	params:
+		-wants : a list of wants needing to be satisfied
+		-okToBeChoice : the parent of whatever spawned this function call has choice fields
+		-skipList : list of chunks not to consider (to avoid infinite loops)
+		-rLevel : recursion depth (increases when we iterate into populating choices for chunks)
+	*/
 	var searchLibraryForPaths = function(wants, okToBeChoice, skipList, params, rLevel) {
 
 		var paths = [];
@@ -182,6 +189,11 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		// --> response to a choice only allowed if prior node was a choice.
 		if (chunk.choiceLabel && (!okToBeChoice)) {
 			log(rLevel, "skipping '" + chunk.id + "' b/c has a choiceLabel field");
+			return false;
+		}
+
+		if (okToBeChoice && typeof chunk.choiceLabel == "undefined") {
+			log(rLevel, "skipping '" + chunk.id + "' b/c it's not a choice and we're looking for one");
 			return false;
 		}
 		return true;
