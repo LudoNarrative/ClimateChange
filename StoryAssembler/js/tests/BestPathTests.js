@@ -1,8 +1,10 @@
 /* global test, QUnit */
 "use strict";
 define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wishlist, ChunkLibrary, Request, State) {
-	
+
 	var run = function() {
+		
+
 		QUnit.module( "BestPath Module tests" );
 		test("bestPath", function( assert ) {
 			var wl, nextPath;
@@ -243,7 +245,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			wl = Wishlist.create([{chunkId: "Choice1"}], State);
 			ChunkLibrary.add([
 				{ id: "Choice1", choices: [{condition: "x eq true"}, {condition: "y eq true"}] },
-				{ id: "AnswerX", effects: ["set x true"] }
+				{ id: "AnswerX", effects: ["set x true"], choiceLabel: "..." }
 			]);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["Choice1"], "A missing choice request shouldn't affect a matching path to that choice.");
@@ -270,7 +272,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			ChunkLibrary.add([
 				{ id: "Choice1", choices: [{chunkId: "Fake1"}, {chunkId: "Fake2"}], effects: ["set x true"] },
 				{ id: "Choice2", choices: [{chunkId: "NodeP"}], effects: ["set x true"] },
-				{ id: "NodeP", content: "..." }
+				{ id: "NodeP", content: "...", choiceLabel: "..." }
 			]);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["Choice2"], "We should prefer a path with available options over one without.");
@@ -339,6 +341,25 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true", order: 1}, {condition: "y eq true", order: 2}], State);
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["Chunk2"], "If multiple different numeric orders, prioritize lowest-valued one.");
+
+		});
+
+		test("shortest", function( assert ) {
+
+			var bestPath, allPaths, wl;
+
+			ChunkLibrary.reset();
+			State.reset();
+			wl = Wishlist.create([{condition: "x eq true"}], State);
+			ChunkLibrary.add([
+				{ id: "shortest_Chunk1", content: "...", choices: [{condition: "x eq true"}] },
+				{ id: "shortest_Chunk2", content: "...", choices: [{condition: "x eq true"}] },
+				{ id: "shortest_Chunk3", content: "...", effects: ["set x true"], choiceLabel: "..." }
+			]);
+
+			wl.logOn();
+			bestPath = wl.bestPath(ChunkLibrary);
+			assert.deepEqual(bestPath.route, ["shortest_Chunk1", "shortest_Chunk3"], "Shouldn't unneccesarily route through nodes.");
 
 		});
 
