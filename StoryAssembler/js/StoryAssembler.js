@@ -119,6 +119,9 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	var refreshNarrative = function() {
 		StoryDisplay.clearText();
 		displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
+
+		newBestPath = getBestPath(chunkLibrary, State.get("currentTextId"));		//look for path from here
+		doChunkChoices(State.get("currentTextId"), newBestPath.choiceDetails, "refresh");
 	}
 
 	//used in Diagnostics panel buttons to change a UI var (theVar) by some amount like +1 or -1 (theMod)
@@ -225,9 +228,21 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		// TODO: We shouldn't display "undefined" if there's no content field.
 		}
 
-	var doChunkChoices = function(chunkId, choiceDetails) {
+	var doChunkChoices = function(chunkId, choiceDetails, mode) {
 
-		var chunk = chunkLibrary.get(chunkId);
+		mode = mode || "normal";		//mode can be "refresh" driven by state
+		var chunk;
+
+		if (mode == "refresh") {
+			chunk = chunkLibrary.get(chunkId, "refresh");	
+		}
+		else {
+			chunk = chunkLibrary.get(chunkId);
+		}
+
+		if (mode == "refresh") {
+			StoryDisplay.clearChoices();
+		}
 
 		// Handle choices
 		if (chunk.choices) {
@@ -246,10 +261,10 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 			});
 		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
-		} else if (wishlist.wantsRemaining() > 0) {
+		} else if (wishlist.wantsRemaining() > 0 && mode !== "refresh") {
 			// We have finished a path. After clicking this button, since we didn't send a chunkId parameter below, the system will search for a new bestPath given the remaining wishlist items.
 			StoryDisplay.addChoice({text: "Continue"});
-		} else {
+		} else if (mode !== "refresh") {
 			doStoryBreak();
 			endScene();
 		}
