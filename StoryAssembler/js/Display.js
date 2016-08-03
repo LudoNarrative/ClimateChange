@@ -54,11 +54,15 @@ define([], function() {
 	// Remove all content from the UI.
 	var clearAll = function() {
 		clearText();
-		document.getElementById("choiceArea").innerHTML = "";
+		clearChoices();
 	}
 
 	var clearText = function() {
 		document.getElementById("storyArea").innerHTML = "";
+	}
+
+	var clearChoices = function() {
+		document.getElementById("choiceArea").innerHTML = "";
 	}
 
 	var diagnose = function(params) {
@@ -222,6 +226,7 @@ define([], function() {
 		init: init,
 		clearAll: clearAll,
 		clearText: clearText,
+		clearChoices: clearChoices,
 		addStoryText: addStoryText,
 		addChoice: addChoice,
 		diagnose: diagnose,
