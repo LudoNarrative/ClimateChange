@@ -268,6 +268,9 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		if (chunk.choices) {
 			// Even if we've satisfied all our wants, we need to recurse so we know what nodes this choice leads to.
 			log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
+
+			var choiceSkipList = util.clone(skipList);		//list of choiceIDs that will be in this (used to prevent duplicate choices)
+
 			chunk.choices.forEach(function(choice) {
 					var validPaths;
 					if (choice.type == "goto") {	//if it's a goto choice, we don't need to recurse, just return
@@ -279,15 +282,17 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 						}];
 					}
 					else {
-						validPaths = searchFromHere(paths, chunk, skipList, choice, wants, pathToHere, rLevel, true);
+						validPaths = searchFromHere(paths, chunk, choiceSkipList, choice, wants, pathToHere, rLevel, true);
 					}
 
 					// Each path in validPaths should have a choiceDetails field, even if it didn't meet the Want requirements (so we know what choice labels to print when displaying the choice).
-					if (!util.isArray(validPaths[0].choiceDetails)) {
-						choiceDetails.push(validPaths[0].choiceDetails);
-					} else {
-						choiceDetails.push(validPaths[0].choiceDetails[0]);
-					}
+					var newChoiceDetails;
+					if (!util.isArray(validPaths[0].choiceDetails)) { newChoiceDetails = validPaths[0].choiceDetails; } 
+					else { newChoiceDetails = validPaths[0].choiceDetails[0]; }
+
+					choiceDetails.push(newChoiceDetails);
+					choiceSkipList.push(newChoiceDetails.id);
+
 					if (validPaths.length > 0 && validPaths[0].route) {
 						paths = addNewIfUnique(paths, validPaths);
 					}
