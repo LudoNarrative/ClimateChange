@@ -35,7 +35,7 @@
 	},
 	{
 		"id": "dinnerStart",
-		"content": ["Emma. Seriously, girl. This stew is not going to eat itself."],
+		"content": "Emma. Seriously, girl. This stew is not going to eat itself.",
 		"choices": [
 			{"gotoId": "whatscalled"},
 			{"gotoId": "thanksbringing"},

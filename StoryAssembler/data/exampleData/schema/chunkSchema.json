@@ -1,0 +1,65 @@
+{
+  "title": "Chunk",
+  "type": "object",
+  "id": "chunk",
+  "properties": {
+    "id": {
+      "title" : "ID",
+      "type": "string",
+      "description": "Unique ID"
+    },
+    "content": {
+      "title" : "Content",
+      "type": "string",
+      "format" : "textarea",
+      "description": "Text displayed"
+    },
+    "conditions": {
+    	"type": "array",
+    	"format": "table",
+    	"title" : "Conditions",
+      "description" : "Conditions that must be met for this chunk to be valid.",
+    	"uniqueItems" : true,
+    	"items" : {
+        "title" : "Condition",
+    		"type" : "string"
+    	}
+    },
+    "effects": {
+      "type": "array",
+      "format": "table",
+      "title" : "Effects",
+      "description" : "Effects that fire when this node is displayed.",
+      "uniqueItems" : true,
+      "items" : {
+        "title" : "Effect",
+        "type" : "string"
+      }
+    },
+    "choices": {
+      "type": "array",
+      "format": "table",
+      "title" : "Choices",
+      "description" : "Effects that fire when this node is displayed.",
+      "uniqueItems" : false,
+      "items" : {
+        "title" : "Choice",
+        "type" : "object",
+        "properties" : {
+          "type": {
+            "type": "string",
+            "enum": [
+              "gotoId",
+              "condition",
+              "chunkId"
+            ],
+            "default": "gotoId"
+          },
+          "val" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}

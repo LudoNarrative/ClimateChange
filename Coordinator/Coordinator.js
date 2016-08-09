@@ -1,6 +1,6 @@
 console.log(window.location.pathname);
 
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData) {
 
 	/*
 		Initializing function
@@ -137,12 +137,17 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "provokeConfidenceChoice eq true" },
 				{ condition: "friendReassuresEmma eq true" },
 			],
+			characters: {
+				"emma": {name: "Emma", nickname: "Em", gender: "female"},
+				"zanita": {name: "Zanita", nickname: "Z", gender: "female"},
+				"shelly": {name: "Shelly", nickname: "Shelly", gender: "female"}
+			},
 			dataFile: require("text!dinnerData"),
 			startState: [
-				"set initialized true",
-				"set friendName Emma",
 				"set career 0",
-				"set confidence 0"
+				"set confidence 0",
+				"set caller zanita",		//speaker who starts the scene
+				"set responder emma"		//responder to speaker for scene start
 			],
 			UIvars: [
 				"confidence",
@@ -337,6 +342,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		loadAvatars : loadAvatars,
 		loadSceneIntro : loadSceneIntro,
 		loadBackground : loadBackground,
-		startGame : startGame
+		startGame : startGame,
+		getStorySpec : getStorySpec
 	}
 });
