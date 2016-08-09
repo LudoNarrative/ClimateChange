@@ -1,0 +1,316 @@
+/*
+
+Challenge
+Backstory
+Knowledge
+
+or
+
+Challenge
+Backstory
+Knowledge
+
+*/
+
+[
+	{
+		"id": "Intro1",
+		"content": "\"Hot day, huh?\"<br><br>\"Thought it was supposed to be cooler by the beach.\"",
+		"choices": [
+			{ "gotoId" : "Intro2" }
+		],
+		"conditions": ["establishScene neq true"],
+		"effects": [
+			"set establishScene true",
+			"set cueOuttro false"
+		]
+	},
+
+	{
+		"id": "Intro2",
+		"choiceLabel" : "Used to be. {ifStateCondition|percent gt 1|Man, finding these little guys is hard work.|}",
+		"content": "\"Name's Rick. Nice meeting you.\"<br><br>\"How'd you get conscripted into this?\"",
+		"choices": [
+			{ "gotoId" : "academicBridge" },
+			{ "gotoId" : "fieldBridge" }
+		],
+		"conditions": [],
+		"effects": [ "set requiredPercent 7" ]
+	},
+//---------------------------------------------------------
+	{	//one of two labels going to Intro3 from Intro2
+		"id": "academicBridge",
+		"choiceLabel" : "Used to be an academic. Studied {ifState|specialty|shrimp|shrimp|}{ifState|specialty|lobster|lobsters|}{ifState|specialty|coral|coral reefs|}. But I decided teaching wasn't for me",
+		"request": {"gotoId": "Intro3"}
+	},
+
+	{	//one of two labels going to Intro3 from Intro2
+		"id": "fieldBridge",
+		"choiceLabel" : "Thought I could do more good out in the field.",
+		"request": {"gotoId": "Intro3"}
+	},
+
+	{
+		"id": "Intro3",
+		"content": "\"Hmm. Used to be truck driver, here. Back when that was still a thing.<br><br>How's your crew doing on this side of the beach?\"",
+		"conditions": [],
+		"choices" : [
+			{ "gotoId" : "progGood" },
+			{ "gotoId" : "progMed" },
+			{ "gotoId" : "progBad" }
+		],
+		"effects": [ "set requiredPercent 12" ]
+	},
+//---------------------------------------------------------
+	{
+		"id": "progGood",
+		"choiceLabel" : "We've found almost a thousand crabs so far.",
+		"content": "\"Well, goody for you.\"<br><br>\"We're taking our sweet time on my side. No sense killing ourselves in this heat.\"",
+		"choices" : [
+			{ "gotoId" : "hydratedBridge1" },
+			{ "gotoId" : "caringGrammarBridge" }
+
+		],
+		"conditions": [],
+		"effects": [ "set requiredPercent 17", "incr optimism 1", "set serious chillsis" ]
+	},
+	{
+		"id": "progMed",
+		"choiceLabel" : "Slow going, but we're making progress.",
+		"content": "If you can call what we're doing \"progress...\"",
+		"choices" : [
+			{ "gotoId" : "spellitout" },
+			{ "gotoId" : "caringRegBridge" }
+			
+		],
+		"conditions": [],
+		"effects": [ "set requiredPercent 17"]
+	},
+	{
+		"id": "progBad",
+		"choiceLabel" : "Going nowhere. What are we even doing out here?",
+		"content": "\"Tell me about it.\"<br><br>\"We're taking our sweet time on my side, too. No sense killing ourselves in this heat.\"",
+		"choices" : [
+			{ "gotoId" : "passedout" },
+			{ "gotoId" : "hydratedBridge2" }
+			
+		],
+		"conditions": [],
+		"effects": [ "set requiredPercent 17", "decr optimism 1", "set serious chillbro"]
+	},
+
+//-----------------------------------------------------------
+	{
+		"id" : "hydratedBridge1",
+		"choiceLabel" : "Stay hydrated.",
+		"request": {"gotoId" : "hydrated" }
+	},
+	{
+		"id" : "hydratedBridge2",
+		"choiceLabel" : "Stay hydrated, and you'll be fine.",
+		"request": {"gotoId" : "hydrated" }
+	},
+
+	{
+		"id": "hydrated",
+		"content" : "Good advice. Even if this desal water tastes like something died in it...",
+		"choices" : [
+			{ "gotoId" : "pointless" }
+		],
+		"effects": ["decr emotional 1", "set serious unchill"]
+	},
+//------------------------------------------------------------
+	{
+		"id" : "caringGrammarBridge",
+		"choiceLabel" : "{ifStateCondition|confidence gt 0|Don't you care about what we're doing here?|You sound like you aren't too sold on this job.}",
+		"request" : { "gotoId" : "dontucare" }
+	},
+	{
+		"id" : "caringRegBridge",
+		"choiceLabel" : "What's <i>that</i> supposed to mean?",
+		"request" : { "gotoId" : "dontucare" }
+	},
+	//------------------------------------------------------------
+	
+	{
+		"id" : "dontucare",
+		"content" : "Are you kidding me?<br><br>Look. Let me explain something to you.",
+		"effects" : ["incr emotional 1", "set serious unchill"],
+		"choices" : [
+			{ "gotoId" : "pointless" }
+		]
+	},
+
+	{
+		"id" : "spellitout",
+		"choiceLabel" : "I don't follow.",
+		"content" : "Well, let me spell it out for you, then.",
+		"effects" : ["decr emotional 1", "set serious unchill"],
+		"choices" : [
+			{ "gotoId" : "pointless" }
+		]
+	},
+
+	{
+		"id" : "passedout",
+		"choiceLabel" : "I'm surprised no one's passed out yet!",
+		"content" : "Don't get yourself all worked up about it.<br><br>Look. Let me explain what's going on here.",
+		"effects" : ["incr emotional 1", "set serious unchill"],
+		"choices" : [
+			{ "gotoId" : "pointless" }
+		]
+	},
+
+	{
+		"id" : "pointless",
+		"choiceLabel" : "More",
+		"content" : "\"You realize this whole project is pointless, right?\"",
+		"effects" : ["set requiredPercent 33", "set serious unchill"],
+		"choices" : [
+			{ "gotoId" : "doomed" }
+		]
+	},
+//--------------------------------------------------------------------
+	{
+		"id" : "doomed",
+		"choiceLabel" : "What do you mean?",
+		"content" : "We're rearranging the deck chairs on the Titanic.<br><br>I mean, the planet's <i>doomed</i>.<br><br>How's moving some crabs from one beach to another going to make any difference?",
+		"effects" : ["set requiredPercent 40", "set establishSpeciesMigration true", "set confrontPlayerBeliefs true"],
+		"choices" : [
+			{ "gotoId" : "warmerWinters" },
+			{ "gotoId" : "leadByExample" },
+			{ "gotoId" : "doSomething" },
+			{ "gotoId" : "itsPointless" }
+		]
+	},
+
+	{
+		"id" : "warmerWinters",
+		"choiceLabel" : "They're more protected on the other side of the bay. They won't die out there.",
+		"content" : "\"Yeah, so they tell us. Looks great on paper.\"<br><br>\"Meanwhile the other 99.99% of the world keeps burning.\"",
+		"effects" : ["set requiredPercent 50", "incr optimism 1"],
+		"choices" : [
+			{ "gotoId" : "nobodyCares" }
+		]
+	},
+
+	{
+		"id" : "leadByExample",
+		"choiceLabel" : "Every little bit helps. We lead by example.",
+		"content" : "\"Yeah. Like bailing out an ocean liner with a teaspoon.\"",
+		"effects" : ["set requiredPercent 50", "incr optimism 1", "incr emotional 1"],
+		"choices" : [
+			{ "gotoId" : "nobodyCares" }
+		]
+	},
+
+	{
+		"id" : "doSomething",
+		"choiceLabel" : "We have to do <i>something</i>.",
+		"content" : "\"That's what everyone says.\"<br><br>\"I wonder why we really bother\"",
+		"effects" : ["set requiredPercent 50", "incr emotional 1"],
+		"choices" : [
+			{ "gotoId" : "nobodyCares" }
+		]
+	},
+	{
+		"id" : "itsPointless",
+		"choiceLabel" : "You're right. This is pointless.",
+		"content" : "\"Hey man, at least it's a job. Government job, no less.\"<br><br>\"Hard to come by these days.\"",
+		"effects" : ["set requiredPercent 50","decr optimism 1","decr emotional 1", "set serious chillbro"],
+		"choices" : [
+			{ "gotoId" : "nobodyCares" }
+		]
+	},
+//------------------------------------------------------
+	{
+		"id" : "nobodyCares",
+		"choiceLabel" : "More",
+		"content" : "{ifStateCondition|optimism gt 0|Face it|You're right, you know}. No one cares about the environment. Even now.<br><br>People are just doing this for a paycheck, to feel better about themselves. Not for some common good.",
+		"effects" : ["set requiredPercent 60", "set serious unchill"],
+		"choices" : [
+			{ "gotoId" : "forGood" },
+			{ "gotoId" : "selfish" },
+			{ "gotoId" : "doingIt" }
+		]
+	},
+
+//-------------------------------------------------------
+	{
+		"id" : "forGood",
+		"choiceLabel" : "Maybe common good and personal good can be the same thing.",
+		"content" : "You really believe that, huh?",
+		"effects" : ["incr optimism 1", "set serious chillbro"],
+		"choices" : [
+			{ "gotoId" : "allHeart" },
+			{ "gotoId" : "goodTheory" }
+		]
+	},
+
+	{
+		"id" : "allHeart",
+		"choiceLabel" : "With all my heart.",
+		"content" : "There's the shift whistle.",
+		"effects" : ["incr emotional 1", "set serious neutral", "set cueOuttro true"]
+	},
+
+	{
+		"id" : "goodTheory",
+		"choiceLabel" : "It's as good a theory as any.",
+		"content" : "There's the shift whistle.",
+		"effects" : ["decr emotional 1", "set serious neutral", "set cueOuttro true"]
+	},
+//-------------------------------------------------------
+	{
+		"id" : "selfish",
+		"choiceLabel" : "Maybe people are inherently selfish.",
+		"content" : "Then in the end, I guess we all get nothing.<br><br>There's the shift whistle.",
+		"effects" : ["decr optimism 1", "set serious unchill", "set cueOuttro true"]
+	},
+//-------------------------------------------------------
+	{
+		"id" : "doingIt",
+		"choiceLabel" : "I guess the point is that we're doing it.",
+		"content" : "I guess so.<br><br>Look. Am I supposed to lie to my little girl? Tell her everything's going to be all right?",
+		"effects" : ["set requiredPercent 70"],
+		"choices" : [
+			{ "gotoId" : "whatUBelieve"},
+			{ "gotoId" : "whatUKnow"},
+			{ "gotoId" : "noncommital"}
+		]
+	},
+	{
+		"id" : "whatUBelieve",
+		"choiceLabel" : "Tell her what you believe.",
+		"content" : "There's the shift whistle.",
+		"effects" : ["incr emotional 1", "set serious neutral", "set cueOuttro true"]
+	},
+	{
+		"id" : "whatUKnow",
+		"choiceLabel" : "Teach her what you know.",
+		"content" : "There's the shift whistle.",
+		"effects" : ["decr emotional 1", "set serious neutral", "set cueOuttro true"]
+	},
+	{
+		"id" : "noncommital",
+		"choiceLabel" : "(Cautious): It's not really my place to say.",
+		"content" : "There's the shift whistle.",
+		"conditions" : ["confidence lt 0"],
+		"effects" : ["decr emotional 1", "set serious neutral", "set cueOuttro true"]
+	},
+//-------------------------------------------------------
+	{
+		"id" : "outtro",
+		"content" : "{ifStateCondition|optimism gt 0|Optimist, huh? Been a while since I met one of those. Thought y'all were extinct, too.|You're kind of a downer. You must get that a lot, huh?} Be seeing you.",
+		"conditions" : ["cueOuttro eq true"],
+		"effects" : ["set requiredPercent 77", "set update 0", "set endScene true"],
+	},
+
+	{
+		"id" : "fail",
+		"content" : "Look, no offense, but I'm going to work on my side. With someone who can hold up a conversation.<br><br>Be seeing you.",
+		"conditions" : ["fail eq true"],
+		"effects" : ["set update 0", "set endScene true"],
+	},
+
+]

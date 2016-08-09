@@ -250,6 +250,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
 				var choiceText = getChoiceText(choiceDetails[pos]);
 				choiceText = Templates.render(choiceText);				//render any grammars in there
+
 				var choiceId = choice.val;
 				if (choice.type == "condition") { choiceId = choiceDetails[pos].id }	//if it's a condition, use the id of the one we fetched
 				
@@ -287,17 +288,18 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	var getChoiceText = function(choiceDetail) {
 		var chunk;
 
-		if (choiceDetail.id) {
-			var chunk = chunkLibrary.get(choiceDetail.id, "refresh");			
-		} 
-		if (chunk.available) { return chunk.choiceLabel; }
-		else {
-			if (chunk.choiceUnavailableLabel) {
+		if (choiceDetail.id) {		//if it has an ID, return the choiceLabel
+			var chunk = chunkLibrary.get(choiceDetail.id, "refresh");
+			if (chunk.available) { return chunk.choiceLabel; }
+
+			else if (chunk.choiceUnavailableLabel) {			//if it has a label for the choice not being available , return that	
 				return unavailableChoiceLabel;
 			}
-			else {
-				return chunk.choiceLabel;
-			}
+		} 
+			
+		else {		//otherwise, return empty?
+			//return chunk.choiceLabel;
+			return "";
 		}
 	}
 

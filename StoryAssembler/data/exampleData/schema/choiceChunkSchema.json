@@ -1,0 +1,9 @@
+{
+  "$ref": "data/exampleData/schema/chunkSchema.json",
+  "properties": {
+    "choiceLabel" : {
+      "type" : "string",
+      "description": "Label for connecting link *into* this chunk (Ex: Pass the plate to your left)"
+    }
+  }
+}

@@ -1,11 +1,51 @@
 [
 	/*
 		These are the global chunks that can be brought into any level
+
+		Backstory: Fragments that can be seated with each character. Two types: Emma backstory that she might bring up at any point (that serves as exposition for her character) or general backstory from others about what it's like to live in a world with climate change
+
+		Knowledge: These are nuggets of knowledge that can be inserted into lectures, arguments, etc.
+
+		Challenge: Chunks that might turn up from students, dinner conversation, or workers saying that climate change isn't real.
+
+		Support: Positive chunks saying we can make a difference.
 	*/
+
+	//---------------------------BACKSTORY---------------------------------------
 	{
-		"id": "test",
-		"content": "This is a test. Does it display?",
-		"conditions": ["test neq true"],
-		"effects": ["set test true"]
-	}
+		"id": "EmmaScienceFair",
+		"content": "4th grade? Mrs. Anderson? Oh my god, that diorama. I remember it was <i>huge</i>...it took forever for you to set up. You spent <i>ages</i> on that. What was it about again?",
+		"conditions": [],
+		"effects": []
+	},
+
+	//---------------------------KNOWLEDGE---------------------------------------
+	{
+		"id": "shrimpDanger",
+		"content": "In places like Maine, the ocean temperature is rising so fast it's all but eliminated the shrimp supply already.",
+		"conditions": [],
+		"effects": ["droppedKnowledge incr 1"]
+	},
+	{
+		"id": "coralDanger",
+		"content": "There's already been widespread bleaching reported of the Great Barrier Reef, and a lot of the species that call it home are vanishing.",
+		"conditions": [],
+		"effects": ["droppedKnowledge incr 1"]
+	},
+	{
+		"id": "lobsterDanger",
+		"content": "There have been a bunch of new diseases that are decimating lobster populations up in Maine. Seems the warmer oceans agree with viruses, at least.",
+		"conditions": [],
+		"effects": ["droppedKnowledge incr 1"]
+	},
+	{
+		"id": "futureDanger",
+		"content": "Have you heard of clathrates? No? They're basically frozen methane...some people call it 'fire ice'. Anyway, methane is much worse a greenhouse gas than CO2. If the planet warms up enough that the clathrates start releasing it into the atmosphere, we could be looking at a runaway feedback loop.",
+		"conditions": [],
+		"effects": ["droppedKnowledge incr 1"]
+	},
+
+	//---------------------------CHALLENGE---------------------------------------
+
+	//---------------------------SUPPORT-----------------------------------------
 ]
