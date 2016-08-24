@@ -26,7 +26,8 @@ requirejs.config({
       "Templates": "../../js/Templates",
       "BestPath": "../../js/BestPath",
     	"util": "../../js/util",
-      "underscore": "../../lib/underscore-1.8.3.min"
+      "underscore": "../../lib/underscore-1.8.3.min",
+      "jQuery": "../../../lib/jquery-3.0.0.min"
 	},
 	shim: {
        "QUnit": {
@@ -35,8 +36,13 @@ requirejs.config({
                QUnit.config.autoload = false;
                QUnit.config.autostart = false;
            }
-       } 
-    }
+       },
+       "jQuery": {
+          export: "$"
+        }
+  }
+
+
 });
 
 requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", "ChunkLibraryTests", "BestPathTests", "TemplatesTest", "StoryAssemblerTests", "CharacterTests", "domReady!"], function(QUnit, StateTests, RequestTests, WantTests, WishlistTests, ChunkLibraryTests, BestPathTests, TemplatesTest, StoryAssemblerTests, CharacterTests) {

@@ -116,7 +116,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			startState: [
 				"set specialty shrimp",
 				"set questionsLeft 3",
-				"set confidence 3"
+				"set confidence 3",
+				"set droppedKnowledge 0"
 			],
 			UIvars: [
 				"confidence"
@@ -136,6 +137,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "establishEmmaBackstory eq true" },
 				{ condition: "provokeConfidenceChoice eq true" },
 				{ condition: "friendReassuresEmma eq true" },
+				{ condition: "droppedKnowledge gte 2", persistent: true },
 			],
 			characters: {
 				"emma": {name: "Emma", nickname: "Em", gender: "female"},
@@ -144,7 +146,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			dataFile: require("text!dinnerData"),
 			startState: [
-				"set career 0",
+				"set career unpicked",
+				"set droppedKnowledge 0",
 				"set confidence 0",
 				"set caller zanita",		//speaker who starts the scene
 				"set responder emma"		//responder to speaker for scene start

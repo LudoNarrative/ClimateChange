@@ -124,6 +124,18 @@ define([], function() {
 		return true;
 	}
 
+	// Return if object is already in array
+	var objInArray = function(obj, array) {
+	    var i;
+	    for (i = 0; i < array.length; i++) {
+	        if (array[i] === obj) {
+	            return true;
+	        }
+	    }
+
+	    return false;
+	}
+
 	return {
 		iterator: iterator,
 		oneOf: oneOf,
@@ -132,6 +144,7 @@ define([], function() {
 		isArray: isArray,
 		arrEqual: arrEqual,
 		removeFromStringList: removeFromStringList,
-		removeArrDuplicates: removeArrDuplicates
+		removeArrDuplicates: removeArrDuplicates,
+		objInArray : objInArray
 	}
 });
