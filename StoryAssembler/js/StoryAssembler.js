@@ -200,8 +200,15 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		var routePos = 0;
 		while (!chunkForText.content) {		//find content to display for the chunk
 			var nextChunkId = bestPath.route[routePos];
+
+			//not sure why we have to do this, but if the first entry in the path is the same as the current chunk (sometimes it is) then use the next one instead
+			if (nextChunkId == chunkForText.id) {
+				routePos++;
+				nextChunkId = bestPath.route[routePos];
+			}
+
 			chunkForText = chunkLibrary.get(nextChunkId);
-			//routePos += 1;		//JG: do we still need this?
+			routePos += 1;		//JG: do we still need this?
 			if (chunkForText) {
 				if (chunkForText.choices) {
 					/*
@@ -246,6 +253,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 
 		// Handle choices
 		if (chunk.choices) {
+			var choiceObjs = [];		//used to store current choiceObjs in blackboard (for graph reference)
 			chunk.choices.forEach(function(choice, pos) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
 				var choiceText = getChoiceText(choiceDetails[pos]);
@@ -254,17 +262,28 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 				var choiceId = choice.val;
 				if (choice.type == "condition") { choiceId = choiceDetails[pos].id }	//if it's a condition, use the id of the one we fetched
 				
-				StoryDisplay.addChoice({
+				var choiceObj = {
 					text: choiceText,
 					chunkId: choiceId,
-					cantChoose: choiceDetails[pos].missing === true
-				});
-
+					cantChoose: choiceDetails[pos].missing === true,
+					persistent: choice.persistent
+				};
+				choiceObjs.push(choiceObj);
+				StoryDisplay.addChoice(choiceObj);
 			});
+			State.set("currentChoices", choiceObjs);
+
 		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
 		} else if (wishlist.wantsRemaining() > 0 && mode !== "refresh") {
 			// We have finished a path. After clicking this button, since we didn't send a chunkId parameter below, the system will search for a new bestPath given the remaining wishlist items.
 			StoryDisplay.addChoice({text: "Continue"});
+			var choiceObj = {
+				text: "Continue",
+				chunkId: "unknown",
+				cantChoose: false
+			};
+			State.set("currentChoices", [choiceObj]);
+
 		} else if (mode !== "refresh") {
 			doStoryBreak();
 			endScene();
@@ -316,7 +335,9 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			State.change(effect);
 		});
 		wishlist.removeSatisfiedWants();
-		Display.setStats("storyStats");
+		if (typeof Display !== "undefined") {			//if we're not running tests, update the storyStats on the display
+			Display.setStats("storyStats");
+		}
 	}
 
 	var doStoryBreak = function() {
@@ -326,7 +347,9 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	// Show the scene is over.
 	var endScene = function() {
 		var text = "Chapter complete!"; 		//TODO: we need stats here
-		Display.setSceneOutro(text);
+		if (typeof Display !== "undefined") {		//if we're not running tests, display scene outro
+			Display.setSceneOutro(text);
+		}
 	}
 
 	return {

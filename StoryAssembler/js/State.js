@@ -19,7 +19,7 @@ define(["Condition"], function(Condition) {
 			value = tryNum;
 		}
 		_blackboard[key] = value;
-		console.log(key + " is now " + value);
+		//console.log(key + " is now " + value);
 		
 	}
 
