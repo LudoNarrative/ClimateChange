@@ -10,7 +10,7 @@ define([], function() {
 
 	/* PRIVATE FUNCTIONS AND VARIABLES */
 	var showUnavailableChoices = true;
-	var enableDiagnostics = true;				//whether to show the gear or not
+	var enableDiagnostics = false;				//whether to show the gear or not
 
 	var clickHandler;
 	var varClickChangerFunc;		//this changes variables in the game when clicked
@@ -94,6 +94,11 @@ define([], function() {
 		var el;
 		el = makeEl("div", "");
 		el.id = "storyArea";
+		if (document.getElementById('storyContainer') == null) {
+			var el2 = makeEl("div", "");
+			el2.id = "storyContainer";
+			document.getElementsByTagName("BODY")[0].appendChild(el2);
+		}
 		document.getElementById('storyContainer').appendChild(el);
 		el = makeEl("div", "");
 		el.id = "choiceArea";
