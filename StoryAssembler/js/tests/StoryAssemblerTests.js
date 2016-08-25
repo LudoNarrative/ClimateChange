@@ -1,6 +1,6 @@
 /* global test */
 "use strict";
-define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../Display"], function(StoryAssembler, ChunkLibrary, State, Wishlist, Display) {
+define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../Display"], function(StoryAssembler, ChunkLibrary, State, Wishlist, StoryDisplay) {
 
 	var getStoryEl = function() {
 		return document.getElementById("storyArea").children[0];
@@ -47,7 +47,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}] },
 				{ id: "Chunk2", choiceLabel: "Chunk2 Label", content: "Chunk2 Content", effects: ["set x true"] }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Basic: First chunk should be shown correctly");
 			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Basic: First choice should be shown correctly");
 			clickChoice(1);
@@ -63,7 +63,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				{ id: "Chunk2", choiceLabel: "Chunk2 Label", content: "Chunk2 Content", choices: [{chunkId: "Chunk3"}] },
 				{ id: "Chunk3", choiceLabel: "Chunk3 Label", content: "Chunk3 Content", effects: ["set x true"] }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "In multi-choice chain, first chunk should be shown correctly");
 			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "In multi-choice chain, first option correct.");
 			clickChoice(1);
@@ -84,7 +84,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				{ id: "Chunk2x", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
 				{ id: "Chunk3x", conditions: ["beat eq 2"], content: "Chunk3 Content", effects: ["set beat 3", "set x true"] }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Chain through condition request: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Chain through condition request: initially only 1 choice");
 			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Chain through condition request: single choice is to Chunk2");
@@ -99,7 +99,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			ChunkLibrary.add([
 				{ id: "Chunk1", content: "Chunk1 Content", effects: ["set x true"], repeatable: true }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work first time (1/3)");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Persistent chunks work first time (2/3)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work first time (3/3)");
@@ -113,7 +113,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			ChunkLibrary.add([
 				{ id: "Chunk1", content: "Chunk1 Content", effects: ["set x true"], repeatable: false }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Non-repeatable chunks work first time (1/2)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Non-repeatable chunks work first time (2/2)");
 			clickChoice(1);
@@ -127,7 +127,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				{ id: "Chunk2", content: "...", effects: ["set x true"], repeatable: false },
 				{ id: "Chunk3", content: "...", effects: ["set x true"], repeatable: false }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			clickChoice(1);
 			clickChoice(1);
 			clickChoice(1);
@@ -144,7 +144,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				{ id: "Chunk2b", choiceLabel: "Chunk2 Label", content: "Chunk2 content" },
 				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", effects: ["set beat 3"] }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Move to different want after thread ends: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Move to different want after thread ends: initially only 1 choice");
 			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Move to different want after thread ends: single choice is to Chunk2");
@@ -166,7 +166,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				{ id: "Chunk4", choiceLabel: "Chunk4 Label", content: "Chunk4 Content" },
 			]);
 			console.log("aw yeah problem child");
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Choices also chain from requests: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Choices also chain from requests: initially only 1 choice");
 			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Choices also chain from requests: single choice is to Chunk2");
@@ -202,7 +202,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				choices: [{chunkId: "Chunk4"}], 
 				effects: ["set beat 2"] }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Text1 Content", "No extra options: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "No extra options: no initial options");
 			assert.deepEqual(contentForChoice(1), "normalChoice Label", "No extra options: normalChoice displays");
@@ -215,7 +215,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			ChunkLibrary.add([
 				{ id: "StressChunk", content: "StressChunk Content", effects: ["incr stress 1"], repeatable: true }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "StressChunk Content", "Testing incremental progress (1)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Testing incremental progress (2)");
 			clickChoice(1);
@@ -238,7 +238,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				content: "linkTest2 Content"
 				}
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, Display);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Text1 Content", "Testing goto-style links (1)");
 			assert.deepEqual(contentForChoice(1), "linkChoice link", "Testing goto-style links (2)");
 			clickChoice(1);

@@ -115,3 +115,9 @@ span.chunk {
 .varIncrease, .varDecrease {
     margin: 0px 20px;
 }
+
+/* editor styles */
+
+#storyContainer.editor {
+    display:none !important;
+}

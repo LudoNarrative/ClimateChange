@@ -85,7 +85,7 @@ Challenge
 		"effects": ["set establishFriendBackstory true"],
 		"conditions" : ["confidence eq 3"]
 	},
-
+//---------------------------------------------------------------------
 	{
 		"id": "stuffed",
 		"choiceLabel": "No thanks, Z. I'm stuffed.",
@@ -107,7 +107,7 @@ Challenge
 		"content": "C'mon. Don't let your intellectual pursuits interfere with enjoying some of my famous <i>cocido</i>.",
 		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
 	},
-
+//---------------------------------------------------------------------
 	{
 		"id": "tooMuchTrouble",
 		"choiceLabel": "I can't believe this spread. You went to too much trouble for me.",
