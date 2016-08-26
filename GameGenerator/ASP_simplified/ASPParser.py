@@ -20,7 +20,12 @@ def solve(*args):
     out, err = clingo.communicate()
     if err:
         print err
-        
+    with open('dump.lp','w') as outfile:
+        result = json.loads(out)
+        witness = result['Call'][0]['Witnesses'][0]['Value']
+        for atom in sorted(witness):
+            outfile.write(atom +'\n')
+            
     return parse_json_result(out)
 
 def solve_randomly(*args):

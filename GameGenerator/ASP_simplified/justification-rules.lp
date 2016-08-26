@@ -18,8 +18,6 @@ closeness_condition(overlaps(E1, E2, true), E1, E2)
 closeness_condition(overlaps(E1, E2, false), E1, E2)
   :- condition(overlaps(E1, E2, false)).
   
-closeness_condition(near(E1, E2), E1, E2)
-  :- condition(near(E1, E2)).
 
 closeness_condition(C, E1, E2)
   :- closeness_condition(C, E2, E1).
@@ -87,23 +85,19 @@ result_enables_condition(move_towards(E2, target), overlaps(E1,E2,true))
     :- closeness_condition( overlaps(E1,E2,true), E1, E2),
        result(_, move_towards(E2, target)).
 
-result_enables_condition(move_towards(E1, E2), near(E1,E2))
-    :- closeness_condition(near(E1,E2), E1, E2),
-       result(_, move_towards(E1, E2)).
-
-result_enables_condition(move_towards(E1, cursor), near(E1,E2))
-    :- closeness_condition(near(E1,E2), E1, E2),
-       result(_, move_towards(E1, cursor)).
 result_enables_condition(move_towards(E1, cursor), overlaps(E1,E2,true))
     :- closeness_condition( overlaps(E1,E2,true), E1, E2),
        result(_, move_towards(E1, cursor)).
+result_enables_condition(move_towards(E1, cursor), overlaps(E1,E2,true))
+    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+       result(_, move_towards(E2, cursor)).
        
 
-result_enables_condition(move_towards(E2, cursor), near(E1,E2))
-    :- closeness_condition(near(E1,E2), E1, E2),
-       result(_, move_towards(E2, cursor)).
-result_enables_condition(move_towards(E2, cursor), overlaps(E1,E2,true))
-    :- closeness_condition( overlaps(E1,E2,true), E1, E2),
+result_enables_condition(move_towards(E1, cursor), overlaps(E1,E2,false))
+    :- closeness_condition( overlaps(E1,E2,false), E1, E2),
+       result(_, move_towards(E1, cursor)).
+result_enables_condition(move_towards(E2, cursor), overlaps(E1,E2,false))
+    :- closeness_condition( overlaps(E1,E2,false), E1, E2),
        result(_, move_towards(E2, cursor)).
        
 result_enables_condition(move_towards(E1, E2), overlaps(E1,E2,true))
@@ -659,11 +653,6 @@ implies(equal(X, Y), le(X, Y))
   :- condition(le(X, Y)).
 implies(equal(X, Y), ge(X, Y))
   :- condition(ge(X, Y)).
-implies(C, near(E1, E2))
-  :- closeness_condition(C, E1, E2).
-
-implies(C, far(E1, E2))
-  :- farness_condition(C, E1, E2).
 
 implies(C, present(E))
   :- spatial_condition(C, E, E_prime).
@@ -820,12 +809,6 @@ goal_relates(Outcome) :-
 goal_relates(Outcome) :-
     goal(prevent(Outcome)).
 
-goal(achieve(Outcome)) :- 
-    subGoal(achieve(Outcome),DEPTH).
-    
-goal(prevent(Outcome)) :-
-    subGoal(prevent(Outcome),DEPTH).
-
 
 destroys(Destroyer,Destroyed) :-
     precondition(overlaps(Destroyed, Destroyer,true), Outcome),
@@ -839,6 +822,7 @@ antagonist(Destroyer) :-
     destroys(Destroyer,Destroyed),
     requires(Outcome,Destroyed),
     playerWillDo(Condition,Outcome).
+
 
 
 % timingChallengeGoal :- 
@@ -1036,8 +1020,7 @@ playerAgency(ENTITY) :-
     result(OUTCOME,moves(ENTITY,  DIRECTION )).
     
 %% Entity influence and determination
-entityInfluences(Entity, Outcome) :-
-    precondition(near(Entity, _), Outcome).
+
 
 entityInfluences(Entity, Outcome) :-
     precondition(overlaps(Entity, _,_), Outcome).

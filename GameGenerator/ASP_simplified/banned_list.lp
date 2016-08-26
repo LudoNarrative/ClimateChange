@@ -1,5 +1,4 @@
 
-:- precondition(timerElapsed(T),O) .
 :- result(O,add(E,L)).
 :- result(O,delete(E)).
 
@@ -13,3 +12,4 @@ nonMouseControls  :-
 :- result(O,apply_restitution(E1,E2)).
 :- result(O,reflect_velocity(E,collision_normal(_,_))).
 
+:- result(change_target(ENTITY), set(target(ENTITY),random_point)) .
