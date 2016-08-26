@@ -72,5 +72,5 @@ if __name__ == '__main__':
     
     
         with open('mod.lp','w') as modfile:
-            modfile.write('.'.join(rules[:minVal])+'.')
+            modfile.write('.'.join(rules[:minVal+1])+'.')
         

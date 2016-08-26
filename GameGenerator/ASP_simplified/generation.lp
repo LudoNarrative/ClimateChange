@@ -204,7 +204,8 @@ precondition(tick,tick) :-
 %%%%%%%%%% NPC   %%%%%%%%%%%%%%%%%%
 
 %npcs can move in a couple of ways
-npcMovements(projectile;random_walk;random_pathfind;attract;repel;bounce).%;patrol;bounce;path(ping_pong);path(loop)).
+npcMovements(%projectile;
+	     random_walk;random_pathfind;attract;repel;bounce).%;patrol;bounce;path(ping_pong);path(loop)).
 
 %pick ways something can move
 % CRM 6/21/2016 - changed max from 0 to 2.
@@ -396,15 +397,16 @@ movementProfiles(constant;linear;logarithmic;ease_in;ease_out;ease_in_out).
 % {result(OUTCOME,spawn(ENTITY)) : potentialOutcomes(OUTCOME) }  1 :- spawnLogic(ENTITY,TYPE,MODE,condition).
 
 %% Adding entities to the screen
-1 {initialize(add(Entity,Place)) : place(Place)} 1 :- entity(Entity).
-1 {initialize(set_sprite(Entity, Sprite)) : sprite(Sprite)} 1
-    :- entity(Entity).
+%%%%%%%%% AJS REVISIT
+%% 1 {initialize(add(Entity,Place)) : place(Place)} 1 :- entity(Entity).
+%% 1 {initialize(set_sprite(Entity, Sprite)) : sprite(Sprite)} 1
+%%     :- entity(Entity).
 
-%%% RESOURCES %%%
-initialResourceValues(R) :- constants(R).
+%% %%% RESOURCES %%%
+%% initialResourceValues(R) :- constants(R).
 
 
-1 {initialize(set(RESOURCE,VALUE)) : initialResourceValues(VALUE)} 1 :- resource(RESOURCE).
+%% 1 {initialize(set(RESOURCE,VALUE)) : initialResourceValues(VALUE)} 1 :- resource(RESOURCE).
 
 resourceTransactions(convert;pay_cost;gain;lose).
 
@@ -487,7 +489,7 @@ resourceTransactions(convert;pay_cost;gain;lose).
 
 % Or check resource values
 {precondition(ge(RESOURCE),OUTCOME) 
-  : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
+  : resource(RESOURCE), potentialValues(VALUE)} :- not precondition(control_event(_),OUTCOME), potentialOutcomes(OUTCOME).
 
 % {precondition(gt(RESOURCE),OUTCOME) 
 %  : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
@@ -496,7 +498,7 @@ resourceTransactions(convert;pay_cost;gain;lose).
 %  : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
 
 {precondition(le(RESOURCE),OUTCOME) 
-  : resource(RESOURCE), potentialValues(VALUE), potentialOutcomes(OUTCOME)}.
+  : resource(RESOURCE), potentialValues(VALUE)} :- not precondition(control_event(_),OUTCOME), potentialOutcomes(OUTCOME).
 
 % XXX CRM 6/21: is this right?
 % check property values
@@ -513,6 +515,9 @@ resourceTransactions(convert;pay_cost;gain;lose).
 {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : potentialOutcomes(OUTCOME)} 
   :- entity(ENTITY1), entity(ENTITY2), ENTITY1 != ENTITY2.
 
+% or see if things are overlapping
+{precondition(overlaps(ENTITY1,ENTITY2,false),OUTCOME) : potentialOutcomes(OUTCOME)} 
+  :- entity(ENTITY1), entity(ENTITY2), ENTITY1 != ENTITY2.
 % other spatial predicates
 % AJS - 7/16 - Not a fan
 %{precondition(near(E1, E2), Outcome) : potentialOutcomes(Outcome)}
