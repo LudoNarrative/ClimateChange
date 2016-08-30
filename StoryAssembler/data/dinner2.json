@@ -18,6 +18,16 @@ Knowledge
 Challenge
 (Support)
 
+
+{ condition: "introMechanics eq true" },
+{ condition: "establishSpecialtyInfo eq true" },
+{ condition: "establishDinnerWithFriend eq true" },
+{ condition: "establishFriendBackstory eq true" },
+{ condition: "establishEmmaRegrets eq true" },
+{ condition: "establishEmmaBackstory eq true" },
+{ condition: "provokeConfidenceChoice eq true" },
+{ condition: "friendReassuresEmma eq true" },
+{ condition: "droppedKnowledge gte 2", persistent: true },
 */
 [
 	//---------------------------INTERSTITIAL---------------------------------
@@ -25,9 +35,9 @@ Challenge
 		"id": "eatFood",
 		"content": ["Emma. Seriously, girl. This stew is not going to eat itself."],
 		"choices": [
-			{"condition": "establishFriendBackstory eq true"},
+			{"condition": "establishDinnerWithFriend eq true"},
 			{"condition": "provokeConfidenceChoice eq true"},
-			{"condition": "establishFriendBackstory eq true"}
+			{"condition": "establishDinnerWithFriend eq true"}
 		]
 	},
 
@@ -35,9 +45,9 @@ Challenge
 		"id": "eatFood2",
 		"content": ["Hey, mind passing the dish next to you? Thanks."],
 		"choices": [
-			{"condition": "establishFriendBackstory eq true"},
+			{"condition": "establishDinnerWithFriend eq true"},
 			{"condition": "provokeConfidenceChoice eq true"},
-			{"condition": "establishFriendBackstory eq true"}
+			{"condition": "establishDinnerWithFriend eq true"}
 		]
 	},
 
@@ -45,9 +55,9 @@ Challenge
 		"id": "eatFood3",
 		"content": ["Sorry for peppering you with questions, ha ha. I'm not giving you much chance to eat!"],
 		"choices": [
-			{"condition": "establishFriendBackstory eq true"},
+			{"condition": "establishDinnerWithFriend eq true"},
 			{"condition": "provokeConfidenceChoice eq true"},
-			{"condition": "establishFriendBackstory eq true"}
+			{"condition": "establishDinnerWithFriend eq true"}
 		],
 	},
 
@@ -59,7 +69,7 @@ Challenge
 		"id": "whatscalled",
 		"choiceLabel": "Thanks. What's it called again?",
 		"content": "<i>Cocido</i>, chica. Figured comfort food would be good the night before my best friend's dissertation defense.",
-		"effects": ["set establishFriendBackstory true"],
+		"effects": ["set establishDinnerWithFriend true"],
 		"conditions" : ["confidence lt 2"]
 	},
 
@@ -67,7 +77,7 @@ Challenge
 		"id": "whatscalled2",
 		"choiceLabel": "Yeah. Where'd you learn to cook this?",
 		"content": "Well, after I came back from Spain it only took a couple weeks before I was craving it. It's just the thing before you start some big project.",
-		"effects": ["set establishFriendBackstory true"],
+		"effects": ["set establishDinnerWithFriend true"],
 		"conditions" : ["confidence eq 2"]
 	},
 
@@ -75,14 +85,14 @@ Challenge
 		"id": "thanksbringing",
 		"choiceLabel": "It's so good. You made this?",
 		"content": "Don't look at me like that! I'm a better cook than you. And it's not like I'm going to let my best friend defend her dissertation after a night of takeout.",
-		"effects": ["set establishFriendBackstory true"]
+		"effects": ["set establishDinnerWithFriend true"]
 	},
 
 	{
 		"id": "thanksbringing2",
 		"choiceLabel": "It's delicious! I think I can taste...parsley?",
 		"content": "Ha, no that's cilantro. You've been eating too much takeout. Gotta feed your brain, Emma!",
-		"effects": ["set establishFriendBackstory true"],
+		"effects": ["set establishDinnerWithFriend true"],
 		"conditions" : ["confidence eq 3"]
 	},
 //---------------------------------------------------------------------
@@ -116,15 +126,28 @@ Challenge
 	},
 
 	{
+		"id": "iknowright",
+		"choiceLabel": "I know, right?",
+		"request": {"gotoId": "inSpain"}
+	},
+
+	{
 		"id": "inSpain",
 		"content": "You would not believe how much of this stuff I ate in Spain. This recipe's okay, if I do say so myself, but only half as good as when you get it there.",
 		"choices" : [
-			{"condition": "establishEmmaRegrets eq true"},
+			//{"condition": "establishEmmaRegrets eq true"},
+			{"gotoId": "stilljealous"},
 			{"gotoId": "quals"},
 			{"gotoId": "stilljealous"}
 		],
 		"conditions": ["establishDinnerWithFriend eq true"],
-		"effects": ["set establishFriendBackstory true"]	
+		"effects": ["set establishFriendBackstory true"]
+	},
+
+		{
+		"id": "quals",
+		"choiceLabel": "I was busy that year taking quals, if I recall.",
+		"content": "And now you're reaping the sweet rewards of that wise decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. I'll just be some chick who ate too much <i>cocido</i>. Speaking of which, could you, uh, pass that back...?"
 	},
 
 	{
@@ -203,25 +226,85 @@ Challenge
 		"effects" : ["set career coral", "set establishSpecialtyInfo true"]
 	},
 	//---------------------------CHALLENGE---------------------------------------
+	{
+		"id": "howufeelChoicetext1",
+		"choiceLabel" : "Don't blame me, I just work here.",
+		"request": {"condition": "provokeConfidenceChoice eq true"}
+	},
+	{
+		"id": "howufeelChoicetext2",
+		"choiceLabel" : "Very funny.",
+		"request": {"condition": "provokeConfidenceChoice eq true"}
+	},
+	{
+		"id": "howufeel",
+		"content" : "Hey. What's up? Oh, don't give me that look. You're quiet, and it's not just nerves. What's on your mind?",
+		"choices": 	[
+			{ "gotoId" : "surePath" },
+			{ "gotoId" : "unsurePath" },
+			{ "gotoId" : "futureWorry" }
+		],
+		"conditions" : ["establishEmmaBackstory eq true"],
+		"effects" : ["set provokeConfidenceChoice true"]
+	},
 
 	//---------------------------SUPPORT-----------------------------------------
+	{
+		"id" : "surePath",
+		"choiceLabel" : "I'm just excited to be starting my career.",
+		"content" : "Heh. You're gonna knock 'em out of the park, Em. {ifState|career|shrimp|Those amoeba shrimp|}{ifState|career|lobster|Your Homarus Lobstarus buddies|}{ifState|career|coral|Your octo-coral-reefie pals|} have got a new superhero.",
+		"effects" : ["incr confidence 1"],
+		"choices" : [
+			{ "gotoId" : "more_haveSomeWine" }
+		]
+	},
 	{
 		"id" : "unsurePath",
 		"choiceLabel" : "I'm just wondering if it was worth it.",
 		"content" : "Worth it? Are you kidding? You're about to start a career doing everything you love. Emma Richards, defender of {ifState|career|shrimp|the amoeba shrimp!|}{ifState|career|lobster|Homarus Lobstarus!|}{ifState|career|coral|the octo-coral-reefies!|} You're going places. I can feel it.",
 		"effects" : ["decr confidence 1"],
-	//	"choices" : [
-	//		{ "gotoId" : "more_haveSomeWine" }
-	//	]
+		"choices" : [
+			{ "gotoId" : "more_haveSomeWine" }
+		]
 	},
 	{
 		"id" : "futureWorry",
 		"choiceLabel" : "I'm just worried about the future.",
 		"content" : "Look at you, always freaking out when things go too well. Look, Emma. You've fought hard to get here. From what I've seen, you're an amazing scientist and a good teacher. Now if I can just get you to take an evening off and go on a date, you'll pretty much have it all.",
 		"effects" : ["decr confidence 1"],
-	//	"choices" : [
-	//		{ "gotoId" : "thanks_haveSomeWine" }
-	//	]
+		"choices" : [
+			{ "gotoId" : "thanks_haveSomeWine" }
+		]
 	},
+
+	{
+		"id" : "more_haveSomeWine",
+		"choiceLabel" : "More",
+		"request": {"condition": "friendReassuresEmma eq true"}
+	},
+
+	{
+		"id" : "thanks_haveSomeWine",
+		"choiceLabel" : "Thanks, Cupid.",
+		"request": {"condition": "friendReassuresEmma eq true"}
+	},
+
+	{
+		"id" : "haveSomeWine",
+		"content" : "Now seriously. I am not joking about this. Have some damn wine. Relax with your friends. The future can take care of itself.",
+		"choices" : [
+			{"gotoId" : "results"}
+		],
+		"conditions" : ["provokeConfidenceChoice eq true"],
+		"effects" : ["set friendReassuresEmma true"]
+	},
+
+	//-----------------------------------------------------------
+
+	{
+		"id" : "results",
+		"choiceLabel" : "More",
+		"content" : "<div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>{ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reefs!|}</span></li><li>Emma has {confidence} <span class='keyword'>confidence</span></li></ul></div>"
+	}
 
 ]

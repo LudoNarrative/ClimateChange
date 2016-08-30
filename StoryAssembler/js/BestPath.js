@@ -134,6 +134,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 		var paths = [];
 		var keys = chunkLibrary.getKeys();
+
 		log(rLevel, "searchLibraryForPaths. wants is [" + getWantVals(wants) + "] and we are skipping [" + skipList + "]. rLevel " + rLevel);
 
 		// Small internal function to do a search and add any unique results.
@@ -164,13 +165,24 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 	// Make sure it's currently OK to recurse into a chunk.
 	var chunkOkToSearch = function(chunkId, skipList, okToBeChoice, rLevel) {
+
+		var updateDebugObj = function(valid, reason) {			//adds info to validChunks (for graph viz)
+			if (rLevel == 1) {
+				var temp = State.get("validChunks");
+				if (typeof temp == "undefined") { temp = []; }
+				var tempObj = {'chunkId': chunkId, 'valid': valid, 'reason': reason}
+				State.set("validChunks", temp.concat([tempObj]));
+			}
+		}
 		var chunk = chunkLibrary.get(chunkId);
 
 		if (!chunk) { return false; }	//if it's not in the chunkLibrary, it's not valid
 
 		// --> shouldn't be blacklisted.
 		if (skipList.indexOf(chunk.id) >= 0) {
-			log(rLevel, "skipping '" + chunk.id + "'");
+			var msg = "skipping '" + chunk.id + "' b/c it's on skiplist";
+			log(rLevel, msg);
+			updateDebugObj(false, msg);
 			return false;
 		}
 		// --> conditions should allow it given the current State.
@@ -182,20 +194,27 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 				}
 			}
 			if (shouldContinue) {
-				log(rLevel, "skipping '" + chunk.id + "' because a condition contradicts current State.");
+				var msg = "skipping '" + chunk.id + "' because a condition contradicts current State.";
+				log(rLevel, msg);
+				updateDebugObj(false, msg);
 				return false;
 			}
 		}
 		// --> response to a choice only allowed if prior node was a choice.
 		if (chunk.choiceLabel && (!okToBeChoice)) {
-			log(rLevel, "skipping '" + chunk.id + "' b/c has a choiceLabel field");
+			var msg = "skipping '" + chunk.id + "' b/c has a choiceLabel field";
+			log(rLevel, msg);
+			updateDebugObj(false, msg);
 			return false;
 		}
 
 		if (okToBeChoice && typeof chunk.choiceLabel == "undefined") {
-			log(rLevel, "skipping '" + chunk.id + "' b/c it's not a choice and we're looking for one");
+			var msg = "skipping '" + chunk.id + "' b/c it's not a choice and we're looking for one";
+			log(rLevel, msg);
+			updateDebugObj(false, msg);
 			return false;
 		}
+		updateDebugObj(true, "");
 		return true;
 	}
 
@@ -268,6 +287,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		if (chunk.choices) {
 			// Even if we've satisfied all our wants, we need to recurse so we know what nodes this choice leads to.
 			log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
+			State.set("validChunks", []);
 
 			var choiceSkipList = util.clone(skipList);		//list of choiceIDs that will be in this (used to prevent duplicate choices)
 
@@ -290,6 +310,9 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 					if (!util.isArray(validPaths[0].choiceDetails)) { newChoiceDetails = validPaths[0].choiceDetails; } 
 					else { newChoiceDetails = validPaths[0].choiceDetails[0]; }
 
+					if (typeof newChoiceDetails == "undefined") {
+						return undefined;
+					}
 					choiceDetails.push(newChoiceDetails);
 					choiceSkipList.push(newChoiceDetails.id);
 
