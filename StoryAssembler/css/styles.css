@@ -119,5 +119,23 @@ span.chunk {
 /* editor styles */
 
 #storyContainer.editor {
-    display:none !important;
+    display:none;
+}
+
+#popup {
+    position: absolute;
+    background-color: white;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#popup_close {
+    position: absolute;
+    right: 11px;
+    font-size: 18px;
+    font-family: Arial;
+    color: #666;
 }

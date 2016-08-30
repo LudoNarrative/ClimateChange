@@ -10,7 +10,7 @@ define([], function() {
 
 	/* PRIVATE FUNCTIONS AND VARIABLES */
 	var showUnavailableChoices = true;
-	var enableDiagnostics = false;				//whether to show the gear or not
+	var enableDiagnostics = true;				//whether to show the gear or not
 
 	var clickHandler;
 	var varClickChangerFunc;		//this changes variables in the game when clicked

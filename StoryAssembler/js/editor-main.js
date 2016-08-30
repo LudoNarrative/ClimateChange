@@ -35,6 +35,10 @@ requirejs.config({
 		"cytoscape": "../lib/cytoscape",
 		"cytoscape-cxtmenu" : "../lib/cytoscape-cxtmenu",
 		"cytoscape-edgehandles" : "../lib/cytoscape-edgehandles",
+		"dagre" : "../lib/dagre.min",
+		"cytoscape-dagre" : "../lib/cytoscape-dagre",
+		"cola" : "../lib/cola",
+		"cytoscape-cola" : "../lib/cytoscape-cola",
 
 		"Game" : "../../GameGenerator/js/game",
 		"AspPhaserGenerator" : "../../asp-phaser-generator/index",
@@ -48,15 +52,19 @@ requirejs.config({
 		"jQueryUI": {
 			export: "$",
 			deps: ["jQuery"]
-		}
+		},
+		"cola": { exports: "cola" }
 	}
 });
 
 requirejs(
-	["State", "StoryDisplay", "Display", "cytoscape", "cytoscape-cxtmenu", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Game", "AspPhaserGenerator", "util", "domReady!"],
-	function(State, StoryDisplay, Display, cytoscape, cxtmenu, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, AspPhaserGenerator, util) {
+	["State", "StoryDisplay", "Display", "cytoscape", "cytoscape-cxtmenu", "dagre", "cytoscape-dagre", "cola", "cytoscape-cola", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Game", "AspPhaserGenerator", "util", "domReady!"],
+	function(State, StoryDisplay, Display, cytoscape, cxtmenu, dagre, cydagre, cola, cycola, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, AspPhaserGenerator, util) {
 
 	cxtmenu( cytoscape, $ ); 		// register extension
+	cydagre( cytoscape, dagre );	// register extension
+	cycola( cytoscape, cola ); // register extension
+
 	var levelData;
 	var globalData;
 	var story;
@@ -67,9 +75,10 @@ requirejs(
 	var stateCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "goto_whatspeciality", "provokeConfidenceChoice"];
 
 	var graphRootId = "";
-	var iterNum = 50;
+	var iterNum = 8;
 	var iterStep = 0;
 	var deadendPaths = 1;
+	var uniqueDeadEnds = false;		//whether to make each dead end a unique node
 
 
 	var formatForEditor = function(mode, data) {
@@ -139,7 +148,7 @@ requirejs(
 		//cleanUpDom();
 	}
 
-	//resets the story, usually called before clicking to re-traverse the choices
+	//resets the story and goes to first node, usually called before clicking to re-traverse the choices
 	var resetStory = function() {
 		var scenes = ["dinner", "lecture", "travel", "worker" ];
 		
@@ -185,14 +194,18 @@ requirejs(
 		var uniqueNodeId = "";
 		
 		if ($("#storyArea span.chunk").html() == "[No path found!]") {		//if there's no path, make node for it
-			uniqueNodeId = 'deadend' + deadendPaths;
-			//uniqueNodeId = 'deadend';
-			newNode = {							//add current node to graph
+			if (uniqueDeadEnds) {
+				uniqueNodeId = 'deadend' + deadendPaths;			//swap out for unique nodes for each ending
+			}
+			else {	uniqueNodeId = 'deadend'; }
+			newNode = {							//create ending node for graph
 				group: 'nodes',
 				data: {
 					id: uniqueNodeId,
 					textId: "[No path found!]",	
-					clickPath: util.clone(clickPath)
+					clickPath: util.clone(clickPath),
+					validChunks: State.get("validChunks").filter(function(val){ return val.valid == true }),
+					invalidChunks: State.get("validChunks").filter(function(val){ return val.valid == false })
 				}			
 			};
 			deadendPaths++;
@@ -202,12 +215,14 @@ requirejs(
 
 			if (clickPath.length == 0) { graphRootId = uniqueNodeId; }		//if this was called as the first one, set graph root to that node
 
-			newNode = {							//add current node to graph
+			newNode = {							//create node for current chunk to add to graph
 				group: 'nodes',
 				data: {
 					id: uniqueNodeId,
 					textId: State.get("currentTextId"),	
-					clickPath: util.clone(clickPath)
+					clickPath: util.clone(clickPath),
+					validChunks: State.get("validChunks").filter(function(val){ return val.valid == true }),
+					invalidChunks: State.get("validChunks").filter(function(val){ return val.valid == false })
 				}			
 			}
 		}
@@ -215,9 +230,11 @@ requirejs(
 		graphData.push(newNode);		//add node to graph
 
 		if (clickPath.length > 0) {
+			var cludge = false;
 
 			if (clickPath[clickPath.length-1].source == uniqueNodeId) {
 				console.log("what on earth");
+				cludge = true;		//TODO: un-cludge this. For now, if source and current node are the same, don't add it b/c it's wrong
 			}
 
 			var type = "choice";
@@ -231,20 +248,24 @@ requirejs(
 			}
 
 			else { 
-				text = " ";			//TODO: how do I load ChunkLibrary to get the label from the current node?
+				text = clickPath[clickPath.length-1].choiceText;			//make label of choicetext for each edge
 			}
-			var newEdge = {
-				group: 'edges',
-		      	data: {
-		        	//id: 'e1',
-		        	//TODO: this says ".id" but we just store the click number right now!
-		        	source: clickPath[clickPath.length-1].source,	 // the source node id (edge comes from this node)
-		        	target: uniqueNodeId,  		 // the target node id (edge goes to this node)
-		        	choiceText: text,
-		        	type : type
-		      	}
-   			}
-   			graphData.push(newEdge);		//add edge to graph
+
+			if (!cludge) {
+				var newEdge = {
+					group: 'edges',
+			      	data: {
+			        	//id: 'e1',
+			        	//TODO: this says ".id" but we just store the click number right now!
+			        	source: clickPath[clickPath.length-1].source,	 // the source node id (edge comes from this node)
+			        	target: uniqueNodeId,  		 // the target node id (edge goes to this node)
+			        	choiceText: text,
+			        	type : type
+			      	}
+	   			}
+
+	   			graphData.push(newEdge);		//add edge to graph
+	   		}
 		}
 	}
 
@@ -271,7 +292,7 @@ requirejs(
 		if (newChoices.length > 0) {		//if there are new choices...
 			newChoices.forEach(function(newChoice, pos) {			//copy them to the leftToVisit with the path to them
 				var choiceClickPath = clickPath.slice(0);		//clone array
-				choiceClickPath.push({source: uniqueNodeId, dest: newChoice.chunkId, clickNum: newChoice.choiceNum+1});
+				choiceClickPath.push({source: uniqueNodeId, dest: newChoice.chunkId, clickNum: newChoice.choiceNum+1, choiceText: newChoice.text});
 				newChoice.clickPath = choiceClickPath;
 				if (!wasVisited(newChoice, leftToVisit)) {
 					leftToVisit.push(newChoice);		//add it to leftToVisit
@@ -280,15 +301,15 @@ requirejs(
 			
 			var nextChoice = leftToVisit.pop();									//pop last item off array, which should be last choice currently available?
 			var temp = nextChoice.clickPath[nextChoice.clickPath.length-1];
-			clickPath.push({source: temp.source, dest: temp.dest, clickNum: temp.clickNum});			//add it to clickPath
+			clickPath.push({source: temp.source, dest: temp.dest, clickNum: temp.clickNum, choiceText: temp.choiceText});			//add it to clickPath
 			if (typeof child(temp.clickNum, getChoiceEl()) !== "undefined") {
 				clickChoice(temp.clickNum);					//click the choice
 				addToGraph(clickPath);
 				stepStory(clickPath);			//repeat process
 			}
-			else if ($("#storyArea span.chunk").html() == "[No path found!]") {
-				//if (leftToVisit.length > 0 && (iterStep < iterNum)) {
-				if (leftToVisit.length > 0) {
+			else if ($("#storyArea span.chunk").html() == "[No path found!]" || newChoices[0].chunkId == "results") {
+				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
+				//if (leftToVisit.length > 0) {
 					iterStep++;
 					console.log("reached the end of this playthrough, backing up and restarting...");
 					var nextNode = leftToVisit.shift();
@@ -301,6 +322,7 @@ requirejs(
 				console.log("Error! There was supposed to be a choice to pick but none is in the el!");
 			}
 		}
+
 		
 	};
 
@@ -321,11 +343,13 @@ requirejs(
 		bound to nodes so you can click to go to them
 	*/
 	var gotoChoice = function(clickPath, story, levelData, globalData) {
-		resetStory();
-		for (var x=0; x < clickPath.length; x++) {
-			if (x==0) { addToGraph([]); }
-			else { addToGraph(clickPath); }
-			clickChoice(clickPath[x].clickNum);
+		resetStory();		//reset story and load first node
+		addToGraph([]);		//add initial node to graph
+		clickChoice(clickPath[0].clickNum);		//click the choice
+
+		for (var x=1; x < clickPath.length; x++) {
+			addToGraph(clickPath);					//add node to graph
+			clickChoice(clickPath[x].clickNum);		//click the choice
 		}
 		addToGraph(clickPath);
 		stepStory(clickPath);
@@ -369,6 +393,35 @@ requirejs(
 		return newChoices
 	}
 
+	var createPopup = function(type, data) {
+
+		$("#popup").html("");
+
+		if (type == "validInvalid") {
+			theHtml = "<div id='popup_close'>X</div><p>Valid</p><ul>";
+			for (var x=0; x< data.valid.length; x++) {
+				theHtml+= "<li>" + data.valid[x].chunkId + "</li>";
+			}
+			theHtml += "</ul><p>Invalid</p><ul>";
+			for (var x=0; x < data.invalid.length; x++) {
+				theHtml+= "<li><strong>" + data.invalid[x].chunkId + "</strong> (" + data.invalid[x].reason + ")</li>";
+			}
+			theHtml += "</ul>";
+		}
+		var left = $(".cxtmenu div").css("left").substring(0, $(".cxtmenu div").css("left").length - 2);
+		left = parseInt(left) + parseInt($(".cxtmenu div").css("width").substring(0, $(".cxtmenu div").css("width").length - 2)) + "px";
+		var top = $(".cxtmenu div").css("top");
+
+		$("#popup").css({"left":left, "top":top});
+		$("#popup").show();
+		$("#popup").append(theHtml);
+
+		$("#popup_close").click(function() {
+			$("#popup").hide();
+		});
+
+	}
+
 	var createGraph = function() {
 
 		var graphElements = simulateRunthroughs();
@@ -397,32 +450,85 @@ requirejs(
 			        'target-arrow-shape': 'triangle',
 			        'curve-style': 'bezier'
 			      }
+			    },
+			    {
+			    	selector: '.highlighted',					//used for path highlighting
+			    	style: {
+						'background-color': '#61bffc',
+						'line-color': '#61bffc',
+						'target-arrow-color': '#61bffc',
+						'transition-property': 'background-color, line-color, target-arrow-color',
+						'transition-duration': '0.5s'
+			    	}
 			    }
 			],
-			/*layout : {
+			/*
+			layout : {
 				name: 'cose',
 				fit: true,
 				nodeOverlap: 10,
 				idealEdgeLength: function( edge ){ return 10; },
 				useMultitasking: true,
 				animate: true
-			}*/
+			}
+			*/
+			
 			layout : {
 				name: 'breadthfirst',
-				roots: '#' + graphRootId
-				
-				//name: 'cose'
+				directed: true,
+				spacingFactor: 3,
+				roots: '#' + graphRootId,
+				avoidOverlap: true,
 			}
+			
+			/*
+			layout : {					//settings here: https://github.com/cytoscape/cytoscape.js-cola
+				name: 'cola',
+				animate: false,
+				maxSimulationTime: 10000,
+				avoidOverlap: true,
+				//flow: { axis: 'x', minSeparation: 500},
+				edgeJaccardLength: 500
+			}
+			*/
+			/*
+			layout : {				//settings here: https://github.com/cytoscape/cytoscape.js-dagre
+				name: 'dagre'
+
+			}
+			*/
+			/*
+			layout : {
+				name: 'concentric',
+				equidistant: true
+			}
+			*/
+			/*
+			layout : {
+				name : 'grid'
+			}
+			*/
 		});
+
+		//cyto.$('*').codirectedEdges().remove();
 
 		cyto.cxtmenu({			//walkthrough of options at https://github.com/cytoscape/cytoscape.js-cxtmenu
 			selector: '*',
 
 			commands: [
 				{
-					content: 'ID',
+					content: 'Goto Here',
 					select: function(ele){
-						console.log( ele.id() );
+						showNarrative();
+						gotoChoice(ele.data().clickPath, story, levelData, globalData);
+					}
+				},
+
+				{
+					content: 'Valid/Invalid Nodes',
+					select: function(ele){
+						var temp = { "valid" : ele.data().validChunks, "invalid" : ele.data().invalidChunks }
+						createPopup( "validInvalid", temp );
 					}
 				},
 
@@ -433,16 +539,15 @@ requirejs(
 					}
 				},
 
-				{
-					content: 'Position',
-					select: function(ele){
-						console.log( ele.position() );
-					}
-				}
+				
 			],
 			fillColor: 'rgba(0, 92, 128,0.75)',
 			activeFillColor: 'rgba(6, 173, 239,0.75)'
 		});
+	}
+
+	var showNarrative = function() {
+		$("#storyContainer.editor").show();
 	}
 	
     var createEditor = function() {
@@ -518,7 +623,7 @@ requirejs(
 		});
     }
 
-    $('body').append("<div id='cyto'></div><button id='submit'>Save JSON file</button><button id='restore'>Reset Changes</button><span id='valid_indicator'></span><div id='editor_holder'></div><div id='storyContainer' class='editor'></div>");
+    $('body').append("<div id='cyto'></div><button id='submit'>Save JSON file</button><button id='restore'>Reset Changes</button><span id='valid_indicator'></span><div id='editor_holder'></div><div id='storyContainer' class='editor'></div><div id='popup'></div>");
 
 	createGraph();
 	//createEditor();
