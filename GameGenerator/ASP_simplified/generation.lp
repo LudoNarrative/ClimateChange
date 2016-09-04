@@ -205,7 +205,7 @@ precondition(tick,tick) :-
 
 %npcs can move in a couple of ways
 npcMovements(%projectile;
-	     random_walk;random_pathfind;attract;repel;bounce).%;patrol;bounce;path(ping_pong);path(loop)).
+	     random_walk;random_pathfind;attract;repel;bounce;periodic_attract;periodic_repel;periodic_attract_repel).%;patrol;bounce;path(ping_pong);path(loop)).
 
 %pick ways something can move
 % CRM 6/21/2016 - changed max from 0 to 2.
@@ -335,8 +335,7 @@ interactions(help;collide;harm;help).
 
 {interaction(ENTITY1,ENTITY2,INTERACTION) : interactions(INTERACTION)} 
     :-  entity(ENTITY1), 
-        entity(ENTITY2), 
-        entityOrdering(ENTITY1,ENTITY2) .
+        entity(ENTITY2).
 
 %pushing
 precondition(overlaps(ENTITY1,ENTITY2,true), push(ENTITY1,ENTITY2)) :-
@@ -346,16 +345,20 @@ result(push(ENTITY1,ENTITY2),apply_force(ENTITY2,direction_from(ENTITY1,ENTITY2)
 
 
 %colliding
-precondition(overlaps(ENTITY1,ENTITY2,true), collide(ENTITY1,ENTITY2)) :- 
+1{
+	precondition(collide(ENTITY1,ENTITY2), collide(ENTITY1,ENTITY2));
+	precondition(collide(ENTITY2,ENTITY1), collide(ENTITY1,ENTITY2))} 1 :-
     interaction(ENTITY1,ENTITY2,collide).
-result(collide(ENTITY1,ENTITY2),apply_restitution(ENTITY1,ENTITY2)) :- 
-    interaction(ENTITY1,ENTITY2,collide).
+
+precondition(overlaps(E1,E2,true),O) :- precondition(collide(E1,E2),O).
 
 %entities can be static
 {static(ENTITY) : entity(ENTITY)}.
 
 %helping means adding a good resource, removing a bad one, or adding a good entity
-precondition(overlaps(ENTITY1,ENTITY2,true), help(ENTITY1,ENTITY2)) :- 
+1{
+	precondition(overlaps(ENTITY1,ENTITY2,true), help(ENTITY1,ENTITY2));
+	precondition(overlaps(ENTITY2,ENTITY1,true), help(ENTITY1,ENTITY2))} 1 :- 
     interaction(ENTITY1,ENTITY2,help).
 
 { result(help(ENTITY1,ENTITY2),increase(G_RESOURCE)) } :-
@@ -364,21 +367,33 @@ precondition(overlaps(ENTITY1,ENTITY2,true), help(ENTITY1,ENTITY2)) :-
 { result(help(ENTITY1,ENTITY2), decrease(B_RESOURCE)) } :-
     interaction(ENTITY1,ENTITY2,help), bad(B_RESOURCE).
 
+{ result(help(ENTITY1,ENTITY2), increase(health(ENTITY2))) } :-
+    interaction(ENTITY1,ENTITY2,help).
+
 % { result(help(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,help), helpful(ENTITY).
 
 
         
 
 %helping means removing a good resource, adding a bad one, or adding a bad entity
-precondition(overlaps(ENTITY1,ENTITY2,true), hurt(ENTITY1,ENTITY2)) :- 
+1{
+	precondition(overlaps(ENTITY1,ENTITY2,true), hurt(ENTITY1,ENTITY2));
+	precondition(overlaps(ENTITY2,ENTITY1,true), hurt(ENTITY1,ENTITY2))} 1 :- 
     interaction(ENTITY1,ENTITY2,hurt).
+
+
 { result(hurt(ENTITY1,ENTITY2),increase(G_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), bad(G_RESOURCE).   
-{ result(hurt(ENTITY1,ENTITY2),decrease(B_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), good(B_RESOURCE).     
+{ result(hurt(ENTITY1,ENTITY2),decrease(B_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), good(B_RESOURCE).
+
+
+{ result(hurt(ENTITY1,ENTITY2), decrease(health(ENTITY2))) } :-
+    interaction(ENTITY1,ENTITY2,hurt).
 % { result(hurt(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,hurt), harmful(ENTITY).
 
 %things need to be placed on the screen
 placements(field(random);field(uniform);field(corner);path(center);path(random);path(endpoints);path(uniform);path(start)).
 
+place(E) :- entity(E).
 placementModality(one_shot;spawn).
 
 spawnTimings(one_shot;constant;exponential_increase;exponential_decay).
@@ -515,7 +530,7 @@ resourceTransactions(convert;pay_cost;gain;lose).
 {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : potentialOutcomes(OUTCOME)} 
   :- entity(ENTITY1), entity(ENTITY2), ENTITY1 != ENTITY2.
 
-% or see if things are overlapping
+% or see if things aren't overlapping
 {precondition(overlaps(ENTITY1,ENTITY2,false),OUTCOME) : potentialOutcomes(OUTCOME)} 
   :- entity(ENTITY1), entity(ENTITY2), ENTITY1 != ENTITY2.
 % other spatial predicates

@@ -113,6 +113,9 @@ result_enables_condition(move_away(E1, E2), far(E1,E2))
 result_enables_condition(move_away(E1, E2), overlaps(E1,E2,false))
     :- closeness_condition(overlaps(E1,E2,false), E1, E3),
        result(_, move_away(E1, E2)).
+result_enables_condition(move_away(E2, E1), overlaps(E1,E2,false))
+    :- closeness_condition(overlaps(E1,E2,false), E1, E3),
+       result(_, move_away(E1, E2)).
 
 result_enables_condition(moves(E1, D), Cond)
     :- closeness_condition(Cond, E1, E2),
@@ -1012,8 +1015,14 @@ limited(RESOURCE) :-
 
     
 playerAgency(ENTITY) :-    
+    controlLogic(draggable(ENTITY)).
+
+playerAgency(ENTITY) :-    
     precondition(control_event(button(BUTTON,STATE)),OUTCOME),
     result(OUTCOME,move_towards(ENTITY,  _ )).
+playerAgency(ENTITY) :-    
+    precondition(control_event(button(BUTTON,STATE)),OUTCOME),
+    result(OUTCOME,move_away(ENTITY,  _ )).
     
 playerAgency(ENTITY) :-    
     precondition(control_event(button(BUTTON,STATE)),OUTCOME),

@@ -1,6 +1,5 @@
+:-  result(_,add(_,_)).
 
-:- result(O,add(E,L)).
-:- result(O,delete(E)).
 
 % %cases %%%%
 % %% no controls except mouse.

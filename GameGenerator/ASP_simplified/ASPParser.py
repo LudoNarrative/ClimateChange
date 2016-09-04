@@ -146,6 +146,20 @@ if __name__ == '__main__':
         if outcome not in outcome2precond:
             outcome2precond[outcome] = []
         outcome2precond[outcome].append(precond[0])
+    collidesOutcome = []
+    for outcome in outcome2precond:
+        collides = -1
+        overlaps = -1
+        for ii,precond in enumerate(outcome2precond[outcome]):
+            temp = prettify(precond)
+            if 'collide' in temp:
+                collides = ii
+            if 'overlaps' in temp:
+                overlaps = ii
+        if collides != -1:
+            outcome2precond[outcome].pop(overlaps)
+            collidesOutcome.append(outcome)
+            
     outcome2result = {}
     every_frames = set()
     for every_frame in out['every_frame']:
@@ -157,18 +171,34 @@ if __name__ == '__main__':
         if outcome not in outcome2result:
             outcome2result[outcome] = []
         if result[0]['terms'][1]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
-            #result[0]['terms'][1]['predicate'] = 'increase_over_time'
+            result[0]['terms'][1]['predicate'] = 'increase_over_time'
             #print ':',result[0]
             pass
         if result[0]['terms'][1]['predicate'] ==  'decrease' and result[0]['terms'][0]['predicate'] in every_frames:
-            #result[0]['terms'][1]['predicate'] = 'decrease_over_time'
+            result[0]['terms'][1]['predicate'] = 'decrease_over_time'
             pass
             #print ':',result[0]
         outcome2result[outcome].append(result[0])
     for outcome in sorted(outcome2precond):
+        if outcome not in collidesOutcome:
+            for precond in outcome2precond[outcome]:
+                print prettify(precond)+'.'
+            if outcome in outcome2result:
+                for result in outcome2result[outcome]:
+                    print prettify(result)+'.'
+            print ''
+    for outcome in collidesOutcome:
         for precond in outcome2precond[outcome]:
             print prettify(precond)+'.'
-        for result in outcome2result[outcome]:
-            print prettify(result)+'.'
+        if outcome in outcome2result:
+            for result in outcome2result[outcome]:
+                print prettify(result)+'.'
         print ''
     
+
+    for o in ['interpretation']:
+        for oo in out[o]:
+            for ooo in oo:
+                print prettify(ooo)+'.'
+        if len(out[o]) > 0:
+            print ''

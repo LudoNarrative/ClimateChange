@@ -13,6 +13,10 @@
 
 tick :- precondition(tick,O).
 :- not tick.
+
+
+false_overlaps :- precondition(overlaps(E,E2,false),O).
+:- not false_overlaps.
 % :- onlyOnePrecondition(O), consumedBy(R,O).
 
 % :- not consumedBy(r1,o1).

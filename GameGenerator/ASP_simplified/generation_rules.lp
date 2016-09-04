@@ -119,6 +119,8 @@ effect(EFFECT) :-
 completeOutcome(OUTCOME) :- 
     result(OUTCOME,EFFECT),
     precondition(CONDITION,OUTCOME).
+completeOutcome(O) :-
+    precondition(collide(_,_),O).
 
 % a resource is free if there is a way to decrease/increase not conditioned on the same resource - i.e. some way to change things
 freeResource(Resource) :- 
@@ -387,7 +389,14 @@ not_every_frame(O) :- precondition(le(R),O), result(O,increase(R)).
 every_frame(O) :- not not_every_frame(O), precondition(C,O).
 
 not_every_frame(O) :- precondition(control_event(click(E)),O).
-not_every_frame(O) :- precondition(overlaps(E1,E2,true),O).
+%not_every_frame(O) :- precondition(overlaps(E1,E2,true),O).
 not_every_frame(O) :- precondition(control_event(button(B,pressed)),O).
 not_every_frame(O) :- precondition(control_event(button(B,released)),O).
 not_every_frame(O) :- precondition(timerElapsed(T),O) .
+
+
+:- precondition(overlaps(E1,E2,true),O),
+   result(O,add(E2,E1)).
+
+:- precondition(overlaps(E1,E2,true),O),
+   result(O,add(E1,E2)).
