@@ -1,5 +1,5 @@
 #const min_entities = 2.
-#const max_entities = 2.
+#const max_entities = 3.
 #const min_resources = 1.
 #const max_resources = 1.
 #const min_outcomes = 0.
@@ -20,6 +20,8 @@
 riskReward :- actionHasRiskReward(ControlEvent).
 :- not riskReward.
 
+:- not interpretation(e1,enemy).
+
 %% % entitiesDoSomething :- precondition(overlaps(E1,E2,POL),O).
 %% % :- not entitiesDoSomething.
-:- hinders(O,O2), result(O2,mode_change(game_loss)), easy(O).
+:- hinders(O,O2), result(O2,mode_change(game_loss)), unrestricted(O).
