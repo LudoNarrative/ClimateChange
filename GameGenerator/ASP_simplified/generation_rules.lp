@@ -400,3 +400,16 @@ not_every_frame(O) :- precondition(timerElapsed(T),O) .
 
 :- precondition(overlaps(E1,E2,true),O),
    result(O,add(E1,E2)).
+
+
+timer_length(Timer,long) :-
+    timerLogic(Timer,N,_),
+    N >= 5.
+
+timer_length(Timer,long) :-
+    timerLogic(Timer,stochastic(D,N),_),
+    N >= 5.
+
+timer_length(Timer,short) :-
+    timerLogic(Timer,_,_),
+    not timer_length(Timer,long).

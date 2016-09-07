@@ -5,6 +5,9 @@
 pools(inventory).
 potential_paths(p1;p2;p3;p4;p5).
 
+columns(left;center;right).
+rows(top;middle;bottom).
+
 opposite(north,south).
 opposite(east,west).
 opposite(forward,backward).
@@ -19,6 +22,18 @@ local(forward;backward;left;right).
 
 place(field).%place(center;random;upper_left;upper_right;lower_left;lower_right).
 
+speeds(slow;normal;fast).
+
+duration(1;3;5;10;
+	 stochastic(exponential,1);
+	 stochastic(exponential,3);
+	 stochastic(exponential,5);
+	 stochastic(exponential,10);
+	 stochastic(gaussian,3);
+	 stochastic(gaussian,5);
+	 stochastic(gaussian,10);
+	 stochastic(gausssian,1)
+	).
 
 buttons(mouse_button;space;up_arrow;down_arrow;left_arrow;right_arrow).
 buttonOrder(mouse_button,up_arrow).
