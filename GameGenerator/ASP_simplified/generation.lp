@@ -4,7 +4,9 @@
 avatarControls(cardinal;horizontal_axis;vertical_axis;tank;platformer;asteroids).
 
 %modes of indirect control
-indirectControls(click_and_drag;click_and_click;click_and_aim;drawn_to_cursor;repeled_from_cursor).
+indirectControls(click_and_drag;
+		 %click_and_click;click_and_aim;
+		 drawn_to_cursor;repeled_from_cursor).
 
 
 %%%%%% INITIALIZATIONS %%%%%%%
@@ -233,7 +235,7 @@ result(tick,moves(ENTITY, forward)) :-
 %Random walkers walk in a given direction for a given amount of time    
 outcome(change_direction(ENTITY)) :- 
     movementScheme(ENTITY,random_walk).
-timer(change_direction(ENTITY),duration) :- 
+1 { timerLogic(change_direction(ENTITY),Duration,loop): duration(Duration) } 1:- 
     movementScheme(ENTITY,random_walk).
 %time's  north  - change direction
 precondition(timerElapsed(change_direction(ENTITY)), change_direction(ENTITY)) :-
@@ -247,7 +249,7 @@ result(tick,moves(ENTITY, forward)) :-
 %random pathfinder - changes target every once in a while
 outcome(change_target(ENTITY)) :- 
     movementScheme(ENTITY,random_pathfind).
-timerLogic(change_target(ENTITY),duration) :- 
+1{timerLogic(change_target(ENTITY),Duration,loop): duration(Duration) } 1 :- 
     movementScheme(ENTITY,random_pathfind).
 initialize(target(ENTITY),random_point) :- 
     movementScheme(ENTITY,random_pathfind).
@@ -351,6 +353,7 @@ result(push(ENTITY1,ENTITY2),apply_force(ENTITY2,direction_from(ENTITY1,ENTITY2)
     interaction(ENTITY1,ENTITY2,collide).
 
 precondition(overlaps(E1,E2,true),O) :- precondition(collide(E1,E2),O).
+result(O,apply_restitution(E1,E2)) :- precondition(collide(E1,E2),O).
 
 %entities can be static
 {static(ENTITY) : entity(ENTITY)}.
@@ -554,7 +557,7 @@ resourceTransactions(convert;pay_cost;gain;lose).
 % Kaboom encoding and game-rules.lp
 {precondition(timerElapsed(Timer), Outcome)
   : potentialOutcomes(Outcome)}
-  :- potentialTimer(Timer).
+  :- potentialTimerLogic(Timer).
 
 %%% Possible Results %%%
 

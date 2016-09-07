@@ -132,7 +132,7 @@ if __name__ == '__main__':
         print args
     out = solve_randomly(args)
     
-    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','static']:
+    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','static','timerLogic']:
         for oo in out[o]:
             for ooo in oo:
                 print prettify(ooo)+'.'
@@ -165,11 +165,30 @@ if __name__ == '__main__':
     for every_frame in out['every_frame']:
         every_frame = every_frame[0]
         every_frames.add(every_frame['terms'][0]['predicate'])
+    replace = {}
+    for result in out['replace']:
         
+        outcome = hashable(result[0]['terms'][0])
+        if result[0]['terms'][2]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
+            result[0]['terms'][1]['predicate'] = 'increase_over_time'
+            result[0]['terms'][2]['predicate'] = 'increase_over_time'
+            #print ':',result[0]
+            pass
+        if result[0]['terms'][2]['predicate'] ==  'decrease' and result[0]['terms'][0]['predicate'] in every_frames:
+            result[0]['terms'][1]['predicate'] = 'decrease_over_time'
+            result[0]['terms'][2]['predicate'] = 'decrease_over_time'
+            pass
+            #print ':',result[0]
+        if outcome not in replace:
+            replace[outcome] = {}
+
+        replace[outcome][prettify(result[0]['terms'][1])] = result[0]['terms'][2]
+        #replace[outcome].append(result[0])
     for result in out['result']:
         outcome = hashable(result[0]['terms'][0])
         if outcome not in outcome2result:
             outcome2result[outcome] = []
+        
         if result[0]['terms'][1]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
             result[0]['terms'][1]['predicate'] = 'increase_over_time'
             #print ':',result[0]
@@ -178,6 +197,10 @@ if __name__ == '__main__':
             result[0]['terms'][1]['predicate'] = 'decrease_over_time'
             pass
             #print ':',result[0]
+        if outcome in replace:
+            if prettify(result[0]['terms'][1]) in replace[outcome]:
+                result[0]['terms'][1] = replace[outcome][prettify(result[0]['terms'][1])]
+
         outcome2result[outcome].append(result[0])
     for outcome in sorted(outcome2precond):
         if outcome not in collidesOutcome:

@@ -344,3 +344,15 @@
    interpretation(E,creates(R)).
 
 :- precondition(overlaps(E,E,P),O), not precondition(collide(E,E),O).
+
+
+:- result(O,add(E1,E2)),
+   1{precondition(overlaps(E1,E2,POL),O2);
+     precondition(collide(E1,E2),O2);
+     precondition(overlaps(E2,E1,POL),O2);
+     precondition(collide(E2,E1),O2)}.
+
+:- entity(E1),entity(E2),
+   2 { precondition(collide(E1,E2),O2)}.
+
+
