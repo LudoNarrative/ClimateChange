@@ -18,6 +18,10 @@ Knowledge
 Challenge
 (Support)
 
+Characters:
+"emma": {name: "Emma", nickname: "Em", gender: "female"},
+"zanita": {name: "Zanita", nickname: "Z", gender: "female"},
+"shelly": {name: "Shelly", nickname: "Shelly", gender: "female"}
 
 { condition: "introMechanics eq true" },
 { condition: "establishSpecialtyInfo eq true" },
@@ -33,72 +37,80 @@ Challenge
 	//---------------------------INTERSTITIAL---------------------------------
 	{
 		"id": "eatFood",
+		"speaker" : "zanita",
 		"content": ["Emma. Seriously, girl. This stew is not going to eat itself."],
 		"choices": [
-			{"condition": "establishDinnerWithFriend eq true"},
-			{"condition": "provokeConfidenceChoice eq true"},
-			{"condition": "establishDinnerWithFriend eq true"}
+			{"condition": "establishDinnerWithFriend eq true", "speaker": "emma"},
+			{"condition": "provokeConfidenceChoice eq true", "speaker": "emma"},
+			{"condition": "establishDinnerWithFriend eq true", "speaker": "emma"}
 		]
 	},
-
+/*
 	{
 		"id": "eatFood2",
+		"speaker" : "zanita",
 		"content": ["Hey, mind passing the dish next to you? Thanks."],
 		"choices": [
-			{"condition": "establishDinnerWithFriend eq true"},
-			{"condition": "provokeConfidenceChoice eq true"},
-			{"condition": "establishDinnerWithFriend eq true"}
+			{"condition": "establishDinnerWithFriend eq true", "speaker": "emma"},
+			{"condition": "provokeConfidenceChoice eq true", "speaker": "emma"},
+			{"condition": "establishDinnerWithFriend eq true", "speaker": "emma"}
 		]
 	},
 
 	{
 		"id": "eatFood3",
+		"speaker" : "zanita",
 		"content": ["Sorry for peppering you with questions, ha ha. I'm not giving you much chance to eat!"],
 		"choices": [
-			{"condition": "establishDinnerWithFriend eq true"},
-			{"condition": "provokeConfidenceChoice eq true"},
-			{"condition": "establishDinnerWithFriend eq true"}
+			{"condition": "establishDinnerWithFriend eq true", "speaker": "emma"},
+			{"condition": "provokeConfidenceChoice eq true", "speaker": "emma"},
+			{"condition": "establishDinnerWithFriend eq true", "speaker": "emma"}
 		],
 	},
-
+*/
 
 	//---------------------------BACKSTORY---------------------------------------
-
 
 	{
 		"id": "whatscalled",
 		"choiceLabel": "Thanks. What's it called again?",
+		"speaker" : "zanita",
 		"content": "<i>Cocido</i>, chica. Figured comfort food would be good the night before my best friend's dissertation defense.",
 		"effects": ["set establishDinnerWithFriend true"],
 		"conditions" : ["confidence lt 2"]
 	},
-
+	/*
 	{
 		"id": "whatscalled2",
 		"choiceLabel": "Yeah. Where'd you learn to cook this?",
+		"speaker" : "zanita",
 		"content": "Well, after I came back from Spain it only took a couple weeks before I was craving it. It's just the thing before you start some big project.",
 		"effects": ["set establishDinnerWithFriend true"],
-		"conditions" : ["confidence eq 2"]
+		"conditions" : ["confidence lt 2"]
 	},
-
+*/
 	{
 		"id": "thanksbringing",
 		"choiceLabel": "It's so good. You made this?",
+		"speaker" : "zanita",
 		"content": "Don't look at me like that! I'm a better cook than you. And it's not like I'm going to let my best friend defend her dissertation after a night of takeout.",
 		"effects": ["set establishDinnerWithFriend true"]
 	},
-
+/*
 	{
 		"id": "thanksbringing2",
 		"choiceLabel": "It's delicious! I think I can taste...parsley?",
+		//"speaker" : "zanita",
 		"content": "Ha, no that's cilantro. You've been eating too much takeout. Gotta feed your brain, Emma!",
 		"effects": ["set establishDinnerWithFriend true"],
 		"conditions" : ["confidence eq 3"]
 	},
+	*/
 //---------------------------------------------------------------------
 	{
 		"id": "stuffed",
 		"choiceLabel": "No thanks, Z. I'm stuffed.",
+		//"speaker" : "zanita",
 		"content": "Are you kidding me? You've hardly had anything. Nervous about your dissertation defense tomorrow, huh?",
 		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
 	},
@@ -106,6 +118,7 @@ Challenge
 	{
 		"id": "stuffed2",
 		"choiceLabel": "No, I'm good. This is too much! You shouldn't have gone through the trouble.",
+		//"speaker" : "zanita",
 		"content": "What? C'mon, Em. You know I love any chance to cook. Hey...what's really going on, huh? You're usually not this quiet.",
 		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"],
 		"conditions" : ["confidence eq 4"]
@@ -114,6 +127,7 @@ Challenge
 	{
 		"id": "stomachNerves",
 		"choiceLabel": "Sorry, no appetite. Guess it must be my nerves.",
+		//"speaker" : "zanita",
 		"content": "C'mon. Don't let your intellectual pursuits interfere with enjoying some of my famous <i>cocido</i>.",
 		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
 	},
@@ -121,6 +135,7 @@ Challenge
 	{
 		"id": "tooMuchTrouble",
 		"choiceLabel": "I can't believe this spread. You went to too much trouble for me.",
+		//"speaker" : "zanita",
 		"content": "Are you kidding me? What are friends for? <br><br>Sounds like something else is going on here.",
 		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
 	},
@@ -133,12 +148,13 @@ Challenge
 
 	{
 		"id": "inSpain",
+		//"speaker" : "zanita",
 		"content": "You would not believe how much of this stuff I ate in Spain. This recipe's okay, if I do say so myself, but only half as good as when you get it there.",
 		"choices" : [
 			//{"condition": "establishEmmaRegrets eq true"},
-			{"gotoId": "stilljealous"},
-			{"gotoId": "quals"},
-			{"gotoId": "stilljealous"}
+			{"gotoId": "stilljealous", "speaker": "emma"},
+			{"gotoId": "quals", "speaker": "emma"},
+			{"gotoId": "stilljealous", "speaker": "emma"}
 		],
 		"conditions": ["establishDinnerWithFriend eq true"],
 		"effects": ["set establishFriendBackstory true"]
@@ -147,6 +163,7 @@ Challenge
 		{
 		"id": "quals",
 		"choiceLabel": "I was busy that year taking quals, if I recall.",
+		"speaker" : "zanita",
 		"content": "And now you're reaping the sweet rewards of that wise decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. I'll just be some chick who ate too much <i>cocido</i>. Speaking of which, could you, uh, pass that back...?"
 	},
 
@@ -162,6 +179,7 @@ Challenge
 	},
 	{
 		"id": "regrets",
+		"speaker" : "zanita",
 		"content": "Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. And I'll just be some chick who ate too much <i>cocido</i>.",
 		"choices" : [
 //			{"gotoId": "wellmaybe"}
@@ -172,9 +190,10 @@ Challenge
 
 	{
 		"id": "loveocean",
+		"speaker" : "zanita",
 		"content": "Look, Em. I've known you as long as anyone. And you've <i>always</i> wanted this. You've been in love with the oceans since we were kids. Remember 4th grade? Mrs. Anderson? Oh my god, that diorama. You spent <i>ages</i> on that.",
 		"choices" : [
-			{"gotoId": "wantedToBePerfect"}
+			{"gotoId": "wantedToBePerfect", "speaker": "emma"}
 		],
 		"conditions": ["establishEmmaRegrets eq true"],
 		"effects" : ["set establishEmmaBackstory true"]
@@ -190,17 +209,19 @@ Challenge
 
 	{
 		"id": 	"whatspecialty",
+		"speaker" : "zanita",
 		"content": "You're kind of still working on it. It's just a 400 page brick of a dissertation now. What are they called again, your little buddies?",
 		"choices": 	[
-			{ "gotoId" : "pickShrimp"},
-			{ "gotoId" : "pickLobsters"},
-			{ "gotoId" : "pickCoral"}
+			{ "gotoId" : "pickShrimp", "speaker": "emma"},
+			{ "gotoId" : "pickLobsters", "speaker": "emma"},
+			{ "gotoId" : "pickCoral", "speaker": "emma"}
 		],
 		"effects": ["set goto_whatspeciality true"]
 	},
 	{
 		"id": 	"pickShrimp",
 		"choiceLabel" : "<i>Lysmata amboinensis.</i> Pacific cleaner shrimp.",
+		"speaker" : "zanita",
 		"content": 	"Right. Lysmata amoeba ninnies. Thingies. I invited some to dinner, but turned out they're a more expensive date than I thought. Seafood is ex<i>pennnn</i>sive.",
 		//"choices": 	[
 		//	{ "gotoId" : "howufeelChoicetext1" }
@@ -209,8 +230,9 @@ Challenge
 	},
 	{
 		"id": 	"pickLobsters",
-		"content": 	"Right. I tried to invite old Homarus to dinner, but turns out he's a more expensive date than I thought. Seafood's getting ex<i>pennnn</i>sive.",
 		"choiceLabel" : "<i>Homarus americanus.</i> Lobsters.",
+		"speaker" : "zanita",
+		"content": 	"Right. I tried to invite old Homarus to dinner, but turns out he's a more expensive date than I thought. Seafood's getting ex<i>pennnn</i>sive.",
 		//"choices": 	[
 		//	{ "gotoId" : "howufeelChoicetext1" }
 		//],
@@ -219,6 +241,7 @@ Challenge
 	{
 		"id": 	"pickCoral",
 		"choiceLabel" : "<i>Octocorallia.</i> Backbone of the coral reefs.",
+		"speaker" : "zanita",
 		"content": 	"Right. Octo-coro-lala-rama-dingdong. I tried to invite ol' Octo Lala to dinner, but turns out he was too busy getting registered on the endangered species list to attend.",
 		//"choices": 	[
 		//	{ "gotoId" : "howufeelChoicetext2" }
@@ -238,11 +261,12 @@ Challenge
 	},
 	{
 		"id": "howufeel",
+		"speaker" : "zanita",
 		"content" : "Hey. What's up? Oh, don't give me that look. You're quiet, and it's not just nerves. What's on your mind?",
 		"choices": 	[
-			{ "gotoId" : "surePath" },
-			{ "gotoId" : "unsurePath" },
-			{ "gotoId" : "futureWorry" }
+			{ "gotoId" : "surePath", "speaker": "emma" },
+			{ "gotoId" : "unsurePath", "speaker": "emma" },
+			{ "gotoId" : "futureWorry", "speaker": "emma" }
 		],
 		"conditions" : ["establishEmmaBackstory eq true"],
 		"effects" : ["set provokeConfidenceChoice true"]
@@ -252,28 +276,31 @@ Challenge
 	{
 		"id" : "surePath",
 		"choiceLabel" : "I'm just excited to be starting my career.",
+		"speaker" : "zanita",
 		"content" : "Heh. You're gonna knock 'em out of the park, Em. {ifState|career|shrimp|Those amoeba shrimp|}{ifState|career|lobster|Your Homarus Lobstarus buddies|}{ifState|career|coral|Your octo-coral-reefie pals|} have got a new superhero.",
 		"effects" : ["incr confidence 1"],
 		"choices" : [
-			{ "gotoId" : "more_haveSomeWine" }
+			{ "gotoId" : "more_haveSomeWine", "speaker": "narrator" }
 		]
 	},
 	{
 		"id" : "unsurePath",
 		"choiceLabel" : "I'm just wondering if it was worth it.",
+		"speaker" : "zanita",
 		"content" : "Worth it? Are you kidding? You're about to start a career doing everything you love. Emma Richards, defender of {ifState|career|shrimp|the amoeba shrimp!|}{ifState|career|lobster|Homarus Lobstarus!|}{ifState|career|coral|the octo-coral-reefies!|} You're going places. I can feel it.",
 		"effects" : ["decr confidence 1"],
 		"choices" : [
-			{ "gotoId" : "more_haveSomeWine" }
+			{ "gotoId" : "more_haveSomeWine", "speaker": "narrator" }
 		]
 	},
 	{
 		"id" : "futureWorry",
 		"choiceLabel" : "I'm just worried about the future.",
+		"speaker" : "zanita",
 		"content" : "Look at you, always freaking out when things go too well. Look, Emma. You've fought hard to get here. From what I've seen, you're an amazing scientist and a good teacher. Now if I can just get you to take an evening off and go on a date, you'll pretty much have it all.",
 		"effects" : ["decr confidence 1"],
 		"choices" : [
-			{ "gotoId" : "thanks_haveSomeWine" }
+			{ "gotoId" : "thanks_haveSomeWine", "speaker": "emma" }
 		]
 	},
 
@@ -291,9 +318,10 @@ Challenge
 
 	{
 		"id" : "haveSomeWine",
+		"speaker" : "zanita",
 		"content" : "Now seriously. I am not joking about this. Have some damn wine. Relax with your friends. The future can take care of itself.",
 		"choices" : [
-			{"gotoId" : "results"}
+			{"gotoId" : "results", "speaker": "narrator"}
 		],
 		"conditions" : ["provokeConfidenceChoice eq true"],
 		"effects" : ["set friendReassuresEmma true"]
@@ -304,6 +332,7 @@ Challenge
 	{
 		"id" : "results",
 		"choiceLabel" : "More",
+		"speaker" : "narrator",
 		"content" : "<div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>{ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reefs!|}</span></li><li>Emma has {confidence} <span class='keyword'>confidence</span></li></ul></div>"
 	}
 

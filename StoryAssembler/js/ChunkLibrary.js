@@ -10,10 +10,16 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	var _library = {};
 
 	var requiredFields = [];
-	var optionalFields = ["id", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "comment", "repeatable"];
+	//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
+	var optionalFields = ["id", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker"];
 
 	// Validates and adds a chunk to the library.
 	var addChunk = function(chunk) {
+/*
+		if (typeof chunk.speaker == "undefined" && typeof chunk.request == "undefined") {
+			throw new Error(chunk.id + " has no speaker, and no request field to pull in speaker from other chunk");
+		}
+*/
 		Validate.check(chunk, requiredFields, optionalFields); // will throw an error if chunk has wrong fields.
 
 		// Assign an ID if one was not specified
@@ -38,6 +44,8 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 					console.log(c)
 					throw new Error("choice not specified in right format", c);
 				}
+
+				if (c.speaker) { chunk.choices[i].speaker = c.speaker; }
 			}
 		}
 		if (chunk.request) {

@@ -75,7 +75,7 @@ requirejs(
 	var stateCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "goto_whatspeciality", "provokeConfidenceChoice"];
 
 	var graphRootId = "";
-	var iterNum = 8;
+	var iterNum = 14;
 	var iterStep = 0;
 	var deadendPaths = 1;
 	var uniqueDeadEnds = false;		//whether to make each dead end a unique node
@@ -177,7 +177,7 @@ requirejs(
 				Character.add(key, story.characters[key]);
 			}
 		}
-
+		State.set("mode", story.mode);
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay);
 
 		$("#storyDiagnostics").hide();
@@ -193,7 +193,7 @@ requirejs(
 		var newNode = {};
 		var uniqueNodeId = "";
 		
-		if ($("#storyArea span.chunk").html() == "[No path found!]") {		//if there's no path, make node for it
+		if ($("#storyArea span.chunk")[$("#storyArea span.chunk").length-1].innerHTML == "[No path found!]") {		//if there's no path, make node for it
 			if (uniqueDeadEnds) {
 				uniqueNodeId = 'deadend' + deadendPaths;			//swap out for unique nodes for each ending
 			}
@@ -319,7 +319,7 @@ requirejs(
 			}
 
 			else {
-				console.log("Error! There was supposed to be a choice to pick but none is in the el!");
+				throw("Error! There was supposed to be a choice to pick but none is in the el!");
 			}
 		}
 
@@ -342,7 +342,7 @@ requirejs(
 		resets game and clicks through until it makes the choice you've passed in
 		bound to nodes so you can click to go to them
 	*/
-	var gotoChoice = function(clickPath, story, levelData, globalData) {
+	var gotoChoice = function(clickPath, story, levelData, globalData, mode = "normal") {
 		resetStory();		//reset story and load first node
 		addToGraph([]);		//add initial node to graph
 		clickChoice(clickPath[0].clickNum);		//click the choice
@@ -351,8 +351,10 @@ requirejs(
 			addToGraph(clickPath);					//add node to graph
 			clickChoice(clickPath[x].clickNum);		//click the choice
 		}
-		addToGraph(clickPath);
-		stepStory(clickPath);
+		if (mode == "normal") {
+			addToGraph(clickPath);
+			stepStory(clickPath);
+		}
 	}
 
 	//checks current choices and returns them if they aren't present in the graphData yet
@@ -396,9 +398,10 @@ requirejs(
 	var createPopup = function(type, data) {
 
 		$("#popup").html("");
+		var theHtml = "<div id='popup_close'>X</div>";
 
 		if (type == "validInvalid") {
-			theHtml = "<div id='popup_close'>X</div><p>Valid</p><ul>";
+			theHtml += "<p>Valid</p><ul>";
 			for (var x=0; x< data.valid.length; x++) {
 				theHtml+= "<li>" + data.valid[x].chunkId + "</li>";
 			}
@@ -408,13 +411,17 @@ requirejs(
 			}
 			theHtml += "</ul>";
 		}
-		var left = $(".cxtmenu div").css("left").substring(0, $(".cxtmenu div").css("left").length - 2);
-		left = parseInt(left) + parseInt($(".cxtmenu div").css("width").substring(0, $(".cxtmenu div").css("width").length - 2)) + "px";
-		var top = $(".cxtmenu div").css("top");
+		if (type == "data") {
+			theHtml += JSON.stringify(data, null, 4);
+		}
+		var left = parseInt($(".cxtmenu div").css("left").substring(0, $(".cxtmenu div").css("left").length - 2)) + 120;
+		left = left + "px";
+		var top = parseInt($(".cxtmenu div").css("top").substring(0, $(".cxtmenu div").css("top").length - 2)) + 80;
+		top = top + "px";
 
 		$("#popup").css({"left":left, "top":top});
 		$("#popup").show();
-		$("#popup").append(theHtml);
+		$("#popup").html(theHtml);
 
 		$("#popup_close").click(function() {
 			$("#popup").hide();
@@ -473,7 +480,7 @@ requirejs(
 			}
 			*/
 			
-			layout : {
+			layout : {						//this is the best so far
 				name: 'breadthfirst',
 				directed: true,
 				spacingFactor: 3,
@@ -484,11 +491,12 @@ requirejs(
 			/*
 			layout : {					//settings here: https://github.com/cytoscape/cytoscape.js-cola
 				name: 'cola',
-				animate: false,
+				animate: true,
+				refresh: 1,
 				maxSimulationTime: 10000,
 				avoidOverlap: true,
-				//flow: { axis: 'x', minSeparation: 500},
-				edgeJaccardLength: 500
+				flow: { axis: 'y', minSeparation: 30},
+				edgeSymDiffLength: 6
 			}
 			*/
 			/*
@@ -513,14 +521,14 @@ requirejs(
 		//cyto.$('*').codirectedEdges().remove();
 
 		cyto.cxtmenu({			//walkthrough of options at https://github.com/cytoscape/cytoscape.js-cxtmenu
-			selector: '*',
+			selector: 'node',
 
 			commands: [
 				{
 					content: 'Goto Here',
 					select: function(ele){
-						showNarrative();
-						gotoChoice(ele.data().clickPath, story, levelData, globalData);
+						gotoChoice(ele.data().clickPath, story, levelData, globalData, "stepTo");
+						$("#storyContainer.editor").show();
 					}
 				},
 
@@ -535,7 +543,7 @@ requirejs(
 				{
 					content: 'Data',
 					select: function(ele){
-						console.log( ele.data() );
+						createPopup("data", ele.data());
 					}
 				},
 
@@ -544,10 +552,6 @@ requirejs(
 			fillColor: 'rgba(0, 92, 128,0.75)',
 			activeFillColor: 'rgba(6, 173, 239,0.75)'
 		});
-	}
-
-	var showNarrative = function() {
-		$("#storyContainer.editor").show();
 	}
 	
     var createEditor = function() {
@@ -623,7 +627,12 @@ requirejs(
 		});
     }
 
-    $('body').append("<div id='cyto'></div><button id='submit'>Save JSON file</button><button id='restore'>Reset Changes</button><span id='valid_indicator'></span><div id='editor_holder'></div><div id='storyContainer' class='editor'></div><div id='popup'></div>");
+    $('body').append("<div id='cyto'></div><button id='submit'>Save JSON file</button><button id='restore'>Reset Changes</button><span id='valid_indicator'></span><div id='editor_holder'></div><div id='storyContainer' class='editor'></div><div id='storyButton'></div><div id='popup'></div>");
+
+    $("#storyButton").click(function() {
+	  $("#storyContainer.editor").toggle();
+	});
+    
 
 	createGraph();
 	//createEditor();

@@ -32,13 +32,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		var wishlist = Wishlist.create(story.wishlist, State);
 		wishlist.logOn();
+
 		if (story.characters) {
 			Character.init(State);
 			for (var key in story.characters) {
 				Character.add(key, story.characters[key]);
 			}
 		}
-
+		State.set("mode", story.mode);
 		State.set("storyUIvars", story.UIvars);
 		Display.setStats("storyStats");
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
@@ -49,12 +50,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 	var getStorySpec = function(id) {
 
-		//var travelData = require("text!travelData");
-		//"text!travelData", "text!workerData", "text!lectureData", "text!dinnerData"
-
 		var storySpec = [
 		{
 			id: "travel",
+			characters: {
+				"emma" : {name: "Emma", nickname: "Em", gender: "female" }
+			},
 			wishlist: [
 				{ condition: "establishScene eq true"},
 				{ condition: "articlesRead eq 4" },
@@ -74,10 +75,17 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			],
 			UIvars: [
 				"articlesRead"
-			]
+			],
+			mode: { 
+				type: "narration"				//can be "narration", "dialogue", or "monologue"
+			}
 		},
 		{
 			id: "worker",
+			characters: {
+				"emma": {name: "Emma", nickname: "Em", gender: "female"},
+				"rick" : {name: "Rick", nickname: "Rick", gender: "male"}
+			},
 			wishlist: [
 				//{ condition: "reinforceSpecialty eq true" },		//this is triggered by grammars
 				{ condition: "establishSpeciesMigration eq true" },
@@ -98,10 +106,21 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			UIvars: [
 				"confidence",
 				"optimism"
-			]
+			],
+			mode: {
+				type: "dialogue",
+				initiator: "rick",
+				respondent: "emma"
+			}
 		},
 		{
 			id: "lecture",
+			characters: {
+				"emma": {name: "Professor Banks", nickname: "Emma", gender: "female"},
+				"franklin": {name: "Franklin", nickname: "Franklin", gender: "male"},
+				"elika": {name: "Elika", nickname: "Elika", gender: "female"},
+				"miguel": {name: "Miguel", nickname: "Miguel", gender: "male"}
+			},
 			wishlist: [
 				{ condition: "callOnStudent eq true", persistent: true},
 				{ condition: "establishLecture eq true"},
@@ -121,13 +140,22 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			],
 			UIvars: [
 				"confidence"
-			]
+			],
+			mode: {
+				type: "monologue",
+				initiator: "emma",
+			}
 		},
 		{
 			/*
 				currently these wishlist items all proceed sequentially
 			*/
 			id: "dinner",
+			characters: {
+				"emma": {name: "Emma", nickname: "Em", gender: "female"},
+				"zanita": {name: "Zanita", nickname: "Z", gender: "female"},
+				"shelly": {name: "Shelly", nickname: "Shelly", gender: "female"}
+			},
 			wishlist: [
 				{ condition: "introMechanics eq true" },
 				{ condition: "establishSpecialtyInfo eq true" },
@@ -139,23 +167,21 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "friendReassuresEmma eq true" },
 				{ condition: "droppedKnowledge gte 2", persistent: true },
 			],
-			characters: {
-				"emma": {name: "Emma", nickname: "Em", gender: "female"},
-				"zanita": {name: "Zanita", nickname: "Z", gender: "female"},
-				"shelly": {name: "Shelly", nickname: "Shelly", gender: "female"}
-			},
 			dataFile: require("text!dinnerData"),
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
 				"set confidence 0",
-				"set caller zanita",		//speaker who starts the scene
-				"set responder emma"		//responder to speaker for scene start
 			],
 			UIvars: [
 				"confidence",
 				"career"
-			]
+			],
+			mode: {
+				type: "dialogue",
+				initiator: "zanita",
+				responder: "emma"
+			}
 		}
 		]
 
