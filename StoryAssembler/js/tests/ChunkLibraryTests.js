@@ -6,6 +6,7 @@ define(["../ChunkLibrary"], function(ChunkLibrary) {
 		QUnit.module( "ChunkLibrary tests" );
 		test("get and set", function( assert ) {
 			var chunk1 = {
+				id: "getsettest",
 				request: {chunkId: "AskPlayerHowToReact"},
 				choices: [
 				   {condition: "shownPlayerAttribute eq true"},
@@ -22,7 +23,6 @@ define(["../ChunkLibrary"], function(ChunkLibrary) {
 			
 			var chunk3 = {
 				id: "SpurnHost",
-				comment: "Test of a chunk comment.",
 				choiceLabel: "Be mean to the host.",
 				content: "Screw you!",
 				effects: ["set host angry"],

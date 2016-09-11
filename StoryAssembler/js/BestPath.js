@@ -25,7 +25,7 @@ For reference, a Want object (defined in Want.js) is in the form:
 The "logOn" and "logOff" functions can be called to turn on detailed console logging of the pathfinding process.
 */
 
-define(["Request", "util", "underscore"], function(Request, util, underscore) {
+define(["Request", "util", "Character", "underscore"], function(Request, util, Character, underscore) {
 
 	var DEFAULT_MAX_DEPTH = 3; // The maximum length of a path, unless "max_depth" is passed in to a function below as a parameter. Raising this too high has severe performance impacts.
 
@@ -39,7 +39,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 		var paths = allPaths(wants, params, _chunkLibrary, _State);
 		if (paths.length > 0) {
-			return chooseFromPotentialPaths(paths, wants);
+			return chooseFromPotentialPaths(paths, wants, _chunkLibrary, _State);
 		} else {
 			return undefined;
 		}
@@ -61,10 +61,54 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 
 	// Given a set of paths, choose the path that maximally satisfies Wants.
 	// We are assuming the only Wants listed are those in our original list.
-	var chooseFromPotentialPaths = function(paths, wants) {
+	var chooseFromPotentialPaths = function(paths, wants, _chunkLibrary, _State) {
 		var bestScore = -1;
 		var bestPos = -1;
 		paths = cullByWantOrder(paths, wants); // eliminate paths that ordering constraints make impossible
+		
+		var temp = paths.sort(function(a,b) {
+			return b.satisfies.length - a.satisfies.length;
+		});
+
+		var bestSpeakerScore = 0;
+		var bestPos;
+		var cutoffLength = paths[0].length;
+		var scoreDebug = [];
+
+		for (var x=0; x < paths.length; x++) {
+			thisScore = 0;
+			if (paths[x].length > cutoffLength) { break; }			//if it doesn't satisfy as many wants, just stop
+			if (typeof _chunkLibrary.get(paths[x].route[0]).speaker !== "undefined") {		//if the speaker for the chunk is good, add a point
+				if (_chunkLibrary.get(paths[x].route[0]).speaker == Character.getBestSpeaker(_State) ) {
+					thisScore++;
+				}
+			}
+			else { thisScore++; }		//if there's no speaker, add a point because we can cast it how we want
+
+			if (typeof paths[x].choiceDetails !== "undefined") {			//if there are options...
+				var optionPoints = 1 / paths[x].choiceDetails.length;		//we'll give 1/n points, where n is # of choices
+
+				for (var y=0; y < paths[x].choiceDetails.length; y++) {
+					var theChoiceSpeaker;
+					try { theChoiceSpeaker = _chunkLibrary.get(paths[x].choiceDetails[y].id).speaker; }
+					catch (err) { }
+					if (typeof theChoiceSpeaker !== "undefined") {
+						var bestSpeaker = Character.getBestSpeaker(_State,1);
+						if (bestSpeaker == theChoiceSpeaker) {
+							thisScore += optionPoints;
+						}
+					}
+					else { thisScore += optionPoints; }		//if it isn't defined, give it points because we can cast it ourselves
+				}
+			}
+			if (thisScore > bestSpeakerScore) {
+				bestSpeakerScore = thisScore;
+				bestPos = x;
+			}
+
+			scoreDebug.push(thisScore);
+		}
+		/*
 		paths.forEach(function(path, pos) {
 			var thisScore = path.satisfies.length;
 			if (thisScore > bestScore) {
@@ -72,6 +116,11 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 				bestPos = pos;
 			}
 		});
+
+		return paths[bestPos];
+		*/
+
+		
 		return paths[bestPos];
 	}
 
@@ -224,7 +273,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 		var pathToHere;
 		log(rLevel, "findAllSatisfyingPaths starting from '" + chunk.id + "' and satisfying wants: " + getWantVals(originalWants));
 		
-		var wants = [];
+		var satisfiedWants = [];
 		var gotoFlag = false;
 		
 		//if there's a goto want, fulfill that and ignore all other wants
@@ -252,19 +301,19 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 				if (satisfied) {
 					pathToHere = createPathOrAddWant(pathToHere, chunk.id, want);
 				} else {
-					wants.push(want);
+					satisfiedWants.push(want);
 				}
 			});
 		}
 
-		if (wants.length !== originalWants.length) {
-			log(rLevel, "--> remaining wants: " + (wants.length ? getWantVals(wants) : "none"));
+		if (satisfiedWants.length !== originalWants.length) {
+			log(rLevel, "--> remaining wants: " + (satisfiedWants.length ? getWantVals(satisfiedWants) : "none"));
 		} else {
 			log(rLevel, "nothing in " + chunk.id + " directly made any Wants true");
 		}
 		// If we still have unsatisfied wants, check for outgoing nodes; otherwise we can stop here.
 		var choiceDetails = [];
-		if (wants.length > 0) { 
+		if (satisfiedWants.length > 0) { 
 			// See if any outgoing nodes can meet any of our wants. If so, add paths for each that start with this node, noting any satisfied Wants discovered along the way.
 			if (chunk.request) {
 				var req;
@@ -278,7 +327,7 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 					req = Request.byCondition(chunk.request.val);
 				}
 				log(rLevel, "We will now search for the request in chunk " + chunk.id + ".");
-				var validPaths = searchFromHere(paths, chunk, skipList, req, wants, pathToHere, rLevel, false);
+				var validPaths = searchFromHere(paths, chunk, skipList, req, satisfiedWants, pathToHere, rLevel, false);
 				if (validPaths.length > 0 && validPaths[0].route) {
 					paths = addNewIfUnique(paths, validPaths);
 				}
@@ -297,12 +346,12 @@ define(["Request", "util", "underscore"], function(Request, util, underscore) {
 						var missingVal = !chunkOkToSearch(choice.val, skipList, true, rLevel)
 						validPaths = [{ 
 							route: [chunk.id],
-							satisfies: [{type:"goto", val:choice.val}],
+							satisfies: [{type: "goto", val:choice.val}],
 							choiceDetails: { missing:missingVal, requestVal: choice.val, id: choice.val }
 						}];
 					}
 					else {
-						validPaths = searchFromHere(paths, chunk, choiceSkipList, choice, wants, pathToHere, rLevel, true);
+						validPaths = searchFromHere(paths, chunk, choiceSkipList, choice, satisfiedWants, pathToHere, rLevel, true);
 					}
 
 					// Each path in validPaths should have a choiceDetails field, even if it didn't meet the Want requirements (so we know what choice labels to print when displaying the choice).
