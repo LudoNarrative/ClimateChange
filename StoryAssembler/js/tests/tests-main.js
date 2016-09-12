@@ -26,6 +26,7 @@ requirejs.config({
       "Templates": "../../js/Templates",
       "BestPath": "../../js/BestPath",
     	"util": "../../js/util",
+      "Character" : "../../js/Character",
       "underscore": "../../lib/underscore-1.8.3.min",
       "jQuery": "../../../lib/jquery-3.0.0.min"
 	},

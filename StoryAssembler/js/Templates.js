@@ -10,6 +10,8 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 
 	//var State;
 	var Character;
+	var currentSpeaker = "";
+
 	var init = function(_State, _Character) {
 		//State = _State;
 		Character = _Character;
@@ -148,7 +150,9 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 	}
 
 	// Main public interface. Given text with grammars, return its content with any templates rendered into fully realized text.
-	var render = function(rawText) {
+	var render = function(rawText, speaker) {
+
+		currentSpeaker = speaker;
 		var txt = rawText;
 		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
 		var match;
@@ -163,6 +167,9 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		}
 
 		// If you wanted to do additional NLG-style processing here like analyzing a sentence and adding hedges, etc., this would be the place to modify 'txt' further before returning it.
+		if (typeof txt !== "undefined") {		//if it's undefined (other systems expecting undefined, not a txt string back, so leave it if so)
+			//txt = currentSpeaker + ": " + txt;
+		}
 
 		return txt;
 	}

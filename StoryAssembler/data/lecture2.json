@@ -21,12 +21,13 @@ Backstory
 			"set calledElika false",
 			"set calledShy false",
 			"set difficulty 1",
-			"set confidence -5"	/*just a test value*/
+			"set confidence 5"	/*just a test value*/
 		]
 	},
 	{
 		"id": "slide1",
-		"request": {"condition": "awesome eq true"},
+		"content": "\"So{ifStateCondition|confidence lt 0|, uh,|} you can see that as CO2 levels {ifStateCondition|confidence lt 0|fall-- er, no, I mean |}rise, the ocean becomes more acidic. Already 25% more acidic than in the 1800s.\"",
+		//"conditions": [],
 		"effects": ["set giveLecture true", "set lectureContent 1"]
 	},
 	{
@@ -69,6 +70,7 @@ Backstory
 	
 	{
 		"id": "Elika1",
+		"unavailableChoiceLabel" : "Can't call on Élika",
 		"choiceLabel": "Call on Élika: she's smart and passionate.",
 		"content": "\"Doctor Banks, if the pH is changing, why aren't species adapting to those changes?\"<br><br>A smart question, and you know the answer-- letting you calm down a little.",
 		"choices": [
@@ -107,6 +109,7 @@ Backstory
 	
 	{
 		"id": "Franklin1",
+		"unavailableChoiceLabel" : "Can't call on Franklin",
 		"choiceLabel": "Call on Franklin, also smart but skeptical about climate change.",
 		"content": "\"Emma, you always say in this class that correlation does not imply causality. So why are all you global warming nuts so sure things are different this time?\"",
 		"choices": [
@@ -189,6 +192,7 @@ Backstory
 
 	{
 		"id": "Shy1",
+		"unavailableChoiceLabel" : "Can't call on shy student",
 		"choiceLabel": "Call on a shy student in the back whose name you don't know.",
 		"content": "\"Doctor Banks, I get the connection between CO2 and pH, but how exactly does higher pH interfere with mollusks and stuff?\"<br><br>It's a straightforward question... should you give it a straightforward answer, or try to inject a little personality?",
 		"choices": [

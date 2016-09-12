@@ -3,7 +3,7 @@
 When beginScene is called, we need to pass in a defined ChunkLibrary, State, and Display module. 
 */
 
-define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
+define(["Request", "Templates", "Want", "Character"], function(Request, Templates, Want, Character) {
 
 	var chunkLibrary;
 	//var State;
@@ -21,6 +21,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		
 		StoryDisplay.init(handleChoiceSelection, refreshNarrative);
 		Templates.init(State, _Character);
+
 		continueScene();
 	}
 
@@ -32,6 +33,16 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 	var continueScene = function(optChunkId) {
 		
 		var bestPath;
+
+		if (typeof State.get("speaker") == "undefined") { State.set("speaker", Character.getBestSpeaker()); }
+		
+		else { 
+			var hardcodedSpeaker = State.get("currentChoices").filter( function(choice) { return choice.chunkId == optChunkId});
+			if (hardcodedSpeaker.length > 0) { State.set("speaker", hardcodedSpeaker[0].speaker); }
+			else { 
+				State.set("speaker", Character.getBestSpeaker()); 
+			}
+		}
 
 		//Cases:
 		if (optChunkId) {		//optchunkid is defined
@@ -141,7 +152,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 		mode = mode || "normal";
 
 		var chunk = chunkLibrary.get(chunkId, mode);
-		var text = Templates.render(chunk.content);
+		var text = Templates.render(chunk.content, State.get("speaker"));
 		if (text !== undefined) { 							//if the chunk has text, display it
 			StoryDisplay.addStoryText(text); 
 		}
@@ -257,7 +268,7 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			chunk.choices.forEach(function(choice, pos) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
 				var choiceText = getChoiceText(choiceDetails[pos]);
-				choiceText = Templates.render(choiceText);				//render any grammars in there
+				choiceText = Templates.render(choiceText, choice.speaker);		//render any grammars in there
 
 				var choiceId = choice.val;
 				if (choice.type == "condition") { choiceId = choiceDetails[pos].id }	//if it's a condition, use the id of the one we fetched
@@ -266,7 +277,8 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 					text: choiceText,
 					chunkId: choiceId,
 					cantChoose: choiceDetails[pos].missing === true,
-					persistent: choice.persistent
+					persistent: choice.persistent,
+					speaker: choice.speaker
 				};
 				choiceObjs.push(choiceObj);
 				StoryDisplay.addChoice(choiceObj);
@@ -311,8 +323,8 @@ define(["Request", "Templates", "Want"], function(Request, Templates, Want) {
 			var chunk = chunkLibrary.get(choiceDetail.id, "refresh");
 			if (chunk.available) { return chunk.choiceLabel; }
 
-			else if (chunk.choiceUnavailableLabel) {			//if it has a label for the choice not being available , return that	
-				return unavailableChoiceLabel;
+			else if (chunk.unavailableChoiceLabel) {			//if it has a label for the choice not being available , return that	
+				return chunk.unavailableChoiceLabel;
 			}
 		} 
 			
