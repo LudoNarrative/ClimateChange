@@ -21,7 +21,7 @@ Backstory
 			"set calledElika false",
 			"set calledShy false",
 			"set difficulty 1",
-			"set confidence -5"	/*just a test value*/
+			"set confidence 5"	/*just a test value*/
 		]
 	},
 	{
