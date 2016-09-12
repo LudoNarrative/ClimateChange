@@ -289,7 +289,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					{
 						id: "happy",
 						src: "happy.png",
-						state: ["confidence gt 4"]
+						state: ["confidence gt 0"]
 					},
 					{
 						id: "worried",
