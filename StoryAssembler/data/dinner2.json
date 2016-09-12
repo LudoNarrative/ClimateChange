@@ -76,8 +76,7 @@ Characters:
 		"choiceLabel": "Thanks. What's it called again?",
 		"speaker" : "zanita",
 		"content": "<i>Cocido</i>, chica. Figured comfort food would be good the night before my best friend's dissertation defense.",
-		"effects": ["set establishDinnerWithFriend true"],
-		"conditions" : ["confidence lt 2"]
+		"effects": ["set establishDinnerWithFriend true"]
 	},
 	/*
 	{
@@ -181,9 +180,9 @@ Characters:
 		"id": "regrets",
 		"speaker" : "zanita",
 		"content": "Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. And I'll just be some chick who ate too much <i>cocido</i>.",
-		"choices" : [
+//		"choices" : [
 //			{"gotoId": "wellmaybe"}
-		],
+//		],
 		"conditions" : ["establishFriendBackstory eq true"],
 		"effects": ["decr confidence 1", "set establishEmmaRegrets true"]
 	},
@@ -193,22 +192,18 @@ Characters:
 		"speaker" : "zanita",
 		"content": "Look, Em. I've known you as long as anyone. And you've <i>always</i> wanted this. You've been in love with the oceans since we were kids. Remember 4th grade? Mrs. Anderson? Oh my god, that diorama. You spent <i>ages</i> on that.",
 		"choices" : [
-			{"gotoId": "wantedToBePerfect", "speaker": "emma"}
+			{"gotoId": "whatspecialty", "speaker": "emma"}
 		],
 		"conditions": ["establishEmmaRegrets eq true"],
 		"effects" : ["set establishEmmaBackstory true"]
 		
-	},
-	{
-		"id": "wantedToBePerfect",
-		"choiceLabel": "I wanted it to be... perfect.",
-		"request": {"condition": "goto_whatspeciality eq true"}
 	},
 
 	//---------------------------KNOWLEDGE---------------------------------------
 
 	{
 		"id": 	"whatspecialty",
+		"choiceLabel": "I wanted it to be... perfect.",
 		"speaker" : "zanita",
 		"content": "You're kind of still working on it. It's just a 400 page brick of a dissertation now. What are they called again, your little buddies?",
 		"choices": 	[

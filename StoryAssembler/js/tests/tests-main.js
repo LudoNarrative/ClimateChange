@@ -28,7 +28,8 @@ requirejs.config({
     	"util": "../../js/util",
       "Character" : "../../js/Character",
       "underscore": "../../lib/underscore-1.8.3.min",
-      "jQuery": "../../../lib/jquery-3.0.0.min"
+      "jQuery": "../../../lib/jquery-3.0.0.min",
+      "jQueryUI": "../../../lib/jquery-ui.min"
 	},
 	shim: {
        "QUnit": {
@@ -38,8 +39,9 @@ requirejs.config({
                QUnit.config.autostart = false;
            }
        },
-       "jQuery": {
-          export: "$"
+       "jQueryUI": {
+          export: "$",
+          deps: ["jQuery"]
         }
   }
 

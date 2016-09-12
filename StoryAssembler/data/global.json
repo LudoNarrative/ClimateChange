@@ -23,35 +23,35 @@
 	//---------------------------KNOWLEDGE---------------------------------------
 	{
 		"id": "shrimpDanger",
-		"speaker" : "global",
+		//"speaker" : "global",
 		"content": "In places like Maine, the ocean temperature is rising so fast it's all but eliminated the shrimp supply already.",
 		"conditions": ["career eq shrimp"],
 		"effects": ["incr droppedKnowledge 1"]
 	},
 	{
 		"id": "coralDanger",
-		"speaker" : "global",
+		//"speaker" : "global",
 		"content": "There's already been widespread bleaching reported of the Great Barrier Reef, and a lot of the species that call it home are vanishing.",
 		"conditions": ["career eq coral"],
 		"effects": ["incr droppedKnowledge 1"]
 	},
 	{
 		"id": "lobsterDanger",
-		"speaker" : "global",
+		//"speaker" : "global",
 		"content": "There have been a bunch of new diseases that are decimating lobster populations up in Maine. Seems the warmer oceans agree with viruses, at least.",
 		"conditions": ["career eq lobster"],
 		"effects": ["incr droppedKnowledge 1"]
 	},
 	{
 		"id": "futureDanger",
-		"speaker" : "global",
-		"content": "Have you heard of clathrates? No? They're basically frozen methane...some people call it 'fire ice'. Anyway, methane is much worse a greenhouse gas than CO2. If the planet warms up enough that the clathrates start releasing it into the atmosphere, we could be looking at a runaway feedback loop.",
+		//"speaker" : "global",
+		"content": "Have you heard of clathrates? {ifSpeaker|Zanita|I saw this on the internet...they're|They're} basically frozen methane...some people call it 'fire ice'. Anyway, methane is much worse a greenhouse gas than CO2. If the planet warms up enough that the clathrates start releasing it into the atmosphere, we could be looking at a runaway feedback loop.",
 		"conditions": [],
 		"effects": ["incr droppedKnowledge 1"]
 	},
 	{
 		"id": "oceanAcidic",
-		"speaker" : "global",
+		//"speaker" : "global",
 		"content": "\"So{ifStateCondition|confidence lt 0|, uh,|} you can see that as CO2 levels {ifStateCondition|confidence lt 0|fall-- er, no, I mean |}rise, the ocean becomes more acidic. Already 25% more acidic than in the 1800s.\"",
 		"conditions": [],
 		"effects": ["incr droppedKnowledge 1", "set awesome true"]
