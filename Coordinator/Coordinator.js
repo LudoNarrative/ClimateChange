@@ -171,7 +171,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
-				"set confidence 0",
+				"set confidence 5",
 			],
 			UIvars: [
 				"confidence",
