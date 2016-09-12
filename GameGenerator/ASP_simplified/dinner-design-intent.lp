@@ -26,6 +26,6 @@ has_sharing :- sharing(O1, O2).
 :- not slowlyDrains(r1).
 
 %% At least one entity is static
-:- not  static(e1).
+:- not  static(_).
 
  :- not unrestrictedGame.
