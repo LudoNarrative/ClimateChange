@@ -28,20 +28,20 @@
 
 % :- not sharingAndCamaraderie.
 
-has_sharing :- sharing(O1, O2).
-:- not has_sharing.
+%has_sharing :- sharing(O1, O2).
+%:- not has_sharing.
 
-:- not narrative_gating.
+%:- not narrative_gating.
 
-:- effect(mode_change(game_loss)). % shouldn't be a way to lose
-:- not slowlyDrains(r1).
+%:- effect(mode_change(game_loss)). % shouldn't be a way to lose
+%:- not slowlyDrains(r1).
 
 %% hacky things that should maybe be generalized
-:- effect(increase(X, X)).
+%:- effect(increase(X, X)).
 
 
 %% At least one entity is static
-:- not static(_).
+%:- not  static(e1).
 
 
 % At most 2 control events

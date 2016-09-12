@@ -26,11 +26,10 @@
 :- static(ENTITY), movementScheme(ENTITY,SCHEME).
 :- static(ENTITY), interaction(OTHER,ENTITY,push).
 :- static(ENTITY), interaction(OTHER,ENTITY,bounce).
-:- static(ENTITY), interaction(OTHER,ENTITY,collide).
 :- static(ENTITY), result(Outcome,moves(ENTITY,Direction)).
 :- static(Entity), effect(move_away(E, E_prime)).
 :- static(Entity), effect(move_towards(E, E_prime)).
-:- static(ENTITY), effect(apply_restitution(ENTITY)).
+
 
 
 % cleanliness
@@ -95,7 +94,7 @@
 % cleanliness - choose e1 before e2
 :- condition(overlaps(A,B,POLARITY)), entityOrdering(B,A).
 :- condition(collide(A,B)), entityOrdering(B,A).
-:- condition(collide(A,A)).
+%:- condition(collide(A,A)).
 
 :- outcome(B), not outcome(A), outcomeOrder(A,B).
 
@@ -356,3 +355,12 @@
    2 { precondition(collide(E1,E2),O2)}.
 
 
+
+
+:- precondition(overlaps(E1,E2,true),O),
+   result(O,add(E2,E1)).
+
+:- precondition(overlaps(E1,E2,true),O),
+   result(O,add(E1,E2)).
+
+:- 2 { clickOnOverlap(E1,E2,O)}, entity(E1),entity(E2).

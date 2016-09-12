@@ -103,11 +103,3 @@ lower_than(mid,high).
 spawnTimings(steady;at_a_time(1);at_a_time(2);at_a_time(3);at_a_time(4);poisson;condition).
 
 change(increases;decreases;set_to).
-
-:-  monotonicallyIncreases(Resource), 
-    precondition(Condition,Outcome),
-    lowThreshold(Condition,Resource,Threshold).
-    
-:-  monotonicallyDecreases(Resource), 
-    precondition(Condition,Outcome),
-    highThreshold(Condition,Resource,Threshold).

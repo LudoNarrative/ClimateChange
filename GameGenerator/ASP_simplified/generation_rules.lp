@@ -6,11 +6,9 @@ moving(ENTITY) :-   entity(ENTITY),
                     movementScheme(ENTITY,SCHEME);
                     interaction(OTHER,ENTITY,push);
                     interaction(OTHER,ENTITY,bounce);
-                    interaction(OTHER,ENTITY,collide);
                     result(Outcome,moves(ENTITY,Direction));
                     effect(move_away(E, E_prime));
-                    effect(move_towards(E, E_prime));
-                    effect(apply_restitution(ENTITY,AMOUNT))}.
+                    effect(move_towards(E, E_prime))}.
 static(ENTITY) :- entity(ENTITY), not moving(ENTITY).
 
 
@@ -274,10 +272,6 @@ disjunction(O1,O2) :-
     not similar(C,O1,O2),
     precondition(C,O2),
     outcome(O1).
-:- not disjunction(O1,O2), 
-    outcome(O1),
-    outcome(O2), 
-    outcomeOrder(O1,O2).
     
 similarResult(increase(R,A1),O1,O2) :-
     result(O1,increase(R,A1)),
@@ -376,7 +370,6 @@ clickOnOverlap(E1,E2,O) :- precondition(overlaps(E1,E2,true),O),
 			   precondition(control_event(click(E1)),O).
 clickOnOverlap(E1,E2,O) :- precondition(overlaps(E1,E2,true),O),
 			   precondition(control_event(click(E2)),O).
-:- 2 { clickOnOverlap(E1,E2,O)}, entity(E1),entity(E2).
 
 perEntity(health(E)) :- entity(E).
 perEntity(target(E)) :- entity(E).
@@ -393,13 +386,6 @@ not_every_frame(O) :- precondition(control_event(click(E)),O).
 not_every_frame(O) :- precondition(control_event(button(B,pressed)),O).
 not_every_frame(O) :- precondition(control_event(button(B,released)),O).
 not_every_frame(O) :- precondition(timerElapsed(T),O) .
-
-
-:- precondition(overlaps(E1,E2,true),O),
-   result(O,add(E2,E1)).
-
-:- precondition(overlaps(E1,E2,true),O),
-   result(O,add(E1,E2)).
 
 
 timer_length(Timer,long) :-
