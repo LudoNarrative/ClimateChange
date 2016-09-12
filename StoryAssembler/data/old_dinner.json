@@ -1,0 +1,257 @@
+[
+	/*
+		archived Coordinator params:
+
+		{
+			id: "dinner",
+			wishlist: [
+				{ condition: "introMechanics eq true" },
+				{ condition: "establishSpecialtyInfo eq true" },
+				{ condition: "establishDinnerWithFriend eq true" },
+				{ condition: "establishFriendBackstory eq true" },
+				{ condition: "establishEmmaRegrets eq true" },
+				{ condition: "establishEmmaBackstory eq true" },
+				{ condition: "provokeConfidenceChoice eq true" },
+				{ condition: "friendReassuresEmma eq true" },
+			],
+			dataFile: require("text!dinnerData"),
+			startState: [
+				"set initialized true",
+				"set friendName Emma",
+				"set career 0",
+				"set confidence 0"
+			],
+			UIvars: [
+				"confidence",
+				"career"
+			]
+		}
+	*/
+	{
+		"id": "Start",
+		"content": "Keep the dishes moving around the table, or conversation will stop. Click a dish passed to you to pass it on, or the down arrow to add food to your plate.",
+		"conditions": ["introMechanics neq true"],
+		"effects": ["set introMechanics true", "set career 0", "set confidence 0"]
+	},
+	{
+		"id": "dinnerStart",
+		"content": "Emma. Seriously, girl. This stew is not going to eat itself.",
+		"choices": [
+			{"gotoId": "whatscalled"},
+			{"gotoId": "thanksbringing"},
+			{"gotoId": "stuffed"}
+		]
+	},
+	{
+		"id": "whatscalled",
+		"choiceLabel": "Thanks. What's it called again?",
+		"content": "<i>Cocido</i>, chica. Figured comfort food would be good the night before my best friend's dissertation defense.",
+		"choices": [
+			{"gotoId": "iknowright"}
+		],
+		"effects": ["set establishDinnerWithFriend true"]
+	},
+	{
+		"id": "thanksbringing",
+		"choiceLabel": "It's so good. You made this?",
+		"content": "Don't look at me like that! I'm a better cook than you. And it's not like I'm going to let my best friend defend her dissertation after a night of takeout.",
+		"choices": [
+			{"gotoId": "youreamazing"}
+		],
+		"effects": ["set establishDinnerWithFriend true"]
+	},
+	{
+		"id": "stuffed",
+		"choiceLabel": "No thanks, Z. I'm stuffed.",
+		"content": "Are you kidding me? You've hardly had anything. Nervous about your dissertation defense tomorrow, huh?",
+		"choices": [
+			{"gotoId": "iguess"}
+		],
+		"effects": ["set establishDinnerWithFriend true"]
+	},
+	{
+		"id": "iknowright",
+		"choiceLabel": "I know, right?",
+		"request": {"gotoId": "inSpain"}
+	},
+	{
+		"id": "youreamazing",
+		"choiceLabel": "You're amazing.",
+		"request": {"condition": "establishFriendBackstory eq true"}
+	},
+	{
+		"id": "iguess",
+		"choiceLabel": "I guess.",
+		"request": {"condition": "establishFriendBackstory eq true"}
+	},
+	{
+		"id": "inSpain",
+		"content": "You would not believe how much of this stuff I ate in Spain. This recipe's okay, if I do say so myself, but only half as good as when you get it there.",
+		"choices" : [
+			{"gotoId": "wishcouldgo"},
+			{"gotoId": "quals"},
+			{"gotoId": "stilljealous"}
+		],
+		"conditions": ["establishDinnerWithFriend eq true"],
+		"effects": ["set establishFriendBackstory true"]
+		
+	},
+	{
+		"id": "wishcouldgo",
+		"choiceLabel": "Wish I could have come with you.",
+		"request": {"condition": "establishEmmaRegrets eq true"}
+	},
+	{
+		"id": "quals",
+		"choiceLabel": "I was busy that year taking quals, if I recall.",
+		"content": "And now you're reaping the sweet rewards of that wise decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. I'll just be some chick who ate too much <i>cocido</i>. Speaking of which, could you, uh, pass that back...?"
+	},
+	{
+		"id": "stilljealous",
+		"choiceLabel": "Still jealous you got to spend six months there.",
+		"request": {"condition": "establishEmmaRegrets eq true"}
+	},
+	{
+		"id": "regrets",
+		"content": "Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision. Tomorrow you'll be Dr. Emma Richards, marine biologist. And I'll just be some chick who ate too much <i>cocido</i>.",
+		"choices" : [
+			{"gotoId": "wellmaybe"}
+		],
+		"conditions" : ["establishFriendBackstory eq true"],
+		"effects": ["decr confidence 1", "set establishEmmaRegrets true"]
+	},
+	{
+		"id": "wellmaybe",
+		"choiceLabel": "Well, maybe...",
+		"request": {"condition": "establishEmmaBackstory eq true"}
+	},
+	{
+		"id": "loveocean",
+		"content": "Look, Em. I've known you as long as anyone. And you've <i>always</i> wanted this. You've been in love with the oceans since we were kids. Remember 4th grade? Mrs. Anderson? Oh my god, that diorama. You spent <i>ages</i> on that.",
+		"choices" : [
+			{"gotoId": "wantedToBePerfect"}
+		],
+		"conditions": ["establishEmmaRegrets eq true"],
+		"effects" : ["set establishEmmaBackstory true"]
+		
+	},
+	{
+		"id": "wantedToBePerfect",
+		"choiceLabel": "I wanted it to be... perfect.",
+		"request": {"condition": "goto_whatspeciality eq true"}
+	},
+	{
+		"id": 	"whatspecialty",
+		"content": "You're kind of still working on it. It's just a 400 page brick of a dissertation now. What are they called again, your little buddies?",
+		"choices": 	[
+			{ "gotoId" : "pickShrimp"},
+			{ "gotoId" : "pickLobsters"},
+			{ "gotoId" : "pickCoral"}
+		],
+		"effects": ["set goto_whatspeciality true"]
+	},
+	{
+		"id": 	"pickShrimp",
+		"choiceLabel" : "<i>Lysmata amboinensis.</i> Pacific cleaner shrimp.",
+		"content": 	"Right. Lysmata amoeba ninnies. Thingies. I invited some to dinner, but turned out they're a more expensive date than I thought. Seafood is ex<i>pennnn</i>sive.",
+		"choices": 	[
+			{ "gotoId" : "howufeelChoicetext1" }
+		],
+		"effects" : ["set career shrimp", "set establishSpecialtyInfo true" ]
+	},
+	{
+		"id": 	"pickLobsters",
+		"content": 	"Right. I tried to invite old Homarus to dinner, but turns out he's a more expensive date than I thought. Seafood's getting ex<i>pennnn</i>sive.",
+		"choiceLabel" : "<i>Homarus americanus.</i> Lobsters.",
+		"choices": 	[
+			{ "gotoId" : "howufeelChoicetext1" }
+		],
+		"effects" : ["set career lobster", "set establishSpecialtyInfo true"]
+	},
+	{
+		"id": 	"pickCoral",
+		"choiceLabel" : "<i>Octocorallia.</i> Backbone of the coral reefs.",
+		"content": 	"Right. Octo-coro-lala-rama-dingdong. I tried to invite ol' Octo Lala to dinner, but turns out he was too busy getting registered on the endangered species list to attend.",
+		"choices": 	[
+			{ "gotoId" : "howufeelChoicetext2" }
+		],
+		"effects" : ["set career coral", "set establishSpecialtyInfo true"]
+	},
+	{
+		"id": "howufeelChoicetext1",
+		"choiceLabel" : "Don't blame me, I just work here.",
+		"request": {"condition": "provokeConfidenceChoice eq true"}
+	},
+	{
+		"id": "howufeelChoicetext2",
+		"choiceLabel" : "Very funny.",
+		"request": {"condition": "provokeConfidenceChoice eq true"}
+	},
+	{
+		"id": "howufeel",
+		"content" : "Hey. What's up? Oh, don't give me that look. You're quiet, and it's not just nerves. What's on your mind?",
+		"choices": 	[
+			{ "gotoId" : "surePath" },
+			{ "gotoId" : "unsurePath" },
+			{ "gotoId" : "futureWorry" }
+		],
+		"conditions" : ["establishEmmaBackstory eq true"],
+		"effects" : ["set provokeConfidenceChoice true"]
+	},
+
+	{
+		"id" : "surePath",
+		"choiceLabel" : "I'm just excited to be starting my career.",
+		"content" : "Heh. You're gonna knock 'em out of the park, Em. {ifState|career|shrimp|Those amoeba shrimp|}{ifState|career|lobster|Your Homarus Lobstarus buddies|}{ifState|career|coral|Your octo-coral-reefie pals|} have got a new superhero.",
+		"effects" : ["incr confidence 1"],
+		"choices" : [
+			{ "gotoId" : "more_haveSomeWine" }
+		]
+	},
+	{
+		"id" : "unsurePath",
+		"choiceLabel" : "I'm just wondering if it was worth it.",
+		"content" : "Worth it? Are you kidding? You're about to start a career doing everything you love. Emma Richards, defender of {ifState|career|shrimp|the amoeba shrimp!|}{ifState|career|lobster|Homarus Lobstarus!|}{ifState|career|coral|the octo-coral-reefies!|} You're going places. I can feel it.",
+		"effects" : ["decr confidence 1"],
+		"choices" : [
+			{ "gotoId" : "more_haveSomeWine" }
+		]
+	},
+	{
+		"id" : "futureWorry",
+		"choiceLabel" : "I'm just worried about the future.",
+		"content" : "Look at you, always freaking out when things go too well. Look, Emma. You've fought hard to get here. From what I've seen, you're an amazing scientist and a good teacher. Now if I can just get you to take an evening off and go on a date, you'll pretty much have it all.",
+		"effects" : ["decr confidence 1"],
+		"choices" : [
+			{ "gotoId" : "thanks_haveSomeWine" }
+		]
+	},
+
+	{
+		"id" : "more_haveSomeWine",
+		"choiceLabel" : "More",
+		"request": {"condition": "friendReassuresEmma eq true"}
+	},
+
+	{
+		"id" : "thanks_haveSomeWine",
+		"choiceLabel" : "Thanks, Cupid.",
+		"request": {"condition": "friendReassuresEmma eq true"}
+	},
+
+	{
+		"id" : "haveSomeWine",
+		"content" : "Now seriously. I am not joking about this. Have some damn wine. Relax with your friends. The future can take care of itself.",
+		"choices" : [
+			{"gotoId" : "results"}
+		],
+		"conditions" : ["provokeConfidenceChoice eq true"],
+		"effects" : ["set friendReassuresEmma true"]
+	},
+
+	{
+		"id" : "results",
+		"choiceLabel" : "More",
+		"content" : "<div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>{ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reefs!|}</span></li><li>Emma has {confidence} <span class='keyword'>confidence</span></li></ul></div>"
+	}
+]
