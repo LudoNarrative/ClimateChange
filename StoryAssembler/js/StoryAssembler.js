@@ -236,6 +236,7 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 					continueScene(nextChunkId);		//TODO: verify this is still correct after above re-factoring
 				} else {
 					displayChunkText(chunkForText.id);
+					doChunkChoices(chunkForText.id);
 					handleEffects(chunkForText);
 				}
 			} else {

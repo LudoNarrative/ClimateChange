@@ -111,6 +111,9 @@ Characters:
 		"choiceLabel": "No thanks, Z. I'm stuffed.",
 		//"speaker" : "zanita",
 		"content": "Are you kidding me? You've hardly had anything. Nervous about your dissertation defense tomorrow, huh?",
+		"choices" : [
+			{"gotoId" : "iguess" }
+		],
 		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
 	},
 
@@ -128,7 +131,7 @@ Characters:
 		"choiceLabel": "Sorry, no appetite. Guess it must be my nerves.",
 		//"speaker" : "zanita",
 		"content": "C'mon. Don't let your intellectual pursuits interfere with enjoying some of my famous <i>cocido</i>.",
-		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
+		"effects": ["decr confidence 1", "set provokeConfidenceChoice true", "set establishDinnerWithFriend true"]
 	},
 //---------------------------------------------------------------------
 	{
@@ -137,6 +140,12 @@ Characters:
 		//"speaker" : "zanita",
 		"content": "Are you kidding me? What are friends for? <br><br>Sounds like something else is going on here.",
 		"effects": ["decr confidence 1", "set provokeConfidenceChoice true"]
+	},
+
+	{
+		"id": "iguess",
+		"choiceLabel": "I guess.",
+		"request": {"condition": "establishFriendBackstory eq true"}
 	},
 
 	{
@@ -153,7 +162,7 @@ Characters:
 			//{"condition": "establishEmmaRegrets eq true"},
 			{"gotoId": "stilljealous", "speaker": "emma"},
 			{"gotoId": "quals", "speaker": "emma"},
-			{"gotoId": "stilljealous", "speaker": "emma"}
+			{"gotoId": "wishcouldgo", "speaker": "emma"}
 		],
 		"conditions": ["establishDinnerWithFriend eq true"],
 		"effects": ["set establishFriendBackstory true"]
@@ -318,7 +327,7 @@ Characters:
 		"choices" : [
 			{"gotoId" : "results", "speaker": "narrator"}
 		],
-		"conditions" : ["provokeConfidenceChoice eq true"],
+		"conditions" : ["provokeConfidenceChoice eq true", "establishSpecialtyInfo eq true", "establishEmmaRegrets eq true", "establishEmmaBackstory eq true"],
 		"effects" : ["set friendReassuresEmma true"]
 	},
 
