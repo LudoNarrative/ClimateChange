@@ -8,7 +8,7 @@ indirectControls(click_and_drag;
 		 %click_and_click;click_and_aim;
 		 drawn_to_cursor;repeled_from_cursor).
 
-
+:-
 %%%%%% INITIALIZATIONS %%%%%%%
 
 min_entities {entity(ENTITY) : potentialEntities(ENTITY)} max_entities.

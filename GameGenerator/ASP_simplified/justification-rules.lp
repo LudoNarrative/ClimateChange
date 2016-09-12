@@ -69,13 +69,13 @@ result_enables_condition(moves(E2, D), overlaps(E1,E2,true))
        result(_, moves(E2, D)),
        result(_,rotates(E2,D2)).
 
-result_enables_condition(tick, overlaps(E1,E2,P))
-:- closeness_condition( overlaps(E1,E2,P), E1, E2),
-   controlLogic(draggable(E1)).
+result_enables_condition(tick, overlaps(E1,E2,P)) :-
+    closeness_condition( overlaps(E1,E2,P), E1, E2),
+    controlLogic(draggable(E1)).
 
-result_enables_condition(tick, overlaps(E1,E2,P))
-:- closeness_condition( overlaps(E1,E2,P), E1, E2),
-   controlLogic(draggable(E2)).
+result_enables_condition(tick, overlaps(E1,E2,P)) :-
+    closeness_condition( overlaps(E1,E2,P), E1, E2),
+    controlLogic(draggable(E2)).
 
 result_enables_condition(move_towards(E1, target), overlaps(E1,E2,true))
     :- closeness_condition( overlaps(E1,E2,true), E1, E2),
@@ -1028,6 +1028,10 @@ playerAgency(ENTITY) :-
     precondition(control_event(button(BUTTON,STATE)),OUTCOME),
     result(OUTCOME,moves(ENTITY,  DIRECTION )).
     
+playerAgency(ENTITY) :-   
+    result(OUTCOME,move_towards(ENTITY,  cursor )).
+playerAgency(ENTITY) :-   
+    result(OUTCOME,move_away(ENTITY,  cursor )).
 %% Entity influence and determination
 
 

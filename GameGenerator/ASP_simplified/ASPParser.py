@@ -139,13 +139,23 @@ if __name__ == '__main__':
         if len(out[o]) > 0:
             print ''
     outcome2precond = {}
-    
+    replace_precondition = {}
+    for result in out['replace_precondition']:
+        outcome = hashable(result[0]['terms'][0])
+        if outcome not in replace_precondition:
+            replace_precondition[outcome] = {}
+        replace_precondition[outcome][prettify(result[0]['terms'][1])] = result[0]['terms'][2]
     
     for precond in out['precondition']:
         outcome = hashable(precond[0]['terms'][1])
         if outcome not in outcome2precond:
             outcome2precond[outcome] = []
+        if outcome in replace_precondition:
+
+            if prettify(precond[0]['terms'][0]) in replace_precondition[outcome]:
+                precond[0]['terms'][0] = replace_precondition[outcome][prettify(precond[0]['terms'][0])]
         outcome2precond[outcome].append(precond[0])
+        
     collidesOutcome = []
     for outcome in outcome2precond:
         collides = -1
@@ -165,7 +175,8 @@ if __name__ == '__main__':
     for every_frame in out['every_frame']:
         every_frame = every_frame[0]
         every_frames.add(every_frame['terms'][0]['predicate'])
-    replace = {}
+  
+    replace = {}    
     for result in out['replace']:
         
         outcome = hashable(result[0]['terms'][0])
