@@ -22,6 +22,10 @@ min_end_outcomes {end_outcome(OUTCOME) : potentialEndOutcomes(OUTCOME)} max_end_
 %an entity should either be singular or many
 1 {singular(ENTITY); many(ENTITY)} 1 :- entity(ENTITY).
 
+1 {initialize(add(ENTITY,AMOUNT,location(ROW,COL))) : counts(AMOUNT), rows(ROW), columns(COL)} :- entity(ENTITY). 
+
+
+
 %avatar requires controls
 1 {controlScheme(ENTITY,SCHEME) : avatarControls(SCHEME) } 1 :- avatar(ENTITY).
 
