@@ -35,13 +35,13 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	}
 
 	var runGenerator = function(gameSpec, aspGame, initialPhaserFile, useGamestring){
-		var generator = AspPhaserGenerator.AspPhaserGenerator(aspGame, initialPhaserFile);
-		var phaserProgram = AspPhaserGenerator.generate(generator.aspGame, generator.initialPhaser, true);
+		//var generator = AspPhaserGenerator.AspPhaserGenerator(aspGame, initialPhaserFile);
+		//var phaserProgram = AspPhaserGenerator.generate(generator.aspGame, generator.initialPhaser, true);
 
 		console.log("\n------------------------------");
 		console.log("Finished Phaser game:");
 		console.log("------------------------------");
-		console.log(phaserProgram);
+		//console.log(phaserProgram);
 
 		if (typeof game !== "undefined") {			//if we're refreshing the game we need to clean up the old one
 			game.destroy();
