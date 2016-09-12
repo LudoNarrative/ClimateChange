@@ -323,8 +323,8 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 			var chunk = chunkLibrary.get(choiceDetail.id, "refresh");
 			if (chunk.available) { return chunk.choiceLabel; }
 
-			else if (chunk.choiceUnavailableLabel) {			//if it has a label for the choice not being available , return that	
-				return unavailableChoiceLabel;
+			else if (chunk.unavailableChoiceLabel) {			//if it has a label for the choice not being available , return that	
+				return chunk.unavailableChoiceLabel;
 			}
 		} 
 			
