@@ -1,6 +1,6 @@
 /* global QUnit, test */
 "use strict";
-define(["../Character", "../State"], function(Character, State) {
+define(["Character", "State"], function(Character, State) {
 	
 	var run = function() {
 		QUnit.module( "Character Module tests" );

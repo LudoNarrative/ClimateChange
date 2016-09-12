@@ -219,7 +219,13 @@ define([], function() {
 		var stateKeys = Object.keys(blackboard);
 		stateKeys.forEach(function(key) {
 			if (blackboard[key]) {
-				var entryEl = makeEl("div", "<span class='bbKey'>" + key + "</span>: <span class='bbValue'>" + blackboard[key] + "</span>", "blackboardEntry");
+				if (key == "validChunks") {
+					var text = blackboard["validChunks"].map(function(item){ return item.chunkId; }).join(", ");
+					var entryEl = makeEl("div", "<span class='bbKey'>" + key + "</span>: <span class='bbValue'>" + text + "</span>", "blackboardEntry");
+				}
+				else {
+					var entryEl = makeEl("div", "<span class='bbKey'>" + key + "</span>: <span class='bbValue'>" + blackboard[key] + "</span>", "blackboardEntry");
+				}
 				area.appendChild(entryEl);
 			}
 		})

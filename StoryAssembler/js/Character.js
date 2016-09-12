@@ -13,7 +13,8 @@ define([], function() {
 	}
 
 	var add = function(key, charDef) {
-		if (characters[key]) {
+		/*
+		if (characters[key]) {			//if the char was already read in, return undefined
 			return undefined;
 		}
 		var charFields = [];
@@ -23,6 +24,13 @@ define([], function() {
 		}
 		characters[key] = charFields;
 		return get(key);
+		*/
+		var temp = State.get("characters");
+		if (typeof temp == "undefined") {
+			temp = [];
+		}
+		temp.push(charDef);
+		State.set("characters", temp);
 	}
 
 	var remove = function(key) {
@@ -72,6 +80,34 @@ define([], function() {
 		return charId + "_" + key;
 	}
 
+	//this returns the character id that matches the discourse pattern (dialogue, etc)
+	//if rLevel is passed in, will run some times 
+	var getBestSpeaker = function(currentSpeaker, rLevel) {
+		var storyMode = State.get("mode");
+		var bestSpeaker;
+		var iterNum = (rLevel === undefined) ? 1 : rLevel+1;
+
+		if (typeof currentSpeaker == "undefined") { bestSpeaker = storyMode.initiator; }
+		else {
+			var tempCurrentSpeaker = currentSpeaker;
+			for (var x=0; x < iterNum; x++) {
+				switch (storyMode.type) {
+					case "narration" : 		//nothing needed
+					break;
+					case "monologue" : 		//set back to initiator if we get off track
+					bestSpeaker = storyMode.initiator;		
+					break;
+					case "dialogue": 		//alternate between initiator and responder
+						if (tempCurrentSpeaker == storyMode.initiator) { bestSpeaker = storyMode.responder; tempCurrentSpeaker = storyMode.responder }
+						else { bestSpeaker = storyMode.initiator; tempCurrentSpeaker = storyMode.initiator; }
+					break;
+				}
+			}
+			bestSpeaker = tempCurrentSpeaker;
+		}
+		return bestSpeaker;
+	}
+
 
 	// Public interface for Character module.
 	return {
@@ -80,7 +116,8 @@ define([], function() {
 		remove: remove,
 		set: set,
 		get: get,
-		getAllIds: getAllIds
+		getAllIds: getAllIds,
+		getBestSpeaker: getBestSpeaker
 
 	}
 });	
