@@ -26,7 +26,8 @@ Backstory
 	},
 	{
 		"id": "slide1",
-		"request": {"condition": "awesome eq true"},
+		"content": "\"So{ifStateCondition|confidence lt 0|, uh,|} you can see that as CO2 levels {ifStateCondition|confidence lt 0|fall-- er, no, I mean |}rise, the ocean becomes more acidic. Already 25% more acidic than in the 1800s.\"",
+		//"conditions": [],
 		"effects": ["set giveLecture true", "set lectureContent 1"]
 	},
 	{
