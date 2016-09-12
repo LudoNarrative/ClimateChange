@@ -124,7 +124,7 @@ completeOutcome(O) :-
 freeResource(Resource) :- 
     resource(Resource), 
     1{result(Outcome,increase(Resource));
-      result(Outcome,decrease(Resource_prime))},
+      result(Outcome,decrease(Resource))},
     not conditionedOnResource(Resource,Outcome),
     outcome(Outcome).
 
@@ -138,7 +138,7 @@ freeResource(Resource) :-
 
 %players must have controls or it's just a weird movie
 playerControls :- precondition(control_event(EVENT),OUTCOME).
-
+playerControls :- controlLogic(_).
 
 % CRM 6/27/2016 - only add a singular entity if it's absent beforehand.
 maintains_singular(Outcome, Entity)
@@ -169,6 +169,8 @@ moves(E) :-
     effect(moves(E,D)).
 moves(E)
   :- controlScheme(E, Scheme).
+moves(E)
+  :- controlLogic(draggable(E)).
 
 moves(E)
   :- effect(move_selected(E)).
@@ -185,6 +187,14 @@ reachableResult(R)
 reachableCondition(C)
   :- result_enables_condition(R, C),
       reachableResult(R).
+
+reachableCondition(overlaps(E1,E2,POLARITY))
+:- precondition(overlaps(E1,E2,POLARITY),O),
+   controlLogic(draggable(E1)).
+
+reachableCondition(overlaps(E1,E2,POLARITY))
+:- precondition(overlaps(E1,E2,POLARITY),O),
+   controlLogic(draggable(E2)).
 
 reachableCondition(control_event(E))
   :- condition(control_event(E)).
