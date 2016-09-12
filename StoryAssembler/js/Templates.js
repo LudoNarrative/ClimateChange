@@ -84,6 +84,15 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (!speakerChar) return "(speaker)";
 			return speakerChar.name || speaker;
 		},
+		"ifSpeaker": function(params, text) {
+			if (params.length !== 3) {
+				console.error("Template 'ifSpeaker' doesn't have three params in chunk '" + text + "'.");
+				return "(speaker)";
+			}
+			var speakerId = State.get("speaker");
+			if (params[0] == speakerId) { return params[1] }
+			else { return params[2] }
+		},
 		// Template stub demonstrating how you might show a random character trait. Look up the current speaker, and print something based on the first found property we have code for.
 		"showSpeakerTrait": function(params, text) {
 			if (params.length !== 0) {
