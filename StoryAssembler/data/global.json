@@ -24,21 +24,21 @@
 	{
 		"id": "shrimpDanger",
 		//"speaker" : "global",
-		"content": "{convoMode|dialogue|You're always saying, like \"Ooh,|}{convoMode|lecture|In places like Maine,|} the ocean temperature is rising so fast it's all but eliminated the shrimp supply{convoMode|dialogue|! Oh no!\"|}{convoMode|lecture| already.|}",
+		"content": "{convoMode|dialogue|You're always saying, like \"Ooh,|}{convoMode|monologue|\"In places like Maine,|} the ocean temperature is rising so fast it's all but eliminated the shrimp supply{convoMode|dialogue|! Oh no!\"|}{convoMode|monologue| already.\"|}",
 		"conditions": ["career eq shrimp"],
 		"effects": ["incr droppedKnowledge 1"]
 	},
 	{
 		"id": "coralDanger",
 		//"speaker" : "global",
-		"content": "{convoMode|dialogue|You're always saying, like \"Wooo, there's|}{convoMode|lecture|There's|} already been widespread bleaching reported of the Great Barrier Reef{convoMode|dialogue|...everything's gonna die!\"|}{convoMode|lecture|, and a lot of the species living there are dying currently out.|}",
+		"content": "{convoMode|dialogue|You're always saying, like \"Wooo, there's|}{convoMode|monologue|There's|} already been widespread bleaching reported of the Great Barrier Reef{convoMode|dialogue|...everything's gonna die!\"|}{convoMode|monologue|, and a lot of the species living there are dying currently out.|}",
 		"conditions": ["career eq coral"],
 		"effects": ["incr droppedKnowledge 1"]
 	},
 	{
 		"id": "lobsterDanger",
 		//"speaker" : "global",
-		"content": "{convoMode|dialogue|Aren't they like, dying from weird illnesses now or something? Guess|}{convoMode|lecture|There have been a bunch of new diseases that are decimating lobster populations up in Maine. Seems|} the warmer oceans agree with viruses, at least.",
+		"content": "{convoMode|dialogue|Aren't they like, dying from weird illnesses now or something? Guess|}{convoMode|monologue|There have been a bunch of new diseases that are decimating lobster populations up in Maine. Seems|} the warmer oceans agree with viruses, at least.",
 		"conditions": ["career eq lobster"],
 		"effects": ["incr droppedKnowledge 1"]
 	},
