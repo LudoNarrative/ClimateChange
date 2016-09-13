@@ -301,7 +301,7 @@ Characters:
 
 	{
 		"id" : "aJoke",
-		"choiceLabel" : "What, do you think this is some kind of joke? That if we just laugh the {ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reefs|} are gonna be just fine?",
+		"choiceLabel" : "What, do you think this is some kind of joke? That if we just laugh the {ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobsters|}{ifState|career|coral|coral reefs|} are gonna be just fine?",
 		"speaker" : "zanita",
 		"content" : "Woah. Hey, I'm sorry. I'm just trying to make you feel better. Are we good?",
 		"effects" : ["incr confidence 1"],
@@ -314,10 +314,10 @@ Characters:
 		"choiceLabel" : "Nothing. Let's just eat.",
 		"speaker" : "zanita",
 		"content" : "Hey, was it what I said, about the {ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reef|}? Look I didn't mean anything by it...I was just trying to cheer you up.",
-		"effects" : ["incr confidence 1"],
 		"choices" : [
 			{"condition": "resolveArgument eq true", "speaker": "emma"}
-		]
+		],
+		"effects" : ["incr confidence 1"],
 	},
 
 		{
@@ -325,7 +325,7 @@ Characters:
 		"choiceLabel" : "It's ok. Sorry Z, I guess I'm just really on edge.",
 		"speaker" : "zanita",
 		"content" : "Heh. You're gonna knock 'em out of the park, Em. I just know it.",
-		"effects" : ["set resolveArgument true"],
+		"effects" : ["set resolveArgument true", "set friendReassuresEmma true"],
 	},
 
 	//---------------------------SUPPORT-----------------------------------------
