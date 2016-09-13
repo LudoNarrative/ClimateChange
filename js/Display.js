@@ -37,7 +37,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 		Coordinator = _coordinator;
 		
 		$('<h1/>', {
-		    text: 'Climate Change Game',
+		    text: 'Climate Change Prototype',
 		    id: 'title'
 		}).appendTo('body');
 
