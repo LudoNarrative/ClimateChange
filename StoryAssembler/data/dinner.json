@@ -324,7 +324,7 @@ Characters:
 		"id" : "outburstResolve",
 		"choiceLabel" : "It's ok. Sorry Z, I guess I'm just really on edge.",
 		"speaker" : "zanita",
-		"content" : "Heh. You're gonna knock 'em out of the park, Em. I just know it.",
+		"content" : "It's ok. You're gonna knock 'em out of the park, Em. I just know it.",
 		"effects" : ["set resolveArgument true", "set friendReassuresEmma true"],
 	},
 
