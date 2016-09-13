@@ -18,8 +18,9 @@ define(["Condition"], function(Condition) {
 		if (!isNaN(tryNum)) {
 			value = tryNum;
 		}
+
 		_blackboard[key] = value;
-		
+
 	}
 
 	var remove = function(key) {
