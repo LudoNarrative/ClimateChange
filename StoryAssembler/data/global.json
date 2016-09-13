@@ -31,7 +31,7 @@
 	{
 		"id": "coralDanger",
 		//"speaker" : "global",
-		"content": "There's already been widespread bleaching reported of the Great Barrier Reef, and a lot of the species that call it home are vanishing.",
+		"content": "There's already been widespread bleaching reported of the Great Barrier Reef, and a lot of the species living there are dying out.",
 		"conditions": ["career eq coral"],
 		"effects": ["incr droppedKnowledge 1"]
 	},
@@ -45,7 +45,7 @@
 	{
 		"id": "futureDanger",
 		//"speaker" : "global",
-		"content": "Have you heard of clathrates? {ifSpeaker|Zanita|I saw this on the internet...they're|They're} basically frozen methane...some people call it 'fire ice'. Anyway, methane is much worse a greenhouse gas than CO2. If the planet warms up enough that the clathrates start releasing it into the atmosphere, we could be looking at a runaway feedback loop.",
+		"content": "Have you heard of clathrates? They're basically frozen methane...some people call it 'fire ice'. Anyway, methane is much worse a greenhouse gas than CO2. If the planet warms up enough that the clathrates start releasing it into the atmosphere, we could be looking at a runaway feedback loop.",
 		"conditions": [],
 		"effects": ["incr droppedKnowledge 1"]
 	},
