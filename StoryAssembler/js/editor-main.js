@@ -23,7 +23,7 @@ requirejs.config({
 		"travelData" : "../data/travel.json", 
 		"workerData" : "../data/worker.json", 
 		"lectureData" : "../data/lecture.json", 
-		"dinnerData" : "../data/dinner2.json",
+		"dinnerData" : "../data/dinner.json",
 
 		"Coordinator" : "../../Coordinator/Coordinator",
 		"Display" : "../../js/Display",
@@ -70,7 +70,7 @@ requirejs(
 	var story;
 	var graphData = [];
 	var leftToVisit = [];
-	var scene = "dinner";		//later, this should be set from dropdown
+	var scene = "dinner2";		//later, this should be set from dropdown
 
 	var stateCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "goto_whatspeciality", "provokeConfidenceChoice"];
 

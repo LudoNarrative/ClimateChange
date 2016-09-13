@@ -1,6 +1,6 @@
 console.log(window.location.pathname);
 
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!dinner2Data", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, dinner2Data) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData) {
 
 	/*
 		Initializing function
@@ -158,22 +158,23 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"shelly": {name: "Shelly", nickname: "Shelly", gender: "female"}
 			},
 			wishlist: [
-			//	{ condition: "introMechanics eq true" },
+				{ condition: "provokeArgument eq true"},
 				{ condition: "establishSpecialtyInfo eq true" },
 				{ condition: "establishDinnerWithFriend eq true" },
 				{ condition: "establishFriendBackstory eq true" },
 				{ condition: "establishEmmaRegrets eq true" },
 				{ condition: "establishEmmaBackstory eq true" },
 				{ condition: "provokeConfidenceChoice eq true" },
-				{ condition: "friendReassuresEmma eq true" },
+				{ condition: "friendReassuresEmma eq true"},
 		//		{ condition: "droppedKnowledge gte 2", persistent: true },
 			],
-			dataFile: require("text!dinner2Data"),
+			dataFile: require("text!dinnerData"),
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
 				"set confidence 5",
-				"set patience 5"
+				"set patience 5",
+				"set argue true"
 			],
 			UIvars: [
 				"confidence",
@@ -197,14 +198,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"shelly": {name: "Shelly", nickname: "Shelly", gender: "female"}
 			},
 			wishlist: [
-			//	{ condition: "introMechanics eq true" },
 				{ condition: "establishSpecialtyInfo eq true" },
 				{ condition: "establishDinnerWithFriend eq true" },
 				{ condition: "establishFriendBackstory eq true" },
 				{ condition: "establishEmmaRegrets eq true" },
 				{ condition: "establishEmmaBackstory eq true" },
 				{ condition: "provokeConfidenceChoice eq true" },
-				{ condition: "friendReassuresEmma eq true" },
+				{ condition: "friendReassuresEmma eq true"},
 		//		{ condition: "droppedKnowledge gte 2", persistent: true },
 			],
 			dataFile: require("text!dinnerData"),
@@ -239,7 +239,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "dinner2",
-				text : "<p>You are Emma Richards, a PhD student who studies the ocean.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
+				text : "<p>You are Emma Richards, a PhD student who studies the ocean.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>However, your nerves may be getting in the way of your personal relationship with your best friend.<p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
 			},
 			{
 				id : "lecture",

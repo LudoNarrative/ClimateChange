@@ -252,6 +252,15 @@ Characters:
 		//],
 		"effects" : ["set career coral", "set establishSpecialtyInfo true"]
 	},
+
+
+
+
+
+
+
+
+
 	//---------------------------CHALLENGE---------------------------------------
 	{
 		"id": "howufeelChoicetext1",
@@ -272,8 +281,51 @@ Characters:
 			{ "gotoId" : "unsurePath", "speaker": "emma" },
 			{ "gotoId" : "futureWorry", "speaker": "emma" }
 		],
-		"conditions" : ["establishEmmaBackstory eq true"],
+		"conditions" : ["establishEmmaBackstory eq true", "argue eq false"],
 		"effects" : ["set provokeConfidenceChoice true"]
+	},
+
+//---------------------------ARGUMENT---------------------------------------
+{
+		"id": "howufeel_arg",
+		"speaker" : "zanita",
+		"content" : "Hey. What's up? You've got that look. What's going on?",
+		"choices": 	[
+			{ "gotoId" : "aJoke", "speaker": "emma" },
+			{ "gotoId" : "nothing", "speaker": "emma" },
+			{ "gotoId" : "futureWorry", "speaker": "emma" }
+		],
+		"conditions" : ["establishEmmaBackstory eq true", "argue eq true"],
+		"effects" : ["set provokeArgument true", "set provokeConfidenceChoice true"]
+	},
+
+	{
+		"id" : "aJoke",
+		"choiceLabel" : "What, do you think this is some kind of joke? That if we just laugh the {ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reefs|} are gonna be just fine?",
+		"speaker" : "zanita",
+		"content" : "Woah. Hey, I'm sorry. I'm just trying to make you feel better. Are we good?",
+		"effects" : ["incr confidence 1"],
+		"choices" : [
+			{"condition": "resolveArgument eq true", "speaker": "emma"}
+		]
+	},
+		{
+		"id" : "nothing",
+		"choiceLabel" : "Nothing. Let's just eat.",
+		"speaker" : "zanita",
+		"content" : "Hey, was it what I said, about the {ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reef|}? Look I didn't mean anything by it...I was just trying to cheer you up.",
+		"effects" : ["incr confidence 1"],
+		"choices" : [
+			{"condition": "resolveArgument eq true", "speaker": "emma"}
+		]
+	},
+
+		{
+		"id" : "outburstResolve",
+		"choiceLabel" : "It's ok. Sorry Z, I guess I'm just really on edge.",
+		"speaker" : "zanita",
+		"content" : "Heh. You're gonna knock 'em out of the park, Em. I just know it.",
+		"effects" : ["set resolveArgument true"],
 	},
 
 	//---------------------------SUPPORT-----------------------------------------
@@ -284,7 +336,7 @@ Characters:
 		"content" : "Heh. You're gonna knock 'em out of the park, Em. {ifState|career|shrimp|Those amoeba shrimp|}{ifState|career|lobster|Your Homarus Lobstarus buddies|}{ifState|career|coral|Your octo-coral-reefie pals|} have got a new superhero.",
 		"effects" : ["incr confidence 1"],
 		"choices" : [
-			{ "gotoId" : "more_haveSomeWine", "speaker": "narrator" }
+			{ "gotoId" : "thanks_haveSomeWine", "speaker": "narrator" }
 		]
 	},
 	{
@@ -294,7 +346,7 @@ Characters:
 		"content" : "Worth it? Are you kidding? You're about to start a career doing everything you love. Emma Richards, defender of {ifState|career|shrimp|the amoeba shrimp!|}{ifState|career|lobster|Homarus Lobstarus!|}{ifState|career|coral|the octo-coral-reefies!|} You're going places. I can feel it.",
 		"effects" : ["decr confidence 1"],
 		"choices" : [
-			{ "gotoId" : "more_haveSomeWine", "speaker": "narrator" }
+			{ "gotoId" : "thanks_haveSomeWine", "speaker": "narrator" }
 		]
 	},
 	{
@@ -307,27 +359,14 @@ Characters:
 			{ "gotoId" : "thanks_haveSomeWine", "speaker": "emma" }
 		]
 	},
-
-	{
-		"id" : "more_haveSomeWine",
-		"choiceLabel" : "More",
-		"request": {"condition": "friendReassuresEmma eq true"}
-	},
-
 	{
 		"id" : "thanks_haveSomeWine",
-		"choiceLabel" : "Thanks, Cupid.",
-		"request": {"condition": "friendReassuresEmma eq true"}
-	},
-
-	{
-		"id" : "haveSomeWine",
+		"choiceLabel" : "Thanks.",
 		"speaker" : "zanita",
 		"content" : "Now seriously. I am not joking about this. Have some damn wine. Relax with your friends. The future can take care of itself.",
 		"choices" : [
 			{"gotoId" : "results", "speaker": "narrator"}
 		],
-		"conditions" : ["provokeConfidenceChoice eq true", "establishSpecialtyInfo eq true", "establishEmmaRegrets eq true", "establishEmmaBackstory eq true"],
 		"effects" : ["set friendReassuresEmma true"]
 	},
 
@@ -337,7 +376,8 @@ Characters:
 		"id" : "results",
 		"choiceLabel" : "More",
 		"speaker" : "narrator",
-		"content" : "<div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>{ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reefs!|}</span></li><li>Emma has {confidence} <span class='keyword'>confidence</span></li></ul></div>"
+		"content" : "<div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>{ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reefs!|}</span></li><li>Emma has {confidence} <span class='keyword'>confidence</span></li></ul></div>",
+		"conditions" : ["provokeConfidenceChoice eq true", "establishSpecialtyInfo eq true", "establishEmmaRegrets eq true", "establishEmmaBackstory eq true"],
 	}
 
 ]
