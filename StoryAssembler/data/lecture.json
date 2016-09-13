@@ -15,13 +15,7 @@ Backstory
 		"content": "{ifStateCondition|confidence gt 0|Class has been going well so far, like you knew it would. But if you can make it through to the end without any major stumbles, you'll really impress Dr. Tennerson.|You didn't expect teaching to be anything near so stressful. Your heart's pounding and sweat's beading on your forehead. Dr. Tennerson's here evaluating you today-- keep it together, Emma!} Five more minutes. You can do this.",
 		"conditions": ["establishLecture neq true"],
 		"effects": [
-			"set establishLecture true", 
-			"set setting lecture",
-			"set calledFranklin false",
-			"set calledElika false",
-			"set calledShy false",
-			"set difficulty 1",
-			"set confidence 5"	/*just a test value*/
+			"set establishLecture true"
 		]
 	},
 	{
@@ -32,7 +26,7 @@ Backstory
 	},
 	{
 		"id": "slide2",
-		"content": "\"And we know that more acidic seawater makes it {ifStateCondition|confidence lt 0|\"--you trail off, losing your train of thought for a moment, then regroup--\"|}harder for shell-forming sea creatures like corals, oysters, and of course my own favorite life form, {ifState|specialty|shrimp|the shrimp|}{ifState|specialty|lobster|the lobster|}{ifState|specialty|coral|the coral|}.\"",
+		"content": "\"And we know that more acidic seawater makes it {ifStateCondition|confidence lt 0|\"--you trail off, losing your train of thought for a moment, then regroup--\"|}harder for shell-forming sea creatures like corals, oysters, and of course my own favorite life form, the {ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral|}.\"",
 		"conditions": ["lectureContent eq 1"],
 		"effects": [
 			"set giveLecture true", 

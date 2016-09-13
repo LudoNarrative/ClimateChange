@@ -123,8 +123,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"miguel": {name: "Miguel", nickname: "Miguel", gender: "male"}
 			},
 			wishlist: [
+				{ condition: "droppedKnowledge eq 1", order: "first"},
+				{ condition: "establishLecture eq true", order: "first"},
 				{ condition: "callOnStudent eq true", persistent: true},
-				{ condition: "establishLecture eq true"},
 				{ condition: "giveLecture eq true", persistent: true },
 				//{ condition: "reinforceSpecialty eq true" },		//this is triggered by grammars
 				//{ condition: "demonstrateConfidence eq true" },	//need to write some confidence-hinging options
@@ -134,10 +135,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			],
 			dataFile: require("text!lectureData"),
 			startState: [
-				"set specialty shrimp",
+				"set career shrimp",
 				"set questionsLeft 3",
-				"set confidence 3",
-				"set droppedKnowledge 0"
+				"set confidence 5",
+				"set droppedKnowledge 0",
+				"set calledFranklin false",
+				"set calledElika false",
+				"set calledShy false"
 			],
 			UIvars: [
 				"confidence"
