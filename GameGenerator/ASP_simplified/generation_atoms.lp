@@ -1,7 +1,7 @@
 
 %%%%% SOUP OF THINGS TO PULL FROM %%%%%
 
-counts(1..10).
+counts(1;3;5).
 
 pools(inventory).
 potential_paths(p1;p2;p3;p4;p5).

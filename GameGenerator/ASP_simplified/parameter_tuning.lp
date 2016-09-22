@@ -5,9 +5,9 @@
 1 {replace_precondition(O,ge(R),ge(R,A)) : potentialValues(A) } 1 :- precondition(ge(R),O).
 1 {replace_precondition(O,le(R),le(R,A)) : potentialValues(A) } 1 :- precondition(le(R),O).
 
-1 {replace(O,moves(E,D),moves(E,D,A)) : speeds(A) } 1 :- result(O,moves(E,D)).
-1 {replace(O,move_towards(E,E2),move_towards(E,E2,A)) : speeds(A) } 1 :- result(O,move_towards(E,E2)).
-1 {replace(O,move_away(E,E2),move_away(E,E2,A)) : speeds(A) } 1 :- result(O,move_away(E,E2)).
+%% 1 {replace(O,moves(E,D),moves(E,D,A)) : speeds(A) } 1 :- result(O,moves(E,D)).
+%% 1 {replace(O,move_towards(E,E2),move_towards(E,E2,A)) : speeds(A) } 1 :- result(O,move_towards(E,E2)).
+%% 1 {replace(O,move_away(E,E2),move_away(E,E2,A)) : speeds(A) } 1 :- result(O,move_away(E,E2)).
 
 :- replace(O,increase(R),increase(R,R)).
 :- replace(O,decrease(R),decrease(R,R)).

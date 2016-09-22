@@ -430,13 +430,66 @@ playerActionHurts(ControlEvent, Resource) :-
     good(Resource),
     precondition(control_event(ControlEvent), Outcome),
     result(Outcome, decrease(Resource)).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% pressing buttons can have confusion
 
+playerActionHelps_prime(button(Button,pressed), Resource) :-
+    playerActionHelps(button(Button,State), Resource).    
+
+playerActionHelps_prime(button(Button,held), Resource) :-
+    playerActionHelps(button(Button,State), Resource).
+
+playerActionHelps_prime(button(Button,released), Resource) :-
+    playerActionHelps(button(Button,State), Resource).
+
+
+playerActionHurts_prime(button(Button,pressed), Resource) :-
+    playerActionHurts(button(Button,State), Resource).    
+
+playerActionHurts_prime(button(Button,held), Resource) :-
+    playerActionHurts(button(Button,State), Resource).
+
+playerActionHurts_prime(button(Button,released), Resource) :-
+    playerActionHurts(button(Button,State), Resource).
+
+%%% clicking and mouse confusion
+
+playerActionHelps_prime(button(mouse_button,pressed), Resource) :-
+    playerActionHelps(click(E), Resource).    
+
+playerActionHelps_prime(button(mouse_button,held), Resource) :-
+    playerActionHelps(click(E), Resource).
+
+playerActionHelps_prime(button(mouse_button,released), Resource) :-
+    playerActionHelps(click(E), Resource).
+
+
+playerActionHurts_prime(button(mouse_button,pressed), Resource) :-
+    playerActionHurts(click(E), Resource).    
+
+playerActionHurts_prime(button(mouse_button,held), Resource) :-
+    playerActionHurts(click(E), Resource).
+
+playerActionHurts_prime(button(mouse_button,released), Resource) :-
+    playerActionHurts(click(E), Resource).
+
+playerActionHelps_prime(click(Entity),Resource) :-
+    playerActionHelps(button(mouse_button,State),Resource),
+    entity(Entity).
+
+playerActionHurts_prime(click(Entity),Resource) :-
+    playerActionHurts(button(mouse_button,State),Resource),
+    entity(Entity).
+
+playerActionHelps_prime(C,R) :- playerActionHelps(C,R).
+playerActionHurts_prime(C,R) :- playerActionHurts(C,R).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+playerActionAffects(ControlEvent, Resource) :-
+    playerActionHurts_prime(ControlEvent, Resource).
     
 playerActionAffects(ControlEvent, Resource) :-
-    playerActionHurts(ControlEvent, Resource).
-    
-playerActionAffects(ControlEvent, Resource) :-
-    playerActionHelps(ControlEvent, Resource).
+    playerActionHelps_prime(ControlEvent, Resource).
     
 playerInfluences(Outcome) :-
     playerActionAffects(_,  Resource),
@@ -445,11 +498,11 @@ playerInfluences(Outcome) :-
 %% XXX TODO: clean up below.
     
 actionHasRiskReward(ControlEvent) :- 
-    playerActionHelps(ControlEvent, Resource1),
-    playerActionHurts(ControlEvent, Resource2).
+    playerActionHelps_prime(ControlEvent, Resource1),
+    playerActionHurts_prime(ControlEvent, Resource2).
     
 actionNeededForMaintenance(ControlEvent, Resource) :-
-    playerActionHelps(ControlEvent, Resource),
+    playerActionHelps_prime(ControlEvent, Resource),
     worseWithTime(Resource).
     
 correlated(Resource1,Resource2,positive) :-
@@ -537,20 +590,28 @@ enables(Enabler, Enabled) :-
     Enabler != Enabled.
 
 
-sharedResource(R, Outcome1, Outcome2) :-
-    consumedBy(R, Outcome1),
-    consumedBy(R, Outcome2),
-    % outcome(Outcome1), outcome(Outcome2), resource(R),
-    Outcome1 != Outcome2.
+%% sharedResource(R, Outcome1, Outcome2) :-
+%%     consumedBy(R, Outcome1),
+%%     consumedBy(R, Outcome2),
+%%     % outcome(Outcome1), outcome(Outcome2), resource(R),
+%%     Outcome1 != Outcome2.
 
-sharedEntity(E, Outcome1, Outcome2) :-
-    requires(Outcome1, E),
-    requires(Outcome2, E),
-    Outcome1 != Outcome2, 
-    result(Outcome1,delete(E)), 
-    result(Outcome2,delete(E)).
+%% sharedEntity(E, Outcome1, Outcome2) :-
+%%     requires(Outcome1, E),
+%%     requires(Outcome2, E),
+%%     Outcome1 != Outcome2, 
+%%     result(Outcome1,delete(E)), 
+%%     result(Outcome2,delete(E)).
 
-
+sharedEntity(E, Outcome, Outcome) :-
+    result(Outcome,delete(E)),
+    precondition(overlaps(E1,E2,true),Outcome),
+    1{ many(E1);many(E2)}.
+    
+sharedResource(R, Outcome, Outcome) :-
+    consumedBy(R, Outcome),
+    precondition(overlaps(E1,E2,true),Outcome),
+    1{ many(E1);many(E2)}.
 sharing(O1, O2) :-
    sharedResource(R, O1, O2).
 sharing(O1, O2) :-
@@ -1123,21 +1184,21 @@ playerWillDo(Cond, Outcome) :-
   conditionEnables(Cond, Outcome),
   outcomeFavorable(Outcome).
 
-playerWillAttemptToCreate(Cond,Outcome) :-
-    entityDetermines(Determinant,Outcome),
-    entityInfluencesOther(Influencer,Determinant),
-    playerAgency(Influencer),
-    conditionEnables(Cond, Outcome),
-    outcomeFavorable(Outcome).
+%% playerWillAttemptToCreate(Cond,Outcome) :-
+%%     entityDetermines(Determinant,Outcome),
+%%     entityInfluencesOther(Influencer,Determinant),
+%%     playerAgency(Influencer),
+%%     conditionEnables(Cond, Outcome),
+%%     outcomeFavorable(Outcome).
 
     
 
-playerWillAttemptToAvoid(Cond,Outcome) :-
-    entityDetermines(Determinant,Outcome),
-    entityInfluencesOther(Influencer,Determinant),
-    playerAgency(Influencer),
-    conditionEnables(Cond, Outcome),
-    outcomeUnfavorable(Outcome).
+%% playerWillAttemptToAvoid(Cond,Outcome) :-
+%%     entityDetermines(Determinant,Outcome),
+%%     entityInfluencesOther(Influencer,Determinant),
+%%     playerAgency(Influencer),
+%%     conditionEnables(Cond, Outcome),
+%%     outcomeUnfavorable(Outcome).
 
 harmful(Entity) :- 
     entityDetermines(Entity,Outcome),
@@ -1162,14 +1223,14 @@ multipleResults(Outcome) :-
     result(Outcome, R2),
     R1 != R2.
 
-allocation_choice(Outcome1,Outcome2,Resource) :-
-    playerInfluences(Outcome1),
-    playerInfluences(Outcome2),
-    Outcome1 != Outcome2,
-    consumedBy(Resource,Outcome1),
-    consumedBy(Resource,Outcome2),
-    multipleResults(Outcome1),
-    multipleResults(Outcime2).
+%% allocation_choice(Outcome1,Outcome2,Resource) :-
+%%     playerInfluences(Outcome1),
+%%     playerInfluences(Outcome2),
+%%     Outcome1 != Outcome2,
+%%     consumedBy(Resource,Outcome1),
+%%     consumedBy(Resource,Outcome2),
+%%     multipleResults(Outcome1),
+%%     multipleResults(Outcime2).
 
 lower_cost(initial,Outcome1,Outcome2) :-
     allocation_choice(Outcome1,Outcome2,Resource),

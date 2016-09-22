@@ -117,8 +117,6 @@ effect(EFFECT) :-
 completeOutcome(OUTCOME) :- 
     result(OUTCOME,EFFECT),
     precondition(CONDITION,OUTCOME).
-completeOutcome(O) :-
-    precondition(collide(_,_),O).
 
 % a resource is free if there is a way to decrease/increase not conditioned on the same resource - i.e. some way to change things
 freeResource(Resource) :- 
@@ -273,15 +271,15 @@ similar(ge(R),O1,O2) :- similar(above(R),O1,O2).
 
 
 similar(le(R),O1,O2) :- similar(below(R),O1,O2).
-disjunction(O1,O2) :-
-    not similar(C,O1,O2),
-    precondition(C,O1),
-    outcome(O2).
+%% disjunction(O1,O2) :-
+%%     not similar(C,O1,O2),
+%%     precondition(C,O1),
+%%     outcome(O2).
     
-disjunction(O1,O2) :-
-    not similar(C,O1,O2),
-    precondition(C,O2),
-    outcome(O1).
+%% disjunction(O1,O2) :-
+%%     not similar(C,O1,O2),
+%%     precondition(C,O2),
+%%     outcome(O1).
     
 similarResult(increase(R,A1),O1,O2) :-
     result(O1,increase(R,A1)),
@@ -303,14 +301,14 @@ similarResult(decrease(R,A2),O1,O2) :-
     result(O2,decrease(R,A2)), 
     outcomeOrder(O1,O2).
 
-disjunctionResult(O1,O2) :-
-    not similarResult(R,O1,O2),
-    result(O1,R),
-    outcome(O2).    
-disjunctionResult(O1,O2) :-
-    not similarResult(R,O1,O2),
-    result(O2,R),
-    outcome(O1).
+%% disjunctionResult(O1,O2) :-
+%%     not similarResult(R,O1,O2),
+%%     result(O1,R),
+%%     outcome(O2).    
+%% disjunctionResult(O1,O2) :-
+%%     not similarResult(R,O1,O2),
+%%     result(O2,R),
+%%     outcome(O1).
 % % NEED TO REASSESS XXXX 
 % % :- not disjunctionResult(O1,O2), 
     % % outcome(O1),

@@ -1,4 +1,4 @@
-:-  result(_,add(_,_)).
+%:-  result(_,add(_,_)).
 
 
 % %cases %%%%
@@ -16,11 +16,11 @@ nonMouseControls  :-
 :- result(_,increase(health(E))).
 :- result(_,decrease(health(E))).
 
-:- entity(E1),
-   entity(E2),
-   entityOrdering(E1,E2),  not precondition(collide(E1,E2),_).
-:- entity(E),
-   not precondition(collide(E,E),_).
+%% :- entity(E1),
+%%    entity(E2),
+%%    entityOrdering(E1,E2),  not precondition(collide(E1,E2),_).
+%% :- entity(E),
+%%    not precondition(collide(E,E),_).
 %:- entityOrdering(E1,E2), not collide(E1,E2).
 
 

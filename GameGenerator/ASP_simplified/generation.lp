@@ -8,7 +8,7 @@ indirectControls(click_and_drag;
 		 %click_and_click;click_and_aim;
 		 drawn_to_cursor;repeled_from_cursor).
 
-:-
+
 %%%%%% INITIALIZATIONS %%%%%%%
 
 min_entities {entity(ENTITY) : potentialEntities(ENTITY)} max_entities.
@@ -22,7 +22,7 @@ min_end_outcomes {end_outcome(OUTCOME) : potentialEndOutcomes(OUTCOME)} max_end_
 %an entity should either be singular or many
 1 {singular(ENTITY); many(ENTITY)} 1 :- entity(ENTITY).
 
-1 {initialize(add(ENTITY,AMOUNT,location(ROW,COL))) : counts(AMOUNT), rows(ROW), columns(COL)} :- entity(ENTITY). 
+1 {initialize(add(ENTITY,location(ROW,COL))) : counts(AMOUNT), rows(ROW), columns(COL)} :- entity(ENTITY). 
 
 
 
@@ -368,14 +368,14 @@ result(O,apply_restitution(E1,E2)) :- precondition(collide(E1,E2),O).
 	precondition(overlaps(ENTITY2,ENTITY1,true), help(ENTITY1,ENTITY2))} 1 :- 
     interaction(ENTITY1,ENTITY2,help).
 
-{ result(help(ENTITY1,ENTITY2),increase(G_RESOURCE)) } :-
-    interaction(ENTITY1,ENTITY2,help), good(G_RESOURCE).   
+%{ result(help(ENTITY1,ENTITY2),increase(G_RESOURCE)) } :-
+%    interaction(ENTITY1,ENTITY2,help), good(G_RESOURCE).   
 
-{ result(help(ENTITY1,ENTITY2), decrease(B_RESOURCE)) } :-
-    interaction(ENTITY1,ENTITY2,help), bad(B_RESOURCE).
+%{ result(help(ENTITY1,ENTITY2), decrease(B_RESOURCE)) } :-
+%    interaction(ENTITY1,ENTITY2,help), bad(B_RESOURCE).
 
-{ result(help(ENTITY1,ENTITY2), increase(health(ENTITY2))) } :-
-    interaction(ENTITY1,ENTITY2,help).
+%{ result(help(ENTITY1,ENTITY2), increase(health(ENTITY2))) } :-
+%    interaction(ENTITY1,ENTITY2,help).
 
 % { result(help(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,help), helpful(ENTITY).
 
@@ -383,18 +383,18 @@ result(O,apply_restitution(E1,E2)) :- precondition(collide(E1,E2),O).
         
 
 %helping means removing a good resource, adding a bad one, or adding a bad entity
-1{
-	precondition(overlaps(ENTITY1,ENTITY2,true), hurt(ENTITY1,ENTITY2));
-	precondition(overlaps(ENTITY2,ENTITY1,true), hurt(ENTITY1,ENTITY2))} 1 :- 
-    interaction(ENTITY1,ENTITY2,hurt).
+%% 1{
+%% 	precondition(overlaps(ENTITY1,ENTITY2,true), hurt(ENTITY1,ENTITY2));
+%% 	precondition(overlaps(ENTITY2,ENTITY1,true), hurt(ENTITY1,ENTITY2))} 1 :- 
+%%     interaction(ENTITY1,ENTITY2,hurt).
 
 
-{ result(hurt(ENTITY1,ENTITY2),increase(G_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), bad(G_RESOURCE).   
-{ result(hurt(ENTITY1,ENTITY2),decrease(B_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), good(B_RESOURCE).
+%% { result(hurt(ENTITY1,ENTITY2),increase(G_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), bad(G_RESOURCE).   
+%% { result(hurt(ENTITY1,ENTITY2),decrease(B_RESOURCE)) } :- interaction(ENTITY1,ENTITY2,hurt), good(B_RESOURCE).
 
 
-{ result(hurt(ENTITY1,ENTITY2), decrease(health(ENTITY2))) } :-
-    interaction(ENTITY1,ENTITY2,hurt).
+%% { result(hurt(ENTITY1,ENTITY2), decrease(health(ENTITY2))) } :-
+%%     interaction(ENTITY1,ENTITY2,hurt).
 % { result(hurt(ENTITY1,ENTITY2),spawn(ENTITY)) } :- interaction(ENTITY1,ENTITY2,hurt), harmful(ENTITY).
 
 %things need to be placed on the screen
@@ -606,3 +606,47 @@ max_end_outcomes.
 % {precondition(le(RESOURCE),OUTCOME) : resource(RESOURCE),potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
 % {precondition(ge(RESOURCE),OUTCOME) : resource(RESOURCE), potentialValues(VALUE)} :- result(OUTCOME,mode_change(MODE)).
 % {precondition(overlaps(ENTITY1,ENTITY2,true),OUTCOME) : entity(ENTITY1),entity(ENTITY2)} :- result(OUTCOME,mode_change(MODE)).
+
+
+
+perEntityCreationModes(spawns;shoots).
+
+{creates(E1,E2,Mode) : perEntityCreationModes(Mode)} 1 :- entity(E1), entity(E2), E1 != E2.
+
+1 {precondition(control_event(button(Button, State)),shoots(E1,E2)):buttons(Button),buttonStates(State) ;
+   precondtion(timerElapsed(shoot(E1,E2)),shoots(E1,E2))} 1 :-
+    1 {creates(E1,E2,_)}, entity(E1), entity(E2).
+
+timerLogic(shoot(E1,E2)) :- precondtion(timerElapsed(shoot(E1,E2)),shoots(E1,E2)).
+
+result(shoots(E1,E2),add(E1,E2)) :-  1 {creates(E1,E2,_)}, entity(E1), entity(E2).
+result(shoots(E1,E2),set(angle(E1),angle(E2))) :-  creates(E1,E2,shoots).
+result(tick,moves(E1,forward)) :- creates(E1,E2,shoots).
+
+
+{ spawns(Entity) : entity(Entity)}.
+
+1 { timerLogic(spawn(Entity,location(Row,Column)),Duration,loop) : duration(Duration),
+    rows(Row),
+    columns(Column)  } 1 :- spawns(Entity).
+precondition(timerElapsed(spawn(Entity,location(Row,Column))),spawn(Entity,location(Row,Column))) :-  timerLogic(spawn(Entity,location(Row,Column)),Duration,loop).
+
+ result(spawn(Entity,location(Row,Column)), add(Entity,location(Row,Column))) :-  timerLogic(spawn(Entity,location(Row,Column)),Duration,loop).
+
+:- creates(shoots(E1,E2)),
+   3 {result(O,moves(E1,_));
+      result(O,move_towards(E1,_));
+      result(O,move_away(E1,_));
+      controlLogic(draggable(E1))}.
+
+:- creates(shoots(E1,E2)),
+   controlLogic(draggable(E1)).
+
+:- result(O,add(E,_)), result(O,delete(E)).
+
+:- precondition(overlaps(E1,E2,Polarity),_),
+   result(_,add(E1,E2)).
+:- precondition(overlaps(E2,E1,Polarity),_),
+   result(_,add(E1,E2)).
+
+%% :- not spawns(_).
