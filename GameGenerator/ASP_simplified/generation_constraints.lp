@@ -141,7 +141,7 @@
 % CRM 6/23/2016 - what about deleting it and then adding it in a new place?
 %   maybe that should be a distinct "set location" result.
 % Don't add and delete an entity as part of outcome
-:- result(Outcome,add(Entity, Amount,Place)),
+:- result(Outcome,add(Entity,Place)),
    result(Outcome,delete(Entity)).
     
 % require entities
@@ -150,7 +150,7 @@
 % only destroy that which you can create
 :-  required(Entity),
    effect(delete(Entity)),
-   not effect(add(Entity,_, _)).
+   not effect(add(Entity,_)).
 
 %screen stuff
 :- many(E), screen(E).
@@ -163,7 +163,7 @@
 
 % more screen stuff
 :- effect(delete(E)), screen(E).
-:- effect(add(E,Amount, Place)), screen(E).
+:- effect(add(E, Place)), screen(E).
 :- interaction(E1,E2,TYPE), screen(E1), screen(E2).
 :- placement(E,_,_), screen(E).
 
@@ -171,7 +171,7 @@
 % Don't care about counting something if its count can't change
 :- resourceLogic(Resource,count(Entity)), 
     {effect(delete(Entity));
-    effect(add(Entity,Amount, Place))} 0.
+    effect(add(Entity, Place))} 0.
 % counting something means it can only be changed by addition/deletion
 :- resourceLogic(Resource,count(Entity)), 
     1 {effect(increase(Resource));
@@ -202,7 +202,7 @@
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
 :- not playerControls.
 
-:- result(Outcome, add(Entity,Amount, Place)), singular(Entity), 
+:- result(Outcome, add(Entity, Place)), singular(Entity), 
    not maintains_singular(Outcome, Entity).
 
 % require something to be present before deleting it
@@ -291,7 +291,7 @@
 
 :- speed(E,0).
 
-:- 2 {result(O,add(E,Amount,L))}, outcome(O).
+:- 2 {result(O,add(E,L))}, outcome(O).
 
 
 % Nested for loops are weird
@@ -307,7 +307,7 @@
     perEntity(PV2).    
     
 %:- result(O,delete(E)), every_frame(O).
-:- result(O,add(E,Amount,L)), every_frame(O).
+:- result(O,add(E,L)), every_frame(O).
 
 
 :- result(O,move_towards(E1,E3)),
@@ -337,7 +337,7 @@
    result(_,move_away(E,_)).
 
 
-:- result(_,add(E,Amount,E)).
+:- result(_,add(E,E)).
 
 :- interpretation(E,consumes(R)),
    interpretation(E,creates(R)).
@@ -345,7 +345,7 @@
 :- precondition(overlaps(E,E,P),O), not precondition(collide(E,E),O).
 
 
-:- result(O,add(E1,Amount,E2)),
+:- result(O,add(E1,E2)),
    1{precondition(overlaps(E1,E2,POL),O2);
      precondition(collide(E1,E2),O2);
      precondition(overlaps(E2,E1,POL),O2);
@@ -358,9 +358,73 @@
 
 
 :- precondition(overlaps(E1,E2,true),O),
-   result(O,add(E2,Amount,E1)).
+   result(O,add(E2,E1)).
 
 :- precondition(overlaps(E1,E2,true),O),
-   result(O,add(E1,Amount,E2)).
+   result(O,add(E1,E2)).
 
 :- 2 { clickOnOverlap(E1,E2,O)}, entity(E1),entity(E2).
+
+%Limitation of Phaser
+:- precondition(control_event(_),O),
+   precondition(overlaps(E1,E2,true),O),
+   precondition(collide(E1,E2),_).
+
+:- result(_,add(E1,E2)),
+   result(_,add(E2,E1)).
+
+
+:- result(O,delete(E1)),
+   not precondition(overlaps(_,E1,true),O),
+   not precondition(overlaps(E1,_,true),O),
+   not precondition(overlaps(E1,_,true),O),
+   not precondition(control_event(click(E1)),O).
+
+:- result(O,add(E1,E2)),
+   precondition(overlaps(E4,E3,true),O),
+   E3 != E2,
+   E4!=E2.
+
+
+:- precondition(overlaps(_,_,false),O),
+   result(O,mode_change(_)).
+
+
+:- precondition(control_event(click(E3)),O),
+   result(O,add(E1,E2)),
+   E2 != E3.
+
+:- precondition(control_event(button(Button,_)),O1),
+   precondition(control_event(button(Button,_)),O2),
+   1{precondition(Condition,O1)}1,
+   1{precondition(Condition,O2)}1,
+   O1 != O2.
+
+
+:- 1 {
+	   precondition(le(R),O);
+	   precondition(ge(R),O);
+	   precondition(lt(R),O);
+	   precondition(gt(R),O)},
+   1 {
+	   result(O,increase(R));
+	   result(O,decrease(R))},
+   resource(R),
+   precondition(_,O),
+   1 {precondition(C,O)} 1.
+
+
+%Don't delete something if you click on it and it's also draggable
+:-
+    controlLogic(draggable(E)),
+    precondition(control_event(click(E)),O),
+    result(O,delete(E)),
+    1 { precondition(_,O)} 1.
+
+:-precondition(control_event(click(E1)),O),
+  precondition(overlaps(E2,E3,false),O).
+
+:- result(tick,add(E,_)).
+
+:- result(_,add(E2,E1)),
+   entityOrdering(E1,E2).
