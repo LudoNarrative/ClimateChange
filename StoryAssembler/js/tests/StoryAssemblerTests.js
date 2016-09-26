@@ -197,22 +197,28 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			State.set("beat", 1);
 			wl = Wishlist.create([{condition: "beat eq 1"}, {condition: "beat eq 2"}], State);
 			ChunkLibrary.add([
-				{ id: "Text1", 
-				content: "Text1 Content", 
-				choices: [{chunkId: "normalChoice"}],
-				effects: ["set beat 1"] },
-				{ id: "normalChoice", 
-				choiceLabel: "normalChoice Label", 
-				content: "normalChoice Content"
+				{ 
+					id: "Text1", 
+					content: "Text1 Content", 
+					choices: [{chunkId: "normalChoice"}],
+					effects: ["set beat 1"] 
 				},
-				{ id: "orphanChoice", 
-				choiceLabel: "orphanChoice Label", 
-				request: {condition: "beat eq 2"} },
-				{ id: "orphanChoiceContent", 
-				conditions: ["beat eq 1"], 
-				content: "orphanChoiceContent Content", 
-				choices: [{chunkId: "Chunk4"}], 
-				effects: ["set beat 2"] }
+				{ 
+					id: "normalChoice", 
+					choiceLabel: "normalChoice Label", 
+					content: "normalChoice Content"
+				},
+				{ 
+					id: "orphanChoice", 
+					choiceLabel: "orphanChoice Label", 
+					request: {condition: "beat eq 2"} },
+				{ 
+					id: "orphanChoiceContent", 
+					conditions: ["beat eq 1"], 
+					content: "orphanChoiceContent Content", 
+					choices: [{chunkId: "Chunk4"}], 
+					effects: ["set beat 2"] 
+				}
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "Text1 Content", "No extra options: first node HTML correct");
@@ -220,12 +226,16 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(contentForChoice(1), "normalChoice Label", "No extra options: normalChoice displays");
 
 			// Test incremental progress towards wishlist items.
-			ChunkLibrary.reset();
-			State.reset();
+			resetTest();
 			State.set("stress", 0);
 			wl = Wishlist.create([{condition: "stress gte 3"}], State);
 			ChunkLibrary.add([
-				{ id: "StressChunk", content: "StressChunk Content", effects: ["incr stress 1"], repeatable: true }
+				{ 
+					id: "StressChunk", 
+					content: "StressChunk Content", 
+					effects: ["incr stress 1"], 
+					repeatable: true 
+				}
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
 			assert.deepEqual(html(getStoryEl()), "StressChunk Content", "Testing incremental progress (1)");
@@ -256,7 +266,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(html(getStoryEl()), "linkTest2 Content", "Testing goto-style links (3)");
 			
 
-			cleanUpDom();
+			//cleanUpDom();
 
 
 		});
