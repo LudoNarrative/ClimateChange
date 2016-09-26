@@ -1,6 +1,6 @@
 /* global test */
 "use strict";
-define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../Display", "Character", "jQueryUI"], function(StoryAssembler, ChunkLibrary, State, Wishlist, StoryDisplay, Character, $) {
+define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDisplay", "Character", "jQueryUI"], function(StoryAssembler, ChunkLibrary, State, Wishlist, StoryDisplay, Character, $) {
 
 	var getStoryEl = function() {
 		return document.getElementById("storyArea").children[0];
@@ -38,6 +38,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 	var run = function() {
 
 		var resetTest = function() {		//local function for resetting stuff between tests
+			
 
 			var characters = {
 				"char1" : {name: "Emma", nickname: "Em", gender: "female" },
@@ -53,6 +54,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			State.set("mode", { type: "narration" } );
 		}
 
+		QUnit.module( "StoryAssembler Module tests" );
 		test("Integration tests for StoryAssembler", function( assert ) {
 			
 			var wl;
@@ -63,7 +65,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}] },
 				{ id: "Chunk2", choiceLabel: "Chunk2 Label", content: "Chunk2 Content", effects: ["set x true"] }
 			]);
-			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Basic: First chunk should be shown correctly");
 			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Basic: First choice should be shown correctly");
 			clickChoice(1);
@@ -106,7 +108,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "../State", "../Wishlist", "../D
 			console.log("clicking choice in Chunk1");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Chain through condition request: after click, should chain through.");
-			assert.deepEqual(countChildren(getChoiceEl()), 0, "Chain through condition request: no options when finished.");
+			assert.deepEqual(contentForChoice(1), "Continue", "Chain through condition request: no options when finished.");
 
 			// Test "persistent" wishlist parameter and "repeatable" chunk parameter.
 			resetTest();
