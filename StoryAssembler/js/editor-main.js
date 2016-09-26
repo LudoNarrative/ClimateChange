@@ -70,7 +70,7 @@ requirejs(
 	var story;
 	var graphData = [];
 	var leftToVisit = [];
-	var scene = "dinner2";		//later, this should be set from dropdown
+	var scene = "lecture";		//later, this should be set from dropdown
 
 	var stateCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "goto_whatspeciality", "provokeConfidenceChoice"];
 
@@ -79,6 +79,8 @@ requirejs(
 	var iterStep = 0;
 	var deadendPaths = 1;
 	var uniqueDeadEnds = false;		//whether to make each dead end a unique node
+
+	graphElements = [];				//global holder for graph elements so we can redraw graph if need be (options are changed)
 
 
 	var formatForEditor = function(mode, data) {
@@ -150,7 +152,7 @@ requirejs(
 
 	//resets the story and goes to first node, usually called before clicking to re-traverse the choices
 	var resetStory = function() {
-		var scenes = ["dinner", "lecture", "travel", "worker" ];
+		var scenes = ["dinner", "dinner_argument", "lecture", "travel", "worker" ];
 		
 		ChunkLibrary.reset();
 		State.reset();
@@ -288,6 +290,7 @@ requirejs(
 
 		var uniqueNodeId = State.get("currentTextId") + "_" + uniquify();
 		var newChoices = checkForNewChoices(graphData, leftToVisit);			//check and see if there are any new choices
+		var endReached = false;
 			
 		if (newChoices.length > 0) {		//if there are new choices...
 			newChoices.forEach(function(newChoice, pos) {			//copy them to the leftToVisit with the path to them
@@ -302,14 +305,26 @@ requirejs(
 			var nextChoice = leftToVisit.pop();									//pop last item off array, which should be last choice currently available?
 			var temp = nextChoice.clickPath[nextChoice.clickPath.length-1];
 			clickPath.push({source: temp.source, dest: temp.dest, clickNum: temp.clickNum, choiceText: temp.choiceText});			//add it to clickPath
-			if (typeof child(temp.clickNum, getChoiceEl()) !== "undefined") {
+			if (typeof child(temp.clickNum, getChoiceEl()) !== "undefined") {		//if there is in fact a choice to click, click it
 				clickChoice(temp.clickNum);					//click the choice
-				addToGraph(clickPath);
-				stepStory(clickPath);			//repeat process
+				
+				if (typeof $("#storyArea span.chunk")[$("#storyArea span.chunk").length-1] == "undefined") {
+					endReached = true;
+					if (leftToVisit.length > 0 && (iterStep < iterNum)) {
+						iterStep++;
+						console.log("reached the end of this playthrough, backing up and restarting...");
+						var nextNode = leftToVisit.shift();
+						gotoChoice(nextNode.clickPath, story, levelData, globalData);
+					}
+				}
+				else {
+					addToGraph(clickPath);
+					stepStory(clickPath);			//repeat process
+				}
 			}
-			else if ($("#storyArea span.chunk").html() == "[No path found!]" || newChoices[0].chunkId == "results") {
+			
+			else if (endReached || $("#storyArea span.chunk").html() == "[No path found!]") {
 				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
-				//if (leftToVisit.length > 0) {
 					iterStep++;
 					console.log("reached the end of this playthrough, backing up and restarting...");
 					var nextNode = leftToVisit.shift();
@@ -321,6 +336,8 @@ requirejs(
 			else {
 				throw("Error! There was supposed to be a choice to pick but none is in the el!");
 			}
+
+
 		}
 
 		
@@ -431,8 +448,8 @@ requirejs(
 
 	var createGraph = function() {
 
-		var graphElements = simulateRunthroughs();
-		console.log("GraphElements", graphElements.filter(function(value){return value.group=='nodes'}));
+		graphElements = simulateRunthroughs();
+		//console.log("GraphElements", graphElements.filter(function(value){return value.group=='nodes'}));
 
 		var cyto = cytoscape({
 			container : $("#cyto"),
@@ -552,6 +569,9 @@ requirejs(
 			fillColor: 'rgba(0, 92, 128,0.75)',
 			activeFillColor: 'rgba(6, 173, 239,0.75)'
 		});
+
+		cyto
+
 	}
 	
     var createEditor = function() {
@@ -626,6 +646,8 @@ requirejs(
 			}
 		});
     }
+
+    //----------------------------------------------------------------------------------------------------------
 
     $('body').append("<div id='cyto'></div><button id='submit'>Save JSON file</button><button id='restore'>Reset Changes</button><span id='valid_indicator'></span><div id='editor_holder'></div><div id='storyContainer' class='editor'></div><div id='storyButton'></div><div id='popup'></div>");
 

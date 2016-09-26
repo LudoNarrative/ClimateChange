@@ -52,7 +52,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var getStorySpec = function(id) {
 
 		var storySpec = [
-		/*{
+		{
 			id: "travel",
 			characters: {
 				"emma" : {name: "Emma", nickname: "Em", gender: "female" }
@@ -113,7 +113,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				initiator: "rick",
 				respondent: "emma"
 			}
-		},*/
+		},
 		{
 			id: "lecture",
 			characters: {

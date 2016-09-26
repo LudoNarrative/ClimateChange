@@ -363,6 +363,9 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 		if (typeof Display !== "undefined") {		//if we're not running tests, display scene outro
 			Display.setSceneOutro(text);
 		}
+		else {
+			StoryDisplay.addStoryText("[End of scene.]");
+		}
 	}
 
 	return {
