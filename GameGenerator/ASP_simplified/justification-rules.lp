@@ -589,7 +589,6 @@ enables(Enabler, Enabled) :-
     result_enables(Result, Enabled),
     Enabler != Enabled.
 
-
 %% sharedResource(R, Outcome1, Outcome2) :-
 %%     consumedBy(R, Outcome1),
 %%     consumedBy(R, Outcome2),
@@ -612,6 +611,42 @@ sharedResource(R, Outcome, Outcome) :-
     consumedBy(R, Outcome),
     precondition(overlaps(E1,E2,true),Outcome),
     1{ many(E1);many(E2)}.
+
+sharedResource(R, Outcome1, Outcome2) :-
+    consumedBy(R, Outcome1),
+    consumedBy(R, Outcome2),
+    % outcome(Outcome1), outcome(Outcome2), resource(R),
+    Outcome1 != Outcome2.
+
+sharedResource(R, Outcome, Outcome) :-
+    consumedBy(R, Outcome),
+    precondition(overlaps(Entity,_,true),Outcome),
+    many(Entity).
+    
+sharedResource(R, Outcome, Outcome) :-
+    consumedBy(R, Outcome),
+    precondition(overlaps(_,Entity,true),Outcome),
+    many(Entity).
+    
+sharedEntity(E, Outcome1, Outcome2) :-
+    requires(Outcome1, E),
+    requires(Outcome2, E),
+    Outcome1 != Outcome2, 
+    result(Outcome1,delete(E)), 
+    result(Outcome2,delete(E)).
+
+sharedEntity(E, Outcome, Outcome) :-
+    requires(Outcome, E),
+    precondition(overlaps(Entity,_,true),Outcome),
+    many(Entity),
+    result(Outcome,delete(E)).
+    
+sharedEntity(E, Outcome, Outcome) :-
+    requires(Outcome, E),
+    precondition(overlaps(_,Entity,true),Outcome),
+    many(Entity),
+    result(Outcome,delete(E)).
+
 sharing(O1, O2) :-
    sharedResource(R, O1, O2).
 sharing(O1, O2) :-
@@ -1010,7 +1045,7 @@ unrestrictedEntity(ENTITY) :-
     entity(ENTITY), 
     not restrictedEntity(ENTITY).
     
-    
+   
 restrictedCondition(overlaps(ENTITY_A,ENTITY_B,POLARITY)) :-
     precondition(overlaps(ENTITY_A,ENTITY_B,POLARITY),Outcome),
     restrictedEntity(ENTITY_A).
@@ -1341,7 +1376,7 @@ unrestrictedCondition(tick).
 
 unrestrictedGame :- 
     unrestricted(Outcome),
-    result(Outcome,mode_change(story_progression)).
+    result(Outcome,mode_change(narrative_progress)).
 
 unrestrictedGame :- 
     unrestricted(Outcome),

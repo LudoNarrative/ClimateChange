@@ -25,7 +25,7 @@ define(["../Templates", "../State"], function(Templates, State) {
 			});
 
 			// Shorthand function
-			var render = function(txt) { return Templates.render({content: txt}); }
+			var render = function(txt) { return Templates.render(txt); }
 
 			// Tests
 			assert.deepEqual(render("some text"), "some text", "text without templates is unchanged");
@@ -39,8 +39,8 @@ define(["../Templates", "../State"], function(Templates, State) {
 			assert.deepEqual(render("{testTwoParams|paral|x}{testTwoParams|lel|y}"), "parallel", "adjacent templates");
 			assert.deepEqual(render("{testTwoParams|{testNoParams}|nope}"), "()|nope}", "nested params shuold be rejected");
 
-			State.change("set charName Maria");
-			assert.deepEqual(render("Hello, {charName}!"), "Hello, Maria!", "showing State value directly");
+			//State.change("set charName Maria");
+			//assert.deepEqual(render("Hello, {charName}!"), "Hello, Maria!", "showing State value directly");
 
 		});
 

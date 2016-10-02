@@ -236,6 +236,7 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 					continueScene(nextChunkId);		//TODO: verify this is still correct after above re-factoring
 				} else {
 					displayChunkText(chunkForText.id);
+					doChunkChoices(chunkForText.id);
 					handleEffects(chunkForText);
 				}
 			} else {
@@ -361,6 +362,9 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 		var text = "Chapter complete!"; 		//TODO: we need stats here
 		if (typeof Display !== "undefined") {		//if we're not running tests, display scene outro
 			Display.setSceneOutro(text);
+		}
+		else {
+			StoryDisplay.addStoryText("[End of scene.]");
 		}
 	}
 

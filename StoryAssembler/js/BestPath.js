@@ -336,40 +336,9 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 		if (chunk.choices) {
 			// Even if we've satisfied all our wants, we need to recurse so we know what nodes this choice leads to.
 			log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
-			State.set("validChunks", []);
 
-			var choiceSkipList = util.clone(skipList);		//list of choiceIDs that will be in this (used to prevent duplicate choices)
+			populateChoices(chunk, skipList, rLevel, paths, satisfiedWants, pathToHere, choiceDetails);
 
-			chunk.choices.forEach(function(choice) {
-					var validPaths;
-					if (choice.type == "goto") {	//if it's a goto choice, we don't need to recurse, just return
-						var missingVal = !chunkOkToSearch(choice.val, skipList, true, rLevel)
-						validPaths = [{ 
-							route: [chunk.id],
-							satisfies: [{type: "goto", val:choice.val}],
-							choiceDetails: { missing:missingVal, requestVal: choice.val, id: choice.val }
-						}];
-					}
-					else {
-						validPaths = searchFromHere(paths, chunk, choiceSkipList, choice, satisfiedWants, pathToHere, rLevel, true);
-					}
-
-					// Each path in validPaths should have a choiceDetails field, even if it didn't meet the Want requirements (so we know what choice labels to print when displaying the choice).
-					var newChoiceDetails;
-					if (!util.isArray(validPaths[0].choiceDetails)) { newChoiceDetails = validPaths[0].choiceDetails; } 
-					else { newChoiceDetails = validPaths[0].choiceDetails[0]; }
-
-					if (typeof newChoiceDetails == "undefined") {
-						return undefined;
-					}
-					choiceDetails.push(newChoiceDetails);
-					choiceSkipList.push(newChoiceDetails.id);
-
-					if (validPaths.length > 0 && validPaths[0].route) {
-						paths = addNewIfUnique(paths, validPaths);
-					}
-			});
-			// log(rLevel, "After choices, choiceDetails is now " + choiceDetails.map(function(x){return x.id}));
 			log(rLevel, "Search through choice(s) of " + chunk.id + " finished.")
 		}
 		if (paths.length === 0) {
@@ -395,6 +364,43 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 			log(rLevel, "**> found these paths: " + pathsToStr(paths));	
 			return paths;
 		}
+	}
+
+// adds choices / choiceDetails to paths object
+	var populateChoices = function(chunk, skipList, rLevel, paths, satisfiedWants, pathToHere, choiceDetails) {
+
+		State.set("validChunks", []);
+		var choiceSkipList = util.clone(skipList);		//list of choiceIDs that will be in this (used to prevent duplicate choices)
+
+		chunk.choices.forEach(function(choice) {
+			var validPaths;
+			if (choice.type == "goto") {	//if it's a goto choice, we don't need to recurse, just return
+				var missingVal = !chunkOkToSearch(choice.val, skipList, true, rLevel)
+				validPaths = [{ 
+					route: [chunk.id],
+					satisfies: [{type: "goto", val:choice.val}],
+					choiceDetails: { missing:missingVal, requestVal: choice.val, id: choice.val }
+				}];
+			}
+			else {
+				validPaths = searchFromHere(paths, chunk, choiceSkipList, choice, satisfiedWants, pathToHere, rLevel, true);
+			}
+
+			// Each path in validPaths should have a choiceDetails field, even if it didn't meet the Want requirements (so we know what choice labels to print when displaying the choice).
+			var newChoiceDetails;
+			if (!util.isArray(validPaths[0].choiceDetails)) { newChoiceDetails = validPaths[0].choiceDetails; } 
+			else { newChoiceDetails = validPaths[0].choiceDetails[0]; }
+
+			if (typeof newChoiceDetails == "undefined") {
+				return undefined;
+			}
+			choiceDetails.push(newChoiceDetails);
+			choiceSkipList.push(newChoiceDetails.id);
+
+			if (validPaths.length > 0 && validPaths[0].route) {
+				paths = addNewIfUnique(paths, validPaths);
+			}
+		});
 	}
 
 	var numChoicesFound = function(choiceDetails) {

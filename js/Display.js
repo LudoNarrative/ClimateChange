@@ -37,7 +37,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 		Coordinator = _coordinator;
 		
 		$('<h1/>', {
-		    text: 'Climate Change Game',
+		    text: 'Climate Change Prototype',
 		    id: 'title'
 		}).appendTo('body');
 
@@ -184,7 +184,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 		var nextIndex = State.get("scenes").findIndex(function(scene) {
 			return (scene == State.get("currentScene"));
 		}) + 1;
-		$( "#blackout" ).fadeIn( "slow", function() {
+		$( "#blackout" ).delay(1600).fadeIn( "slow", function() {
 	    	$("#sceneIntro").html(endText);
 
 	    	$('<h3/>', {
