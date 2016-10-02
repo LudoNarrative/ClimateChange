@@ -17,28 +17,26 @@
 #const max_conditions_per = 3.
 
 
-%%There is an event that represents sharing and the player influences it
-%%playerSharing(O) :- playerInfluences(O), representsSharing(O). 
-%%Sharing should increase a camaraderie resource.
-%% sharingAndCamaraderie :-
-%% playerSharing(O), representsCamaraderie(C), increases(O, C).
-
-%% representsCamaraderie(C) :- resource(C).
-
-%% :- not sharingAndCamaraderie.
 
 has_sharing :- sharing(O1, O2).
 :- not has_sharing.
+sharing_required :- sharing(O1,O2),
+		    1 {
+			    outcome_enables(O1,increase(R));
+			    outcome_enables(O2,increase(R))},
+		    precondition(le(R),O3),
+		    result(O3,mode_change(narrative_gating)).
+:- not sharing_required.
 
-%:- not narrative_gating.
-
+:- precondition(le(R),O3),
+   result(O3,mode_change(narrative_gating)),
+   2 {result(_,increase(R))}.
+:- not effect(mode_change(narrative_gating)).
+:- effect(mode_change(narrative_progress)).
 :- effect(mode_change(game_win)).
 :- effect(mode_change(game_loss)). % shouldn't be a way to lose
-%:- not slowlyDrains(r1).
-
-%hacky things that should maybe be generalized
-%:- effect(increase(X, X)).
-
+:- not decreasesOverTime(r1).
+:- not nonMonotonic(r1).
 
 %At least one entity is static
 :- not  static(e1).
@@ -46,4 +44,8 @@ has_sharing :- sharing(O1, O2).
 
 %At most 2 control events
 :- {condition(control_event(X))} 2.
-%:- not unrestrictedGame.
+
+%
+non_discrete_game :- playerInfluences(O), every_frame(O).
+:- non_discrete_game.
+

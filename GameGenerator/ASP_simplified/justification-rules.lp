@@ -957,6 +957,14 @@ monotonicallyIncreases(Resource) :-
     result(Outcome1, increase(Resource)),
     not nonMonotonic(Resource).
 
+decreasesOverTime(Resource) :-
+    1 {precondition(tick,Outcome);
+       precondition(timerElapsed(_),Outcome)},
+    result(Outcome, decrease(Resource)).
+increasesOverTime(Resource) :-
+    1 {precondition(tick,Outcome);
+       precondition(timerElapsed(_),Outcome)},
+    result(Outcome, increase(Resource)).
 constant(Resource) :-
     resource(Resource),
     not nonMonotonic(Resource),
