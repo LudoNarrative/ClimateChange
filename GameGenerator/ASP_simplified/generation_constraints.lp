@@ -428,3 +428,23 @@
 
 :- result(_,add(E2,E1)),
    entityOrdering(E1,E2).
+
+:- 2 {result(O,add(E1,E2))},
+   result(_,add(E1,E2)).
+
+:- precondition(C,O1),
+   result(O1,mode_change(_)),
+   2 {precondition(C,_)}.
+
+:- precondition(control_event(_),O),
+   result(O,mode_change(_)).
+
+:- playerDetermines(O),
+   result(O,mode_change(_)).
+
+:- precondition(control_event(click(E2)),O),
+   precondition(overlaps(E1,E3,true),O).
+
+
+:- result(O,delete(E)),
+   singular(E).

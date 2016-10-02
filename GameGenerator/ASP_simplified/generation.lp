@@ -586,7 +586,7 @@ resourceTransactions(convert;pay_cost;gain;lose).
 % modes can change
 % modes(M) :- potentialModes(M).
 % XXX should reconcile this with "potentialModes" in generation_atoms.lp
-modes(narrative_progress;game_win;game_loss).
+modes(narrative_progress;narrative_gating;game_win;game_loss).
 
 %% CRM 7/2/2016 trying to relax this constraint
 % 1 {result(END_OUTCOME,mode_change(MODE)) : modes(MODE)} 
