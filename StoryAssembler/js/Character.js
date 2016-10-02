@@ -6,60 +6,80 @@ A character is a person in the story being assembled (player or NPC). We use the
 define([], function() {
 
 	var State;
-	var characters = {}; // For each key, an array of IDs: all properties associated with this character.
+//	var characters = {}; // For each key, an array of IDs: all properties associated with this character.
 
 	var init = function(_State) {
 		State = _State;
+		State.set("characters", []);	//empty out any lingering characters
 	}
 
-	var add = function(key, charDef) {
-		/*
-		if (characters[key]) {			//if the char was already read in, return undefined
+	var add = function(charDef) {
+		
+		var characters = State.get("characters");
+		if (typeof characters == "undefined") {
+			characters = [];
+		}
+
+		var charIndex = characters.map(function(e) { return e.id; }).indexOf(charDef.id);
+		if (charIndex > -1) {			//if the char was already read in, return undefined
 			return undefined;
 		}
-		var charFields = [];
-		for (var defKey in charDef) {
-			State.set(stateKey(key, defKey), charDef[defKey]);
-			charFields.push(defKey);
-		}
-		characters[key] = charFields;
-		return get(key);
-		*/
-		var temp = State.get("characters");
-		if (typeof temp == "undefined") {
-			temp = [];
-		}
-		temp.push(charDef);
-		State.set("characters", temp);
+		
+		characters.push(charDef);
+		State.set("characters", characters);
+		return get(charDef.id);		
 	}
 
 	var remove = function(key) {
-		if (!characters[key]) return;
-		characters[key].forEach(function(defKey) {
-			State.remove(stateKey(key, defKey));
-		});
-		delete characters[key];
+		var charIndex = State.get("characters").map(function(e) { return e.id; }).indexOf(key);
+		if (charIndex < 0) { return; }
+
+		var newChars = State.get("characters");
+		newChars.splice(charIndex,1);
+		State.set("characters", newChars);
 	}
 
+	/*
+	supports {"health" : "set 1"}, {"health": "incr 1"}, {"health": "decr 1"}
+	*/
 	var set = function(key, statsObj) {
-		if (!characters[key]) {
+		var characters = State.get("characters");
+		var charIndex = characters.map(function(e) { return e.id; }).indexOf(key);
+
+		if (charIndex < 0) {
 			throw new Error("Tried to set stats for character '" + key + "' but no such character was found.");
 		}
+
 		for (var statsKey in statsObj) {
-			if (characters[key].indexOf(statsKey) < 0) {
-				characters[key].push(statsKey);
-			}
+			var propExists = false;
+			if (typeof State.get("characters")[charIndex][statsKey] !== "undefined") { propExists = true; }
+
 			var parts = statsObj[statsKey].split(" ");
 			var op = parts[0].trim();
 			var val = parts[1].trim();
-			State.change(op + " " + stateKey(key, statsKey) + " " + val);
+
+			if (op == "set") { characters[charIndex][statsKey] = val; }
+			if (op == "incr") {	
+				if (propExists) { characters[charIndex][statsKey] = parseInt(characters[charIndex][statsKey]) + parseInt(val); } 
+				else { throw new Error("Tried to set "+ statsKey +" for character '" + key + "' but no such property was found.");}
+			}
+			if (op == "decr") {
+				if (propExists) { characters[charIndex][statsKey] = parseInt(characters[charIndex][statsKey]) - parseInt(val); } 
+				else { throw new Error("Tried to set "+ statsKey +" for character '" + key + "' but no such property was found.");}
+			}
+
+			State.set("characters", characters);
 		}
 	}
 
-	var get = function(key, stat) {
-		if (!characters[key]) {
+	var get = function(key) {
+
+		var charIndex = State.get("characters").map(function(e) { return e.id; }).indexOf(key);
+
+		if (charIndex == -1) {
 			return undefined;
 		}
+		/*
 		if (!stat) {
 			var charObj = {}
 			charObj.id = key;
@@ -67,13 +87,13 @@ define([], function() {
 				charObj[defKey] = State.get(stateKey(key, defKey));
 			});
 			return charObj;
-		} else {
-			return State.get(stateKey(key, stat));
+		}*/ else {
+			return State.get("characters")[charIndex];
 		}
 	}
 
 	var getAllIds = function() {
-		return Object.keys(characters);
+		return State.get("characters").map(function(e) { return e.id; });
 	}
 
 	var stateKey = function(charId, key) {

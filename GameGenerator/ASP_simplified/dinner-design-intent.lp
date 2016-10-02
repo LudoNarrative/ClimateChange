@@ -16,8 +16,6 @@
 #const max_resource_change_per = 3.
 #const max_conditions_per = 3.
 
-
-
 has_sharing :- sharing(O1, O2).
 :- not has_sharing.
 sharing_required :- sharing(O1,O2),
@@ -48,4 +46,3 @@ sharing_required :- sharing(O1,O2),
 %
 non_discrete_game :- playerInfluences(O), every_frame(O).
 :- non_discrete_game.
-
