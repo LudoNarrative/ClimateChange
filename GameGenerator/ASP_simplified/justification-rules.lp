@@ -171,14 +171,14 @@ result_enables_condition(R, C_prime)
 
 %% Entities
 
-result_enables_condition(add(Entity, Place), present(Entity)) :-
-      condition(present(Entity)),
-      effect(add(Entity, Place)).
+%% result_enables_condition(add(Entity, Place), present(Entity)) :-
+%%       condition(present(Entity)),
+%%       effect(add(Entity, Place)).
 
-result_enables_condition(delete(Entity), absent(Entity)) :-
-      condition(absent(Entity)),
-      effect(delete(Entity)),
-      singular(Entity).
+%% result_enables_condition(delete(Entity), absent(Entity)) :-
+%%       condition(absent(Entity)),
+%%       effect(delete(Entity)),
+%%       singular(Entity).
 
 
 %%% Other meaning %%%
@@ -666,10 +666,10 @@ hasSharing :- sharing(O1, O2).
 hasEntitySharing :- sharedEntity(E, O1, O2).
 
 %% XXX rewrite the below.
-enables(Outcome, Outcome2) :-
-    result(Outcome, add(Entity, Place)), 
-    requires(Outcome2, Entity),
-    Outcome != Outcome2 .
+%enables(Outcome, Outcome2) :-
+%    result(Outcome, add(Entity, Place)), 
+%    requires(Outcome2, Entity),
+%    Outcome != Outcome2 .
  
 hinders(Outcome, Outcome2) :-
     result(Outcome, delete(Entity)), 
