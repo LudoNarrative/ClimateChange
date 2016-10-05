@@ -448,3 +448,16 @@
 
 :- result(O,delete(E)),
    singular(E).
+
+
+differentPreconditions(O1,O2) :-
+    precondition(A,O1),
+    precondition(B,O2),
+    O1 != O2,
+    A != B.
+
+:- precondition(_,O1),
+   precondition(_,O2),
+   O1 != O2,
+   not differentPreconditions(O1,O2).
+   

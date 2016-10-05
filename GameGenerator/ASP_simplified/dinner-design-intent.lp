@@ -26,6 +26,9 @@ sharing_required :- sharing(O1,O2),
 		    result(O3,mode_change(narrative_gating)).
 :- not sharing_required.
 
+:- sharedEntity(E,_,_),
+   not result(_,add(E,_)).
+
 :- precondition(le(R),O3),
    result(O3,mode_change(narrative_gating)),
    2 {result(_,increase(R))}.
