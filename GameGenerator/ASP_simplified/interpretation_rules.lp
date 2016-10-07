@@ -56,6 +56,13 @@ interpretation(Entity1, helps(Entity2)) :-
     result(O,increase(Resource)),
     playerAgency(Entity2).
 
+interpretation(Entity,consumes(Entity1)) :-
+    precondition(overlaps(Entity,Entity1,true),O),
+    result(O,delete(Entity1)).
+interpretation(Entity,consumes(Entity1)) :-
+    precondition(overlaps(Entity1,Entity,true),O),
+    result(O,delete(Entity1)).
+
 interpretation(Entity,consumes(Resource)) :-
     precondition(overlaps(Entity,Entity1,true),O),
     result(O,decrease(Resource)).

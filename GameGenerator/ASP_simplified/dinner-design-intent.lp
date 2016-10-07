@@ -6,7 +6,7 @@
 
 
 #const min_entities = 1.
-#const max_entities = 3.
+#const max_entities = 2.
 #const min_resources = 1.
 #const max_resources = 1.
 #const min_outcomes = 0.
@@ -16,8 +16,8 @@
 #const max_resource_change_per = 3.
 #const max_conditions_per = 3.
 
-has_sharing :- sharing(O1, O2).
-:- not has_sharing.
+%% has_sharing :- sharing(O1, O2).
+%% :- not has_sharing.
 sharing_required :- sharing(O1,O2),
 		    1 {
 			    outcome_enables(O1,increase(R));
@@ -26,8 +26,8 @@ sharing_required :- sharing(O1,O2),
 		    result(O3,mode_change(narrative_gating)).
 :- not sharing_required.
 
-:- sharedEntity(E,_,_),
-   not result(_,add(E,_)).
+%% :- sharedEntity(E,_,_),
+%%    not result(_,add(E,_)).
 
 :- precondition(le(R),O3),
    result(O3,mode_change(narrative_gating)),
@@ -49,3 +49,5 @@ sharing_required :- sharing(O1,O2),
 %
 non_discrete_game :- playerInfluences(O), every_frame(O).
 :- non_discrete_game.
+
+:- complex(R).
