@@ -1,3 +1,15 @@
+
+:- outcome(OUTCOME), not completeOutcome(OUTCOME).
+
+:- precondition(overlaps(E1,E2,_),O),
+   precondition(control_event(_),O),
+   1 { precondition(overlaps(E1,E2,_),_) } 1.
+
+
+% Don't have more than 1 control event per outcome
+:- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
+:- not playerControls.
+
 % Only 1 avatar
 :-  avatar(ENTITY), 
     many(ENTITY).
@@ -177,7 +189,6 @@
     1 {effect(increase(Resource));
        effect(decrease(Resource))}.
 
-:- outcome(OUTCOME), not completeOutcome(OUTCOME).
 
 % Don't have 2 separate ways of overlapping for an outcome
 
@@ -198,9 +209,6 @@
 :- result(Outcome,decrease(Resource)),
    precondition(le(Resource),Outcome).
 
-% Don't have more than 1 control event per outcome
-:- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
-:- not playerControls.
 
 :- result(Outcome, add(Entity, Place)), singular(Entity), 
    not maintains_singular(Outcome, Entity).
