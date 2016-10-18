@@ -79,8 +79,8 @@ Test specs used for the visualization tool to make sure different things are wor
 			"id": "test2_change2",
 			"speaker" : "Test1",
 			"choiceLabel": "I am choice id test2_change2",
-			"content": "Here's the test2_change2 node doop de doo."
-			//"effects": ["set test2Con true"]
+			"content": "Here's the test2_change2 node doop de doo.",
+			"effects": ["set droppedKnowledge 2"]
 		},
 		{
 			"id": "test2_end",

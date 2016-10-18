@@ -80,11 +80,11 @@ requirejs(
 
 	//which state variables to check to determine if we create a new node or merge it into one node
 	var stateCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice", "validChunks", "invalidChunks"];
-	//which variables to check to determine if in the same container
-	var groupingCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice"];
+	//which variables to check to determine if broken out but still in same container if same ID
+	//var groupingCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice"];
 
 	var graphRootId = "";
-	var iterNum = 1;				//number of playthroughs to run
+	var iterNum = 25;				//number of playthroughs to run
 	var iterStep = 0;
 	var idStepper = 0;
 	var deadendPaths = 1;
@@ -236,15 +236,19 @@ requirejs(
 		else {
 			uniqueNodeId = State.get("currentTextId") + "_" + uniquify("id");
 			
-			var groupingStates = graphData.filter(function(item){ return typeof item.data.groupingState !== "undefined";});
-			groupingStates = groupingStates.map(function(item){ return item.data.groupingState;	});
+			//var groupingStates = graphData.filter(function(item){ return typeof item.data.groupingState !== "undefined";});
+			//groupingStates = groupingStates.map(function(item){ return item.data.groupingState;	});
 
-			var groupingStateString = State.get("currentTextId") + "_" + uniquify("groupId");
+			//var groupingStateString = State.get("currentTextId") + "_" + uniquify("groupId");
+			var groupingStateString = State.get("currentTextId");
 
-			var duplicateNodeIndex = groupingStates.indexOf(groupingStateString);
-			if (duplicateNodeIndex > -1) {		//if the id already exists
-				if (typeof graphData[duplicateNodeIndex].data.parent == "undefined") {	//if that item doesn't have a parent, (parent doesn't exist)
-					var parentId = "parent_" + graphData[duplicateNodeIndex].data.id;
+			//var duplicateNodeIndex = groupingStates.indexOf(groupingStateString);
+
+			var groupCheck = graphData.filter(function(item){ return item.data.textId == groupingStateString; });
+
+			if (groupCheck.length > 0) {		//if the id already exists
+				if (typeof groupCheck[0].data.parent == "undefined") {	//if that item doesn't have a parent, (parent doesn't exist)
+					var parentId = "parent_" + groupCheck[0].data.textId;
 					var newParent = {							//create node for current chunk to add to graph
 						group: 'nodes',
 						data: {
@@ -257,11 +261,11 @@ requirejs(
 						}			
 					}
 					graphData.push(newParent);		//add it
-					graphData[duplicateNodeIndex].data.parent = parentId;
+					graphData[graphData.indexOf(groupCheck[0])].data.parent = parentId;		//set the parent
 					theParent = parentId;
 				}
 				else {
-					theParent = "parent_" + graphData[duplicateNodeIndex].data.id;
+					theParent = "parent_" + groupCheck[0].data.textId;
 				}
 			}
 
@@ -329,15 +333,15 @@ requirejs(
 			var theCompares;
 			var theString = "";
 
-			if (type == "id") { theCompares = stateCompares; theString += "_" + String(idStepper); }
-			else if (type == "groupId") { theCompares = groupingCompares; }
+			if (type == "id") { theCompares = stateCompares; /*theString += "_" + String(idStepper);*/ }
+			//else if (type == "groupId") { theCompares = groupingCompares; }
 			
 			for (var x=0; x < theCompares.length; x++) {
 				var temp = State.get(theCompares[x]);
-				if (typeof temp == "undefined") { theString += "-u"; }
-				else if (temp == false) { theString += "-f"; }
-				else if (temp == true) { theString += "-t"; }
-				else { theString += "-" + theString; }
+				if (typeof temp == "undefined") { theString = theString + theCompares[x] + "-u"; }
+				else if (temp == false) { theString = theString + theCompares[x] + "-f"; }
+				else if (temp == true) { theString = theString + theCompares[x] + "-t"; }
+				else { theString = theString + theCompares[x] + "-" + theString; }
 			}
 
 			idStepper++;
@@ -353,7 +357,7 @@ requirejs(
 	var stepStory = function(clickPath) {
 		var uniqueNodeId = graphData[graphData.length-1].data.id;		//grab last thing added to graphData
 		if (typeof uniqueNodeId == "undefined") { uniqueNodeId = graphData[graphData.length-2].data.id; }		//if it wasn't a node, grab next one up
-		//var uniqueNodeId = State.get("currentTextId") + "_" + uniquify("id");
+		
 		var newChoices = checkForNewChoices(graphData);			//check and see if there are any new choices
 		var endReached = false;
 			
