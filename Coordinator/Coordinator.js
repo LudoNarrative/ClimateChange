@@ -8,7 +8,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 
 		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "lecture"];	//order of scenes
+		var scenes = ["dinner", "dinner_argument", "lecture", "travel", "worker"];	//order of scenes
 		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -48,7 +48,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	}
 
 
-
+	//returns specs for stories. If id == "all", will return all of them (for populating a menu)
 	var getStorySpec = function(id) {
 
 		var storySpec = [
@@ -232,7 +232,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		}
 		]
 
-		return storySpec.filter(function(v) { return v.id === id; })[0];
+		if (id == "all") { return storySpec; }
+		else { return storySpec.filter(function(v) { return v.id === id; })[0]; }
 	}
 
 	var loadSceneIntro = function(id) {

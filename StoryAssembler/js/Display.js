@@ -197,6 +197,8 @@ define([], function() {
 	var _showWishlist = function(wishlist) {
 		var area = document.getElementsByClassName("wishlistArea")[0];
 		area.innerHTML = "";
+		if (typeof satisfiesList == "undefined") { satisfiesList = []; }
+
 		// Show Wishlist.
 		var wishlistArr = wishlist.wantsAsArray();
 		if (wishlistArr.length > 0) {

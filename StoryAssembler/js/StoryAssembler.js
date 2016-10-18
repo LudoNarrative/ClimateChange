@@ -111,7 +111,7 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 
 	var getBestPath = function(chunkLibrary, startingPoint) {		
 	//this function gets best path from the starting point, or if that's not specified, does a blind search 
-		console.log("called getBestPath with chunkLibrary: " + chunkLibrary.getKeys() + " and startingPoint: " + startingPoint);
+		//console.log("called getBestPath with chunkLibrary: " + chunkLibrary.getKeys() + " and startingPoint: " + startingPoint);
 		if (startingPoint) {
 			var temp = wishlist.bestPath(chunkLibrary, {startAt: startingPoint});
 			console.log("bestPath is: " , temp);
@@ -299,6 +299,7 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 
 		} else if (mode !== "refresh") {
 			doStoryBreak();
+			State.set("currentChoices", []);
 			endScene();
 		}
 		StoryDisplay.diagnose({
