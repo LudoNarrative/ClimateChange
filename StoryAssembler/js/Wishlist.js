@@ -67,11 +67,18 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 
 		var removeSatisfiedWants = function() {
 			var keys = Object.keys(_wants);
+			var wantsSatisfied = [];
+
 			keys.forEach(function(key) {
 				if (State.isTrue(_wants[key].request.val) && !_wants[key].persistent) {
+					wantsSatisfied.push(_wants[key].request.val);
 					delete _wants[key];
 				}
 			});
+
+			if (wantsSatisfied.length > 0) { State.set("wantsSatisfied", wantsSatisfied); }			//set flag in state that wants were satisfied
+			else { State.set("wantsSatisfied", []); }
+
 		}
 
 		var toStr = function() {
