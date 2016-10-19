@@ -71,7 +71,7 @@ requirejs(
 	var story;
 	var graphData = [];
 	var leftToVisit = [];
-	var currentScene = "test2";		//later, this should be set from dropdown
+	var currentScene = "dinner";		//later, this should be set from dropdown
 
 	var stories = Coordinator.getStorySpec("all");
 	var testStories = HanSON.parse(testData);
@@ -84,7 +84,7 @@ requirejs(
 	//var groupingCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice"];
 
 	var graphRootId = "";
-	var iterNum = 25;				//number of playthroughs to run
+	var iterNum = 50;				//number of playthroughs to run
 	var iterStep = 0;
 	var idStepper = 0;
 	var deadendPaths = 1;
@@ -191,7 +191,7 @@ requirejs(
 		ChunkLibrary.add(globalData);
 
 		var wishlist = Wishlist.create(story.wishlist, State);
-		wishlist.logOn();
+		//wishlist.logOn();
 
 		if (story.characters) {
 			Character.init(State);
@@ -204,6 +204,16 @@ requirejs(
 
 		$("#storyDiagnostics").hide();
 		$("#storyDiagnosticsButton").hide();
+	}
+
+	//returns a color for a node if a want was satisfied
+	var setNodeColor = function(wantsSatisfied) {
+		if (wantsSatisfied && wantsSatisfied.length > 0) {
+			return "#43d9ff"
+		}
+		else {
+			return "#666666"
+		}
 	}
 
 	/*
@@ -227,6 +237,8 @@ requirejs(
 					id: uniqueNodeId,
 					textId: "[No path found!]",	
 					clickPath: util.clone(clickPath),
+					wantsSatisfied: State.get('wantsSatisfied'),
+					color: setNodeColor(State.get('wantsSatisfied')),
 					validChunks: State.get("validChunks").filter(function(val){ return val.valid == true }),
 					invalidChunks: State.get("validChunks").filter(function(val){ return val.valid == false })
 				}			
@@ -253,7 +265,9 @@ requirejs(
 						group: 'nodes',
 						data: {
 							id: parentId,
-							textId: parentId,	
+							textId: parentId,
+							color: '#666',
+							wantsSatisfied: State.get('wantsSatisfied'),
 							//clickPath: util.clone(clickPath),
 							//validChunks: State.get("validChunks").filter(function(val){ return val.valid == true }),
 							//invalidChunks: State.get("validChunks").filter(function(val){ return val.valid == false }),
@@ -277,10 +291,12 @@ requirejs(
 					id: uniqueNodeId,
 					textId: State.get("currentTextId"),	
 					clickPath: util.clone(clickPath),
+					wantsSatisfied: State.get('wantsSatisfied'),
 					validChunks: State.get("validChunks").filter(function(val){ return val.valid == true }),
 					invalidChunks: State.get("validChunks").filter(function(val){ return val.valid == false }),
 					groupingState: groupingStateString,
-					parent: theParent
+					parent: theParent,
+					color: setNodeColor(State.get('wantsSatisfied'))
 				}			
 			}
 		}
@@ -511,7 +527,39 @@ requirejs(
 			theHtml += "</ul>";
 		}
 		if (type == "data") {
-			theHtml += JSON.stringify(data, null, 4);
+			for (var subData in data) {
+				theHtml += "<p><strong>" + subData + "</strong></p><ul>";
+				switch (subData) {
+					case "clickPath":
+						for (var x=0; x < data[subData].length; x++) {
+							theHtml += "<li>" + data[subData][x].source + "</li>";
+						}
+					break;
+					case "invalidChunks":
+						/*if (data[subData].length == 0) { theHtml += "<li>none</li>"; }
+						for (var x=0; x < data[subData].length; x++) {
+							theHtml += "<li>" + data[subData][x].chunkId + "</li>";
+						}*/
+						break;
+					case "validChunks":
+						/*
+						if (data[subData].length == 0) { theHtml += "<li>none</li>"; }
+						for (var x=0; x < data[subData].length; x++) {
+							theHtml += "<li>" + data[subData][x].chunkId + "</li>";
+						}*/
+						break;
+					case "wantsSatisfied":
+						if (data[subData].length == 0) { theHtml += "<li>(none satisfied)</li>"; }
+						else { theHtml += "<li>" + data[subData] + "</li>"; }
+					break;
+					default:
+						theHtml += "<li>" + JSON.stringify(data[subData], null, 4) + "</li>";
+						break;
+				}
+				
+				theHtml += "</ul>";
+			}
+			//theHtml += JSON.stringify(data, null, 4);
 		}
 		var left = parseInt($(".cxtmenu div").css("left").substring(0, $(".cxtmenu div").css("left").length - 2)) + 120;
 		left = left + "px";
@@ -552,7 +600,7 @@ requirejs(
 			    {
 			      selector: 'node',
 			      style: {
-			        'background-color': '#666',
+			        'background-color': 'data(color)',
 			        'label': 'data(textId)'
 			      }
 			    },
@@ -580,7 +628,7 @@ requirejs(
 			    	}
 			    }
 			],
-			
+			/*
 			layout : {
 				name: 'cose',
 				fit: true,
@@ -589,7 +637,7 @@ requirejs(
 				useMultitasking: true,
 				animate: true
 			}
-			
+			*/
 			/*
 			layout : {						//this is the best so far
 				name: 'breadthfirst',
@@ -610,12 +658,10 @@ requirejs(
 				edgeSymDiffLength: 6
 			}
 			*/
-			/*
+			
 			layout : {				//settings here: https://github.com/cytoscape/cytoscape.js-dagre
 				name: 'dagre'
-
 			}
-			*/
 			/*
 			layout : {
 				name: 'concentric',
