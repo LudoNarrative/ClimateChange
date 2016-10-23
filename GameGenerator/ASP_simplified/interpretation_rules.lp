@@ -105,13 +105,23 @@ interpretation(Entity1,helper) :-
 interpretation(Entity,static) :-
     static(Entity).
 
-interpetation(Entity,rhythmic) :-
-    precondition(timerElapsed(Timer),Outcome),
-    1 {result(Outcome,moves(Entity,Direction));
-       result(Outcome,move_towards(Entity,Other));
-       result(Outcome,move_away(Entity,Other));
-       result(Outcome,rotates(Entity,Direction));
-       result(Outcome,rotate_to(Entity,Direction));
-       result(Outcome,set(target(ENTITY),Something))},
-    entity(Entity).
+% interpretation(Entity,rhythmic) :-
+    % precondition(timerElapsed(Timer),Outcome),
+    % 1 {result(Outcome,moves(Entity,Direction));
+       % result(Outcome,move_towards(Entity,Other));
+       % result(Outcome,move_away(Entity,Other));
+       % result(Outcome,rotates(Entity,Direction));
+       % result(Outcome,rotate_to(Entity,Direction));
+       % result(Outcome,set(target(ENTITY),Something))},
+    % entity(Entity).
 
+%ughh
+% interpretation(Entity2,positional_assymetry) :-
+        % result(O,add(Entity2,SpawnLocation)),
+        % interpretation(Entity1, consumes(E2)),
+        % initialize(add(Entity1,LA)),
+        % initialize(add(Entity1,LB)),
+        % distance(SpawnLocation,LA,DA),
+        % distance(SpawnLocation,LB,DB),
+        % DA != DB.
+        

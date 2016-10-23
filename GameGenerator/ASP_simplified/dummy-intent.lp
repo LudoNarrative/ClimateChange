@@ -14,3 +14,5 @@
 % :- onlyOnePrecondition(O), consumedBy(R,O).
 
 % :- not consumedBy(r1,o1).
+
+:- not controlScheme(_,drawn_to_cursor).

@@ -114,9 +114,9 @@ effect(EFFECT) :-
 % :- 2 {result(OUTCOME,EFFECT)}, effect(EFFECT).
 
 % an outcome needs result and precondition
-completeOutcome(OUTCOME) :- 
-    result(OUTCOME,EFFECT),
-    precondition(CONDITION,OUTCOME).
+% completeOutcome(OUTCOME) :- 
+    % result(OUTCOME,EFFECT),
+    % precondition(CONDITION,OUTCOME).
 
 % a resource is free if there is a way to decrease/increase not conditioned on the same resource - i.e. some way to change things
 freeResource(Resource) :- 
@@ -190,6 +190,26 @@ reachableCondition(overlaps(E1,E2,POLARITY))
 :- precondition(overlaps(E1,E2,POLARITY),O),
    controlLogic(draggable(E1)).
 
+reachableCondition(overlaps(E1,E2,POLARITY))
+:- precondition(overlaps(E1,E2,POLARITY),O),
+   result(_,move_towards(E1,cursor)).
+   
+   
+reachableCondition(overlaps(E1,E2,POLARITY))
+:- precondition(overlaps(E1,E2,POLARITY),O),
+   result(_,move_towards(E2,cursor)).
+   
+   
+
+reachableCondition(overlaps(E1,E2,POLARITY))
+:- precondition(overlaps(E1,E2,POLARITY),O),
+   result(_,move_away(E1,cursor)).
+   
+   
+reachableCondition(overlaps(E1,E2,POLARITY))
+:- precondition(overlaps(E1,E2,POLARITY),O),
+   result(_,move_away(E2,cursor)).
+   
 reachableCondition(overlaps(E1,E2,POLARITY))
 :- precondition(overlaps(E1,E2,POLARITY),O),
    controlLogic(draggable(E2)).
@@ -281,25 +301,25 @@ similar(le(R),O1,O2) :- similar(below(R),O1,O2).
 %%     precondition(C,O2),
 %%     outcome(O1).
     
-similarResult(increase(R,A1),O1,O2) :-
-    result(O1,increase(R,A1)),
-    result(O2,increase(R,A2)), 
-    outcomeOrder(O1,O2).
+% similarResult(increase(R),O1,O2) :-
+    % result(O1,increase(R)),
+    % result(O2,increase(R)), 
+    % outcomeOrder(O1,O2).
 
-similarResult(decrease(R,A1),O1,O2) :-
-    result(O1,decrease(R,A1)),
-    result(O2,decrease(R,A2)), 
-    outcomeOrder(O1,O2).  
+% similarResult(decrease(R),O1,O2) :-
+    % result(O1,decrease(R)),
+    % result(O2,decrease(R)), 
+    % outcomeOrder(O1,O2).  
     
-similarResult(increase(R,A2),O1,O2) :-
-    result(O1,increase(R,A1)),
-    result(O2,increase(R,A2)), 
-    outcomeOrder(O1,O2).
+% similarResult(increase(R),O1,O2) :-
+    % result(O1,increase(R)),
+    % result(O2,increase(R)), 
+    % outcomeOrder(O1,O2).
 
-similarResult(decrease(R,A2),O1,O2) :-
-    result(O1,decrease(R,A1)),
-    result(O2,decrease(R,A2)), 
-    outcomeOrder(O1,O2).
+% similarResult(decrease(R),O1,O2) :-
+    % result(O1,decrease(R)),
+    % result(O2,decrease(R)), 
+    % outcomeOrder(O1,O2).
 
 %% disjunctionResult(O1,O2) :-
 %%     not similarResult(R,O1,O2),
@@ -341,7 +361,7 @@ duplicatesPrecondition(O1, P) :-
 differentiated(O) :- 
   precondition(P, O), not duplicatesPrecondition(O, P).
 
-% :- outcome(O), not differentiated(O).
+:- outcome(O), not differentiated(O).
 
 
 
@@ -384,6 +404,9 @@ perEntity(target(E)) :- entity(E).
 
 every_frame(O) :- precondition(tick,O).
     
+not_every_frame(O) :- precondition(overlaps(E,_,true),O), result(O,delete(E)).
+not_every_frame(O) :- precondition(overlaps(_,E,true),O), result(O,delete(E)).
+
 not_every_frame(O) :- precondition(ge(R),O), result(O,decrease(R)).
 not_every_frame(O) :- precondition(le(R),O), result(O,increase(R)).
 

@@ -59,16 +59,24 @@ hasSymmetry(result(O,add(ENTITY,L))) :- result(O,add(ENTITY,L)),
 %%    C > 1.
 
 
-%% in_between_horizontal(center,left,right).
-%% in_between_horizontal(center,right,left).
-%% in_between_vertical(middle,top,bottom).
-%% in_between_vertical(middle,bottom,top).
+in_between_horizontal(center,left,right).
+in_between_horizontal(center,right,left).
+in_between_vertical(middle,top,bottom).
+in_between_vertical(middle,bottom,top).
 
-%% location(Y,X) :- rows(Y),columns(X).
+location(Y,X) :- rows(Y),columns(X).
 
-%% in_between(location(YM,XM),location(Y1,X1),location(Y2,X2)) :- 1 {in_between_horizontal(XM,X1,X2); in_between_vertical(YM,Y1,Y2)},
-%% 							       location(YM,XM),location(Y1,X1),location(Y2,X2).
+in_between(location(YM,XM),location(Y1,X1),location(Y2,X2)) :- 1 {in_between_horizontal(XM,X1,X2); in_between_vertical(YM,Y1,Y2)},
+							       location(YM,XM),location(Y1,X1),location(Y2,X2).
 
+spawnsAtInitial(E) :-  precondition(timerElapsed(_),O),
+    result(O,add(E,location(X,Y))),
+    initialize(add(E,location(X,Y))).
+
+ :-  precondition(timerElapsed(_),O),
+    result(O,add(E,location(X1,Y1))),
+    initialize(add(E,location(X2,Y2))),
+    not spawnsAtInitial(E).
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% % THIS PROBABLY NEEDS REWORKING
@@ -101,7 +109,23 @@ hasSymmetry(result(O,add(ENTITY,L))) :- result(O,add(ENTITY,L)),
 %% %%    interpretation(Player,player_controlled),
 %% %%    C1 > 0,
    
-      
+distanceV(top,middle,1).
+distanceV(top,bottom,2).
+distanceV(middle,bottom,1).
+distanceH(left,center,1).
+distanceH(left,right,1).
+distanceH(center,right,1).
+distanceH(T2,T,D) :- distanceH(T,T2,D).
+distanceV(T2,T,D) :- distanceV(T,T2,D).
+
+distanceL(location(X,Y),location(X2,Y2),D1 + D2) :- distanceV(X,X2,D1), distanceH(Y,Y2,D2).
 
 
-		  
+%% 			      initialize(add(ENTITY,TC,location(top,center))),
+%% 			      initialize(add(ENTITY,TL,location(top,left))),
+%% 			      initialize(add(ENTITY,MR,location(middle,right))),
+%% 			      initialize(add(ENTITY,MC,location(middle,center))),
+%% 			      initialize(add(ENTITY,ML,location(middle,left))),
+%% 			      initialize(add(ENTITY,BR,location(bottom,right))),
+%% 			      initialize(add(ENTITY,BC,location(bottom,center))),
+%% 			      initialize(add(ENTITY,BL,location(bottom,left))).
