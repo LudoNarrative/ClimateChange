@@ -1,11 +1,16 @@
 
-:- outcome(OUTCOME), not completeOutcome(OUTCOME).
+%:- outcome(OUTCOME), not completeOutcome(OUTCOME).
 
 :- precondition(overlaps(E1,E2,_),O),
    precondition(control_event(_),O),
    1 { precondition(overlaps(E1,E2,_),_) } 1.
 
 
+:- result(O,delete(E1)),
+   not precondition(overlaps(_,E1,true),O),
+   not precondition(overlaps(E1,_,true),O),
+   not precondition(control_event(click(E1)),O).
+   
 % Don't have more than 1 control event per outcome
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
 :- not playerControls.
@@ -39,8 +44,8 @@
 :- static(ENTITY), interaction(OTHER,ENTITY,push).
 :- static(ENTITY), interaction(OTHER,ENTITY,bounce).
 :- static(ENTITY), result(Outcome,moves(ENTITY,Direction)).
-:- static(Entity), effect(move_away(E, E_prime)).
-:- static(Entity), effect(move_towards(E, E_prime)).
+:- static(Entity), effect(move_away(Entity, E_prime)).
+:- static(Entity), effect(move_towards(Entity, E_prime)).
 
 
 
@@ -62,20 +67,9 @@
 :- goal(reach(end)), not placement(ENTITY, path(start)), avatar(ENTITY).  
 :- goal(reach(end)), not placement(ENTITY, path(end)), avatar(ENTITY).   
 
-% Don't increase or decrease in more than 1 way per resource, per outcome
-% CRM and MM 6/20/2016: We could turn this into a proceduralist reading
-% constraint with a notion of "confusingness."
-:- 2 {result(OUTCOME, decrease(RESOURCE,AMOUNT)) : potentialValues(AMOUNT)}, 
-    resource(RESOURCE), 
-    outcome(OUTCOME). 
-    
-:- 2 {result(OUTCOME, increase(RESOURCE,AMOUNT)): potentialValues(AMOUNT)}, 
-    resource(RESOURCE), 
-    outcome(OUTCOME). 
-    
 % Don't increase and decrease at the same time
-:-  result(OUTCOME,increase(RESOURCE,AMOUNT1)), 
-    result(OUTCOME,decrease(RESOURCE,AMOUNT2)).
+:-  result(OUTCOME,increase(RESOURCE)), 
+    result(OUTCOME,decrease(RESOURCE)).
     
 % Don't have 2 resources counting the same thing
 :- 2 {resourceLogic(RESOURCE,count(ENTITY)) : resource(RESOURCE)},
@@ -144,7 +138,7 @@
     result(OUTCOME,set_sprite(ENTITY,SPRITE)). 
 
 % Don't have complex button pressing states
-:- 2 {precondition(control_event(BUTTON,STATE),OUTCOME)
+:- 2 {precondition(control_event(button(BUTTON,STATE)),OUTCOME)
  : buttons(BUTTON), buttonStates(STATE)}, outcome(OUTCOME).
 
 % Don't move in multiple ways per outcome
@@ -170,8 +164,8 @@
 
 
 % only allow something to decrease on tick if it can be increased
-:- result(tick, decrease(R, A)),
-   not effect(increase(R, _)).
+:- result(tick, decrease(R)),
+   not effect(increase(R)).
 
 % more screen stuff
 :- effect(delete(E)), screen(E).
@@ -240,7 +234,7 @@
 :- precondition(_, O), unreachableOutcome(O).
 
 %:- result(O, add(E,Amount, P)), not controlled(O).
-:- result(O, delete(E)), not controlled(O).
+% :- result(O, delete(E)), not controlled(O).
 
 %%%% Misc - should be organized at some point.
 
@@ -260,10 +254,6 @@
     entity(E2),
     polarity(POLARITY).
 
-% misc
-:- effect(increase(R,R)).
-:- effect(decrease(R,R)).
-
 % Don't let something move away from the cursor if we need to click on it.
 :- result(O, move_away(E, cursor)), condition(control_event(click(E))).
 
@@ -272,28 +262,22 @@
     
 :-  onlyOnePrecondition(O),
     above(R,O),
-    result(O,increase(R2,A)).
+    result(O,increase(R2)).
     
 :-  onlyOnePrecondition(O),
     above(R,O),
-    result(O,decrease(R2,A)).
+    result(O,decrease(R2)).
           
 :-  onlyOnePrecondition(O),
     below(R,O),
-    result(O,increase(R2,A)).
+    result(O,increase(R2)).
     
 :-  onlyOnePrecondition(O),
     below(R,O),
-    result(O,decrease(R2,A)).
+    result(O,decrease(R2)).
     
 :-  result(O,move_away(E2,E1)),
     result(O2,move_away(E1,E2)).
-
-:-  result(O,increase(R1,R2)),
-    result(O,increase(R2,R1)).
-
-:-  result(O,decrease(R1,R2)),
-    result(O,decrease(R2,R1)).
     
 :- 3 {move(T,E)}, entity(E).
 
@@ -382,11 +366,6 @@
    result(_,add(E2,E1)).
 
 
-:- result(O,delete(E1)),
-   not precondition(overlaps(_,E1,true),O),
-   not precondition(overlaps(E1,_,true),O),
-   not precondition(overlaps(E1,_,true),O),
-   not precondition(control_event(click(E1)),O).
 
 :- result(O,add(E1,E2)),
    precondition(overlaps(E4,E3,true),O),
@@ -469,3 +448,8 @@ differentPreconditions(O1,O2) :-
    O1 != O2,
    not differentPreconditions(O1,O2).
    
+:-  result(OUTCOME,_),
+    not precondition(_,OUTCOME).
+    
+:-  not result(OUTCOME,_),
+    precondition(_,OUTCOME).

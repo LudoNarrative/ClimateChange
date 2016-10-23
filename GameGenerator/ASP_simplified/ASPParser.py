@@ -178,7 +178,7 @@ if __name__ == '__main__':
   
     replace = {}    
     for result in out['replace']:
-        
+        continue
         outcome = hashable(result[0]['terms'][0])
         if result[0]['terms'][2]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
             result[0]['terms'][1]['predicate'] = 'increase_over_time'

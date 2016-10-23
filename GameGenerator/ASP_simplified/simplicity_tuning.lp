@@ -3,7 +3,7 @@
 :- 8 {precondition(_,_)}.
 
 
-:- 8 {result(_,_)}.
+ :- 8 {result(_,_)}.
 
 
 simple(R) :- resource(R),

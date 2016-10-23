@@ -556,13 +556,13 @@ goal(achieve(Outcome)) :-
 goal(prevent(Outcome)) :-
     result(Outcome, mode_change(game_loss)).
 
-result(Outcome, decrease(Resource, 1)) :-
-    result(Outcome, delete(Entity)),
-    resourceLogic(Resource, count(Entity)).
+% result(Outcome, decrease(Resource, 1)) :-
+    % result(Outcome, delete(Entity)),
+    % resourceLogic(Resource, count(Entity)).
     
-result(Outcome, increase(Resource,1)) :-
-    result(Outcome,add(Entity, Place)),
-    resourceLogic(Resource,count(Entity)).
+% result(Outcome, increase(Resource,1)) :-
+    % result(Outcome,add(Entity, Place)),
+    % resourceLogic(Resource,count(Entity)).
  
 requires(Outcome, Entity) :-
     precondition(overlaps(Entity,Entity_B,POLARITY),Outcome).
@@ -602,16 +602,25 @@ enables(Enabler, Enabled) :-
 %%     result(Outcome1,delete(E)), 
 %%     result(Outcome2,delete(E)).
 
-sharedEntity(E, Outcome, Outcome) :-
-    result(Outcome,delete(E)),
+sharedEntity(E1, Outcome, Outcome) :-
+    result(Outcome,delete(E1)),
     precondition(overlaps(E1,E2,true),Outcome),
-    1{ many(E1);many(E2)}.
+    many(E2).
+    
+sharedEntity(E2, Outcome, Outcome) :-
+    result(Outcome,delete(E2)),
+    precondition(overlaps(E1,E2,true),Outcome),
+    many(E1).
     
 sharedResource(R, Outcome, Outcome) :-
     consumedBy(R, Outcome),
     precondition(overlaps(E1,E2,true),Outcome),
-    1{ many(E1);many(E2)}.
+    many(E1).
 
+sharedResource(R, Outcome, Outcome) :-
+    consumedBy(R, Outcome),
+    precondition(overlaps(E1,E2,true),Outcome),
+    many(E2).
 sharedResource(R, Outcome1, Outcome2) :-
     consumedBy(R, Outcome1),
     consumedBy(R, Outcome2),
@@ -1261,10 +1270,10 @@ bootstrapping(Bootstrapped,Outcome) :-
     result(Bootstrapped,increase(Resource)),
     result_enables(increase(Resource), Outcome).
 
-multipleResults(Outcome) :-
-    result(Outcome, R1),
-    result(Outcome, R2),
-    R1 != R2.
+% multipleResults(Outcome) :-
+    % result(Outcome, R1),
+    % result(Outcome, R2),
+    % R1 != R2.
 
 %% allocation_choice(Outcome1,Outcome2,Resource) :-
 %%     playerInfluences(Outcome1),

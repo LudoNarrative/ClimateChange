@@ -1,0 +1,15 @@
+
+
+dynamic_engine(R) :- 
+%source -- 
+        result(O,increase(R)),
+        %replace(result(O,increase(R)),result(O,increase(R,R2))) 
+%action -- 
+        precondition(ge(R),O2),
+        result(O2,decrease(R)),
+%invest -- 
+        precondition(ge(R),O3),
+        result(O3,decrease(R)),
+        result(O3,increase(R2)).
+          
+          

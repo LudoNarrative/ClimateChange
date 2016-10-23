@@ -1,5 +1,6 @@
 %:-  result(_,add(_,_)).
 
+:- result(_,add(_,E)), entity(E).
 
 % %cases %%%%
 % %% no controls except mouse.
