@@ -70,7 +70,7 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 			return b.satisfies.length - a.satisfies.length;
 		});
 
-		var bestSpeakerScore = 0;
+		var bestSpeakerScore = -1;
 		var bestPos;
 		var cutoffLength = paths[0].length;
 		var scoreDebug = [];
