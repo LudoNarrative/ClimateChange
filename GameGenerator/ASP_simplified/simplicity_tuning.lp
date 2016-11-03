@@ -18,7 +18,7 @@ simple(E) :- entity(E),
 	      result(_,delete(E));
 	      precondition(overlaps(_,E,_),_);
 	      precondition(overlaps(E,_,_),_);
-	      precondition(control_event(click(E)),_)} 3.
+	      precondition(control_event(click(E)),_)} 5.
 complex(E) :- not simple(E), entity(E).
 
 

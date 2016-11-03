@@ -401,6 +401,15 @@ result(O,apply_restitution(E1,E2)) :- precondition(collide(E1,E2),O).
 placements(field(random);field(uniform);field(corner);path(center);path(random);path(endpoints);path(uniform);path(start)).
 
 place(E) :- entity(E).
+place(location(top,center)).
+place(location(top,left)).
+place(location(middle,right)).
+place(location(middle,center)).
+place(location(middle,left)).
+place(location(bottom,right)).
+place(location(bottom,center)).
+place(location(bottom,left)).
+
 placementModality(one_shot;spawn).
 
 spawnTimings(one_shot;constant;exponential_increase;exponential_decay).

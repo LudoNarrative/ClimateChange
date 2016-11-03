@@ -1,3 +1,2 @@
 #!/bin/bash
-
-sed -e "s/\:\-.*//g" temp2 >  tempG2;  uniq -c tempG2 > tempG3; sort -nr tempG3 > tempG4 
+cut -d "(" -f 1 temp2 >  tempG2;  sort tempG2 | uniq -c > tempG3; sort -nr tempG3 > tempG4 
