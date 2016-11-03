@@ -1,3 +1,5 @@
+body { font-family: arial, sans-serif; }
+
 h1 {
 	font-family: Arial;
 }
@@ -123,7 +125,7 @@ span.chunk {
     position:fixed;
     width:40%;
     top:0px;
-    left: 0px;
+    right: 60px;
 }
 
 #storyContainer.editor div {
@@ -138,6 +140,7 @@ span.chunk {
     border: 2px solid #ccc;
     border-radius: 10px;
     padding: 10px;
+    display:none;
 }
 
 #popup_close {
@@ -151,8 +154,29 @@ span.chunk {
 #storyButton {
     width:50px;
     height:50px;
-    background-color:red;
-    position: fixed;
+    background-image:url('images/text.png');
+    background-size:100%;
+    top:10px;
+    left:10px;
+}
+
+#instructions {
+    font-family: arial;
+    width: 400px;
+    margin-bottom:20px;
+}
+
+#sceneSelectDiv { position:absolute; z-index:99; }
+
+#sceneSelectDiv label {
+    margin-right:10px;
+}
+
+#sceneSelectDiv select { margin-bottom:10px; }
+
+#cyto {
+    border:2px solid #ccc;
+    position:absolute;
+    left:0px;
     top:0px;
-    right:0px;
 }
