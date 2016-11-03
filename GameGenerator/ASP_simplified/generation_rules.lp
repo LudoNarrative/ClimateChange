@@ -404,11 +404,11 @@ perEntity(target(E)) :- entity(E).
 
 every_frame(O) :- precondition(tick,O).
     
-not_every_frame(O) :- precondition(overlaps(E,_,true),O), result(O,delete(E)).
-not_every_frame(O) :- precondition(overlaps(_,E,true),O), result(O,delete(E)).
+:- every_frame(O), precondition(overlaps(E,_,true),O), result(O,delete(E)).
+:- every_frame(O), precondition(overlaps(_,E,true),O), result(O,delete(E)).
 
-not_every_frame(O) :- precondition(ge(R),O), result(O,decrease(R)).
-not_every_frame(O) :- precondition(le(R),O), result(O,increase(R)).
+:- every_frame(O),precondition(ge(R),O), result(O,decrease(R)).
+:- every_frame(O), precondition(le(R),O), result(O,increase(R)).
 
 every_frame(O) :- not not_every_frame(O), precondition(C,O).
 

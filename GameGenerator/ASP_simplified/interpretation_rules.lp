@@ -6,7 +6,7 @@ interpretation(Entity1,spawns(Entity2)) :-
 
 interpretation(Entity1,shoots(Entity2)) :-
     result(O,add(Entity2,Entity1)),
-    result(tick,moves(forward(Entity2))).
+    result(tick,move(Entity2,forward)).
 
 interpretation(Entity1, harms(Entity2)) :-
     precondition(overlaps(Entity1,Entity2,true),O),

@@ -82,11 +82,11 @@
     transaction(RESOURCE,TRANSACTION).
     
 % can only change at most N resources per outcome
-:- max_resource_change_per + 1  {changes(OUTCOME,CHANGE, CV,V) :
-				 resource(CV),
-				 potentialValues(V), 
-				 change(CHANGE)}, 
-   outcome(OUTCOME).
+% :- max_resource_change_per + 1  {changes(OUTCOME,CHANGE, CV,V) :
+				 % resource(CV),
+				 % potentialValues(V), 
+				 % change(CHANGE)}, 
+   % outcome(OUTCOME).
 % :-  2 {changes(OUTCOME,CHANGE,CV,V)}, 
     % outcome(OUTCOME), 
     % resource(CV).        
@@ -453,3 +453,14 @@ differentPreconditions(O1,O2) :-
     
 :-  not result(OUTCOME,_),
     precondition(_,OUTCOME).
+    
+:-  precondition(overlaps(E1,E2,_),O),
+    result(O,move_away(E1,E2)).
+:-  precondition(overlaps(E2,E1,_),O),
+    result(O,move_away(E1,E1)).
+:-  precondition(overlaps(E1,E2,_),O),
+    result(O,move_towards(E1,E2)).
+:-  precondition(overlaps(E2,E1,_),O),
+    result(O,move_towards(E1,E1)).
+
+    

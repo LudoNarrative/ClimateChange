@@ -40,7 +40,7 @@ sharing_required :- sharing(O1,O2),
 :- not nonMonotonic(r1).
 
 %At least one entity is static
-:- not  static(e1).
+%:- not  static(e1).
 
 
 %At most 2 control events
@@ -50,6 +50,4 @@ sharing_required :- sharing(O1,O2),
 % non_discrete_game :- playerInfluences(O), every_frame(O).
 % :- non_discrete_game.
 
-% :- complex(R).
-
-:- not controlScheme(e2,drawn_to_cursor).
+:- complex(R).
