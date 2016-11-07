@@ -45,7 +45,7 @@
 
 
 % simply Don't have more than 2 preconditions
-:- 3 {precondition(CONDITION,Outcome)}, outcome(Outcome).
+:- 5 {precondition(CONDITION,Outcome)}, outcome(Outcome).
 
 
 
@@ -72,3 +72,113 @@ different_precondition(O1,O2) :-
    precondition(compare(le,Resource),Outcome).
 
 :- spatial_condition(E1,E2), not moves(E1), not moves(E2).
+
+  
+% require entities
+:- entity(Entity), not required(Entity).
+
+% only destroy that which you can create
+:-  required(Entity),
+   action(delete(Entity)),
+   not action(add(Entity)).
+
+
+% only allow something to decrease on tick if it can be increased
+:- result(tick, modify(decrease,R)),
+   not action(modify(increase,R)).
+
+
+% Don't check more than 1 collision
+:- 2 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)}, outcome(OUTCOME).
+
+
+
+:- resource(Resource), not freeResource(_,Resource).
+
+
+% simple feedback loop exclusion
+% Don't increase a resource on a positive check of it
+:- result(Outcome,modify(increase,Resource)),
+  precondition(compare(ge,Resource),Outcome).
+% don't decrease a resource on negative check of it
+:- result(Outcome,modify(decrease,Resource)),
+   precondition(compare(le,Resource),Outcome).
+
+
+:- result(Outcome, add(Entity)), singular(Entity).
+
+
+% constraint on reachability
+:- precondition(_, O), unreachableOutcome(O).
+
+
+%% Don't check for "mouse button pressed" and "clicking" an entity in the
+%  same game
+:- condition(control_event(button(mouse_button,pressed))),
+   condition(control_event(click(_))).
+
+
+% Don't let something move away from the cursor if we need to click on it.
+:- result(O, move(E, direction(away,cursor))),
+   condition(control_event(click(E))).
+
+:- precondition(timerElapsed(T),Outcome), 2 { precondition(C,Outcome)}.
+
+
+:- only_one_precondition(O),
+   precondition(compare(_,_),O),
+   result(O,modify(_,_)).
+
+
+
+:-  result(O,move(E2,direction(away,E1))),
+    result(O2,move(E1,direction(away,E2))).
+
+
+:- result(O,add(E)), every_frame(O).
+
+:- 2{result(O,modify(_,R))}, resource(R), outcome(O).
+
+:- precondition(control_event(click(Entity)),Outcome),
+   precondition(overlaps(Entity),Outcome).
+
+
+%:- precondition(overlaps(E,E,P),O),
+%   not precondition(collide(E,E),O).
+
+
+
+%Limitation of Phaser
+:- precondition(control_event(_),O),
+   precondition(overlaps(E1,E2,true),O),
+   precondition(collide(E1,E2),_).
+
+
+
+:- precondition(overlaps(_,_,false),O),
+   result(O,mode_change(_)).
+
+
+
+%Don't delete something if you click on it and it's also draggable
+:-  controlLogic(draggable(E)),
+    precondition(control_event(click(E)),O),
+    result(O,delete(E)),
+    only_one_precondition(O).
+
+
+:- result(O,delete(E)),
+   singular(E).
+
+
+:- condition(overlaps(E,E,_)), singular(E).
+
+:- result(O,mode_change(_)),
+   2 {result(O,_)}.
+
+:- result(O,mode_change(_)),
+   not precondition(overlaps(_),O),
+   not precondition(compare(_,_),O).
+
+:- 2{precondition(compare(_,_),O)},
+   outcome(O).

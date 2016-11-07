@@ -9,7 +9,7 @@ action(A) :- result(_,A).
 
 has_precondition(O) :- precondition(_,O).
 has_result(O) :- result(O,_).
-
+condition(Condition) :- precondition(Condition,_).
 
 every_frame(O) :- precondition(tick,O).
  
@@ -25,10 +25,92 @@ not_every_frame(O) :- precondition(timerElapsed(T),O) .
 playerControls :- precondition(control_event(EVENT),OUTCOME).
 playerControls :- controlLogic(_).
 
+player_controls(Entity) :-  controlLogic(draggable(Entity)).
+player_controls(Entity) :-  action(move(Entity,direction(_,cursor))).
+player_controls(Entity) :-  action(move(Entity,direction(_,Other))),
+			    player_controls(Other).
+player_controls(Entity) :-  result(Outcome,move(Entity,direction(_))),
+			    precondition(control_event(EVENT),Outcome).
+
+
+
+
 
 spatial_condition(E1,E2) :- precondition(overlaps(E1,E2,P),O).
 spatial_condition(E2,E1) :- precondition(overlaps(E1,E2,P),O).
 
 
+
 moves(E) :- result(_,move(E,_)).
 moves(E) :- controlLogic(draggable(E)).
+
+
+precondition(overlaps(Entity),Outcome) :-  precondition(overlaps(Entity,_,_),Outcome).
+precondition(overlaps(Entity),Outcome) :-  precondition(overlaps(_,Entity,_),Outcome).
+
+
+required(Entity) :- condition(control_event(click(Entity))).
+required(Entity) :- condition(overlaps(Entity)).
+
+
+% a resource is free if there is a way to decrease/increase not conditioned on the same resource - i.e. some way to change things
+freeResource(Change,Resource) :- 
+    resource(Resource), 
+    result(Outcome,modify(Change,Resource)),
+    not precondition(compare(_,_),Outcome),
+    outcome(Outcome).
+
+%or if it's conditioned in the proper way on a free resource
+freeResource(Change,Resource) :- 
+    resource(Resource), 
+    result(Outcome,modify(Change,Resource)),
+    precondition(compare(ge,Resource2),Outcome),
+    freeResource(increase,Resource2),
+    outcome(Outcome).
+
+freeResource(Change,Resource) :- 
+    resource(Resource), 
+    result(Outcome,modify(Change,Resource)),
+    precondition(compare(le,Resource2),Outcome),
+    freeResource(decrease,Resource2),
+    outcome(Outcome).
+
+
+reachableCondition(control_event(E))  :-
+    condition(control_event(E)).
+
+reachableCondition(tick)  :-
+    condition(tick).
+
+reachableCondition(timerElapsed(T)) :-
+    condition(timerElapsed(T)).
+
+reachableCondition(overlaps(E1,E2,POLARITY)) :-
+    reachableCondition(overlaps(E1)),
+    condition(overlaps(E1,E2,POLARITY)).
+
+reachableCondition(overlaps(E1,E2,POLARITY)) :-
+    reachableCondition(overlaps(E2)),
+    condition(overlaps(E1,E2,POLARITY)).
+
+reachableCondition(collide(E1,E2)) :- reachableCondition(overlaps(E1,E2,P)).
+
+reachableCondition(overlaps(Entity)) :-
+    player_controls(Entity).
+
+reachableCondition(compare(ge,Resource)) :-
+    action(modify(increase,Resource)).
+reachableCondition(compare(le,Resource)) :-
+    action(modify(decrease,Resource)).
+
+
+unreachableCondition(Condition) :- condition(Condition),
+				   not reachableCondition(Condition).
+
+unreachableOutcome(Outcome) :- precondition(Condition,Outcome),
+			       unreachableCondition(Condition).
+
+reachableOutcome(Outcome) :- outcome(Outcome),
+			     not unreachableOutcome(Outcome).
+
+only_one_precondition(Outcome) :- 1 {precondition(_,Outcome)} 1, outcome(Outcome).
