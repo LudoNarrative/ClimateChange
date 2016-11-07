@@ -34,23 +34,23 @@ outcome(repeled_from_cursor(ENTITY)) :- controlScheme(ENTITY,repeled_from_cursor
 %cursor is electromagnet
 precondition(control_event(button(mouse_button, held)),drawn_to_cursor(ENTITY)) :- 
     outcome(drawn_to_cursor(ENTITY)). 
-result(drawn_to_cursor(ENTITY), move(ENTITY,towards(cursor))):-
+result(drawn_to_cursor(ENTITY), move(ENTITY,direction(towards,cursor))):-
     outcome(drawn_to_cursor(ENTITY)).
 
 %cursor is opposite polarity (well, same polarity) electromagnet
 precondition(control_event(button(mouse_button, held)),repeled_from_cursor(ENTITY)) :- 
     outcome(repeled_from_cursor(ENTITY)). 
-result(repeled_from_cursor(ENTITY), move(ENTITY,away(cursor))):-
+result(repeled_from_cursor(ENTITY), move(ENTITY,direction(away,cursor))):-
     outcome(repeled_from_cursor(ENTITY)).
 
 place(E) :- entity(E).
 location(-1..1,-1..1).
 place(location(X,Y)) :- location(X,Y).
 
-{precondition(control_event(click(ENTITY)),outcome(OUTCOME))
+{precondition(control_event(click(ENTITY)),OUTCOME)
  : entity(ENTITY), outcome(OUTCOME)}.
 
-{precondition(compare((ge;le),RESOURCE),outcome(OUTCOME))
+{precondition(compare((ge;le),RESOURCE),OUTCOME)
  : resource(RESOURCE), outcome(OUTCOME)}.
 
 {precondition(control_event(button(BUTTON,STATE)),OUTCOME) 
@@ -62,8 +62,8 @@ place(location(X,Y)) :- location(X,Y).
  entity(ENTITY2),
  polarity(P)}.
 
-{precondition(timerElapsed(Timer), Outcome)
-  : outcome(Outcome), timer(Timer)}.
+1{precondition(timerElapsed(Timer), Outcome)
+  : outcome(Outcome)} 1 :- timer(Timer).
 
 
 
@@ -81,6 +81,24 @@ place(location(X,Y)) :- location(X,Y).
 {result(OUTCOME,modify(decrease,RESOURCE)) 
   : outcome(OUTCOME),resource(RESOURCE)}.
 
+properties(health).
+
+% resources can increase
+{result(OUTCOME,modify(increase,property(Property,Entity)))
+  : outcome(OUTCOME),entity(Entity),properties(Property)}.
+% or decrease
+{result(OUTCOME,modify(decrease,property(Property,Entity))) 
+  : outcome(OUTCOME),entity(Entity),properties(Property)}.
+
+
+{result(OUTCOME,  move(ENTITY1,direction(towards,ENTITY2)))
+ : outcome(OUTCOME),
+ entity(ENTITY1),
+ entity(ENTITY2)}.
+{result(OUTCOME,  move(ENTITY1,direction(away,ENTITY2)))
+ : outcome(OUTCOME),
+ entity(ENTITY1),
+ entity(ENTITY2)}.
 
 min_end_outcomes 
 {result(OUTCOME,mode_change(MODE)) : modes(MODE), outcome(OUTCOME)}
@@ -91,3 +109,10 @@ precondition(tick,tick) :- outcome(tick).
 
 
 1{many(Entity);singular(Entity)}1 :- entity(Entity).
+
+
+{precondition(collide(Entity1,Entity2),collide(Entity1,Entity2)) :
+ entity(Entity1),entity(Entity2)}.
+
+precondition(overlaps(E1,E2,true),O) :- precondition(collide(E1,E2),O).
+result(O,apply_restitution(E1,E2)) :- precondition(collide(E1,E2),O).
