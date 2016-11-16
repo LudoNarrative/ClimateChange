@@ -30,6 +30,11 @@
 {reading(produces,relation(Entity1,Entity2))} :-
     action(add(Entity2,Entity1)).
 
+    
+{reading(consumes,relation(Entity1,Entity2))} :-
+    precondition(overlaps(Entity2,Entity1,true),Outcome),
+    result(Outcome,delete(Entity2)).
+    
 {reading(chases,relation(Entity1,Entity2))} :-
     action(move(Entity1,direction(towards,Entity2))).
 
@@ -52,8 +57,6 @@
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,modify(increase,Resource1)).
 
-
-
 {reading(consts,relation(Entity1,Resource1))} :-
     result(Outcome,add(Entity1)),
     result(Outcome,modify(decrease,Resource1)).
@@ -62,7 +65,53 @@
     result(Outcome,add(Entity1)),
     result(Outcome,modify(decrease,Resource1)).
 
+{reading(goal(Action),Thing)} :-
+    goal(Action,Thing).
+
+{reading(goal(produce),Resource)} :-
+    precondition(compare(le,Resource),Outcome),
+    result(Outcome,mode_change(game_loss;narrative_gating)).
+
+{reading(goal(produce),Resource)} :-
+    precondition(compare(ge,Resource),Outcome),
+    result(Outcome,mode_change(game_win;narrative_progress)).
+
+    
+{reading(goal(reduce),Resource)} :-
+    precondition(compare(ge,Resource),Outcome),
+    result(Outcome,mode_change(game_loss;narrative_gating)).
+    
+{reading(goal(reduce),Resource)} :-
+    precondition(compare(le,Resource),Outcome),
+    result(Outcome,mode_change(game_win;narrative_progress)).
+
+{reading(sharing,relation(Entity,Entity1))} :-     
+    reading(consumes,relation(Entity1,Entity)),
+    many(Entity1),
+    precondition(overlaps(Entity,Entity1,true),Outcome),
+    result(Outcome,delete(Entity)),
+    result(Outcome,modify(increase,Resource)),
+    reading(good,Resource).
+    
+{reading(sharing,relation(Entity,Entity1))} :-     
+    reading(consumes,relation(Entity1,Entity)),
+    many(Entity1),
+    precondition(overlaps(Entity1,Entity,true),Outcome),
+    result(Outcome,delete(Entity)),
+    result(Outcome,modify(increase,Resource)),
+    reading(good,Resource).
+    
+{reading(good,Resource)} :-
+    reading(goal(produce),Resource).
+{reading(bad,Resource)} :-
+    reading(goal(reduce),Resource).
+    
 %%%% HELPERS 
+
+change(game_win,positive).
+change(narrative_progress,positive).
+change(game_loss,negative).
+change(narrative_gating,positive).
 
 over_time(Outcome) :-
     precondition(tick,Outcome).
@@ -82,27 +131,6 @@ monotonic(Resource) :-
 nonmonotonic(Resource) :-
     resource(Resource),
     not monotonic(Resource).
-
-{reading(goal(Action),Thing)} :-
-    goal(Action,Thing).
-
-{reading(goal(produce),Resource)} :-
-    precondition(compare(le,Resource),Outcome),
-    result(Outcome,mode_change(game_loss;narrative_gating)).
-
-{reading(goal(reduce),Resource)} :-
-    precondition(compare(ge,Resource),Outcome),
-    result(Outcome,mode_change(game_loss;narrative_gating)).
-
-
-{reading(goal(produce),Resource)} :-
-    precondition(compare(ge,Resource),Outcome),
-    result(Outcome,mode_change(game_win;narrative_progress)).
-
-{reading(goal(reduce),Resource)} :-
-    precondition(compare(le,Resource),Outcome),
-    result(Outcome,mode_change(game_loss;narrative_progress)).
-
 
 
 reading_about(Thing) :-
