@@ -22,7 +22,7 @@ indirectControls(click_and_drag;
 		 drawn_to_cursor;repeled_from_cursor).
 
 
-1 {controlScheme(ENTITY,SCHEME) : indirectControls(SCHEME)} 1 :- entity(ENTITY).
+{controlScheme(ENTITY,SCHEME) : indirectControls(SCHEME)} 1 :- entity(ENTITY).
 
 
 

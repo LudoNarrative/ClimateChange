@@ -59,4 +59,4 @@ complex(entities) :-
 
 
 readings(N) :- N = {reading(_,_)}.
-%#minimize { N : readings(N)}.
+#minimize { N : readings(N)}.

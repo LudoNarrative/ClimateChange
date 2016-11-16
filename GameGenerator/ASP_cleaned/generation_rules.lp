@@ -33,7 +33,7 @@ player_controls(Entity) :-  result(Outcome,move(Entity,direction(_))),
 			    precondition(control_event(EVENT),Outcome).
 
 
-
+player_controls_outcome(O) :- precondition(control_event(E),O).
 
 
 spatial_condition(E1,E2) :- precondition(overlaps(E1,E2,P),O).
@@ -114,3 +114,10 @@ reachableOutcome(Outcome) :- outcome(Outcome),
 			     not unreachableOutcome(Outcome).
 
 only_one_precondition(Outcome) :- 1 {precondition(_,Outcome)} 1, outcome(Outcome).
+
+    
+balanced(property(Property,E)) :- action(modify(increase,property(Property,E))),
+                                  action(modfiy(decrease,property(Property,E))).
+                                  
+frivolous(Resource) :- not condition(compare(_,Resource)),
+                        resource(Resource).

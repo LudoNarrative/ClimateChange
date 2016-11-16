@@ -1,4 +1,8 @@
 
+    
+:-  precondition(overlaps(E1,E2,POLARITY),O),
+    precondition(control_event(click(E3)),O).
+    
 :- outcome(o(N)), N > 2, not outcome(o(N-1)).
 :- resource(r(N)), N > 2, not resource(r(N-1)).
 :- entity(e(N)), N > 2, not entity(e(N-1)).
@@ -11,9 +15,6 @@
 :- 2 {precondition(C,tick)}.
 
    
-:- every_frame(O), precondition(overlaps(E,_,true),O), result(O,delete(E)).
-:- every_frame(O), precondition(overlaps(_,E,true),O), result(O,delete(E)).
-
 :- every_frame(O), precondition(compare(ge,R),O), result(O,modify(decrease,R)).
 :- every_frame(O), precondition(compare(le,R),O), result(O,modify(increase,R)).
 
@@ -182,3 +183,30 @@ different_precondition(O1,O2) :-
 
 :- 2{precondition(compare(_,_),O)},
    outcome(O).
+
+:- result(O,delete(E)),
+    result(O,add(E)). 
+
+    
+:-  result(Outcome,mode_change(game_loss;narrative_gating)),
+    player_controls_outcome(Outcome).
+
+:-  result(O,modify(_,property(_,E))),
+    result(O,delete(E)).
+
+:- condition(overlaps(e(E1),e(E2),POLARITY)),
+    E2 < E1.
+    
+    
+:-  precondition(control_event(click(E)),O),
+    result(O,add(E)).
+    
+:- action(modify(_,property(Property,E))),
+   not balanced(property(Property,E)).
+
+
+
+:-  controlLogic(draggable(E)),
+    condition(collide(E,_)).
+:-  controlLogic(draggable(E)),
+    condition(collide(_,E)).
