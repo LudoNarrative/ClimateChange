@@ -13,7 +13,7 @@ define([], function() {
 		State.set("characters", []);	//empty out any lingering characters
 	}
 
-	var add = function(charDef) {
+	var add = function(char, charDef) {
 		
 		var characters = State.get("characters");
 		if (typeof characters == "undefined") {
@@ -24,7 +24,7 @@ define([], function() {
 		if (charIndex > -1) {			//if the char was already read in, return undefined
 			return undefined;
 		}
-		
+		charDef.id = char;			//add dictionary key as id
 		characters.push(charDef);
 		State.set("characters", characters);
 		return get(charDef.id);		

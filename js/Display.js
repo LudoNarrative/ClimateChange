@@ -3,6 +3,12 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	var State;
 	var Coordinator;
 
+	//initializes our copy of State and Coordinator
+	var init = function(_Coordinator, _State) {
+		State = _State;
+		Coordinator = _Coordinator;
+	}
+
 	var makeLink = function(_coordinator, id, content, target) {
 		
 		var pTag = $('<p/>', {
@@ -31,10 +37,9 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 		_coordinator.startGame(id);
 	}
 
-	var initTitleScreen = function(_coordinator, _State, scenes) {
+	var initTitleScreen = function(_Coordinator, _State, scenes) {
 
-		State = _State;
-		Coordinator = _coordinator;
+		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
 		
 		$('<h1/>', {
 		    text: 'Climate Change Prototype',
@@ -46,7 +51,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 			id: 'begin',
 			click: function() {
 				$( "#blackout" ).fadeIn( "slow", function() {
-	    			startScene(_coordinator, scenes[0], true);
+	    			startScene(_Coordinator, scenes[0], true);
   				});
 			}
 		}).appendTo('body');
@@ -58,7 +63,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 
 		// For each scene, make a link to start it.
 		scenes.forEach(function(scene, pos) {
-			var el = makeLink(_coordinator, scene, scene, "#");
+			var el = makeLink(_Coordinator, scene, scene, "#");
 			$('body').append(el);
 		});
 
@@ -147,22 +152,24 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 		var stats = State.get("storyUIvars");
 		$("#"+containerId).html('');
 
-		stats.forEach(function(stat, pos) {
-			$('<div/>', {
-				id: stat+'Container',
-		    	class: 'stat'
-			}).appendTo("#"+containerId);
+		if (typeof stats !== "undefined") {
+			stats.forEach(function(stat, pos) {
+				$('<div/>', {
+					id: stat+'Container',
+			    	class: 'stat'
+				}).appendTo("#"+containerId);
 
-			$('<span/>', {
-		    	class: 'statLabel',
-		    	text: stat + ": "
-			}).appendTo('#'+stat+'Container');
+				$('<span/>', {
+			    	class: 'statLabel',
+			    	text: stat + ": "
+				}).appendTo('#'+stat+'Container');
 
-			$('<span/>', {
-		    	class: 'statValue',
-		    	text: State.get(stat)
-			}).appendTo('#'+stat+'Container');
-		});
+				$('<span/>', {
+			    	class: 'statValue',
+			    	text: State.get(stat)
+				}).appendTo('#'+stat+'Container');
+			});
+		}
 	};
 
 	//sets the intro screen for each scene
@@ -366,6 +373,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	}
 
 	return {
+		init : init,
 		initTitleScreen : initTitleScreen,
 		setAvatar : setAvatar,
 		setStats : setStats,
