@@ -72,7 +72,7 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 
 		var bestSpeakerScore = -1;
 		var bestPos;
-		var cutoffLength = paths[0].length;
+		var cutoffLength = typeof paths[0] !== "undefined" ? paths[0].length : 0;		//if paths[0] exists, set to that length, otherwise 0
 		var scoreDebug = [];
 
 		for (var x=0; x < paths.length; x++) {
