@@ -7,7 +7,7 @@
 
 define([], function() {
 
-	var ops = ["eq", "neq", "gte", "lte", "gt", "lt"];
+	var ops = ["eq", "neq", "gte", "lte", "gt", "lt", "incr", "decr"];
 
 	/* Return a condition string as an object with keys param, op, and value.
 	"x gt 5" becomes -> { param: "x", op: "gt", val: "5" }
@@ -68,6 +68,10 @@ define([], function() {
 				return value > conditionParts.value;
 			case "lt":
 				return value < conditionParts.value;
+			case "incr":
+				return true;		//should always evaluate to true, since in doing the action it fulfills it?
+			case "decr":
+				return true;		//should always evaluate to true, since in doing the action it fulfills it?
 			default:
 				throw new Error("Tried to test condition with op '" + conditionParts.op + "' but this did not seem to be a valid operator.");
 		}

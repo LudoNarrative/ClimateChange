@@ -25,6 +25,7 @@ requirejs.config({
 		"lectureData" : "../data/lecture.json", 
 		"dinnerData" : "../data/dinner.json",
 		"testData" : "../data/testData.json",
+		"generalistData" : "../data/generalist.json",
 
 		"Coordinator" : "../../Coordinator/Coordinator",
 		"Display" : "../../js/Display",
@@ -59,8 +60,8 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "StoryDisplay", "Display", "cytoscape", "cytoscape-cxtmenu", "dagre", "cytoscape-dagre", "cola", "cytoscape-cola", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Game", "AspPhaserGenerator", "util", "text!testData", "domReady!"],
-	function(State, StoryDisplay, Display, cytoscape, cxtmenu, dagre, cydagre, cola, cycola, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, AspPhaserGenerator, util, testData) {
+	["State", "StoryDisplay", "Display", "cytoscape", "cytoscape-cxtmenu", "dagre", "cytoscape-dagre", "cola", "cytoscape-cola", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Templates", "Game", "AspPhaserGenerator", "util", "text!testData", "domReady!"],
+	function(State, StoryDisplay, Display, cytoscape, cxtmenu, dagre, cydagre, cola, cycola, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Templates, Game, AspPhaserGenerator, util, testData) {
 
 	cxtmenu( cytoscape, $ ); 		// register extension
 	cydagre( cytoscape, dagre );	// register extension
@@ -72,7 +73,7 @@ requirejs(
 	var graphData = [];
 	var leftToVisit = [];
 	playThroughs = [];
-	var currentScene = "dinner";		//later, this should be set from dropdown
+	var currentScene = "generalist";		//starting scene (you can change this in the UI from the dropdown)
 
 	var stories = Coordinator.getStorySpec("all");
 	var testStories = HanSON.parse(testData);
@@ -80,7 +81,7 @@ requirejs(
 	testScenes = testStories.map(function(obj){return obj.id});
 
 	//which state variables to check to determine if we create a new node or merge it into one node
-	var stateCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice", "validChunks", "invalidChunks"];
+	var stateCompares = ["articlesRead","droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice", "validChunks", "invalidChunks"];
 	//which variables to check to determine if broken out but still in same container if same ID
 	//var groupingCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice"];
 
@@ -166,8 +167,11 @@ requirejs(
 		
 		ChunkLibrary.reset();
 		State.reset();
+		Display.init(Coordinator, State);
+		//Templates.init(Character);
 
 		//State.set("scenes", scenes);			//do we even need to do this?
+		State.set("displayType", "editor");
 		State.set("currentScene", currentScene);
 
 		var testStory = false;
@@ -201,7 +205,7 @@ requirejs(
 			}
 		}
 		State.set("mode", story.mode);
-		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay);
+		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 
 		$("#storyDiagnostics").hide();
 		$("#storyDiagnosticsButton").hide();
@@ -209,9 +213,13 @@ requirejs(
 
 	//returns a color for a node if a want was satisfied
 	var setNodeColor = function(wantsSatisfied) {
-		if (wantsSatisfied && wantsSatisfied.length > 0) {
+		if (wantsSatisfied == "error") {
+			return "#fa0505"
+		}
+		else if (wantsSatisfied && wantsSatisfied.length > 0) {
 			return "#43d9ff"
 		}
+		
 		else {
 			return "#666666"
 		}
@@ -227,7 +235,8 @@ requirejs(
 		var uniqueNodeId = "";
 		var theParent;
 		
-		if ($("#storyArea span.chunk")[$("#storyArea span.chunk").length-1].innerHTML == "[No path found!]") {		//if there's no path, make node for it
+		var currHtml = $("#storyArea span.chunk")[$("#storyArea span.chunk").length-1].innerHTML;
+		if (currHtml == "[No path found!]" || currHtml == "[Scene assembly failed.]") {		//if there's no path, make node for it
 			if (uniqueDeadEnds) {
 				uniqueNodeId = 'deadend' + deadendPaths;			//swap out for unique nodes for each ending
 			}
@@ -237,10 +246,10 @@ requirejs(
 				classes: 'lexia',
 				data: {
 					id: uniqueNodeId,
-					textId: "[No path found!]",	
+					textId: currHtml,	
 					clickPath: util.clone(clickPath),
 					wantsSatisfied: State.get('wantsSatisfied'),
-					color: setNodeColor(State.get('wantsSatisfied')),
+					color: setNodeColor("error"),		//JG
 					validChunks: State.get("validChunks").filter(function(val){ return val.valid == true }),
 					invalidChunks: State.get("validChunks").filter(function(val){ return val.valid == false })
 				}			
@@ -467,7 +476,7 @@ requirejs(
 				}
 			}
 
-			else if ($("#storyArea").html().indexOf("[End of scene.]") > -1) {
+			else if ($("#storyArea").html().indexOf("[End of scene.]") > -1) {				//if we're done, restart
 				addToGraph(clickPath);
 				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
 					iterStep++;
@@ -476,8 +485,18 @@ requirejs(
 					gotoChoice(nextNode.clickPath, story, levelData, globalData);
 				}
 			}
+
+			else if ($("#storyArea").html().indexOf("[Scene assembly failed.]") > -1) {			//if we errored out, restart
+				addToGraph(clickPath);
+				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
+					iterStep++;
+					console.log("reached an error in this playthrough, backing up and restarting...");
+					var nextNode = leftToVisit.shift();
+					gotoChoice(nextNode.clickPath, story, levelData, globalData);
+				}
+			}
 			
-			else if ($("#storyArea span.chunk").html() == "[No path found!]") {
+			else if ($("#storyArea").html().indexOf("[No path found!]") > -1) {					//if we couldn't find a path, restart
 				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
 					iterStep++;
 					console.log("reached the end of this playthrough, backing up and restarting...");
@@ -517,6 +536,11 @@ requirejs(
 
 			for (var x=1; x < clickPath.length; x++) {
 				addToGraph(clickPath);					//add node to graph
+
+				//JG (PROBLEM: looks like we have extra clicks added to the ends of paths here?)
+				if ($("#storyArea").html().indexOf("[No path found!]") > -1) {		//if there's no choice, don't click it
+					break;
+				}
 				clickChoice(clickPath[x].clickNum);		//click the choice
 			}
 			if (mode == "normal") {
@@ -848,9 +872,7 @@ requirejs(
 		$("#cyto").before("<div id='sceneSelectDiv'><label>Scene Selector</label><select id='sceneSelect'></select><br/><label># of Iterations</label><select id='iterSelect'></select><div id='storyButton'></div></div>");
 
 		normalScenes.forEach(function(scene) {
-			if (scene !== "dinner_argument") {
-				$('#sceneSelect').append($('<option>', {value: scene, text:scene }));
-			}
+			$('#sceneSelect').append($('<option>', {value: scene, text:scene }));
 		});
 		testScenes.forEach(function(scene) {
 			$('#sceneSelect').append($('<option>', {value: scene, text:scene }));

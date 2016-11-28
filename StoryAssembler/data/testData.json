@@ -90,5 +90,41 @@ Test specs used for the visualization tool to make sure different things are wor
 			"effects": ["set test2Con true"]
 		}
 	]
-}
+},
+//tests global grammars firing correctly
+{
+	"id": "test3",
+	"characters": {
+		"test1" : {"name": "Test1", "nickname": "McTesterson", "gender": "female" }
+	},
+	"wishlist": [
+		{ "condition": "test1Con eq true"},
+		{ "condition": "test2Con eq true"}
+	],
+	"startState": [
+		"set test1Con false"
+	],
+	"UIvars": [],
+	"mode": { 
+		"type": "narration"				//can be "narration", "dialogue", or "monologue"
+	},
+	"dataFile": [
+		{
+			"id": "test1_beginning",
+			"speaker" : "test1",
+			"content": "Just testing the barest minimum of an example.",
+			"choices": [
+				{"gotoId": "test1_end", "speaker": "Test1"},
+			],
+			"effects": ["set test1Con true"]
+		},
+		{
+			"id": "test1_end",
+			"speaker" : "Test1",
+			"choiceLabel": "Testing, testing, 123.",
+			"content": "Here's the second node doop de doo.",
+			"effects": ["set test2Con true"]
+		}
+	]
+},
 ]

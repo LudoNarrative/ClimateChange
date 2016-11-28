@@ -12,7 +12,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 	var Character;
 	var currentSpeaker = "";
 
-	var init = function(_State, _Character) {
+	var init = function(_Character) {
 		//State = _State;
 		Character = _Character;
 	}
@@ -71,23 +71,33 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 				return params[2];
 			}
 		},
-		// Template to print the name of the current speaker (which is stored in the "speaker" variable on the blackboard), using the expected 'name' property. 
+		// Returns the name of the current speaker (which is stored in the "speaker" variable on the blackboard), using the expected 'name' property. 
 		"speaker": function(params, text) {
 			if (params.length !== 0) {
 				console.error("Template command 'speaker' must not have any params, in text '" + text + "'.");
 				return "(speaker)";
 			}
-
 			var speaker = State.get("speaker");
 			if (!speaker) return "(speaker)";
 			var speakerChar = Character.get(speaker);
 			if (!speakerChar) return "(speaker)";
 			return speakerChar.name || speaker;
 		},
+
+		//{name|protagonist}
+		"name": function(params, text) {
+			if (params.length !== 1) {
+				console.error("Template command 'speaker' must have 1 param, in text '" + text + "'.");
+				return "(speaker)";
+			}
+			var speakerChar = Character.get(params[0]);
+			if (!speakerChar) return "(speaker)";
+			return speakerChar.name || speaker;
+		},
 		"ifSpeaker": function(params, text) {
 			if (params.length !== 3) {
 				console.error("Template 'ifSpeaker' doesn't have three params in chunk '" + text + "'.");
-				return "(speaker)";
+				return "(ifSpeaker)";
 			}
 			var speakerId = State.get("speaker");
 			if (params[0] == speakerId) { return params[1] }
@@ -96,7 +106,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		"convoMode": function(params, text) {
 			if (params.length !==3){
 				console.error("Template 'convoMode' doesn't have three params in chunk '" + text + "'.");
-				return "(speaker)";
+				return "(convoMode)";
 			}
 			var cMode = State.get("mode").type;
 			if (cMode == params[0]) { return params[1] }
@@ -168,10 +178,13 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 	}
 
 	// Main public interface. Given text with grammars, return its content with any templates rendered into fully realized text.
-	var render = function(rawText, speaker) {
+	var render = function(rawText, speaker, mode) {
 
 		currentSpeaker = speaker;
-		var txt = rawText;
+		var txt;
+		if (typeof rawText == "object") { txt = rawText[0]; }		//if rawText is coming from chunk content, it's an array, otherwise string
+		else { txt = rawText; }
+
 		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
 		var match;
 		while ((match = re.exec(txt)) !== null) {
@@ -185,8 +198,9 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		}
 
 		// If you wanted to do additional NLG-style processing here like analyzing a sentence and adding hedges, etc., this would be the place to modify 'txt' further before returning it.
-		if (typeof txt !== "undefined") {		//if it's undefined (other systems expecting undefined, not a txt string back, so leave it if so)
-			//txt = currentSpeaker + ": " + txt;
+		if (typeof txt !== "undefined" && mode !== "want") {		//if it's undefined (other systems expecting undefined, not a txt string back, so leave it if so)
+			var speakerName = processTemplate("{name|" + currentSpeaker + "}");
+			txt = speakerName + ": " + txt;
 		}
 
 		return txt;

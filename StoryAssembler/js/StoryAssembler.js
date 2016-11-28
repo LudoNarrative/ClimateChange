@@ -20,7 +20,7 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 		params = params || {};
 		
 		StoryDisplay.init(handleChoiceSelection, refreshNarrative);
-		Templates.init(State, _Character);
+		Templates.init(_Character);
 
 		continueScene();
 	}
@@ -163,10 +163,14 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 				bestPath = getBestPath(chunkLibrary);		//do a blind search
 			}
 			if (!bestPath) {								//if it's still empty, throw an error
-				throw new Error("Tried to get text for '" + chunkId + "' and it had no content, so we tried to recurse through bestPath, but did not find anything.");
+				if (State.get('displayType') !== "editor") {
+					throw new Error("Tried to get text for '" + chunkId + "' and it had no content, so we tried to recurse through bestPath, but did not find anything.");
+				}
+				else { endScene(true); }
 			}
-
-			doChunkText(chunkId, bestPath);		//display text from search
+			else {
+				doChunkText(chunkId, bestPath);		//display text from search
+			}
 			
 		}
 
@@ -272,7 +276,9 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 				choiceText = Templates.render(choiceText, choice.speaker);		//render any grammars in there
 
 				var choiceId = choice.val;
-				if (choice.type == "condition") { choiceId = choiceDetails[pos].id }	//if it's a condition, use the id of the one we fetched
+				if (choice.type == "condition") { 
+					choiceId = choiceDetails[pos].id //if it's a condition, use the id of the one we fetched	
+				}	
 				
 				var choiceObj = {
 					text: choiceText,
@@ -346,7 +352,11 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 	var handleEffects = function(chunk) {
 		if (!chunk.effects) return;
 		chunk.effects.forEach(function(effect) {
-			State.change(effect);
+			if (effect.indexOf("addWishlist") > -1) {		//if the effect is adding to the wishlist...
+				eval("var newWant = " + effect.substring(effect.indexOf("{"), effect.indexOf("}")+1));
+				wishlist.add(newWant);
+			}
+			else { State.change(effect); }
 		});
 		wishlist.removeSatisfiedWants();
 		if (typeof Display !== "undefined") {			//if we're not running tests, update the storyStats on the display
@@ -359,13 +369,14 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 	}
 
 	// Show the scene is over.
-	var endScene = function() {
-		var text = "Chapter complete!"; 		//TODO: we need stats here
-		if (typeof Display !== "undefined") {		//if we're not running tests, display scene outro
-			Display.setSceneOutro(text);
+	var endScene = function(assemblyFailed) {
+		
+		if (State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
+			Display.setSceneOutro("Chapter complete!");
 		}
 		else {
-			StoryDisplay.addStoryText("[End of scene.]");
+			if (assemblyFailed) { StoryDisplay.addStoryText("[Scene assembly failed.]");}
+			else { StoryDisplay.addStoryText("[End of scene.]"); }
 		}
 	}
 

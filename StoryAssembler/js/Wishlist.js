@@ -29,6 +29,12 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 			delete _wants[id];
 		}
 
+		var add = function(item) {		//add an item to the wishlist
+			var want;
+			want = Want.create(item);
+			_wants[want.id] = want;
+		}
+
 		// Get a random Want from the wishlist. (this is not especially useful except maybe for testing.)
 		var getRandom = function() {
 			if (wantsRemaining() > 0) {
@@ -90,6 +96,7 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 		// Return the wishlist interface.
 		return {
 			remove: remove,
+			add: add,
 			getRandom: getRandom,
 			wantsRemaining: wantsRemaining,
 			toStr: toStr,
