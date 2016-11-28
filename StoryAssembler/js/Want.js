@@ -3,7 +3,7 @@
 A want is a Request with associated metadata.
 */
 
-define(["Request", "Validate", "util"], function(Request, Validate, util) {
+define(["Request", "Validate", "Templates", "util", ], function(Request, Validate, Templates, util) {
 
 	var requiredFields = [];
 	var optionalFields = ["condition", "chunkId", "order", "persistent"];
@@ -22,6 +22,10 @@ define(["Request", "Validate", "util"], function(Request, Validate, util) {
 	Note that this is the same format as valid Wants, except that instead of condition or chunkId there will be a 'request' field that is a Request object (see the Request module).
 	*/
 	var create = function(want) {
+
+		for (var key in want) {	
+			want[key] = Templates.render(want[key], undefined, "want"); 
+		}
 		Validate.check(want, requiredFields, optionalFields);
 
 		if (want.condition) {
