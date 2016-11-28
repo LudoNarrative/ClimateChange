@@ -174,10 +174,6 @@ if __name__ == '__main__':
             free_variables.append(['action',free_var])
         else:
             results[outcome]['other'].append(prettify(terms[1]))
-    print resources        
-    print initializations
-    print preconditions
-    print results
     var_generator = create_generator(free_variables,{'condition':[0,1,3,5,10],'action':[1,2,5]})
     comparators = {'ge':lambda x,y: x >= y,
                    'le':lambda x,y: x <= y}
@@ -211,6 +207,7 @@ if __name__ == '__main__':
         latest_reached  = {}
         for simulations in range(simulation_count):
             state = { r:v for r,v in initializations.items()}
+            this_run = set()
             for timestep in range(depth):
                 for s,v in state.items():
                     next_state[s] = v
@@ -220,12 +217,17 @@ if __name__ == '__main__':
                     for condition in preconditions[outcome]['compare']:
                         if not comparators[condition[0]](state[condition[1]], condition[2][0]):
                             outcome_fails = True
-                    for condition in preconditions[outcome]['other']:
+                    
+                    if len( preconditions[outcome]['other']) > 0:
                         rand_fail = random.random() > random_odds
                         outcome_fails = outcome_fails or rand_fail
-
+                    for condition in preconditions[outcome]['other']:
+                        if 'tick' == condition:
+                            outcome_fails = False
+                        
                     if not outcome_fails:
                         outcome_reached.add(outcome)
+                        this_run.add(outcome)
                         if outcome not in earliest_reached:
                             earliest_reached[outcome] = float('inf')
                         earliest_reached[outcome] = min(timestep,earliest_reached[outcome])
@@ -237,6 +239,12 @@ if __name__ == '__main__':
                             next_state[action[1]] = modifiers[action[0]](next_state[action[1]],action[2][0])
                 for s,v in next_state.items():
                     state[s] = v
+            
+            for outcome in this_run:
+                for action in results[outcome]['other'] + results[outcome]['modify']:
+                    if 'game_loss' in action:
+                        loss_weight = 0.1
+                        fitness += loss_weight
         for outcome in results:
             if outcome not in latest_reached:
                 latest_reached[outcome] = depth*2
@@ -265,9 +273,9 @@ if __name__ == '__main__':
         
         if end_count > 0 and other_count > 0:
             avg_end_weight = 1
-            earliest_latest_weight = 10
+            earliest_latest_weight = 30
             fitness += avg_end_weight*(float(total_end)/float(end_count)-float(total_other)/float(other_count))
-           
+            
             fitness += earliest_latest_weight*(earliest_end-latest_other)
            
         return fitness,
@@ -333,8 +341,13 @@ if __name__ == '__main__':
         if fit > best:
             best = fit
             best_ind = ind
-    print best,best_ind
-
+    print best
+    for free_var,set_var in zip(free_variables,best_ind):
+        free_var[1][0] = set_var
+    print 'PRECONDITIONS'
+    print preconditions
+    print 'RESULTS'
+    print results
     '''
     for vars in var_generator:
         for simulations in range(simulation_count):
