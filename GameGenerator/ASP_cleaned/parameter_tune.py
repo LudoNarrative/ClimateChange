@@ -50,18 +50,7 @@ def parse_terms(arguments):
             terms.append({'predicate':arguments})
             arguments = ''
     return terms, ''
-            
-# def parse_atom(atom):
-    # if '(' in atom:
-        # left = atom.find('(')
-        # predicate  = atom[:left]
-        # rest = atom[left+1:-1]
-        # tok = ''
-        # for char in rest:
-             
-        # return {'predicate':predicate, 'terms':terms}
-    # else:
-        # return {'predicate':atom}
+   
 def parse_json_result(out):
     """Parse the provided JSON text and extract a dict
     representing the predicates described in the first solver result."""
@@ -159,6 +148,7 @@ if __name__ == '__main__':
             direction  = prettify(terms[0]['terms'][0])
             resource   = prettify(terms[0]['terms'][1])
             free_var = [0]
+<<<<<<< HEAD
             replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
             preconditions[outcome]['compare'].append( (direction,resource,free_var))
             free_variables.append(['condition',free_var])
@@ -168,6 +158,15 @@ if __name__ == '__main__':
   
     free_action_variables = []
     for result in out['result']:
+=======
+            preconditions[outcome]['compare'].append( [direction,resource,free_var])
+            free_variables.append(['condition',free_var,(outcome,direction,resource)])
+        else:
+            preconditions[outcome]['other'].append( prettify(terms[0]))
+    results = {}
+    
+    for result in parsed['result']:
+>>>>>>> a7f23a505fa45cc168fdb38dff5c1ff963e8ad9b
         
         result = result[0]
         terms = result['terms']
@@ -180,12 +179,42 @@ if __name__ == '__main__':
             direction  = prettify(terms[1]['terms'][0])
             resource   = prettify(terms[1]['terms'][1])
             free_var = [1]
+<<<<<<< HEAD
             replacements[prettify(result)] = ('result',outcome,direction,resource,free_var)
             results[outcome]['modify'].append( (direction,resource,free_var))
             free_variables.append(['action',free_var])
         else:
             results[outcome]['other'].append(prettify(terms[1]))
     var_generator = create_generator(free_variables,{'initialization':[0,5,10],'condition':[0,1,3,5,10],'action':[1,2,5]})
+=======
+            results[outcome]['modify'].append( [direction,resource,free_var])
+            free_variables.append(['action',free_var,(outcome,direction,resource)])
+        else:
+            results[outcome]['other'].append(prettify(terms[1]))
+    for outcome in preconditions:
+        outcome_direction = 0
+        for result in  results[outcome]['other']:
+            if 'game_win' in result:
+                outcome_direction = 10
+            if 'narrative_progress' in result:
+                outcome_direction = 5
+            if 'game_loss' in result:
+                outcome_direction = 10
+            if 'narrative_gating' in result:
+                outcome_direction = 5
+        if outcome_direction != 0:
+            for precondition in preconditions[outcome]['compare']:
+                if precondition[0] == 'le':
+                    outcome_direction = 10-outcome_direction
+                to_delete = -1
+                for ii in range(len(free_variables)):
+                    if free_variables[ii][2] == (outcome,precondition[0],precondition[1]):
+                        to_delete = ii
+                del free_variables[to_delete]
+                precondition[2] = [outcome_direction]
+    print free_variables
+    var_generator = create_generator(free_variables,{'condition':[0,1,3,5,10],'action':[1,2,5]})
+>>>>>>> a7f23a505fa45cc168fdb38dff5c1ff963e8ad9b
     comparators = {'ge':lambda x,y: x >= y,
                    'le':lambda x,y: x <= y}
     modifiers = {'increase': lambda x,y:  x+y,
@@ -357,12 +386,6 @@ if __name__ == '__main__':
     print best
     for free_var,set_var in zip(free_variables,best_ind):
         free_var[1][0] = set_var
-    print 'PRECONDITIONS'
-    print preconditions
-    print 'RESULTS'
-    print results
-    
-
     
     for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','static','timer']:
         for oo in out[o]:
