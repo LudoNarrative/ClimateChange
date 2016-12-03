@@ -123,21 +123,30 @@ if __name__ == '__main__':
     if err:
         print err
 
-    parsed = parse_json_result(out)
+    out = parse_json_result(out)
     resources = []
-    for resource in parsed['resource']:
+    for resource in out['resource']:
         
         resources.append(prettify(resource[0]['terms'][0]))
-    initializations = {}
-    for initialization in parsed['initialize']:
+    initializations = {}   
+    for initialization in out['initialize']:
         initialization = initialization[0]
         terms = initialization['terms'][0]
         if 'set' == terms['predicate']:
-            initializations[prettify(terms['terms'][0])] = int(terms['terms'][1]['predicate'])
+            initializations[prettify(terms['terms'][0])] = [int(terms['terms'][1]['predicate'])]
 
-    preconditions = {}
+            
     free_variables = []
-    for precondition in parsed['precondition']:
+    for resource in resources:
+        if resource not in initializations:
+            free_var = [0]
+            initializations[resource] = free_var
+            free_variables.append(['initialization',free_var])
+            
+            
+    preconditions = {}
+    replacements = {}
+    for precondition in out['precondition']:
         
         precondition = precondition[0]
         terms = precondition['terms']
@@ -150,14 +159,15 @@ if __name__ == '__main__':
             direction  = prettify(terms[0]['terms'][0])
             resource   = prettify(terms[0]['terms'][1])
             free_var = [0]
+            replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
             preconditions[outcome]['compare'].append( (direction,resource,free_var))
             free_variables.append(['condition',free_var])
         else:
             preconditions[outcome]['other'].append( prettify(terms[0]))
     results = {}
-    
+  
     free_action_variables = []
-    for result in parsed['result']:
+    for result in out['result']:
         
         result = result[0]
         terms = result['terms']
@@ -170,11 +180,12 @@ if __name__ == '__main__':
             direction  = prettify(terms[1]['terms'][0])
             resource   = prettify(terms[1]['terms'][1])
             free_var = [1]
+            replacements[prettify(result)] = ('result',outcome,direction,resource,free_var)
             results[outcome]['modify'].append( (direction,resource,free_var))
             free_variables.append(['action',free_var])
         else:
             results[outcome]['other'].append(prettify(terms[1]))
-    var_generator = create_generator(free_variables,{'condition':[0,1,3,5,10],'action':[1,2,5]})
+    var_generator = create_generator(free_variables,{'initialization':[0,5,10],'condition':[0,1,3,5,10],'action':[1,2,5]})
     comparators = {'ge':lambda x,y: x >= y,
                    'le':lambda x,y: x <= y}
     modifiers = {'increase': lambda x,y:  x+y,
@@ -189,24 +200,25 @@ if __name__ == '__main__':
     toolbox = base.Toolbox()
     def rand_range(min_,max_):
         def gen():
-            return min_ + (max_-min_)*random.random()
+            return random.randrange(min_,max_)
         return gen
-    toolbox.register("attr_float", random.random)
+    
+    toolbox.register("attr_int", rand_range(0,10))
     toolbox.register("individual", tools.initRepeat, creator.Individual,
-                     toolbox.attr_float, n=len(free_variables))
+                     toolbox.attr_int, n=len(free_variables))
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     def evaluate(individual):
         state = { r:v for r,v in initializations.items()}
         for free_var,set_var in zip(free_variables,individual):
             free_var[1][0] = set_var
-
+        
         next_state = {}
         fitness = 0
         outcome_reached = set()
         earliest_reached = {}
         latest_reached  = {}
         for simulations in range(simulation_count):
-            state = { r:v for r,v in initializations.items()}
+            state = { r:v[0] for r,v in initializations.items()}
             this_run = set()
             for timestep in range(depth):
                 for s,v in state.items():
@@ -236,6 +248,7 @@ if __name__ == '__main__':
                         latest_reached[outcome] = max(timestep,latest_reached[outcome])
                         
                         for action in results[outcome]['modify']:
+                           
                             next_state[action[1]] = modifiers[action[0]](next_state[action[1]],action[2][0])
                 for s,v in next_state.items():
                     state[s] = v
@@ -294,7 +307,7 @@ if __name__ == '__main__':
                             child[i] = max
                         elif child[i] < min:
                             child[i] = min
-                        #child[i] = np.round(child[i]*10.)/10.
+                        child[i] = np.round(child[i]*10.)/10.
                 return offspring
             return wrapper
         return decorator
@@ -348,32 +361,123 @@ if __name__ == '__main__':
     print preconditions
     print 'RESULTS'
     print results
-    '''
-    for vars in var_generator:
-        for simulations in range(simulation_count):
-            for timestep in range(depth):
-                for s,v in state.items():
-                    next_state[s] = v
+    
 
-                for outcome in preconditions:
-                    outcome_fails = False
-                    for condition in preconditions[outcome]['compare']:
-                        if not comparators[condition[0]](state[condition[1]], condition[2][0]):
-                            outcome_fails = True
-                    for condition in preconditions[outcome]['other']:
-                        outcome_fails = outcome_fails or random.random() > random_odds
+    
+    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','static','timer']:
+        for oo in out[o]:
+            for ooo in oo:
+                print prettify(ooo)+'.'
+        if len(out[o]) > 0:
+            print ''
+    outcome2precond = {}
+    replace_precondition = {}
+    for resource,initialization in initializations.items():
+        print 'initialize(set({},{})).'.format(resource,initialization[0])
+    print ''
+    
+    for precond in out['precondition']:
+        if precond[0]['terms'][0]['predicate'] == 'overlaps' and  len(precond[0]['terms'][0]['terms']) == 1:
+            continue
+        outcome = hashable(precond[0]['terms'][1])
+        if outcome not in outcome2precond:
+            outcome2precond[outcome] = []
+        if outcome in replace_precondition:
 
-                    if not outcome_fails:
-                        for action in results[outcome]['modify']:
-                            next_state[action[1]] = modifiers[action[0]](next_state[action[1]],action[2][0])
-                for s,v in next_state.items():
-                    state[s] = v
-            #print state
-            for s,v in state.items():
-                accum_states[s].append(float(v))
-        if display:
-            print free_variables
-            for s,vs in accum_states.items():
-                print s, np.mean(vs), np.std(vs),vs
-    '''
+            if prettify(precond[0]['terms'][0]) in replace_precondition[outcome]:
+                precond[0]['terms'][0] = replace_precondition[outcome][prettify(precond[0]['terms'][0])]
+        outcome2precond[outcome].append(precond[0])
+        
+    collidesOutcome = []
+    for outcome in outcome2precond:
+        collides = -1
+        overlaps = -1
+        for ii,precond in enumerate(outcome2precond[outcome]):
+            temp = prettify(precond)
+            if 'collide' in temp:
+                collides = ii
+            if 'overlaps' in temp:
+                overlaps = ii
+        if collides != -1:
+            outcome2precond[outcome].pop(overlaps)
+            collidesOutcome.append(outcome)
+            
+    outcome2result = {}
+    every_frames = set()
+    for every_frame in out['every_frame']:
+        every_frame = every_frame[0]
+        every_frames.add(every_frame['terms'][0]['predicate'])
+  
+    replace = {}    
+    for result in out['replace']:
+        continue
+        outcome = hashable(result[0]['terms'][0])
+        if result[0]['terms'][2]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
+            result[0]['terms'][1]['predicate'] = 'increase_over_time'
+            result[0]['terms'][2]['predicate'] = 'increase_over_time'
+            #print ':',result[0]
+            pass
+        if result[0]['terms'][2]['predicate'] ==  'decrease' and result[0]['terms'][0]['predicate'] in every_frames:
+            result[0]['terms'][1]['predicate'] = 'decrease_over_time'
+            result[0]['terms'][2]['predicate'] = 'decrease_over_time'
+            pass
+            #print ':',result[0]
+        if outcome not in replace:
+            replace[outcome] = {}
 
+        replace[outcome][prettify(result[0]['terms'][1])] = result[0]['terms'][2]
+        #replace[outcome].append(result[0])
+    for result in out['result']:
+        outcome = hashable(result[0]['terms'][0])
+        if outcome not in outcome2result:
+            outcome2result[outcome] = []
+        
+        if result[0]['terms'][1]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
+            result[0]['terms'][1]['predicate'] = 'increase_over_time'
+            #print ':',result[0]
+            pass
+        if result[0]['terms'][1]['predicate'] ==  'decrease' and result[0]['terms'][0]['predicate'] in every_frames:
+            result[0]['terms'][1]['predicate'] = 'decrease_over_time'
+            pass
+            #print ':',result[0]
+        if outcome in replace:
+            if prettify(result[0]['terms'][1]) in replace[outcome]:
+                result[0]['terms'][1] = replace[outcome][prettify(result[0]['terms'][1])]
+
+        outcome2result[outcome].append(result[0])
+    for outcome in sorted(outcome2precond):
+        if outcome not in collidesOutcome:
+            for precond in outcome2precond[outcome]:
+                if prettify(precond) in replacements:
+                    repl = replacements[prettify(precond)]
+                    #('precondition',outcome,direction,resource,free_var)
+                    print 'precondition(compare({},{},{}),{}).'.format(repl[2],repl[3],repl[4][0],repl[1])
+                else:
+                    print prettify(precond)+'.'
+            if outcome in outcome2result:
+                for result in outcome2result[outcome]:
+                    if prettify(result) in replacements:
+                        repl = replacements[prettify(result)]
+                        print 'result({},modify({},{},{})).'.format(repl[1],repl[2],repl[3],repl[4][0])
+                    else:
+                        print prettify(result)+'.'
+            print ''
+    for outcome in collidesOutcome:
+        for precond in outcome2precond[outcome]:
+            print prettify(precond)+'.'
+        if outcome in outcome2result:
+            for result in outcome2result[outcome]:
+                if prettify(result) in replacements:
+                    repl = replacements[prettify(result)]
+                    print 'result({},modify({},{},{})).'.format(repl[1],repl[2],repl[3],repl[4][0])
+                else:
+                    print prettify(result)+'.'
+        print ''
+    
+
+    for o in ['reading']:
+        for oo in out[o]:
+            for ooo in oo:
+                print prettify(ooo)+'.'
+        if len(out[o]) > 0:
+            print ''
