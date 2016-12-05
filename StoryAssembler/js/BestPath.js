@@ -62,66 +62,59 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 	// Given a set of paths, choose the path that maximally satisfies Wants.
 	// We are assuming the only Wants listed are those in our original list.
 	var chooseFromPotentialPaths = function(paths, wants, _chunkLibrary, _State) {
-		var bestScore = -1;
+
 		var bestPos = -1;
+		var bestSpeakerScore = -1;
 		paths = cullByWantOrder(paths, wants); // eliminate paths that ordering constraints make impossible
 		
-		var temp = paths.sort(function(a,b) {
+		paths.sort(function(a,b) {		//descending order, satisfies most to satisfies least
 			return b.satisfies.length - a.satisfies.length;
 		});
+		
+		var cutoffLength = typeof paths[0] !== "undefined" ? paths[0].satisfies.length : 0;		//if paths[0] exists, set to that length, otherwise 0
 
-		var bestSpeakerScore = -1;
-		var bestPos;
-		var cutoffLength = typeof paths[0] !== "undefined" ? paths[0].length : 0;		//if paths[0] exists, set to that length, otherwise 0
-		var scoreDebug = [];
+		for (var x=0; x < paths.length; x++) {		//for each path...
+			if (paths[x].satisfies.length < cutoffLength) { break; }			//if it doesn't satisfy as many wants, just stop
 
-		for (var x=0; x < paths.length; x++) {
-			thisScore = 0;
-			if (paths[x].length > cutoffLength) { break; }			//if it doesn't satisfy as many wants, just stop
-			if (typeof _chunkLibrary.get(paths[x].route[0]).speaker !== "undefined") {		//if the speaker for the chunk is good, add a point
-				if (_chunkLibrary.get(paths[x].route[0]).speaker == Character.getBestSpeaker(_State) ) {
-					thisScore++;
-				}
-			}
-			else { thisScore++; }		//if there's no speaker, add a point because we can cast it how we want
+			var thisScore = _calcSpeakerScore(paths[x], _chunkLibrary, _State);		//add in the score from speaker (paths written for current speaker score higher)
 
-			if (typeof paths[x].choiceDetails !== "undefined") {			//if there are options...
-				var optionPoints = 1 / paths[x].choiceDetails.length;		//we'll give 1/n points, where n is # of choices
-
-				for (var y=0; y < paths[x].choiceDetails.length; y++) {
-					var theChoiceSpeaker;
-					try { theChoiceSpeaker = _chunkLibrary.get(paths[x].choiceDetails[y].id).speaker; }
-					catch (err) { }
-					if (typeof theChoiceSpeaker !== "undefined") {
-						var bestSpeaker = Character.getBestSpeaker(_State,1);
-						if (bestSpeaker == theChoiceSpeaker) {
-							thisScore += optionPoints;
-						}
-					}
-					else { thisScore += optionPoints; }		//if it isn't defined, give it points because we can cast it ourselves
-				}
-			}
 			if (thisScore > bestSpeakerScore) {
 				bestSpeakerScore = thisScore;
 				bestPos = x;
 			}
-
-			scoreDebug.push(thisScore);
 		}
-		/*
-		paths.forEach(function(path, pos) {
-			var thisScore = path.satisfies.length;
-			if (thisScore > bestScore) {
-				bestScore = thisScore;
-				bestPos = pos;
-			}
-		});
-
-		return paths[bestPos];
-		*/
-
 		
 		return paths[bestPos];
+	}
+
+	//helper function...calculates the speaker score. Penalizes choices written for other characters than current one desired
+	var _calcSpeakerScore = function(thePath, _chunkLibrary, _State) {
+		var speakerScore = 0;
+
+		if (typeof _chunkLibrary.get(thePath.route[0]).speaker !== "undefined") {		//if the speaker for the chunk is good, add a point
+			if (_chunkLibrary.get(thePath.route[0]).speaker == Character.getBestSpeaker(_State) ) {
+				speakerScore++;
+			}
+		}
+		else { speakerScore++; }		//if there's no speaker, add a point because we can cast it how we want
+
+		if (typeof thePath.choiceDetails !== "undefined") {			//if there are options...
+			var optionPoints = 1 / thePath.choiceDetails.length;		//we'll give 1/n points, where n is # of choices
+
+			for (var y=0; y < thePath.choiceDetails.length; y++) {			//for each of the choices in each path...
+				var theChoiceSpeaker;
+				try { theChoiceSpeaker = _chunkLibrary.get(thePath.choiceDetails[y].id).speaker; }		//grab a speaker if it has one
+				catch (err) { }
+				if (typeof theChoiceSpeaker !== "undefined") {				//if it doesn't have one...
+					var bestSpeaker = Character.getBestSpeaker(_State,1);		//make one
+					if (bestSpeaker == theChoiceSpeaker) {
+						speakerScore += optionPoints;
+					}
+				}
+				else { speakerScore += optionPoints; }		//if it isn't defined, give it points because we can cast it ourselves
+			}
+		}
+		return speakerScore;
 	}
 
 	// Cull paths based on the "order" field of wishlist wants. 
