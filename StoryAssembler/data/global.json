@@ -66,5 +66,86 @@
 
 	//---------------------------CHALLENGE---------------------------------------
 
-	//---------------------------SUPPORT-----------------------------------------
+
+
+	//---------------------------GENERALIST-----------------------------------------
+	{
+		"id": "apologizeMessy",
+		"speaker" : "ally",
+		"content": "Sorry everything's so messy!",
+		"effects": [""]
+	},
+	{
+		"id": "justMovedIn",
+		"speaker" : "ally",
+		"content": "I keep forgetting...you haven't been here before, right?",
+		"conditions": ["setting neq beach"],
+		"effects": [""]
+	},
+	{
+		"id": "bathroomDownTheHall",
+		"speaker" : "ally",
+		"content": "{ifState|dinner|3|Bathroom's down that hallway, in case you forgot.|}{ifState|classroom|3|Break room's up on the third floor, in case you forgot.|}{ifState|beach|3|Lunch is gonna be back at the parking lot, in case no one told you.|}",
+		"conditions": ["setting neq beach"],
+		"effects": ["set establishSetting true"]
+	},
+
+	{
+		"id": "takingItIn",
+		"choiceLabel": "Sure! Sorry, I was just taking everything in.",
+		"request": {"condition": "establishSetting eq true"}
+	},
+	//--------------------Set up challenge (not confident)-------------------------------------------------
+	{
+		"id": "whatsWrong",
+		"speaker" : "ally",
+		"content": "Hey what's wrong, {name|protagonist}? You've got that look.",
+		"choices": [
+			{"gotoId" : "whatAmIDoing", "speaker" : "protagonist" }
+		],
+		"effects": ["set provokeConfidenceChoice true"]
+	},
+//--------------------Set up challenge (confident)-------------------------------------------------
+//(set provokeConfidenceChoice true)
+	{
+		"id": "whyDoesItMatter",
+		"speaker" : "antagonist",
+		"content": "Honestly, I don't see how you're going to make a difference. We're all screwed. But if it makes you feel better, I guess go ahead and do it while you can.",
+		"choices" : [
+			{"condition": "droppedKnowledge incr 1", "speaker" : "protagonist"},
+		],
+		"effects": ["set provokeConfidenceChoice true"]
+	},
+	{
+		"id": "youreOverreacting",
+		"speaker" : "antagonist",
+		"content": "Seriously, I think you and all the other alarmists are over-reacting. This whole climate change thing is just a bunch of self-absorbed panic.",
+		"choices" : [
+			{"condition": "droppedKnowledge incr 1", "speaker" : "protagonist"},
+		],
+		"effects": ["set provokeConfidenceChoice true"]
+	},
+
+//-----------------------------------------------------------------------------------------------------
+//(set allyReassuresProtag true)
+	{
+		"id": "whatAmIDoing",
+		"choiceLabel": "I just...what am I even doing? I mean even if I get this degree, what then?",
+		"speaker" : "ally",
+		"content": "Don't give me that, {name|protagonist}! You've been doing this your whole life! You got this!",
+		"effects": ["set allyReassuresProtag true"]
+	},
+	{
+		"id": "easilyBacksdown",
+		"speaker" : "antagonist",
+		"content": "Woah, woah. Ok sorry.",
+		"conditions": ["provokeConfidenceChoice eq true"],
+		"effects": ["set allyReassuresProtag true"]
+	},
+//--------------------------------------------------------------------------------------------------------
+	{
+		"id": "confidentRebuttal",
+		"choiceLabel" : "Are you kidding? There are all sorts of things. Look-",
+		"request": {"condition": "droppedKnowledge incr 1"}
+	}
 ]

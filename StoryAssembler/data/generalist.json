@@ -65,39 +65,8 @@ Characters:
 			{"condition": "establishSetting eq true", "speaker" : "protagonist"},
 			{"condition": "provokeConfidenceChoice eq true", "speaker" : "protagonist"},
 			{"condition": "establishSetting eq true", "speaker" : "protagonist"}
-		]
-	},
-	{
-		"id": "chooseSetting",
-		"speaker" : "ally",
-		"content": ["Hey wait a second. Where the heck are we?"],
-		"choices": [
-			{"gotoId" : "settingDinner", "speaker" : "protagonist" },
-			{"gotoId" : "settingBeach", "speaker" : "protagonist" },
-			{"gotoId" : "settingClassroom", "speaker" : "protagonist" }
 		],
-		"effects": ["addWishlist { 'condition': 'itsAwesome eq true', 'persistent': true }"]
-	},
-	{
-		"id": "settingDinner",
-		"choiceLabel": "Dinner, of course?",
-		"speaker" : "ally",
-		"content": "Yeah, I thought so!",
-		"effects": ["set setting dinner", "set setSetting true"]
-	},
-	{
-		"id": "settingBeach",
-		"choiceLabel": "The beach, of course?",
-		"speaker" : "ally",
-		"content": "Yeah, I thought so!",
-		"effects": ["set setting beach", "set setSetting true"]
-	},
-	{
-		"id": "settingClassroom",
-		"choiceLabel": "The classroom, of course?",
-		"speaker" : "ally",
-		"content": "Yeah, I thought so!",
-		"effects": ["set setting classroom", "set setSetting true"]
+		"effects": ["addWishlist { 'condition': 'droppedKnowledge gte 1' }"]
 	},
 
 	//---------------------------BACKSTORY---------------------------------------
