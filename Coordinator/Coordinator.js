@@ -162,10 +162,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"antagonist": {name: "Shelly", nickname: "Shelly", gender: "female"}
 			},
 			wishlist: [
+				{ condition: "setSetting eq true", order: "first" },		//debug item to let us mash settings together
+
 				{ condition: "establishSpecialtyInfo eq true" },
 				{ condition: "establishSetting eq true" },
 				{ condition: "establishAllyBackstory eq true" },
-				{ condition: "establishProtagRegrets eq true" },
+				//{ condition: "establishProtagRegrets eq true" },
 				{ condition: "establishProtagBackstory eq true" },
 				{ condition: "provokeConfidenceChoice eq true" },
 				{ condition: "allyReassuresProtag eq true"},
@@ -177,7 +179,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set droppedKnowledge 0",
 				"set confidence 5",
 				"set patience 5",
-				"set argue false"
+				"set argue false",
+
 			],
 			UIvars: [
 				"confidence",
