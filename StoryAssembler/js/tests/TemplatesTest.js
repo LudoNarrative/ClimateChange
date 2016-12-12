@@ -28,16 +28,16 @@ define(["../Templates", "../State"], function(Templates, State) {
 			var render = function(txt) { return Templates.render(txt); }
 
 			// Tests
-			assert.deepEqual(render("some text"), "some text", "text without templates is unchanged");
-			assert.deepEqual(render("some {testNoParams} text"), "some resultOne text", "cmd without params");
-			assert.deepEqual(render("{testNoParams} at start"), "resultOne at start", "templates at start of string");
-			assert.deepEqual(render("at end is {testNoParams}"), "at end is resultOne", "templates at end of string");
-			assert.deepEqual(render("some \\{testNoParams\\} text"), "some \\{testNoParams\\} text", "escaping braces");
-			assert.deepEqual(render("\\{testNoParams\\} at start"), "\\{testNoParams\\} at start", "escaping braces at start of string doesn't work");
-			assert.deepEqual(render("this is {messed {up"), "this is {messed {up", "malformed should be skipped");
-			assert.deepEqual(render("lots of {testTwoParams|fun|asdf} {testTwoParams|exciting|xcvb} {testNoParams} stuff"), "lots of fun exciting resultOne stuff", "test with multiple params");
-			assert.deepEqual(render("{testTwoParams|paral|x}{testTwoParams|lel|y}"), "parallel", "adjacent templates");
-			assert.deepEqual(render("{testTwoParams|{testNoParams}|nope}"), "()|nope}", "nested params shuold be rejected");
+			assert.deepEqual(render("some text"), "(speaker): some text", "text without templates is unchanged");
+			assert.deepEqual(render("some {testNoParams} text"), "(speaker): some resultOne text", "cmd without params");
+			assert.deepEqual(render("{testNoParams} at start"), "(speaker): resultOne at start", "templates at start of string");
+			assert.deepEqual(render("at end is {testNoParams}"), "(speaker): at end is resultOne", "templates at end of string");
+			assert.deepEqual(render("some \\{testNoParams\\} text"), "(speaker): some \\{testNoParams\\} text", "escaping braces");
+			assert.deepEqual(render("\\{testNoParams\\} at start"), "(speaker): \\{testNoParams\\} at start", "escaping braces at start of string doesn't work");
+			assert.deepEqual(render("this is {messed {up"), "(speaker): this is {messed {up", "malformed should be skipped");
+			assert.deepEqual(render("lots of {testTwoParams|fun|asdf} {testTwoParams|exciting|xcvb} {testNoParams} stuff"), "(speaker): lots of fun exciting resultOne stuff", "test with multiple params");
+			assert.deepEqual(render("{testTwoParams|paral|x}{testTwoParams|lel|y}"), "(speaker): parallel", "adjacent templates");
+			assert.deepEqual(render("{testTwoParams|{testNoParams}|nope}"), "(speaker): ()|nope}", "nested params shuold be rejected");
 
 			//State.change("set charName Maria");
 			//assert.deepEqual(render("Hello, {charName}!"), "Hello, Maria!", "showing State value directly");

@@ -371,7 +371,7 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 	// Show the scene is over.
 	var endScene = function(assemblyFailed) {
 		
-		if (State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
+		if (typeof Display !== "undefined" && State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
 			Display.setSceneOutro("Chapter complete!");
 		}
 		else {
