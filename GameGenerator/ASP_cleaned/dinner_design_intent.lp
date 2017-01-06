@@ -17,3 +17,6 @@
 :- not reading(goal(produce),r(1)).
 :- not action(mode_change(narrative_gating)).
 :- 2 {action(mode_change(N))}.
+
+:- not static(e(2)).
+

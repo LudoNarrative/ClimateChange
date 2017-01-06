@@ -8,6 +8,11 @@ from deap import base
 from deap import creator
 from deap import tools
 
+comparators = {'ge':lambda x,y: x >= y,
+               'le':lambda x,y: x <= y}
+modifiers = {'increase': lambda x,y:  x+y,
+             'decrease': lambda x,y:  x-y}
+
 def solve(*args):
     """Run clingo with the provided argument list and return the parsed JSON result."""
     args = ['clingo','--outf=2']+list(args)
@@ -33,13 +38,6 @@ def solve_randomly(*args):
     """Like solve() but uses a random sign heuristic with a random seed."""
     args = list(args[0]) + ["--sign-def=3","--seed="+str(random.randint(0,1<<30))]
     return solve(*args)   
-
-def create_generator(free_vars,var_map):
-    import itertools
-    somelists = []
-    for var in free_vars:
-        somelists.append(var_map[var[0]])
-    return itertools.product(*somelists)
 
 def parse_terms(arguments):
     terms = []
@@ -123,6 +121,176 @@ def hashable(obj):
 
     return items
 
+
+
+def parse_game(result):
+    resources = []
+
+    
+    for resource in result['resource']:        
+        resources.append(prettify(resource[0]['terms'][0]))
+    initializations = {}
+    settings = []   
+    for initialization in result['initialize']:
+        initialization = initialization[0]
+        terms = initialization['terms'][0]
+        if 'set' == terms['predicate']:
+            settings.append(('initialize',prettify(terms['terms'][0]),[int(terms['terms'][1]['predicate'])],'set'))
+        if 'add' in terms['predicate']:
+            settings.append(('initialize',prettify(terms['terms'][0]),[int(terms['terms'][1]['predicate'])],'add',prettify(terms['terms'][2])))
+    free_variables = []
+    
+    for resource in resources:
+        if resource not in initializations:
+            free_var = [0]
+            free_variables.append(['initialize',free_var])
+            settings.append(('initialize',resource,free_var,'set'))
+            
+            
+    rules = {}
+    replacements = {}
+    for precondition in result['precondition']:
+        
+        precondition = precondition[0]
+        terms = precondition['terms']
+        outcome = prettify(terms[1])
+        if outcome not in rules:
+            rules[outcome] = {}
+            rules[outcome]['preconditions'] = {}
+            rules[outcome]['preconditions']['compare'] = []
+            rules[outcome]['preconditions']['other'] = []
+            rules[outcome]['preconditions']['overlaps'] = []
+            rules[outcome]['results'] = {}
+            rules[outcome]['results']['modify'] = []
+            rules[outcome]['results']['other'] = []
+            rules[outcome]['results']['add'] = []
+            rules[outcome]['results']['delete'] = []
+        if 'compare' == terms[0]['predicate']:
+            direction  = prettify(terms[0]['terms'][0])
+            resource   = prettify(terms[0]['terms'][1])
+            free_var = [0]
+            replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
+            rules[outcome]['preconditions']['compare'].append( (direction,resource,free_var))
+            free_variables.append(['condition',free_var])
+        elif 'overlaps' == terms[0]['predicate'] or 'collide' == terms[0]['predicate']:
+            entity1  = prettify(terms[0]['terms'][0])
+            entity2   = prettify(terms[0]['terms'][1])
+            
+            rules[outcome]['preconditions']['overlaps'].append( (entity1,entity2))
+        else:
+            rules[outcome]['preconditions']['other'].append( prettify(terms[0]))
+   
+    free_action_variables = []
+    for result in result['result']:
+
+        
+        result = result[0]
+        terms = result['terms']
+        outcome = prettify(terms[0])
+        if 'modify' == terms[1]['predicate']:
+            direction  = prettify(terms[1]['terms'][0])
+            resource   = prettify(terms[1]['terms'][1])
+            free_var = [1]
+            replacements[prettify(result)] = ('result',outcome,direction,resource,free_var)
+            rules[outcome]['results']['modify'].append( (direction,resource,free_var))
+            free_variables.append(['action',free_var])
+        elif 'add' == terms[1]['predicate']:
+            entity   = prettify(terms[1]['terms'][0])
+            rules[outcome]['results']['add'].append( (entity))
+        elif 'delete' == terms[1]['predicate']:
+            entity   = prettify(terms[1]['terms'][0])
+            rules[outcome]['results']['delete'].append( (entity))
+            
+        else:
+            rules[outcome]['results']['other'].append(prettify(terms[1]))
+    return settings,free_variables,rules,replacements
+
+def run_once(rules,settings,player_model,depth):
+    state = {}
+    for setting in settings:
+        if 'initialize' == setting[0]:
+            state[setting[1]] = setting[2]
+            
+    next_state = {}
+    history = []
+    for timestep in range(depth):
+        rules_fired = []
+        
+        for s,v in state.items():
+            next_state[s] = v
+        for outcome in rules:
+            outcome_fails = random.random() > player_model[outcome]
+            if outcome_fails:
+                continue
+            
+            for condition in rules[outcome]['preconditions']['compare']:
+                if not comparators[condition[0]](state[condition[1]], condition[2]):
+                    outcome_fails = True
+                    break
+            if outcome_fails:
+                continue
+            for condition in rules[outcome]['preconditions']['overlaps']:
+                if state[condition[0]] <= 0 or state[condition[1]]  <= 0:
+                    outcome_fails = True
+                    break
+            if outcome_fails:
+                continue
+
+            rules_fired.append(outcome)
+            for action in rules[outcome]['results']['modify']:
+                next_state[action[1]] = [modifiers[action[0]](next_state[action[1]][0],action[2][0])]
+            for action in rules[outcome]['results']['add']:
+                state[action[0]] += 1
+            for action in rules[outcome]['results']['delete']:
+                state[action[0]] -= 1
+                state[action[0]] = max(0,state[action[0]])
+                
+        history.append(rules_fired)
+        for s,v in next_state.items():
+            state[s] = v
+    return history
+
+def score_individual(free_variables,rules,settings,player_model,depth,simulation_count):
+    
+    def score(individual): 
+        outcome_reached = set()  
+        fitness = 0
+        earliest_reached = {}
+        latest_reached = {}
+        for simulations in range(simulation_count):     
+            for free_var,set_var in zip(free_variables,individual):
+                free_var[1][0] = set_var
+            history =  run_once(rules,settings,player_model,depth)
+            for step_ind,step in enumerate(history):
+                for rule in step:
+                    outcome_reached.add(rule)
+                    if rule not in earliest_reached:
+                        earliest_reached[rule] = float('inf')
+                        latest_reached[rule] = float('-inf')
+                    earliest_reached[rule] = min(step_ind,earliest_reached[rule])
+                    latest_reached[rule] = max(step_ind,latest_reached[rule])
+        for outcome in rules:
+            if outcome not in latest_reached:
+                latest_reached[outcome] = depth*2
+            if outcome not in earliest_reached:
+                earliest_reached[outcome] = depth*2
+        
+        outcome_weight = 1000
+        fitness += outcome_weight*(len(outcome_reached)-len(rules))
+
+        end_weight = 5
+
+        for outcome in rules:
+            has_mode_change = False
+            for action in rules[outcome]['results']['other']:
+                if 'mode_change' in action:
+                    has_mode_change = True
+                    break
+            if has_mode_change:
+                fitness += -end_weight*(depth-earliest_reached[outcome])
+                fitness += end_weight*latest_reached[outcome]
+        return (fitness,)
+    return score
 if __name__ == '__main__':
 
     args = sys.argv[1:]
@@ -131,75 +299,7 @@ if __name__ == '__main__':
         args = args[:args.index('-s')] + args[args.index('-s')+2:]
         print args
     out = solve_randomly(args)
-    resources = []
-    for resource in out['resource']:
-        
-        resources.append(prettify(resource[0]['terms'][0]))
-    initializations = {}   
-    for initialization in out['initialize']:
-        initialization = initialization[0]
-        terms = initialization['terms'][0]
-        if 'set' == terms['predicate']:
-            initializations[prettify(terms['terms'][0])] = [int(terms['terms'][1]['predicate'])]
-
-            
-    free_variables = []
-    for resource in resources:
-        if resource not in initializations:
-            free_var = [0]
-            initializations[resource] = free_var
-            free_variables.append(['initialization',free_var])
-            
-            
-    preconditions = {}
-    replacements = {}
-    for precondition in out['precondition']:
-        
-        precondition = precondition[0]
-        terms = precondition['terms']
-        outcome = prettify(terms[1])
-        if outcome not in preconditions:
-            preconditions[outcome] = {}
-            preconditions[outcome]['compare'] = []
-            preconditions[outcome]['other'] = []
-        if 'compare' == terms[0]['predicate']:
-            direction  = prettify(terms[0]['terms'][0])
-            resource   = prettify(terms[0]['terms'][1])
-            free_var = [0]
-            replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
-            preconditions[outcome]['compare'].append( (direction,resource,free_var))
-            free_variables.append(['condition',free_var])
-        else:
-            preconditions[outcome]['other'].append( prettify(terms[0]))
-    results = {}
-  
-    free_action_variables = []
-    for result in out['result']:
-
-        
-        result = result[0]
-        terms = result['terms']
-        outcome = prettify(terms[0])
-        if outcome not in results:
-            results[outcome] = {}
-            results[outcome]['modify'] = []
-            results[outcome]['other'] = []
-        if 'modify' == terms[1]['predicate']:
-            direction  = prettify(terms[1]['terms'][0])
-            resource   = prettify(terms[1]['terms'][1])
-            free_var = [1]
-            replacements[prettify(result)] = ('result',outcome,direction,resource,free_var)
-            results[outcome]['modify'].append( (direction,resource,free_var))
-            free_variables.append(['action',free_var])
-        else:
-            results[outcome]['other'].append(prettify(terms[1]))
-    var_generator = create_generator(free_variables,{'initialization':[0,5,10],'condition':[0,1,3,5,10],'action':[1,2,5]})
-
-    comparators = {'ge':lambda x,y: x >= y,
-                   'le':lambda x,y: x <= y}
-    modifiers = {'increase': lambda x,y:  x+y,
-                 'decrease': lambda x,y:  x-y}
-    random_odds =0.5#$9
+    settings,free_variables,rules,replacements = parse_game(out)
     simulation_count = 40
     depth = 6
     display = False
@@ -211,101 +311,19 @@ if __name__ == '__main__':
         def gen():
             return random.randrange(min_,max_)
         return gen
-    
+
+
+    player_model = {rule:0.5 for rule in rules}
     toolbox.register("attr_int", rand_range(0,10))
     toolbox.register("individual", tools.initRepeat, creator.Individual,
                      toolbox.attr_int, n=len(free_variables))
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-    def evaluate(individual):
-        state = { r:v for r,v in initializations.items()}
-        for free_var,set_var in zip(free_variables,individual):
-            free_var[1][0] = set_var
-        
-        next_state = {}
-        fitness = 0
-        outcome_reached = set()
-        earliest_reached = {}
-        latest_reached  = {}
-        for simulations in range(simulation_count):
-            state = { r:v[0] for r,v in initializations.items()}
-            this_run = set()
-            for timestep in range(depth):
-                for s,v in state.items():
-                    next_state[s] = v
-
-                for outcome in preconditions:
-                    outcome_fails = False
-                    for condition in preconditions[outcome]['compare']:
-                        if not comparators[condition[0]](state[condition[1]], condition[2][0]):
-                            outcome_fails = True
-                    
-                    if len( preconditions[outcome]['other']) > 0:
-                        rand_fail = random.random() > random_odds
-                        outcome_fails = outcome_fails or rand_fail
-                    for condition in preconditions[outcome]['other']:
-                        if 'tick' == condition:
-                            outcome_fails = False
-                        
-                    if not outcome_fails:
-                        outcome_reached.add(outcome)
-                        this_run.add(outcome)
-                        if outcome not in earliest_reached:
-                            earliest_reached[outcome] = float('inf')
-                        earliest_reached[outcome] = min(timestep,earliest_reached[outcome])
-                        if outcome not in latest_reached:
-                            latest_reached[outcome] = float('-inf')
-                        latest_reached[outcome] = max(timestep,latest_reached[outcome])
-                        
-                        for action in results[outcome]['modify']:
-                           
-                            next_state[action[1]] = modifiers[action[0]](next_state[action[1]],action[2][0])
-                for s,v in next_state.items():
-                    state[s] = v
-            
-            for outcome in this_run:
-                for action in results[outcome]['other'] + results[outcome]['modify']:
-                    if 'game_loss' in action:
-                        loss_weight = 0.1
-                        fitness += loss_weight
-        for outcome in results:
-            if outcome not in latest_reached:
-                latest_reached[outcome] = depth*2
-            if outcome not in earliest_reached:
-                earliest_reached[outcome] = depth*2
-
-        outcome_weight = 1000
-        fitness += outcome_weight*(len(outcome_reached)-len(preconditions))
-        total_end = 0
-        end_count = 0
-        total_other = 0
-        other_count = 0
-        earliest_end = float('inf')
-        latest_other = float('-inf')
-        for outcome in results:
-            for action in results[outcome]['other'] + results[outcome]['modify']:
-                if 'mode_change' in action:
-                    #want game_win and loss to come at end
-                    total_end += earliest_reached[outcome]
-                    end_count += 1
-                    earliest_end = min(earliest_end,earliest_reached[outcome])
-                else:
-                    total_other += latest_reached[outcome]
-                    other_count += 1
-                    latest_other = max(latest_other,latest_reached[outcome])
-        
-        if end_count > 0 and other_count > 0:
-            avg_end_weight = 1
-            earliest_latest_weight = 30
-            fitness += avg_end_weight*(float(total_end)/float(end_count)-float(total_other)/float(other_count))
-            
-            fitness += earliest_latest_weight*(earliest_end-latest_other)
-           
-        return fitness,
 
     toolbox.register("mate", tools.cxTwoPoint)
     toolbox.register("mutate", tools.mutGaussian, mu=2, sigma=4, indpb=0.1)
     toolbox.register("select", tools.selTournament, tournsize=3)
-    toolbox.register("evaluate", evaluate)
+    toolbox.register("evaluate", score_individual(free_variables,rules,settings,player_model,depth,simulation_count))
+
     def checkBounds(min, max):
         def decorator(func):
             def wrapper(*args, **kargs):
@@ -364,6 +382,7 @@ if __name__ == '__main__':
             best = fit
             best_ind = ind
     print best
+
     for free_var,set_var in zip(free_variables,best_ind):
         free_var[1][0] = set_var
     
@@ -375,8 +394,13 @@ if __name__ == '__main__':
             print ''
     outcome2precond = {}
     replace_precondition = {}
-    for resource,initialization in initializations.items():
-        print 'initialize(set({},{})).'.format(resource,initialization[0])
+    for setting in settings:
+        if setting[0] == 'initialize':
+            if setting[3] == 'set':
+                print 'initialize(set({},{})).'.format(setting[1],setting[2][0])
+            elif setting[3] == 'add':
+                print 'initialize(add({},{},{})).'.format(setting[1],setting[2][0],setting[4])
+                
     print ''
     
     for precond in out['precondition']:

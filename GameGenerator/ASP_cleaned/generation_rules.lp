@@ -33,6 +33,8 @@ player_controls(Entity) :-  result(Outcome,move(Entity,direction(_))),
 			    precondition(control_event(EVENT),Outcome).
 
 
+player_controls_outcome(O) :- precondition(overlaps(E),O),
+			      player_controls(E).
 player_controls_outcome(O) :- precondition(control_event(E),O).
 
 
@@ -93,7 +95,17 @@ reachableCondition(overlaps(E1,E2,POLARITY)) :-
     reachableCondition(overlaps(E2)),
     condition(overlaps(E1,E2,POLARITY)).
 
+reachableCondition(overlaps(E1,E2,POLARITY)) :-
+    action(move(E1,direction(towards,E2))),
+    condition(overlaps(E1,E2,POLARITY)).
+
+reachableCondition(overlaps(E1,E2,POLARITY)) :-
+    action(move(E2,direction(towards,E1))),
+    condition(overlaps(E1,E2,POLARITY)).
+
 reachableCondition(collide(E1,E2)) :- reachableCondition(overlaps(E1,E2,P)).
+
+ignoredCondition(overlaps(Entity)) :- condition(overlaps(Entity)).
 
 reachableCondition(overlaps(Entity)) :-
     player_controls(Entity).
@@ -108,7 +120,8 @@ unreachableCondition(Condition) :- condition(Condition),
 				   not reachableCondition(Condition).
 
 unreachableOutcome(Outcome) :- precondition(Condition,Outcome),
-			       unreachableCondition(Condition).
+			       unreachableCondition(Condition),
+			       not ignoredCondition(Condition).
 
 reachableOutcome(Outcome) :- outcome(Outcome),
 			     not unreachableOutcome(Outcome).
