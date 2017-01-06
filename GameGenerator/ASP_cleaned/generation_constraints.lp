@@ -106,11 +106,11 @@ different_precondition(O1,O2) :-
    precondition(compare(le,Resource),Outcome).
 
 
-:- result(Outcome, add(Entity)), singular(Entity).
+:- action( add(Entity)), singular(Entity).
 
 
 % constraint on reachability
-:- precondition(_, O), unreachableOutcome(O).
+:- outcome( O), unreachableOutcome(O).
 
 
 %% Don't check for "mouse button pressed" and "clicking" an entity in the
@@ -205,8 +205,28 @@ different_precondition(O1,O2) :-
    not balanced(property(Property,E)).
 
 
-
+% Phaser doesn't allow this
 :-  controlLogic(draggable(E)),
     condition(collide(E,_)).
 :-  controlLogic(draggable(E)),
     condition(collide(_,E)).
+
+
+:- precondition(overlaps(E1,E2,true),O),
+   result(O,move(E1,_)).
+
+:- precondition(overlaps(E1,E2,true),O),
+   result(O,move(E2,_)).
+
+
+:-  precondition(compare(ge,R),O),
+    result(O,add(E)),
+    precondition(overlaps(E),O2),
+    result(O2,increase(R)).
+
+
+:-  precondition(compare(le,R),O),
+    result(O,add(E)),
+    precondition(overlaps(E),O2),
+    result(O2,decrease(R)).
+

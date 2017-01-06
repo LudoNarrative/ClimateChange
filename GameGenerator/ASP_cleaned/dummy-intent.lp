@@ -13,15 +13,6 @@
 #const max_conditions_per = 2.
 
 
-:- not precondition(collide(e(1),e(2)),_).
-:- not reading(chases,relation(e(1),e(2))).
-:- not reading(chases,relation(e(1),e(3))).
-:- not reading(chases,relation(e(3),e(2))).
-:- not reading(flees,relation(e(2),e(1))).
+hastimer :- timer(_).
 
-has_goal :- reading(goal(_),_).
-:- not has_goal.
-
-:- not precondition(compare(_,_),_).
-
-:- complex(E).
+:- not hastimer.

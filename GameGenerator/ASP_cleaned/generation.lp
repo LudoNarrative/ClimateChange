@@ -1,18 +1,38 @@
 
-entity(e(N)) :- N = 1..min_entities.
-{ entity(e(M)) } :- entity(e(M-1)), M=(min_entities+1)..max_entities.
+%entity(e(N)) :- N = 1..min_entities.
+{max_entity(M)} :- M =min_entities..max_entities.
 
-resource(r(N)) :- N = 1..min_resources.
-{ resource(r(M)) } :- resource(r(M-1)), M=(min_resources+1)..max_resources.
+entity(e(M)) :- M = 1..N, max_entity(N).
+%{ entity(e(M)) } :-  M=(min_entities+1)..max_entities.
+%:- entity(e(M)), not entity(e(M-1)).
 
 
-outcome(o(N)) :- N = 1..min_outcomes.
-{ outcome(o(M)) } :- outcome(o(M-1)), M=(min_outcomes+1)..max_outcomes.
+
+{max_resource(M)} :- M =min_resources..max_resources.
+
+resource(r(M)) :- M = 1..min_resources..N, max_resource(N).
+%resource(r(N)) :- N = 1..min_resources.
+%{ resource(r(M)) } :- M=(min_resources+1)..max_resources.
+%:- resource(r(M)), not resource(r(M-1)).
+
+
+
+{max_outcome(M)} :- M =min_outcomes..max_outcomes.
+
+outcome(o(M)) :- M = 1..N, max_outcome(N).
+%outcome(o(N)) :- N = 1..min_outcomes.
+%{ outcome(o(M)) } :- M=(min_outcomes+1)..max_outcomes.
+%:- outcome(o(M)), not outcome(o(M-1)).
 
 1 {outcome(tick)}.
 
-timer(t(N)) :- N = 1..min_timers.
-{ timer(t(M)) } :- timer(t(M-1)), M=(min_timers+1)..max_timers.
+
+{max_timer(M)} :- M =min_timers..max_timers.
+
+timer(t(M)) :- M = 1..N, max_timer(N).
+%timer(t(N)) :- N = 1..min_timers.
+%{ timer(t(M)) } :- M=(min_timers+1)..max_timers.
+%:- timer(t(M)), not timer(t(M-1)).
 
 { avatar(e(1)) }.
 

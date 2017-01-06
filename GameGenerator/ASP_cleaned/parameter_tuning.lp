@@ -34,52 +34,41 @@ actual(result(C,O)) :- result(C,O), not requires_tuning(result(C,O)).
 1 {initialize(set(R,V)) : parameter_values(V)} 1 :- 
     resource(R).
 
-at(R,V,0) :- initialize(set(R,V)).
+at(R,V,(0,K)) :- initialize(set(R,V)), outcome(K).
 
 actual(condition(C)) :- actual(precondition(C,_)).
 
 
-condition_occurs_at(compare(ge,R,V),T) :-  actual(condition(compare(ge,R,V))),
-                             at(R,V2,T),
+condition_occurs_at(compare(ge,R,V),(T,K)) :-  actual(condition(compare(ge,R,V))),
+                             at(R,V2,(T,K)),
                              V2 >= V.
           
-condition_occurs_at(compare(le,R,V),T) :-  actual(condition(compare(le,R,V))),
-                             at(R,V2,T),
+condition_occurs_at(compare(le,R,V),(T,K)) :-  actual(condition(compare(le,R,V))),
+                             at(R,V2,(T,K)),
                              V2 <= V. 
 
 
-condition_doesnt_occur_at(compare(ge,R,V),T) :-  actual(condition(compare(ge,R,V))),
-                             at(R,V2,T),
-                             V2 > V.
-          
-condition_doesnt_occur_at(compare(le,R,V),T) :-  actual(condition(compare(le,R,V))),
-                             at(R,V2,T),
-                             V2 > V.                               
-condition_occurs_at(tick,T) :- timestep(T).
+condition_occurs_at(tick,(T,K)) :- timestep(T),outcome(K).
 
 
-{ condition_occurs_at(C,T)  }:- condition(C),
+{ condition_occurs_at(C,(T,K))  }:- condition(C),
                                actual(condition(C)),
-                               timestep(T).
+                               timestep(T), outcome(K).
 
-condition_doesnt_occur_at(C,T) :- actual(condition(C)),
-                                  not condition_can_occur_at(C,T),
-                                  not condition_occurs_at(C,T),
-                                  timestep(T).
-                               
-                               
-outcome_doesnt_occur_at(O,T) :- actual(precondition(C,O)), 
-                                condition_doesnt_occur_at(C,T).
-outcome_can_occur_at(O,T) :- not outcome_doesnt_occur_at(O,T), 
-                                condition_can_occur_at(O,T).
-outcome_occurs_at(O,T) :- not outcome_doesnt_occur_at(O,T), 
-                            not outcome_can_occur_at(O,T), 
-                            condition_occurs_at(C,T), 
+outcome_doesnt_occur_at(O,(T,K)) :- actual(precondition(C,O)), 
+                                    not condition_occurs_at(C,(T,K)),
+				    timestep(T),
+				    outcome(K).
+outcome_occurs_at(O,(T,K)) :- not outcome_doesnt_occur_at(O,(T,K)), 
+                            condition_occurs_at(C,(T,K)), 
                             actual(precondition(C,O)).
-result_occurs_at(result(O,A),T) :- actual(result(O,A)), outcome_occurs_at(O,T).
+stop(T,O) :- outcome_occurs_at(O,(T,O)).
 
 
-at(R,V+Old,T+1) :- V = #sum{ Increase    : result_occurs_at(result(O,modify(increase,R,Increase)),T);
-                             -Decrease   : result_occurs_at(result(O,modify(decrease,R,Decrease)),T)},
-                         at(R,Old,T),
-                         timestep(T).
+result_occurs_at(result(O,A),(T,K)) :- actual(result(O,A)), outcome_occurs_at(O,(T,K)).
+
+
+at(R,V+Old,(T+1,K)) :- V = #sum{ Increase    : result_occurs_at(result(O,modify(increase,R,Increase)),(T,K));
+                             -Decrease   : result_occurs_at(result(O,modify(decrease,R,Decrease)),(T,K))},
+                       at(R,Old,(T,K)),
+                       timestep(T).
