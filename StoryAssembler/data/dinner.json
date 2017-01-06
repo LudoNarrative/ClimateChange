@@ -26,11 +26,11 @@ Characters:
 { condition: "introMechanics eq true" },
 { condition: "establishSpecialtyInfo eq true" },
 { condition: "establishSetting eq true" },
-{ condition: "establishFriendBackstory eq true" },
-{ condition: "establishEmmaRegrets eq true" },
-{ condition: "establishEmmaBackstory eq true" },
+{ condition: "establishAllyBackstory eq true" },
+{ condition: "establishProtagRegrets eq true" },
+{ condition: "establishProtagBackstory eq true" },
 { condition: "provokeConfidenceChoice eq true" },
-{ condition: "friendReassuresEmma eq true" },
+{ condition: "allyReassuresProtag eq true" },
 { condition: "droppedKnowledge gte 2", persistent: true },
 */
 [
@@ -145,7 +145,7 @@ Characters:
 	{
 		"id": "iguess",
 		"choiceLabel": "I guess.",
-		"request": {"condition": "establishFriendBackstory eq true"}
+		"request": {"condition": "establishAllyBackstory eq true"}
 	},
 
 	{
@@ -159,13 +159,13 @@ Characters:
 		//"speaker" : "ally",
 		"content": "You would not believe how much of this stuff I ate in Spain. This recipe's okay, if I do say so myself, but only half as good as when you get it there.",
 		"choices" : [
-			//{"condition": "establishEmmaRegrets eq true"},
+			//{"condition": "establishProtagRegrets eq true"},
 			{"gotoId": "stilljealous", "speaker" : "protagonist"},
 			{"gotoId": "quals", "speaker" : "protagonist"},
 			{"gotoId": "wishcouldgo", "speaker" : "protagonist"}
 		],
 		"conditions": ["establishSetting eq true"],
-		"effects": ["set establishFriendBackstory true"]
+		"effects": ["set establishAllyBackstory true"]
 	},
 
 		{
@@ -178,12 +178,12 @@ Characters:
 	{
 		"id": "stilljealous",
 		"choiceLabel": "Still jealous you got to spend six months there.",
-		"request": {"condition": "establishEmmaRegrets eq true"}
+		"request": {"condition": "establishProtagRegrets eq true"}
 	},
 	{
 		"id": "wishcouldgo",
 		"choiceLabel": "Wish I could have come with you.",
-		"request": {"condition": "establishEmmaRegrets eq true"}
+		"request": {"condition": "establishProtagRegrets eq true"}
 	},
 	{
 		"id": "regrets",
@@ -192,8 +192,8 @@ Characters:
 //		"choices" : [
 //			{"gotoId": "wellmaybe"}
 //		],
-		"conditions" : ["establishFriendBackstory eq true"],
-		"effects": ["decr confidence 1", "set establishEmmaRegrets true"]
+		"conditions" : ["establishAllyBackstory eq true"],
+		"effects": ["decr confidence 1", "set establishProtagRegrets true"]
 	},
 
 	{
@@ -203,8 +203,8 @@ Characters:
 		"choices" : [
 			{"gotoId": "whatspecialty", "speaker" : "protagonist"}
 		],
-		"conditions": ["establishEmmaRegrets eq true"],
-		"effects" : ["set establishEmmaBackstory true"]
+		"conditions": ["establishProtagRegrets eq true"],
+		"effects" : ["set establishProtagBackstory true"]
 		
 	},
 
@@ -254,13 +254,6 @@ Characters:
 	},
 
 
-
-
-
-
-
-
-
 	//---------------------------CHALLENGE---------------------------------------
 	{
 		"id": "howufeelChoicetext1",
@@ -281,7 +274,7 @@ Characters:
 			{ "gotoId" : "unsurePath", "speaker" : "protagonist" },
 			{ "gotoId" : "futureWorry", "speaker" : "protagonist" }
 		],
-		"conditions" : ["establishEmmaBackstory eq true", "argue eq false"],
+		"conditions" : ["establishProtagBackstory eq true", "argue eq false"],
 		"effects" : ["set provokeConfidenceChoice true"]
 	},
 
@@ -295,7 +288,7 @@ Characters:
 			{ "gotoId" : "nothing", "speaker" : "protagonist" },
 			{ "gotoId" : "futureWorry", "speaker" : "protagonist" }
 		],
-		"conditions" : ["establishEmmaBackstory eq true", "argue eq true"],
+		"conditions" : ["establishProtagBackstory eq true", "argue eq true"],
 		"effects" : ["set provokeArgument true", "set provokeConfidenceChoice true"]
 	},
 
@@ -368,7 +361,7 @@ Characters:
 		"speaker" : "ally",
 		"content" : "Now seriously. I am not joking about this. Have some damn wine. Relax with your friends. The future can take care of itself.",
 		"conditions" : ["provokeConfidenceChoice eq true"],
-		"effects" : ["set friendReassuresEmma true"]
+		"effects" : ["set allyReassuresProtag true"]
 	}
 
 	//-----------------------------------------------------------
@@ -378,7 +371,7 @@ Characters:
 		"choiceLabel" : "More",
 		"speaker" : "narrator",
 		"content" : "<div class='outcome'><p class='outcomeHeader'>Outcome:</p><ul><li>Emma's specialty is <span class='keyword'>{ifState|career|shrimp|shrimp|}{ifState|career|lobster|lobster|}{ifState|career|coral|coral reefs!|}</span></li><li>Emma has {confidence} <span class='keyword'>confidence</span></li></ul></div>",
-		"conditions" : ["provokeConfidenceChoice eq true", "establishSpecialtyInfo eq true", "establishEmmaRegrets eq true", "establishEmmaBackstory eq true"],
+		"conditions" : ["provokeConfidenceChoice eq true", "establishSpecialtyInfo eq true", "establishProtagRegrets eq true", "establishProtagBackstory eq true"],
 	}
 */
 ]
