@@ -8,18 +8,18 @@ define(["Character", "State"], function(Character, State) {
 
 			Character.init(State);
 
-			Character.add({id: "mposi", name: "Mposi Akinya", age: 49});
+			Character.add("mposi", {id: "mposi", name: "Mposi Akinya", age: 49});
 			assert.deepEqual(Character.get("mposi")["name"], "Mposi Akinya", "Basic add and get work as expected.")
 			assert.deepEqual(Character.get("mposi").id, "mposi", "Id field should be added to object with passed-in key.")
 			assert.deepEqual(Character.get("mposi").name, "Mposi Akinya", "Whole object should include passed-in parameters.")
 			assert.notOk(Character.get("fake"), "Returns undefined for an undefined character.");
-			assert.notOk(Character.add({id: "mposi", age: 100}), "Should return false if you try to add an already existing character");
+			assert.notOk(Character.add("mposi", {id: "mposi", age: 100}), "Should return false if you try to add an already existing character");
 			assert.deepEqual(Character.get("mposi").age, 49, "A failed add should not alter an existing character.")
 			Character.remove("mposi");
 			assert.notOk(Character.get("mposi"), "Removing character should work.");
 
-			Character.add({id: "mposi", name: "Mposi", age: 49});
-			Character.add({id: "ndege", name: "Ndege", age: 31});
+			Character.add("mposi", {id: "mposi", name: "Mposi", age: 49});
+			Character.add("ndege", {id: "ndege", name: "Ndege", age: 31});
 			var allChars = Character.getAllIds();
 			assert.deepEqual(allChars.length, 2, "getAll should return correct number of added chars");
 			assert.ok(["mposi", "ndege"].indexOf(allChars[0]) >= 0, "keys from all passed-in characters should exist in allChars");

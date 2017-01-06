@@ -49,7 +49,6 @@ Characters:
 { condition: "establishSpecialtyInfo eq true" },
 *{ condition: "establishSetting eq true" },
 { condition: "establishAllyBackstory eq true" },
-{ condition: "establishProtagRegrets eq true" },
 { condition: "establishProtagBackstory eq true" },
 *{ condition: "provokeConfidenceChoice eq true" },
 *{ condition: "allyReassuresProtag eq true"},
@@ -58,6 +57,39 @@ Characters:
 [
 	//---------------------------INTERSTITIAL---------------------------------
 	{
+		"id": "setLevelSetting",
+		"speaker" : "ally",
+		"content": ["Ok, so where are we?"],
+		"choices" : [
+			{"gotoId" : "atDinner", "speaker" : "protagonist"},
+			{"gotoId" : "atLecture", "speaker" : "protagonist"},
+			{"gotoId" : "atBeach", "speaker" : "protagonist"}
+		],
+		"effects": ["set setSetting true"]
+	},
+	{
+		"id": "atDinner",
+		"speaker" : "ally",
+		"choiceLabel" : "We're at the dinner scene.",
+		"content": "Oh, ok. Right.",
+		"effects" : ["set setting dinner"]
+	},
+	{
+		"id": "atLecture",
+		"speaker" : "ally",
+		"choiceLabel" : "We're at the lecture scene.",
+		"content": "Oh, ok. Right.",
+		"effects" : ["set setting lecture"]
+	},
+	{
+		"id": "atBeach",
+		"speaker" : "ally",
+		"choiceLabel" : "We're at the beach scene.",
+		"content": "Oh, ok. Right.",
+		"effects" : ["set setting beach"]
+	},
+
+	{
 		"id": "eatFood",
 		"speaker" : "ally",
 		"content": ["{name|protagonist}, come on. This stew is not going to eat itself."],
@@ -65,49 +97,49 @@ Characters:
 			{"condition": "establishSetting eq true", "speaker" : "protagonist"},
 			{"condition": "provokeConfidenceChoice eq true", "speaker" : "protagonist"},
 			{"condition": "establishSetting eq true", "speaker" : "protagonist"}
-		]
-	},
-	{
-		"id": "chooseSetting",
-		"speaker" : "ally",
-		"content": ["Hey wait a second. Where the heck are we?"],
-		"choices": [
-			{"gotoId" : "settingDinner", "speaker" : "protagonist" },
-			{"gotoId" : "settingBeach", "speaker" : "protagonist" },
-			{"gotoId" : "settingClassroom", "speaker" : "protagonist" }
 		],
-		"effects": ["addWishlist { 'condition': 'itsAwesome eq true', 'persistent': true }"]
+		//"effects": ["addWishlist { 'condition': 'droppedKnowledge gte 1' }"]
 	},
-	{
-		"id": "settingDinner",
-		"choiceLabel": "Dinner, of course?",
-		"speaker" : "ally",
-		"content": "Yeah, I thought so!",
-		"effects": ["set setting dinner", "set setSetting true"]
-	},
-	{
-		"id": "settingBeach",
-		"choiceLabel": "The beach, of course?",
-		"speaker" : "ally",
-		"content": "Yeah, I thought so!",
-		"effects": ["set setting beach", "set setSetting true"]
-	},
-	{
-		"id": "settingClassroom",
-		"choiceLabel": "The classroom, of course?",
-		"speaker" : "ally",
-		"content": "Yeah, I thought so!",
-		"effects": ["set setting classroom", "set setSetting true"]
-	},
+
 
 	//---------------------------BACKSTORY---------------------------------------
 	//(set establishSetting true)
 
 	{
+		"id": "apologizeMessyChoice",
+		"choiceLabel": "What's with all the boxes everywhere?",
+		"request": {"gotoId": "apologizeMessy"},
+		"effects": ["set establishSetting true"]
+	},
+	{
 		"id": "apologizeMessy",
 		"speaker" : "ally",
-		"content": "Sorry everything's so messy!",
+		"content" : "Sorry everything's so messy!",
+		"choices" : [
+			{"gotoId" : "dontWorryAboutIt", "speaker" : "protagonist"},
+			{"gotoId" : "whatsWithNewDigs", "speaker" : "protagonist"},
+			{"gotoId" : "youShouldSeeMyPlace", "speaker" : "protagonist"}
+		],
+		"conditions": ["setting eq dinner"],
 		"effects": ["set establishSetting true"]
+	},
+	{
+		"id": "dontWorryAboutIt",
+		"speaker" : "ally",
+		"choiceLabel" : "Don't worry about it!",
+		"content": "yeah, I suppose you've seen worse. Remember back when I was working nights? Ugh.",
+	},
+	{
+		"id": "whatsWithNewDigs",
+		"speaker" : "ally",
+		"choiceLabel" : "Yeah haha, what's going on?",
+		"content": "Oh you know. New digs, always takes some time to settle in. At least that's the excuse I'm going with!",
+	},
+	{
+		"id": "youShouldSeeMyPlace",
+		"speaker" : "ally",
+		"choiceLabel" : "Are you kidding? You should see my place!",
+		"content": "Yeah, well, you've had your head down for a while now. Living that glamorous grad student lifestyle!",
 	},
 	{
 		"id": "justMovedIn",
@@ -119,11 +151,10 @@ Characters:
 	{
 		"id": "bathroomDownTheHall",
 		"speaker" : "ally",
-		"content": "{ifState|dinner|3|Bathroom's down that hallway, in case you forgot.|}{ifState|classroom|3|Break room's up on the third floor, in case you forgot.|}{ifState|beach|3|Lunch is gonna be back at the parking lot, in case no one told you.|}",
+		"content": "{ifState|setting|dinner|Bathroom's down that hallway, in case you forgot.|}{ifState|setting|lecture|Break room's up on the third floor, in case you forgot.|}{ifState|setting|beach|Lunch is gonna be back at the parking lot, in case no one told you.|}",
 		"conditions": ["setting neq beach"],
 		"effects": ["set establishSetting true"]
 	},
-
 	{
 		"id": "takingItIn",
 		"choiceLabel": "Sure! Sorry, I was just taking everything in.",
@@ -148,7 +179,8 @@ Characters:
 		"choices" : [
 			{"condition": "droppedKnowledge incr 1", "speaker" : "protagonist"},
 		],
-		"effects": ["set provokeConfidenceChoice true"]
+		"conditions" : [],
+		"effects" : ["set provokeConfidenceChoice true"],
 	},
 	{
 		"id": "youreOverreacting",
