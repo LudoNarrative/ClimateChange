@@ -79,7 +79,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	}
 
 	/* 
-		Returns a chunk for a given id.
+		Returns a chunk for a given id, or false
 		-chunkId: the id of the chunk being requested
 		-mode: "normal" = we check for it being available, "refresh" = we do not
 	*/
@@ -87,6 +87,8 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	var get = function(chunkId, mode) {
 
 		mode = mode || "normal";
+
+		if (typeof _library[chunkId] == "undefined") { return false; }
 
 		if (mode == "normal") {
 			if (_library[chunkId].available) {

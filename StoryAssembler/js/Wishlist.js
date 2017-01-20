@@ -3,7 +3,7 @@
 A wishlist is an unordered set of Wants.
 */
 
-define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
+define(["Want", "Validate", "BestPath", "util"], function(Want, Validate, BestPath, util) {
 
 	/* Create a new wishlist from the given array of Wants, with its own interface for accessing and modifying the values within. I.e. we'll use it something like this:
 		var wl = Wishlist.create(listOfWants, State);
@@ -19,7 +19,14 @@ define(["Want", "BestPath", "util"], function(Want, BestPath, util) {
 		// Add the wants passed in to the constructor.
 		var want;
 		items.forEach(function(item) {
-			want = Want.create(item); // will throw error if any wants in list are invalid
+
+			if (typeof item.condition == "string" || !item.request) {
+				want = Want.create(item); // will throw error if any wants in list are invalid
+			}
+			else {		//if we passed in items that are already wants...
+				//Validate.check(item, Want.requiredFields, Want.optionalFields);
+				want = item;
+			}
 			_wants[want.id] = want;
 		});
 

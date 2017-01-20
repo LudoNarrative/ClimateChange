@@ -111,6 +111,7 @@ Characters:
 		"request": {"gotoId": "apologizeMessy"},
 		"effects": ["set establishSetting true"]
 	},
+	//----------------------------------------------------------------------------------
 	{
 		"id": "apologizeMessy",
 		"speaker" : "ally",
@@ -141,6 +142,8 @@ Characters:
 		"choiceLabel" : "Are you kidding? You should see my place!",
 		"content": "Yeah, well, you've had your head down for a while now. Living that glamorous grad student lifestyle!",
 	},
+
+	//----------------------------------------------------------------------------------
 	{
 		"id": "justMovedIn",
 		"speaker" : "ally",

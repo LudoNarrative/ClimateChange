@@ -36,6 +36,7 @@ requirejs.config({
 		"jsonEditor": "../../lib/jsonEditor/jsoneditor",
 		"cytoscape": "../lib/cytoscape",
 		"cytoscape-cxtmenu" : "../lib/cytoscape-cxtmenu",
+		"cytoscape-cose-bilkent" : "../lib/cytoscape-cose-bilkent",
 		"cytoscape-edgehandles" : "../lib/cytoscape-edgehandles",
 		"dagre" : "../lib/dagre.min",
 		"cytoscape-dagre" : "../lib/cytoscape-dagre",
@@ -60,12 +61,13 @@ requirejs.config({
 });
 
 requirejs(
-	["State", "StoryDisplay", "Display", "cytoscape", "cytoscape-cxtmenu", "dagre", "cytoscape-dagre", "cola", "cytoscape-cola", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Templates", "Game", "AspPhaserGenerator", "util", "text!testData", "domReady!"],
-	function(State, StoryDisplay, Display, cytoscape, cxtmenu, dagre, cydagre, cola, cycola, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Templates, Game, AspPhaserGenerator, util, testData) {
+	["State", "StoryDisplay", "Display", "cytoscape", "cytoscape-cxtmenu", "cytoscape-cose-bilkent", "dagre", "cytoscape-dagre", "cola", "cytoscape-cola", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Templates", "Game", "AspPhaserGenerator", "util", "text!testData", "domReady!"],
+	function(State, StoryDisplay, Display, cytoscape, cxtmenu, regCose, dagre, cydagre, cola, cycola, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Templates, Game, AspPhaserGenerator, util, testData) {
 
 	cxtmenu( cytoscape, $ ); 		// register extension
 	cydagre( cytoscape, dagre );	// register extension
 	cycola( cytoscape, cola ); // register extension
+	regCose( cytoscape );
 
 	var levelData;
 	var globalData;
@@ -779,6 +781,40 @@ requirejs(
 			}
 			*/
 			/*
+			layout : {
+				name: 'cose-bilkent',
+				//ready: function () {},		// Called on `layoutready`
+				//stop: function () {},				  // Called on `layoutstop`
+				fit: true,		 		 // Whether to fit the network view after when done
+				//padding: 10,				// Padding on fit
+				randomize: false,			// Whether to enable incremental mode
+				nodeRepulsion: 55000,		// Node repulsion (non overlapping) multiplier
+				idealEdgeLength: 200,		// Ideal edge (non nested) length
+				// Divisor to compute edge forces
+				edgeElasticity: 1.0,
+				// Nesting factor (multiplier) to compute ideal edge length for nested edges
+				// nestingFactor: 0.1,
+				// Gravity force (constant)
+				// gravity: 0.25,
+				// Maximum number of iterations to perform
+				numIter: 7500,
+				// For enabling tiling
+				// tile: true,
+				// Type of layout animation. The option set is {'during', 'end', false}
+				animate: 'false',
+				// Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
+				// tilingPaddingVertical: 10,
+				// Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
+				// tilingPaddingHorizontal: 10,
+				// Gravity range (constant) for compounds
+				// gravityRangeCompound: 1.5,
+				// Gravity force (constant) for compounds
+				// gravityCompound: 1.0,
+				// Gravity range (constant)
+				gravityRange: 6.8
+			}
+			*/
+			
 			layout : {						//this is the best so far
 				name: 'breadthfirst',
 				directed: true,
@@ -786,7 +822,7 @@ requirejs(
 				roots: '#' + graphRootId,
 				avoidOverlap: true,
 			}
-			*/
+			
 			/*
 			layout : {					//settings here: https://github.com/cytoscape/cytoscape.js-cola
 				name: 'cola',
@@ -794,17 +830,18 @@ requirejs(
 				refresh: 1,
 				maxSimulationTime: 10000,
 				avoidOverlap: true,
+
 				flow: { axis: 'y', minSeparation: 30},
 				edgeSymDiffLength: 6
 			}
 			*/
-			
+			/*
 			layout : {				//settings here: https://github.com/cytoscape/cytoscape.js-dagre
 				name: 'dagre',
 				rankDir: 'TB',
 				rankSep: 75
 			}
-			
+			*/
 			/*
 			layout : {
 				name: 'concentric',

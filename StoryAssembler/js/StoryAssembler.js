@@ -3,7 +3,7 @@
 When beginScene is called, we need to pass in a defined ChunkLibrary, State, and Display module. 
 */
 
-define(["Request", "Templates", "Want", "Character"], function(Request, Templates, Want, Character) {
+define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Request, Templates, Want, Wishlist, Character) {
 
 	var chunkLibrary;
 	//var State;
@@ -34,13 +34,13 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 		
 		var bestPath;
 
-		if (typeof State.get("speaker") == "undefined") { State.set("speaker", Character.getBestSpeaker()); }
+		if (typeof State.get("speaker") == "undefined") { State.set("speaker", Character.getBestSpeaker(State)); }
 		
 		else { 
 			var hardcodedSpeaker = State.get("currentChoices").filter( function(choice) { return choice.chunkId == optChunkId});
 			if (hardcodedSpeaker.length > 0) { State.set("speaker", hardcodedSpeaker[0].speaker); }
 			else { 
-				State.set("speaker", Character.getBestSpeaker()); 
+				State.set("speaker", Character.getBestSpeaker(State)); 
 			}
 		}
 
@@ -109,17 +109,24 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 
 	}
 
-	var getBestPath = function(chunkLibrary, startingPoint) {		
+	var getBestPath = function(chunkLibrary, startingPoint, tempWishlist) {		
 	//this function gets best path from the starting point, or if that's not specified, does a blind search 
+	//will use initial wishlist by default, but will go off passed in "tempWishlist" if necessary
 		//console.log("called getBestPath with chunkLibrary: " + chunkLibrary.getKeys() + " and startingPoint: " + startingPoint);
 		if (startingPoint) {
-			var temp = wishlist.bestPath(chunkLibrary, {startAt: startingPoint});
+			var temp;
+			if (tempWishlist) {	temp = tempWishlist.bestPath(chunkLibrary, {startAt: startingPoint}); }
+			else { temp = wishlist.bestPath(chunkLibrary, {startAt: startingPoint}); }
+
 			console.log("bestPath is: " , temp);
 			return temp;
 		}
 
 		else {
-			var temp = wishlist.bestPath(chunkLibrary);
+			var temp 
+			if (tempWishlist) { temp = tempWishlist.bestPath(chunkLibrary); }
+			else { temp = wishlist.bestPath(chunkLibrary); }
+
 			console.log("bestPath is: ", temp);
 			return temp;
 			//return wishlist.bestPath(chunkLibrary);
@@ -158,7 +165,11 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 		}
 		else {												//if it's making a request for text to display...
 			
-			bestPath = getBestPath(chunkLibrary, chunkId);	//grab text from request
+			var contentRequestWant = Want.create({condition: "dummySetting eq true", order: "first"});		//create a temporary wishlist with that content request
+			contentRequestWant.request = chunk.request;
+			var tempWishlist = Wishlist.create([contentRequestWant], State);
+
+			bestPath = getBestPath(chunkLibrary, chunkId, tempWishlist);	//grab text from request
 			if (!bestPath) {								//if it still isn't known...
 				bestPath = getBestPath(chunkLibrary);		//do a blind search
 			}
@@ -216,29 +227,17 @@ define(["Request", "Templates", "Want", "Character"], function(Request, Template
 		while (!chunkForText.content) {		//find content to display for the chunk
 			var nextChunkId = bestPath.route[routePos];
 
-			//not sure why we have to do this, but if the first entry in the path is the same as the current chunk (sometimes it is) then use the next one instead
+			//TODO: not sure why we have to do this, but if the first entry in the path is the same as the current chunk (sometimes it is) force it to use the next one instead. This is a *really* weird fix and should be de-tangled / gotten rid of
 			if (nextChunkId == chunkForText.id) {
-				routePos++;
+				if (routePos+1 <= bestPath.route.length-1) { routePos++; }
 				nextChunkId = bestPath.route[routePos];
 			}
 
 			chunkForText = chunkLibrary.get(nextChunkId);
 			routePos += 1;		//JG: do we still need this?
 			if (chunkForText) {
-				if (chunkForText.choices) {
-					/*
-					displayChunkText(chunkForText.id);
-					handleEffects(chunkForText);
-
-					bestPath = getBestPath(chunkLibrary, nextChunkId);
-					if (!bestPath) { bestPath = getBestPath(chunkLibrary);}
-					
-					//sometimes there are no choiceDetails because the choice has content that is the end of the experience...need to refactor doChunkChocies so that you don't need choiceDetails, but it will let you render the choice
-					doChunkChoices(nextChunkId, bestPath.choiceDetails);
-					*/
-
-					continueScene(nextChunkId);		//TODO: verify this is still correct after above re-factoring
-				} else {
+				if (chunkForText.choices) { continueScene(nextChunkId); } 
+				else {
 					displayChunkText(chunkForText.id);
 					doChunkChoices(chunkForText.id);
 					handleEffects(chunkForText);
