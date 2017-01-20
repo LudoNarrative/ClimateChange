@@ -103,9 +103,8 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 
 			for (var y=0; y < thePath.choiceDetails.length; y++) {			//for each of the choices in each path...
 				var theChoiceSpeaker;
-				try { theChoiceSpeaker = _chunkLibrary.get(thePath.choiceDetails[y].id).speaker; }		//grab a speaker if it has one
-				catch (err) { }
-				if (typeof theChoiceSpeaker !== "undefined") {				//if it doesn't have one...
+				theChoiceSpeaker = _chunkLibrary.get(thePath.choiceDetails[y].id).speaker;		//grab a speaker if it has one
+				if (!theChoiceSpeaker) {				//if it doesn't have one...
 					var bestSpeaker = Character.getBestSpeaker(_State,1);		//make one
 					if (bestSpeaker == theChoiceSpeaker) {
 						speakerScore += optionPoints;
@@ -271,14 +270,15 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 		
 		//if there's a goto want, fulfill that and ignore all other wants
 		originalWants.forEach(function(want) { 	
-			if (want.type === "goto" && chunk.id === want.val) { 
+			//if (want.type === "goto" && chunk.id === want.val) {		//it used to be this?? Not sure why the chunk.id of what we're looking for is the chunk we're on?
+			if (want.type === "goto") { 
 				gotoFlag = true;
-				pathToHere = createPathOrAddWant(pathToHere, chunk.id, want);
+				pathToHere = createPathOrAddWant(pathToHere, want.val, want);
 				log(rLevel, "-->goto matches '" + want.val + "' so going with that and stopping.");
 			}
 		});	
 
-		// Does this chunk directly make one or more Wants true, or make progress towards one of them being true?
+		// Otherwise, determine: does this chunk directly make one or more Wants true, or make progress towards one of them being true?
 		if (!gotoFlag) {
 			originalWants.forEach(function(want) {
 				var satisfied = false;

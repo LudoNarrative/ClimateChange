@@ -1,5 +1,3 @@
-console.log(window.location.pathname);
-
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, globalData) {
 
 	/*
@@ -163,7 +161,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			wishlist: [
 				{ condition: "setSetting eq true", order: "first" },		//debug item to let us mash settings together
-
 				{ condition: "establishSpecialtyInfo eq true" },
 				{ condition: "establishSetting eq true" },
 				{ condition: "establishAllyBackstory eq true" },

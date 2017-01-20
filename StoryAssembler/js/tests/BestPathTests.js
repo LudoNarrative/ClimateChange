@@ -115,6 +115,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			// Test multiple wants. 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Node1", content: "...", effects: ["set x true", "set q true"] },
@@ -131,6 +132,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "DirectNode", content: "...", effects: ["set x true"] },
@@ -143,6 +145,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Choice1", choices: [{chunkId: "answer1"}] },
@@ -160,6 +163,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{chunkId: "TestNode"}], State);
 			ChunkLibrary.add([
 				{ id: "TestNode", content: "Hello, world!" },
@@ -169,6 +173,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Choice1", effects: ["set x true"], choices: [{chunkId: "answerY"}, {condition: "z eq true"}] },
@@ -213,6 +218,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Node1", effects: ["set x true"] },
@@ -242,6 +248,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{chunkId: "Choice1"}], State);
 			ChunkLibrary.add([
 				{ id: "Choice1", choices: [{condition: "x eq true"}, {condition: "y eq true"}] },
@@ -256,6 +263,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{chunkId: "Node1"}], State);
 			ChunkLibrary.add([
 				{ id: "Node2", content: "..." }
@@ -268,6 +276,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Choice1", choices: [{chunkId: "Fake1"}, {chunkId: "Fake2"}], effects: ["set x true"] },
@@ -284,6 +293,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Chunk1", choices: [{chunkId: "Chunk2"}] },
@@ -305,6 +315,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true", order: "first"}, {condition: "z eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Chunk1", content: "...", effects: ["set x true"] },
@@ -350,6 +361,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 
 			ChunkLibrary.reset();
 			State.reset();
+			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "shortest_Chunk1", content: "...", choices: [{condition: "x eq true"}] },

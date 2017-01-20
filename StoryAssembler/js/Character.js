@@ -102,8 +102,8 @@ define([], function() {
 
 	//this returns the character id that matches the discourse pattern (dialogue, etc)
 	//if rLevel is passed in, will run some times 
-	var getBestSpeaker = function(currentSpeaker, rLevel) {
-		var storyMode = State.get("mode");
+	var getBestSpeaker = function(_State, rLevel) {
+		var storyMode = _State.get("mode");
 		var bestSpeaker;
 		var iterNum = (rLevel === undefined) ? 1 : rLevel+1;
 

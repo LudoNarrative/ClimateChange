@@ -59,7 +59,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			
 			var wl;
 			resetTest();
-
+/*
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}] },
@@ -247,16 +247,20 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 
 			// Test gotoId as a Twine-like deterministic link
 			resetTest();
+
+			
 			wl = Wishlist.create([{condition: "theChunk eq 1"}, {condition: "theChunk eq 4"}], State);
 			wl.logOn();
 			ChunkLibrary.add([
-				{ id: "LinkTest1", 
-				content: "Text1 Content", 
-				choices: [{gotoId: "LinkTest2"}],
-				effects: ["set theChunk 1"] },
-				{ id: "LinkTest2", 
-				choiceLabel: "linkChoice link", 
-				content: "linkTest2 Content"
+				{ 
+					id: "LinkTest1", 
+					content: "Text1 Content", 
+					choices: [{gotoId: "LinkTest2"}],
+					effects: ["set theChunk 1"] },
+				{ 
+					id: "LinkTest2", 
+					choiceLabel: "linkChoice link", 
+					content: "linkTest2 Content"
 				}
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
@@ -293,6 +297,48 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(contentForChoice(1), "(speaker): hey choicelabel", "Testing compound nodes (2)");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "(speaker): chunk3 is me!", "Testing compound nodes (3)");
+*/
+			// Test compound nodes with gotoIds
+			resetTest();
+			wl = Wishlist.create([{condition: "establishSetting eq true", order: "first"}, {condition: "awesome eq heckYeah"} ], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{
+					"id": "setup",
+					"speaker" : "ally",
+					"content" : "Sorry everything's so messy!",
+					"choices" : [
+						{"gotoId" : "choiceInterface", "speaker" : "protagonist"}
+					],
+					"effects": ["set establishSetting true"]
+				},
+				{
+					"id": "choiceInterface",
+					"choiceLabel": "What's with all the boxes everywhere?",
+					"request": {"gotoId": "interface"},
+					//"effects": ["set establishSetting true"]
+				},
+				{
+					"id": "interface",
+					"speaker" : "ally",
+					"content" : "I'm the interface!",
+					"choices" : [
+						{"gotoId" : "dummyChoice", "speaker" : "protagonist"}
+					],
+					//"effects": ["set establishSetting true"]
+				},
+				{
+					"id": "dummyChoice",
+					"choiceLabel": "I'm the dummy choice.",
+					"content": "dummy content"
+				},
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+			assert.deepEqual(html(getStoryEl()), "(speaker): Sorry everything's so messy!", "Test compound nodes with gotoIds w/ no Want motivation (1)");
+			assert.deepEqual(contentForChoice(1), "(speaker): What's with all the boxes everywhere?", "Test compound nodes with gotoIds w/ no Want motivation (2)");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "(speaker): I'm the interface!", "Test compound nodes with gotoIds w/ no Want motivation (3)");
+			assert.deepEqual(contentForChoice(1), "(speaker): I'm the dummy choice.", "Test compound nodes with gotoIds w/ no Want motivation (4)");
 
 
 		});
