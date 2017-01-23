@@ -1,8 +1,25 @@
 /* global test, QUnit */
 "use strict";
-define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wishlist, ChunkLibrary, Request, State) {
+define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Character"], function(Wishlist, ChunkLibrary, Request, State, Character) {
 
 	var run = function() {
+
+		var resetTest = function() {		//local function for resetting stuff between tests
+			
+
+			var characters = {
+				"char1" : {name: "Emma", nickname: "Em", gender: "female" },
+				"char2": {name: "Miguel", nickname: "Miguel", gender: "male"}
+			};
+
+			ChunkLibrary.reset();
+			State.reset();
+			Character.init(State);
+			for (var key in characters) {
+				Character.add(key, characters[key]);
+			}
+			State.set("mode", { type: "narration" } );
+		}
 		
 
 		QUnit.module( "BestPath Module tests" );
@@ -77,7 +94,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			assert.deepEqual(nextPath.route, ["Node2"], "conditions should restrict valid paths");
 
 			// Test choice structure.
-			ChunkLibrary.reset();
+			resetTest();
 
 			wl = Wishlist.create([{condition: "x eq 1"}], State);
 			ChunkLibrary.add([
@@ -87,8 +104,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Choice2"], "can't choose a chunk with a choiceLabel unless through a choice");
 
-			ChunkLibrary.reset();
-			State.reset();
+			resetTest();
 			wl = Wishlist.create([{condition: "x eq 1"}], State);
 			ChunkLibrary.add([
 				{ id: "alpha", content: "What do you choose?", choices: [{chunkId: "Choice1"}, {condition: "z eq 5"}] },
@@ -101,8 +117,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			var allPaths = wl.allPaths(ChunkLibrary);
 			assert.deepEqual(allPaths.length, 1, "should only find a single path when only one choice can meet an original Want.");
 
-			ChunkLibrary.reset();
-			State.reset();
+			resetTest();
 			wl = Wishlist.create([{condition: "x eq 1"}], State);
 			State.set("node2Banned", true);
 			ChunkLibrary.add([
@@ -113,8 +128,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			assert.notOk(nextPath, "can't find a path ending in a node with an invalid condition.");
 
 			// Test multiple wants. 
-			ChunkLibrary.reset();
-			State.reset();
+			resetTest();
 			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true"}], State);
 			ChunkLibrary.add([
@@ -130,8 +144,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["Node3"], "should pick a maximally Want-satisfying path, even if not all wants can be satisfied.");
 
-			ChunkLibrary.reset();
-			State.reset();
+			resetTest();
 			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}, {condition: "y eq true"}], State);
 			ChunkLibrary.add([
@@ -143,8 +156,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State"], function(Wi
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(nextPath.route, ["ChoiceNode", "Result2"], "should maximize Wants through choice structures.");
 
-			ChunkLibrary.reset();
-			State.reset();
+			resetTest();
 			State.set("mode", "narration");
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
