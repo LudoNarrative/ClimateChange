@@ -234,7 +234,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			}
 
 			chunkForText = chunkLibrary.get(nextChunkId);
-			routePos += 1;		//JG: do we still need this?
+			routePos += 1;
 			if (chunkForText) {
 				if (chunkForText.choices) { continueScene(nextChunkId); } 
 				else {
