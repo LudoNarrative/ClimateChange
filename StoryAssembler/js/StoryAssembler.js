@@ -34,14 +34,18 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		
 		var bestPath;
 
-		if (typeof State.get("speaker") == "undefined") { State.set("speaker", Character.getBestSpeaker(State)); }
+		if (typeof State.get("speaker") == "undefined") { State.set("speaker", Character.getBestSpeaker(State, 1, "content")); }
 		
 		else { 
+			/*
+			//This would be used if a choiceLabel was a short-hand for the next full text node that expanded it, instead of a stand-alone utterance
 			var hardcodedSpeaker = State.get("currentChoices").filter( function(choice) { return choice.chunkId == optChunkId});
 			if (hardcodedSpeaker.length > 0) { State.set("speaker", hardcodedSpeaker[0].speaker); }
 			else { 
-				State.set("speaker", Character.getBestSpeaker(State)); 
+				State.set("speaker", Character.getBestSpeaker(State, 2)); 
 			}
+			*/
+			State.set("speaker", Character.getBestSpeaker(State, 1, "content"));
 		}
 
 		//Cases:
@@ -271,6 +275,12 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			var choiceObjs = [];		//used to store current choiceObjs in blackboard (for graph reference)
 			chunk.choices.forEach(function(choice, pos) {
 				// TODO: What to do about choices that can't be met? Remove whole Chunk from consideration? Remove just that choice?
+
+				if (typeof choice.speaker == "undefined") {		//if there's no hard-coded speaker for the choice...
+					choice.speaker = Character.getBestSpeaker(State, 1, "choice");
+					State.set("speaker", choice.speaker);
+				}
+
 				var choiceText = getChoiceText(choiceDetails[pos]);
 				choiceText = Templates.render(choiceText, choice.speaker);		//render any grammars in there
 

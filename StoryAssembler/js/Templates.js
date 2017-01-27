@@ -180,7 +180,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 	// Main public interface. Given text with grammars, return its content with any templates rendered into fully realized text.
 	var render = function(rawText, speaker, mode) {
 
-		currentSpeaker = speaker;
+		var currentSpeaker = speaker;
 		var txt;
 		if (typeof rawText == "object") { txt = rawText[0]; }		//if rawText is coming from chunk content, it's an array, otherwise string
 		else { txt = rawText; }
