@@ -102,14 +102,25 @@ define([], function() {
 
 	//this returns the character id that matches the discourse pattern (dialogue, etc)
 	//if rLevel is passed in, will run some times 
-	var getBestSpeaker = function(_State, rLevel) {
+	var getBestSpeaker = function(_State, rLevel, textType) {
 		var storyMode = _State.get("mode");
 		var bestSpeaker;
+		var speaker = _State.get("speaker");
 		var iterNum = (rLevel === undefined) ? 1 : rLevel+1;
 
-		if (typeof currentSpeaker == "undefined") { bestSpeaker = storyMode.initiator; }
+		if (typeof speaker == "undefined") { 			//if there's no current speaker, set one
+			if (typeof storyMode == "undefined") { 		//if there's no specified storyMode, use monologue
+				storyMode = {
+					type: "monologue",
+					initiator: _State.get('characters')[0].id
+				}
+				_State.set('mode', storyMode);
+				_State.set('speaker', storyMode.initiator);
+			}
+			bestSpeaker = storyMode.initiator; 			//otherwise set it to the initiator
+		}
 		else {
-			var tempCurrentSpeaker = currentSpeaker;
+			//var tempCurrentSpeaker = speaker;
 			for (var x=0; x < iterNum; x++) {
 				switch (storyMode.type) {
 					case "narration" : 		//nothing needed
@@ -117,13 +128,14 @@ define([], function() {
 					case "monologue" : 		//set back to initiator if we get off track
 					bestSpeaker = storyMode.initiator;		
 					break;
-					case "dialogue": 		//alternate between initiator and responder
-						if (tempCurrentSpeaker == storyMode.initiator) { bestSpeaker = storyMode.responder; tempCurrentSpeaker = storyMode.responder }
-						else { bestSpeaker = storyMode.initiator; tempCurrentSpeaker = storyMode.initiator; }
+					case "dialogue": 		//alternate between initiator and responder (we set 'speaker' for use in multiple iterations, like choosing choice speakers)
+						//if (speaker == storyMode.initiator) { bestSpeaker = storyMode.responder; speaker = storyMode.responder; }
+						//else { bestSpeaker = storyMode.initiator; speaker = storyMode.initiator; }
+						if (textType == "content") { bestSpeaker = storyMode.initiator; }
+						if (textType == "choice") { bestSpeaker = storyMode.responder; }
 					break;
 				}
 			}
-			bestSpeaker = tempCurrentSpeaker;
 		}
 		return bestSpeaker;
 	}

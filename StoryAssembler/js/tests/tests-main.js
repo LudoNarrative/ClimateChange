@@ -57,7 +57,7 @@ requirejs.config({
 
 });
 
-requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", "ChunkLibraryTests", "BestPathTests", "TemplatesTest", "StoryAssemblerTests", "CharacterTests", "domReady!"], function(QUnit, StateTests, RequestTests, WantTests, WishlistTests, ChunkLibraryTests, BestPathTests, TemplatesTest, StoryAssemblerTests, CharacterTests) {
+requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", "ChunkLibraryTests", "BestPathTests", "TemplatesTest", "StoryAssemblerTests", "CharacterTests", "NarrationModesTests","domReady!"], function(QUnit, StateTests, RequestTests, WantTests, WishlistTests, ChunkLibraryTests, BestPathTests, TemplatesTest, StoryAssemblerTests, CharacterTests, NarrationModesTests) {
 
 	StateTests.run();
 	RequestTests.run();
@@ -68,6 +68,7 @@ requirejs(["QUnit", "StateTests", "RequestTests", "WantTests", "WishlistTests", 
   TemplatesTest.run();
   StoryAssemblerTests.run();
   CharacterTests.run();
+  NarrationModesTests.run();
 
 	QUnit.load();
 	QUnit.start();

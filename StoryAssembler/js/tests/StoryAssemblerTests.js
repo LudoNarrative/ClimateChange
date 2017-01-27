@@ -59,7 +59,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			
 			var wl;
 			resetTest();
-/*
+
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			ChunkLibrary.add([
 				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}] },
@@ -297,7 +297,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(contentForChoice(1), "(speaker): hey choicelabel", "Testing compound nodes (2)");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "(speaker): chunk3 is me!", "Testing compound nodes (3)");
-*/
+
 			// Test compound nodes with gotoIds
 			resetTest();
 			wl = Wishlist.create([{condition: "establishSetting eq true", order: "first"}, {condition: "awesome eq heckYeah"} ], State);
