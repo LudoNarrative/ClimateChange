@@ -111,7 +111,7 @@ Characters:
 	{
 		"id": "bensAdditionalAlternativeSecondChunk",
 		//"choiceLabel": "Lets call the artist over to buy them all.",
-		//"speaker" : "ally",
+		"speaker" : "NONE",
 		"content": "<i>The shopkeeper approaches you, eager to fill your lives with art</i>",
 		"choices": [
 			{"gotoId":"shopkeeperGreeting"},

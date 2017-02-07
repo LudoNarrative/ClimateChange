@@ -169,6 +169,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		//through earlier call to Character.getBestSpeaker
 		if(chunk.speaker !== undefined){
 			chunkSpeaker = chunk.speaker
+			State.set("speaker", chunkSpeaker)
 		}
 		else{
 			chunkSpeaker = State.get("speaker")
