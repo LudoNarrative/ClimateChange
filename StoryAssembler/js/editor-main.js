@@ -26,6 +26,7 @@ requirejs.config({
 		"dinnerData" : "../data/dinner.json",
 		"testData" : "../data/testData.json",
 		"generalistData" : "../data/generalist.json",
+		"benTestData" : "../data/benTestData.json",
 
 		"Coordinator" : "../../Coordinator/Coordinator",
 		"Display" : "../../js/Display",
