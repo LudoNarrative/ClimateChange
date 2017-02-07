@@ -159,11 +159,23 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	}
 
 	var displayChunkText = function(chunkId, mode) {
+		var chunkSpeaker;
 
 		mode = mode || "normal";
 
 		var chunk = chunkLibrary.get(chunkId, mode);
-		var text = Templates.render(chunk.content, State.get("speaker"));
+
+		//If the chunk specifies who the speaker should be, use that. Otherwise use the speaker determined 
+		//through earlier call to Character.getBestSpeaker
+		if(chunk.speaker !== undefined){
+			chunkSpeaker = chunk.speaker
+		}
+		else{
+			chunkSpeaker = State.get("speaker")
+		}
+
+		var text = Templates.render(chunk.content, chunkSpeaker);
+		//var text = Templates.render(chunk.content, State.get("speaker")); 
 		if (text !== undefined) { 							//if the chunk has text, display it
 			StoryDisplay.addStoryText(text); 
 		}

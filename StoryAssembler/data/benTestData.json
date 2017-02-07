@@ -77,7 +77,7 @@ Characters:
 		"id": "bensFirstChunk",
 		//"choiceLabel": "Heh, yeah. Pretty nice. ",
 		//"speaker" : "ally",
-		"content": "{name|protagonist}. Ooohh man! Look at all these pictures with oceans in them. I'm in heaven.",
+		"content": "Ooohh man! Look at all these pictures with oceans in them. I'm in heaven, {name|protagonist}.",
 		"choices": [
 			{"gotoId":"bensSecondChunk"},
 			{"gotoId":"bensAlternativeSecondChunk"},
