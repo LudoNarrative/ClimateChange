@@ -379,7 +379,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(ChunkLibrary.get('interface').available, true, "for first node, interface should still be available from ChunkLibrary");
 			clickChoice(1);
 			assert.deepEqual(ChunkLibrary.get('interface'), false, "after clicking, interface should not be available");
-
+/*
 			//dynamic chunks brought in as choices should be valid if the root chunk making the request has an effect that would make their state pre-condition true
 			resetTest();
 			wl = Wishlist.create([{condition: "establishFriendBackstory eq true", order: "first"}, {condition: "establishEmmaRegrets eq true"} ], State);
@@ -411,7 +411,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(contentForChoice(1), "(speaker): Still jealous you got to spend six months there.", "Dynamic choice label should be brought in without wishlist item");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "(speaker): Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision.", "Content should display correctly");
-			
+			*/
 
 		});
 	}
