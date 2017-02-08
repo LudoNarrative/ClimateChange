@@ -340,6 +340,78 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(html(getStoryEl()), "(speaker): I'm the interface!", "Test compound nodes with gotoIds w/ no Want motivation (3)");
 			assert.deepEqual(contentForChoice(1), "(speaker): I'm the dummy choice.", "Test compound nodes with gotoIds w/ no Want motivation (4)");
 
+			//chunks that are used in dynamic / compound chunks should also be removed from the content library if applicable
+			resetTest();
+			wl = Wishlist.create([{condition: "establishSetting eq true", order: "first"}, {condition: "awesome eq heckYeah"} ], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{
+					"id": "setup",
+					"speaker" : "ally",
+					"content" : "Sorry everything's so messy!",
+					"choices" : [
+						{"gotoId" : "choiceInterface", "speaker" : "protagonist"}
+					],
+					"effects": ["set establishSetting true"]
+				},
+				{
+					"id": "choiceInterface",
+					"choiceLabel": "What's with all the boxes everywhere?",
+					"request": {"gotoId": "interface"},
+					//"effects": ["set establishSetting true"]
+				},
+				{
+					"id": "interface",
+					"speaker" : "ally",
+					"content" : "I'm the interface!",
+					"choices" : [
+						{"gotoId" : "dummyChoice", "speaker" : "protagonist"}
+					],
+					//"effects": ["set establishSetting true"]
+				},
+				{
+					"id": "dummyChoice",
+					"choiceLabel": "I'm the dummy choice.",
+					"content": "dummy content"
+				},
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+			assert.deepEqual(ChunkLibrary.get('interface').available, true, "for first node, interface should still be available from ChunkLibrary");
+			clickChoice(1);
+			assert.deepEqual(ChunkLibrary.get('interface'), false, "after clicking, interface should not be available");
+
+			//dynamic chunks brought in as choices should be valid if the root chunk making the request has an effect that would make their state pre-condition true
+			resetTest();
+			wl = Wishlist.create([{condition: "establishFriendBackstory eq true", order: "first"}, {condition: "establishEmmaRegrets eq true"} ], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{
+					"id": "inSpain",
+					"content": "You would not believe how much of this stuff I ate in Spain.",
+					"choices" : [
+						{"condition": "establishEmmaRegrets eq true"},
+					],
+					"conditions": [],
+					"effects": ["set establishFriendBackstory true"]
+				},
+				{
+					"id": "stilljealous",
+					"choiceLabel": "Still jealous you got to spend six months there.",
+					"request": {"condition": "establishEmmaRegrets eq true"}
+				},
+				{
+					"id": "regrets",
+					"content": "Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision.",
+					"conditions" : ["establishFriendBackstory eq true"],
+					"effects": ["decr confidence 1", "set establishEmmaRegrets true"]
+				}
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+			assert.deepEqual(html(getStoryEl()), "(speaker): You would not believe how much of this stuff I ate in Spain.", "dynamic choiceLabels chain correctly (1)");
+			assert.deepEqual(contentForChoice(1), "(speaker): Still jealous you got to spend six months there.", "Dynamic choice label should be brought in without wishlist item");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "(speaker): Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision.", "Content should display correctly");
+			
 
 		});
 	}

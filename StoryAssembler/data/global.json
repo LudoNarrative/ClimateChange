@@ -19,13 +19,6 @@
 		"conditions": [],
 		"effects": []
 	},
-	{
-		"id": "EmmaFrog",
-		"speaker" : "emma",
-		"content": "4th grade? Mrs. Anderson? Oh my god, that diorama. I remember it was <i>huge</i>...it took forever for you to set up. You spent <i>ages</i> on that. What was it about again?",
-		"conditions": [],
-		"effects": []
-	},
 
 	//---------------------------KNOWLEDGE---------------------------------------
 	{

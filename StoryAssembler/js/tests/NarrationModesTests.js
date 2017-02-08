@@ -114,9 +114,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			nextPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(State.getBlackboard().mode.type, "monologue", "default mode is 'monologue'");
 
-			
-
-			//if mode is dialogue, choice speaker should be one explicitly coded if chosen
+			//if mode is dialogue, choice speaker should still be one explicitly coded if chosen
 
 			//should respect speaker explicitly coded if choiceLabel is different from main speaker
 
