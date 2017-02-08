@@ -7,3 +7,7 @@ Open localhost:8000 to see the demo.
 If you don't have Twisted, you can also use:
 
 	python -m SimpleHTTPServer
+
+	or
+
+	python -m http.server (for Python3 users)
