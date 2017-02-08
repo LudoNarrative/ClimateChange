@@ -95,9 +95,10 @@ Characters:
 		"content": ["{name|protagonist}, come on. This stew is not going to eat itself."],
 		"choices" : [
 			{"condition": "establishSetting eq true", "speaker" : "protagonist"},
-			{"condition": "provokeConfidenceChoice eq true", "speaker" : "protagonist"},
+			{"condition": "setupChallenge eq true", "speaker" : "protagonist"},
 			{"condition": "establishSetting eq true", "speaker" : "protagonist"}
 		],
+		"conditions" : ["setting eq dinner"],
 		//"effects": ["addWishlist { 'condition': 'droppedKnowledge gte 1' }"]
 	},
 
@@ -111,7 +112,6 @@ Characters:
 		"request": {"gotoId": "apologizeMessy"},
 		"effects": ["set establishSetting true"]
 	},
-	//----------------------------------------------------------------------------------
 	{
 		"id": "apologizeMessy",
 		"speaker" : "ally",
@@ -124,6 +124,8 @@ Characters:
 		"conditions": ["setting eq dinner"],
 		"effects": ["set establishSetting true"]
 	},
+	//----------------------------------------------------------------------------------
+
 	{
 		"id": "dontWorryAboutIt",
 		"speaker" : "ally",
@@ -155,7 +157,6 @@ Characters:
 		"id": "bathroomDownTheHall",
 		"speaker" : "ally",
 		"content": "{ifState|setting|dinner|Bathroom's down that hallway, in case you forgot.|}{ifState|setting|lecture|Break room's up on the third floor, in case you forgot.|}{ifState|setting|beach|Lunch is gonna be back at the parking lot, in case no one told you.|}",
-		"conditions": ["setting neq beach"],
 		"effects": ["set establishSetting true"]
 	},
 	{
@@ -163,7 +164,7 @@ Characters:
 		"choiceLabel": "Sure! Sorry, I was just taking everything in.",
 		"request": {"condition": "establishSetting eq true"}
 	},
-	//--------------------Set up challenge (not confident)-------------------------------------------------
+	//--------------------Set up challenge (not confident)---------------------------------
 	{
 		"id": "whatsWrong",
 		"speaker" : "ally",
@@ -171,51 +172,55 @@ Characters:
 		"choices": [
 			{"gotoId" : "whatAmIDoing", "speaker" : "protagonist" }
 		],
-		"effects": ["set provokeConfidenceChoice true"]
+		"effects": ["set setupChallenge true"]
 	},
-//--------------------Set up challenge (confident)-------------------------------------------------
+//--------------------Set up challenge (confident)-------------------------------------------
 //(set provokeConfidenceChoice true)
 	{
 		"id": "whyDoesItMatter",
 		"speaker" : "antagonist",
-		"content": "Honestly, I don't see how you're going to make a difference. We're all screwed. But if it makes you feel better, I guess go ahead and do it while you can.",
+		"content": "<strong>Set up challenge (confident)</strong><br>Honestly, I don't see how you're going to make a difference. We're all screwed. But if it makes you feel better, I guess go ahead and do it while you can.",
 		"choices" : [
 			{"condition": "droppedKnowledge incr 1", "speaker" : "protagonist"},
 		],
-		"conditions" : [],
-		"effects" : ["set provokeConfidenceChoice true"],
+		"conditions" : ["confidence gte 6"],
+		"effects" : ["set setupChallenge true"],
 	},
 	{
 		"id": "youreOverreacting",
 		"speaker" : "antagonist",
-		"content": "Seriously, I think you and all the other alarmists are over-reacting. This whole climate change thing is just a bunch of self-absorbed panic.",
+		"content": "<strong>Set up challenge (confident)</strong><br>Seriously, I think you and all the other alarmists are over-reacting. This whole climate change thing is just a bunch of self-absorbed panic.",
 		"choices" : [
 			{"condition": "droppedKnowledge incr 1", "speaker" : "protagonist"},
 		],
-		"effects": ["set provokeConfidenceChoice true"]
+		"conditions" : ["confidence gte 6"],
+		"effects": ["set setupChallenge true"]
 	},
 
-//-----------------------------------------------------------------------------------------------------
+//----Set up challenge (not confident)---------------------------------------------------------
 //(set allyReassuresProtag true)
 	{
 		"id": "whatAmIDoing",
 		"choiceLabel": "I just...what am I even doing? I mean even if I get this degree, what then?",
 		"speaker" : "ally",
 		"content": "Don't give me that, {name|protagonist}! You've been doing this your whole life! You got this!",
-		"effects": ["set allyReassuresProtag true"]
+		"conditions" : ["confidence lte 5"],
+		"effects": ["set respondToChallenge true"]
 	},
 	{
 		"id": "easilyBacksdown",
 		"speaker" : "antagonist",
 		"content": "Woah, woah. Ok sorry.",
-		"conditions": ["provokeConfidenceChoice eq true"],
+		"conditions": ["setupChallenge eq true"],
 		"effects": ["set allyReassuresProtag true"]
 	},
 //--------------------------------------------------------------------------------------------------------
 	{
 		"id": "confidentRebuttal",
 		"choiceLabel" : "Are you kidding? There are all sorts of things. Look-",
-		"request": {"condition": "droppedKnowledge incr 1"}
+		"request": {"condition": "droppedKnowledge incr 1"},
+		"conditions" : ["confidence gte 6"],
+		"effects": ["set respondToChallenge true"]
 	},
 //--------------------------------------------------------------------------------------------------------
 //set career
@@ -234,21 +239,35 @@ Characters:
 		"choiceLabel" : "<i>Lysmata amboinensis.</i> Pacific cleaner shrimp.",
 		"speaker" : "ally",
 		"content": 	"Right. Lysmata amoeba ninnies. Thingies.",
-		"effects" : ["set career shrimp"]
+		"effects" : ["set career shrimp", "set establishSpecialtyInfo true"]
 	},
 	{
 		"id": 	"pickLobsters",
 		"choiceLabel" : "<i>Homarus americanus.</i> Lobsters.",
 		"speaker" : "ally",
 		"content": 	"Right. Been awhile since I've seen one of those!",
-		"effects" : ["set career lobster"]
+		"effects" : ["set career lobster", "establishSpecialtyInfo eq true"]
 	},
 	{
 		"id": 	"pickCoral",
 		"choiceLabel" : "<i>Octocorallia.</i> Backbone of the coral reefs.",
 		"speaker" : "ally",
 		"content": 	"Right. Octo-coro-lala-rama-dingdong.",
-		"effects" : ["set career coral"]
+		"effects" : ["set career coral", "establishSpecialtyInfo eq true"]
+	},
+//--------------------------------------------------------------------------------------------------------
+//reveal backstory
+	{
+		"id": 	"disastrousDate",	
+		"speaker" : "protagonist",
+		"content": "Oh man, what was his name...Vincent? We went to that Italian place, and he found out he was allergic to pesto?",
+		"effects" : ["set establishProtagBackstory true"]
+	},
+	{
+		"id": 	"tester",	
+		"speaker" : "protagonist",
+		"choiceLabel" : "tester choice",
+		"content": "Testsetsetsst",
 	},
 
 ]

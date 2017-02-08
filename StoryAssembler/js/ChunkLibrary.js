@@ -94,6 +94,8 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 			if (_library[chunkId].available) {
 				return _library[chunkId];
 			}
+			else { return false; }
+
 		}
 		else {
 			return _library[chunkId];
