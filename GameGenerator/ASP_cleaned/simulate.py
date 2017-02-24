@@ -288,7 +288,7 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
         outcome_weight = 1000
         fitness += outcome_weight*(len(outcome_reached)-len(rules))
 
-        end_weight = 500
+        end_weight = 5
 
         for outcome in rules:
             has_mode_change = False
@@ -311,8 +311,23 @@ if __name__ == '__main__':
     out = solve_randomly(args)
     settings,free_variables,rules,replacements = parse_game(out)
     simulation_count = 40
-    depth = 6
+    depth = 10
     display = False
+
+    player_model_mappings = {'player_will_attempt':0.7,
+                             'undetermined':0.5,
+                             'must_happen':1,
+                             'player_will_avoid':0.2,
+                             'player_might_attempt':0.5}
+    player_model = {}
+    for o in ['player_model']:
+        print o
+        for oo in out[o]:        
+            for ooo in oo:
+                outcome =prettify(ooo['terms'][0])
+                cond =prettify(ooo['terms'][1])
+                player_model[outcome] = player_model_mappings[cond]
+                
     creator.create("FitnessMax", base.Fitness, weights=(1.0,))
     creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -323,7 +338,7 @@ if __name__ == '__main__':
         return gen
 
 
-    player_model = {rule:1 for rule in rules}
+    #player_model = {rule:1 for rule in rules}
     
     toolbox.register("attr_int", rand_range(0,10))
     toolbox.register("individual", tools.initRepeat, creator.Individual,
