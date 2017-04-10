@@ -1,4 +1,4 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!benTestData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, benTestData, globalData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!benTestData", "text!newExampleData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, benTestData, newExampleData, globalData) {
 
 	/*
 		Initializing function
@@ -6,7 +6,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 
 		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "benTest"];	//order of scenes
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "benTest", "newExample"];	//order of scenes
 		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -50,6 +50,31 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var getStorySpec = function(id) {
 
 		var storySpec = [
+		{
+			id: "newExample",
+			characters: {
+				"protagonist" : {name: "Emma", nickname: "Em", gender: "female" },
+				"char1" : {name: "Simon", nickname: "Simon", gender: "male" },
+				"char2" : {name: "Eliza", nickname: "Liz", gender: "female" },
+				"char3" : {name: "Michael", nickname: "Mike", gender: "male" },
+				"char4" : {name: "Julia", nickname: "Jul", gender: "female" }
+			},
+			wishlist: [
+				{ condition: "establishScene eq true"},
+				{ condition: "introductions eq 2"}
+			],
+			dataFile: require("text!newExampleData"),
+			startState: [
+				"set establishScene false",
+				"set introductions 0"
+			],
+			UIvars: [
+				"introductions"
+			],
+			mode: { 
+				type: "dialogue"
+			}
+		},
 		{
 			id: "travel",
 			characters: {
@@ -322,6 +347,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		var sceneScreens = [
 			{
+				id : "newExample",
+				text : "<p>This is an introduction for an example scene!</p>"
+			},
+			{
 				id : "dinner",
 				text : "<p>You are Emma Richards, a PhD student who studies the ocean.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
 			},
@@ -358,6 +387,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	//loads background, for now this is based on scene id
 	var loadBackground = function(id) {
 		var sceneBgs = [
+			{
+				id : "newExample",
+				src : "dinner.png"
+			},
 			{
 				id : "dinner",
 				src : "dinner.png"
@@ -397,6 +430,16 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var loadAvatars = function(id) {
 		var avatarSpec= [
+			{
+				id : "newExample",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["introductions gt 0"]
+					},
+				]
+			},
 			{
 				id : "dinner",
 				avatars: [
@@ -542,6 +585,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var Game = require("Game");
 
 		var gameResources = [
+			{
+				id: "newExample",
+				aspFilepaths: ['asp-phaser-generator/test/fixtures/asp-game-1.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
 			{
 				id: "dinner",
 				aspFilepaths: ['asp-phaser-generator/test/fixtures/asp-game-1.lp'],
