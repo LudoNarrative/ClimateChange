@@ -129,6 +129,10 @@ def parse_game(result):
     
     for resource in result['resource']:        
         resources.append(prettify(resource[0]['terms'][0]))
+        
+    entities = []
+    for entity in result['entity']:        
+        entities.append(prettify(entity[0]['terms'][0]))
     initializations = {}
     settings = []   
     for initialization in result['initialize']:
@@ -146,6 +150,12 @@ def parse_game(result):
             free_variables.append(['initialize',free_var])
             settings.append(('initialize',resource,free_var,'set'))
             
+    for entity in entities:
+        if entity not in initializations:
+            free_var = [0]
+            print entity
+            free_variables.append(['initialize',free_var])
+            settings.append(('initialize',entity,free_var,'add'))
             
     rules = {}
     replacements = {}
@@ -173,10 +183,11 @@ def parse_game(result):
             rules[outcome]['preconditions']['compare'].append( (direction,resource,free_var))
             free_variables.append(['condition',free_var])
         elif 'overlaps' == terms[0]['predicate'] or 'collide' == terms[0]['predicate']:
-            entity1  = prettify(terms[0]['terms'][0])
-            entity2   = prettify(terms[0]['terms'][1])
-            
-            rules[outcome]['preconditions']['overlaps'].append( (entity1,entity2))
+            if len(terms[0]['terms']) > 1:
+                entity1  = prettify(terms[0]['terms'][0])
+                entity2   = prettify(terms[0]['terms'][1])
+                
+                rules[outcome]['preconditions']['overlaps'].append( (entity1,entity2))
         else:
             rules[outcome]['preconditions']['other'].append( prettify(terms[0]))
    
@@ -210,7 +221,6 @@ def run_once(rules,settings,player_model,depth):
     for setting in settings:
         if 'initialize' == setting[0]:
             state[setting[1]] = setting[2]
-            
     next_state = {}
     history = []
     for timestep in range(depth):
@@ -240,10 +250,10 @@ def run_once(rules,settings,player_model,depth):
             for action in rules[outcome]['results']['modify']:
                 next_state[action[1]] = [modifiers[action[0]](next_state[action[1]][0],action[2][0])]
             for action in rules[outcome]['results']['add']:
-                state[action[0]] += 1
+                next_state[action][0] += 1
             for action in rules[outcome]['results']['delete']:
-                state[action[0]] -= 1
-                state[action[0]] = max(0,state[action[0]])
+                next_state[action][0] -= 1
+                state[action][0] = max(0,state[action][0])
                 
         history.append(rules_fired)
         for s,v in next_state.items():
@@ -301,8 +311,23 @@ if __name__ == '__main__':
     out = solve_randomly(args)
     settings,free_variables,rules,replacements = parse_game(out)
     simulation_count = 40
-    depth = 6
+    depth = 10
     display = False
+
+    player_model_mappings = {'player_will_attempt':0.7,
+                             'undetermined':0.5,
+                             'must_happen':1,
+                             'player_will_avoid':0.2,
+                             'player_might_attempt':0.5}
+    player_model = {}
+    for o in ['player_model']:
+        print o
+        for oo in out[o]:        
+            for ooo in oo:
+                outcome =prettify(ooo['terms'][0])
+                cond =prettify(ooo['terms'][1])
+                player_model[outcome] = player_model_mappings[cond]
+                
     creator.create("FitnessMax", base.Fitness, weights=(1.0,))
     creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -313,7 +338,8 @@ if __name__ == '__main__':
         return gen
 
 
-    player_model = {rule:0.5 for rule in rules}
+    #player_model = {rule:1 for rule in rules}
+    
     toolbox.register("attr_int", rand_range(0,10))
     toolbox.register("individual", tools.initRepeat, creator.Individual,
                      toolbox.attr_int, n=len(free_variables))
@@ -399,7 +425,7 @@ if __name__ == '__main__':
             if setting[3] == 'set':
                 print 'initialize(set({},{})).'.format(setting[1],setting[2][0])
             elif setting[3] == 'add':
-                print 'initialize(add({},{},{})).'.format(setting[1],setting[2][0],setting[4])
+                print 'initialize(add({},{})).'.format(setting[1],setting[2][0])
                 
     print ''
     

@@ -251,8 +251,7 @@ buttonPriority(A,C) :-
 
 movement(move(E,D)) :- action(move(E,D)).
 
-bad(A) :- result(outcome(avatar(M1)),A),
+:- result(outcome(avatar(M1)),A),
    not result(outcome(avatar(M2)),A),
    outcome(outcome(avatar(M2))),
    not movement(A).
-   

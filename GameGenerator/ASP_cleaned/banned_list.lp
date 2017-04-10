@@ -1,1 +1,1 @@
-:- precondition(control_event(button(_,_)),_).
+%:- precondition(control_event(button(_,_)),_).

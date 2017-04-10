@@ -25,14 +25,19 @@ has_collides(Outcome) :- precondition(collide(_,_),Outcome).
 
 overlaps(N) :- N =  {condition(overlaps(E))}.
 collides(N) :- N = {condition(collide(E1,E2))}.
-preconditions_allowed(N) :- N = 8 + A + B,
+avatar_controls(4) :- controlScheme(_,tank;_,asteroids;_,cardinal).
+avatar_controls(2) :- controlScheme(_,horizontal;_,vertical).
+
+preconditions_allowed(N) :- N = 8 + A + B + C,
 			    overlaps(A),
-			    collides(B).
+			    collides(B),
+			    avatar_controls(C).
 :- N + 1 {precondition(_,_)},
    preconditions_allowed(N).
 
 
- :- 8 {result(_,_)}.
+ :- N + 1 {result(_,_)},
+   preconditions_allowed(N).
 
 
 
@@ -59,4 +64,4 @@ complex(entities) :-
 
 
 readings(N) :- N = {reading(_,_)}.
-%#minimize { N : readings(N)}.
+#minimize { N : readings(N)}.
