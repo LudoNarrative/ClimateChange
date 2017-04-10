@@ -18,7 +18,7 @@ every_frame(O) :- not not_every_frame(O), precondition(C,O).
 not_every_frame(O) :- precondition(control_event(click(E)),O).
 not_every_frame(O) :- precondition(control_event(button(B,pressed)),O).
 not_every_frame(O) :- precondition(control_event(button(B,released)),O).
-not_every_frame(O) :- precondition(timerElapsed(T),O) .
+not_every_frame(O) :- precondition(timer_elapsed(T),O) .
 
 
 %players must have controls or it's just a weird movie
