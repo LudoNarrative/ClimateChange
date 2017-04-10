@@ -192,7 +192,7 @@ change(narrative_gating,positive).
 over_time(Outcome) :-
     precondition(tick,Outcome).
 over_time(Outcome) :-
-    precondition(timerElapsed(T),Outcome).
+    precondition(timer_elapsed(T),Outcome).
 
 over_time(Change,Resource) :-
     over_time(Outcome),
@@ -232,10 +232,6 @@ outcome_creates_condition(Outcome,compare(ge,Resource)) :-
 
 outcome_creates_condition(Outcome,overlaps(Entity)) :-
     result(Outcome,move(Entity,direction(_,_))),
-    condition(overlaps(Entity)).
-
-outcome_creates_condition(Outcome,overlaps(Entity)) :-
-    result(Outcome,move(Entity,direction(_))),
     condition(overlaps(Entity)).
 
 outcome_enables(Outcome,Other) :-

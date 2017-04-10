@@ -3,10 +3,10 @@
 :-  precondition(overlaps(E1,E2,POLARITY),O),
     precondition(control_event(click(E3)),O).
     
-:- outcome(o(N)), N > 2, not outcome(o(N-1)).
-:- resource(r(N)), N > 2, not resource(r(N-1)).
-:- entity(e(N)), N > 2, not entity(e(N-1)).
-:- timer(t(N)), N > 2, not timer(t(N-1)).
+:- outcome(outcome(o(N))), N >= 2, not outcome(outcome(o(N-1))).
+:- resource(resource(r(N))), N >= 2, not resource(resource(r(N-1))).
+:- entity(entity(e(N))), N >= 2, not entity(entity(e(N-1))).
+:- timer(timer(t(N))), N >= 2, not timer(timer(t(N-1))).
 
 
 :- outcome(O), not has_precondition(O).
@@ -34,9 +34,9 @@
 :- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
 :- not playerControls.
 
-% Only 1 avatar
-:-  avatar(ENTITY), 
-    many(ENTITY).
+%AJS - GETTING RID OF THIS Only 1 avatar
+%:-  avatar(ENTITY), 
+%    many(ENTITY).
 
 
 
@@ -123,7 +123,7 @@ different_precondition(O1,O2) :-
 :- result(O, move(E, direction(away,cursor))),
    condition(control_event(click(E))).
 
-:- precondition(timerElapsed(T),Outcome), 2 { precondition(C,Outcome)}.
+:- precondition(timer_elapsed(T),Outcome), 2 { precondition(C,Outcome)}.
 
 
 :- only_one_precondition(O),
@@ -222,11 +222,37 @@ different_precondition(O1,O2) :-
 :-  precondition(compare(ge,R),O),
     result(O,add(E)),
     precondition(overlaps(E),O2),
-    result(O2,increase(R)).
+    result(O2,modify(increase,R)).
 
 
 :-  precondition(compare(le,R),O),
     result(O,add(E)),
     precondition(overlaps(E),O2),
-    result(O2,decrease(R)).
+    result(O2,modify(decrease,R)).
 
+buttonPriority(mouse_button,space).
+buttonPriority(space,down_arrow).
+buttonPriority(down_arrow,up_arrow).
+buttonPriority(up_arrow,left_arrow).
+buttonPriority(up_arrow,right_arrow).
+buttonPriority(A,C) :-
+    buttonPriority(A,B),
+    buttonPriority(B,C).
+
+:- not condition(control_event(button(BUTTON1,_))),
+   condition(control_event(button(BUTTON2,_))),
+   buttonPriority(BUTTON1,BUTTON2).
+
+:- precondition(overlaps(E1,E2,false),O),
+   result(O,move(E1,direction(away,E2))).
+:- precondition(overlaps(E2,E1,false),O),
+   result(O,move(E1,direction(away,E2))).
+
+
+movement(move(E,D)) :- action(move(E,D)).
+
+bad(A) :- result(outcome(avatar(M1)),A),
+   not result(outcome(avatar(M2)),A),
+   outcome(outcome(avatar(M2))),
+   not movement(A).
+   

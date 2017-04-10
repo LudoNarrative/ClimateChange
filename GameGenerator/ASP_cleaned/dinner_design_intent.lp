@@ -13,10 +13,11 @@
 #const max_conditions_per = 2.
 
 
-:- not reading(sharing,relation(e(1),e(2))).
-:- not reading(goal(produce),r(1)).
+:- not reading(sharing,relation(entity(e(1)),entity(e(2)))).
+:- not reading(goal(produce),resource(r(1))).
 :- not action(mode_change(narrative_gating)).
 :- 2 {action(mode_change(N))}.
 
-:- not static(e(2)).
+:- not static(entity(e(2))).
 
+:- not controlScheme(entity(e(1)),cardinal).
