@@ -50,14 +50,20 @@
 
 
 
+%% different_precondition(O1,O2) :-
+%%     precondition(P,O1),
+%%     not precondition(P,O2),
+%%     outcome(O2).
+%% different_precondition(O1,O2) :-
+%%     not precondition(P,O1),
+%%     precondition(P,O2),
+%%     outcome(O1).
+
 different_precondition(O1,O2) :-
-    precondition(P,O1),
-    not precondition(P,O2),
+    1 {precondition(P,O1);precondition(P,O2)} 1,
+    condition(P),
+    outcome(O1),
     outcome(O2).
-different_precondition(O1,O2) :-
-    not precondition(P,O1),
-    precondition(P,O2),
-    outcome(O1).
 
 :- has_precondition(O1),
    has_precondition(O2),
@@ -81,7 +87,7 @@ different_precondition(O1,O2) :-
 % only destroy that which you can create
 :-  required(Entity),
    action(delete(Entity)),
-   not action(add(Entity)).
+   not action(add(Entity,_,_)).
 
 
 % only allow something to decrease on tick if it can be increased
@@ -106,7 +112,7 @@ different_precondition(O1,O2) :-
    precondition(compare(le,Resource),Outcome).
 
 
-:- action( add(Entity)), singular(Entity).
+:- action( add(Entity,_,_)), singular(Entity).
 
 
 % constraint on reachability
@@ -136,7 +142,7 @@ different_precondition(O1,O2) :-
     result(O2,move(E1,direction(away,E2))).
 
 
-:- result(O,add(E)), every_frame(O).
+:- result(O,add(E,_,_)), every_frame(O).
 
 :- 2{result(O,modify(_,R))}, resource(R), outcome(O).
 
@@ -185,7 +191,7 @@ different_precondition(O1,O2) :-
    outcome(O).
 
 :- result(O,delete(E)),
-    result(O,add(E)). 
+    result(O,add(E,_,_)). 
 
     
 :-  result(Outcome,mode_change(game_loss;narrative_gating)),
@@ -199,7 +205,7 @@ different_precondition(O1,O2) :-
     
     
 :-  precondition(control_event(click(E)),O),
-    result(O,add(E)).
+    result(O,add(E,_,_)).
     
 :- action(modify(_,property(Property,E))),
    not balanced(property(Property,E)).
@@ -220,13 +226,13 @@ different_precondition(O1,O2) :-
 
 
 :-  precondition(compare(ge,R),O),
-    result(O,add(E)),
+    result(O,add(E,_,_)),
     precondition(overlaps(E),O2),
     result(O2,modify(increase,R)).
 
 
 :-  precondition(compare(le,R),O),
-    result(O,add(E)),
+    result(O,add(E,_,_)),
     precondition(overlaps(E),O2),
     result(O2,modify(decrease,R)).
 
@@ -257,4 +263,13 @@ movement(move(E,D)) :- action(move(E,D)).
    not movement(A).
 
 
-:- 3{result(outcome(avatar(M),A))}.
+:- 3{result(outcome(avatar(M)),A)}.
+
+
+
+:- initialize(set_sprite(E1,S)),
+   initialize(set_sprite(E2,S)),
+   initialize(set_color(E1,C)),
+   initialize(set_color(E2,C)),
+   E1 != E2.
+   
