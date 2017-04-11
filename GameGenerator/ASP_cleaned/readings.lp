@@ -134,7 +134,8 @@ reading(stakes(high),Resource) :-
     result(Outcome,mode_change(game_win)).
 
 reading(stakes(high),property(Entity,health)) :-
-    entity(Entity).
+    entity(Entity),
+    action(modify(decrease,property(Entity,health))).
 
 reading(stakes(low),Resource) :-
     resource(Resource),

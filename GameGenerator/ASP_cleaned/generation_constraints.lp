@@ -273,3 +273,5 @@ movement(move(E,D)) :- action(move(E,D)).
    initialize(set_color(E2,C)),
    E1 != E2.
    
+:- result(O,move(E,_)),
+   result(O,delete(E)).
