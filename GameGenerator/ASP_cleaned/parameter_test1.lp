@@ -27,7 +27,7 @@ initialize(add(e2,2,location(bottom,left))).
 initialize(add(e3,10,location(top,center))).
 initialize(add(e3,10,location(bottom,center))).
 
-precondition(control_event(button(mouse_button,held)),o3).
+precondition(control_event(button(mouse,held)),o3).
 precondition(overlaps(e1,e2,true),o3).
 result(o3,modify(increase,r1)).
 
@@ -38,11 +38,11 @@ precondition(tick,tick).
 result(tick,moves(e2,forward)).
 result(tick,modify(decrease,r1)).
 
-precondition(control_event(button(mouse_button,held)),o1).
+precondition(control_event(button(mouse,held)),o1).
 precondition(overlaps(e1,e2,false),o1).
 result(o1,modify(decrease,r1)).
 
-precondition(control_event(button(mouse_button,held)),o4).
+precondition(control_event(button(mouse,held)),o4).
 result(o4,move_towards(e1,cursor)).
 
 precondition(compare(le,r1),o2).
