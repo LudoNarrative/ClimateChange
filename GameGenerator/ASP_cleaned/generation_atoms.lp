@@ -4,6 +4,10 @@
 
 constants(0..3).
 
+
+row(top;middle;bottom).
+col(left;center;right).
+
 modes(narrative_gating;narrative_progress;game_loss;game_win).
 
 buttons(mouse;space;up_arrow;down_arrow;left_arrow;right_arrow).
