@@ -1,0 +1,47 @@
+[
+	{
+		"id": "sceneIntro",
+		"content": "The coffeehouse is packed--yet another indication the madness of finals has fully descended. You scan the crowd to see if anybody else has shown up. Where...",
+		"effects" : [
+			"set establishScene true"
+		]
+	},
+	{
+		"id": "simonWaves",
+		"content": "...oh. There's {name|char1}, waving over in the corner with some other people.<br/>\"Hey how's it going, {name|protagonist}?\" Have you met everyone?",
+		"repeatable" : "true",
+		"choices": [
+			{"gotoId": "introEliza"},
+			{"condition": "introductions incr 1"},
+			{"condition": "introductions incr 1"},
+		],
+		"conditions": ["establishScene eq true"]
+	},
+	{
+		"id": "introEliza",
+		"speaker" : "char2",
+		"choiceLabel": "Talk to quiet girl",
+		"content": "She shakes your hand. \"Hey, I'm {name|char2}.\"",
+		"effects" : [
+			"incr introductions 1"
+		]
+	},
+	{
+		"id": "introMike",
+		"speaker" : "char3",
+		"choiceLabel": "Talk to the guy with glasses.",
+		"content": "He nods his head. \"What's up. I'm {name|char3}.\"",
+		"effects" : [
+			"incr introductions 1"
+		]
+	},
+	{
+		"id": "introJulia",
+		"speaker" : "char4",
+		"choiceLabel": "Talk to laughing girl",
+		"content": "\"Sorry, sorry. Funny cat pictures. Anyway, I'm {name|char4}. Nice to meet you!\"",
+		"effects" : [
+			"incr introductions 1"
+		]
+	},
+]

@@ -26,6 +26,7 @@ requirejs.config({
 		"dinnerData" : "../StoryAssembler/data/dinner.json",
 		"generalistData" : "../StoryAssembler/data/generalist.json",
 		"benTestData" : "../StoryAssembler/data/benTestData.json",
+		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 
 		"Coordinator" : "../Coordinator/Coordinator",
 		"Display" : "Display",
