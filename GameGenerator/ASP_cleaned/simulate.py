@@ -147,14 +147,14 @@ def parse_game(result):
     for resource in resources:
         if resource not in initializations:
             free_var = [0]
-            free_variables.append(['initialize',free_var])
+            free_variables.append(['initialize',free_var,resource])
             settings.append(('initialize',resource,free_var,'set'))
             
     for entity in entities:
         if entity not in initializations:
             free_var = [0]
-            print entity
-            free_variables.append(['initialize',free_var])
+            
+            free_variables.append(['initialize',free_var,entity])
             settings.append(('initialize',entity,free_var,'add'))
             
     rules = {}
@@ -181,13 +181,17 @@ def parse_game(result):
             free_var = [0]
             replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
             rules[outcome]['preconditions']['compare'].append( (direction,resource,free_var))
-            free_variables.append(['condition',free_var])
+            free_variables.append(['condition',free_var,resource])
         elif 'overlaps' == terms[0]['predicate'] or 'collide' == terms[0]['predicate']:
             if len(terms[0]['terms']) > 1:
                 entity1  = prettify(terms[0]['terms'][0])
                 entity2   = prettify(terms[0]['terms'][1])
-                
-                rules[outcome]['preconditions']['overlaps'].append( (entity1,entity2))
+                valence = False
+                if  'collide' == terms[0]['predicate']:
+                    valence = True
+                elif prettify(terms[0]['terms'][2]) == 'true':
+                    valence = True
+                rules[outcome]['preconditions']['overlaps'].append( (entity1,entity2,valence))
         else:
             rules[outcome]['preconditions']['other'].append( prettify(terms[0]))
    
@@ -204,7 +208,7 @@ def parse_game(result):
             free_var = [1]
             replacements[prettify(result)] = ('result',outcome,direction,resource,free_var)
             rules[outcome]['results']['modify'].append( (direction,resource,free_var))
-            free_variables.append(['action',free_var])
+            free_variables.append(['action',free_var,resource])
         elif 'add' == terms[1]['predicate']:
             entity   = prettify(terms[1]['terms'][0])
             rules[outcome]['results']['add'].append( (entity))
@@ -240,9 +244,15 @@ def run_once(rules,settings,player_model,depth):
             if outcome_fails:
                 continue
             for condition in rules[outcome]['preconditions']['overlaps']:
-                if state[condition[0]] <= 0 or state[condition[1]]  <= 0:
+                if condition[2] and state[condition[0]][0] <= 0 or state[condition[1]][0]  <= 0 or  state[condition[0]][0] + state[condition[1]][0]  <= 1:
                     outcome_fails = True
                     break
+                if condition[2]:
+                    val = state[condition[0]][0] + state[condition[1]][0]
+                else:
+                    val = 10- (state[condition[0]][0]+ state[condition[1]][0])
+                outcome_fails =  outcome_fails or random.random() > 0.9/(1+np.exp(-0.75*(val-5)))
+                
             if outcome_fails:
                 continue
 
@@ -310,7 +320,7 @@ if __name__ == '__main__':
         print args
     out = solve_randomly(args)
     settings,free_variables,rules,replacements = parse_game(out)
-    simulation_count = 40
+    simulation_count = 10
     depth = 10
     display = False
 
@@ -321,7 +331,7 @@ if __name__ == '__main__':
                              'player_might_attempt':0.5}
     player_model = {}
     for o in ['player_model']:
-        print o
+       
         for oo in out[o]:        
             for ooo in oo:
                 outcome =prettify(ooo['terms'][0])
@@ -349,25 +359,39 @@ if __name__ == '__main__':
     toolbox.register("mutate", tools.mutGaussian, mu=2, sigma=4, indpb=0.1)
     toolbox.register("select", tools.selTournament, tournsize=3)
     toolbox.register("evaluate", score_individual(free_variables,rules,settings,player_model,depth,simulation_count))
-
+    add = set([])
+    for action in out['action']:
+        if action[0]['terms'][0]['predicate'] == 'add':
+            add.add(prettify(action[0]['terms'][0]['terms'][0]))
+            
+    many = set([])
+    for oo in out['many']:
+        for ooo in oo:
+            ooo = prettify(ooo['terms'][0])
+            if ooo not in add:
+                many.add( ooo)
     def checkBounds(min, max):
         def decorator(func):
             def wrapper(*args, **kargs):
                 offspring = func(*args, **kargs)
                 for child in offspring:
                     for i in xrange(len(child)):
+                        child[i] = np.round(child[i])
                         if child[i] > max:
                             child[i] = max
                         elif child[i] < min:
                             child[i] = min
-                        child[i] = np.round(child[i]*10.)/10.
+                            
+                        if free_variables[i][0] == 'initialize' and free_variables[i][2] in many and child[i] < 2:
+                            child[i] = 2
+                            
                 return offspring
             return wrapper
         return decorator
-    
+    toolbox.decorate("individual", checkBounds(0.1, 10))
     toolbox.decorate("mate", checkBounds(0.1, 10))
     toolbox.decorate("mutate", checkBounds(0.1, 10))
-    pop = toolbox.population(n=50)
+    pop = toolbox.population(n=20)
     CXPB, MUTPB, NGEN = 0.5, 0.2, 40
 
     # Evaluate the entire population
@@ -415,7 +439,11 @@ if __name__ == '__main__':
     for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','static','timer']:
         for oo in out[o]:
             for ooo in oo:
-                print prettify(ooo)+'.'
+                prettified = prettify(ooo).split('(')[0]
+                if 'entity' in prettified or 'resource' in prettified or 'timer' in prettified:
+                    print prettify(ooo['terms'][0])
+                else:
+                    print prettify(ooo)+'.'
         if len(out[o]) > 0:
             print ''
     outcome2precond = {}
@@ -423,9 +451,9 @@ if __name__ == '__main__':
     for setting in settings:
         if setting[0] == 'initialize':
             if setting[3] == 'set':
-                print 'initialize(set({},{})).'.format(setting[1],setting[2][0])
+                print 'initialize(set_value({},scalar({}))).'.format(setting[1],int(setting[2][0]))
             elif setting[3] == 'add':
-                print 'initialize(add({},{})).'.format(setting[1],setting[2][0])
+                print 'initialize(add({},scalar({}))).'.format(setting[1],int(setting[2][0]))
                 
     print ''
     
@@ -463,22 +491,9 @@ if __name__ == '__main__':
   
     replace = {}    
     for result in out['replace']:
-        continue
-        outcome = hashable(result[0]['terms'][0])
-        if result[0]['terms'][2]['predicate'] ==  'increase' and result[0]['terms'][0]['predicate'] in every_frames:
-            result[0]['terms'][1]['predicate'] = 'increase_over_time'
-            result[0]['terms'][2]['predicate'] = 'increase_over_time'
-            #print ':',result[0]
-            pass
-        if result[0]['terms'][2]['predicate'] ==  'decrease' and result[0]['terms'][0]['predicate'] in every_frames:
-            result[0]['terms'][1]['predicate'] = 'decrease_over_time'
-            result[0]['terms'][2]['predicate'] = 'decrease_over_time'
-            pass
-            #print ':',result[0]
-        if outcome not in replace:
-            replace[outcome] = {}
+        outcome = prettify(result[0]['terms'][0])
 
-        replace[outcome][prettify(result[0]['terms'][1])] = result[0]['terms'][2]
+        replace[outcome] = prettify(result[0]['terms'][1])
         #replace[outcome].append(result[0])
     for result in out['result']:
         outcome = hashable(result[0]['terms'][0])
@@ -504,16 +519,16 @@ if __name__ == '__main__':
                 if prettify(precond) in replacements:
                     repl = replacements[prettify(precond)]
                     #('precondition',outcome,direction,resource,free_var)
-                    print 'precondition(compare({},{},{}),{}).'.format(repl[2],repl[3],repl[4][0],repl[1])
+                    print 'precondition({}({},scalar({})),{}).'.format(repl[2],repl[3],(repl[4][0]),repl[1])
                 else:
                     print prettify(precond)+'.'
             if outcome in outcome2result:
                 for result in outcome2result[outcome]:
                     if prettify(result) in replacements:
                         repl = replacements[prettify(result)]
-                        print 'result({},modify({},{},{})).'.format(repl[1],repl[2],repl[3],repl[4][0])
+                        print 'result({},{}({},scalar({}))).'.format(repl[1],repl[2],repl[3],(repl[4][0]))
                     else:
-                        print prettify(result)+'.'
+                        print replace.get(prettify(result),prettify(result))+'.'
             print ''
     for outcome in collidesOutcome:
         for precond in outcome2precond[outcome]:
@@ -522,9 +537,9 @@ if __name__ == '__main__':
             for result in outcome2result[outcome]:
                 if prettify(result) in replacements:
                     repl = replacements[prettify(result)]
-                    print 'result({},modify({},{},{})).'.format(repl[1],repl[2],repl[3],repl[4][0])
+                    print 'result({},{}({},scalar({}))).'.format(repl[1],repl[2],repl[3],(repl[4][0]))
                 else:
-                    print prettify(result)+'.'
+                    print replace.get(prettify(result),prettify(result))+'.'
         print ''
     
 

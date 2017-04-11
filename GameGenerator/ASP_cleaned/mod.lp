@@ -115,7 +115,7 @@ different_precondition(O1,O2) :-
 
 %% Don't check for "mouse button pressed" and "clicking" an entity in the
 %  same game
-:- condition(control_event(button(mouse_button,pressed))),
+:- condition(control_event(button(mouse,pressed))),
    condition(control_event(click(_))).
 
 
@@ -230,7 +230,7 @@ different_precondition(O1,O2) :-
     precondition(overlaps(E),O2),
     result(O2,modify(decrease,R)).
 
-buttonPriority(mouse_button,space).
+buttonPriority(mouse,space).
 buttonPriority(space,down_arrow).
 buttonPriority(down_arrow,up_arrow).
 buttonPriority(up_arrow,left_arrow).

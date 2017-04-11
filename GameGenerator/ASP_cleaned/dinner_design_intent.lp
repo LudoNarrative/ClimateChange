@@ -19,5 +19,3 @@
 :- 2 {action(mode_change(N))}.
 
 :- not static(entity(e(2))).
-
-:- not controlScheme(entity(e(1)),cardinal).

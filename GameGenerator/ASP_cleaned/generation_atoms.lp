@@ -6,7 +6,7 @@ constants(0..3).
 
 modes(narrative_gating;narrative_progress;game_loss;game_win).
 
-buttons(mouse_button;space;up_arrow;down_arrow;left_arrow;right_arrow).
+buttons(mouse;space;up_arrow;down_arrow;left_arrow;right_arrow).
 buttonStates(pressed;held;released).
 
 sprite(square;circle;triangle;pentagon;star).
