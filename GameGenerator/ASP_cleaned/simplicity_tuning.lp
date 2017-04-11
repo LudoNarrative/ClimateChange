@@ -17,10 +17,13 @@ has_collides(Outcome) :- precondition(collide(_,_),Outcome).
 :- 3 {precondition(_,Outcome)},
    outcome(Outcome),
    not has_overlaps(Outcome).
-:- 5 {precondition(_,Outcome)},
+:- 3 {precondition(_,Outcome)},
    outcome(Outcome),
    not has_collides(Outcome).
-:- 8 {precondition(_,Outcome)},
+:- 6 {precondition(_,Outcome)},
+   outcome(Outcome).
+
+:- 4 {result(Outcome,_)},
    outcome(Outcome).
 
 overlaps(N) :- N =  {condition(overlaps(E))}.
@@ -64,4 +67,6 @@ complex(entities) :-
 
 
 readings(N) :- N = {reading(_,_)}.
+:- readings(N),
+   N > 15.
 %#minimize { N : readings(N)}.

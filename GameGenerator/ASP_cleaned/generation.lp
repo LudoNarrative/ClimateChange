@@ -70,7 +70,7 @@ outcome(outcome(avatar(move_right))) :-
     controlScheme(ENTITY,platformer)}.		
 
 %asteroids/combat tank moving forward
-outcome(outcome(avatar_move_forward)) :- 
+outcome(outcome(avatar(move_forward))) :- 
     1 {controlScheme(ENTITY,tank); 
     controlScheme(ENTITY,asteroids)}.
 
@@ -78,10 +78,10 @@ outcome(outcome(avatar_move_forward)) :-
 outcome(outcome(avatar_move_backward)) :- controlScheme(ENTITY,tank).
     
 %tanks and spaceships can rotate
-outcome(outcome(avatar_rotate_right)) :- 
+outcome(outcome(avatar(rotate_right))) :- 
     1{controlScheme(ENTITY,tank); 
     controlScheme(ENTITY,asteroids)}.
-outcome(outcome(avatar_rotate_left)) :- 
+outcome(outcome(avatar(rotate_left))) :- 
     1{controlScheme(ENTITY,tank); 
       controlScheme(ENTITY,asteroids)}.
 
@@ -269,3 +269,6 @@ precondition(tick,tick) :- outcome(tick).
 
 precondition(overlaps(E1,E2,true),O) :- precondition(collide(E1,E2),O).
 result(O,apply_restitution(E1,E2)) :- precondition(collide(E1,E2),O).
+
+
+%:- 2 {precondition(_,outcome(avatar(_)

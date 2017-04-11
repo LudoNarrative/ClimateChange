@@ -134,14 +134,19 @@ def parse_game(result):
     for entity in result['entity']:        
         entities.append(prettify(entity[0]['terms'][0]))
     initializations = {}
+    adds = {}
     settings = []   
     for initialization in result['initialize']:
         initialization = initialization[0]
         terms = initialization['terms'][0]
         if 'set' == terms['predicate']:
-            settings.append(('initialize',prettify(terms['terms'][0]),[int(terms['terms'][1]['predicate'])],'set'))
+            settings.append(('initialize',prettify(terms['terms'][0]),[int(terms['terms'][1]['terms'][0]['predicate'])],'set'))
         if 'add' in terms['predicate']:
-            settings.append(('initialize',prettify(terms['terms'][0]),[int(terms['terms'][1]['predicate'])],'add',prettify(terms['terms'][2])))
+            if prettify(terms['terms'][0]) not in adds:
+                adds[prettify(terms['terms'][0])] = 0
+            adds[prettify(terms['terms'][0])] += int(terms['terms'][1]['terms'][0]['predicate'])
+    for add in adds:
+        settings.append(('initialize',add,[adds[add]],'add',''))
     free_variables = []
     
     for resource in resources:
@@ -452,9 +457,7 @@ if __name__ == '__main__':
         if setting[0] == 'initialize':
             if setting[3] == 'set':
                 print 'initialize(set_value({},scalar({}))).'.format(setting[1],int(setting[2][0]))
-            elif setting[3] == 'add':
-                print 'initialize(add({},scalar({}))).'.format(setting[1],int(setting[2][0]))
-                
+                   
     print ''
     
     for precond in out['precondition']:
