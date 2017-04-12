@@ -28,7 +28,7 @@ reading(hurt,relation(Entity1,Entity2)) :-
     result(Outcome,delete(Entity2)).
 
 reading(produces,relation(Entity1,Entity2)) :-
-    action(add(Entity2,Entity1)).
+    action(add(Entity2,_,Entity1)).
 
     
 reading(consumes,relation(Entity1,Entity2)) :-
@@ -58,11 +58,11 @@ reading(produces,relation(Entity1,Resource1)) :-
     result(Outcome,modify(increase,Resource1)).
 
 reading(consts,relation(Entity1,Resource1)) :-
-    result(Outcome,add(Entity1)),
+    result(Outcome,add(Entity1,_,_)),
     result(Outcome,modify(decrease,Resource1)).
 
 reading(costs,relation(Entity1,Resource1)) :-
-    result(Outcome,add(Entity1)),
+    result(Outcome,add(Entity1,_,_)),
     result(Outcome,modify(decrease,Resource1)).
 
 reading(goal(Action),Thing) :-
@@ -134,7 +134,8 @@ reading(stakes(high),Resource) :-
     result(Outcome,mode_change(game_win)).
 
 reading(stakes(high),property(Entity,health)) :-
-    entity(Entity).
+    entity(Entity),
+    action(modify(decrease,property(Entity,health))).
 
 reading(stakes(low),Resource) :-
     resource(Resource),

@@ -1,8 +1,29 @@
-
+number(N) :- N = 1..5.
 %entity(e(N)) :- N = 1..min_entities.
 {max_entity(M)} :- M =min_entities..max_entities.
 
 entity(entity(e(M))) :- M = 1..N, max_entity(N).
+
+1 {initialize(set_sprite(Entity,Sprite)) : sprite(Sprite)} 1 :-
+    entity(Entity).
+
+1 {initialize(set_color(Entity,Color)) : colors(Color)} 1 :-
+    entity(Entity).
+
+1 { initialize(add(Entity,1,location(Row,Col))) : row(Row), col(Col) } 1 :-
+    singular(Entity).
+
+1 { number_to_place(Entity,Number) : number(Number)} 1 :-
+    many(Entity).
+
+1 { initialize(add(Entity,scalar(NumberToPlace),location(Row,Col))) : row(Row), col(Col) } :-
+    many(Entity),
+    number_to_place(Entity,NumberToPlace).
+
+total_count(Entity,N) :- N = PerPlace*Places,
+			 number_to_place(Entity,PerPlace),
+			 Places = {initialize(add(Entity,_,_))},
+			 entity(Entity).
 
 
 
@@ -49,7 +70,7 @@ outcome(outcome(avatar(move_right))) :-
     controlScheme(ENTITY,platformer)}.		
 
 %asteroids/combat tank moving forward
-outcome(outcome(avatar_move_forward)) :- 
+outcome(outcome(avatar(move_forward))) :- 
     1 {controlScheme(ENTITY,tank); 
     controlScheme(ENTITY,asteroids)}.
 
@@ -57,10 +78,10 @@ outcome(outcome(avatar_move_forward)) :-
 outcome(outcome(avatar_move_backward)) :- controlScheme(ENTITY,tank).
     
 %tanks and spaceships can rotate
-outcome(outcome(avatar_rotate_right)) :- 
+outcome(outcome(avatar(rotate_right))) :- 
     1{controlScheme(ENTITY,tank); 
     controlScheme(ENTITY,asteroids)}.
-outcome(outcome(avatar_rotate_left)) :- 
+outcome(outcome(avatar(rotate_left))) :- 
     1{controlScheme(ENTITY,tank); 
       controlScheme(ENTITY,asteroids)}.
 
@@ -185,9 +206,18 @@ place(location(X,Y)) :- location(X,Y).
 
 {result(OUTCOME,delete(ENTITY)) : entity(ENTITY), outcome(OUTCOME)}.
 % or added to a location
-{result(Outcome, add(Entity)) : } 
-:- entity(Entity), outcome(Outcome).
+{result(Outcome, add(Entity,scalar(1),location(Y,X))) : row(Y),col(X) } :-
+    entity(Entity),
+    outcome(Outcome).
 
+{result(Outcome, add(Entity,scalar(1),cursor)) } :-
+    entity(Entity),
+    outcome(Outcome).
+
+{result(Outcome, add(Entity,scalar(1),Other)) } :-
+    entity(Entity),
+    entity(Other),
+    outcome(Outcome).
 % resources can increase
 {result(OUTCOME,modify(increase,RESOURCE))
   : outcome(OUTCOME),resource(RESOURCE)}.
@@ -239,3 +269,6 @@ precondition(tick,tick) :- outcome(tick).
 
 precondition(overlaps(E1,E2,true),O) :- precondition(collide(E1,E2),O).
 result(O,apply_restitution(E1,E2)) :- precondition(collide(E1,E2),O).
+
+
+%:- 2 {precondition(_,outcome(avatar(_)
