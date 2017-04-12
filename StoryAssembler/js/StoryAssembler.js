@@ -21,7 +21,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		
 		StoryDisplay.init(handleChoiceSelection, refreshNarrative);
 		Templates.init(_Character);
-
+		alert("go go StoryAssembler goooo!");
 		continueScene();
 	}
 
@@ -100,9 +100,13 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				
 				displayChunkText(bestPath.route[0]);
 
-				var chunk = chunkLibrary.get(bestPath.route[0]);
+				//if displayChunkText didn't populate the text or choices fully, go through and do that
+				if ($("#storyArea").html() == "" || $("#choiceArea").html() == "") {	
 
-				handleFoundPath(bestPath.route[0], bestPath);
+					var chunk = chunkLibrary.get(bestPath.route[0]);
+
+					handleFoundPath(bestPath.route[0], bestPath);
+				}
 				
 			}
 			else {
@@ -263,9 +267,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				throw new Error("We started with chunk '" + chunkId + "' and it had no content, so we tried to recurse through bestPath, but did not find anything in the path with content. bestPath was:", bestPath);
 			}
 		}
-
-		// TODO: We shouldn't display "undefined" if there's no content field.
-		}
+	}
 
 	var doChunkChoices = function(chunkId, choiceDetails, mode) {
 
