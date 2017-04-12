@@ -5,7 +5,7 @@
     polarity(POLARITY).
 
 
-:- 2 {result(O,add(E))}, outcome(O).
+:- 2 {result(O,add(E,_,_))}, outcome(O).
 
 %preconditions_allowed_per(Outcome,N) :- N = 2 + A + B,
 %					A = {precondition(overlaps(E),Outcome)},
@@ -17,10 +17,13 @@ has_collides(Outcome) :- precondition(collide(_,_),Outcome).
 :- 3 {precondition(_,Outcome)},
    outcome(Outcome),
    not has_overlaps(Outcome).
-:- 5 {precondition(_,Outcome)},
+:- 3 {precondition(_,Outcome)},
    outcome(Outcome),
    not has_collides(Outcome).
-:- 8 {precondition(_,Outcome)},
+:- 6 {precondition(_,Outcome)},
+   outcome(Outcome).
+
+:- 4 {result(Outcome,_)},
    outcome(Outcome).
 
 overlaps(N) :- N =  {condition(overlaps(E))}.
@@ -47,7 +50,7 @@ simple(R) :- resource(R),
 complex(R) :- not simple(R), resource(R).
 
 simple(E) :- entity(E),
-	     {result(_,add(E));
+	     {result(_,add(E,_,_));
 	      result(_,delete(E));
 	      precondition(overlaps(_,E,_),_);
 	      precondition(overlaps(E,_,_),_);
@@ -56,7 +59,7 @@ complex(E) :- not simple(E), entity(E).
 
 
 complex(entities) :- 
-	     5 {result(_,add(E));
+	     5 {result(_,add(E,_,_));
 	      result(_,delete(E));
 	      precondition(overlaps(_,E,_),_);
 	      precondition(overlaps(E,_,_),_);
@@ -64,4 +67,6 @@ complex(entities) :-
 
 
 readings(N) :- N = {reading(_,_)}.
+:- readings(N),
+   N > 15.
 %#minimize { N : readings(N)}.

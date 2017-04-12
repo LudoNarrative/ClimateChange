@@ -19,3 +19,9 @@
 :- 2 {action(mode_change(N))}.
 
 :- not static(entity(e(2))).
+
+
+:- total_count(entity(e(2)),N),
+   N > 3.
+:- total_count(entity(e(2)),N),
+   N < 2.
