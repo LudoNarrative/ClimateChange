@@ -25,7 +25,7 @@ requirejs.config({
 		"lectureData" : "../StoryAssembler/data/lecture.json", 
 		"dinnerData" : "../StoryAssembler/data/dinner.json",
 		"generalistData" : "../StoryAssembler/data/generalist.json",
-		"benTestData" : "../StoryAssembler/data/benTestData.json",
+		"undergradDinnerData" : "../StoryAssembler/data/undergradDinnerData.json",
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 
 		"Coordinator" : "../Coordinator/Coordinator",

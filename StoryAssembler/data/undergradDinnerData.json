@@ -1,0 +1,138 @@
+[
+/*
+{ condition: "establishFriends eq true" },
+{ condition: "establishSettingDinner eq true" },
+{ condition: "establishDefenseTomorrow eq true" },
+{ condition: "EmmaJobFutureBeat eq true" },
+{ condition: "EmmaClassTypeBeat eq true" },
+{ condition: "friendIsInAcademia eq true" },
+{ condition: "friendIsNotInAcademia eq true"},
+{ condition: "friendTension gte 4"},
+{ condition: "friendTensionRelieved eq true"},
+{ condition: "checkinWithDisagreer eq true"},
+{ condition: "inactivityIsBad eq true"},
+{ condition: "outro eq true"},
+*/
+	{
+		"id": "placeholder_establishFriends",
+		"content": "establishFriends eq true",
+		"effects" : [
+			"set establishFriends true"
+		]
+	},
+		{
+		"id": "placeholder_establishSettingDinner",
+		"content": "establishSettingDinner eq true",
+		"effects" : [
+			"set establishSettingDinner true"
+		]
+	},
+		{
+		"id": "placeholder_establishDefenseTomorrow",
+		"content": "establishDefenseTomorrow eq true",
+		"effects" : [
+			"set establishDefenseTomorrow true"
+		]
+	},
+	{
+		"id": "placeholder_EmmaDefenseFeeling",
+		"content": "EmmaDefenseFeeling eq true",
+		"effects" : [
+			"set EmmaDefenseFeeling true"
+		],
+		"conditions" : [
+			"establishDefenseTomorrow eq true"
+		]
+	},
+	{
+		"id": "placeholder_EmmaJobFutureBeat",
+		"content": "EmmaJobFutureBeat eq true",
+		"effects" : [
+			"set EmmaJobFutureBeat true"
+		],
+		"conditions" : [
+			"establishDefenseTomorrow eq true"
+		]
+	},
+		{
+		"id": "placeholder_EmmaClassTypeBeat",
+		"content": "EmmaClassTypeBeat eq true",
+		"effects" : [
+			"set EmmaClassTypeBeat true"
+		],
+		"conditions" : [
+			"EmmaJobFutureBeat eq true"
+		]
+	},
+		{
+		"id": "placeholder_friendIsInAcademia",
+		"content": "friendIsInAcademia eq true",
+		"effects" : [
+			"set friendIsInAcademia true"
+		],
+		"conditions" : [
+			"establishFriends eq true"
+		]
+	},
+		{
+		"id": "placeholder_friendIsNotInAcademia",
+		"content": "friendIsNotInAcademia eq true",
+		"effects" : [
+			"set friendIsNotInAcademia true"
+		],
+		"conditions" : [
+			"establishFriends eq true"
+		]
+	},
+		{
+		"id": "placeholder_friendTension",
+		"content": "friendTension gte 4",
+		"effects" : [
+			"set friendTension 5"		//you can use "incr friendTension 1" for fragments in this section to get to 4+
+		],
+		"conditions" : [
+			"establishFriends eq true"
+		]
+	},
+		{
+		"id": "placeholder_friendTensionRelieved",
+		"content": "friendTensionRelieved eq true",
+		"effects" : [
+			"set friendTensionRelieved true",
+			"set friendTension 0"
+		],
+		"conditions" : [
+			"establishFriends eq true",
+			"friendTension gte 5"
+		]
+	},
+		{
+		"id": "placeholder_checkinWithDisagreer",
+		"content": "checkinWithDisagreer eq true",
+		"effects" : [
+			"set checkinWithDisagreer true"
+		],
+		"conditions" : [
+			"friendTensionRelieved eq true"
+		]
+	},
+		{
+		"id": "inactivityIsBad",
+		"content": "inactivityIsBad eq true",
+		"effects" : [
+			"set inactivityIsBad true"
+		],
+		"conditions" : [
+			"friendIsInAcademia eq true",
+			"friendIsNotInAcademia eq true"
+		]
+	},
+		{
+		"id": "outro",
+		"content": "outro eq true",
+		"effects" : [
+			"set outro true"
+		]
+	},
+
+]
