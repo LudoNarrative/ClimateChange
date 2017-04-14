@@ -21,7 +21,6 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		
 		StoryDisplay.init(handleChoiceSelection, refreshNarrative);
 		Templates.init(_Character);
-		alert("go go StoryAssembler goooo!");
 		continueScene();
 	}
 
