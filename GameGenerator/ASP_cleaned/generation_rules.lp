@@ -19,7 +19,8 @@ not_every_frame(O) :- precondition(control_event(click(E)),O).
 not_every_frame(O) :- precondition(control_event(button(B,pressed)),O).
 not_every_frame(O) :- precondition(control_event(button(B,released)),O).
 not_every_frame(O) :- precondition(timer_elapsed(T),O) .
-
+not_every_frame(O) :- precondition(overlaps(E),O),
+		      result(O,delete(E)).
 
 %players must have controls or it's just a weird movie
 playerControls :- precondition(control_event(EVENT),OUTCOME).
@@ -53,7 +54,8 @@ precondition(overlaps(Entity),Outcome) :-  precondition(overlaps(_,Entity,_),Out
 
 required(Entity) :- condition(control_event(click(Entity))).
 required(Entity) :- condition(overlaps(Entity)).
-
+required(Entity) :- result(_,apply_restitution(Entity,_)).
+required(Entity) :- result(_,apply_restitution(_,Entity)).
 
 % a resource is free if there is a way to decrease/increase not conditioned on the same resource - i.e. some way to change things
 freeResource(Change,Resource) :- 

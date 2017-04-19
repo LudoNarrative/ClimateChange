@@ -25,3 +25,14 @@
    N > 3.
 :- total_count(entity(e(2)),N),
    N < 2.
+
+:- action(delete(entity(e(2)))).
+
+:- 0 {controlScheme(_,_)} 0.
+
+:- controlScheme(_,click_and_drag).
+
+
+:- action(add(entity(e(2)),_)).
+
+%:- not entity(entity(wall)).
