@@ -13,13 +13,9 @@
 %					outcome(Outcome).
 
 has_overlaps(Outcome) :- precondition(overlaps(E),Outcome).
-has_collides(Outcome) :- precondition(collide(_,_),Outcome).
 :- 3 {precondition(_,Outcome)},
    outcome(Outcome),
    not has_overlaps(Outcome).
-:- 3 {precondition(_,Outcome)},
-   outcome(Outcome),
-   not has_collides(Outcome).
 :- 6 {precondition(_,Outcome)},
    outcome(Outcome).
 
@@ -27,13 +23,11 @@ has_collides(Outcome) :- precondition(collide(_,_),Outcome).
    outcome(Outcome).
 
 overlaps(N) :- N =  {condition(overlaps(E))}.
-collides(N) :- N = {condition(collide(E1,E2))}.
 avatar_controls(4) :- controlScheme(_,tank;_,asteroids;_,cardinal).
 avatar_controls(2) :- controlScheme(_,horizontal;_,vertical).
-
-preconditions_allowed(N) :- N = 8 + A + B + C,
+avatar_controls(0) :- not controlScheme(_,tank;_,asteroids;_,cardinal;_,horizontal;_,vertical).
+preconditions_allowed(N) :- N = 6 + A  + C,
 			    overlaps(A),
-			    collides(B),
 			    avatar_controls(C).
 :- N + 1 {precondition(_,_)},
    preconditions_allowed(N).
