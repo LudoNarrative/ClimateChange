@@ -4,6 +4,7 @@ import subprocess
 import random
 import sys
 import numpy as np
+from math import *
 from deap import base
 from deap import creator
 from deap import tools
@@ -99,7 +100,7 @@ def parse_json_result(out):
 
 
 def prettify(atom):
-    
+
     s = atom['predicate']
     if 'terms' in atom:
         s += '('
@@ -440,25 +441,37 @@ if __name__ == '__main__':
 
     for free_var,set_var in zip(free_variables,best_ind):
         free_var[1][0] = set_var
+    find_and_replace = []
+    for o in ['outcome','entity','resource','timer']:
+        for oo in out[o]:
+            for ooo in oo:
+                if 'terms' in ooo['terms'][0]:
+                    find = prettify(ooo['terms'][0]['terms'][0])
+                    replace = replace = find.replace('(','_').replace(',','_X_').replace(')','_XX_')
+                    find = '{}({})'.format(o,find)
+                    replace = '{}({})'.format(o,replace)
+                    find_and_replace.append((find,replace))
+  
     
-    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','static','timer']:
+    out_string = []
+    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer']:
         for oo in out[o]:
             for ooo in oo:
                 prettified = prettify(ooo).split('(')[0]
                 if 'entity' in prettified or 'resource' in prettified or 'timer' in prettified:
-                    print prettify(ooo['terms'][0])
+                    out_string.append( prettify(ooo['terms'][0]))
                 else:
-                    print prettify(ooo)+'.'
+                    out_string.append( prettify(ooo)+'.')
         if len(out[o]) > 0:
-            print ''
+            out_string.append( '')
     outcome2precond = {}
     replace_precondition = {}
     for setting in settings:
         if setting[0] == 'initialize':
             if setting[3] == 'set':
-                print 'initialize(set_value({},scalar({}))).'.format(setting[1],int(setting[2][0]))
+                out_string.append( 'initialize(set_value({},scalar({}))).'.format(setting[1],int(setting[2][0])))
                    
-    print ''
+    out_string.append( '')
     
     for precond in out['precondition']:
         if precond[0]['terms'][0]['predicate'] == 'overlaps' and  len(precond[0]['terms'][0]['terms']) == 1:
@@ -490,14 +503,16 @@ if __name__ == '__main__':
     every_frames = set()
     for every_frame in out['every_frame']:
         every_frame = every_frame[0]
-        every_frames.add(every_frame['terms'][0]['predicate'])
-  
+        every_frames.add(prettify(every_frame['terms'][0]))
+        
     replace = {}    
     for result in out['replace']:
         outcome = prettify(result[0]['terms'][0])
 
         replace[outcome] = prettify(result[0]['terms'][1])
         #replace[outcome].append(result[0])
+
+    
     for result in out['result']:
         outcome = hashable(result[0]['terms'][0])
         if outcome not in outcome2result:
@@ -516,39 +531,60 @@ if __name__ == '__main__':
                 result[0]['terms'][1] = replace[outcome][prettify(result[0]['terms'][1])]
 
         outcome2result[outcome].append(result[0])
+
+
+    sorted2outcome = {}
     for outcome in sorted(outcome2precond):
+        for precond in outcome2precond[outcome]:
+            sorted2outcome[prettify(precond['terms'][-1])] = outcome
+    
+    for outcome in sorted(sorted2outcome):
+        outcome = sorted2outcome[outcome]
         if outcome not in collidesOutcome:
             for precond in outcome2precond[outcome]:
                 if prettify(precond) in replacements:
                     repl = replacements[prettify(precond)]
                     #('precondition',outcome,direction,resource,free_var)
-                    print 'precondition({}({},scalar({})),{}).'.format(repl[2],repl[3],(repl[4][0]),repl[1])
+                    out_string.append( 'precondition({}({},scalar({})),{}).'.format(repl[2],repl[3],int(floor((repl[4][0]))),repl[1]))
                 else:
-                    print prettify(precond)+'.'
+                    out_string.append( prettify(precond)+'.')
             if outcome in outcome2result:
                 for result in outcome2result[outcome]:
                     if prettify(result) in replacements:
                         repl = replacements[prettify(result)]
-                        print 'result({},{}({},scalar({}))).'.format(repl[1],repl[2],repl[3],(repl[4][0]))
+                        action = repl[2]
+                        if repl[1] in every_frames:
+                            
+                            action += '_over_time'
+                        out_string.append( 'result({},{}({},scalar({}))).'.format(repl[1],action,repl[3],int(ceil((repl[4][0])))))
                     else:
-                        print replace.get(prettify(result),prettify(result))+'.'
-            print ''
+                        out_string.append( replace.get(prettify(result),prettify(result))+'.')
+            out_string.append( '')
     for outcome in collidesOutcome:
         for precond in outcome2precond[outcome]:
-            print prettify(precond)+'.'
+            out_string.append( prettify(precond)+'.')
         if outcome in outcome2result:
             for result in outcome2result[outcome]:
                 if prettify(result) in replacements:
                     repl = replacements[prettify(result)]
-                    print 'result({},{}({},scalar({}))).'.format(repl[1],repl[2],repl[3],(repl[4][0]))
+                    action = repl[2]
+                    if repl[1] in every_frames:
+                            
+                        action += '_over_time'
+                    out_string.append( 'result({},{}({},scalar({}))).'.format(repl[1],action,repl[3],int(ceil((repl[4][0])))))
                 else:
-                    print replace.get(prettify(result),prettify(result))+'.'
-        print ''
+                    out_string.append( replace.get(prettify(result),prettify(result))+'.')
+        out_string.append( '')
     
 
     for o in ['reading']:
         for oo in out[o]:
             for ooo in oo:
-                print prettify(ooo)+'.'
+                out_string.append( prettify(ooo)+'.')
         if len(out[o]) > 0:
-            print ''
+            out_string.append( '')
+    out_string  = '\n'.join(out_string)
+    
+    for f,r in find_and_replace:
+        out_string = out_string.replace(f,r)
+    print out_string

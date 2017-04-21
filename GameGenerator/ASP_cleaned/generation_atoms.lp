@@ -11,13 +11,12 @@ col(left;center;right).
 modes(narrative_gating;narrative_progress;game_loss;game_win).
 
 buttons(mouse;space;up_arrow;down_arrow;left_arrow;right_arrow).
-buttonStates(pressed;held;released).
+buttonStates(pressed;held).
 
 sprite(square;circle;triangle;pentagon;star).
 
-colors(red;green;blue;yellow;magenta;cyan;white;gray;black).
 
-potentialValues(V) :- constants(V).
-potentialValues(R) :- resource(R).
+angle_direction(cw;ccw).
+colors(red;green;blue;yellow;magenta;cyan;white;gray;black).
 
 polarity(true;false).
