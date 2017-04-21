@@ -1,0 +1,346 @@
+[
+/*
+{ condition: "establishFriends eq true" },
+{ condition: "establishSettingDinner eq true" },
+{ condition: "establishDefenseTomorrow eq true" },
+{ condition: "EmmaJobFutureBeat eq true" },
+{ condition: "EmmaClassTypeBeat eq true" },
+{ condition: "friendIsInAcademia eq true" },
+{ condition: "friendIsNotInAcademia eq true"},
+{ condition: "friendTension gte 4"},
+{ condition: "friendTensionRelieved eq true"},
+{ condition: "checkinWithDisagreer eq true"},
+{ condition: "inactivityIsBad eq true"},
+{ condition: "outro eq true"},
+*/
+
+		{
+		"id": "questionShelly",
+		"content": "{name|protagonist} turns to {name|nonAcademicFriend} and asks, \"so {nickname|nonAcademicFriend}, you think you'll ever go back to school?\" {name|academicFriend} quickly glances over to {name|nonAcademicFriend} but seems uninterested in her response.",
+		"effects":[
+			"set shellyQuestioned true",
+			"incr friendTension 1"
+		],
+		"conditions": [
+			"establishFriends eq true",
+		],
+		"choices": [
+			{"gotoId": "hellNo" }
+		],
+	},
+
+//Won't go to hellNo
+		{
+		"id": "hellNo",
+		"choiceLabel": "Continue!",
+		"content": "\"What? No way!\" exclaimed {name|nonAcademicFriend}, \"Why would I waste time in school when I can be actively making a difference in society?\" {name|academicFriend} rolls her eyes and lets out an audible groan of disapproval.",
+		"effects": [
+			"incr friendTension 1"           //Remove this later
+		],
+		"conditions": [
+		//	"shellyQuestioned eq true"
+		],
+		"choices":[
+			{"gotoId": "emmaUnderstands"},
+			{"gotoId": "suggestSchool"}
+		],
+	},
+
+		{
+			"id": "emmaUnderstands",
+			"choiceLabel": "\"I understand\"",
+			"content": "{name|protagonist} nods and understands the choice that Shelly has made. She responds with, \"I can see where you're coming from. It must feel good knowing that you're actively doing things to save our planet.\"",
+			"effects":[
+				"set emmaUnderstands true",
+			],
+			"choices":[
+				{"gotoId": "pointless"}
+			]
+	},
+
+		{
+			"id": "suggestSchool",
+			"choiceLabel": "\"Well...\"",
+			"content": "\"Well...you can always go back to actively making a difference locally, but the best time to be in school is while you're still young! At least give it some thought\" said Emma, trying to persuade {name|nonAcademicFriend} to change her mind.",
+			"effects":[
+				"set suggestSchool true",
+			],
+			"choices":[
+				{"gotoId": "whatItTakes"}
+			]
+	},
+
+		{
+			"id": "pointless",
+			"choiceLabel": "Continue",
+			"content": "Zanita has had enough.\"But that's not the best way to approach the issue of climate change. We can't solve a global issue with just small, local efforts.\"",
+			"effects":[
+				"incr friendTension 1",
+				"set zanitaReply true"
+			],
+			"conditions": [
+			//	"emmaUnderstands eq true"
+			],
+			"choices": [
+				{"gotoId": "zanitaIsWrong"}
+			]
+	},
+	
+		{
+			"id": "whatItTakes",
+			"choiceLabel": "Continue",
+			"content": "Zanita interjects before Shelly has a chance to respond, \"She doesn't have what it takes. Just let her keep doing her little community service.\"",
+			"effects":[
+				"incr friendTension 1",
+				"set zanitaReply true"
+			],
+			"conditions":[
+			//	"suggestSchool eq true"
+			],
+			"choices": [
+				{"gotoId": "zanitaIsWrong"}
+			]
+	},
+
+		{
+			"id": "zanitaIsWrong",
+			"choiceLabel": "Continue",
+			"content": "Shelly can't take anymore and stands up. \"You guys just don't see it do you? You keep talking about learning about the issue and solving it on a larger scale, but i'm the one actually going out and doing something about it. I'd rather be spending the next few years making a small difference than sitting in class not making a difference at all. If everybody just did their part in keeping the environment healthy, then we wouldn't have this issue anyways.\"",
+			"effects": [
+				"incr friendTension 1",
+				"incr confidence -1",
+				"set shellyRebuttal true",
+			],
+			"conditions": [
+			//	"zanitaReply eq true"
+			],
+			"choices": [
+				{"gotoId": "calmThemDown"},
+				{"gotoId": "dragAside"}
+			], 
+	},
+
+		{
+			"id": "calmThemDown",
+			"choiceLabel": "\"Calm down guys!\"",
+			"content": "{name|protagonist} jumps in between the two girls and keeps them each at arms length. \"Can we please just stop this and have a nice dinner? You're both doing great things and we should be celebrating all of our accomplishments!\"",
+			"effects": [
+				
+				"set calmThemDown true",
+			],
+			"conditions": [
+			//	"shellyRebuttal eq true"
+			],
+			"choices": [
+				{"gotoId": "zanitaRuinsIt"}
+			]
+	},
+
+		{
+			"id": "zanitaRuinsIt",
+			"choiceLabel": "Continue",
+			"content": "Zanita quickly turns, shoving Emma's arm away with her shoulder. Without a glance towards either of the girls, Zanita utters under her breath, \"I wouldn't call anything she's done an accomplishment.\"",
+			"effects": [
+				"incr friendTension 1",
+				"set chaosErupts true"
+			],
+			"conditions": [
+			//	"calmThemDown eq true"
+			],
+			"choices": [
+				{"gotoId": "emmaMustChoose"}
+			]
+
+	},
+
+		{
+			"id": "dragAside",
+			"choiceLabel": "Drag Zanita aside",
+			"content": "Emma grabs Zanita by the arm and jerks her away from Shelly. In an attempt to diffuse the tension, Emma turns to Zanita and says, \"come on, just give Shelly a break. She probably just doesn't know if school is right for her or not. Just give her some time to figure stuff out\"",
+			"effects": [
+				"set draggedAside true",
+				"incr friendTension 1"
+			],
+			"conditions": [
+			//	"shellyRebuttal eq true"
+			],
+			"choices": [
+				{"gotoId": "overHeard"}
+			]
+
+	},
+
+		{
+			"id": "overHeard",
+			"choiceLabel": "Emma gets pushed out of the way",
+			"content": "Shelly looks at Emma as if she is disgusted by what she just heard Emma say to Zanita. \"Do you really believe that I am lost in my life? I know exactly what I am doing. Z, maybe you think that you're path is the right path, but I believe in what I am doing, which is a lot more than what you're doing. Emma, surely you're smart enough to see that i'm right...right?\"",
+			"effects": [
+				"set chaosErupts true",
+				"incr friendTension 1"
+			],
+			"conditions":[
+			//	"draggedAside eq true"
+			],
+			"choices": [
+				{"gotoId": "emmaMustChoose"}
+			]
+	},
+
+		{
+			"id": "emmaMustChoose",
+			"choiceLabel": "Continue",
+			"content": "Things were not supposed to turn out this way. Emma desperately tries to find a way to diffuse the situation without losing either of her friends.",
+			"effects": [
+				"incr friendTension 1"
+			],
+			"conditions":[
+			//	"chaosErupts eq true"
+			]
+	},
+
+/*
+		{
+		"id": "placeholder_friendTensionRelieved",
+		"content": "friendTensionRelieved eq true",
+		"effects" : [
+			"set friendTensionRelieved true",
+			"set friendTension 0"
+		],
+		"conditions" : [
+			"establishFriends eq true",
+			"friendTension gte 5"
+		]
+	},
+	*/
+
+		{
+			"id": "makeAChoice",
+			"content": "But Emma does not know what to do. Siding with one of her friends would risk losing the other, but getting them to both agree on something is an impossible task.",
+			"conditions":[
+				"establishFriends eq true",
+				"friendTension gte 5"
+			],
+			"choices": [
+				{"gotoId": "sideWithZanita"},
+				{"gotoId": "sideWithShelly"},
+				{"gotoId": "placateBoth"}
+			]
+	},
+
+		{
+			"id": "sideWithZanita",
+			"content": "\"I'm sorry Shelly, but I think that I can benefit the world a lot more by taking the academic route. That is why I am still here in school like Zanita. But that does not mean that I don't think you aren't doing anything. If you feel like you're making a difference in the world, then keep doing what you're doing.\"",
+			"choiceLabel": "Side with Zanita",
+			"effects": [
+				"set pickedZanita true",
+			],
+			"choices":[
+				{"gotoId": "shellyGivesUp"}
+			]
+
+	},
+
+		{
+			"id": "sideWithShelly",
+			"content": "\"I'm sorry Z, but Shelly does have a point. If everyone just did their part in caring for the environment, then we wouldn't have to be learning about this stuff because there wouldn't be a global climate change issue. Unfortunately, a lot of people don't care enough to do something about it like we are.\"",
+			"choiceLabel": "Side with Shelly",
+			"effects": [
+				"set pickedShelly true"
+			],
+			"choices":[
+				{"gotoId": "zanitaGivesUp"}
+			]
+	},
+
+		{
+			"id": "placateBoth",
+			"content": "\"I don't get why you guys care so much about what the other person is doing! Look, we're all fighting the same issue right? It shouldn't matter what we're doing, as long as we're doing something right? So can't we just set this aside and support eachother?\"",
+			"choiceLabel": "\"We're on the same side\"",
+			"effects": [
+				"set placateBoth true"
+			],
+			"choices":[
+				{"gotoId": "bothChill"}
+			]
+	},
+
+		{
+			"id": "shellyGivesUp",
+			"choiceLabel": "Continue",
+			"content": "Tired of arguing, Shelly turns and looks for another table to sit at. Before she leaves, she tells the girls, \"I will keep at it because I am doing what I think is right. You guys keep doing you're thing, and i'll keep doing mine.\"",
+			"conditions": [
+			//	"pickedZanita eq true",
+			],
+			"effects":[
+				"set pickedSide true"
+			],
+			"choices":[
+				{"gotoId": "aftermath"}
+			]
+	},
+
+		{
+			"id": "zanitaGivesUp",
+			"choiceLabel": "Continue",
+			"content": "Shocked that Emma would side with Shelly, Zanita pauses to think. She replies with, \"I understand what Shelly is saying, but it is just not plausible to think that everyone is going to contribute to the cause. But I do respect what you're doing and if that's what you think is the best course of action for you, then go for it.\"",
+			"conditions":[
+			//	"pickedShelly eq true"
+			],
+			"effects":[
+				"set pickedSide true"
+			],
+			"choices":[
+				{"gotoId": "aftermath"}
+			]
+	},
+
+		{
+			"id": "bothChill",
+			"choiceLabel": "Continue",
+			"content": "Both Shelly and Zanita look at each other, but neither of them say a single word. Shelly is the first to break the gaze by turning around and taking a seat at a nearby table. Zanita lets out a reluctant \"you're right\" and takes a seat at a different table.",
+			"conditions":[
+			//	"placateBoth eq true"
+			],
+			"effects":[
+				"set pickedSide true"
+			],
+			"choices":[
+				{"gotoId": "aftermath"}
+			]
+	},
+
+		{
+			"id": "aftermath",
+			"choiceLabel": "Emma lets out a sigh of relief",
+			"content": "An audible sigh of relief escapes the mouth of Emma. Knowing it could have been much worse, Emma is sure that they can work things out eventually.",
+			"effects": [
+				"set friendTension 0",
+				"set friendTensionRelieved true"
+			],
+			"conditions":[
+			//	"pickedSide eq true"
+			]
+	},
+
+		{
+		"id": "placeholder_checkinWithDisagreer",
+		"content": "checkinWithDisagreer eq true",
+		"effects" : [
+			"set checkinWithDisagreer true"
+		],
+		"conditions" : [
+			"friendTensionRelieved eq true"
+		]
+	},
+		{
+		"id": "inactivityIsBad",
+		"content": "inactivityIsBad eq true",
+		"effects" : [
+			"set inactivityIsBad true"
+		],
+		"conditions" : [
+			"friendIsInAcademia eq true",
+			"friendIsNotInAcademia eq true"
+		]
+	}
+]

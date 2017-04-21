@@ -1,4 +1,4 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData, globalData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin", "text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, globalData) {
 
 	/*
 		Initializing function
@@ -22,12 +22,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		story.startState.forEach(function(command) {
 			State.change(command);
 		});
-		var levelData = HanSON.parse(story.dataFile);
-		var globalDataFile = require("text!globalData");	//TODO: why can't we just include this via require up above with the other data files????
-		var globalData = HanSON.parse(globalDataFile);
+		var levelDataArray = [];
+
+		//load the levelDataArray with all the dataFiles for both the level, and the global fragments file
+		for (var x=0; x < story.dataFiles.length; x++) { levelDataArray.push(HanSON.parse(require(story.dataFiles[x]))); }
+		levelDataArray.push(HanSON.parse(globalData));
+
 		ChunkLibrary.reset();
-		ChunkLibrary.add(levelData);
-		ChunkLibrary.add(globalData);
+		for (var x=0; x < levelDataArray.length; x++) { ChunkLibrary.add(levelDataArray[x]); }		//add in fragments from all files
 
 		var wishlist = Wishlist.create(story.wishlist, State);
 		wishlist.logOn();
@@ -63,7 +65,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "establishScene eq true"},
 				{ condition: "introductions eq 2"}
 			],
-			dataFile: require("text!newExampleData"),
+			dataFiles: ["text!newExampleData"],
 			startState: [
 				"set establishScene false",
 				"set introductions 0"
@@ -85,7 +87,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "articlesRead eq 4" },
 				{ condition: "endScene eq true" }
 			],
-			dataFile: require("text!travelData"),
+			dataFiles: ["text!travelData"],
 			startState: [
 				"set specialty shrimp",
 				"set cueOuttro false",
@@ -117,7 +119,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "establishScene eq true"},
 				{ condition: "endScene eq true" }
 			],
-			dataFile: require("text!workerData"),
+			dataFiles: ["text!workerData"],
 			startState: [
 				"set confidence 1",
 				"set optimism 0",
@@ -156,7 +158,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "respondToQuestion eq true" },
 				{ condition: "classOver eq true", persistent: true }
 			],
-			dataFile: require("text!lectureData"),
+			dataFiles: ["text!lectureData"],
 			startState: [
 				"set career shrimp",
 				"set questionsLeft 3",
@@ -195,7 +197,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "respondToChallenge eq true"},
 				{ condition: "droppedKnowledge gte 2", persistent: true },
 			],
-			dataFile: require("text!generalistData"),
+			dataFiles: ["text!generalistData"],
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
@@ -236,7 +238,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "allyReassuresProtag eq true"},
 				{ condition: "droppedKnowledge gte 1", persistent: true },
 			],
-			dataFile: require("text!dinnerData"),
+			dataFiles: ["text!dinnerData"],
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
@@ -275,7 +277,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "allyReassuresProtag eq true"},
 		//		{ condition: "droppedKnowledge gte 2", persistent: true },
 			],
-			dataFile: require("text!dinnerData"),
+			dataFiles: ["text!dinnerData"],
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
@@ -305,9 +307,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"nonAcademicFriend": {name: "Shelly", nickname: "Shelly", gender: "female"}
 			},
 			wishlist: [
-				{ condition: "establishFriends eq true" , order: "first"},
-				{ condition: "establishSettingDinner eq true", order: "first" },
-				{ condition: "establishDefenseTomorrow eq true", order: "first" },
+				{ condition: "establishFriends eq true"},
+				{ condition: "establishSettingDinner eq true"},
+				{ condition: "establishDefenseTomorrow eq true"},
 				{ condition: "EmmaDefenseFeeling eq true" },
 				{ condition: "EmmaJobFutureBeat eq true" },
 				{ condition: "EmmaClassTypeBeat eq true" },
@@ -316,10 +318,20 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "friendTension gte 4"},
 				{ condition: "friendTensionRelieved eq true"},
 				{ condition: "checkinWithDisagreer eq true"},
-				{ condition: "inactivityIsBad eq true"},
+				{ condition: "inactivityIsBad eq true", order: "first"},
 				{ condition: "outro eq true", order: "last"},
 			],
-			dataFile: require("text!undergradDinnerData"),
+			//if you just want to use one file, uncomment this and comment out the big block below
+			//dataFiles: ["text!undergradDinnerData_irapopor"],
+			
+			dataFiles: [
+				"text!undergradDinnerData_kevin", 
+				"text!undergradDinnerData_talon", 
+				"text!undergradDinnerData_irapopor", 
+				"text!undergradDinnerData_sgadsby", 
+				"text!undergradDinnerData_madreed",
+				"text!undergradDinnerData_sjsherma"],
+				
 			startState: [
 				"set establishFriends false",
 				"set establishSettingDinner false",
@@ -345,6 +357,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"confidence",
 				"academicEnthusiasm",
 				"friendTension",
+				"academicFriendRelationship",
+				"nonAcademicFriendRelationship"
+
 				
 			],
 			mode: {
