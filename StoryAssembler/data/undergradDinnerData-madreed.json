@@ -1,0 +1,282 @@
+[
+/*
+{ condition: "establishFriends eq true" },
+{ condition: "establishSettingDinner eq true" },
+{ condition: "establishDefenseTomorrow eq true" },
+{ condition: "EmmaJobFutureBeat eq true" },
+{ condition: "EmmaClassTypeBeat eq true" },
+{ condition: "friendIsInAcademia eq true" },
+{ condition: "friendIsNotInAcademia eq true"},
+{ condition: "friendTension gte 4"},
+{ condition: "friendTensionRelieved eq true"},
+{ condition: "checkinWithDisagreer eq true"},
+{ condition: "inactivityIsBad eq true"},
+{ condition: "outro eq true"},
+*/
+{
+	"id": "looking_down",
+	//"choiceLabel": "dinner start!",
+	"speaker": "academicFriend",
+	"content": "\"Em...\" Emma stares at her plate lost in thought. \"Emma, are you really that worried?\"",
+	"choices":[
+	{"gotoId": "Emma_is_worried"},
+	{"gotoId": "Emma_lies"},
+	{"gotoId": "Emma_is_unsure"}
+	],
+	"effects": [
+	"set EmmaDefenseFeeling true"
+	]
+	},
+	{
+		"id": "Emma_is_worried",
+		"choiceLabel": "\"Well, yea...sorry.\"",
+		"content": "Zanita smiles at you, \"What do you have to be sorry for Emma? You just have to realize that you are going to do fine.\" {name|nonAcademicFriend} looks up from her food and gives you a thumbs up.",
+		"effects": [
+		"incr confidence 1"
+		],
+		"choices": [
+		{"gotoId": "Emma_reason"}
+		]
+		},
+		{
+			"id": "Emma_lies",
+			"choiceLabel": "\"No not at all.\"",
+			"content": "Zanita chuckles a little bit, \"Em, we've known eachother since we were kids you can't lie to me I can see right through you. So why are you so stressed?\"",
+			"choices": [
+			{"gotoId": "Emma_reason"}
+			]
+			},
+			{
+				"id": "Emma_is_unsure",
+				"choiceLabel": "\"I'm not really sure.\"",
+				"content": "\"Well I think that means yes Em. So tell me what's bothering you.\"",
+				"choices": [
+				{"gotoId": "Emma_reason"}
+				]
+				},
+				{
+					"id": "Emma_reason",
+					"choiceLabel": "\"What if it doesn't work out?\"",
+					"content": "Emma's gaze is still fixed to the table as she says \"I feel my whole life has come to this point what if my defence falls flat? what if I drop the ball?\"",
+					"choices": [
+					{"gotoId": "shelly_and_defence"}
+					]
+					},
+					{
+						"id": "shelly_and_defence",
+						"choiceLabel": "continue",
+						"content": "{name|nonAcademicFriend} stops eating for a moment to give you her support, \"Come on Em, how hard can it be?\"",
+						"choices": [
+						{"gotoId": "postive_vibes"},
+						{"gotoId": "negative_vibes"}
+						]
+						},
+						{
+							"id": "postive_vibes",
+							"choiceLabel": "\"Yea... I guess it's fine.\"",
+							"content": "Emma smiles at {name|nonAcademicFriend} and says \"It won't be hard, I know what I am talking about but I'm scared anyway there's always a chance that I will completely fail!\"",
+							"choices": [
+							{"gotoId": "anxiety_for_future"}
+							]
+							},
+							{
+								"id": "negative_vibes",
+								"choiceLabel": "\"Really hard {name|nonAcademicFriend}\"",
+												"content": "Emma's anxiety grows \"{name|nonAcademicFriend} this is a huge thing, I don't think you understand how much work and study I put into this. I really can blow it tomorrow and I'm scared!\"", //This could affect their friendship
+												"effects": [
+												"decr confidence .5"
+												],
+												"choices":[
+												{"gotoId": "more_negative_vibes"}
+												]
+												},
+												{
+													"id": "more_negative_vibes",
+													"choiceLabel": "continue",
+													"content": "Zanita looks at {name|nonAcademicFriend}, \"Really?\" Emma then continues to panic, \"what if they hate my defense? what if they think it's futile to protect the earth at the state it's in now?\"",
+													"effects": [
+													"decr confidence .5"
+													],
+													"choices": [
+													{"gotoId": "anxiety_for_future"}
+													]
+													},
+													{
+														"id": "anxiety_for_future",
+														"choiceLabel": "continue",
+										//I would like the options to not appear if you cannot choose them however for now they are greyed out.
+										"content": "Zanita interjects \"Exactly, how many years has this been your passion Em? How long have you dedicated your heart and soul into the ocean?\"",
+										"choices": [
+										{"gotoId": "weak_answer"},
+										{"gotoId": "bad_answer"}, //This choice should also be weak_answer and change from one to the other based on confidence level. However the method I tired didn't work so I will learn this next meeting.
+										{"gotoId": "hopeful_answer"},
+										{"gotoId": "honest_answer"}
+										]
+										},
+										{
+											"id": "bad_answer", //this will be the low confidence version.
+											"choiceLabel": "\"I don't know if it even matters.\"",
+											"content": "Emma face grows even sadder as she retorts \"Does it even matter? Even if I do well in my defence what is there for future me? Will I actually be able to change anything?\"",
+											"conditions": [
+											"confidence lt 4"
+											],
+											"effects":[
+											"decr confidence 1"
+											],
+											"choices": [
+											{"gotoId": "continue_bad_answer"}
+											]
+											},
+											{
+												"id": "weak_answer", //This is the highger confidence answer that is still kinda weak
+												"choiceLabel": "\"A few years I guess.\"",
+												"content": "\"Really Em? 'a few years' don't you mean 'since I was a child'?\"",
+												"conditions": [
+												"confidence gte 4"
+												],
+												"choices": [
+												{"gotoId": "continue_weak_answer"}
+												]
+												},
+												{
+													"id": "hopeful_answer",
+													"choiceLabel": "\"Since I was a kid.\"",
+													"content": "\"Since I was a child I loved the ocean. It has been my passion for over a decade. This is my life and that's why i'm so worried. I have so much to protect and I can only do that if I do well in my defence, I'm so scared something bad will happen.\"", 
+													"conditions":[
+													"confidence gte 6"
+													],
+													"choices": [
+													{"gotoId": "continue_good_answer"}
+													]
+													//I would love to include some backstoy maybe Emma's first trip to the beach or an aquarium (a good memory).  
+													//Or maybe a bad memory like her seeign her favorite beach littered with suffocated ocean life of oil from 
+													//a spill this is a good spot for backstory Then Zanita can give a funny quip about hearing the story for the 5th time.
+													},	
+													{
+														"id": "honest_answer",
+														"choiceLabel": "\"I have been working on this defence for years.\"",
+														"content": "\"Everything I have worked on in my upper education has been leading to tomorrow, I can't let myself do poorly tomorrow, and there is so much that can go wrong.\"",
+														"conditions": [
+														"confidence gte 5"
+														],
+														"choices": [
+														{"gotoId": "continue_good_answer"}
+														]
+														},
+														{
+															"id": "continue_good_answer",
+															"choiceLabel": "\"I know I'm just anxious, but it's scary.\"",
+															"content": "Zanita seems pleased that you are starting to come around \"I know it's scary but I know from experience that you can talk about the ocean for days. You know your stuff and you are going to prove that tomorrow. Don't focus on the you of the now, focus on the you that you want to be. So tell me about your future you.\"",
+															"choices": [
+															{"gotoId": "Future_Emma"}
+															]
+															},
+															{
+																"id": "continue_weak_answer",
+																"choiceLabel": "It doesn't matter",
+																"content": "Emma falls further into self doubt \"Well it doesn't matter how long I have been working on it if I fail in my defence.\"",
+																"choices": [
+																{"gotoId": "continue_bad_answer"}
+																]
+																},
+																{
+																	"id": "continue_bad_answer",
+																	"choiceLabel": "continue",
+																	"content": "Zanita grows ever more frustrated as she says \"Emma you have worked your whole life for this don't give me this crap you have a future. Don't focus on the you of the now, focus on the you that you want to be. So who is future Emma?\"",
+																	},
+																	//Here is my second beat.
+																	{
+																		"id": "Future_Emma",
+																		"content": "As Emma takes her mind off of her doubt and thinks of her future her face lightens \"Well I will be a lecturer very soon.\" {name|nonAcademicFriend} gives you a curious look and asks \"Is that what you want Emma?\" The way {name|nonAcademicFriend} asked sounds like it is coming from a good place however you cannot help but feel upset by the question.",
+																		"choices": [
+																		{"gotoId": "happy_lecturer"},
+																		{"gotoId": "unsure_lecturer"}
+																		],
+																		"conditions": [
+																		"EmmaDefenseFeeling eq true"
+																		],
+																		"effects": [
+																		"set EmmaJobFutureBeat true"
+																		]
+																		},
+																		{
+																			"id": "happy_lecturer",
+																			"choiceLabel": "\"This is what I want.\"",
+																			"content": "\"Of course this is what I want. I am shaping the minds of the future generations. I am giving my hope to people who will lead the charge in enviromental protection.\"", 
+																			"choices": [
+																			{"gotoId": "Shellys_dissapointment"}
+																			]
+																			},
+																			{
+																				"id": "Shellys_dissapointment", //This could lower Emma's academic enthusiasm
+																				"speaker": "nonAcademicFriend",
+																				"choiceLabel": "continue",
+																				"content": "A look of discouragement falls across {name|nonAcademicFriend}'s face. \"You are just so passionate that I thought you would be the first one out in the field.\"",
+																				"effects": [
+																				"decr confidence .5"
+																				],
+																				"choices": [
+																				{"gotoId": "ignore_shelly"},
+																				{"gotoId": "explaing_importance"}
+																				]
+																				},
+																				{
+																					"id": "ignore_shelly",
+																					"choiceLabel": "\"Whatever, what do you think about it {name|academicFriend}\"", //this could be another place where friend tension could be raised.
+																					"content": "\"Well I agree with {name|nonAcademicFriend} that I would have expected you to be working in the feild, however I really do feel this is much more beneficial. Even if you don't beleive it, you are an influence Em.\"",
+																					"choices": [
+																					{"gotoId": "Zanitas_joke"}
+																					]
+																					},
+																					{
+																						"id": "Zanitas_joke",
+																						"choiceLabel": "\"I'm excited for my first lecture.\"",
+																						"content": "{name|academicFriend} laughs \"Just be careful not to talk their ears off I know you can talk for days about your research!\" {name|nonAcademicFriend} cant't help but laugh at the truth of {name|academicFriend}'s statement.",
+																						"effects": [
+																						"incr confidence 1"
+																						]
+																						},
+																						{
+																							"id": "explaing_importance",
+																							"choiceLabel": "\"This is just as important {name|nonAcademicFriend}\"",
+																							"content": "\"Honestly shaping young minds is more beneficial from my perspective. Think about it {name|nonAcademicFriend}, there is only one of me, but if I inspire people to do amazing things I have succeeded and effectively multiplied any contibution that I could do alone.\"",
+																							"choices": [
+																							{"gotoId": "shellys_joke"}
+																							]
+																							},
+																							{
+																								"id": "shellys_joke",
+																								"choiceLabel": "continue",
+																							"content": "{name|nonAcademicFriend} smiles \"Well I feel the acedemic rout will constrict you but I understand how you are still doing wonderful things, I am proud of you Em. Althouhg what 'young minds' are you shaping Em? You are letting teaching age you already!\" The few of you chuckle a little bit and continue eating.", //I am getting a little tired, basically the joke is that Emma is in her twenties and her students are within a few years of her.. I will fix the coherence later... >~>
+																							"effects": [
+																							"incr confidence 1"
+																							]
+																							},
+																							{
+																								"id": "unsure_lecturer",
+																								"choiceLabel": "\"Well it's the best thing I can do.\"",
+																								"content": "\"I don't think I can change anything on my own, but at least I can hope that all the people I will be speaking too can make a change.\"",
+																								"choices": [
+																								{"gotoId": "scold_emma"}
+																								]
+																								},
+																								{
+																									"id": "scold_emma",
+																									"choiceLabel": "continue",
+																									"content": "both {name|academicFriend} and {name|nonAcademicFriend} look at you dissapointed and {name|nonacademicFriend} says \"If someone as dedicated as you 'can't do anything', why in the world do you think anybody else can?\"",
+																									"choices": [
+																									{"gotoId": "Emma_lecture_apology"},
+																									{"gotoId": "Emma_lecture_defense"}
+																									]
+																									},
+																									{
+																										"id": "Emma_lecture_apology",
+																										"choiceLabel": "\"I'm sorry\"",
+																										"content": "\"I just think that lecturing is what is best for me and for the planet. I don't know if I would be happier in the feild, but I can gerountee stability as a lecturer. That's not something I can do in other things I'd like to do.\"",
+																										},
+																										{
+																											"id": "Emma_lecture_defense",
+																											"choiceLabel": "\"Lecturing is important to me.\"",
+																											"content": "\"I beleive this is the most important thing I can do, I need to give it a chance.\"",
+																											},
+																											]
