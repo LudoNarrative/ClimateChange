@@ -1,5 +1,6 @@
 
     
+
 :-  precondition(overlaps(E1,E2,POLARITY),O),
     precondition(control_event(click(E3)),O).
     
@@ -18,11 +19,21 @@
 :- every_frame(O), precondition(compare(ge,R),O), result(O,modify(decrease,R)).
 :- every_frame(O), precondition(compare(le,R),O), result(O,modify(increase,R)).
 
+:- result(tick,move(E,direction(_,E))).
 
- 
+
+:- condition(overlaps(entity(e(N)),entity(e(N2)),_)),
+   N2 < N.
+
 :- precondition(overlaps(E1,E2,_),O),
    precondition(control_event(_),O),
    1 { precondition(overlaps(E1,E2,_),_) } 1.
+
+:- precondition(overlaps(E1,E2,true),O1),
+   result(O1,delete(entity(E))),
+   precondition(overlaps(E1,E2,true),O2),
+   predondition(control_event(C),O2),
+   O1 != O2.
 
 
 :- result(O,delete(E1)),
@@ -158,7 +169,7 @@ different_precondition(O1,O2) :-
 %Limitation of Phaser
 :- precondition(control_event(_),O),
    precondition(overlaps(E1,E2,true),O),
-   precondition(collide(E1,E2),_).
+   result(tick,apply_restitution(E1,E2)).
 
 
 
@@ -210,6 +221,9 @@ different_precondition(O1,O2) :-
 :- action(modify(_,property(Property,E))),
    not balanced(property(Property,E)).
 
+:- 5 { initialize(add(E,L,C))},
+   entity(E).
+   
 
 % Phaser doesn't allow this
 :-  controlLogic(draggable(E)),
@@ -275,3 +289,17 @@ movement(move(E,D)) :- action(move(E,D)).
    
 :- result(O,move(E,_)),
    result(O,delete(E)).
+
+:- result(tick,move_towards(E,E)).
+
+
+:- result(O,move(E,direction(T_A,E2))),
+   2 {result(O2,move(E,direction(T_A,E2)))}.
+   
+   
+:- 2 {initialize(add(_,_L))},
+   initialize(add(_,_,L)).
+
+
+:- action(move(E,direction(_,E2))),
+   2 {action(move(E,direction(_,E2)))}.

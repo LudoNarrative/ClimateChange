@@ -20,6 +20,14 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
     many(Entity),
     number_to_place(Entity,NumberToPlace).
 
+
+speed_values(1;2;4).
+
+1 {speed(E,S) : speed_values(S)} 1 :- entity(E), not static(E).
+						     
+	      
+
+
 total_count(Entity,N) :- N = PerPlace*Places,
 			 number_to_place(Entity,PerPlace),
 			 Places = {initialize(add(Entity,_,_))},
@@ -34,13 +42,18 @@ resource(resource(r(M))) :- M = 1..min_resources..N, max_resource(N).
 
 {max_outcome(M)} :- M =min_outcomes..max_outcomes.
 
-outcome(outcome(o(M))) :- M = 1..N, max_outcome(N).
+standard_outcome(outcome(o(M))) :- M = 1..N, max_outcome(N).
 1 {outcome(tick)}.
 
+outcome(O) :- standard_outcome(O).
 
 {max_timer(M)} :- M =min_timers..max_timers.
 
 timer(timer(t(M))) :- M = 1..N, max_timer(N).
+
+1 {timerLogic(T,scalar(N),loop): speed_values(N)} 1 :- timer(T).
+
+
 
 { avatar(entity(e(1))) }.
 
@@ -55,18 +68,18 @@ directControls(asteroids;
 
 outcome(outcome(avatar(move_up))) :- 
     1 {controlScheme(ENTITY,cardinal); 
-    controlScheme(ENTITY,vertical_axis)}.
+    controlScheme(ENTITY,vertical)}.
 outcome(outcome(avatar(move_down))) :- 
     1 {controlScheme(ENTITY,cardinal); 
-    controlScheme(ENTITY,vertical_axis)}.
+    controlScheme(ENTITY,vertical)}.
 %need to move  west  if horizontal axis
 outcome(outcome(avatar(move_left))) :- 
     1 {controlScheme(ENTITY,cardinal); 
-    controlScheme(ENTITY,horizontal_axis); 
+    controlScheme(ENTITY,horizontal); 
     controlScheme(ENTITY,platformer)}.
 outcome(outcome(avatar(move_right))) :- 
     1 {controlScheme(ENTITY,cardinal); 
-    controlScheme(ENTITY,horizontal_axis); 
+    controlScheme(ENTITY,horizontal); 
     controlScheme(ENTITY,platformer)}.		
 
 %asteroids/combat tank moving forward
@@ -155,7 +168,9 @@ result(outcome(avatar(rotate_right)),rotates(ENTITY, cw))  :-
 indirectControls(click_and_drag;
 		 %click_and_click;click_and_aim;
 	drawn_to_cursor;%;
-	repeled_from_cursor).
+	repeled_from_cursor;
+        click_to_spin;
+	click_to_move).
 
 
 {controlScheme(ENTITY,SCHEME) : indirectControls(SCHEME)} 1 :- entity(ENTITY).
@@ -163,20 +178,71 @@ indirectControls(click_and_drag;
 
 controlLogic(draggable(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
 outcome(outcome(drawn_to_cursor(ENTITY))) :- controlScheme(ENTITY,drawn_to_cursor).
-outcome(outcome(repeled_from_cursor(ENTITY))) :- controlScheme(ENTITY,repeled_from_cursor).      
+outcome(outcome(repeled_from_cursor(ENTITY))) :- controlScheme(ENTITY,repeled_from_cursor). 
+outcome(outcome(click_to_spin(ENTITY))) :- controlScheme(ENTITY,click_to_spin).       
+outcome(outcome(click_to_move(ENTITY))) :- controlScheme(ENTITY,click_to_move).  
 
   
 %cursor is electromagnet
-precondition(control_event(button(mouse_button, held)),outcome(drawn_to_cursor(ENTITY))) :- 
+precondition(control_event(button(mouse, held)),outcome(drawn_to_cursor(ENTITY))) :- 
     outcome(outcome(drawn_to_cursor(ENTITY))). 
 result(outcome(drawn_to_cursor(ENTITY)), move(ENTITY,direction(towards,cursor))):-
     outcome(outcome(drawn_to_cursor(ENTITY))).
 
 %cursor is opposite polarity (well, same polarity) electromagnet
-precondition(control_event(button(mouse_button, held)),outcome(repeled_from_cursor(ENTITY))) :- 
+precondition(control_event(button(mouse, held)),outcome(repeled_from_cursor(ENTITY))) :- 
     outcome(outcome(repeled_from_cursor(ENTITY))). 
 result(outcome(repeled_from_cursor(ENTITY)), move(ENTITY,direction(away,cursor))):-
     outcome(outcome(repeled_from_cursor(ENTITY))).
+
+1 {precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY)));
+   precondition(control_event(button(mouse, pressed)),outcome(click_to_spin(ENTITY)));
+   precondition(control_event(click(ENTITY)),outcome(click_to_spin(ENTITY)))
+   } 1:- 
+       outcome(outcome(click_to_spin(ENTITY))).
+
+angle_speeds(1;5;10).
+1 {result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
+   angle_direction(DIR),
+   angle_speeds(AMOUNT);
+   result(outcome(click_to_spin(ENTITY)), rotate_to(ENTITY,random_int(0,360)))
+  } 1 :-
+    precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY))).
+
+angle_speeds_discrete(10;20;30;45;60;90).
+1 {result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
+   angle_direction(DIR),
+   angle_speeds_discrete(AMOUNT)
+  } 1 :-
+    outcome(outcome(click_to_spin(ENTITY))),
+    1 {precondition(control_event(button(mouse, pressed)),outcome(click_to_spin(ENTITY)));
+       precondition(control_event(click(ENTITY)),outcome(click_to_spin(ENTITY)))}.
+
+result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_spin(ENTITY))).
+
+%CLICK TO MOVE
+
+precondition(control_event(button(mouse, pressed)),outcome(click_to_move(ENTITY))) :-
+    outcome(outcome(click_to_move(ENTITY))).
+
+result(outcome(click_to_move(ENTITY)),move(ENTITY,direction(forward))) :-
+    outcome(outcome(click_to_move(ENTITY))).
+
+1 {timer(click_to_move(ENTITY));
+   result(tick,rotates(ENTITY,DIR,scalar(AMOUNT))) :
+   angle_direction(DIR), angle_speeds(AMOUNT)} 1 :- 
+    outcome(outcome(click_to_move(ENTITY))).
+
+1 {result(timer_elapsed(timer(click_to_move(ENTITY))),  rotates(ENTITY,DIR,scalar(AMOUNT))) :
+   angle_direction(DIR),
+   angle_speeds_discrete(AMOUNT);
+   result(timer_elapsed(timer(click_to_move(ENTITY))),  rotate_to(ENTITY,random_int(0,360)))} 1 :-
+    timer(click_to_move(ENTITY)).
+
+
+result(tick, move(ENTITY,direction(forward))) :-
+    outcome(click_to_spin(ENTITY)).
+
 
 place(E) :- entity(E).
 location(-1..1,-1..1).
@@ -264,11 +330,6 @@ precondition(tick,tick) :- outcome(tick).
 1{many(Entity);singular(Entity)}1 :- entity(Entity).
 
 
-{precondition(collide(Entity1,Entity2),collide(Entity1,Entity2)) :
+{result(tick,apply_restitution(Entity1,Entity2)) :
  entity(Entity1),entity(Entity2)}.
 
-precondition(overlaps(E1,E2,true),O) :- precondition(collide(E1,E2),O).
-result(O,apply_restitution(E1,E2)) :- precondition(collide(E1,E2),O).
-
-
-%:- 2 {precondition(_,outcome(avatar(_)
