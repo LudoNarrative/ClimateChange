@@ -1,0 +1,86 @@
+
+
+{
+	"id": "placeholder_establishScene",
+	"content": "establishScene eq true",
+	"effects": [
+		"set establishScene true"
+	]
+},
+
+{
+	"id": "placeholder_establishDetails eq true",
+	"content": "establishDetails eq true",
+	"effects": [
+		"set establishDetails true",
+	]
+},
+
+{
+	"id": "placeholder_establishComposure eq true",
+	"content": "establishComposure eq true",
+	"effects": [
+		"set establishComposure true",
+	]
+},
+
+{
+	"id": "placeholder_establishStudents eq true",
+	"content": "establishStudents eq true",
+	"effects": [
+		"set establishStudents true",
+	]
+
+},
+
+{
+	"id": "placeholder_enthusiasticStudent eq true",
+	"content": "establishStudents eq true",
+	"effects": [
+		"set establishStudents true",
+		"set talkToStudent true"
+	],
+	"conditions": [
+		"establishStudents eq true"
+	]
+},
+
+{
+	"id": "placeholder_shyStudent eq true",
+	"content": "shyStudent eq true",
+	"effects": [
+		"set establishStudents true",
+		"set talkToStudent true"
+	],
+	"conditions": [
+		"establishStudents eq true"
+	]
+},
+
+{
+	"id": "placeholder_skepticalStudent eq true",
+	"content": "skepticalStudent eq true",
+	"effects": [
+		"set establishStudents true",
+		"set talkToStudent true"
+	],
+	"conditions": [
+		"establishStudents eq true"
+	]
+},
+
+{
+	"id": "placeholder_followUp eq true",
+	"content": "followUp eq true",
+	"effects": [
+		"set followUp true",
+	]
+},
+
+{
+	"id": "lectureEnd",
+	"content": "lectureEnd eq true",
+	"effects": [
+		"set lectureEnd true"
+	]
+},
