@@ -1,0 +1,51 @@
+[
+    {
+        "id": "setScene",
+        "effects" : ["set sceneSet true"]
+    },
+    {
+        "id": "whatWentWrong",
+        "conditions" : ["sceneSet eq true"],
+        "effect" : ["set establishWrong true"]
+    },
+    {
+        // this is all possible reasons, will be multiple ids
+        "id": "reasonsItWentWrong1"
+    },
+    {
+        // this is all possible reasons, will be multiple ids
+        "id": "reasonsItWentWrong2"
+    },
+    {
+        // this is all possible reasons, will be multiple ids
+        "id": "reasonsItWentWrong3"
+    },
+    {
+        // leaned academic
+        "id": "decidePath1",
+        "conditions" : ["establishWrong eq true"]
+    },
+    {
+        // middle of road
+        "id": "decidePath2"
+    },
+    {
+        // leaned academic
+        "id": "decidePath3"
+    },
+    {
+        "id": "deanOffersTransition"
+    },
+    {
+        "id": "deanOffersSupport"
+    },
+    {
+        "id": "loseComposure"
+    },
+    {
+        "id": "chanceToRecover"
+    },
+    {
+        "id": "forcedOutOfCareerPath"
+    }
+]
