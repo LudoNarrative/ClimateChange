@@ -136,3 +136,21 @@ balanced(property(Property,E)) :- action(modify(increase,property(Property,E))),
                                   
 frivolous(Resource) :- not condition(compare(_,Resource)),
                         resource(Resource).
+
+
+constant(Entity) :- entity(Entity),
+		    not action(add(Entity,_,_)),
+		    not action(delete(Entity)).
+
+monotonic(Entity,increase) :- 
+    action(add(Entity,_,_)),
+    not action(delete(Entity)).
+monotonic(Entity,decrease) :- 
+    not action(add(Entity,_,_)),
+    action(delete(Entity)).
+
+monotonic(Entity) :- monotonic(Entity,_).
+
+non_monotonic(Entity) :- not monotonic(Entity),
+			 entity(Entity).
+			     
