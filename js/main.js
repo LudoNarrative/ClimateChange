@@ -25,7 +25,22 @@ requirejs.config({
 		"lectureData" : "../StoryAssembler/data/lecture.json", 
 		"dinnerData" : "../StoryAssembler/data/dinner.json",
 		"generalistData" : "../StoryAssembler/data/generalist.json",
-		"undergradDinnerData" : "../StoryAssembler/data/undergradDinnerData.json",
+		//"undergradDinnerData" : "../StoryAssembler/data/undergradDinnerData.json",
+
+		"undergradDinnerData_kevin" : "../StoryAssembler/data/undergradDinnerData-kevin.json",
+		"undergradDinnerData_talon" : "../StoryAssembler/data/undergradDinnerData-talon.json",
+		"undergradDinnerData_irapopor" : "../StoryAssembler/data/undergradDinnerData-irapopor.json",
+		"undergradDinnerData_sgadsby" : "../StoryAssembler/data/undergradDinnerData-sgadsby.json",
+		"undergradDinnerData_madreed" : "../StoryAssembler/data/undergradDinnerData-madreed.json",
+		"undergradDinnerData_sjsherma" : "../StoryAssembler/data/undergradDinnerData-sjsherma.json",
+
+		"undergradDean_sgadsby" : "../StoryAssembler/data/undergradDean-sgadsby.json",
+		"undergradDean_talon" : "../StoryAssembler/data/undergradDean-talon.json",
+		"undergradDean_irapopor" : "../StoryAssembler/data/undergradDean-irapopor.json",
+
+		"undergradLecture_kply" : "../StoryAssembler/data/undergradLecture-kply.json",
+		"undergradLecture_sjsherma" : "../StoryAssembler/data/undergradLecture-sjsherma.json",
+
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 
 		"Coordinator" : "../Coordinator/Coordinator",
