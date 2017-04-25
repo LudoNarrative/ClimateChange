@@ -1,0 +1,348 @@
+[
+/*
+{ condition: "establishFriends eq true" },
+{ condition: "establishSettingDinner eq true" },
+{ condition: "establishDefenseTomorrow eq true" },
+{ condition: "EmmaJobFutureBeat eq true" },
+{ condition: "EmmaClassTypeBeat eq true" },
+{ condition: "friendIsInAcademia eq true" },
+{ condition: "friendIsNotInAcademia eq true"},
+{ condition: "friendTension gte 4"},
+{ condition: "friendTensionRelieved eq true"},
+{ condition: "checkinWithDisagreer eq true"},
+{ condition: "inactivityIsBad eq true"},
+{ condition: "outro eq true"},
+*/
+		{
+		"id": "EmmaClassTypeBeat",
+		"content": "{name|protagonist} smiles at her friends before {name|academicFriend} asks, <p> \"So tell us all about the class you're going to design. I want to hear all about it. \" </p> {name|nonAcademicFriend} looks over at {name|protagonist} and smiles <p> \"Yes. Do so tell us what you're planning on doing since I couldn't get you to come join my side of things. \"</p> ",
+		"choices" : [
+			{"gotoId": "classSize"},
+			{"gotoId": "classStyle"},
+			{"gotoId": "className"},
+			{"gotoId": "classSubject"}
+		],
+		"effects" : [
+			"set EmmaClassTypeBeat true","addWishlist { 'condition' : 'classDiscussion eq 4' }"
+		],
+		"conditions" : [
+			"EmmaJobFutureBeat eq true"
+		]
+	},
+	{
+		"id": "classSize",
+		"choiceLabel": "Talk about class size",
+		"content": "\"So {nickname|protagonist}, What type of class size are you going to have? Is it going to small or is it going to be one of those huge lecture halls with hundreds of students in them?\" {name|nonAcademicFriend} rolls his eyes at the last part of the comment. <p> \"I bet most students in the large class will just use the class to fulfill some GE requirement or something. I did some of that back in college.\" </p>",
+		"choices": [
+			{"gotoId":"smol"},
+			{"gotoId": "large"},
+		],
+		"effects" : [
+			"incr classDiscussion 1","incr academicFriendRelationship 1", "incr academicEnthusiasm 1"
+		],
+	},
+	{
+		"id": "smol",
+		"choiceLabel": "say it'll be small",
+		"content": " \"I plan on doing a small class. Hopefully under 100 students. Maybe more like 50. I like the idea of having a small dedicated class that I can share all my knowledge with.\" {name|nonAcademicFriend} rolls her eyes again <p> \"Or you could've joined me and used your knowledge to actively help out instead of passing it onto to people in hopes they do something with it.\"</p> {name|academicFriend} sighs at {name|nonAcademicFriend}'s comment. <p> \"Well <i> I </i> think it sounds wonderful. Small classes can be fun. Tell us more.\"</p> ",
+		"choices": [
+			{"gotoId":"className"},
+			{"gotoId": "classStyle"},
+			{"gotoId": "classSubject"},
+			{"gotoId": "nothingLeftToSay"}
+		],
+		"effects" : [
+			"decr nonAcademicFriendRelationship 1"
+		],
+	},
+	{
+		"id": "large",
+		"choiceLabel": "say it'll be large",
+		"content": " \"I'm up for a large class. It could be fun teaching to so many students in a big lecture hall. Plus the more students I can teach, the more I can get my ideas and knowledge out to all of them so they can spread it and use it.\" <p> \"Or they'll go home and forget all about it and out of that giant set of students maybe a couple remember.\" </p> {name|academicFriend} glared at {name|nonAcademicFriend}. <p> \"A couple is more then enough {name|nonAcademicFriend}. I think it's great you want to do a large class {nickname|protagonist}. You'll definitely get your message out there. Tell us more.\" </p> ",
+		"choices": [
+			{"gotoId":"className"},
+			{"gotoId": "classStyle"},
+			{"gotoId": "classSubject"},
+			{"gotoId": "nothingLeftToSay"}
+		],
+		"effects" : [
+			"decr nonAcademicFriendRelationship 1","incr condfidence 1"
+		],
+	},
+	{
+		"id": "classStyle",
+		"choiceLabel": "Talk about class style",
+		"content": "\"So what type of class style are you going to use? Are you going to make it like a lecture or more like a seminar where people can talk a lot? \" {name|protagonist} smiled at {name|academicFriend} and thought about what she was going to say",
+		"choices": [
+			{"gotoId":"seminar"},
+			{"gotoId": "lecture"}
+		],
+		"effects" : [
+			"incr classDiscussion 1","incr academicFriendRelationship 1","incr academicEnthusiasm 1"
+		],
+		
+	},
+	{
+		"id": "seminar",
+		"choiceLabel": "say it'll be seminar styled",
+		"content": "\"It'll be more seminar styled. I like the idea of sharing my knowledge and then getting people to discuss it amongst themselves.\" {name|academicFriend} smiles and agrees with {name|protagonist}. <p>\"Or maybe they'll say nothing and you'll get an awkward silence. A lot of people don't like speaking up in class you know.\"</p> <p>\"Well <i> I </i> still think it sounds lovely {nickname|protagonist}. Why don't you tell us more? \" </p>",
+		"choices": [
+			{"gotoId":"className"},
+			{"gotoId": "classSize"},
+			{"gotoId": "classSubject"},
+			{"gotoId": "nothingLeftToSay"}
+		],
+		"effects" : [
+			"decr nonAcademicFriendRelationship 1"
+		],
+	},
+	{
+		"id": "lecture",
+		"choiceLabel": "say it'll be lecture styled",
+		"content": "\"It'll be more lecture styled. That way I can get all my ideas out for that class session at once and then be able to take questions from people. I could even take some questions during the lecture. Either way, it'll be fine.\" {name|academicFriend} smiled at {name|protagonist}'s confidence. <p>\"It'll be more then fine {nickname|protagonist}. It'll be great. What else do you have planned for your class? \"</p>",
+		"choices": [
+			{"gotoId":"className"},
+			{"gotoId": "classSize"},
+			{"gotoId": "classSubject"},
+			{"gotoId": "nothingLeftToSay"}
+		],
+		"effects" : [
+			"incr nonAcademicFriendRelationship 1","incr confidence 1"
+		],
+	},
+	{
+		"id": "className",
+		"choiceLabel": "Talk about class name",
+		"content": " \"I hadn't exactly thought of a name yet. I've had some ideas for names but I don't know if they're any good.\" {name|academicFriend} smiles and tries to reassure you that it'll be a great name. She asks what the names are. ",
+		"choices": [
+			{"gotoId":"tellName"},
+			{"gotoId": "sayNothing"}
+		],
+		"effects" : [
+			"incr classDiscussion 1","incr academicFriendRelationship 1","decr confidence 1"
+		],
+	},
+	{
+		"id": "tellName",
+		"choiceLabel": "Talk about name choices",
+		"content": " \"I was thinking maybe a class called Social, Economic and International Impacts of Climate Change. But it was just an idea. I'll probably change it. Especially if I decided to do a different subject then straight on climate change\" {name|nonAcademicFriend} smiled a bit <p> \" Well it's not a half bad name for a class.\" </p> <p> \"See {nickname|protagonist}? Even {name|nonAcademicFriend} likes it. Don't worry so much. Whatever you decide on for a class name will be great, no matter the topic. Tell us more\"</p> ",
+		"choices": [
+			{"gotoId":"classSubject"},
+			{"gotoId": "classSize"},
+			{"gotoId": "classStyle"},
+			{"gotoId": "nothingLeftToSay"}
+		],
+		"effects" : [
+			"incr nonAcademicFriendRelationship 1","decr confidence 1"
+		],
+	},
+	{
+		"id": "sayNothing",
+		"choiceLabel": "stay silent",
+		"content": "{name|protagonist} keeps her mouth shut and says nothing. She looks at her plate of food a bit self consciously. <p> \"You worry too much {nickname|protagonist}. It'll be great, people will love it. Why don't you tell us something else about the class?\" </p> ",
+		"choices": [
+			{"gotoId":"classSubject"},
+			{"gotoId": "classSize"},
+			{"gotoId": "classStyle"},
+			{"gotoId": "nothingLeftToSay"}
+		],
+		"effects" : [
+			"decr confidence 1"
+		],
+	},
+	{
+		"id": "classSubject",
+		"choiceLabel": "Talk about class subject",
+		"content": "\"So what subject are you going to talk about? I'm super curious to hear about it.\" {name|protagonist} smiled a bit nerviously at her friend who was clearly excited to hear her plans. <p> \"I haven't exactly picked one yet. There are so many good options \"</p> <p> \"Well then tell us some of your ideas! \"</p> {name|protagonist} looked over at a clearly bored {name|nonAcademicFriend} and an excited {name|academicFriend} before deciding",
+		"choices": [
+			{"gotoId":"talkAboutIt"},
+			{"gotoId": "sayNothingAboutIt"}
+		],
+		"effects" : [
+			"incr classDiscussion 1","incr academicFriendRelationship 1","incr academicEnthusiasm 1","decr nonAcademicFriendRelationship 1"
+		],
+	},
+	{
+		"id": "talkAboutIt",
+		"choiceLabel": "Talk about more about it.",
+		"content": "\"Well i've had several ideas for classes. I might do a class about Climate Change or maybe something enviromental or maybe even something marine biology related.\" {name|nonAcademicFriend} laughed at the end of {name|protagonist}'s statment <p> \"Well you <i> did </i> spend all this time researching and  writing about marine animals. Maybe do that one.\" {name|protagonist} smiles at {name|nonAcademicFriend}, least she's attemping to be supportive. </p>",
+		"choices": [
+			{"gotoId":"className"},
+			{"gotoId": "classSize"},
+			{"gotoId": "classStyle"},
+			{"gotoId": "nothingLeftToSay"}
+		],
+		"effects" : [
+			"incr nonAcademicFriendRelationship 1","incr confidence 1"
+		],
+	},
+	{
+		"id": "sayNothingAboutIt",
+		"choiceLabel": "say nothing else.",
+		"content": " \"It's fine. I'll tell you guys when I decide.\" She decided to try to keep the peace, noticing how bored {name|nonAcademicFriend} already looked. {name|academicFriend} sighed \"Fine. But you better keep us in the loop. I want to know more.\"",
+		"choices": [
+			{"gotoId":"className"},
+			{"gotoId": "classSize"},
+			{"gotoId": "classStyle"},
+			{"gotoId": "nothingLeftToSay"}
+		],
+		"effects" : [
+			"incr nonAcademicFriendRelationship 1"
+		],
+	},
+	{
+		"id": "nothingLeftToSay",
+		"choiceLabel": "say that's all she has prepaired",
+		"content": "\"That's all I really have prepaired.I've spent a while going over the options but there would still be so much work before I actually start my class\" {name|nonAcademicFriend} speaks up <p> \"Like getting through your PhD defense tomorrow.\" </p> {name|academicFriend} smiles at {name|protagonist} before saying \"Well that'll be over before you know it and then you'll be a teacher. It'll be great, despite <i> somebody's </i> clear lack of interest\"</p> <p> \"Didn't you want somebody to play devil's advocate the entire time?\"</p> {name|protagonist} sighs and looks at her friends. Why they couldn't get along with this topic, she'll probably never know. She thought maybe they were just both too passionate in the side of field to not butt heads all the time. Least they're still happy for her no matter what. ",
+		//"choices": [
+			//{"gotoId":"placeholder_friendIsInAcademia"},
+			//{"gotoId":"inactivityIsBad"},
+		//],
+		"effects" : [
+			"incr nonAcademicFriendRelationship 1","incr academicFriendRelationship 1","incr confidence 1","incr academicEnthusiasm 1"
+		],
+		"conditions" : [
+			"classDiscussion eq 4"
+		]
+	},
+		{
+		"id": "inactivityIsBad",
+		//"choiceLabel": "Create a plan to unite friends under one cause",
+		"content": "{name|protagonist} looked at her two friends and sighed. Despite their obvious differences,especially in choice of profession, she still wanted her two friends to get along with each other. So she came up with a simple plan. Instead of fighting <i> against </i> each other, she'd make them fight together for a common goal. She knew just the idea.",
+		"choices" : [
+			{"gotoId": "startPlan"}
+		],
+		"effects" : [
+			"set inactivityIsBad true", "addWishlist { 'condition' : 'UniteFriends eq true' }","incr confidence 2"
+		],
+		"conditions" : [
+			"friendIsInAcademia eq true",
+			"friendIsNotInAcademia eq true"
+		],
+	},
+	//{
+		//"id": "startPlan",
+		//"choiceLabel": "start the idea",
+		//"request" : {"gotoId": "startPlan2" }
+	//},
+	{
+		"id": "startPlan",
+		"choiceLabel": "start the idea",
+		"content": "{name|protagonist} looked over at them before saying \"I mean I know I have a job lined up and everything... but I guess since I spent so long getting a PhD and everything, I figured I might as well teach.\"",
+		"choices": [
+			{"gotoId":"watchThem"}
+		],
+	},
+	{
+		"id": "watchThem",
+		"choiceLabel": "Watch their reactions",
+		"content": "Both of them,{name|academicFriend} and {name|nonAcademicFriend},looked at her like she's insane. Which is exactly what she was going for. She wants them to do this so they'll fight. She's praying they're not going to fight <i> each other </i>,because that would defeat the purpose of this. If they fought her, it could be a nice way to keep the room calm. Least she hoped so.",
+		"choices": [
+			{"gotoId":"academicFriendAnnoyed"},
+			{"gotoId":"non-academicFriendAnnoyed"}
+		],
+	},
+		{
+		"id": "academicFriendAnnoyed",
+		"choiceLabel": "listen to {name|academicFriend}",
+		"content": "{name|protagonist} saw that {name|academicFriend} looked angrier then usual. She knew how passionate {name|academicFriend} was about her academic work and how excited she was for her to be joining the academic field with her. <p> \"{name|protagonist}! What on earth has gotten into you! This is about more then a job! If you only wanted a job, you could've done just about anything else with likely half the work you've put in.. Aren't you exicted about your job as a professor?! You get to shape young minds and help them become our future for the planet. Isn't that important to you still?! \" </p>",
+		//"request": [
+			//{"gotoId":"non-academicFriendAnnoyed"}
+			//],
+			"choices": [
+			{"gotoId":"non-academicFriendAnnoyed"}
+		],
+		"effects" : [
+				"decr academicFriendRelationship 1"
+		],
+	},
+		{
+		"id": "non-academicFriendAnnoyed",
+		"choiceLabel": "Look at {name|nonAcademicFriend}",
+		"request" : {"gotoId": "AttentionShelly"}
+	},
+	{
+		"id": "AttentionShelly",
+		"choiceLabel": "Look at {name|nonAcademicFriend}",
+		"content": "{name|protagonist} opened her mouth to say something but closed it when {name|nonAcademicFriend} started to speak. <p> \"{name|protagonist}! I know we disagree on a lot of things. Especially with the fact that you're going into academics and not following me,which I still think is a ridiculous,but it's just a job?! This is not  <i>just </i> a job, it's about saving the earth! Teaching may be a far more passive approach then what I'm doing but I guess it's still something. The idea of you not doing <i> anything </i> quite frankly disgusts me.\" </p>",
+		"choices": [
+			{"gotoId":"ZanitaAgain"}
+			//{"gotoId": "academicFriendAnnoyed"}
+		],
+		"effects" : [
+				"decr nonAcademicFriendRelationship 1"
+		],
+	},
+	{
+		"id": "ZanitaAgain",
+		"choiceLabel": "Listen to {name|academicFriend} speak",
+		"content": "Before {name|protagonist} could even open her mouth, {name|academicFriend} spoke again. She looked calmer after her initial outburst <p> \"So what's going on? Are you <i> actually </i> serious about this? I agree that this is more then a job, it's a way to help the earth by empowering other people to able to act. Bright young minded people. Don't you want to help with that? \" </p> {name|protagonist} smile a bit at {name|academicFriend}. It's exactly what she wanted. It's part of the reason she spent so much time and effort on getting her PhD. but she also just wanted her friends to get along. ",
+		"choices": [
+			{"gotoId":"ShellySpeaks"},
+			{"gotoId": "ZanitaSpeaks"},
+			{"gotoId": "admitPlan"}
+		],
+		"effects" : [
+				"decr academicFriendRelationship 1"
+		],
+	},
+	{
+		"id": "ShellySpeaks",
+		"choiceLabel": "Listen to {name|nonAcademicFriend} speak",
+		"content": "{name|protagonist} listens to {name|nonAcademicFriend} speak up again. <p> \"While I hate to agree with {name|academicFriend},I'm going to have to. Even if you take the more passive approach and teach, it's still helping the enviroment by inspiring people. Who knows, maybe I can come in your class and encourage people to come join me.\"</p> {name|nonAcademicFriend} laughed softly at that. It made her happy to see her friend being at least somewhat supportive of her job choice. ",
+		"choices": [
+			{"gotoId":"ZanitaSpeaks"},
+			{"gotoId": "actuallyAdmitPlan"}
+		],
+		"effects" : [
+				"incr nonAcademicFriendRelationship 1"
+		],
+	},
+	{
+		"id": "ZanitaSpeaks",
+		"choiceLabel": "Listen to {name|academicFriend} speak once again",
+		"content": "{name|protagonist} watches {name|academicFriend} continue to speak. It's not out of anger but more out of passion. She smiled at her a bit more. {name|protagonist} knew how passionate her friend was teaching the next generation. She even agreed a few times with {name|nonAcademicFriend}. {name|protagonist} smiled and was glad her plan worked out so well. Least nobody was fighting anybody except her.",
+		"choices": [
+			{"gotoId":"ShellySpeaks"},
+			{"gotoId": "actuallyAdmitPlan"}	
+		],
+		"effects" : [
+				"decr academicFriendRelationship 1"
+		],
+	},
+	{
+		"id": "admitPlan",
+		"choiceLabel": "consider admiting plan",
+		"content": "She smiled at her two friends. They were so passionate about saving the earth, she was glad to have them. Despite the fact that they tend to fight a lot with each other, they meant well and that's what's important.",
+		"choices": [
+			{"gotoId":"ShellySpeaks"},
+			{"gotoId": "ZanitaSpeaks"}
+		],
+		"effects" : [
+				"incr condfidence 1"
+		],
+	},
+	{
+		"id": "actuallyAdmitPlan",
+		"choiceLabel": "tell friends the truth",
+		"content": "She looked at her two friends and smiled. Their passion for saving the earth was incredible,each in their own way of doing it. They were the perfect friends to have. <p>\"I should tell you guys something. I actually made it up. Of course i'm still interested in saving earth. I'm excited for my future in academics to help shape minds to help save the earth. I just wanted to get you two to agree on something. <i> Anything </i> really. It worked though.\"",
+		"choices": [
+			{"gotoId":"continueDinner"}
+		],
+		"effects" : [
+				"incr condfidence 1"
+		],
+	},
+	{
+		"id": "continueDinner",
+		"choiceLabel": "continue dinner",
+		"content": "{name|academicFriend} looked ever so slightly annoyed but still happy for her. {name|nonAcademicFriend} looked a bit pissed but eventually letting it go. {name|academicFriend} laughed before speaking up <p> \"You sometimes have the weirdest way of dealing with things {nickname|protagonist}.\"</p> {name|nonAcademicFriend} agrees and {name|protagonist} laughs in agreement with her two friends. ",
+		//"choices": [
+			//{"gotoId":"outro"}
+		//],
+		"effects" : [
+			"set UniteFriends true","incr academicFriendRelationship 2","incr nonAcademicFriendRelationship 1"
+		],
+	},
+
+]

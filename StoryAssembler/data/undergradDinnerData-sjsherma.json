@@ -1,0 +1,111 @@
+[
+/*
+{ condition: "establishFriends eq true" },
+{ condition: "establishSettingDinner eq true" },
+{ condition: "establishDefenseTomorrow eq true" },
+{ condition: "EmmaJobFutureBeat eq true" },
+{ condition: "EmmaClassTypeBeat eq true" },
+{ condition: "friendIsInAcademia eq true" },
+{ condition: "friendIsNotInAcademia eq true"},
+{ condition: "friendTension gte 4"},
+{ condition: "friendTensionRelieved eq true"},
+{ condition: "checkinWithDisagreer eq true"},
+{ condition: "inactivityIsBad eq true"},
+{ condition: "outro eq true"},
+*/
+
+	{
+		"id": "firstMoments",
+		"content": "Dinner. Just the three of you. With {name|academicFriend} and {name|nonAcademicFriend} in the same room together. <br/><br/>Oh dear, you can just imagine the two of them knocking heads before the table is set. <br/> <br/> Hopefully the dinner won't get turned completely upside-down. Besides, your friends are each other's friends too! ... For the most part. Until {name|nonAcademicFriend} dropped out of grad school. And {name|academicFriend} stopped talking to her. But hey! They agreed to attend the same dinner party together, so it shouldn't be too bad... right?",
+		"choices": [{
+				"gotoId" : "emmaExcitement"
+			},
+			{
+				"gotoId" : "emmaUncertain"
+			},
+			{
+				"gotoId": "emmaLols"
+			}
+		],
+		"effects": [
+			"addWishlist { 'condition': 'enterApartment eq true' }",
+			"set establishFriends true"
+		]
+	},
+	{
+		"id": "emmaExcitement",
+		"choiceLabel": "It should be alright! I'm sure I'll be able to help them keep things relatively peaceful tonight.",
+		"content": "You feel excitement swell within you as you knock on the door. As much as your friends liked to bicker, that's nothing your fine diplomatic skills can't handle.",
+		"effects": ["incr confidence 1"]
+	},
+	{
+		"id": "emmaUncertain",
+		"choiceLabel": "There's no way I'll be able to keep those two from lunging for each other's throats.",
+		"content": "You sigh at the inevitablity you foresee. There's only so much one person can do, after all. Might as well grab a helmet now, lest the mashed potatoes go flying.",
+		"effects": ["decr confidence 1"]
+	},
+	{
+		"id": "emmaLols",
+		"choiceLabel": "Hope there's popcorn, because that's going to be one heck of a show.",
+		"content": "What can you say? You're a person who enjoys fine dining and entertainment.",
+	},
+	{
+		"id": "enterDoor",
+		"content": "The moment your knuckle kisses the front door it goes flying open. <br/><br/> \"{name|protagonist}!\" {name|nonAcademicFriend} grins at you, delighted. \"You're finally here!\" <br/><br/>\"Please don't break my door,\" {name|academicFriend} calls from deeper within. {name|nonAcademicFriend} makes a face over her shoulder before ushering you in. \"So awesome you're here,\" {name|nonAcademicFriend} continues. \"It was getting boring already.\" <br/><br/> {name|academicFriend} emerges into the living room while drying her hands on a towel, a frown on her face. \"You've only been here for five minutes.\" <br/><br/> \"Terribly boring,\" {name|nonAcademicFriend} says with twice the drama, throwing a hand over her forehead. \"Save me from the boredom, {name|protagonist}!\" <br/><br/> {name|academicFriend} rolls her eyes but smiles at you, placing her hands on her hips. \"Glad you could come, {nickname|protagonist}.\"",
+		"choices": [{
+				"gotoId": "bringItUp"
+			},
+			{
+				"gotoId": "niceGreeting"
+			},
+			{
+				"gotoId": "somethingFunny"
+			}
+		],
+		"effects": ["set enterApartment true"]
+	},
+	{
+    "id" : "bringItUp",
+    "choiceLabel" : "So, still not getting along, huh?",
+    "content" : "Sometimes, it's fun to poke the elephant in the room. <br/><br/>{name|academicFriend}'s gaze darts over at {name|nonAcademicFriend}, whose face has collapsed into a scowl. \"Well,\" {name|academicFriend}. \"I might not say <i>that</i> - \" <br/><br/> \"I totally would -\" <br/><br/> \"But we're not here to talk about that, we're here to talk about you! Food's almost ready, I'll be right back.\" {name|academicFriend} (perhaps wisely) darts out of the room, swinging the towel in her concealed ire. {name|nonAcademicFriend}'s arms are crossed. They look grumpy. Not, one would say, a very good start.",
+    "effects" : ["incr friendTension 1"],
+  },
+  {
+    "id" : "niceGreeting",
+    "choiceLabel" : "Glad to be here.",
+    "content" : "{name|nonAcademicFriend} beams at you as {name|academicFriend} says, \"Cool, I'm going to head back into the kitchen real quick, I'll be right back,\" before heading back, throwing the towel over her shoulder.",
+  },
+  {
+    "id" : "somethingFunny",
+    "choiceLabel" : "Yeah yeah, that's all fine and good, so where's the food?",
+    "content" : "{name|academicFriend} laughs. \"It's coming up, I promise. Hope your grumbling stomach can wait for just a little longer,\" she teases as she heads back towards where you assume is the kitchen. Where you hope is the kitchen. Because that means food. {name|nonAcademicFriend} pats your shoulder cheerfully.",
+  },
+	{
+    "id" : "questionsNonAcademic",
+    "content" : "You turn towards Shelly. \"So,\" you say. \"You're really not coming back to academia, huh?\" <br/><br/>\"Yup,\" Shelly says, poppibg the 'p'.",
+    "choices" : [
+      {"gotoId" : "whyThough"},
+      {"gotoId" : "stressOut"},
+      {"gotoId" : "handleIt"}
+    ],
+    "effects" : ["set friendIsNotInAcademia true"]
+  },
+  {
+    "id" : "whyThough",
+    "choiceLabel" : "Why, though?",
+    "content" : "Shelly's eyes drift over to the side as she shrugs. \"Well, at one point I was doing so much work and all I could think was: why? What is point? To get some fancy degree that might not even get me anywhere? Why am I trying to impress a bunch of old people who think they can judge me?\" She leans back. \"Then I thought - all this time I'm spending on this research I'm only doing for school - I can bring it into the real world. Actually do something to make a difference.\" She sighs. \"Or maybe I'm just afraid that after my dissertation I'll just - stop. Too burned out to do anything but work. Another cog in the machine.\" <br/><br/>Upon noticing the look on your face, she lets out a snicker and playfully pucnhes your choulder. \"And so that I dont have to worry about a dissertation.\"",
+    "effects" : ["incr nonAcademicFriendRelationship 1"],
+  },
+  {
+    "id" : "stressOut",
+    "choiceLabel" : "I mean, it is pretty hard. Sometimes the stress gets to me. ",
+    "content" : "\"Sometimes I wonder if I can even do it at all.\" The thought makes your mood sink. <br/><br/>Shelly's face is suddenly much closer, her face furiously determined. \"Hey, it's a dinner party,\" she says with a scowl. \"Dont be a downer on yourself! You're supposed to stop thinking about that for tonight - save that 'ugh im so worried' for tomorrow!\"",
+    "effects" : ["decr confidence 1"],
+  },
+  {
+    "id" : "handleIt",
+    "choiceLabel" : "You just couldn't handle it, could you?",
+    "content" : "Shelly's face collapses into a scowl.  \"Hey,\" she growls. \"So I dont fit perfectly into the system. Who cares.\" She crosses her arms and turns away from you, quietly fuming.",
+    "effects" : ["decr nonAcademicFriendRelationship 1"],
+  }
+]

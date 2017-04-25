@@ -1,4 +1,5 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData, globalData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin", 
+	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, globalData) {
 
 	/*
 		Initializing function
@@ -6,7 +7,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 
 		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner"];	//order of scenes
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean"];	//order of scenes
 		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -22,12 +23,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		story.startState.forEach(function(command) {
 			State.change(command);
 		});
-		var levelData = HanSON.parse(story.dataFile);
-		var globalDataFile = require("text!globalData");	//TODO: why can't we just include this via require up above with the other data files????
-		var globalData = HanSON.parse(globalDataFile);
+		var levelDataArray = [];
+
+		//load the levelDataArray with all the dataFiles for both the level, and the global fragments file
+		for (var x=0; x < story.dataFiles.length; x++) { levelDataArray.push(HanSON.parse(require(story.dataFiles[x]))); }
+		levelDataArray.push(HanSON.parse(globalData));
+
 		ChunkLibrary.reset();
-		ChunkLibrary.add(levelData);
-		ChunkLibrary.add(globalData);
+		for (var x=0; x < levelDataArray.length; x++) { ChunkLibrary.add(levelDataArray[x]); }		//add in fragments from all files
 
 		var wishlist = Wishlist.create(story.wishlist, State);
 		wishlist.logOn();
@@ -63,7 +66,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "establishScene eq true"},
 				{ condition: "introductions eq 2"}
 			],
-			dataFile: require("text!newExampleData"),
+			dataFiles: ["text!newExampleData"],
 			startState: [
 				"set establishScene false",
 				"set introductions 0"
@@ -85,7 +88,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "articlesRead eq 4" },
 				{ condition: "endScene eq true" }
 			],
-			dataFile: require("text!travelData"),
+			dataFiles: ["text!travelData"],
 			startState: [
 				"set specialty shrimp",
 				"set cueOuttro false",
@@ -117,7 +120,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "establishScene eq true"},
 				{ condition: "endScene eq true" }
 			],
-			dataFile: require("text!workerData"),
+			dataFiles: ["text!workerData"],
 			startState: [
 				"set confidence 1",
 				"set optimism 0",
@@ -156,7 +159,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "respondToQuestion eq true" },
 				{ condition: "classOver eq true", persistent: true }
 			],
-			dataFile: require("text!lectureData"),
+			dataFiles: ["text!lectureData"],
 			startState: [
 				"set career shrimp",
 				"set questionsLeft 3",
@@ -195,7 +198,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "respondToChallenge eq true"},
 				{ condition: "droppedKnowledge gte 2", persistent: true },
 			],
-			dataFile: require("text!generalistData"),
+			dataFiles: ["text!generalistData"],
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
@@ -236,7 +239,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "allyReassuresProtag eq true"},
 				{ condition: "droppedKnowledge gte 1", persistent: true },
 			],
-			dataFile: require("text!dinnerData"),
+			dataFiles: ["text!dinnerData"],
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
@@ -275,7 +278,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "allyReassuresProtag eq true"},
 		//		{ condition: "droppedKnowledge gte 2", persistent: true },
 			],
-			dataFile: require("text!dinnerData"),
+			dataFiles: ["text!dinnerData"],
 			startState: [
 				"set career unpicked",
 				"set droppedKnowledge 0",
@@ -305,9 +308,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"nonAcademicFriend": {name: "Shelly", nickname: "Shelly", gender: "female"}
 			},
 			wishlist: [
-				{ condition: "establishFriends eq true" , order: "first"},
-				{ condition: "establishSettingDinner eq true", order: "first" },
-				{ condition: "establishDefenseTomorrow eq true", order: "first" },
+				{ condition: "establishFriends eq true"},
+				{ condition: "establishSettingDinner eq true"},
+				{ condition: "establishDefenseTomorrow eq true"},
 				{ condition: "EmmaDefenseFeeling eq true" },
 				{ condition: "EmmaJobFutureBeat eq true" },
 				{ condition: "EmmaClassTypeBeat eq true" },
@@ -316,10 +319,20 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "friendTension gte 4"},
 				{ condition: "friendTensionRelieved eq true"},
 				{ condition: "checkinWithDisagreer eq true"},
-				{ condition: "inactivityIsBad eq true"},
+				{ condition: "inactivityIsBad eq true", order: "first"},
 				{ condition: "outro eq true", order: "last"},
 			],
-			dataFile: require("text!undergradDinnerData"),
+			//if you just want to use one file, uncomment this and comment out the big block below
+			//dataFiles: ["text!undergradDinnerData_irapopor"],
+			
+			dataFiles: [
+				"text!undergradDinnerData_kevin", 
+				"text!undergradDinnerData_talon", 
+				"text!undergradDinnerData_irapopor", 
+				"text!undergradDinnerData_sgadsby", 
+				"text!undergradDinnerData_madreed",
+				"text!undergradDinnerData_sjsherma"],
+				
 			startState: [
 				"set establishFriends false",
 				"set establishSettingDinner false",
@@ -345,11 +358,110 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"confidence",
 				"academicEnthusiasm",
 				"friendTension",
+				"academicFriendRelationship",
+				"nonAcademicFriendRelationship"
+
 				
 			],
 			mode: {
 				type: "dialogue",
 				initiator: "ally",
+				responder: "protagonist"
+			}
+		},
+
+		//undergrad lecture scene
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "undergradLecture",
+			characters: {
+				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
+				"skepticStudent": {name: "Todd", nickname: "Todd", gender: "male"},
+				"shyStudent": {name: "Aidan", nickname: "Aidan", gender: "male"},
+				"idealisticStudent": {name: "Lupita", nickname: "Lupita", gender: "female"}
+			},
+			wishlist: [
+				{ condition: "establishScene eq true" },
+				{ condition: "establishDetails eq true" },
+				{ condition: "establishComposure eq true" },
+				{ condition: "establishStudents eq true" },
+				{ condition: "talkToStudent gte 3" },
+				{ condition: "followUp eq true" },
+				{ condition: "lectureEnd eq true" },
+
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			//dataFiles: ["text!undergradDinnerData_irapopor"],
+			
+			dataFiles: [
+				"text!undergradLecture_kply", 
+				"text!undergradLecture_sjsherma"
+			],
+				
+			startState: [
+				"set establishScene false",
+				"set establishDetails false",
+				"set establishComposure false",
+				"set establishStudents false",
+				"set talkToStudent 0",
+				"set followUp false",
+				"set lectureEnd false",
+
+				"set composure 10"
+			],
+			UIvars: [
+
+			],
+			mode: {
+				type: "monologue",
+				initiator: "protagonist",
+				responder: "protagonist"
+			}
+		},
+
+		//undergrad dean scene
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "undergradDean",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"authorityFigure": {name: "Dean Smith", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "sceneSet eq true"},
+				{ condition: "troubleWithLecture eq true"},
+				{ condition: "reasonForTrouble eq true"},
+				{ condition: "pathChoiceMade eq true"},
+				{ condition: "deanReaction eq true"},
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			//dataFiles: ["text!undergradDinnerData_irapopor"],
+			
+			dataFiles: [
+				"text!undergradDean_talon", 
+				"text!undergradDean_irapopor", 
+				"text!undergradDean_sgadsby"
+			],
+				
+			startState: [
+				"set sceneSet false",
+				"set troubleWithLecture false",
+				"set reasonForTrouble false",
+				"set pathChoiceMade false",
+				"set deanReaction false",
+
+				"set confidence 5"
+			],
+			UIvars: [
+
+			],
+			mode: {
+				type: "dialogue",
+				initiator: "authorityFigure",
 				responder: "protagonist"
 			}
 		}
@@ -394,6 +506,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				id : "undergradDinner",
 				text : "<p>You are Emma Richards, a PhD student who studies the ocean.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
 			},
+			{
+				id : "undergradLecture",
+				text : "<p>You were able to secure a job as an adjunct professor in Environmental Sciences.</p><p>Dr. Tennerson, a senior faculty member, as been sent to evaluate how the class is going.</p><p>Choose what Emma says, but make sure to keep your cool!</p>"
+			},
+			{
+				id : "undergradDean",
+				text : "<p>TODO: Scene description</p>"
+			}
 			
 
 		]
@@ -435,6 +555,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id : "undergradDinner",
 				src : "travel.png"
+			},
+			{
+				id : "undergradLecture",
+				src : "lecture.png"
+			},
+			{
+				id : "undergradDean",
+				src : "lecture.png"
 			},
 
 		]
@@ -586,7 +714,47 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						state: ["confidence gt -1000"]
 					},
 				]
-			}
+			},
+			{
+				id : "undergradLecture",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["composure gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["composure eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["composure eq 0"]
+					},
+				]
+			},
+			{
+				id : "undergradDean",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
+			},
 		];
 
 		State.avatars = avatarSpec.filter(function(v) { return v.id === id; })[0].avatars;
@@ -609,6 +777,16 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "undergradDinner",
+				aspFilepaths: ['asp-phaser-generator/test/fixtures/asp-game-1.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "undergradLecture",
+				aspFilepaths: ['asp-phaser-generator/test/fixtures/asp-game-1.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "undergradDean",
 				aspFilepaths: ['asp-phaser-generator/test/fixtures/asp-game-1.lp'],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},

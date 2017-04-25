@@ -3,8 +3,8 @@
 Allows including inline templating to vary text based on the State.
 
 */
-
 /* global define */
+
 define(["util", "Condition", "State"], function(util, Condition, State) {
 	"use strict";
 
@@ -94,6 +94,16 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (!speakerChar) return "(speaker)";
 			return speakerChar.name || speaker;
 		},
+		//{nickname|protagonist}
+		"nickname": function(params, text) {
+			if (params.length !== 1) {
+				console.error("Template command 'nickname' must have 1 param, in text '" + text + "'.");
+				return "(nickname)";
+			}
+			var speakerChar = Character.get(params[0]);
+			if (!speakerChar) return "(nickname)";
+			return speakerChar.nickname || speaker;
+		},
 		"ifSpeaker": function(params, text) {
 			if (params.length !== 3) {
 				console.error("Template 'ifSpeaker' doesn't have three params in chunk '" + text + "'.");
@@ -112,7 +122,15 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (cMode == params[0]) { return params[1] }
 			else { return params[2] }
 		},
+		"showCharTrait": function(params, text) {
+			if (params.length !== 0) {
+				console.error("Template command 'showCharTrait' must have params, in text '" + text + "'.");
+				return "(showSpeakerTrait)";
+			}
+		}
 		// Template stub demonstrating how you might show a random character trait. Look up the current speaker, and print something based on the first found property we have code for.
+		//para
+		/*
 		"showSpeakerTrait": function(params, text) {
 			if (params.length !== 0) {
 				console.error("Template command 'showSpeakerTrait' must not have any params, in text '" + text + "'.");
@@ -129,6 +147,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 				return "";
 			}
 		}
+		*/
 	}
 
 	// Add a new template command at run-time. (Probably mostly only useful for testing, or to load in template commands from an external definition file. Normally, you would add them to the "templates" object above.)

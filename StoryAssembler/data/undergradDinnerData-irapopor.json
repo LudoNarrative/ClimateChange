@@ -1,0 +1,197 @@
+[
+/*
+{ condition: "establishFriends eq true" },
+{ condition: "establishSettingDinner eq true" },
+{ condition: "establishDefenseTomorrow eq true" },
+{ condition: "EmmaJobFutureBeat eq true" },
+{ condition: "EmmaClassTypeBeat eq true" },
+{ condition: "friendIsInAcademia eq true" },
+{ condition: "friendIsNotInAcademia eq true"},
+{ condition: "friendTension gte 4"},
+{ condition: "friendTensionRelieved eq true"},
+{ condition: "checkinWithDisagreer eq true"},
+{ condition: "inactivityIsBad eq true"},
+{ condition: "outro eq true"},
+*/
+
+	//Ian's Part
+
+	{
+		"id": "unconfidentEstablishDefenseTomorrow",
+		"content": "<p>\"{name|protagonist}, you look a little squimish,\" {name|academicFriend} notes. \"Worried about tomorrow?\"</p><p>\"What's going on tomorrow?\" {name|nonAcademicFriend}'s head pops up like a gofer's from its hole. \"Is it something fun?\"</p><p>\"Come on {name|nonAcademicFriend}, think about it for a second.\" {name|academicFriend} massages her temple.<p></p>\"Is it... your dissertation?\" Ding. \"Oh, yep. You're definetly presenting your thesis. Yeah, that's no fun.\"</p>",
+		"choices" : [
+			{"gotoId":"mightBeFun"},
+			{"gotoId":"notAboutFun"},
+			{"gotoId":"notFun"}
+		],
+		"conditions" : [
+			"confidence lt 5",
+			"defenseTomorrowStart neq true"
+		],
+		"effects" : [
+			"set establishDefenseTomorrow true",
+			"set defenseTomorrowStart true"
+		]
+	},
+	{
+		"id": "confidentEstablishDefenseTomorrow",
+		"content": "<p>\"So {name|protagonist}, do you feel ready for tomorrow?\" {name|academicFriend} asks.</p><p>\"What's going on tomorrow?\" {name|nonAcademicFriend}'s head pops up like a gofer's from its hole. \"Is it something fun?\"\n</p><p>Come on {name|nonAcademicFriend}, think about it for a second.\" {name|academicFriend} massages her temple.</p><p>\"Is it... your dissertation?\" Ding. \"Oh, yep. You're definetly presenting your thesis. Yeah, that's no fun.\"</p>",
+		"choices" : [
+			{"gotoId":"mightBeFun"},
+			{"gotoId":"notAboutFun"},
+			{"gotoId":"notFun"}
+		],
+		"conditions" : [
+			"confidence gte 5",
+			"defenseTomorrowStart neq true"
+		], 
+		"effects" : [
+			"set establishDefenseTomorrow true",
+			"set defenseTomorrowStart true"
+		]
+	},
+		{
+			"id": "mightBeFun",
+			"choiceLabel" : "<p>\"I dunno, it could be fun. In a scholarly sort of way.\"</p>",
+			"content": "<p>\"If you say so. That sounds like Stockholm Syndrome to me though.\" {name|nonAcademicFriend} rotates her hand around like she is swirling an invisble glass of boxed wine.</p><p>\"Well, that's out there now. But yes, {name|protagonist}, school is fun. It just doesn't sound that way when you say it out loud.\" {name|academicFriend} takes a big swig of water and almost chokes.</p>",
+			"effects" : [
+			//	"incr academicEnthusiasm 1"
+			]
+		},
+		{
+			"id": "notAboutFun",
+			"choiceLabel" : "<p>\"Well {name|nonAcademicFriend}, its not supposed to be fun. I'm trying to make an actual difference here.\"</p>",
+			"content": "\"<p>Hey, where did that come from. Its not like I'm a child or anything.\" The table rattles as {name|nonAcademicFriend} pushes herself back and raises her arm to defend against a verbal linebacker. \"I DO infact know we all gotta buckle down sometimes. I'm just trying not to be all serious at the dinner table.\" She slumps down and turns her attention towards the food, lazily analyzing it.</p>",
+			"choices" : [
+				{"gotoId" : "sorryShell"},
+				{"gotoId" : "Look. I care."}
+			],
+			"effects" : [
+				"incr friendTension 1"
+			]
+		},
+			{
+				"id": "sorryShell",
+				"choiceLabel" : "<p>\"I'm sorry. That was a bit aggressive of me.\"</p>",
+				"content": "<p>\"No. Yeah. I understand.\"</p>"
+			},
+			{
+				"id": "Look. I care.",
+				"choiceLabel" : "<p>\"Look. I didn't mean it like that. I just, like, really into the research I'm doing.\"</p>",
+				"content" : "<p>\"And that's good.\" It sounds as if {name|nonAcademicFriend}'s voice is about to crack. \"You should care. That's... important.\"</p>",
+				"effects" : [
+					"incr academicEnthusiasm 1"
+				]
+			},
+		{
+			"id": "notFun",
+			"choiceLabel" : "<p>\"Yeah, but you gotta do what you gotta do. I guess.\"</p>",
+			"content": "<p>\"But, like, you'll be great of course. Maybe it just isn't worth the effort, ya know?\" {name|nonAcademicFriend}'s eyes dart around the room, looking for someone that might back her.</p><p>\"Really {name|nonAcademicFriend}?\" Though she is relatively calm, it feels as if {name|academicFriend}'s eyes burrow into {name|nonAcademicFriend} like javelins. \"Hey, {name|protagonist}. I bet you will be pleasantly surprised.\" She places her hand on your arm and gives it a tiny little squeeze.",
+			"choices" : [
+				{"gotoId" : "otherUses"},
+				{"gotoId" : "aLongTime"}
+			],
+			"effects" : [
+				"decr confidence 1"
+			]
+		},
+			{
+				"id" : "otherUses",
+				"choiceLabel" : "<p>\"I guess I'm just wondering if there are better things I can do with my time.\"</p>",
+				"content" : "\"I have a friend that I think is organizing a beach clean up tomorrow if you'd be interested,\" {name|nonAcademicFriend} adds. Casually.</p><p>\"Woah, {name|nonAcademicFriend}, hold the phone.\" {name|academicFriend} is exasperrated. She is wrangling whales with a laso. \"She's going to her dissertation.\"</p>",
+				"effects" : [
+					"decr academicEnthusiasm 1"
+				]
+			},
+			{
+				"id" : "aLongTime",
+				"choiceLabel" : "<p>\"It's taken me so long to get here. It feels kinda crazy that I'm so close to my PhD. I'm a little all over the place, is all.\"</p>",
+				"content" : "<p>\"You and me both friend.\" {name|nonAcademicFriend} toastes with... a forkful of mashed potatoes.</p><p>\"It doesn't get much harder than grad school. But you have thrived every step of the way. Your committie is going to be blown away. Like a hurricane, only not because we're trying to stop those.\" {name|academicFriend} laughs, but it looks like she wished she hadn't. \"Anyways, you are great.\"</p>"
+			},
+	/*{
+		"id": "placeholder_establishDefenseTomorrow",
+		"content": "establishDefenseTomorrow eq true",
+		"effects" : [
+			"set establishDefenseTomorrow true"
+		]
+	},*/
+	{
+		"id": "placeholder_friendIsInAcademiaEnthusiastic",
+		"content": "<p>\"So {nickname|protagonist}, I got you something.\" {name|academicFriend} pulls out a coffee thermos from under the table. \"It says 'PHD'. I have one too. Whenever we are both on campus we can stop but that little cafe and drink some mocha on the patio. It'll be adorable\"</p><p>\"Will you also snicker about the peasant undergraduates as they go to their fifth class that day?\" Shelly stands in defense of the proletariat.</p>",
+		"choices" : [
+			{"gotoId" : "love"},
+			{"gotoId" : "tooMuch"}
+		],
+		"effects" : [
+			"set friendIsInAcademia true",
+			"set academiaFriend true"
+		],
+		"conditions" : [
+			"establishFriends eq true",
+			"academicEnthusiasm gt 3",
+			"academiaFriend neq true"
+		]
+	},
+
+		{
+			"id": "love",
+			"choiceLabel" : "<p>I. Love. It.</p>",
+			"content" : "<p>{name|academicFriend} claps her hands together and bounces, just a little, all the while ignoring {name|nonAcademicFriend} sticking her tongue out at her.</p>",
+			"effects" : [
+				"incr academicEnthusiasm 1"
+			]		
+		},
+
+		{
+			"id": "tooMuch",
+			"choiceLabel" : "<p>\"Thanks {nickname|academicFriend} but isn't this a little preemptive.\"</p>",
+			"content" : "<p>\"Nonsense. You have this in the bag\"</p><p>Do not succumb to the bourgeoisie {nickname|protagonist}}.\"</p><p>\"{name|nonAcademicFriend}, I'm still paying of students loans you know?\"</p><p>{name|nonAcademicFriend} keeps her eyes locked on {name|academicFriend} as she sips her drink.</p>"
+		},
+
+	{
+		"id": "placeholder_friendIsInAcademiaUnenthusiastic",
+		"content": "<p>\"Hey {nickname|protagonist}. I want to tell you something. When I was about to present my dissertation I felt awful.\" {name|academicFriend} sets her utensils down and places her hands on her lap. \"I couldn't sleep. I thought I was getting the flu. When I showed up at campus I was so nervous that I threw up in the bathroom just five minutes before my presentation. I looked like a zombie. Afterward, my advisor came up to speak with me. Told me it went perfectly. I didn't even put in half the work you did.\" She looks up to you. \"I know it kinda feels like the end of the world, but it is gonna be just fine.</p>",
+		"choices" : [
+			{"gotoId" : "nothing"},
+			{"gotoId" : "gross"},
+			{"gotoId" : "gotThis"}
+		],
+		"effects" : [
+			"set friendIsInAcademia true",
+			"set academiaFriend true"
+		],
+		"conditions" : [
+			"establishFriends eq true",
+			"academicEnthusiasm lte 3",
+			"academiaFriend neq true"
+		]
+	},
+		{
+			"id": "nothing",
+			"choiceLabel" : "<p>Say nothing.</p>",
+			"content" : "<p>\"Why don't I go grab dessert.\" {name|academicFriend} gets up and walks into the kitchen. {name|nonAcademicFriend} clasps your shoulder for just a second. {name|academicFriend} returns with a few bowls of ice cream. \"Sorry, it's a little melted.\"</p>",
+			"effects" : [
+				"decr confidence 1",
+				"decr academicEnthusiam 1"
+			]
+		},
+		{
+			"id": "gross",
+			"choiceLabel" : "<p>\"Jeez, {nickname|academicFriend}, that's pretty gross you threw up.\"</p>",
+			"content" : "<p>Shell laughs. Or at least should would have had she not been mid gulp of water and now spewing it over the table.</p><p>{name|academicFriend} cleans the splash back off her with a napkin.\"And that's the last time I tell you anything,\" {name|academicFriend} notes, smiling.</p>",
+			"effects" : [
+				"incr confidence 1"
+			]
+		},
+		{
+			"id": "gotThis",
+			"choiceLabel" : "<p>\"You're right {nickname|academicFriend}, I got this.\"</p>",
+			"content" : "<p>\"Atta girl.\" {name|academicFriend} gives you a light slug in the arm.</p><p>\"You are going to do great at whatever you do. Just remember you don't need to be a professor to make a difference'\" {name|nonAcademicFriend} says.</p>",
+			"effects" : [
+				"incr confidence 1",
+				"incr academicEnthusiasm 1"
+			]
+		}
+
+	//End of Ian's part
+]

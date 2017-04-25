@@ -1,0 +1,307 @@
+[
+/*
+{ condition: "establishFriends eq true" },
+{ condition: "establishSettingDinner eq true" },
+{ condition: "establishDefenseTomorrow eq true" },
+{ condition: "EmmaJobFutureBeat eq true" },
+{ condition: "EmmaClassTypeBeat eq true" },
+{ condition: "friendIsInAcademia eq true" },
+{ condition: "friendIsNotInAcademia eq true"},
+{ condition: "friendTension gte 4"},
+{ condition: "friendTensionRelieved eq true"},
+{ condition: "checkinWithDisagreer eq true"},
+{ condition: "inactivityIsBad eq true"},
+{ condition: "outro eq true"},
+*/
+//
+
+//Establish Dinner Scene - START
+//scene_1
+	{
+		"id": "DinnerScene:firstLooks",
+		"content": "Emma looked around the living room -- she wondered if it would be called a living room when the dining area and the kitchen all flowed into each other from one shared space. Emma’s mind was wondering; she didn’t really feel here.<br><br>Her nerves were distracting her and for a moment she felt as though she’d just walked into some kind of modern art gallery that her friend was hosting rather than Zanita’s new apartment. Emma took off her coat and threw it on the large blue armchair in the corner of the room, just past the front door.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_2
+	{
+		"id": "DinnerScene:chair",
+		"choiceLabel": "Only one moment passes before Emma jolts over to the armchair to pick back up her jacket.<br><br>\"Sorry!\" she said, a bit embarrassed. Both Zanita and Shelly looked at her a bit strangely -- questioning.<br><br>\"For what?\" Zanita says.",
+		"conditions": [
+		
+		],
+		"effects": [
+		
+		]
+	},
+//scene_3_preChoice_1
+	{
+		"id": "DinnerScene:sorry",
+		"choiceLabel": "\"I didn’t mean to just toss my jacket on your new chair…\" Emma said, shuffling her weight from one foot to the other.",
+		"choices" : [
+			//Going down Zanita Forgive will not increase the tention in the room
+			{"gotoId": "DinnerScene:choiceZanitaForgive"},
+			//Going down Shelly Sassy will increase the tention in the room
+			{"gotoId": "DinnerScene:choiceShellySassy"},
+		],
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_4_choice_1
+	{
+		"id": "DinnerScene:choiceZanitaForgive",
+		"choiceLabel": "Zanita: \"Oh, don’t even worry about that. This is my home new and I want you to feel at home when you’re here.\"",
+		"choices": [
+			{"gotoId": "DinnerScene:contDinner"}
+		],
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_5_choice_2
+	{
+		"id": "DinnerScene:choiceShellySassy",
+		"choiceLabel": "Shelly: \"Ha, that’s not a new chair. Me and Z went thrifting and found it. She had to flick the crumbs off it before they rang us up.\"<br><br>\"Z and I…\" Zanita corrected. Shelly looked annoyed.<br><br>\"Whatever, Mrs.University,\" Shelly said.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_6
+	{
+		"id": "DinnerScene:",
+		"content": "Emma takes a breath as Zanita pats her hands dry before taking the apron she was wearing off and making her way to Emma. She places a hand on Emma’s shoulder and gives her a little squeeze and says \"don’t freak out.\" Zanita spoke soft but firm, knowing exactly what Emma’s going through and that she’ll make it through just fine, too. \"After a little wine and a little food you’ll be feeling a little better.\"<br><br>\"Maybe a bit more than a little wine,\" Emma said and let out a little laugh.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_7
+	{
+		"id": "DinnerScene:",
+		"content": "A moment later there was a loud POP! from the kitchen that made Emma and Zanita both jump! They looked to see Shelly holding a bottle of champagne, giggling to herself. The cork had shot, bounced off the ceiling, and landed somewhere they didn’t quite see.<br><br>\"Hey!\" Zanita yelled, brow furrowing, making her way toward Shelly.<br><br>\"What’re ya standing around for! Let’s get the party going!\" Shelly said.<br><br>\"You’re getting champagne all over the floor… Also, I was saving that for the end -- as a toast for Emma.\" Zanita snatched the bottle from Shelly and grabbed the apron from the counter and began dabbing up the mess.<br><br>\"Come on, Z, live a little! It’s just a bottle. We have more! I brought some, too, you know.\" Shelly pointed to a bottle and small baggie of limes on the kitchen counter.<br><br>\"I told you, we’re not doing Tequila shots! That’s just asking for Em to be hungover and flub her dissertation tomorrow.\" Zanita scolded.<br><br>Shelly snatched the bottle back from Zanita. \"It’s just a speech,\" she said, and began pouring herself a glass.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_8_preChoice_2
+	{
+		"id": "DinnerScene:",
+		"content": "Emma interjected \"Let’s…\" She paused...",
+		"conditions": [
+			"establishSettingDinner eq true"
+		],
+		"effects": [
+		
+		],
+	},
+//scene_9_choice_2_1
+	{
+		"id": "DinnerScene:choiceParty",
+		"choiceLabel": "Emma: \"...Let's have the champagne now. Shelly’s right, we should relax a little!\"",
+		"content": "Emma threw her coat back on the big blue armchair and walked over to Shelly and grabbed a glass. \"Let’s toast now, and start the evening off right!\" Emma held up her glass and looked at Zanita.<br><br>\"Ugg.. fine. We can drink it now if we must.\" Zanita reluctantly grabbed a glass.",
+		"conditions": [
+
+		],
+		"effects" : [
+			"decr academicFriendRelationship 1",
+			"incr nonAcademicFriendRelationship 1"
+		]
+	},
+//scene_10_choice_2_2
+	{
+		"id": "DinnerScene:choiceRespectTheParty",
+		"choiceLabel": "Emma: \"...Let’s find the cork. Zanita had a plan for the evening. She did go out of her way to throw this party.\"",
+		"content": "Emma began looking for the cork somewhere on the ground in a random corner of the room, not knowing really where it might’ve gone off to.<br><br>\"Don’t do that, we should drink this now that it’s open anyway\" Zanita said, \"but if anyone should look for the cork it should be Shelly!\"<br><br>Zanita gave a belly laugh and poured herself a glass.<br><br>\"Very funny…\" Shelly said.<br><br>Emma made her way back to the three in the kitchen and grabbed a glass along with the other three.",
+		"conditions": [
+
+		],
+		"effects" : [
+			"incr academicFriendRelationship 1",
+			"decr nonAcademicFriendRelationship 1"
+		]
+	},
+//scene_11_end
+	{
+		"id": "DinnerScene:",
+		"content": "\"To Emma!\" Shelly said, and the three held their champagne high and took a drink. \"Now can we finally eat! I’m sharvin’!\" Shelly pulled out her chair and plopped down at the dinner table.<br><br>\"Sure, dinner’s just about ready anyway.\" Zanita said, taking her seat, too -- as far around the circle from Shelly as she could.",
+		"conditions": [
+
+		],
+		"effects": [
+			"set establishSettingDinner true"
+		]
+	},
+//Establish Dinner Scene - END
+
+//Outro Scene - START
+//This chunk is the same for any path
+//scene_1
+	{
+		"id": "Outro:start",
+		"content": "\"Listen, this was supposed to be a nice dinner to help me relax. I don’t want to sound ungrateful but this is doing nothing but stressing me out!\" {name|protagonist} had hardly touched her food. It was growing cold and coagulated on her plate.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+
+//Friend tension is high, confidence is low
+//scene_2
+	{
+		"id": "Outro:HighLow1",
+		"content": "{name|protagonist}’s head hung low as she made concentric circles with her fork in the juice on her plate.<br><br>{name|nonAcademicFriend} and {name|academicFriend} had been arguing with each other all night and {name|protagonist} felt a migraine coming on.<br><br>\"I know you’ll do something great, Em, but you’ve gotta be better than this if you’re going to make it through tomorrow,\" {name|academicFriend} said, as she poured herself another half glass of wine. \"This kind of negativity won’t go unnoticed by the dean.\"<br><br>\"Lay off her, .,\" {name|nonAcademicFriend} retorted, \"There’s more to a person than just what’s on a piece of paper at the end of the day.\"<br><br>\"You don’t know what it’s like on that day, {name|nonAcademicFriend}. This is a big moment for Em.\"<br><br>\"If this is a big moment for me, stop fighting and support me!\" {name|protagonist} yelled. The rattling of silverware against the plates around the dinner table make them both stop to look at the {name|protagonist}. She was on the verge of tears but she wouldn’t let them see her break down.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_3
+	{
+		"id": "Outro:HighLow2",
+		"content": "Both {name|nonAcademicFriend} and {name|academicFriend} look at each other.<br><br>\"We’re sorry,\" {name|nonAcademicFriend} said. She stood up and walked over to {name|protagonist}. \"You know we both just want what’s best for you, right?\"<br><br>\"{name|nonAcademicFriend}’s right\" {name|academicFriend} said, making her way to {name|protagonist}, also. \"I know that me and {name|nonAcademicFriend} take different approaches to how we think things should best be done, but you know what whatever you do we’ll be there for you, to support you.\"",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_4
+	{
+		"id": "Outro:HighLow3",
+		"content": "{name|protagonist} squeezed her eyes shut and pressed the palms of her hands hard into them. One moment later she straightened her back and took a deep breath.<br><br>\"It’ll be okay tomorrow,\" {name|protagonist} said.<br><br>\"Of course it will be,\" {name|academicFriend} said, rubbing {name|protagonist}’s shoulder with her hand.<br><br>{name|protagonist} took another deep breath in and another long breath out. \"I just have to make it through tomorrow. If I just make it through tomorrow I’ll be fine.\"",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_5
+	{
+		"id": "Outro:HighLow4",
+		"content": "\"Listen,\" {name|academicFriend} said, \"it’s getting late and I don’t want to kick you out but you should get some rest before tomorrow. You’ve got a big day, Em.\"<br><br>{name|protagonist} stood up, feeling a little light headed and a lot nervous.<br><br>\"I’ll be in the audience right there with you.\" {name|academicFriend} said.<br><br>{name|protagonist} packed up her things walked to her car.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_6
+	{
+		"id": "Outro:HighLow5",
+		"content": "\"{name|protagonist}!\" {name|nonAcademicFriend} yelled, standing in front of her own car about a half block down. \"You’re gonna do great tomorrow! Knock ‘em dead!\" With that, {name|nonAcademicFriend} got in her car and drove off.<br><br>{name|protagonist} stood for a long moment and thought to herself. She would have stayed a bit longer and thought some more but it was getting cold.<br><br>\"I’d better get to bed,\" {name|protagonist} said, getting into her car. \"I really hope everything goes well tomorrow.\"",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+
+//Friend tension is high, confidence is high
+//scene_7
+	{
+		"id": "Outro:HigHigh1",
+		"content": "{name|protagonist} stood up, pushed her plate aside, and leaned over the table, looking at the two who had been bickering all night long. \"This is my day tomorrow and I know you both have strong opinions on how I should go about things from here on out but in the end it’s my choice to make.\" {name|protagonist} was looking at both of them intently.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_8
+	{
+		"id": "Outro:HigHigh2",
+		"content": "{name|nonAcademicFriend} and {name|academicFriend} stopped talking and looked at {name|protagonist} who was still looking at them.<br><br>\"{name|protagonist}…\" {name|academicFriend} started to speak but {name|protagonist} cut her off.<br><br>\"No, I will go to my dissertation tomorrow and I’m going to do great and if you two want to be there to support me, that’s fine. But if you’re going to show up and act like how you have been acting toward each other tonight then don’t bother.\"",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_9
+	{
+		"id": "Outro:HigHigh3",
+		"content": "Both {name|nonAcademicFriend} and {name|academicFriend} look at each other.<br><br>\"We’re sorry,\" {name|nonAcademicFriend} said. She stood up and walked over to {name|protagonist}. \"You know we both just want what’s best for you, right?\"<br><br>\"{name|nonAcademicFriend}’s right\" {name|academicFriend} said, making her way to {name|protagonist}, also. \"I know that me and {name|nonAcademicFriend} take different approaches to how we think things should best be done, but you know what whatever you do we’ll be there for you, to support you.\"",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_10
+	{
+		"id": "Outro:HigHigh4",
+		"content": "\"Listen,\" {name|academicFriend} said, \"it’s getting late and I don’t want to kick you out but you should get some rest before tomorrow. You’ve got a big day, Em.\"<br><br>{name|protagonist} stood up, feeling a little light headed and a lot nervous.<br><br>\"I’ll be in the audience right there with you.\" {name|academicFriend} said.<br><br>{name|protagonist} packed up her things walked to her car.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_11
+	{
+		"id": "Outro:HigHigh5",
+		"content": "\"{name|protagonist}!\" {name|nonAcademicFriend} yelled, standing in front of her own car about a half block down. \"You’re gonna do great tomorrow! Knock ‘em dead!\" With that, {name|nonAcademicFriend} got in her car and drove off.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+//scene_12
+	{
+		"id": "Outro:HigHigh6",
+		"content": "{name|protagonist} stood for a long moment, still thinking about the night that just transpired.<br><br>I’m going to do great tomorrow, {name|protagonist} thought to herself.<br><br>\"No, I’m going to do amazing!\" She said out loud.<br><br>{name|protagonist} got into her car and began driving home. She was nervous but excited at the same time.",
+		"conditions": [
+
+		],
+		"effects": [
+		
+		]
+	},
+
+//Ending of the outro scene. This is the same for any path.
+//scene_13
+	{
+		"id": "Outro:LastScene",
+		"content": "She knew she probably wouldn’t get much sleep tonight.",
+		"conditions": [
+
+		],
+		"effects": [
+			"set outro true"
+		]
+	}
+//Outro Scene - END
+]

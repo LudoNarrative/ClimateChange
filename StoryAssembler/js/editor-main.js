@@ -27,6 +27,13 @@ requirejs.config({
 		"testData" : "../data/testData.json",
 		"generalistData" : "../data/generalist.json",
 		"benTestData" : "../data/benTestData.json",
+		"newExampleData" : "../data/newExampleData.json",
+		"undergradDinnerData_kevin" : "../data/undergradDinnerData-kevin.json",
+		"undergradDinnerData_talon" : "../data/undergradDinnerData-talon.json",
+		"undergradDinnerData_irapopor" : "../data/undergradDinnerData-irapopor.json",
+		"undergradDinnerData_sgadsby" : "../data/undergradDinnerData-sgadsby.json",
+		"undergradDinnerData_madreed" : "../data/undergradDinnerData-madreed.json",
+		"undergradDinnerData_sjsherma" : "../data/undergradDinnerData-sjsherma.json",
 
 		"Coordinator" : "../../Coordinator/Coordinator",
 		"Display" : "../../js/Display",
@@ -93,7 +100,7 @@ requirejs(
 	var iterStep = 0;
 	var idStepper = 0;
 	var deadendPaths = 1;
-	var uniqueDeadEnds = false;		//whether to make each dead end a unique node
+	var uniqueDeadEnds = true;		//whether to make each dead end a unique node
 
 	graphElements = [];				//global holder for graph elements so we can redraw graph if need be (options are changed)
 
@@ -188,15 +195,22 @@ requirejs(
 			State.change(command);
 		});
 
-		if (testStory) { levelData = story.dataFile; }		//if it's a testStory, no need to HanSON parse
-		else { levelData = HanSON.parse(story.dataFile); }
-		
-		var globalDataFile = require("text!globalData");
-		globalData = HanSON.parse(globalDataFile);
+		var levelDataArray = [];
 
-		ChunkLibrary.add(levelData);
-		console.log('levelData', levelData);
-		ChunkLibrary.add(globalData);
+		if (testStory) { levelData = story.dataFile; }		//if it's a testStory, no need to HanSON parse
+		else { 
+			for (var x=0; x < story.dataFiles.length; x++) { 
+				levelDataArray.push(HanSON.parse(require(story.dataFiles[x]))); 
+			}
+		}
+
+		if (testStory) { ChunkLibrary.add(levelData); }
+		else {
+			for (var x=0; x < levelDataArray.length; x++) { ChunkLibrary.add(levelDataArray[x]); }
+		}
+
+		ChunkLibrary.add(HanSON.parse(require("text!globalData")));
+		
 
 		var wishlist = Wishlist.create(story.wishlist, State);
 		//wishlist.logOn();
@@ -815,7 +829,7 @@ requirejs(
 				gravityRange: 6.8
 			}
 			*/
-			
+			/*
 			layout : {						//this is the best so far
 				name: 'breadthfirst',
 				directed: true,
@@ -823,7 +837,7 @@ requirejs(
 				roots: '#' + graphRootId,
 				avoidOverlap: true,
 			}
-			
+			*/
 			/*
 			layout : {					//settings here: https://github.com/cytoscape/cytoscape.js-cola
 				name: 'cola',
@@ -836,13 +850,13 @@ requirejs(
 				edgeSymDiffLength: 6
 			}
 			*/
-			/*
+			
 			layout : {				//settings here: https://github.com/cytoscape/cytoscape.js-dagre
 				name: 'dagre',
 				rankDir: 'TB',
 				rankSep: 75
 			}
-			*/
+			
 			/*
 			layout : {
 				name: 'concentric',
