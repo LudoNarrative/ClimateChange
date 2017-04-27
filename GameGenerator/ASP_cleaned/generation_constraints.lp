@@ -32,7 +32,7 @@
 :- precondition(overlaps(E1,E2,true),O1),
    result(O1,delete(entity(E))),
    precondition(overlaps(E1,E2,true),O2),
-   predondition(control_event(C),O2),
+   precondition(control_event(C),O2),
    O1 != O2.
 
 
@@ -290,14 +290,14 @@ movement(move(E,D)) :- action(move(E,D)).
 :- result(O,move(E,_)),
    result(O,delete(E)).
 
-:- result(tick,move_towards(E,E)).
+:- result(tick,move(E,direction(towards,E))).
 
 
 :- result(O,move(E,direction(T_A,E2))),
    2 {result(O2,move(E,direction(T_A,E2)))}.
    
    
-:- 2 {initialize(add(_,_L))},
+:- 2 {initialize(add(_,_,L))},
    initialize(add(_,_,L)).
 
 

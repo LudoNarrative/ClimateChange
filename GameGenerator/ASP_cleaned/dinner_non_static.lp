@@ -1,5 +1,5 @@
 #const min_entities = 1.
-#const max_entities = 2.
+#const max_entities = 3.
 #const min_resources = 1.
 #const max_resources = 2.
 #const min_outcomes = 2.
@@ -17,8 +17,6 @@
 :- not reading(maintenance,resource(r(1))).
 :- not action(mode_change(narrative_gating)).
 :- 2 {action(mode_change(N))}.
-
-:- not static(entity(e(2))).
 
 
 :- total_count(entity(e(2)),N),
