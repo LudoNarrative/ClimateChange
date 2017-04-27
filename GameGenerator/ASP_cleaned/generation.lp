@@ -176,6 +176,11 @@ indirectControls(click_and_drag;
 {controlScheme(ENTITY,SCHEME) : indirectControls(SCHEME)} 1 :- entity(ENTITY).
 
 
+:- 2 {controlScheme(ENTITY,SCHEME)},
+   entity(ENTITY).
+
+
+
 controlLogic(draggable(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
 outcome(outcome(drawn_to_cursor(ENTITY))) :- controlScheme(ENTITY,drawn_to_cursor).
 outcome(outcome(repeled_from_cursor(ENTITY))) :- controlScheme(ENTITY,repeled_from_cursor). 
@@ -333,3 +338,52 @@ precondition(tick,tick) :- outcome(tick).
 {result(tick,apply_restitution(Entity1,Entity2)) :
  entity(Entity1),entity(Entity2)}.
 
+
+behaviors(chase;
+	  flee;
+	  patrol;
+	  pingpong;
+	  wander).
+
+
+{behavior(ENTITY,BEHAVIOR) : behaviors(BEHAVIOR)} 2 :- entity(ENTITY).
+
+
+:- behavior(ENTITY,_), controlScheme(ENTITY,_).
+
+
+{chases(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,chase).
+
+:- chases(ENTITY,ENTITY).
+
+result(tick,move(ENTITY,direction(towards,OTHER))) :- chases(ENTITY,OTHER).
+
+
+{flees(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,flee).
+
+:- flees(ENTITY,ENTITY).
+
+result(tick,move(ENTITY,direction(away,OTHER))) :- flees(ENTITY,OTHER).
+
+timer(timer(patrol(ENTITY))) :- behavior(ENTITY,patrol).
+
+precondition(timer_elapsed(timer(patrol(ENTITY))),outcome(patrol(ENTITY))) :- behavior(ENTITY,patrol).
+1 {result(outcome(patrol(ENTITY)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
+   angle_direction(DIRECTION),
+   angle_speeds(AMOUNT)} 1 :- behavior(ENTITY,patrol).
+
+result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,patrol).
+
+timer(timer(pingpong(ENTITY))) :- behavior(ENTITY,pingpong).
+
+precondition(timer_elapsed(timer(pingpong(ENTITY))),outcome(pingpong(ENTITY))) :- behavior(ENTITY,pingpong).
+result(outcome(pingpong(ENTITY)), rotates(ENTITY, cw,scalar(180))) :- behavior(ENTITY,pingpong).
+
+result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,pingpong).
+
+timer(timer(wander(ENTITY))) :- behavior(ENTITY,wander).
+
+precondition(timer_elapsed(timer(wander(ENTITY))),outcome(wander(ENTITY))) :- behavior(ENTITY,wander).
+result(outcome(wander(ENTITY)), rotate_to(ENTITY,random_int(scalar(0),scalar(360)))) :- behavior(ENTITY,wander).
+
+result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,wander).
