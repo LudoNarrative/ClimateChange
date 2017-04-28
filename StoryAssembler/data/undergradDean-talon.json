@@ -1,0 +1,101 @@
+[
+	//undergradDeanScene-talon.json
+	{
+		"id": "deanOffice",
+		"content": ["Emma enters the dean's office. Dean is ask his desk, working. Emma enters."],
+		"choices": [
+			{"gotoId": "emmaQuestion"}
+		]
+	},
+	{
+		"id": "emmaQuestion",
+		"choiceLabel": "You wanted to see me, Dean Simon?",
+		"content": "Dean asks Emma if she knows why she is here. He asks if she understands. Emma responds:",
+		"choices": [
+			{"gotoId": "emmaRespondsYes"},
+			{"gotoId": "emmaRespondsNo"}
+		],
+	},
+	{
+		"id": "emmaRespondsYes",
+		"choiceLabel": "I think I do, yes.",
+		"content": "Emma explains that she thinks she understands what she is doing here.",
+		"effects": [
+			"set establishSetting true"
+			//Dean +1
+		],
+		"choices":[
+			{"gotoId": "deanExplainsCalm"}
+		],
+	},
+	{
+		"id": "emmaRespondsNo",
+		"choiceLabel": "I'm not sure that I do, no.",
+		"content": "Emma explains that she is confused and doesn't understand exactly why she is here.",
+		"effects": [
+			"set establishSetting true",
+			//Dean -1
+		],
+		"choices":[
+			{"gotoId": "deanExplainsAnnoyed"}
+		],
+	},
+	{
+		"id": "deanExplainsAnnoyed",
+		"choiceLabel": "Dean is frank with Emma.",
+		"content": "He tells her that her preformance is not everything it could be and asks again if she still doesn't understand the problem.",
+		"choices": [
+			{"gotoId": "emmaDefensive"},	//Table flip start. This might lead to local
+			{"gotoId": "emmaSubmissive"},	//she explains it's just a job... nothing more. This might lead to Research or LocalAction
+			{"gotoId": "emmaPassionate"},	//she explains that she is doing work to change the world, she needs to teach this way. This might lead to UN
+			{"gotoId": "emmaUnPassionate"}	//She explains that she just doesn't want to be a teacher anymore. This path might lead to local action or research
+		]
+	},
+	{
+		"id": "deanExplainsCalm",
+		"choiceLabel": "Dean is frank with Emma.",
+		"content": "He tells her that her preformance is not everything it could be and asks if there's something she might want to help her regarding her strugles.",
+		"choices": [
+			{"gotoId": "emmaDefensive"},	//Table flip start. This might lead to local
+			{"gotoId": "emmaSubmissive"},	//she explains it's just a job... nothing more. This might lead to Research or LocalAction
+			{"gotoId": "emmaPassionate"},	//she explains that she is doing work to change the world, she needs to teach this way. This might lead to UN
+			{"gotoId": "emmaUnPassionate"}	//She explains that she just doesn't want to be a teacher anymore. This path might lead to local action or research
+		]
+	},
+	{
+		"id": "emmaDefensive",
+		"choiceLabel": "Emma gets defensive and angry.",
+		"content": "Might blame the students, might freak out and blame the dean",
+		//this path will lead to Ian and the worse path
+		"choices": [
+			{"gotoId": "IanPath_1"},
+		]
+	},
+	{
+		"id": "emmaSubmissive",
+		"choiceLabel": "Emma explains is't just a job.",
+		"content": "She understands that she's not as passionate as she could be, but it's just a job. 9 to 5. clock in, clock out.",
+		//this path will lead to Ian and the worse path
+		"choices": [
+			{"gotoId": "IanPath_2"},
+		]
+	},
+	{
+		"id": "emmaPassionate",
+		"choiceLabel": "Emma becomes angry, but only because she is so passionate about the work she's doing",
+		"content": "She is hard with the students but that's only because they're the only one's that can have the potential to change the world.",
+		//This path will lead to Summer and the better path
+		"choices": [
+			{"gotoId": "SummerPath_1"},
+		]
+	},
+	{
+		"id": "emmaUnPassionate",
+		"choiceLabel": "Emma explains that maybe teaching is not right for her.",
+		"content": "She's worked so hard for this, but maybe it's just not right for her. She's douting herself and doubts her abilities as a teacher.",
+		//This section will lead to Summer and the better path
+		"choices": [
+			{"gotoId": "SummerPath_2"},
+		]
+	},
+]
