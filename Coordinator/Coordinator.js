@@ -1,4 +1,4 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin", 
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin",
 	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, globalData) {
 
 	/*
@@ -74,7 +74,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			UIvars: [
 				"introductions"
 			],
-			mode: { 
+			mode: {
 				type: "dialogue"
 			}
 		},
@@ -103,7 +103,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			UIvars: [
 				"articlesRead"
 			],
-			mode: { 
+			mode: {
 				type: "narration"				//can be "narration", "dialogue", or "monologue"
 			}
 		},
@@ -324,15 +324,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
 			//dataFiles: ["text!undergradDinnerData_irapopor"],
-			
+
 			dataFiles: [
-				"text!undergradDinnerData_kevin", 
-				"text!undergradDinnerData_talon", 
-				"text!undergradDinnerData_irapopor", 
-				"text!undergradDinnerData_sgadsby", 
+				"text!undergradDinnerData_kevin",
+				"text!undergradDinnerData_talon",
+				"text!undergradDinnerData_irapopor",
+				"text!undergradDinnerData_sgadsby",
 				"text!undergradDinnerData_madreed",
 				"text!undergradDinnerData_sjsherma"],
-				
+
 			startState: [
 				"set establishFriends false",
 				"set establishSettingDinner false",
@@ -361,7 +361,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"academicFriendRelationship",
 				"nonAcademicFriendRelationship"
 
-				
+
 			],
 			mode: {
 				type: "dialogue",
@@ -378,46 +378,60 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			id: "undergradLecture",
 			characters: {
 				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
-				"skepticStudent": {name: "Todd", nickname: "Todd", gender: "male"},
-				"shyStudent": {name: "Aidan", nickname: "Aidan", gender: "male"},
-				"idealisticStudent": {name: "Lupita", nickname: "Lupita", gender: "female"}
+				"skepticStudent": {name: "Franklin", nickname: "Franklin", gender: "male"},
+				"shyStudent": {name: "Aiden", nickname: "Aiden", gender: "non-binary"},
+				"enthusiasticStudent": {name: "Élika", nickname: "Élika", gender: "female"},
 			},
 			wishlist: [
 				{ condition: "establishScene eq true" },
 				{ condition: "establishDetails eq true" },
 				{ condition: "establishComposure eq true" },
 				{ condition: "establishStudents eq true" },
+				{ condition: "enthusiasticStudent eq true"},
+				{ condition: "skepticalStudent eq true"},
+				{ condition: "shyStudent eq true"},
 				{ condition: "talkToStudent gte 3" },
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
 
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
-			//dataFiles: ["text!undergradDinnerData_irapopor"],
-			
+			//dataFiles: ["text!undergradLecture-sjsherma"],
+
 			dataFiles: [
-				"text!undergradLecture_kply", 
+				"text!undergradLecture_kply",
 				"text!undergradLecture_sjsherma"
 			],
-				
+
 			startState: [
 				"set establishScene false",
 				"set establishDetails false",
 				"set establishComposure false",
 				"set establishStudents false",
+				"set enthusiasticStudent false",
+				"set skepticalStudent false",
+				"set shyStudent false",
 				"set talkToStudent 0",
 				"set followUp false",
 				"set lectureEnd false",
 
-				"set composure 10"
+				"set composure 10",
+				"set curiosity 3",
+				"set hope 5",
+				"set optimism 7",
+
+				"set questionsLeft 4",
 			],
 			UIvars: [
-
+				"composure",
+				"curiosity",
+				"hope",
+				"optimism",
 			],
 			mode: {
 				type: "monologue",
 				initiator: "protagonist",
-				responder: "protagonist"
+				responder: "protagonist",
 			}
 		},
 
@@ -440,13 +454,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
 			//dataFiles: ["text!undergradDinnerData_irapopor"],
-			
+
 			dataFiles: [
-				"text!undergradDean_talon", 
-				"text!undergradDean_irapopor", 
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
 				"text!undergradDean_sgadsby"
 			],
-				
+
 			startState: [
 				"set sceneSet false",
 				"set troubleWithLecture false",
@@ -514,7 +528,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				id : "undergradDean",
 				text : "<p>TODO: Scene description</p>"
 			}
-			
+
 
 		]
 		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
