@@ -104,6 +104,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (!speakerChar) return "(nickname)";
 			return speakerChar.nickname || speaker;
 		},
+		//{ifSpeaker|protagonist|text if true|text if false}
 		"ifSpeaker": function(params, text) {
 			if (params.length !== 3) {
 				console.error("Template 'ifSpeaker' doesn't have three params in chunk '" + text + "'.");

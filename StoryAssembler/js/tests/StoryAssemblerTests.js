@@ -2,8 +2,9 @@
 "use strict";
 define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDisplay", "Character", "jQueryUI"], function(StoryAssembler, ChunkLibrary, State, Wishlist, StoryDisplay, Character, $) {
 
-	var getStoryEl = function() {
-		return document.getElementById("storyArea").children[0];
+	var getStoryEl = function(childIndex) {
+		var theIndex = (typeof childIndex !== 'undefined') ?  childIndex : 0;
+		return document.getElementById("storyArea").children[theIndex];
 	}
 	var getChoiceEl = function() {
 		return document.getElementById("choiceArea");
@@ -58,6 +59,28 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 		test("Integration tests for StoryAssembler", function( assert ) {
 			
 			var wl;
+
+			//if a fragment is supposed to fire via continue, but depends on the effects running in a linked choice, and those effects make the state correct to continue, then that should work
+			resetTest();
+			State.set("mode", "narration");
+			State.set("x", false);
+			State.set("y", false);
+			State.set("blockingFlag", true);
+			wl = Wishlist.create([{condition: "x eq true"},{condition: "y eq true"}], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{ id: "init", content: "init stuff", choices: [{gotoId: "linkedChoice"}], effects: ["set x true"] },
+				{ id: "linkedChoice", content: "linked Choice", effects: ["set blockingFlag false"], choiceLabel: "..."},
+				{ id: "linkedContinue", content: "...", effects: ["set y true"], conditions: ["blockingFlag eq false", "x eq true"] }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+			assert.deepEqual(html(getStoryEl()), "init stuff", "Correct chunk is chosen to begin");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "linked Choice", "Correct choice is available");
+			assert.deepEqual(contentForChoice(1), "Continue", "Effect applied at correct interval");
+
+
+			//---------------------------------------------------------------
 			resetTest();
 
 			wl = Wishlist.create([{condition: "x eq true"}], State);
@@ -66,10 +89,10 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				{ id: "Chunk2", choiceLabel: "Chunk2 Label", content: "Chunk2 Content", effects: ["set x true"] }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk1 Content", "Basic: First chunk should be shown correctly");
-			assert.deepEqual(contentForChoice(1), "(speaker): Chunk2 Label", "Basic: First choice should be shown correctly");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Basic: First chunk should be shown correctly");
+			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Basic: First choice should be shown correctly");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk2 Content", "Basic: Second chunk should be shown correctly");
+			assert.deepEqual(html(getStoryEl()), "Chunk2 Content", "Basic: Second chunk should be shown correctly");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Should be no choices if we've run out of chunks.");
 
 			resetTest();
@@ -82,14 +105,14 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				{ id: "Chunk3", choiceLabel: "Chunk3 Label", content: "Chunk3 Content", effects: ["set x true"] }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk1 Content", "In multi-choice chain, first chunk should be shown correctly");
-			assert.deepEqual(contentForChoice(1), "(speaker): Chunk2 Label", "In multi-choice chain, first option correct.");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "In multi-choice chain, first chunk should be shown correctly (if this fails, check to make sure BestPath max depth is 3 or more)");
+			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "In multi-choice chain, first option correct.");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk2 Content", "In multi-choice chain, second chunk shows correctly.");
-			assert.deepEqual(contentForChoice(1), "(speaker): Chunk3 Label", "In multi-choice chain, second option correct.");
+			assert.deepEqual(html(getStoryEl()), "Chunk2 Content", "In multi-choice chain, second chunk shows correctly.");
+			assert.deepEqual(contentForChoice(1), "Chunk3 Label", "In multi-choice chain, second option correct.");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "In multi-choice chain, should be exactly 1 option.");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk3 Content", "In multi-choice chain, last chunk should show correctly.");
+			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "In multi-choice chain, last chunk should show correctly.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "In multi-choice chain, no options when finished.");
 
 			// Test chaining through condition-based request (condition is different than initial wishlist goals)
@@ -102,12 +125,12 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				{ id: "Chunk3x", conditions: ["beat eq 2"], content: "Chunk3 Content", effects: ["set beat 3", "set x true"] }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk1 Content", "Chain through condition request: first node HTML correct");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Chain through condition request: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Chain through condition request: initially only 1 choice");
-			assert.deepEqual(contentForChoice(1), "(speaker): Chunk2 Label", "Chain through condition request: single choice is to Chunk2");
+			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Chain through condition request: single choice is to Chunk2");
 			console.log("clicking choice in Chunk1");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk3 Content", "Chain through condition request: after click, should chain through.");
+			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Chain through condition request: after click, should chain through.");
 			assert.deepEqual(contentForChoice(1), "Continue", "Chain through condition request: no options when finished.");
 
 			// Test "persistent" wishlist parameter and "repeatable" chunk parameter.
@@ -117,11 +140,11 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				{ id: "Chunk1", content: "Chunk1 Content", effects: ["set x true"], repeatable: true }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk1 Content", "Persistent chunks work first time (1/3)");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work first time (1/3)");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Persistent chunks work first time (2/3)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work first time (3/3)");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk1 Content", "Persistent chunks work second time (1/2)");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work second time (1/2)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work second time (2/2)");
 
 			resetTest();
@@ -130,7 +153,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				{ id: "Chunk1", content: "Chunk1 Content", effects: ["set x true"], repeatable: false }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk1 Content", "Non-repeatable chunks work first time (1/2)");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Non-repeatable chunks work first time (1/2)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Non-repeatable chunks work first time (2/2)");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "[End of scene.]", "Non-repeatable chunks: if a used non-repeatable chunk is the only thing satisfying a wishlist item, fail to find a path");
@@ -159,36 +182,35 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", effects: ["set beat 3"] }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk1 Content", "Move to different want after thread ends: first node HTML correct");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Move to different want after thread ends: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Move to different want after thread ends: initially only 1 choice");
-			assert.deepEqual(contentForChoice(1), "(speaker): Chunk2 Label", "Move to different want after thread ends: single choice is to Chunk2");
+			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Move to different want after thread ends: single choice is to Chunk2");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk2 content", "Move to different want after thread ends: after click, should chain through.");
+			assert.deepEqual(html(getStoryEl()), "Chunk2 content", "Move to different want after thread ends: after click, should chain through.");
 			assert.deepEqual(contentForChoice(1), "Continue", "Move to different want after thread ends: single choice is to Chunk2");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk3 Content", "Move to different want after thread ends: second node HTML correct");
+			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Move to different want after thread ends: second node HTML correct");
 
 			//unit test for pulling in chunk with choices into chunk making request that has no content
 			resetTest();
 			State.set("beat", 1);
-			wl = Wishlist.create([{condition: "beat eq 2"}, {condition: "beat eq 3"}], State);
+			wl = Wishlist.create([{condition: "beat eq 2"}, {condition: "beat eq 3"}, {condition: "beat eq 4"}], State);
 			ChunkLibrary.add([
 				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}], effects: ["set beat 2"] },
 				{ id: "Chunk2", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
 				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", choices: [{chunkId: "Chunk4"}], effects: ["set beat 3", "set x true"] },
-				{ id: "Chunk4", choiceLabel: "Chunk4 Label", content: "Chunk4 Content" },
+				{ id: "Chunk4", choiceLabel: "Chunk4 Label", content: "Chunk4 Content", effects: ["set beat 4"] },
 			]);
-			console.log("aw yeah problem child");
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk1 Content", "Choices also chain from requests: first node HTML correct");
+			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Choices also chain from requests: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Choices also chain from requests: initially only 1 choice");
-			assert.deepEqual(contentForChoice(1), "(speaker): Chunk2 Label", "Choices also chain from requests: single choice is to Chunk2");
+			assert.deepEqual(contentForChoice(1), "Chunk2 Label", "Choices also chain from requests: single choice is to Chunk2");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk3 Content", "Choices also chain from requests: after click, should chain through.");
-			assert.deepEqual(contentForChoice(1), "(speaker): Chunk4 Label", "Choices also chain from requests: single choice is to Chunk4");
+			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Choices also chain from requests: after click, should chain through.");
+			assert.deepEqual(contentForChoice(1), "Chunk4 Label", "Choices also chain from requests: single choice is to Chunk4");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "Choices also chain from requests: second screen only 1 choice");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Chunk4 Content", "Choices also chain from requests: after click, should chain through again.");
+			assert.deepEqual(html(getStoryEl()), "Chunk4 Content", "Choices also chain from requests: after click, should chain through again.");
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Choices also chain from requests: no options when finished.");
 			console.log(wl.wantsAsArray());
 
@@ -221,9 +243,9 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				}
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Text1 Content", "No extra options: first node HTML correct");
+			assert.deepEqual(html(getStoryEl()), "Text1 Content", "No extra options: first node HTML correct");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "No extra options: no initial options");
-			assert.deepEqual(contentForChoice(1), "(speaker): normalChoice Label", "No extra options: normalChoice displays");
+			assert.deepEqual(contentForChoice(1), "normalChoice Label", "No extra options: normalChoice displays");
 
 			// Test incremental progress towards wishlist items.
 			resetTest();
@@ -238,10 +260,10 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				}
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): StressChunk Content", "Testing incremental progress (1)");
+			assert.deepEqual(html(getStoryEl()), "StressChunk Content", "Testing incremental progress (1)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Testing incremental progress (2)");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): StressChunk Content", "Testing incremental progress (3)");
+			assert.deepEqual(html(getStoryEl()), "StressChunk Content", "Testing incremental progress (3)");
 			clickChoice(1);
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Testing incremental progress (4)");
 
@@ -264,10 +286,10 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				}
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Text1 Content", "Testing goto-style links (1)");
-			assert.deepEqual(contentForChoice(1), "(speaker): linkChoice link", "Testing goto-style links (2)");
+			assert.deepEqual(html(getStoryEl()), "Text1 Content", "Testing goto-style links (1)");
+			assert.deepEqual(contentForChoice(1), "linkChoice link", "Testing goto-style links (2)");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): linkTest2 Content", "Testing goto-style links (3)");
+			assert.deepEqual(html(getStoryEl()), "linkTest2 Content", "Testing goto-style links (3)");
 			
 			// Test compound nodes where second content node fulfills wishlist item
 			resetTest();
@@ -293,10 +315,10 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				}
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): chunk1 is me!", "Testing compound nodes (1)");
-			assert.deepEqual(contentForChoice(1), "(speaker): hey choicelabel", "Testing compound nodes (2)");
+			assert.deepEqual(html(getStoryEl()), "chunk1 is me!", "Testing compound nodes (1)");
+			assert.deepEqual(contentForChoice(1), "hey choicelabel", "Testing compound nodes (2)");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): chunk3 is me!", "Testing compound nodes (3)");
+			assert.deepEqual(html(getStoryEl()), "chunk3 is me!", "Testing compound nodes (3)");
 
 			// Test compound nodes with gotoIds
 			resetTest();
@@ -334,11 +356,11 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				},
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Sorry everything's so messy!", "Test compound nodes with gotoIds w/ no Want motivation (1)");
-			assert.deepEqual(contentForChoice(1), "(speaker): What's with all the boxes everywhere?", "Test compound nodes with gotoIds w/ no Want motivation (2)");
+			assert.deepEqual(html(getStoryEl()), "Sorry everything's so messy!", "Test compound nodes with gotoIds w/ no Want motivation (1)");
+			assert.deepEqual(contentForChoice(1), "What's with all the boxes everywhere?", "Test compound nodes with gotoIds w/ no Want motivation (2)");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): I'm the interface!", "Test compound nodes with gotoIds w/ no Want motivation (3)");
-			assert.deepEqual(contentForChoice(1), "(speaker): I'm the dummy choice.", "Test compound nodes with gotoIds w/ no Want motivation (4)");
+			assert.deepEqual(html(getStoryEl()), "I'm the interface!", "Test compound nodes with gotoIds w/ no Want motivation (3)");
+			assert.deepEqual(contentForChoice(1), "I'm the dummy choice.", "Test compound nodes with gotoIds w/ no Want motivation (4)");
 
 			//chunks that are used in dynamic / compound chunks should also be removed from the content library if applicable
 			resetTest();
@@ -379,6 +401,60 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(ChunkLibrary.get('interface').available, true, "for first node, interface should still be available from ChunkLibrary");
 			clickChoice(1);
 			assert.deepEqual(ChunkLibrary.get('interface'), false, "after clicking, interface should not be available");
+
+			//StoryAssembler correctly handles looping requests and doesn't display multiple chunks at once
+			resetTest();
+			State.set("droppedKnowledge", 0 );
+			wl = Wishlist.create([{ condition: "setSetting eq true", order: "first" }, { condition: "droppedKnowledge gte 2", persistent: true }, { condition: "establishSetting eq true"}, { condition: "respondToChallenge eq true"} ], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{
+					"id": "start",
+					"content": "This is just a start node.",
+					"choices" : [
+						{"gotoId": "choice1"},
+					],
+					"conditions": [],
+					"effects": ["set setSetting true"]
+				},
+				{
+					"id": "choice1",
+					"speaker" : "ally",
+					"choiceLabel" : "We're at the dinner scene.",
+					"content": "Oh, ok. Right.",
+					"effects" : ["set setting dinner"]
+				},
+				{
+					"id": "slide1",
+					"speaker" : "protagonist",
+					"request" : {"condition": "droppedKnowledge incr 1"},
+					//"choices" : [
+					//	{"gotoId": "slide2", "speaker" : "protagonist"}
+					//],
+					//"conditions" : ["setting eq lecture"],
+					"effects" : ["set establishSetting true", "set slide1 true"]
+				},
+				{
+					"id": "clathratesDanger",
+					//"speaker" : "global",
+					"content": "Have you heard of clathrates?",
+					"conditions": [],
+					"effects": ["incr droppedKnowledge 1"]
+				},
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+			assert.deepEqual(html(getStoryEl()), "This is just a start node.", "Correct chunk is chosen to begin");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "Oh, ok. Right.", "Simple goto works correctly.");
+			assert.deepEqual(contentForChoice(1), "Continue","Proper continue");
+			clickChoice(1);
+			assert.deepEqual(getStoryEl(1), undefined, "Displays chunk just once, not multiple times");
+			assert.deepEqual(countChildren(getChoiceEl()), 1, "There should be only one child");
+
+			//-----------------------------------------------------------
+
+			
+
 /*
 			//dynamic chunks brought in as choices should be valid if the root chunk making the request has an effect that would make their state pre-condition true
 			resetTest();
@@ -407,11 +483,11 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 				}
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "(speaker): You would not believe how much of this stuff I ate in Spain.", "dynamic choiceLabels chain correctly (1)");
-			assert.deepEqual(contentForChoice(1), "(speaker): Still jealous you got to spend six months there.", "Dynamic choice label should be brought in without wishlist item");
+			assert.deepEqual(html(getStoryEl()), "You would not believe how much of this stuff I ate in Spain.", "dynamic choiceLabels chain correctly (1)");
+			assert.deepEqual(contentForChoice(1), "Still jealous you got to spend six months there.", "Dynamic choice label should be brought in without wishlist item");
 			clickChoice(1);
-			assert.deepEqual(html(getStoryEl()), "(speaker): Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision.", "Content should display correctly");
-			*/
+			assert.deepEqual(html(getStoryEl()), "Oh, come on. Don't beat yourself up. I'm pretty sure you made the right decision.", "Content should display correctly");
+*/
 
 		});
 	}
