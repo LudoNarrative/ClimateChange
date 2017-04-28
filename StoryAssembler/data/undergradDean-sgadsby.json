@@ -1,0 +1,215 @@
+[
+    /*
+    { condition: "sceneSet eq true"},
+    { condition: "troubleWithLecture eq true"},
+    { condition: "reasonForTrouble eq true"},
+    { condition: "pathChoiceMade eq true"},
+    { condition: "deanReaction eq true"},
+    */
+    {
+        "id": "setScene", 
+        "content" : "setScene",
+        "effects" : ["set sceneSet true"]
+    },
+    {
+        "id": "whatWentWrong", 
+        "content" : "whatWentWrong",
+        "conditions" : ["sceneSet eq true"],
+        "effects" : ["set troubleWithLecture true"]
+    },
+   {
+        // this is all possible reasons, will be multiple ids (high enthusiasm). take 3-4 "clicks" depending on choice currently. will probably expand on "dean tells the story" so it'll probably go up to 4 or 5-5 or 6 clicks. possibly more. depending on how long content is
+        "id": "reasonsItWentWrong1",
+	//	"choiceLabel": "you explain your troubles",
+        "content" : "Emma explains her nerves and not being able to shake off first lecture for a bit. Dean is understanding.",
+		"choices" : 
+			{"gotoId": "DeanTellsStory"},
+		],
+		"conditions" : ["sceneSet eq true"], //add high academic enthusiasm requirement.
+        "effects" : [ "set reasonForTrouble true"],//,"incr deanFriendliness 1"]
+    },
+	{
+        
+		"id": "DeanTellsStory",
+		"choiceLabel": "you listen to the Dean tell a story.",
+        "content" : "Dean tells story about flubbing his first set of lecture. he reassures Emma and asks what she wants to do.",
+		"choices" : [
+			{"gotoId": "continueTeaching"},
+			{"gotoId": "research"},
+		],
+      //  "effects" : [ "incr deanFriendliness 1"]
+    },
+	
+    {
+        // this is all possible reasons, will be multiple ids (passive  "whatever. it's a job") //takes 4-6 "clicks" depending on choices currently. will probably expand on "dean gives passionate speech" so it'll probably go up to 5 or 6-7 or 8 "clicks"
+        "id": "reasonsItWentWrong2",
+		//"choiceLabel": "you say you are just doing your job", //uncomment when merging?
+        "content" : "Dean is not happy about this. explains it's more then just a job.",
+		"choices" : [
+			{"gotoId": "linkToSpeech"},
+			{"gotoId": "ContinuePassiveness"}
+		],
+		"conditions" : ["sceneSet eq true"], //add low academic enthusiasm requirement.
+        "effects" : [ "set reasonForTrouble true"],//,"decr deanFriendliness 1"]
+    },
+	 {
+        "id": "ContinuePassiveness",
+		"choiceLabel": "You continue to be passive",
+        "content" : "Dean gets angrier. Asks if you really mean that.",
+		"choices" : [
+			{"gotoId": "yes"},
+			{"gotoId": "no"}
+		],
+	//	"effects" : ["decr deanFriendliness 1","incr tension 1"],
+    },
+	{
+        "id": "yes",
+		"choiceLabel": "you say yes",
+		"request": {"gotoId": "passionateDeanSpeech"},
+	//	"effects" : ["decr deanFriendliness 1","set stillPassive true","incr tension 1"],
+    },
+	{
+        "id": "no",
+		"choiceLabel": "You say no",
+		"request": {"gotoId": "passionateDeanSpeech"},
+	//	"effects" : ["decr tension 1","incr deanFriendliness 1"],
+    },
+	{
+        "id": "linkToSpeech",
+		"choiceLabel": "you listen to speech",
+		"request": {"gotoId": "passionateDeanSpeech"}
+    },
+	 {
+        "id": "passionateDeanSpeech",
+        "content" : "Dean gives passionate speech to emma. niceness of speech is dependent on if emma's passiveness.",
+		"choices" : [
+			{"gotoId": "reflectOnSpeech"},
+		],
+    },
+	 {
+        "id": "reflectOnSpeech",
+		"choiceLabel": "You reflect briefly on speech given",
+        "content" : "Emma reflects on speech. Realizes that maybe she really could do more, that it's def more then a job. you think about what to do now.",
+		"choices" : [
+			{"gotoId": "askImprovements"},
+			{"gotoId": "decidePath1"}, //possibly change this so i can reuse techer/researcher fragments
+			{"gotoId": "decidePath2"}
+		],
+    },
+	{
+        "id": "askImprovements",
+		"choiceLabel": "You ask for suggestions before deciding",
+        "content" : "Emma asks for ways to improve. Dean gives some suggestions. you nod in agreement. You think about what to do now.",
+		"choices" : [
+			{"gotoId": "decidePath1"}, 
+			{"gotoId": "decidePath2"}
+		],
+		// "effects" : [ "incr deanFriendliness 1"]
+    },
+	{
+        "id": "decidePath1",
+		"choiceLabel": "decide to be teacher",
+        "content" : "You decide to teach more",
+		"choices" : [
+			{"gotoId": "linkThankDeanPR"}
+		],
+		"effects" : ["set pathChoiceMade true"],//,"incr deanFriendliness 1","decr tension 1"],
+    },
+	{
+        "id": "decidePath2",
+		"choiceLabel": "ask about other academic positions",
+        "content" : "Dean offers research lecturer position. You like this option. You take it",
+		"choices" : [
+			{"gotoId": "linkThankDeanPR"}
+		],
+		"effects" : ["set pathChoiceMade true"],//"incr deanFriendliness 1","decr tension 1"],
+    },
+	
+    {
+        // this is all possible reasons, will be multiple ids (angry af. not writing)
+       "id": "reasonsItWentWrong3",
+        "content" : "reasonsItWentWrong3",
+        "effects" : [ "set reasonForTrouble true"]
+     },
+    {
+        // leaned academic (full on professor)
+        "id": "continueTeaching",
+		"choiceLabel": "You laugh and decide to stick to lecturing",
+        "content" : "Emma feels inspired. She's going full on professor. Dean is happy",
+		"choices" : [
+			{"gotoId": "deanOffersSupport"},
+		],
+        "conditions" : ["reasonForTrouble eq true"],
+        "effects" : [ "set pathChoiceMade true"],//,"incr deanFriendliness 1"]
+    },
+    {
+        // middle of road (researcher position)
+        "id": "research",
+		"choiceLabel": "You say you're hesistant to lecture again",
+        "content" : "Emma doesn't want to give up on academics just yet but doesn't know if she wants to lecture. Dean is nice and supportive.",
+		"choices" : [
+			{"gotoId": "getOffersOfSupport"},
+		],
+		 "conditions" : ["reasonForTrouble eq true"],
+        "effects" : [ "set pathChoiceMade true"] //job: lecturer to more researchy path. i believe it leads to senior faculty scene.
+    },
+	{
+        "id": "getOffersOfSupport",
+		"choiceLabel": "Listen to support from Dean",
+        "content" : "Dean offers suggestions to make things easier. possibly smaller class size or maybe doing research projects with a small group of students.",
+		"choices" : [
+			{"gotoId": "linkThankDean"}, 
+		],
+    },
+	
+    {
+        // leaned non-academic (local action, not writing)
+        "id": "decidePath3",
+        "content" : "decidePath3",
+		 "conditions" : ["reasonForTrouble eq true"],
+		"effects" : [ "set pathChoiceMade true"]
+    },
+    {
+//offers transistion to local action group
+        "id": "deanOffersTransition",
+        "content" : "deanOffersTransition",
+		 "conditions" : ["reasonForTrouble eq true"],
+        "effects" : ["set deanReaction true"]
+    },
+    {
+        "id": "deanOffersSupport",
+		"choiceLabel": "Listen to Dean's support",
+        "content" : "Dean thanks Emma and wishes her good luck. he tells her to relax and work hard. Emma nods.",
+		 "conditions" : ["reasonForTrouble eq true"],
+        "effects" : ["set deanReaction true"],//,"incr deanFriendliness 1"] //job: lecturer to UN path
+    },
+	{
+        "id": "linkThankDean",
+		"choiceLabel": "you thank the dean for all his help",
+		"request": {"gotoId": "thankDean"}
+    },
+	{
+        "id": "linkThankDeanPR", //link to get there through passive route.
+		"choiceLabel": "you thank dean for inspiring you again.",
+		"request": {"gotoId": "thankDean"}
+    },
+	 {
+        "id": "thankDean",
+        "content" : "Emma thanks dean for all the help he's given. Dean smiles and wishes her luck. if relationship with dean is not the greatest, little less friendly but still wishes her luck.", //use hedges to seperate two. link inspiriation for passive route and help for high academic enthusiasm route
+		"conditions" : ["reasonForTrouble eq true"],
+        "effects" : ["set deanReaction true"],//,"incr deanFriendliness 1"] 
+    },
+    {
+        "id": "loseComposure", 
+        "content" : "loseComposure"
+    },
+    {
+        "id": "chanceToRecover", 
+        "content" : "chanceToRecover"
+    },
+    {
+        "id": "forcedOutOfCareerPath", 
+        "content" : "forcedOutOfCareerPath",
+        "effects" : ["set deanReaction true"]
+    }
+]

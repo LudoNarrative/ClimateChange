@@ -56,7 +56,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			var chunk = chunkLibrary.get(optChunkId);	//get data on our chunk to do the check below
 
 			if (chunk.content) {	//if there was no chunk content, it already grounded out recursively and displayed with displayChunkText(), so we shouldn't redo that here
-
+				handleEffects(chunk);			//apply this chunk's effects before running bestPath
 				bestPath = getBestPath(chunkLibrary, optChunkId);		//look for path from here
 
 				StoryDisplay.diagnose({

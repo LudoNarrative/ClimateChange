@@ -104,6 +104,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (!speakerChar) return "(nickname)";
 			return speakerChar.nickname || speaker;
 		},
+		//{ifSpeaker|protagonist|text if true|text if false}
 		"ifSpeaker": function(params, text) {
 			if (params.length !== 3) {
 				console.error("Template 'ifSpeaker' doesn't have three params in chunk '" + text + "'.");
@@ -122,11 +123,56 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (cMode == params[0]) { return params[1] }
 			else { return params[2] }
 		},
-		"showCharTrait": function(params, text) {
-			if (params.length !== 0) {
-				console.error("Template command 'showCharTrait' must have params, in text '" + text + "'.");
-				return "(showSpeakerTrait)";
+		
+		//{charTrait|protagonist|favFood|fallback text}
+		"charTrait": function(params, text) {
+			if (params.length !== 3) {
+				console.error("Template command 'charTrait' must have 3 params, in text '" + text + "'.");
+				return "(charTrait)";
 			}
+			var theChar = Character.get(params[0]);
+			if (!theChar) {
+				console.error("Tried to run 'charTrait' template, but no char for '" + params[0] + "'");
+				return "(charTrait)";
+			}
+
+			if (typeof theChar[params[1]] == "undefined") {
+				console.error("Tried to run 'charTrait' template, but '" + params[0] + "' doesn't have the trait '" + params[1] + "'.");
+				return params[2];
+			}
+
+			return theChar[params[1]];
+		},
+
+		//{ifCharTraitIs|protagonist|trait statement like charisma eq 5|text if true|text if false}
+		"ifCharTraitIs": function(params, text) {
+			if (params.length !== 4) {
+				console.error("Template command 'ifCharTraitIs' must have 4 params, in text '" + text + "'.");
+				return "(ifCharTraitIs)";
+			}
+			var theChar = Character.get(params[0]);
+			if (!theChar) {
+				console.error("Tried to run 'ifCharTraitIs' template, but no char for '" + params[0] + "'");
+				return "(ifCharTraitIs)";
+			}
+			
+			var parts = Condition.parts(params[1]);
+			var bbParam = params[0] + "_" + parts.param;
+			var check = bbParam + " " + parts.op + " " + parts.value;
+
+			if (typeof theChar[parts.param] == "undefined") {
+				console.error("Tried to run 'ifCharTraitIs' template, but '" + params[0] + "' doesn't have the trait '" + parts.param + "'.");
+				return params[3];
+			}
+
+			State.set(bbParam, theChar[parts.param]);		//set temp blackboard item
+			if (State.isTrue(check)) {
+				State.remove(bbParam);			//remove temp blackboard item
+				return params[2];
+			}
+			
+			State.remove(bbParam);			//remove temp blackboard item
+			return params[3];
 		}
 		// Template stub demonstrating how you might show a random character trait. Look up the current speaker, and print something based on the first found property we have code for.
 		//para

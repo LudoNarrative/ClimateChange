@@ -1,4 +1,5 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin", "text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, globalData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin",
+	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, globalData) {
 
 	/*
 		Initializing function
@@ -6,7 +7,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 
 		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner"];	//order of scenes
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean"];	//order of scenes
 		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -73,7 +74,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			UIvars: [
 				"introductions"
 			],
-			mode: { 
+			mode: {
 				type: "dialogue"
 			}
 		},
@@ -102,7 +103,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			UIvars: [
 				"articlesRead"
 			],
-			mode: { 
+			mode: {
 				type: "narration"				//can be "narration", "dialogue", or "monologue"
 			}
 		},
@@ -323,15 +324,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
 			//dataFiles: ["text!undergradDinnerData_irapopor"],
-			
+
 			dataFiles: [
-				"text!undergradDinnerData_kevin", 
-				"text!undergradDinnerData_talon", 
-				"text!undergradDinnerData_irapopor", 
-				"text!undergradDinnerData_sgadsby", 
+				"text!undergradDinnerData_kevin",
+				"text!undergradDinnerData_talon",
+				"text!undergradDinnerData_irapopor",
+				"text!undergradDinnerData_sgadsby",
 				"text!undergradDinnerData_madreed",
 				"text!undergradDinnerData_sjsherma"],
-				
+
 			startState: [
 				"set establishFriends false",
 				"set establishSettingDinner false",
@@ -360,11 +361,121 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"academicFriendRelationship",
 				"nonAcademicFriendRelationship"
 
-				
+
 			],
 			mode: {
 				type: "dialogue",
 				initiator: "ally",
+				responder: "protagonist"
+			}
+		},
+
+		//undergrad lecture scene
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "undergradLecture",
+			characters: {
+				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
+				"skepticStudent": {name: "Franklin", nickname: "Franklin", gender: "male"},
+				"shyStudent": {name: "Aiden", nickname: "Aiden", gender: "non-binary"},
+				"enthusiasticStudent": {name: "Élika", nickname: "Élika", gender: "female"},
+			},
+			wishlist: [
+				{ condition: "establishScene eq true" },
+				{ condition: "establishDetails eq true" },
+				{ condition: "establishComposure eq true" },
+				{ condition: "establishStudents eq true" },
+				{ condition: "enthusiasticStudent eq true"},
+				{ condition: "skepticalStudent eq true"},
+				{ condition: "shyStudent eq true"},
+				{ condition: "talkToStudent gte 3" },
+				{ condition: "followUp eq true" },
+				{ condition: "lectureEnd eq true" },
+
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			//dataFiles: ["text!undergradLecture-sjsherma"],
+
+			dataFiles: [
+				"text!undergradLecture_kply",
+				"text!undergradLecture_sjsherma"
+			],
+
+			startState: [
+				"set establishScene false",
+				"set establishDetails false",
+				"set establishComposure false",
+				"set establishStudents false",
+				"set enthusiasticStudent false",
+				"set skepticalStudent false",
+				"set shyStudent false",
+				"set talkToStudent 0",
+				"set followUp false",
+				"set lectureEnd false",
+
+				"set composure 10",
+				"set curiosity 3",
+				"set hope 5",
+				"set optimism 7",
+
+				"set questionsLeft 4",
+			],
+			UIvars: [
+				"composure",
+				"curiosity",
+				"hope",
+				"optimism",
+			],
+			mode: {
+				type: "monologue",
+				initiator: "protagonist",
+				responder: "protagonist",
+			}
+		},
+
+		//undergrad dean scene
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "undergradDean",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"authorityFigure": {name: "Dean Smith", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "sceneSet eq true"},
+				{ condition: "troubleWithLecture eq true"},
+				{ condition: "reasonForTrouble eq true"},
+				{ condition: "pathChoiceMade eq true"},
+				{ condition: "deanReaction eq true"},
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			//dataFiles: ["text!undergradDinnerData_irapopor"],
+
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+
+			startState: [
+				"set sceneSet false",
+				"set troubleWithLecture false",
+				"set reasonForTrouble false",
+				"set pathChoiceMade false",
+				"set deanReaction false",
+
+				"set confidence 5"
+			],
+			UIvars: [
+
+			],
+			mode: {
+				type: "dialogue",
+				initiator: "authorityFigure",
 				responder: "protagonist"
 			}
 		}
@@ -409,7 +520,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				id : "undergradDinner",
 				text : "<p>You are Emma Richards, a PhD student who studies the ocean.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
 			},
-			
+			{
+				id : "undergradLecture",
+				text : "<p>You were able to secure a job as an adjunct professor in Environmental Sciences.</p><p>Dr. Tennerson, a senior faculty member, as been sent to evaluate how the class is going.</p><p>Choose what Emma says, but make sure to keep your cool!</p>"
+			},
+			{
+				id : "undergradDean",
+				text : "<p>TODO: Scene description</p>"
+			}
+
 
 		]
 		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
@@ -450,6 +569,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id : "undergradDinner",
 				src : "travel.png"
+			},
+			{
+				id : "undergradLecture",
+				src : "lecture.png"
+			},
+			{
+				id : "undergradDean",
+				src : "lecture.png"
 			},
 
 		]
@@ -601,7 +728,47 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						state: ["confidence gt -1000"]
 					},
 				]
-			}
+			},
+			{
+				id : "undergradLecture",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["composure gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["composure eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["composure eq 0"]
+					},
+				]
+			},
+			{
+				id : "undergradDean",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
+			},
 		];
 
 		State.avatars = avatarSpec.filter(function(v) { return v.id === id; })[0].avatars;
@@ -628,9 +795,19 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
 			{
+				id: "undergradLecture",
+				aspFilepaths: ['asp-phaser-generator/test/fixtures/asp-game-1.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "undergradDean",
+				aspFilepaths: ['asp-phaser-generator/test/fixtures/asp-game-1.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
 				id: "dinner",
 				aspFilepaths: ['asp-phaser-generator/test/fixtures/asp-game-1.lp'],
-				gameString : "var variables; var gridSize; var gridLinesHorizontal; var gridLinesVertical; var grid; var gridIdx; var addedEntities; var low; var medium; var mid; var high; var goals; var e1; var e2; var r1; function preload(){ 	game.load.image('e1','assets/sprites/circle.png');	game.load.image('e2','assets/sprites/circle.png'); };function create(){ 	variables={'confidence':'5','optimism':'2','difficulty':'3'}; 	gridSize=30; 	gridLinesHorizontal=Math.floor((game.width-1)/gridSize); 	gridLinesVertical=Math.floor((game.height-1)/gridSize); 	grid=initGrid(); 	gridIdx=0; 	addedEntities={}; 	low=1; 	medium=6; 	mid=medium; 	high=11; 	goals=[];	e1=game.add.physicsGroup(); 	addedEntities['e1']=e1; 	initEntityProperties(e1);	e2=game.add.physicsGroup(); 	addedEntities['e2']=e2; 	initEntityProperties(e2); 	r1=high;	var x=190;var y=160;for (var ii = 0; ii < 1; ii++){ 		x+=(Math.random() * 30) - 15; 		y+=(Math.random() * 30) - 15; 		addedEntities['e1'].create(x,y,'e1'); 		updateGrid(); 		initEntityProperties(addedEntities['e1']); 	} 	var x=50;var y=160;for (var ii = 0; ii < 1; ii++){ 		x+=(Math.random() * 30) - 15; 		y+=(Math.random() * 30) - 15; 		addedEntities['e2'].create(x,y,'e2'); 		updateGrid(); 		initEntityProperties(addedEntities['e2']); 	} 	var x=300;var y=160;for (var ii = 0; ii < 1; ii++){ 		x+=(Math.random() * 30) - 15; 		y+=(Math.random() * 30) - 15; 		addedEntities['e2'].create(x,y,'e2'); 		updateGrid(); 		initEntityProperties(addedEntities['e2']); 	} 	game.time.events.loop(Phaser.Timer.SECOND*10, t1_t1Listener, this);	addedEntities['e2'].forEach(function(item){item.body.immovable=true;}, this); }function update(){ 	for(var k in addedEntities) {if (addedEntities.hasOwnProperty(k)) { 		var entity = addedEntities[k]; 		entity.forEach(function(item) { 		item.body.velocity.x *= 0.9; 		item.body.velocity.y *= 0.9; 		}, this); 	}}	addedEntities['e1'].forEach(function(item){ 		item.inputEnabled=true; 		item.input.enableDrag(true); 	}, this);	r1=r1-low*this.game.time.elapsed/10000.0;	game.physics.arcade.overlap(addedEntities['e2'],addedEntities['e1'],o1OverlapHandler,null, this); 	if(r1<=0){ 		changeMode('narrative_progression'); }	addedEntities['e1'].forEach(function(item){item.tint=0xffffff;}, this); 	addedEntities['e2'].forEach(function(item){item.tint=0x0000ff;}, this); 	game.physics.arcade.collide(e1,e1,null,null,this);	for(var k in addedEntities) {if (addedEntities.hasOwnProperty(k)) { 		var entity = addedEntities[k]; 		entity.forEach(function(item) { 		item.body.velocity.clamp(-300,300); 			if(item.x>game.width){item.x=game.width;}if (item.x<0){item.x=0;} if (item.y>game.height){item.y=game.height;}if (item.y<0){item.y=0;} 		}, this); 	}}        setVariable('patience',r1); };function render(){}; function t1_t1Listener(){	var x=190;var y=160;for (var ii = 0; ii < 1; ii++){ 		x+=(Math.random() * 30) - 15; 		y+=(Math.random() * 30) - 15; 		addedEntities['e1'].create(x,y,'e1'); 		updateGrid(); 		initEntityProperties(addedEntities['e1']); 	} } function o1OverlapHandler(e1,e2){ 	e2.destroy();	r1=r1+low;};function setVariable(varName,value){	variables[varName]=value;	State.set(varName, value.toFixed(1));	Display.setAvatar(State);	Display.setStats('storyStats');};function getVariable(varName){ 	return variables[varName]; };function getRandomPoint(){ 	var x=game.rnd.integerInRange(0,game.world.width-1); 	var y=game.rnd.integerInRange(0,game.world.height-1); 	return new Phaser.Point(x,y); };function initGrid(){ 	grid=[]; 	for(var i=0;i<gridLinesHorizontal;i++){for(var j=0;j<gridLinesVertical;j++){grid.push(new Phaser.Point(i*gridSize,j*gridSize));}} 	shuffle(grid); 	return grid; };function updateGrid(sprite){ 	gridIdx++; 	if(gridIdx===grid.length){gridIdx=0;shuffle(grid);} };function shuffle(a){ 	var j,x,i; 	for(i=a.length;i;i--){j=Math.floor(Math.random()*i);x=a[i-1];a[i-1]=a[j];a[j]=x;} };function move_towards(e,dir){ 	e.body.velocity.x += dir.x; 	e.body.velocity.y += dir.y; };function move_away(e,dir){ 	e.body.velocity.x -= dir.x; 	e.body.velocity.y -= dir.y; };function moves(e,x,y){ 	e.body.velocity.x += x; 	e.body.velocity.y += y; };function move_forward(e,amount){ 	var newV = game.physics.arcade.velocityFromRotation(e.rotation,amount); 	e.body.velocity.x += newV.x; 	e.body.velocity.y += newV.y; };function move_left(e,amount){ 	var newV = game.physics.arcade.velocityFromRotation(e.rotation-Math.PI*0.5,amount); 	e.body.velocity.x += newV.x; 	e.body.velocity.y += newV.y; };function move_right(e,amount){ 	var newV = game.physics.arcade.velocityFromRotation(e.rotation+Math.PI*0.5,amount); 	e.body.velocity.x += newV.x; 	e.body.velocity.y += newV.y; };function move_backward(e,amount){ 	var newV = game.physics.arcade.velocityFromRotation(e.rotation-Math.PI,amount); 	e.body.velocity.x += newV.x; 	e.body.velocity.y += newV.y; };function initEntityProperties(group){ 	group.forEach(function(item) { 	item.body.collideWorldBounds = true; 	item.anchor.x = 0.5; 	item.anchor.y = 0.5; 	item.rotation = 0; 	if (!item.body.velocity.hasOwnProperty('x')){item.body.velocity.x=0;} 	if (!item.body.velocity.hasOwnProperty('y')){item.body.velocity.y=0;} 	if (!item.body.hasOwnProperty('angularVelocity')){item.body.angularVelocity=0;} 	}, this); };function changeMode(newMode){ 	if(newMode==='game_win'){mode = 'win'; game.world.removeAll(); displayText('CLEARED');} 	else if(newMode==='game_loss'){mode='loss'; game.stage.backgroundColor = '#400';} };function displayText(t){ 	var style = { font: 'bold 32px Arial', fill: '#fff', boundsAlignH: 'center', boundsAlignV: 'middle'}; 	text = game.add.text(0, 0, t, style); };function getAspGoals(){ 	if (goals === undefined || goals.length == 0){return ['No ASP goals.'];} 	else{return goals;} };goals=['Prevent:[r1] le [0]','Maintain r1'];"
+				gameString : "no"
 			},
 			{
 				id: "dinner_argument",
