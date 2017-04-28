@@ -315,6 +315,7 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
             if has_mode_change:
                 fitness += -end_weight*(depth-earliest_reached[outcome])
                 fitness += end_weight*latest_reached[outcome]
+                #print outcome, earliest_reached[outcome],latest_reached[outcome],fitness
         return (fitness,)
     return score
 if __name__ == '__main__':
@@ -326,8 +327,8 @@ if __name__ == '__main__':
         print args
     out = solve_randomly(args)
     settings,free_variables,rules,replacements = parse_game(out)
-    simulation_count = 10
-    depth = 10
+    simulation_count = 50
+    depth = 20
     display = False
 
     player_model_mappings = {'player_will_attempt':0.7,
@@ -399,7 +400,8 @@ if __name__ == '__main__':
     toolbox.decorate("mutate", checkBounds(0.1, 10))
     pop = toolbox.population(n=20)
     CXPB, MUTPB, NGEN = 0.5, 0.2, 40
-
+  
+    
     # Evaluate the entire population
     fitnesses = map(toolbox.evaluate, pop)
     for ind, fit in zip(pop, fitnesses):
@@ -409,7 +411,7 @@ if __name__ == '__main__':
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
         # Clone the selected individuals
-        offspring = map(toolbox.clone, offspring)
+        offspring = toolbox.map(toolbox.clone, offspring)
 
         # Apply crossover and mutation on the offspring
         for child1, child2 in zip(offspring[::2], offspring[1::2]):
@@ -425,7 +427,7 @@ if __name__ == '__main__':
 
         # Evaluate the individuals with an invalid fitness
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
-        fitnesses = map(toolbox.evaluate, invalid_ind)
+        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
 

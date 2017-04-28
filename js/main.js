@@ -34,6 +34,13 @@ requirejs.config({
 		"undergradDinnerData_madreed" : "../StoryAssembler/data/undergradDinnerData-madreed.json",
 		"undergradDinnerData_sjsherma" : "../StoryAssembler/data/undergradDinnerData-sjsherma.json",
 
+		"undergradDean_sgadsby" : "../StoryAssembler/data/undergradDean-sgadsby.json",
+		"undergradDean_talon" : "../StoryAssembler/data/undergradDean-talon.json",
+		"undergradDean_irapopor" : "../StoryAssembler/data/undergradDean-irapopor.json",
+
+		"undergradLecture_kply" : "../StoryAssembler/data/undergradLecture-kply.json",
+		"undergradLecture_sjsherma" : "../StoryAssembler/data/undergradLecture-sjsherma.json",
+
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 
 		"Coordinator" : "../Coordinator/Coordinator",

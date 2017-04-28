@@ -1,0 +1,280 @@
+/*Establish Giving Lecture
+Establish Style of Class
+Establish Emma's Initial Composure
+Establish Students
+Pick Student to Call On
+Enthusiastic Student Conversation
+Shy Student Conversation
+Skeptical Student Conversation
+Follow-up Question
+
+Establish scene setting
+Establish details specific to her current career
+Establish Emma's Initial Composure
+Establish challenge
+Choose which character you talk to
+Convo to temper zealous enthusiasm of ally
+Convo to emphasize action over inaction
+Action to interact with skeptical character
+Repeat character interaction
+
+Wishlist items:
+
+condition: "establishScene eq true",
+condition: "establishDetails eq true",
+condition: "establishComposure eq true",
+condition: "establishStudents eq true",
+condition: "EnthusiasticStudent eq true",
+condition: "ShyStudent eq true",
+conditoin: "SkepticalStudent eq true",
+condition: "FollowUp eq true",
+condition: "LectureEnd eq true",
+
+Variables:
+Emma's Composure/Breath/Frustration
+“Current Student” (that Emma is speaking with)
+Skeptic’s curiosity (starts low)
+Shy student’s hope (starts medium)
+Eager student’s Blind Optimism? (starts high)
+
+"set career"
+"set confidence eq 5"
+"set skepticCuriosity eq 3"
+"set shyHope eq 5"
+"set blindOptimism eq 7" */
+[
+  {
+  	"id": "placeholder_establishScene",
+  	"content": "establishScene eq true",
+    "conditions" : ["establishScene neq true"],
+  	"effects": [
+  		"set establishScene true"
+  	]
+  },
+
+  {
+  	"id": "placeholder_establishDetails",
+  	"content": "establishDetails eq true",
+  	"effects": [
+  		"set establishDetails true",
+  	]
+  },
+
+  {
+  	"id": "placeholder_establishComposure",
+  	"content": "establishComposure eq true",
+  	"effects": [
+  		"set establishComposure true",
+  	]
+  },
+
+  {
+    "id": "establishStudents",
+    "content": "{ifStateCondition|questionsLeft eq 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft lt 4|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. With most of the class half asleep, there are, sadly, only three hands begging to be called on, which is just a little bit disappointing. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. Was your class not engaging enough? Nerves knot in your belly. You hope you can survive the questions.|And maybe a little unencouraging, but oh well, you'll take what you can get.}",
+    "choices" : [
+      {"gotoId" : "elikaIntro"},
+      {"gotoId" : "franklinIntro"},
+      {"gotoId" : "aidenIntro"}
+    ],
+    "effects" : [
+      "set establishStudents true"
+    ],
+    "conditions" : [
+      "establishScene eq true"
+    ],
+    "repeatable": "true"
+  },
+
+  {
+		"id": "questionBridge",
+		"choiceLabel": "Take another question.",
+		"content": "You check the time. {ifStateCondition|composure lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
+		"repeatable": "true"
+	},
+
+//elika
+
+  {
+    "id" : "elikaIntro",
+    "unavailableChoiceLabel" : "Already called on {name|enthusiasticStudent}.",
+    "choiceLabel" : "Call on the student whose hand shot up high above her head.",
+    "content": "Ah, yes, {name|enthusiasticStudent}, a particularly enthusiastic student who has been raising her hand often in class already. You enjoy her passion, though she does tend to get some things wrong in her excitement. <br><br/> {name|enthusiasticStudent} leans forward, hands gesturing furiously as she (placeholder). ",
+    "effects" : [
+      "set enthusiasticStudent true",
+      "incr talkToStudent 1",
+      "decr questionsLeft 1",
+    ],
+    "choices" : [
+      {"gotoId" : "encouragingResponse"},
+      {"gotoId" : "gentleResponse"},
+      {"gotoId" : "bluntResponse"}
+    ],
+  },
+
+  {
+    "id" : "encouragingResponse",
+    "choiceLabel" : "That is an excellent point, absolutely.",
+    "content" : "Looking around at all the bored and unconvinced faces, you decide to say, heck yeah, everything is awesomesauce. {name|enthusiasticStudent} is absolutely delighted, though you notice faces that aren't as happy. You hope encouraging {name|enthusiasticStudent}'s optimism was an encouragement to act rather than an encouragement to sit back, thinking everything's all fine and dandy.",
+    "effects" : [
+      "incr blindOptimism 2",
+      "incr shyHope 2",
+      "decr skepticCuriosity 2",
+    ],
+  },
+
+  {
+    "id" : "gentleResponse",
+    "choiceLabel" : "It's actually a bit more complicated than that.",
+    "content" : "(You explain the complications and correct some facts. If you have low composure you stumble across your reasoning and don't manage to get your message across.) {name|enthusiasticStudent}'s face turns thoughtful.",
+    "effects" : [
+      "decr blindOptimism 2",
+      "incr shyHope 2",
+      "incr skepticCuriosity 2",
+    ],
+  },
+
+  {
+    "id" : "bluntResponse",
+    "choiceLabel" : "No, you've got your facts completely wrong.",
+    "content" : "(You tear apart {name|enthusiasticStudent} without regard to her feelings whatsoever.) {name|enthusiasticStudent} looks crushed. As well as many others.",
+    "effects" : [
+      "decr blindOptimism 5",
+      "decr shyHope 2",
+      "decr skepticCuriosity 2",
+    ]
+  },
+
+  {
+    "id" : "elikaFollowUp",
+    "content" : "{name|enthusiasticStudent} looks like she wants to ask another question. Take it?",
+    "choices" : [
+      {"gotoId" : "elikaQuestion2"},
+      {"gotoId" : "questionBrige"}
+    ],
+    "conditions" : ["enthusiasticStudent eq true"]
+  },
+
+//franklinIntro
+
+  {
+    "id" : "franklinIntro",
+    "unavailableChoiceLabel" : "Already called on {name|skepticalStudent}.",
+    "choiceLabel" : "Call on the student who delicately raised his hand with a skeptical frown.",
+    "content" : "{name|skepticalStudent} has a frown on his face, reports that his mom is an influential business partner for an oil company who has scientists working on these issues and asks a question that suggests that global warming is just a conspiracy.",
+    "choices" : [
+      {"gotoId" : "logicResponse"},
+      {"gotoId" : "valueResponse"},
+      {"gotoId" : "sourResponse"}
+      ],
+    "effects" : [
+      "set skepticalStudent true",
+      "incr talkToStudent 1",
+    ],
+  },
+
+  {
+    "id" : "logicResponse",
+    "choiceLabel" : "Turn to the facts",
+    "content" : "Facts facts facts.",
+    "effects" : [
+      "incr blindOptimism 2",
+      "incr shyHope 2",
+      "incr skepticCuriosity 2",
+    ],
+  },
+
+  {
+    "id" : "sourResponse",
+    "choiceLabel" : "\"Listen here you little -\"",
+    "content" : "wOw, what a conspiracy, trying to get us clean air and water, how horrible",
+    "effects" : [
+      "decr skepticCuriosity 2",
+    ],
+  },
+
+  {
+    "id" : "valueResponse",
+    "choiceLabel" : "Appeal to his values",
+    "content" : "if u dont want to do anything unless it affects you too, lets see u like money? and living? listen up kid, you fail to take care of the earth the earth can no longer take care of you. nor give you money. hah. so there.",
+    "effects" : [
+      "incr blindOptimism 2",
+      "incr shyHope 2",
+      "incr skepticCuriosity 2",
+    ]
+  },
+
+  {
+    "id" : "franklinFollowUp",
+    "choiceLabel" : "Yes",
+    "content" : "if this works",
+    "choices" : [
+      {"condition" : "franklinFu eq true"},
+      {"condition" : "franklinFu eq true"},
+      {"condition" : "franklinFu eq true"}
+    ],
+    "conditions" : ["skepticalStudent eq true"]
+  },
+
+  //aiden
+
+  {
+    "id" : "aidenIntro",
+    "unavailableChoiceLabel" : "Already called on Aiden.",
+    "choiceLabel" : "Call on the student whose hand hesitantly hovers halfway up in the air.",
+    "content" : "{name|shyStudent} looks ready to crawl under their desk when your attention turns to them. \"U-um, uh, I- I get that the ac- that the rise in acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"What can we do about it?\" <br/><br/> Their eyes fall upon their desk. \"Even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'Geez, we've gone too far to turn back now. No one wants to give up their car.'\" ",
+    "choices" : [
+        {"gotoId" : "hopefulResponse"},
+        {"gotoId" : "pessimisticResponse"},
+        {"gotoId" : "harshResponse"}
+        ],
+      "effects" : [
+        "set shyStudent true",
+        "incr talkToStudent 1",
+      ],
+    },
+
+    {
+      "id" : "hopefulResponse",
+      "choiceLabel" : "There's still hope.",
+      "content" : "\"True, the amount of carbon dioxide released into the atmosphere is making a noticeable impact on our planet,\" you say. \"But we're acknowledging these problems, right? And we're doing something about them. <br/><br/>\"For example, did you know that 16.9% of energy generation in 2016 comes from rebewable energy? Which may not seem much until you compare it to the 13% just the year before. We're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything because it's hopeless, we'll never change. Then there's zero chance anything will get better.\"",
+      "effects" : [
+        "incr blindOptimism 2",
+        "incr shyHope 2",
+        "incr skepticCuriosity 2",
+      ],
+    },
+
+    {
+      "id" : "pessimisticResponse",
+      "choiceLabel" : "Yeah, humankind sure has done a pretty good job at ruining the planet.",
+      "content" : "\"It's not looking good for us, sadly. {ifStateCondition|composure lt 3|Humans are selfish, greedy creatures who won't make a lick of different because we're too busy thinking about ourselves without even realizing that this is impacting us too!|Even if we were to suddenly stop emitting greenhouse gases, the earth would still warm about a degree of Farenheit, so...\" <br/><br/>You stop abruptly, noticing {name|shyStudent}'s face crumple. Maybe that wasn't the greatest way to put things.",
+      "effects" : [
+        "decr blindOptimism 2",
+        "decr shyHope 2",
+        "decr skepticCuriosity 2",
+      ],
+    },
+
+    {
+      "id" : "harshResponse",
+      "choiceLabel" : "Don't be such a downer, kid.",
+      "content" : "\"That attitude is the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|shyStudent} shrinking back. You may have been a little too harsh. And unprofessional. Whoops. <br/><br> {ifStateCondition|composure gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
+      "effects" : [
+        "incr blindOptimism 2",
+        "incr shyHope 1",
+        "incr skepticCuriosity 2",
+      ]
+    },
+
+    {
+      "id" : "aidenFollowUp",
+      "choiceLabel" : "Yes",
+      "content" : "J",
+      "choices" : [
+        {"condition" : "jessieFu eq true"},
+        {"condition" : "jessieFu eq true"},
+        {"condition" : "jessieFu eq true"}
+      ],
+      "conditions" : ["shyStudent eq true"]
+    },
+]

@@ -1,4 +1,5 @@
 [
+<<<<<<< HEAD
 	//undergradDeanScene-talon.json
 	{
 		"id": "deanOffice",
@@ -98,4 +99,84 @@
 			{"gotoId": "SummerPath_2"},
 		]
 	},
+=======
+    /*
+    { condition: "sceneSet eq true"},
+    { condition: "troubleWithLecture eq true"},
+    { condition: "reasonForTrouble eq true"},
+    { condition: "pathChoiceMade eq true"},
+    { condition: "deanReaction eq true"},
+    */
+    {
+        "id": "setScene",
+        "content" : "setScene",
+        "effects" : ["set sceneSet true"]
+    },
+    {
+        "id": "whatWentWrong",
+        "content" : "whatWentWrong",
+        "conditions" : ["sceneSet eq true"],
+        "effects" : ["set troubleWithLecture true"]
+    },
+    {
+        // this is all possible reasons, will be multiple ids
+        "id": "reasonsItWentWrong1",
+        "content" : "reasonsItWentWrong1",
+        "effects" : [ "set reasonForTrouble true"]
+    },
+    {
+        // this is all possible reasons, will be multiple ids
+        "id": "reasonsItWentWrong2",
+        "content" : "reasonsItWentWrong2",
+        "effects" : [ "set reasonForTrouble true"]
+    },
+    {
+        // this is all possible reasons, will be multiple ids
+        "id": "reasonsItWentWrong3",
+        "content" : "reasonsItWentWrong3",
+        "effects" : [ "set reasonForTrouble true"]
+    },
+    {
+        // leaned academic
+        "id": "decidePath1",
+        "content" : "decidePath1",
+        "conditions" : ["reasonForTrouble eq true"],
+        "effects" : [ "set pathChoiceMade true"]
+    },
+    {
+        // middle of road
+        "id": "decidePath2",
+        "content" : "decidePath2",
+        "effects" : [ "set pathChoiceMade true"]
+    },
+    {
+        // leaned academic
+        "id": "decidePath3",
+        "content" : "decidePath3",
+        "effects" : [ "set pathChoiceMade true"]
+    },
+    {
+        "id": "deanOffersTransition",
+        "content" : "deanOffersTransition",
+        "effects" : ["set deanReaction true"]
+    },
+    {
+        "id": "deanOffersSupport",
+        "content" : "deanOffersSupport",
+        "effects" : ["set deanReaction true"]
+    },
+    {
+        "id": "loseComposure",
+        "content" : "loseComposure"
+    },
+    {
+        "id": "chanceToRecover",
+        "content" : "chanceToRecover"
+    },
+    {
+        "id": "forcedOutOfCareerPath",
+        "content" : "forcedOutOfCareerPath",
+        "effects" : ["set deanReaction true"]
+    }
+>>>>>>> b1bfa6e37e545fcd0e157646955a1ded11d29ca2
 ]
