@@ -44,389 +44,143 @@ Eager student’s Blind Optimism? (starts high)
 "set blindOptimism eq 7" */
 [
   {
-    "id" : "placeholder_establishScene",
-    "content" : "establishScene eq true",
-    "effects" : [
-      "set establishScene true"
-    ]
+  	"id": "placeholder_establishScene",
+  	"content": "establishScene eq true",
+    "conditions" : ["establishScene neq true"],
+  	"effects": [
+  		"set establishScene true"
+  	]
   },
+
   {
-    "id" : "placholder_establishDetails eq true",
-    "content" : "establishDetails eq true",
-    "effects" : "set establishDetails true"
+  	"id": "placeholder_establishDetails",
+  	"content": "establishDetails eq true",
+  	"effects": [
+  		"set establishDetails true",
+  	]
   },
+
   {
-    "id": "placeholder_establishComposure",
-    "content": "establishComposure eq true",
-    "effects" : [
-      "set establishComposure true"
-    ]
+  	"id": "placeholder_establishComposure",
+  	"content": "establishComposure eq true",
+  	"effects": [
+  		"set establishComposure true",
+  	]
   },
-  //establishing students/questions
+
   {
     "id": "establishStudents",
-    "content": "Look around the room, observe the hands raised (most of the class being clearly bored, there's only three hands. a bit disappointing/unencouraging, but oh well, you'll take what you can get.) <br><br/> Establish Elika as a particularly enthusiastic student who has been raising her hand often in class already. You enjoy her passion, though she does tend to get some things wrong in her excitement. <br/><br/> Establish Franklin as an intelligent and eloquent student, though has a very snotty manner of asking questions that seem purposefully provocative and implying that global warming isn't real. He gets under your skin just a little, though you do enjoy the challenge of bringing some form of awareness to skeptical students. <br/><br/> Establish Jessie as a shy, soft-spoken student who hasn't raised their hand at all during class, but they clearly seem uncertain and nervous.",
+    "content": "{ifState|questionsLeft|0|You're out of time for questions.|}{ifState|questionsLeft|1|You have time for one more question.|}{ifState|questionsLeft lt 4|You have time for a few more questions.|}{ifState|questionsLeft|4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. With most of the class half asleep, there are, sadly, only three hands begging to be called on, which is just a little bit disappointing. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. Was your class not engaging enough? Nerves knot in your belly. You hope you can survive the questions.|And maybe a little unencouraging, but oh well, you'll take what you can get}",
     "choices" : [
-      {"condition" : "talkToStudent eq true"},
-      {"condition" : "talkToStudent eq true"},
-      {"condition" : "talkToStudent eq true"}
+      {"gotoId" : "elikaIntro"},
+      {"gotoId" : "franklinIntro"},
+      {"gotoId" : "aidenIntro"}
     ],
     "effects" : [
       "set establishStudents true"
     ],
     "conditions" : [
       "establishScene eq true"
-    ]
-  },
-  {
-    "id" : "anotherQuestion",
-    "content" : "Take another question",
-    "repeatable" : "true",
-    "conditions" : "questionsLeft gt 0"
-  },
-  {
-    "id": "questionBridge",
-    "content": "You check the time. A good place to move on. You look around the room for more questions",
-    "repeatable": "true",
-    "choices" : [
-      {"gotoId" : "anotherQuestion"}
-    ]
-  },
-  {
-    "id" : "followingUp",
-    "content" : "Looks like the student has another question. Take it?",
-    "choices" : [
-      {"condition" : "canFollowUp eq true"},
-      {"gotoId" : "endDiscussion"}
     ],
-    "repeatable" : "true",
-    "conditions" : [
-      "responseElika eq true",
-      "responseFranklin eq true",
-      "responseJessie eq true"
-    ]
+    "repeatable": "true"
   },
+
   {
-    "id" : "endDiscussion",
-    "request" : "questionBridge",
+		"id": "questionBridge",
+		"choiceLabel": "Take another question.",
+		"content": "You check the time. {ifStateCondition|composure lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
+		"repeatable": "true"
+	},
+
+//elika
+
+  {
+    "id" : "elikaIntro",
+    "unavailableChoiceLabel" : "Already called on {name|enthusiasticStudent}.",
+    "choiceLabel" : "Call on the student whose hand shot up high above her head.",
+    "content": "Ah, yes, {name|enthusiasticStudent}, a particularly enthusiastic student who has been raising her hand often in class already. You enjoy her passion, though she does tend to get some things wrong in her excitement. <br><br/> {name|enthusiasticStudent} leans forward, hands gesturing furiously as she (placeholder). ",
     "effects" : [
-      "set currentStudent false",
-      "set elikaFu false",
-      "set franklinFu false",
-      "set jessieFu false"
-      "set talkToStudent false"
+      "set enthusiasticStudent true",
+      "incr talkToStudent 1",
+      "decr questionsLeft 1",
     ],
-    "conditions" : [
-      "canFollowUp eq true"
+    "choices" : [
+      {"gotoId" : "encouragingResponse"},
+      {"gotoId" : "gentleResponse"},
+      {"gotoId" : "bluntResponse"}
+    ],
+  },
+
+  {
+    "id" : "encouragingResponse",
+    "choiceLabel" : "That is an excellent point, absolutely.",
+    "content" : "Looking around at all the bored and unconvinced faces, you decide to say, heck yeah, everything is awesomesauce. {name|enthusiasticStudent} is absolutely delighted, though you notice faces that aren't as happy. Perhaps others that have noticed the flaws in {name|enthusiasticStudent}'s argument. Maybe others are getting the wrong idea. You hope encouraging {name|enthusiasticStudent}'s optimism was an encouragement to act rather than an encouragement to sit back, thinking everything's all fine and dandy.",
+    "effects" : [
+      "incr blindOptimism 2",
+      "incr shyHope 2",
+      "decr skepticCuriosity 2",
+    ],
+  },
+
+  {
+    "id" : "gentleResponse",
+    "choiceLabel" : "It's actually a bit more complicated than that.",
+    "content" : "(You explain the complications and correct some facts.) {name|enthusiasticStudent}'s face turns thoughtful.",
+    "effects" : [
+      "decr blindOptimism 2",
+      "incr shyHope 2",
+      "incr skepticCuriosity 2",
+    ],
+  },
+
+  {
+    "id" : "bluntResponse",
+    "choiceLabel" : "No, you've got your facts completely wrong.",
+    "content" : "Elika looks crushed. As well as many others.",
+    "effects" : [
+      "decr blindOptimism 5",
+      "decr shyHope 2",
+      "decr skepticCuriosity 2",
     ]
   },
-  //Elika
+
   {
-    "id": "elikaIntro",
-    "choiceLabel" : "Call on Elika. The class could use a little more energy.",
-    "content": "Hand shot up in the air, speak rapidly, filled with enthusiasm: wants to talk about the steps towards healing the earth. Maybe question about how fast it's going? <br/><br/> Well, you know that there are some complications, but Elika's optimism is infectious. Would it really help to quash her enthusiasm a little? Or would encouraging her do more harm?",
+    "id" : "elikaFollowUp",
+    "content" : "{name|enthusiasticStudent} looks like she wants to ask another question. Take it?",
+  },
+
+//franklinIntro
+
+  {
+    "id" : "franklinIntro",
+    "unavailableChoiceLabel" : "Already called on {name|skepticalStudent}.",
+    "choiceLabel" : "Call on the student who delicately raised his hand with a skeptical frown.",
+    "content" : "Franklin has a frown on his face, reports that his mom (ceo of an oil company probably) had scientists on these issues and asks if global warming is just a conspiracy.",
     "choices" : [
       {"condition" : "responseElika eq true"},
       {"condition" : "responseElika eq true"},
       {"condition" : "responseElika eq true"}
       ],
     "effects" : [
-      "set EnthusiasticStudent true",
-      "set talkToStudent true",
+      "set skepticalStudent true",
+      "incr talkToStudent 1",
       "set currentStudent true"
     ],
   },
+
   {
-    "id" : "encouragingResponse",
-    "choiceLabel" : "Encourage Elika's positivity. We need more of that around here.",
-    "content" : "Looking around at all the bored and unconvinced faces, you decide to say, heck yeah, everything's awesomesauce. Elika is absolutely delighted, though you notice faces that aren't as happy.",
-    "effects" : [
-      "incr blindOptimism 2",
-      "incr shyHope 2",
-      "decr skepticCuriosity 2",
-      "set responseElika true"
-    ],
-  },
-  {
-    "id" : "gentleResponse",
-    "choiceLabel" : "Point out the facts and complications, but kindly with a hopeful note",
-    "content" : "Elika's face turns thoughtful",
-    "effects" : [
-      "decr blindOptimism 2",
-      "incr shyHope 2",
-      "incr skepticCuriosity 2",
-      "set responseElika true"
-    ],
-  },
-  {
-    "id" : "bluntResponse",
-    "choiceLabel" : "Point out the facts and complications, but with a negative twist",
-    "content" : "Elika looks crushed. As well as many others.",
-    "effects" : [
-      "decr blindOptimism 5",
-      "decr shyHope 2",
-      "decr skepticCuriosity 2",
-      "set responseElika true"
-    ]
-  },
-  {
-    "id" : "elikaFollowUp",
-    "choiceLabel" : "Yes",
-    "content" : "Depending on how you answered her first question. Gives chance to change your mind. Agree, which prompts Elika to talk about another awesome thing. Disagree gently, she asks another question about something, probably if it's true or not",
+    "id" : "aidenIntro",
+    "choiceLabel" : "Call on the student whose hand hesitantly hovers halfway up in the air.",
+    "content" : "Aiden ducks their face down, nervoulsy draws circles onto the surface of their desk.",
     "choices" : [
-      {"condition" : "elikaFu eq true"},
-      {"condition" : "elikaFu eq true"},
-      {"condition" : "elikaFu eq true"}
-    ],
-    "effects" : [
-      "set canFollowUp true",
-      "set responseElika false"
-    ],
-    "conditions" : ["responseElika eq true"]
-  },
-  {
-    "id" : "agreeAwesome",
-    "choiceLabel" : "Continue to agree with Elika",
-    "content" : "Agree with Elika. She is thrilled at this point.",
-    "effects" : [
-      "set elikaFu true",
-      "incr blindOptimism 1",
-      "incr shyHope 1",
-      "decr skepticCuriosity 1"
-    ],
-  },
-  {
-    "id" : "disagreeSoft",
-    "choiceLabel" : "Going gently again",
-    "content" : "Point out facts, is effective in providing food for thought.",
-    "effects" : [
-      "set elikaFu true",
-      "decr blindOptimism 1",
-      "incr shyHope 1",
-      "incr skepticCuriosity 1"
-    ]
-  },
-  {
-    "id" : "disagreeHarsh",
-    "choiceLabel" : "Point out, bluntly",
-    "content" : "Yup, soul-crushing",
-    "effects" : [
-      "set elikaFu true",
-      "decr blindOptimism 2",
-      "decr shyHope 1",
-      "decr skepticCuriosity 1"
-    ]
-  },
-  //Franklin
-  {
-    "id" : "franklinIntro",
-    "choiceLabel" : "Call on Franklin. You can take whatever he tries to throws at you.",
-    "content" : "Franklin has a frown on his face, reports that his mom (ceo of an oil company probably) had scientists on these issues and asks if global warming is just a conspiracy.",
-    "choices" : [
-      {"condition" : "franklinResponse eq true"},
-      {"condition" : "franklinResponse eq true"},
-      {"condition" : "franklinResponse eq true"}
-    ],
-    "effects" : [
-      "set SkepticalStudent true",
-      "set talkToStudent true",
-      "set currentStudent true"
-    ]
-  },
-  {
-    "id" : "logicResponse",
-    "choiceLabel" : "Logic",
-    "content" : "Facts facts facts.",
-    "effects" : [
-      "incr blindOptimism 2",
-      "incr shyHope 2",
-      "incr skepticCuriosity 2",
-      "set responseFranklin true"
-    ],
-  },
-  {
-    "id" : "sourResponse",
-    "choiceLabel" : "listen here you little -",
-    "content" : "nope",
-    "effects" : [
-      "decr blindOptimism 2",
-      "decr shyHope 2",
-      "decr skepticCuriosity 2",
-      "set responseFranklin true"
-    ],
-  },
-  {
-    "id" : "valueResponse",
-    "choiceLabel" : "values ~",
-    "content" : "hm",
-    "effects" : [
-      "incr blindOptimism 5",
-      "incr shyHope 2",
-      "incr skepticCuriosity 2",
-      "set responseFranklin true"
-    ]
-  },
-  {
-    "id" : "franklinFollowUp",
-    "choiceLabel" : "Yes",
-    "content" : "Depending on how you answered her first question. Gives chance to change your mind. Agree, which prompts Elika to talk about another awesome thing. Disagree gently, she asks another question about something, probably if it's true or not (franklin now)",
-    "choices" : [
-      {"condition" : "franklinFu eq true"},
-      {"condition" : "franklinFu eq true"},
-      {"condition" : "franklinFu eq true"}
-    ],
-    "effects" : [
-      "set canFollowUp true",
-      "set responseFranklin false"
-    ],
-    "conditions" : ["responseFranklin eq true"]
-  },
-  {
-    "id" : "agreeAwesome",
-    "choiceLabel" : "Continue to agree with Elika",
-    "content" : "Agree with Elika. She is thrilled at this point.",
-    "effects" : [
-      "set elikaFu true",
-      "incr blindOptimism 1",
-      "incr shyHope 1",
-      "decr skepticCuriosity 1"
-    ],
-  },
-  {
-    "id" : "disagreeSoft",
-    "choiceLabel" : "Going gently again",
-    "content" : "Point out facts, is effective in providing food for thought.",
-    "effects" : [
-      "set elikaFu true",
-      "decr blindOptimism 1",
-      "incr shyHope 1",
-      "incr skepticCuriosity 1"
-    ]
-  },
-  {
-    "id" : "disagreeHarsh",
-    "choiceLabel" : "Point out, bluntly",
-    "content" : "Yup, soul-crushing",
-    "effects" : [
-      "set elikaFu true",
-      "decr blindOptimism 2",
-      "decr shyHope 1",
-      "decr skepticCuriosity 1"
-    ]
-  },
-  //Jessie
-  {
-    "id" : "jessieIntro",
-    "choiceLabel" : "Call on Franklin. You can take whatever he tries to throws at you.",
-    "content" : "Franklin has a frown on his face, reports that his mom (ceo of an oil company probably) had scientists on these issues and asks if global warming is just a conspiracy.",
-    "choices" : [
-      {"condition" : "jessieResponse eq true"},
-      {"condition" : "jessieResponse eq true"},
-      {"condition" : "jessieResponse eq true"}
-    ],
-    "effects" : [
-      "set ShyStudent true",
-      "set talkToStudent true",
-      "set currentStudent true"
-    ]
-  },
-  {
-    "id" : "logicResponse",
-    "choiceLabel" : "Logic",
-    "content" : "Facts facts facts.",
-    "effects" : [
-      "incr blindOptimism 2",
-      "incr shyHope 2",
-      "incr skepticCuriosity 2",
-      "set responseFranklin true"
-    ],
-  },
-  {
-    "id" : "sourResponse",
-    "choiceLabel" : "listen here you little -",
-    "content" : "nope",
-    "effects" : [
-      "decr blindOptimism 2",
-      "decr shyHope 2",
-      "decr skepticCuriosity 2",
-      "set responseFranklin true"
-    ],
-  },
-  {
-    "id" : "valueResponse",
-    "choiceLabel" : "values ~",
-    "content" : "hm",
-    "effects" : [
-      "incr blindOptimism 5",
-      "incr shyHope 2",
-      "incr skepticCuriosity 2",
-      "set responseFranklin true"
-    ]
-  },
-  {
-    "id" : "jessieFollowUp",
-    "choiceLabel" : "Yes",
-    "content" : "Depending on how you answered her first question. Gives chance to change your mind. Agree, which prompts Elika to talk about another awesome thing. Disagree gently, she asks another question about something, probably if it's true or not (jessie now)",
-    "choices" : [
-      {"condition" : "jessieFu eq true"},
-      {"condition" : "jessieFu eq true"},
-      {"condition" : "jessieFu eq true"}
-    ],
-    "effects" : [
-      "set canFollowUp true",
-      "set responseFranklin false"
-    ],
-    "conditions" : ["responseFranklin eq true"]
-  },
-  {
-    "id" : "agreeAwesome",
-    "choiceLabel" : "Continue to agree with Elika",
-    "content" : "Agree with Elika. She is thrilled at this point.",
-    "effects" : [
-      "set elikaFu true",
-      "incr blindOptimism 1",
-      "incr shyHope 1",
-      "decr skepticCuriosity 1"
-    ],
-  },
-  {
-    "id" : "disagreeSoft",
-    "choiceLabel" : "Going gently again",
-    "content" : "Point out facts, is effective in providing food for thought.",
-    "effects" : [
-      "set elikaFu true",
-      "decr blindOptimism 1",
-      "incr shyHope 1",
-      "incr skepticCuriosity 1"
-    ]
-  },
-  {
-    "id" : "disagreeHarsh",
-    "choiceLabel" : "Point out, bluntly",
-    "content" : "Yup, soul-crushing",
-    "effects" : [
-      "set elikaFu true",
-      "decr blindOptimism 2",
-      "decr shyHope 1",
-      "decr skepticCuriosity 1"
-    ]
-  },
-  //unique
-  {
-    "id" : "enthusiasticRamble",
-    "content" : "Elika rambles on about stuff",
-    "conditions" : "blindOptimism eq 10"
-  },
-  {
-    "id" : "skepticRebuttal",
-    "content" : "Franklin calls out to protest/remark upon how little efforts to curb global warming doesn't matter, asking why put so much work into something so pointless. Elika furious retorts, and now Emma has a mini class debate/war on her hands.",
-    "conditions" : "skepticCuriosity eq 0"
-  },
-      {
-      "id": "lectureEnd",
-      "content": "lectureEnd eq true",
+        {"condition" : "responseElika eq true"},
+        {"condition" : "responseElika eq true"},
+        {"condition" : "responseElika eq true"}
+        ],
       "effects" : [
-        "set lectureEnd true"
-      ]
+        "set skepticalStudent true",
+        "incr talkToStudent 1",
+        "set currentStudent true"
+      ],
     },
 ]
