@@ -40,7 +40,7 @@ define(["../Templates", "../State", "../StoryAssembler", "../ChunkLibrary", "Wis
 
 		var resetTest = function() {		//local function for resetting stuff between tests
 			var characters = {
-				"char1" : {name: "Emma", nickname: "Em", gender: "female" },
+				"char1" : {name: "Emma", nickname: "Em", gender: "female", favFood: "pork" },
 				"char2": {name: "Miguel", nickname: "Miguel", gender: "male"}
 			};
 
@@ -96,13 +96,21 @@ define(["../Templates", "../State", "../StoryAssembler", "../ChunkLibrary", "Wis
 			wl = Wishlist.create([{condition: "x eq true"}], State);
 			wl.logOn();
 			ChunkLibrary.add([
-				{ id: "init", content: "{ifCharTraitIs|char1|gender eq female|she|uh oh} {ifCharTraitIs|char1|gender eq fwa|she|uh oh} {ifCharTraitIs|char1|honk eq fwa|she|uh oh}", choices: [{gotoId: "linkedChoice"}], effects: ["set x true"] }
+				{ id: "init", content: "{ifCharTraitIs|char1|gender eq female|she|uh oh} {ifCharTraitIs|char1|gender eq fwa|she|uh oh} {ifCharTraitIs|char1|honk eq fwa|she|uh oh}", effects: ["set x true"] }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
-			assert.deepEqual(html(getStoryEl()), "she uh oh uh oh", "charTraits work correctly");
+			assert.deepEqual(html(getStoryEl()), "she uh oh uh oh", "ifCharTraitIs works correctly");
 
-			//State.change("set charName Maria");
-			//assert.deepEqual(render("Hello, {charName}!"), "Hello, Maria!", "showing State value directly");
+			//test charTrait grammar
+			resetTest();
+			State.set("mode", "narration");
+			wl = Wishlist.create([{condition: "x eq true"}], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{ id: "init", content: "{charTrait|char1|favFood|food} {charTrait|char1|favssFood|food}", effects: ["set x true"] }
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+			assert.deepEqual(html(getStoryEl()), "pork food", "charTrait work correctly");
 
 		});
 
