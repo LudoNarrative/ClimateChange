@@ -5,22 +5,32 @@
 </head>
 <body>
     <script type="text/javascript">
+
+    var path = require('path');
+
+    var gameFileDirPath = function() {
+        
+        var only_path = path.dirname(process.execPath);         //get path to running process
+        //var ASPloc = "/Users/jacob/Work/grad school/UCSC 2011-13/EIS/Year 3/Climate Game/Phaser/test/clingo-4.5.4-macos-10.9/clingo";
+        var finalPath = only_path.split(path.sep);       //split string to array using OS-specific slashes (diff between Mac and PC)
+        while (finalPath[finalPath.length -1] !== "compiled") {   //cut off everything below the compiled directory path
+            finalPath.length--;
+        }
+        finalPath.length--;                          //cut off "compiled" (now we should be in same directory as "clingo")
+        finalPath = finalPath.join(path.sep);             //join back into a string
+
+        return finalPath;
+    }
     //-----------------------------------------------------------------------------
         //detect and return the Clingo executable path and ASPFile path for Mac or PC
         var getClingoPaths = function(ASPFile) {
-            var path = require('path');
-            var only_path = path.dirname(process.execPath);         //get path to running process
+
+            var finalPath = gameFileDirPath();
+
             var clingoDir;
             if (process.platform === 'win32') { clingoDir = "clingo-4.5.4-win64"; }      //windows (even 64-bit) always returns win32
             else { clingoDir = "clingo-4.5.4-macos-10.9" }
 
-            //var ASPloc = "/Users/jacob/Work/grad school/UCSC 2011-13/EIS/Year 3/Climate Game/Phaser/test/clingo-4.5.4-macos-10.9/clingo";
-            var finalPath = only_path.split(path.sep);       //split string to array using OS-specific slashes (diff between Mac and PC)
-            while (finalPath[finalPath.length -1] !== "compiled") {   //cut off everything below the compiled directory path
-                finalPath.length--;
-            }
-            finalPath.length--;                          //cut off "compiled" (now we should be in same directory as "clingo")
-            finalPath = finalPath.join(path.sep);             //join back into a string
             var exePath = finalPath + path.sep + "clingo" + path.sep + clingoDir + path.sep + "clingo";         //add in path to Clingo
             var filePath = finalPath + path.sep + "clingo" + path.sep + "game_files" + path.sep + ASPFile;
   
@@ -41,7 +51,7 @@
             
             ASP.stdout.on('data', function (data) {           //data returned is in UINT-8 format
                 var result = JSON.parse(String.fromCharCode.apply(null, data));
-                processResult(result);          //hand it off to processing function, since this is asynchronous
+                processASPResult(result);          //hand it off to processing function, since this is asynchronous
             });
             
             /* // do something when stdout ends?
@@ -59,13 +69,35 @@
 
         //----------------------------------------------------------------------------------
         //Do amazing things with the returned object from Clingo
-        var processResult = function(result) {
+        var processASPResult = function(result) {
+            console.log("this is before ASP result");
             console.log(result);
+            runPython(pythonFile);
         }
-
         //----------------------------------------------------------------------------------
+        //Do amazing things with the returned object from python
+        var processPythonResult = function(result) {
+            console.log(result);
+            console.log("after python result read out");
+        }
+        //----------------------------------------------------------------------------------
+        var runPython = function(pythonFile) {
+            
+            var finalPath = gameFileDirPath();
+            var filePath = finalPath + path.sep + "clingo" + path.sep + "game_files" + path.sep + pythonFile;
 
+            console.log("about to spawn python process at " + filePath);
+            var python = require('child_process').spawn("python" , [filePath]);
+            python.stdout.on('data', function (data) {           //data returned is in UINT-8 format
+                //var result = JSON.parse(String.fromCharCode.apply(null, data));
+                var result = String.fromCharCode.apply(null, data);
+                processPythonResult(result);          //hand it off to processing function, since this is asynchronous
+            });
+            console.log("after processPythonResult called");
+        }
+        //----------------------------------------------------------------------------------
         var ASPFile = "clingo-bridge-example.lp";        //name of ASP file
+        var pythonFile = "pythonTest.py";
 
         runClingo(ASPFile, "--outf=2 -n 10");         //run the ASP file with this command
 
