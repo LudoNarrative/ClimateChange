@@ -123,16 +123,37 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (cMode == params[0]) { return params[1] }
 			else { return params[2] }
 		},
-		//{ifCharTraitIs|protagonist|trait statement like charisma eq 5|text if true|text if false}
-		"ifCharTraitIs": function(params, text) {
-			if (params.length !== 4) {
-				console.error("Template command 'showCharTrait' must have 4 params, in text '" + text + "'.");
-				return "(showCharTrait)";
+		
+		//{charTrait|protagonist|favFood|fallback text}
+		"charTrait": function(params, text) {
+			if (params.length !== 3) {
+				console.error("Template command 'charTrait' must have 3 params, in text '" + text + "'.");
+				return "(charTrait)";
 			}
 			var theChar = Character.get(params[0]);
 			if (!theChar) {
-				console.error("Tried to run 'showCharTrait' template, but no char for '" + params[0] + "'");
-				return "(showCharTrait)";
+				console.error("Tried to run 'charTrait' template, but no char for '" + params[0] + "'");
+				return "(charTrait)";
+			}
+
+			if (typeof theChar[params[1]] == "undefined") {
+				console.error("Tried to run 'charTrait' template, but '" + params[0] + "' doesn't have the trait '" + params[1] + "'.");
+				return params[2];
+			}
+
+			return theChar[params[1]];
+		},
+
+		//{ifCharTraitIs|protagonist|trait statement like charisma eq 5|text if true|text if false}
+		"ifCharTraitIs": function(params, text) {
+			if (params.length !== 4) {
+				console.error("Template command 'ifCharTraitIs' must have 4 params, in text '" + text + "'.");
+				return "(ifCharTraitIs)";
+			}
+			var theChar = Character.get(params[0]);
+			if (!theChar) {
+				console.error("Tried to run 'ifCharTraitIs' template, but no char for '" + params[0] + "'");
+				return "(ifCharTraitIs)";
 			}
 			
 			var parts = Condition.parts(params[1]);
@@ -140,7 +161,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			var check = bbParam + " " + parts.op + " " + parts.value;
 
 			if (typeof theChar[parts.param] == "undefined") {
-				console.error("Tried to run 'showCharTrait' template, but '" + params[0] + "' doesn't have the trait '" + parts.param + "'.");
+				console.error("Tried to run 'ifCharTraitIs' template, but '" + params[0] + "' doesn't have the trait '" + parts.param + "'.");
 				return params[3];
 			}
 
