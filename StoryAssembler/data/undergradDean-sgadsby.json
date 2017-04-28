@@ -22,7 +22,7 @@
         "id": "reasonsItWentWrong1",
 	//	"choiceLabel": "you explain your troubles",
         "content" : "Emma explains her nerves and not being able to shake off first lecture for a bit. Dean is understanding.",
-		"choices" : 
+		"choices" : [ 
 			{"gotoId": "DeanTellsStory"},
 		],
 		"conditions" : ["sceneSet eq true"], //add high academic enthusiasm requirement.
