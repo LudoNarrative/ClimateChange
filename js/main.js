@@ -52,11 +52,11 @@ requirejs.config({
 		"jsonEditor": "../lib/jsonEditor/jsoneditor",
 
 		"Game" : "../GameGenerator/js/game",
-		"AspPhaserGenerator" : "../asp-phaser-generator/index",
-		"translateAsp" : '../asp-phaser-generator/src/asp-to-cygnus',
-		"rensa" : '../asp-phaser-generator/src/brain',
-		"ctp" : '../asp-phaser-generator/src/cygnus-to-phaser-brain',
-		"translatePhaserBrain" : '../asp-phaser-generator/src/phaser-brain-to-code'
+		"AspPhaserGenerator" : "../asp-phaser-generator-2/index",
+		"translateAsp" : '../asp-phaser-generator-2/src/asp-to-cygnus-2',
+		"rensa" : '../asp-phaser-generator-2/src/brain',
+		"ctp" : '../asp-phaser-generator-2/src/cygnus-to-phaser-brain-2',
+		"translatePhaserBrain" : '../asp-phaser-generator-2/src/phaser-brain-to-code-2'
 	},
 
 	shim: {
