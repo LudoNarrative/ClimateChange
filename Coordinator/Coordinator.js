@@ -467,6 +467,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set reasonForTrouble false",
 				"set pathChoiceMade false",
 				"set deanReaction false",
+				"set tension 0",
 
 				"set confidence 5"
 			],
