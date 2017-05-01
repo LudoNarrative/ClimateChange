@@ -229,13 +229,15 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 		// --> conditions should allow it given the current State.
 		if (chunk.conditions && chunk.conditions.length > 0) {
 			var shouldContinue = false;
+			var badCondition;
 			for (var j = 0; j < chunk.conditions.length; j++) {
 				if (!State.isTrue(chunk.conditions[j])) {
 					shouldContinue = true;				
+					badCondition = chunk.conditions[j];
 				}
 			}
 			if (shouldContinue) {
-				var msg = "skipping '" + chunk.id + "' because a condition contradicts current State.";
+				var msg = "skipping '" + chunk.id + "' because the condition " + badCondition + " contradicts current State.";
 				log(rLevel, msg);
 				updateDebugObj(false, msg);
 				return false;
