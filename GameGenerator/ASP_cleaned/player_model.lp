@@ -1,7 +1,8 @@
 
 
-
-
+required(good).
+required(bad).
+required(tradeoff).
 
 player_model(tick,must_happen).
 
