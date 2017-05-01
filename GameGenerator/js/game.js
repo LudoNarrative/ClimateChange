@@ -10,7 +10,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		Display = _Display;
 		State = _State;
 
-		var useGamestring = true;		//if true, will use the gameString variable in the gameSpec as the game code to eval
+		var useGamestring = false;		//if true, will use the gameString variable in the gameSpec as the game code to eval
 
 		var aspFilepath = gameSpec.aspFilepaths[Math.floor(Math.random()*gameSpec.aspFilepaths.length)];		//pick a random aspfile if there are 1+
 
@@ -23,7 +23,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 		jQuery.get(aspFilepath, function(data) {
 	    	aspGame = data;
-	    	jQuery.get('asp-phaser-generator/test/fixtures/initial-phaser-file.json', function(data2) {
+	    	jQuery.get('asp-phaser-generator-2/test/fixtures/initial-phaser-file.json', function(data2) {
 	    		initialPhaserFile = data2;
 	    		runGenerator(gameSpec, aspGame, initialPhaserFile, useGamestring);
 	    		Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, initialPhaserFile);		//create game diagnostics
@@ -35,13 +35,13 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	}
 
 	var runGenerator = function(gameSpec, aspGame, initialPhaserFile, useGamestring){
-		//var generator = AspPhaserGenerator.AspPhaserGenerator(aspGame, initialPhaserFile);
-		//var phaserProgram = AspPhaserGenerator.generate(generator.aspGame, generator.initialPhaser, true);
+		var generator = AspPhaserGenerator.AspPhaserGenerator(aspGame, initialPhaserFile);
+		var phaserProgram = AspPhaserGenerator.generate(generator.aspGame, generator.initialPhaser, true);
 
 		console.log("\n------------------------------");
 		console.log("Finished Phaser game:");
 		console.log("------------------------------");
-		//console.log(phaserProgram);
+		console.log(phaserProgram);
 
 		if (typeof game !== "undefined") {			//if we're refreshing the game we need to clean up the old one
 			game.destroy();
