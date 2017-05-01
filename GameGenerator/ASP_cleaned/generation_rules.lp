@@ -154,3 +154,19 @@ monotonic(Entity) :- monotonic(Entity,_).
 non_monotonic(Entity) :- not monotonic(Entity),
 			 entity(Entity).
 			     
+
+
+trivial(Outcome) :- precondition(control_event(_),Outcome),
+		    1 {precondition(_,Outcome)} 1.
+
+trivial(tick).
+
+trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
+		    2 { player_controls(E1);
+			player_controls(E2);
+			static(E1);
+			static(E2)},
+		    every_frame(Outcome).
+
+
+		    

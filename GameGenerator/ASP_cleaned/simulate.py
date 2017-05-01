@@ -16,8 +16,11 @@ modifiers = {'increase': lambda x,y:  x+y,
 
 def solve(*args):
     """Run clingo with the provided argument list and return the parsed JSON result."""
+    print_args =  ['clingo']+list(args)
     args = ['clingo','--outf=2']+list(args)
-    print ' '.join(args)
+
+    
+    print ' '.join(print_args)
     clingo = subprocess.Popen(
         ' '.join(args),
         stdout=subprocess.PIPE,
@@ -590,3 +593,146 @@ if __name__ == '__main__':
     for f,r in find_and_replace:
         out_string = out_string.replace(f,r)
     print out_string
+
+    labels = {}
+    for o in ['label']:
+        for oo in out[o]:
+            for label in oo:
+                labels[prettify(label['terms'][0])] = prettify(label['terms'][1])
+
+    for o in ['reading']:
+        for oo in out[o]:
+            for ooo in oo:
+                reading = prettify(ooo)
+                if 'goal' in reading:
+                    print "The goal is to " + prettify(ooo['terms'][0]['terms'][0]) + " " + labels[prettify(ooo['terms'][1]['terms'][0])]
+
+
+    will_dos = []
+    avoids = []
+    for o in ['player_model']:
+       
+        for oo in out[o]:        
+            for ooo in oo:
+                outcome =hashable(ooo['terms'][0])
+                cond =prettify(ooo['terms'][1])
+                if cond == 'player_will_attempt':
+                    will_dos.append(outcome)
+                if cond == 'player_will_avoid':
+                    avoids.append(outcome)
+    press_mapping = {'pressed':'pressing',
+                     'held':'holding'}
+    key_mapping = {'mouse':'mouse button',
+                   'space':'space bar',
+                   'up_arrow':'up key',
+                   'down_arrow':'down key',
+                   'left_arrow':'left key',
+                   'right_arrow':'right key'}
+    if will_dos:
+        print '\nThey will do this by'
+
+        for outcome_ind,outcome in enumerate(will_dos):
+            for ind,precond in enumerate(outcome2precond[outcome]):
+                precond = precond['terms'][0]
+                if 'overlaps' == precond['predicate']:
+                    if 'true' == precond['terms'][2]['predicate']:
+                        print '\tattempting to make a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' touch'
+                    else:
+                        print '\tattempting to keep a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' from touching'
+                elif 'control_event' == precond['predicate']:
+                    if 'click' ==  precond['terms'][0]['predicate']:
+                        print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0]['terms'][0])]
+                    elif 'button' == precond['terms'][0]['predicate']:
+                        verb = precond['terms'][0]['terms'][1]['predicate']
+                        button = precond['terms'][0]['terms'][0]['predicate']
+                        print '\t {} the {}'.format(press_mapping[verb],key_mapping[button])
+                else:
+                    print prettify(precond)
+                if len(outcome2precond[outcome]) > 1:
+                    if ind == 0:
+                        print '\t at the same time as'
+                    elif ind < len(outcome2precond[outcome])-1:
+                        print '\t and'
+            if outcome_ind < len(will_dos)-1:
+                print '\n\tor\n'
+
+  
+                
+    if avoids:
+        print '\nThey will avoid'
+
+        for outcome_ind,outcome in enumerate(avoids):
+            for ind,precond in enumerate(outcome2precond[outcome]):
+                precond = precond['terms'][0]
+                if 'overlaps' == precond['predicate']:
+                    if 'true' == precond['terms'][2]['predicate']:
+                        print '\tattempting to make a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' touch'
+                    else:
+                        print '\tattempting to keep a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' from touching'
+                elif 'control_event' == precond['predicate']:
+                    if 'click' ==  precond['terms'][0]['predicate']:
+                        print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0]['terms'][0])]
+                    elif 'button' == precond['terms'][0]['predicate']:
+                        verb = precond['terms'][0]['terms'][1]['predicate']
+                        button = precond['terms'][0]['terms'][0]['predicate']
+                        print '\t{} the {}'.format(press_mapping[verb],key_mapping[button])
+                else:
+                    print prettify(precond)
+                if len(outcome2precond[outcome]) > 1:
+                    if ind == 0:
+                        print '\t at the same time as'
+                    elif ind < len(outcome2precond[outcome])-1:
+                        print '\t and'
+            if outcome_ind < len(will_dos)-1:
+                print '\n\tor\n'
+
+
+    print '\nThe player controls the game by'
+    for oo in out['controlLogic']:
+        print ''
+        for ooo in oo:
+            ooo = ooo['terms'][0]
+            if 'draggable' == ooo['predicate']:
+                entity = ooo['terms'][0]['terms'][0]
+                print '\tclicking-and-dragging {}s'.format(labels[prettify(entity)])
+            else:
+                print prettify(ooo)
+
+    direction_mapping = {'towards':'towards',
+                         'away':'away from'}
+    for oo in out['action']:
+        for ooo in oo:
+            pretty = prettify(ooo)
+            ooo = ooo['terms'][0]
+            if 'move' in pretty and 'cursor' in pretty:
+                print '\tthe {} moves {} the cursor'.format(labels[prettify(ooo['terms'][0]['terms'][0])],direction_mapping[prettify(ooo['terms'][1]['terms'][0])])
+     
+    for oo in out['condition']:
+        for ooo in oo:
+            pretty = prettify(ooo)
+            precond = ooo['terms'][0]
+            if 'control_event' in pretty:
+                if 'click' ==  precond['terms'][0]['predicate']:
+                    print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0]['terms'][0])]
+                elif 'button' == precond['terms'][0]['predicate']:
+                    verb = precond['terms'][0]['terms'][1]['predicate']
+                    button = precond['terms'][0]['terms'][0]['predicate']
+                    print '\t{} the {}'.format(press_mapping[verb],key_mapping[button])
+
+    sprites = {}
+    for oo in out['initialize']:
+        for ooo in oo:
+            pretty = prettify(ooo)
+            if 'set_sprite' in pretty or 'set_color' in pretty:
+                ooo = ooo['terms'][0]
+                entity = prettify(ooo['terms'][0]['terms'][0])
+                if entity not in sprites:
+                    sprites[entity] = {}
+                if 'set_sprite' in pretty:
+                    sprites[entity]['sprite'] = prettify(ooo['terms'][1])
+                if 'set_color' in pretty:
+                    sprites[entity]['color'] = prettify(ooo['terms'][1])
+    print ''
+    
+    for sprite in sorted(sprites):
+        print 'A ' +  labels[sprite] + ' looks like a ' + sprites[sprite]['color'] + ' ' + sprites[sprite]['sprite']

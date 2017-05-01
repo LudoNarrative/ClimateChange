@@ -303,3 +303,9 @@ movement(move(E,D)) :- action(move(E,D)).
 
 :- action(move(E,direction(_,E2))),
    2 {action(move(E,direction(_,E2)))}.
+
+:- player_model(Outcome,player_will_attempt),
+   trivial(Outcome).
+
+
+
