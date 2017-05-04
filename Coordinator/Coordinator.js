@@ -453,7 +453,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "deanReaction eq true"},
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
-			//dataFiles: ["text!undergradDinnerData_irapopor"],
+			//dataFiles: ["text!undergradDean_sgadsby"],
 
 			dataFiles: [
 				"text!undergradDean_talon",
@@ -469,7 +469,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set deanReaction false",
 				"set tension 0",
 
-				"set confidence 5"
+				"set confidence 5",
+				"set academicEnthusiasm 0",			//global stat
 			],
 			UIvars: [
 
