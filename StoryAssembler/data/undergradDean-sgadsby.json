@@ -36,8 +36,8 @@
 			{"gotoId": "DeanReassurence"},
 			//{"gotoId": "DeanTellsStory"},
 		],
-		"conditions" : ["tension lt 5","academicEnthusiasm gt 5"],
-		//"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm gt 5"], //add high academic enthusiasm requirement.
+		//"conditions" : ["tension lt 5","academicEnthusiasm gt 5"],
+		"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm gt 5"], //add high academic enthusiasm requirement.
         "effects" : [ "set reasonForTrouble true"],//,"incr deanFriendliness 1"]
     },
 	{
@@ -88,8 +88,8 @@
 			{"gotoId": "linkToSpeech"},
 			{"gotoId": "ContinuePassiveness"}
 		],
-		"conditions" : ["tension lt 5","academicEnthusiasm lt 5"],
-	//	"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm lt 5"], //add low academic enthusiasm requirement.
+	//	"conditions" : ["tension lt 5","academicEnthusiasm lt 5"],
+		"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm lt 5"], //add low academic enthusiasm requirement.
         "effects" : [ "set reasonForTrouble true"],//,"decr deanFriendliness 1"]
     },
 	 {
