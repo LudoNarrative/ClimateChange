@@ -39,7 +39,7 @@
 		"choiceLabel": "\"I think I do.\"",
 		"content": "Dean Simon nodded at Emma’s acknowledgment; it was solemn and kind.<br>\"What’s going on, Emma. It feels like night-and-day from where we were just a month ago.\"<br>Emma’s hands found their way to the hem of her blouse. She picked at a loose thread as she struggled for words.<br>\"It’s just{ifStateCondition|confidence lte 5|...\" She hesitated. There was a long moment of silence. \"Just...\"|...}",
 		"effects": [
-			"troubleWithLecture eq true"
+			"set troubleWithLecture true"
 		],
 	},
 	{
