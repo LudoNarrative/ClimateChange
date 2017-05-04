@@ -65,13 +65,13 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			State.set("mode", "narration");
 			State.set("x", false);
 			State.set("y", false);
-			State.set("blockingFlag", true);
+			State.set("blocking", 1);
 			wl = Wishlist.create([{condition: "x eq true"},{condition: "y eq true"}], State);
 			wl.logOn();
 			ChunkLibrary.add([
 				{ id: "init", content: "init stuff", choices: [{gotoId: "linkedChoice"}], effects: ["set x true"] },
-				{ id: "linkedChoice", content: "linked Choice", effects: ["set blockingFlag false"], choiceLabel: "..."},
-				{ id: "linkedContinue", content: "...", effects: ["set y true"], conditions: ["blockingFlag eq false", "x eq true"] }
+				{ id: "linkedChoice", content: "linked Choice", effects: ["incr blocking 1"], choiceLabel: "..."},
+				{ id: "linkedContinue", content: "...", effects: ["set y true"], conditions: ["blocking eq 2", "x eq true"] }
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
 			assert.deepEqual(html(getStoryEl()), "init stuff", "Correct chunk is chosen to begin");

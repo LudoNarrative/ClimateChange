@@ -1,99 +1,102 @@
 
 
-%% reading(help,relation(Entity1,Entity2)) :-
-%%     precondition(overlaps(Entity1,Entity2,true),Outcome),
-%%     result(Outcome,modify(increase,property(Entity2,health))).
+{reading(help,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity1,Entity2,true),Outcome),
+    result(Outcome,modify(increase,property(Entity2,health))).
 
-%% reading(help,relation(Entity1,Entity2)) :-
-%%     precondition(overlaps(Entity2,Entity1,true),Outcome),
-%%     result(Outcome,modify(increase,property(Entity2,health))).
-
-
-%% reading(hurt,relation(Entity1,Entity2)) :-
-%%     precondition(overlaps(Entity1,Entity2,true),Outcome),
-%%     result(Outcome,modify(decrease,property(Entity2,health))).
+{reading(help,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity2,Entity1,true),Outcome),
+    result(Outcome,modify(increase,property(Entity2,health))).
 
 
-%% reading(hurt,relation(Entity1,Entity2)) :-
-%%     precondition(overlaps(Entity1,Entity2,true),Outcome),
-%%     result(Outcome,delete(Entity2)).
-
-%% reading(hurt,relation(Entity1,Entity2)) :-
-%%     precondition(overlaps(Entity2,Entity1,true),Outcome),
-%%     result(Outcome,modify(decrease,property(Entity2,health))).
+{reading(hurt,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity1,Entity2,true),Outcome),
+    result(Outcome,modify(decrease,property(Entity2,health))).
 
 
-%% reading(hurt,relation(Entity1,Entity2)) :-
-%%     precondition(overlaps(Entity2,Entity1,true),Outcome),
-%%     result(Outcome,delete(Entity2)).
+{reading(hurt,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity1,Entity2,true),Outcome),
+    result(Outcome,delete(Entity2)).
 
-%% reading(produces,relation(Entity1,Entity2)) :-
-%%     action(add(Entity2,_,Entity1)).
+{reading(hurt,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity2,Entity1,true),Outcome),
+    result(Outcome,modify(decrease,property(Entity2,health))).
+
+
+{reading(hurt,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity2,Entity1,true),Outcome),
+    result(Outcome,delete(Entity2)).
+
+{reading(produces,relation(Entity1,Entity2)) } :-
+    action(add(Entity2,_,Entity1)).
 
     
-reading(consumes,relation(Entity1,Entity2)) :-
+{reading(consumes,relation(Entity1,Entity2)) } :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,delete(Entity2)).
     
-%% reading(chases,relation(Entity1,Entity2)) :-
-%%     action(move(Entity1,direction(towards,Entity2))).
+{reading(chases,relation(Entity1,Entity2)) } :-
+    action(move(Entity1,direction(towards,Entity2))).
 
-%% reading(flees,relation(Entity1,Entity2)) :-
-%%     action(move(Entity1,direction(away,Entity2))).
+{reading(flees,relation(Entity1,Entity2)) } :-
+    action(move(Entity1,direction(away,Entity2))).
 
-reading(consumes,relation(Entity1,Resource1)) :-
+{reading(consumes,relation(Entity1,Resource1)) } :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(decrease,Resource1)).
 
-%% reading(consumes,relation(Entity1,Resource1)) :-
-%%     precondition(overlaps(Entity2,Entity1,true),Outcome),
-%%     result(Outcome,modify(decrease,Resource1)).
+{reading(consumes,relation(Entity1,Resource1)) } :-
+    precondition(overlaps(Entity2,Entity1,true),Outcome),
+    result(Outcome,modify(decrease,Resource1)).
 
-%% reading(produces,relation(Entity1,Resource1)) :-
-%%     precondition(overlaps(Entity1,Entity2,true),Outcome),
-%%     result(Outcome,modify(increase,Resource1)).
+{reading(produces,relation(Entity1,Resource1)) } :-
+    precondition(overlaps(Entity1,Entity2,true),Outcome),
+    result(Outcome,modify(increase,Resource1)).
 
-%% reading(produces,relation(Entity1,Resource1)) :-
-%%     precondition(overlaps(Entity2,Entity1,true),Outcome),
-%%     result(Outcome,modify(increase,Resource1)).
+{reading(produces,relation(Entity1,Resource1)) } :-
+    precondition(overlaps(Entity2,Entity1,true),Outcome),
+    result(Outcome,modify(increase,Resource1)).
 
-%% reading(consts,relation(Entity1,Resource1)) :-
-%%     result(Outcome,add(Entity1,_,_)),
-%%     result(Outcome,modify(decrease,Resource1)).
+{reading(consts,relation(Entity1,Resource1)) } :-
+    result(Outcome,add(Entity1,_,_)),
+    result(Outcome,modify(decrease,Resource1)).
 
-%% reading(costs,relation(Entity1,Resource1)) :-
-%%     result(Outcome,add(Entity1,_,_)),
-%%     result(Outcome,modify(decrease,Resource1)).
+{reading(costs,relation(Entity1,Resource1)) } :-
+    result(Outcome,add(Entity1,_,_)),
+    result(Outcome,modify(decrease,Resource1)).
 
-%% reading(goal(Action),Thing) :-
-%%     goal(Action,Thing).
+{reading(goal(Action),Thing) } :-
+    goal(Action,Thing).
 
-reading(goal(produce),Resource) :-
+{reading(goal(produce),Resource) } :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
-reading(goal(produce),Resource) :-
+{reading(goal(produce),Resource) } :-
     precondition(compare(ge,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
     
-reading(goal(reduce),Resource) :-
+{reading(goal(reduce),Resource) } :-
     precondition(compare(ge,Resource),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
     
-reading(goal(reduce),Resource) :-
+{reading(goal(reduce),Resource) } :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
-reading(sharing,relation(Entity,Entity1)) :-     
+{reading(sharing,relation(Entity,Entity1)) }  :-    
     reading(consumes,relation(Entity1,Entity)),
     many(Entity1),
     precondition(overlaps(Entity,Entity1,true),Outcome),
     result(Outcome,delete(Entity)),
     result(Outcome,modify(increase,Resource)),
     reading(good,Resource).
-    
-reading(sharing,relation(Entity,Entity1)) :-     
+required(good) :- required(sharing).
+required(consumes) :- required(sharing).
+
+
+{reading(sharing,relation(Entity,Entity1)) } :-     
     reading(consumes,relation(Entity1,Entity)),
     many(Entity1),
     precondition(overlaps(Entity1,Entity,true),Outcome),
@@ -101,87 +104,173 @@ reading(sharing,relation(Entity,Entity1)) :-
     result(Outcome,modify(increase,Resource)),
     reading(good,Resource).
     
-reading(good,Resource) :-
+{reading(good,Resource) } :-
     reading(goal(produce),Resource).
-reading(bad,Resource) :-
+
+required(goal(produce)) :- required(good).
+
+{reading(bad,Resource) } :-
     reading(goal(reduce),Resource).
-reading(good,property(Player,health)) :-
-    player_controls(Player). 
+{reading(good,property(Player,health)) } :-
+    player_controls(Player),
+    action(modify(_,property(plaery,health))).
+
+required(goal(reduce)) :- required(bad).
+
+{reading(good,Entity)} :-
+    reading(good,Resource),
+    reading(produces,relation(Entity,Resource)).
+
+{reading(good,Entity)} :-
+    reading(bad,Resource),
+    reading(consumes,relation(Entity,Resource)).
+
+{reading(bad,Entity)} :-
+    reading(good,Resource),
+    reading(consumes,relation(Entity,Resource)).
+
+{reading(bad,Entity)} :-
+    reading(bad,Resource),
+    reading(produces,relation(Entity,Resource)).
 
 
-reading(maintenance,Resource) :-
+%%Good / Bad Outcome
+
+reading(good,Outcome) :-
+    result(Outcome,modify(increase,Resource)),
+    reading(good,Resource).
+
+reading(bad,Outcome) :-
+    result(Outcome,modify(decrease,Resource)),
+    reading(good,Resource).
+
+
+reading(bad,Outcome) :-
+    result(Outcome,modify(increase,Resource)),
+    reading(bad,Resource).
+
+reading(good,Outcome) :-
+    result(Outcome,modify(decrease,Resource)),
+    reading(bad,Resource).
+
+
+
+
+reading(good,Outcome) :-
+    result(Outcome,delete(Entity,_)),
+    reading(bad,Entity).
+
+reading(good,Outcome) :-
+    result(Outcome,add(Entity,_)),
+    reading(good,Entity).
+
+reading(bad,Outcome) :-
+    result(Outcome,delete(Entity,_)),
+    reading(good,Entity).
+
+reading(bad,Outcome) :-
+    result(Outcome,add(Entity,_)),
+    reading(bad,Entity).
+
+
+
+
+reading(tradeoff,Outcome) :-
+    reading(good,Outcome),
+    reading(bad,Outcome).
+
+
+
+{reading(maintenance,Resource) } :-
     reading(good,Resource),
     player_controls_outcome(Outcome),
     result(Outcome,modify(increase,Resource)),
     result(OverTime,modify(decrease,Resource)),
     over_time(OverTime).
 
-reading(maintenance,Resource) :-
+
+required(produces) :- required(maintenance).
+required(good) :- required(maintenance).
+
+{reading(maintenance,Resource) } :-
     reading(bad,Resource),
     player_controls_outcome(Outcome),
     result(Outcome,modify(decrease,Resource)),
     result(OverTime,modify(increase,Resource)),
     over_time(OverTime).
 
+required(bad) :- required(maintenance).
 
 
-%% reading(stakes(high),Resource) :-
-%%     precondition(compare(ge,Resource),Outcome),
-%%     result(Outcome,mode_change(game_loss)).
+{reading(stakes(high),Resource) } :-
+    precondition(compare(ge,Resource),Outcome),
+    result(Outcome,mode_change(game_loss)).
     
-%% reading(stakes(high),Resource) :-
-%%     precondition(compare(le,Resource),Outcome),
-%%     result(Outcome,mode_change(game_win)).
+{reading(stakes(high),Resource) } :-
+    precondition(compare(le,Resource),Outcome),
+    result(Outcome,mode_change(game_win)).
 
-%% reading(stakes(high),property(Entity,health)) :-
-%%     entity(Entity),
-%%     action(modify(decrease,property(Entity,health))).
+{reading(stakes(high),property(Entity,health)) } :-
+    entity(Entity),
+    action(modify(decrease,property(Entity,health))).
 
-%% reading(stakes(low),Resource) :-
-%%     resource(Resource),
-%%     not reading(stakes(high)).
-
-%% %Grinding is a valid reading iff monotonic, player controls the modification
-%% reading(grinding,Resource) :-
-%%     monotonic(Resource),
-%%     player_controls_outcome(Outcome),
-%%     result(Outcome,modify(_,Resource)),
-%%     not reading(risk,Outcome).
+{reading(stakes(low),Resource) } :-
+    resource(Resource),
+    not reading(stakes(high),Resource).
 
 
-%% %Organization
+required(stakes(high)) :- required(stakes(low)).
 
-%% reading(organization) :-
-%%     precondition(overlaps(Entity,Entity2,true),Outcome),
-%%     outcome_enables(Outcome,EndOutcome),
-%%     result(EndOutcome,mode_change(game_win;narrative_progress)).
+%Grinding is a valid reading iff monotonic, player controls the modification
+{reading(grinding,Resource) } :-
+    monotonic(Resource),
+    player_controls_outcome(Outcome),
+    result(Outcome,modify(_,Resource)),
+    not reading(risk,Outcome).
 
-%% %an outcome has risk, if a similar outcome is bad
-%% reading(risk, Outcome) :-
-%%     precondition(Cond,Outcome),
-%%     precondition(Cond,BadOutcome),
-%%     reading(outcome_hurts,relation(BadOutcome,_)).
+required(risk) :- required(grinding).
 
-%% reading(outcome_helps,relation(Outcome,Resource)) :-
-%%     result(Outcome,modify(increase,Resource)),
-%%     player_controls_outcome(Outcome),
-%%     reading(good,Resource).
-%% reading(outcome_helps,relation(Outcome,Resource)) :-
-%%     result(Outcome,modify(decrease,Resource)),
-%%     player_controls_outcome(Outcome),
-%%     reading(bad,Resource).
+%Organization
 
-%% reading(outcome_hurts,relation(Outcome,Resource)) :-
-%%     result(Outcome,modify(decrease,Resource)),
-%%     player_controls_outcome(Outcome),
-%%     reading(good,Resource).
-%% reading(outcome_hurts,relation(Outcome,Resource)) :-
-%%     result(Outcome,modify(increase,Resource)),
-%%     player_controls_outcome(Outcome),
-%%     reading(bad,Resource).
+{reading(organization) } :-
+    precondition(overlaps(Entity,Entity2,true),Outcome),
+    outcome_enables(Outcome,EndOutcome),
+    result(EndOutcome,mode_change(game_win;narrative_progress)).
+
+%an outcome has risk, if a similar outcome is bad
+{reading(risk, Outcome) } :-
+    precondition(Cond,Outcome),
+    precondition(Cond,BadOutcome),
+    reading(outcome_hurts,relation(BadOutcome,_)).
+
+required(outcome_hurts) :- required(risk).
+
+{reading(outcome_helps,relation(Outcome,Resource)) } :-
+    result(Outcome,modify(increase,Resource)),
+    player_controls_outcome(Outcome),
+    reading(good,Resource).
+{reading(outcome_helps,relation(Outcome,Resource)) } :-
+    result(Outcome,modify(decrease,Resource)),
+    player_controls_outcome(Outcome),
+    reading(bad,Resource).
 
 
-%%%% HELPERS 
+required(good) :- required(outcome_helps).
+required(bad) :- required(outcome_helps).
+
+{reading(outcome_hurts,relation(Outcome,Resource)) } :-
+    result(Outcome,modify(decrease,Resource)),
+    player_controls_outcome(Outcome),
+    reading(good,Resource).
+{reading(outcome_hurts,relation(Outcome,Resource)) } :-
+    result(Outcome,modify(increase,Resource)),
+    player_controls_outcome(Outcome),
+    reading(bad,Resource).
+
+required(good) :- required(outcome_hurts).
+required(bad) :- required(outcome_hurts).
+
+%HELPERS 
 
 change(game_win,positive).
 change(narrative_progress,positive).
@@ -245,3 +334,6 @@ outcome_enables(O1,O3) :-
 :- reading(grinding,Resource),
    result(Outcome,modify(_,Resource)),
    not player_controls_outcome(Outcome).
+
+
+:- reading(Reading,_), not required(Reading).
