@@ -72,7 +72,8 @@
 		"choiceLabel": "\"Don’t patronize me, Simon!\"",
 		"content": "\"You have no right to speak to me that way!\"",
 		"effects": [
-			"incr tension 4"
-		],
-	},
+			"incr tension 4",
+			"set troubleWithLecture true"
+		]
+	}
 ]
