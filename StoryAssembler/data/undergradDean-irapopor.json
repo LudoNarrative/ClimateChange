@@ -8,22 +8,38 @@
     */
     // Ian's Part
     {
+        "id": "ianStarti",
+        "content" : "Higher tension or lower tension",
+        "choices" : [
+            {"gotoId" : "midTensionStarti"},
+            {"gotoId" : "highTensionStarti"}
+        ],
+        "conditions" : [
+            "troubleWithLecture eq true",
+            "tension gte 5"
+        ]
+    },
+    {
         "id": "midTensionStarti",
-        "content" : "<p>\"Okay {name|protagonist}, I think the both of us have had long days. Lets see if we can't figure what might be causing trouble for you these past week.\" {name|authorityFigure} pulls off his glasses and wipes them. It seems redundant how clear they appear.</p>",
+        "choiceLabel" : "Mid Tension",
+        "content" : "<p>\"Okay {name|protagonist}, I think the both of us have had long days. Lets see if we can't figure what might be causing trouble for you these past few weeks.\" {name|authorityFigure} pulls off his glasses and wipes them. It seems redundant given how clear they appear.</p>",
         "choices" : [
             {"gotoId":"Idunnoi"},
             {"gotoId":"maybeImNervousi"},
             {"gotoId":"aConcreteReasoni"}
         ],
         "conditions" : [
-            "troubleWithLecture eq true",
-            "tension gte 5",
-            "tension lt 10"
+            "troubleWithLecture eq true"//,
+            //"tension gte 5",
+            //"tension lt 10"
+        ],
+        "effects" : [
+            "set tension 5"
         ]
     },
         {
             "id": "Idunnoi",
-            "choiceLabel" : "I... I am really not sure.",
+            "choiceLabel" : "{ifStateCondition|composure gte 4|I really don't know.|I... I can't figure it out.}",
             "content" : "<p>\"Yes... I can understand that finding your footing in lecture can be tough, but you've had some time now. You have to have something. If you don't... well, let's not have that.\" He folds his hands and his gaze pierces you.</>",
             "choices" : [
                 {"gotoId":"mustNotBeMei"},
@@ -32,8 +48,8 @@
         },
             {
                 "id": "mustNotBeMei",
-                "choiceLabel" : "If there is a problem, it isn't me. It must be the students.",
-                "content" : "<p>{name|authorityFigure} turns away and tries to exhales. It sounds like a raspy cough. \"And well, how is it their fault?\"</p>",
+                "choiceLabel" : "{ifStateCondition|composure gte 3|If there is a problem, it isn't me. It must be the students.|If there's a problem... well there isn't. Maybe the students are causing trouble, but not me.}",
+                "content" : "<p>He goes rigid. \"And well, how is it their fault?\"</p>",
                 "choices" : [
                     {"gotoId" : "theyDon'tCarei"},
                     {"gotoId" : "theyAreDisruptivei"}
@@ -44,18 +60,18 @@
             },
                 {// good place for call back to lecture
                     "id": "theyDon'tCarei",
-                    "choiceLabel" : "They just don't seem to care.",
-                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barelly holding together. Maybe steam will pour from his ears. \"And it is your job to make them care.\"</p>"
+                    "choiceLabel" : "{ifStateCondition|hope lt 3|It's like they've stopped caring. One student seems close to dropping out.|They just don't seem to care that much.}",
+                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barelly holding together. \"And it is your job to make them care.\"</p>"
                 },
                 {
                     "id": "theyAreDisruptivei",
-                    "choiceLabel" : "They are constantly fighting with the information I am telling them.",
-                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barelly holding together. Maybe steam will pour from his ears. \"They shouldn't have to agree with you right off the bat, should they?\"</p>"
+                    "choiceLabel" : "{ifStateCondition|optimism lt 3|They're aggressive. There is this one that tries to disprove everything I say.|They are constantly fighting with the information I am telling them.}",
+                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barelly holding together. \"They shouldn't have to agree with you right off the bat, should they?\"</p>"
                 },
         {
             "id": "maybeImNervousi",
-            "choiceLabel" : "I've just been... so nervous.",
-            "content" : "<p>For a second it looks like {name|authorityFigure} is going to rest a reassuring had on your arm, but he refolds his hands. \"I understand. Believe me, we've all been there. But what is eating at you. There must be something that is bothering you\"</p>",
+            "choiceLabel" : "{ifStateCondition|composure gte 5|My nerves, they're all shot.|My nerves are like... all... ya know?}",
+            "content" : "<p>For a second it looks like {name|authorityFigure} is going to rest a reassuring had on your arm, but he refolds his hands. \"I understand. Believe me, we've all been there. But what is eating at you. There must be something that is making you feel this way.\"</p>",
             "choices" : [
                 {"gotoId" : "amIDoingEnoughi"},
                 {"gotoId" : "yeahIReallyDontknowi"}
@@ -63,7 +79,7 @@
         },
             {
                 "id": "amIDoingEnoughi",
-                "choiceLabel" : "Sometimes I just wonder if I am really doing enough talking in a classroom",
+                "choiceLabel" : "I'm having trouble acting like I'm making a difference while I'm cooped up in some polished classroom.",
                 "content" : "<p>He turns and looks out the window for just a second. Maybe he sees himself out there on the beach. \"The kids are going to have to carry the torch for us. Sooner than we'd like to admit.\"</p>",
                 "choices" : [
                     {"gotoId":"iShouldLeavei"},
@@ -75,8 +91,8 @@
             },
                 {
                     "id": "iShouldLeavei",
-                    "choiceLabel" : "Maybe, but I guess I'm just not the one to hand it off. I need to be out there, seeing my difference.",
-                    "content" : "<p>\"The real world can feel far away sometimes, away from all our polished classrooms and rennovated labs.\" He smirks, but his skin pulls too far. It looks like it might hurt. \"I definetly didn't think this would be the way our conversation would go, but I haven't seen you this confident since you joined.\"</p>",
+                    "choiceLabel" : "{ifStateCondition|composure gte 3|Maybe, but I guess I'm just not the one to hand it off. I need to be out there, seeing my difference.|But what if I burn them... I should avoid the uh... torch thing.}",
+                    "content" : "<p>\"{if|StateCondition|composure gte 3|The real world can feel far away sometimes, away from all our polished classrooms and rennovated labs.\"|\"Um, yes. Duly noted.\"} He smirks, but his skin pulls too far. It looks like it might hurt. \"I definetly didn't think this would be the way our conversation would go, but I haven't seen you this confident since you joined.\"</p>",
                     "effects" : [
                         "set pathChoiceMade true"
                     ]
@@ -84,23 +100,23 @@
                 {
                     "id": "isThereSomethingElseForMeHerei",
                     "choiceLabel" : "It just feels wrong sometimes. Spouting knowledge when there is still so much I don't know.",
-                    "content" : "<p>\"To be fair, no one knows everything, not even close, and someone has to teach.\" He scratches his chin and stares up at the ceiling. \"For know, lets move your schedule towards lab work. Let you get your hands dirty, you know.\"</p>",
+                    "content" : "<p>\"To be fair and someone has to teach. Snazy elbow patches aside, we're not just for show.\" He scratches his chin and stares up at the ceiling. \"For know, lets have you help out with some of our field studies. Let you get your hands dirty, you know.\"</p>",
                     "effects" : [
                         "set pathChoiceMade true"
                     ]
                 },
             {
                 "id": "yeahIReallyDontknowi",
-                "choiceLabel" : "I honestly don't know. I'm sorry",
-                "content" : "<p>{name|authorityFigure} taps his pencil against his desk. For awhile, everything is silent.</p>",
+                "choiceLabel" : "{ifStateCondition|composure gte 4|I keep thinking and thinking, but still. Nothing. I have no idea what is going on.|\"I'm sorry, but I just can't...\"}",
+                "content" : "<p>{name|authorityFigure} taps his pencil against his desk. For awhile, everything is silent. {ifStateCondition|composure gte 4|Tears well in your eyes.|}</p>",
                 "effects" : [
                     "incr tension 5"
                 ]
             },
         {
             "id": "aConcreteReasoni",
-            "choiceLabel" : "Honestly, I think I just haven't expected them to be so engaged. But I'm getting better.",
-            "content" : "<p>He smiles. \"I'm glad to hear that, but better isn't necesarrilly right. Are you sure you are committed to this? What matters is that your heart is in it, I don't care how good you are.\"</p>.",
+            "choiceLabel" : "{ifStateCondition|curiosity gte 7|They're so smart! One student, just... I've never seen someone so excited to learn.|Honestly, I think I just haven't expected them to be so on top of their game.} I just need to keep up really. But I'm getting better.",
+            "content" : "<p>He smiles. \"It thrills me that everyone is so focused on learning, but better isn't necesarrilly right. Are you sure you are committed to this? What matters is that your heart is in it, I don't care how good you are.\"</p>.",
             "choices" : [
                 {"gotoId":"isThereSomethingElseForMeHerei"},
                 {"gotoId":"iNeedMorePracticei"},
@@ -108,19 +124,23 @@
             ],
             "effects" : [
                 "set reasonForTrouble true"
+            ],
+            "conditions" : [
+                "academicEnthusiasm gte 10"
             ]
         },
             {
                 "id": "iNeedMorePracticei",
-                "choiceLabel" : "Yes. My heart is 100% in it.",
-                "content" : "<p>\"I would say your remind me of a younger version of myself, but I wasn't nearly this convincing.\"</p>",
+                "choiceLabel" : "{ifStateCondition|composure gte 4|Yes. My heart is 100% in it.|Yes, I like, really want this. Yeah!}",
+                "content" : "<p>\"I would say your remind me of a younger version of myself, but I told my partner I was going to try and be less of a cliche.\"</p>",
                 "effects" : [
                     "set pathChoiceMade true"
                 ]
             },
     {
         "id": "highTensionStarti",
-        "content" : "<p>{name|authorityFigure} places his glasses on the table and rubs his eyes with his fingers. His elbows drop onto the desk before he speaks again. \"{name|protagonist} I'm going to be honest with you. This isn't going well.\"</p>",
+        "choiceLabel" : "high tension start",
+        "content" : "<p>{name|authorityFigure} places his glasses on the table and rubs his eyes with his fingers. His elbows drop onto the desk before he speaks again. \"{name|protagonist}, I'm going to be honest with you. This isn't going well.\"</p>",
         "choices" : [
             {"gotoId":"stokeTheFirei"},
             {"gotoId":"reconcilei"},
@@ -128,10 +148,11 @@
         ],
         "conditions" : [
             "troubleWithLecture eq true",
-            "tension gte 10"
+            //"tension gte 10"
         ],
         "effects" : [
-            "set deanReaction true"
+            "set deanReaction true",
+            "set tension 10"
         ]
     },
         {
@@ -141,17 +162,23 @@
         },
         {
             "id": "stokeTheFirei",
-            "choiceLabel" : "You know what. I don't care. I don't need you to approve of me.",
-            "content" : "<p>His hand slams against the table. \"{name|protagonist} really? Do you understand what you are saying.\" He turns away and breathes deep before facing you again. \"But fine. I'll give you one last chance. Can you tell me what might be causing trouble in class?\"</p>",
+            "choiceLabel" : "Guess what. I don't care. I don't need you to approve of me.",
+            "content" : "<p>His hand slams against the table. \"{name|protagonist}, really? Do you understand what you are saying.\" He turns away and breathes deep before facing you again. \"But fine. I'll give you one last chance. Can you tell me what might be causing trouble in class?\"</p>",
             "choices" : [
                 {"gotoId":"schoolIsTheProblemi"},
                 {"gotoId":"noProblemi"}
+            ],
+            "conditions" : [
+                "tension gte 10"
+            ],
+            "effects" : [
+                "incr tension 5"
             ]
         },
             {
                 "id": "schoolIsTheProblemi",
                 "choiceLabel" : "It is the classroom. We talk about the problems in the world without actually doing anything.",
-                "content" : "<p>\"That's all I need to hear.\" He swivles on his chair to face his bookcase. \"I think you should go.\"</p>",
+                "content" : "<p>\"Fine, if it really is that simple to you, that's all I need to hear.\" He swivles on his chair to face his bookcase. \"I think you should go.\"</p>",
                 "choices" : [
                     {"gotoId":"apologizeAndLeavei"},
                     {"gotoId":"justLeavei"},
@@ -159,12 +186,15 @@
                 ],
                 "effects" : [
                     "set reasonForTrouble true"
+                ],
+                "conditions" : [
+                    "academicEnthusiasm lte 3"
                 ]
             },
             {
                 "id": "noProblemi",
-                "choiceLabel" : "There is no problem. This is a waste of time.",
-                "content" : "<p>\"No problem!\" He bounds up and his chair shoots back against the wall. \"The problem is that you have no control of your class! They walk all over you and... and frankly it's unacceptable for our university to be represented as such.\" {name|authorityFigure} holds a hand ot his chest. Maybe the words cut as they work their way out.</p>",
+                "choiceLabel" : "{ifStateCondition|composure gte 6|There is no problem. This is a waste of time.|I... I just don't see a problem here. Alright?}",
+                "content" : "<p>{ifStateCondition|tension gt 10|He bounds up and his chair slams back against the wall. He stares you down, but deep|He sighs. Deep} down he is praying for the tension to dissolve away. \"{ifStateCondition|tension gt 5|You have no control of the kids!|See, the problem is that you have no control of your class.} They walk all over you and... and frankly it's unacceptable for our university to be represented as such.\" {name|authorityFigure} holds a hand on his chest. Maybe the words cut as they work their way out.</p>",
                 "choices" : [
                     {"gotoId":"apologizeAndLeavei"},
                     {"gotoId":"justLeavei"},
@@ -180,6 +210,9 @@
                     "content" : "<p>\"Emma. Please leave.\"</p>",
                     "effects" : [
                         "set pathChoiceMade true"
+                    ],
+                    "conditions" : [
+                        "tension gte 5"
                     ]
                 },
                 {
@@ -192,7 +225,7 @@
                 },
                 {
                     "id": "apologizeAndLeavei",
-                    "choiceLabel" : " I'll be on my way. I'm sorry it ended up this way.",
+                    "choiceLabel" : "{ifStateCondition|composure gte 5|I'll be on my way.|I'm...} I'm sorry it ended up this way.",
                     "content" : "<p>\"Yeah, I am too.\"</p>",
                     "effects" : [
                         "set pathChoiceMade true"
@@ -202,21 +235,27 @@
         {
             "id": "reconcilei",
             "choiceLabel" : "Let's take a step back. This whole situation has put me a little on edge and I apologize.",
-            "content" : "<p>\"I understand. You'll never meet a teacher that says teaching is easy. But we still haven't made any progress. What has been the problem in you class?\"</p>",
+            "content" : "<p>\"I understand. You'll never meet a teacher that says what they do is easy. But we still haven't made any progress. What has been the problem in you class?\"</p>",
             "choices" : [
                 {"gotoId":"iMightKnowTheProblemi"},
                 {"gotoId":"thisMightNotBeForMei"}
+            ],
+            "conditions" : [
+                "composure gte 7"
             ]
         },
             {
                 "id": "iMightKnowTheProblemi",
-                "choiceLabel" : "I think it's the learning curve. I'm struggling more than most, but I'm getting there.",
-                "request" : {"gotoId":"aConcreteReasoni"}
+                "choiceLabel" : "I think it's the learning curve. I'm struggling more than most, but the kids are so driven. I want keep up, even if I have to stumble a bit.",
+                "request" : {"gotoId":"aConcreteReasoni"},
+                "conditions" : [
+                    "academicEnthusiasm gte 7"
+                ]
             },
             {
                 "id": "thisMightNotBeForMei",
-                "choiceLabel" : "I've been having this gnawing feeling that I'm just not doing enough",
-                "content" : "<p>\"Alright, and what can we do to make you feel like you are doing waht you need to.\"</p>",
+                "choiceLabel" : "I've been having this gnawing feeling that I'm just sitting in a nice airconditioned classroom away from the real problems out there.",
+                "content" : "<p>\"Alright, and what can we do to make you feel like you are getting something done.\"</p>",
                 "choices" : [
                     {"gotoId":"iShouldLeavei"},
                     {"gotoId":"isThereSomethingElseICanDoHerei"}
@@ -224,7 +263,7 @@
             },
                 {
                     "id": "isThereSomethingElseICanDoHerei",
-                    "choiceLabel" : "I still care about this university. I just want to be more engaged in work, not just reciting knowledge",
+                    "choiceLabel" : "I still care about this university. I just want something a bit more labor intensive, not just reciting knowledge",
                     "request" : {"gotoId" : "isThereSomethingElseForMeHerei"}
                 },
                 
@@ -246,18 +285,34 @@
     },
         {
             "id": "tellMeTheStoryi",
-            "choiceLabel" : "Yes tell me the story dean",
-            "content" : "Well here is my story."
+            "choiceLabel" : "Sure, let's hear it.",
+            "content" : "<p>\"I'd just started teaching. It was my third week. No, maybe it was my second.\" His finger twidles about as if he is trying to pluck the date out of the air. \"Anyway, doesn't matter. I was supposed to be doing a lecture on community reactions to changing ecosystems. The thing is, I blanked, so you know what I did?\"</p>.",
+            "choices" : [
+                {"gotoId":"whati"}
+            ]
         },
+            {
+                "id": "whati",
+                "choiceLabel" : "What?",
+                "content" : "<p>\"I just talk about fish. My thesis was on salmon migration. Best damn lecture I ever gave. I was so excited to just talk about fish that I got myself even more excited. At the end of the lecture a quiet student comes up to me and tells me it's the best lecture he ever saw. Then he apologizes causes he's changing his major from environmental studies to computer science and was going to be dropping the class.\"</p>",
+                "choices" : [
+                    {"gotoId":"soi"}
+                ]
+            },
+                {
+                    "id": "soi",
+                    "choiceLabel" : "Okay... so what's the moral.",
+                    "content" : "<p>\"Moral? I dunno. Sometimes things get so rocky you'll never quite guess where it is going. Anyways, you have more important things than to listen to my stories going on and I got more important things to do than tell stories, so let's call it for today.\"</p>"
+                },
         {
             "id": "pleaseDontTellMeTheStoryi",
-            "choiceLabel" : "Maybe some other time.",
-            "content" : "<p>\"If you say so, but I would've preferred a straightforward 'no'.\" He flashes a grin and his teeth sparkle, just a little bit.</p>"
+            "choiceLabel" : "Let's leave it for next time.",
+            "content" : "<p>\"If you say so, but I would've preferred a straightforward 'no'.\" He flashes a grin and his teeth sparkle, just a little bit. \"Get out of here kid, you got things to do.\"</p>"
         },
 
     {
         "id": "interrupti",
-        "content" : "Here is the interrupt where you have a mental breakdown",
+        "content" : "<p>{ifStateCondition|tension gte 7|Your fists clench. He's going to fire you any second. Right when you slip. You can't let him win.|Everything is going alright so far, but it's only a matter of time. This is meeting about you getting fired, right?} Maybe if you stop sweating so much... Stop! Oh, did he just ask a question? Guess you'll just have to tune in for the next one. Nope. Maybe just shoot for one in ten questions answered.</p>",
         "choices" : [
             {"gotoId":"nothingToDoNowi"}
         ],
@@ -270,7 +325,7 @@
     },
         {
             "id": "nothingToDoNowi",
-            "choiceLabel" : "We'll, nothing to do now",
+            "choiceLabel" : "If you don't make eye contact, maybe you can keep from crying.",
             "request" : {"gotoId":"noProblemi"}
         }
 ]

@@ -471,8 +471,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 				"set confidence 5",
 				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				"set composure 5"
 			],
 			UIvars: [
+				"tension"
 
 			],
 			mode: {

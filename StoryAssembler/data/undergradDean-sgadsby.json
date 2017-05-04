@@ -11,21 +11,33 @@
         "content" : "Will send you either to go through high academic enthusiasm emma or academic enthusiasm emma",
 		"choices" : [ 
 			{"gotoId": "HighAcademic"},
-			{"gotoId": "LowAcademic"},
+			{"gotoId": "LowAcademic"}
+		],
+		"conditions" : [
+			"troubleWithLecture eq true",
+			"tension lt 5"
 		]
     },
 	{	
         "id": "HighAcademic",
 		"choiceLabel": "High Academic",
         "content" : "This is high academic enthusiasm Emma",
-		 "effects" : ["set academicEnthusiasm 6"],
+		"conditions" : [
+			"troubleWithLecture eq true",
+			"tension lt 5"
+		],
+		 "effects" : ["set academicEnthusiasm 6"]
     },
 	{
          
         "id": "LowAcademic",
 		"choiceLabel": "Low Academic",
         "content" : "This is low academic enthusiasm Emma",
-		"effects" : ["set academicEnthusiasm 4"],
+		"conditions" : [
+			"troubleWithLecture eq true",
+			"tension lt 5"
+		],
+		"effects" : ["set academicEnthusiasm 4"]
     },
    {
         // this is all possible reasons, will be multiple ids (high enthusiasm). 
@@ -33,12 +45,12 @@
 	//	"choiceLabel": "you explain your troubles",
         "content" : "You smile {ifStateCondition|confidence lt 5|a bit nervously|} at the Dean. You start off by saying \"{ifStateCondition|confidence lt 5|um |}I was just really nervous about that first lecture and I guess I {ifStateCondition|confidence lt 5|um |} couldn't shake the feeling off. Least for the first couple lectures and then things just...{ifStateCondition|confidence lt 5|um|} kinda crashed. I didn't want this to happen. I'm sorry.\"",
 		"choices" : [ 
-			{"gotoId": "DeanReassurence"},
+			{"gotoId": "DeanReassurence"}
 			//{"gotoId": "DeanTellsStory"},
 		],
 		//"conditions" : ["tension lt 5","academicEnthusiasm gt 5"],
 		"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm gt 5"], //add high academic enthusiasm requirement.
-        "effects" : [ "set reasonForTrouble true"],//,"incr deanFriendliness 1"]
+        "effects" : [ "set reasonForTrouble true"]//,"incr deanFriendliness 1"]
     },
 	{
 		"id": "DeanReassurence",
@@ -46,8 +58,8 @@
         "content" : "The dean smiles at you. \"Now Emma, It's alright. We all have our bad days and sometimes we have a rough start. But it's about bouncing back that matters. Would you like to hear a story about my days as a professor? \"",
 		"choices" : [
 			{"gotoId": "DeanTellsStory"},
-			{"gotoId": "noD"},
-		],
+			{"gotoId": "noD"}
+		]
       //  "effects" : [ "incr deanFriendliness 1"]
     },
 	{
@@ -56,16 +68,16 @@
         "content" : " \"What a pity. It's a great story.\" You look at the Dean's face and notice the slight unhappiness in it. Maybe you <i> should've </i> listen to the story,even if it was only to please him. \"Anyways, since we've already talked about what happened and why it happened, what do you want to do about it Emma?\" ",
 		"choices" : [
 			{"gotoId": "continueTeaching"},
-			{"gotoId": "research"},
-		],
+			{"gotoId": "research"}
+		]
     },
 	{        
 		"id": "DeanTellsStory",
 		"choiceLabel": "you listen to the Dean tell a story.", 
         "content" : "You look up at him as he starts to talk \"When I first started teaching here, it was a disaster as well. At least half my students didn't show up unless it was a day for an exam,my first set of lectures went terrible and then one time while I was flustered, I accidentally call myself by a student's name and they never let that go. I ended up being \"professor Simon\" for somehow the entire year.\" You start to laugh at the ridiculousness of the story. It's hard for you to imagine the dean messing up so badly he was called Simon by his students the entire year. You take comfort in the fact that least you haven't had that problem yet.",
 		"choices" : [
-			{"gotoId": "askAboutStory"},
-		],
+			{"gotoId": "askAboutStory"}
+		]
       //  "effects" : [ "incr deanFriendliness 1"]
     },
 	{        
@@ -74,9 +86,9 @@
         "content" : "You laugh for a bit longer before asking \"Why'd you tell me that?\" \"To show you that everyone makes mistakes, it's natural to do so. It's okay that things haven't exactly gone perfect this semester,my first semester certainly didn't go well. The real question here is what do you want to do about it? \"",
 		"choices" : [
 			{"gotoId": "continueTeaching"},
-			{"gotoId": "research"},
+			{"gotoId": "research"}
 		],
-       "effects" : ["set tellStory true"], //incr deanFriendliness 1"]
+       "effects" : ["set tellStory true"] //incr deanFriendliness 1"]
     },
 	
     {
@@ -90,7 +102,7 @@
 		],
 	//	"conditions" : ["tension lt 5","academicEnthusiasm lt 5"],
 		"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm lt 5"], //add low academic enthusiasm requirement.
-        "effects" : [ "set reasonForTrouble true"],//,"decr deanFriendliness 1"]
+        "effects" : [ "set reasonForTrouble true"]//,"decr deanFriendliness 1"]
     },
 	 {
         "id": "ContinuePassiveness",
@@ -100,19 +112,19 @@
 			{"gotoId": "yes"},
 			{"gotoId": "no"}
 		],
-		"effects" : ["incr tension 1",],//"decr deanFriendliness 1","incr tension 1"],
+		"effects" : ["incr tension 1"]//"decr deanFriendliness 1","incr tension 1"],
     },
 	{
         "id": "yes",
 		"choiceLabel": "you say yes",
 		"request": {"gotoId": "passionateDeanSpeech"},
-		"effects" : ["set stillPassive true","incr tension 1"],//,"decr deanFriendliness 1","incr tension 1"],
+		"effects" : ["set stillPassive true","incr tension 1"]//,"decr deanFriendliness 1","incr tension 1"],
     },
 	{
         "id": "no",
 		"choiceLabel": "You say no",
 		"request": {"gotoId": "passionateDeanSpeech"},
-		"effects" : ["decr tension 1"],//,"incr deanFriendliness 1"],
+		"effects" : ["decr tension 1"]//,"incr deanFriendliness 1"],
     },
 	{
         "id": "linkToSpeech",
@@ -123,9 +135,13 @@
         "id": "passionateDeanSpeech",
         "content" : "The dean looks at you {ifStateCondition|stillPassive eq true|rather appalled|a bit relieved}. He starts saying \"Emma. This is our future. We have to educate these young minds about these current climate change problems. If we don't do it, who will teach them? Now {ifStateCondition|stillPassive eq true|you say nobody seems to care in your class,it's your <i> job </i> to make these students care.|}Even if you only seem to impact a couple students,those couple students could make all the difference. They could go on to teach or get involved with a local action group. But let's get one thing straight here, this is <b> not </b> just a job. Understand?\" You nod in understanding.",
 		"choices" : [
-			{"gotoId": "reflectOnSpeech"},
+			{"gotoId": "reflectOnSpeech"}
 		],
-		"conditions" : ["academicEnthusiasm lt 5"],
+		"conditions" : [
+			"academicEnthusiasm lt 5",
+			"troubleWithLecture eq true",
+			"tension lt 5"
+		]
     },
 	 {
         "id": "reflectOnSpeech", 
@@ -135,7 +151,7 @@
 			{"gotoId": "askImprovements"},
 			{"gotoId": "decidePath1"},
 			{"gotoId": "decidePath2"}
-		],
+		]
     },
 	{
         "id": "askImprovements", 
@@ -144,7 +160,7 @@
 		"choices" : [
 			{"gotoId": "decidePath1"}, 
 			{"gotoId": "decidePath2"}
-		],
+		]
 		// "effects" : [ "incr deanFriendliness 1"]
     },
 	{
@@ -154,7 +170,7 @@
 		"choices" : [
 			{"gotoId": "linkThankDeanPR"}
 		],
-		"effects" : ["set pathChoiceMade true","set fixPassive true","decr tension 1"],//,"incr deanFriendliness 1","decr tension 1"],
+		"effects" : ["set pathChoiceMade true","set fixPassive true","decr tension 1"]//,"incr deanFriendliness 1","decr tension 1"],
     },
 	{
         "id": "decidePath2", //Dean offers research lecturer position. You like this option. You take it
@@ -163,7 +179,7 @@
 		"choices" : [
 			{"gotoId": "linkThankDeanPR"}
 		],
-		"effects" : ["set pathChoiceMade true","set fixPassive true","decr tension 1"],//"incr deanFriendliness 1","decr tension 1"],
+		"effects" : ["set pathChoiceMade true","set fixPassive true","decr tension 1"]//"incr deanFriendliness 1","decr tension 1"],
     },
     {
         // leaned academic (full on professor)
@@ -171,10 +187,10 @@
 		"choiceLabel": "You laugh and decide to stick to lecturing",
         "content" : "You smile back up at the dean. \"I want to keep teaching. I'll try to work on my nerves so they stop being a problem during class.  {ifStateCondition|tellStory eq true|Besides,if you can survive being called professor Simon for an entire year by students, I can handle whatever they throw at me. |}\"",
 		"choices" : [
-			{"gotoId": "deanOffersSupport"},
+			{"gotoId": "deanOffersSupport"}
 		],
         "conditions" : ["reasonForTrouble eq true"],
-        "effects" : [ "set pathChoiceMade true"],//,"incr deanFriendliness 1"]
+        "effects" : [ "set pathChoiceMade true"]//,"incr deanFriendliness 1"]
     },
     {
         // middle of road (researcher position)
@@ -182,7 +198,7 @@
 		"choiceLabel": "You say you're hesistant to lecture again", 
         "content" : "You start to explain you're a still a bit hesistant to teach again {ifStateCondition|tellStory eq true|even with the help of hearing his story|}. The dean nods and looks up at Emma. \"Well I may have a few suggestions if you'd like to hear them.\"",
 		"choices" : [
-			{"gotoId": "getOffersOfSupport"},
+			{"gotoId": "getOffersOfSupport"}
 		],
 		 "conditions" : ["reasonForTrouble eq true"],
         "effects" : [ "set pathChoiceMade true"] //job: lecturer to more researchy path. i believe it leads to senior faculty scene.
@@ -192,8 +208,8 @@
 		"choiceLabel": "Listen to the suggestions", 
         "content" : "\"I'd love to hear them.\" The dean nods at you,looking rather happy that you want to hear his suggestions. \"Well there is a number of things that we could sort out together to make things easier. One of them being that you could move to doing more things like academic research for the school and occasionally lecturing that to students instead of having your own class. There's also....\" You continue to listen to talk. He's gives off a lot of ideas to help ease the pressure of everything that's happened recently. ",
 		"choices" : [
-			{"gotoId": "linkThankDean"}, 
-		],
+			{"gotoId": "linkThankDean"}
+		]
     },
 	
     {
@@ -202,7 +218,7 @@
 		"choiceLabel": "Listen to Dean's support",
         "content" : "The dean smiles back at you. \"I'm glad {ifStateCondition|tellStory eq true|the story helped.|}. I can't wait to see your lectures improve. Good luck.\" You nod and smile before leaving the room. Things didn't go as badly as you had thought they might have.",
 		"conditions" : ["reasonForTrouble eq true"],
-        "effects" : ["set deanReaction true"],//,"incr deanFriendliness 1"] //job: lecturer to UN path
+        "effects" : ["set deanReaction true"]//,"incr deanFriendliness 1"] //job: lecturer to UN path
     },
 	{
         "id": "linkThankDean",
@@ -218,7 +234,7 @@
         "id": "thankDean",
         "content" : "\"Thank you for all your help. I really appreciate {ifStateCondition|fixPassive eq true|you inspiring me again.|all you're trying to do for me.} \" The dean nods his head. \"Well we want our professors to succeed here in whatever way feels best for them. {ifStateCondition|fixPassive eq true|Sometimes all you need is a motivational speech to remind you of what's important and reinvigorate you back into action.|}I wish you all the best.\" You smile and nod before leaving the room. Things didn't go as badly as you had thought they might have. ", 
 		"conditions" : ["reasonForTrouble eq true"],
-        "effects" : ["set deanReaction true"],//,"incr deanFriendliness 1"] 
+        "effects" : ["set deanReaction true"]//,"incr deanFriendliness 1"] 
     },
    
 ]
