@@ -17,7 +17,10 @@
 		"effects": [
 			"set establishDetails true"
 		],
-		"conditions": "lecture eq true",
+		"conditions": [
+			"lecture eq true",
+			"establishScene eq true"
+		],
 		"choices": [{
 			"gotoId": "lookAround"
 		}]
@@ -29,7 +32,10 @@
 		"effects": [
 			"set establishDetails true"
 		],
-		"conditions": "seminar eq true",
+		"conditions": [
+			"seminar eq true",
+			"establishScene eq true"
+		],
 		"choices": [{
 			"gotoId": "lookAround"
 		}]
@@ -40,7 +46,7 @@
 		"choiceLabel": "Look around the room",
 		"content": "As your eyes scan the room, several things catch your attention.",
 		"repeatable": "true",
-		"conditions": "establishDetails eq true",
+		"conditions": ["establishDetails eq true"],
 		"choices": [{
 				"condition": "roomObjects eq 1"
 			},
@@ -58,8 +64,8 @@
 	{
 		"id": "seatNumberLecture",
 		"choiceLabel": "Look at all the seats",
-		"content": "Your eyes run up and down the many rows of seats. There are easily enough seats for 200 students. The sheer number of students {ifStateCondition|composure gte 5|excites you, knowing that you will be able to influence all of their lives in your lecture.|makes you very nervous because you don't want to mess up your first lecture.}",
-		"conditions": "classType eq lecture",
+		"content": "Your eyes run up and down the many rows of seats. There are easily enough seats for 200 students. The sheer number of students {ifStateCondition|composure gte 5|excites you, knowing that you will be able to influence all of their lives in your lecture.|watching you applies more pressure than you were expecting.}",
+		"conditions": ["classType eq lecture"], 
 		"effects": [
 			"incr roomObjects 1"
 		],
@@ -72,7 +78,7 @@
 		"id": "seatNumberSeminar",
 		"choiceLabel": "Look at all the seats",
 		"content": "Scanning the room, your eyes jump from seat to seat. The room itself is not large but it is packed full of students who are eager to learn.",
-		"conditions": "classType eq seminar",
+		"conditions": ["seminar eq true"],
 		"effects": [
 			"incr roomObjects 1"
 		],
@@ -84,7 +90,7 @@
 	{
 		"id": "frontDesk",
 		"choiceLabel": "Glance down at your workstation",
-		"content": "The table in front of you is organized with an abundance of supplies. {ifStateCondition|composure gte 5| You will put all of them to good use while educating your students.| It's actually a little overwhelming.}",
+		"content": "The table in front of you is organized with an abundance of supplies. {ifStateCondition|composure gte 5| You will put all of them to good use.| It's actually a little overwhelming.}",
 		"effects": [
 			"incr roomObjects 1"
 		],
@@ -107,15 +113,19 @@
 
 	{
 		"id": "lowConfidenceComposure",
-		"content": "It is now time class to begin but you find yourself at a lost for words. After a few seconds of silence, you manage to force out, \"Umm hello, welcome to my class, in which we will be discussing the issue of climate change.\"",
+		"content": "It is now time for class to begin but you find yourself at a lost for words. After a few seconds of silence, you manage to force out, \"Umm hi, I mean uhh, hello class.\" At this point, you are seriously considering running far away from here. \"We'll be learning about climate change. Haha sorry, this is my first lecture.\" The last sentence is accompanied by a few seconds of forced laughter.",
 		"effects": [
 			"set establishComposure true"
 		],
 		"conditions": [
 			"composure lt 5",
 			"roomObjects eq 3"
+		],
+		"choices": [
+			{"gotoId": "lectureContent"}
 		]
 	},
+
 
 	{
 		"id": "mediumConfidenceComposure",
@@ -127,6 +137,9 @@
 			"composure gte 5",
 			"composure lt 10",
 			"roomObjects eq 3"
+		],
+		"choices": [
+			{"gotoId": "lectureContent"}
 		]
 	},
 
@@ -139,70 +152,105 @@
 		"conditions": [
 			"roomObjects eq 3",
 			"composure gte 10"
+		],
+		"choices": [
+			{"gotoId": "lectureContent"}
 		]
 	},
 
 	{
 		"id": "lectureContent",
-		"content": "\"Climate change is a huge problem in our world. Just one small example of the impact that it has is in the ocean. The ocean is becoming more and more {ifStateCondition|composure lt 5|, uh,|} acidic every year. It is already {ifStateCondition|composure lt 5|\", the students watch you quietly as you pause to consult your notes, \"|}25% more acidic than it was in the 1800s. This is because human actions are raising the CO2 levels in the {ifStateCondition|composure lt 5|water, err I mean, in the|} atmosphere.\"",
+		"content": "\"First things first,{ifStateCondition|composure lt 5| uh,|} I am going to give you all a sense of what this quarter will be like.\" You introduce the basic structure of the class and provide the students with a grading rubric and a little background about yourself. \"The content of the class is not necessarily super hard. My goal is to educate you on the effects of climate change and what you can do to help.\"",
 		"conditions": [
 			"establishComposure eq true"
+		],
+		"choices": [
+			{"gotoId": "lectureContent2"}
 		]
 
 	},
 
 	{
+		"id": "lectureContent2",
+		"content": "\"Just as an example of what you can expect, let me just provide an interesting statistic, just to get your feet wet. The water in our oceans is roughly{ifStateCondition|composure lt 5|\", the students watch you quietly as you pause to consult your notes, \"|} 25% more acidic than it was in the 1800s. This is because human actions are raising the CO2 levels in the {ifStateCondition|composure lt 5|water, err I mean, in the|} atmosphere.\"",
+		"choices": [
+			{"gotoId": "lectureContent3"}
+		]
+	},
+
+	{
+		"id": "lectureContent3",
+		"content": "You present a few more snippets of information before continuing with, \"Those were just a few examples of data that we will be studying. Besides effects of climate change, we will also be learning about how all of ways that you guys can help out locally and on the global scale.",
+		"choices":[
+			{"condition": "bridgeFinished eq true"}
+		],
+		"effects": [
+			"set lectureFinished true"
+		]
+	},
+
+	{
 		"id": "lectureBridge",
-		"content": "After about 30 minutes of lecturing, you tell the class, \"well, now that you know the general idea behind what climate change is, {ifStateCondition|composure gte 5|I can answer any questions that you guys have.|I guess I can try to answer your questions.}\"",
+		"content": "30 {ifStateCondition|composure lt 5|long|} minutes later, \"well, now that you know the general idea behind what you can expect from this quarter, {ifStateCondition|composure gte 5|I can answer any questions that you guys have.|I guess I can try to answer your questions.}\"",
+		"effects": [
+			"set bridgeFinished true"
+		],
 		"conditions": [
-			"lectureContent gte 3",
+			"lectureFinished eq true",
 			"lecture eq true"
 		]
 	},
 
 	{
 		"id": "seminarBridge",
-		"content": "\"But that is just one example of the way climate change affects the world. Because this is not a lecture, {ifStateCondition|composure gte 5|We should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
+		"content": "\"{ifStateCondition|composure gte 5|Well that's enough talking for me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|composure gte 5|We should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
+		"effects": [
+			"set bridgeFinished true"
+		],
 		"conditions": [
-			"seminarContent gte 3",
+			"lectureFinished eq true",
 			"seminar eq true"
+
 		]
 
 	},
 	{
 		"id": "lectureEndWell",
-		"content": "The lecture ends with the students applauding and emmas confidence rising",
+		"content": "As the end of the class period draws near, the eyes of every student are fixed on your, waiting for your permission to leave. \"Well, that concludes the first lecture. Sorry if it didn't go as smoothly as you were expecting, but we are all going to learn throughout this quarter. I'll see you all next time!\" The sound of books closing and backpacks being zipped up erupts all around the room and one-by-one, the students leave, some even flashing you a smile on the way out.",
 		"effects": [
 			"incr composure 3",
 			"set lectureEnd true"
 		],
 		"conditions": [
-			"composure gte 10"
+			"composure gte 10",
+			"bridgeFinished eq true"
 		]
 	},
 
 	{
 		"id": "lectureEndOk",
-		"content": "The lecture ends with students getting up and leaving at the end of class and some students staying to ask clarifying questions",
+		"content": "You hear a faint rustling of bags and papers. You realize that the class period has ended and students are becoming restless. \"Oh I'm sorry guys, I promise to get better at this as the quarter goes on. I'll see you all next time!\"",
 		"effects": [
 			"incr composure 1",
 			"set lectureEnd true"
 		],
 		"conditions": [
 			"composure gte 5",
-			"composure lt 10"
+			"composure lt 10",
+			"bridgeFinished eq true"
 		]
 	},
 
 	{
 		"id": "lectureEndBadly",
-		"content": "Students begin to leave before the class period ends and Emma loses focus. She lets the class out early.",
+		"content": "You spot a few students leaving early and your eyes dart to the clock, afraid that you have gone past the end of the class period, but there are still a lot of time left. You are thrown off by what just happened and lose your train of though. \"Umm haha sorry everyone, I completely forgot what I was going to talk about next. Uhh there wasn't that much left anyways so I guess you're dismissed for today. I'll see you next time.\"",
 		"effects": [
 			"incr composure -2",
 			"set lectureEnd true"
 		],
 		"conditions": [
-			"composure lt 5"
+			"composure lt 5",
+			"bridgeFinished eq true"
 		]
 	}
 
