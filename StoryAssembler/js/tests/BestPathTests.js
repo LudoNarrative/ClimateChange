@@ -385,9 +385,7 @@ define(["../Wishlist", "../ChunkLibrary", "../Request", "../State", "../Characte
 			bestPath = wl.bestPath(ChunkLibrary);
 			assert.deepEqual(bestPath.route, ["shortest_Chunk1", "shortest_Chunk3"], "Shouldn't unneccesarily route through nodes.");
 
-		});
-
-		
+		});		
 
 	}
 

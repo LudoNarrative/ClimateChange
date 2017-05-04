@@ -28,12 +28,20 @@ requirejs.config({
 		"generalistData" : "../data/generalist.json",
 		"benTestData" : "../data/benTestData.json",
 		"newExampleData" : "../data/newExampleData.json",
+
 		"undergradDinnerData_kevin" : "../data/undergradDinnerData-kevin.json",
 		"undergradDinnerData_talon" : "../data/undergradDinnerData-talon.json",
 		"undergradDinnerData_irapopor" : "../data/undergradDinnerData-irapopor.json",
 		"undergradDinnerData_sgadsby" : "../data/undergradDinnerData-sgadsby.json",
 		"undergradDinnerData_madreed" : "../data/undergradDinnerData-madreed.json",
 		"undergradDinnerData_sjsherma" : "../data/undergradDinnerData-sjsherma.json",
+
+		"undergradDean_sgadsby" : "../data/undergradDean-sgadsby.json",
+		"undergradDean_talon" : "../data/undergradDean-talon.json",
+		"undergradDean_irapopor" : "../data/undergradDean-irapopor.json",
+
+		"undergradLecture_kply" : "../data/undergradLecture-kply.json",
+		"undergradLecture_sjsherma" : "../data/undergradLecture-sjsherma.json",
 
 		"Coordinator" : "../../Coordinator/Coordinator",
 		"Display" : "../../js/Display",
