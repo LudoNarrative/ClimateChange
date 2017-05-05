@@ -352,14 +352,14 @@ behaviors(chase;
 :- behavior(ENTITY,_), controlScheme(ENTITY,_).
 
 
-{chases(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,chase).
+1 {chases(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,chase).
 
 :- chases(ENTITY,ENTITY).
 
 result(tick,move(ENTITY,direction(towards,OTHER))) :- chases(ENTITY,OTHER).
 
 
-{flees(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,flee).
+1 {flees(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,flee).
 
 :- flees(ENTITY,ENTITY).
 
@@ -370,7 +370,7 @@ timer(timer(patrol(ENTITY))) :- behavior(ENTITY,patrol).
 precondition(timer_elapsed(timer(patrol(ENTITY))),outcome(patrol(ENTITY))) :- behavior(ENTITY,patrol).
 1 {result(outcome(patrol(ENTITY)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
    angle_direction(DIRECTION),
-   angle_speeds(AMOUNT)} 1 :- behavior(ENTITY,patrol).
+   angle_speeds_discrete(AMOUNT)} 1 :- behavior(ENTITY,patrol).
 
 result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,patrol).
 
