@@ -1,0 +1,84 @@
+[{
+		"id": "onAPlane",
+		"content": "ON A PLANE CONTENT",
+		"effects": [
+			"set onAPlane true"
+		],
+		"choices": [{
+			"gotoId": "reminisce"
+		}]
+	},
+
+	{
+		"id": "reminisce",
+		"content": "REMINISCE CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set reminisce true"
+		],
+		"choices": [{
+			"gotoId": "talkExposition"
+		}]
+	},
+
+	{
+		"id": "talkExposition",
+		"content": "talkExposition CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set talkExposition true"
+		],
+		"choices": [{
+			"gotoId": "dealWithSomeone"
+		}]
+	},
+
+	{
+		"id": "dealWithSomeone",
+		"content": "dealWithSomeone CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set dealWithSomeone true"
+		],
+		"choices": [{
+			"gotoId": "readSomething"
+		}]
+	},
+
+	{
+		"id": "readSomething",
+		"content": "readSomething CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set readSomething true"
+		],
+		"choices": [{
+			"gotoId": "acceptOrDeclineSomething"
+		}]
+	},
+
+	{
+		"id": "acceptOrDeclineSomething",
+		"content": "acceptOrDeclineSomething CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set acceptOrDeclineSomething true"
+		],
+		"choices": [{
+			"gotoId": "outroForLanding"
+		}]
+	},
+
+	{
+		"id": "outroForLanding",
+		"content": "outroForLanding CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set outroForLanding true"
+		],
+		"choices": []
+	}
+
+
+
+]
