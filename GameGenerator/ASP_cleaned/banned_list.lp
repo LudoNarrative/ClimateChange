@@ -11,4 +11,4 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 :- action(add(E,_,cursor)).
 
 
-:- result(tick,rotates(_,_)).
+%:- result(tick,rotates(_,_,_)).
