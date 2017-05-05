@@ -7,7 +7,7 @@
     { condition: "deanReaction eq true"},
     */
     // Ian's Part
-    {
+    /*{
         "id": "ianStarti",
         "content" : "Higher tension or lower tension",
         "choices" : [
@@ -18,10 +18,10 @@
             "troubleWithLecture eq true",
             "tension gte 5"
         ]
-    },
+    },*/
     {
         "id": "midTensionStarti",
-        "choiceLabel" : "Mid Tension",
+        //"choiceLabel" : "Mid Tension",
         "content" : "<p>\"Okay {name|protagonist}, I think the both of us have had long days. Lets see if we can't figure what might be causing trouble for you these past few weeks.\" {name|authorityFigure} pulls off his glasses and wipes them. It seems redundant given how clear they appear.</p>",
         "choices" : [
             {"gotoId":"Idunnoi"},
@@ -30,8 +30,8 @@
         ],
         "conditions" : [
             "troubleWithLecture eq true",
-            "tension gte 5"//,
-            //"tension lt 10"
+            "tension gte 5",
+            "tension lt 10"
         ],
         "effects" : [
             "set tension 5"
@@ -138,16 +138,9 @@
                     "set pathChoiceMade true"
                 ]
             },
-            {
-                "id" : "tempHighStarti",
-                "request" : {"gotoId" : "highTensionStarti"},
-                "conditions" : [
-                    "troubleWithLecture eq true"
-                ]
-            },
     {
         "id": "highTensionStarti",
-        "choiceLabel" : "high tension start",
+        //"choiceLabel" : "high tension start",
         "content" : "<p>{name|authorityFigure} places his glasses on the table and rubs his eyes with his fingers. His elbows drop onto the desk before he speaks again. \"{name|protagonist}, I'm going to be honest with you. This isn't going well.\"</p>",
         "choices" : [
             {"gotoId":"stokeTheFirei"},
