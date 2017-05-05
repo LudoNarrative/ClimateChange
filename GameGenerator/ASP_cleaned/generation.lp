@@ -10,7 +10,7 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
 1 {initialize(set_color(Entity,Color)) : colors(Color)} 1 :-
     entity(Entity).
 
-1 { initialize(add(Entity,1,location(Row,Col))) : row(Row), col(Col) } 1 :-
+1 { initialize(add(Entity,scalar(1),location(Row,Col))) : row(Row), col(Col) } 1 :-
     singular(Entity).
 
 1 { number_to_place(Entity,Number) : number(Number)} 1 :-
