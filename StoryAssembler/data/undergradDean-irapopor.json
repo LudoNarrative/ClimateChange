@@ -70,7 +70,7 @@
                 },
         {
             "id": "maybeImNervousi",
-            "choiceLabel" : "{ifStateCondition|composure gte 5|My nerves, they're all shot.|My nerves are like... all... ya know?}",
+            "choiceLabel" : "{ifStateCondition|composure gte 5|It's just like, I'm so nervous I'm fried.|I'm so like... nervous... ya know?}",
             "content" : "<p>For a second it looks like {name|authorityFigure} is going to rest a reassuring had on your arm, but he refolds his hands. \"I understand. Believe me, we've all been there. But what is eating at you. There must be something that is making you feel this way.\"</p>",
             "choices" : [
                 {"gotoId" : "amIDoingEnoughi"},
@@ -80,7 +80,7 @@
             {
                 "id": "amIDoingEnoughi",
                 "choiceLabel" : "I'm having trouble acting like I'm making a difference while I'm cooped up in some polished classroom.",
-                "content" : "<p>He turns and looks out the window for just a second. Maybe he sees himself out there on the beach. \"The kids are going to have to carry the torch for us. Sooner than we'd like to admit.\"</p>",
+                "content" : "<p>He turns and looks out the window for just a second. \"The kids are going to have to carry the torch for us. Sooner than we'd like to admit.\"</p>",
                 "choices" : [
                     {"gotoId":"iShouldLeavei"},
                     {"gotoId":"isThereSomethingElseForMeHerei"}
@@ -147,7 +147,7 @@
             {"gotoId":"sayNothingi"}
         ],
         "conditions" : [
-            "troubleWithLecture eq true",
+            "troubleWithLecture eq true"//,
             //"tension gte 10"
         ],
         "effects" : [
