@@ -1,5 +1,5 @@
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin",
-	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, globalData) {
+	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!travel_placeholder", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, travel_placeholder, globalData) {
 
 	/*
 		Initializing function
@@ -7,7 +7,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 
 		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean"];	//order of scenes
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel"];	//order of scenes
 		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -485,6 +485,58 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				initiator: "authorityFigure",
 				responder: "protagonist"
 			}
+		},
+		//undergrad travel scene
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "undergradTravel",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"passenger": {name: "Phil", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "onAPlane eq true"},
+				{ condition: "reminisce eq true"},
+				{ condition: "talkExposition eq true"},
+				{ condition: "dealWithSomeone eq true"},
+				{ condition: "readSomething eq true"},
+				{ condition: "acceptOrDeclineSomething eq true"},
+				{ condition: "outroForLanding eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!travel_placeholder"],
+/*
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set onAPlane false",
+				"set reminisce false",
+				"set talkExposition false",
+				"set dealWithSomeone false",
+				"set readSomething false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				
+				"set composure 5",
+				"set carbonFootprint 0",
+				"set fame 0"
+			],
+			UIvars: [
+				"carbonFootprint"
+
+			],
+			mode: {
+				type: "narration"
+			}
 		}
 		]
 
@@ -533,6 +585,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradDean",
+				text : "<p>TODO: Scene description</p>"
+			},
+			{
+				id : "undergradTravel",
 				text : "<p>TODO: Scene description</p>"
 			}
 
@@ -583,6 +639,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradDean",
+				src : "lecture.png"
+			},
+			{
+				id : "undergradTravel",
 				src : "lecture.png"
 			},
 
@@ -776,6 +836,26 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					},
 				]
 			},
+			{
+				id : "undergradTravel",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["composure gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["composure eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["composure eq 0"]
+					},
+				]
+			},
 		];
 
 		State.avatars = avatarSpec.filter(function(v) { return v.id === id; })[0].avatars;
@@ -808,6 +888,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "undergradDean",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "undergradTravel",
 				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
