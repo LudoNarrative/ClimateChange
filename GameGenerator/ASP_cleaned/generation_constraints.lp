@@ -1,5 +1,16 @@
 
     
+:- action(move(Entity,direction(away,_))),
+   not action(apply_restitution(Entity,Entity)).
+
+
+
+:- action(move(Entity,direction(towards,_))),
+   not action(apply_restitution(Entity,Entity)).
+
+:- action(move(Entity,direction(towards,Other))),
+   not action(apply_restitution(Entity,Other)).
+
 
 :-  precondition(overlaps(E1,E2,POLARITY),O),
     precondition(control_event(click(E3)),O).
@@ -306,6 +317,3 @@ movement(move(E,D)) :- action(move(E,D)).
 
 :- player_model(Outcome,player_will_attempt),
    trivial(Outcome).
-
-
-
