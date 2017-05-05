@@ -41,6 +41,8 @@ requirejs.config({
 		"undergradLecture_kply" : "../StoryAssembler/data/undergradLecture-kply.json",
 		"undergradLecture_sjsherma" : "../StoryAssembler/data/undergradLecture-sjsherma.json",
 
+		"travel_placeholder" : "../StoryAssembler/data/travel_placeholder.json",
+
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 
 		"Coordinator" : "../Coordinator/Coordinator",
