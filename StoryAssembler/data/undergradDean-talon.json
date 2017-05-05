@@ -2,17 +2,20 @@
 	//undergradDeanScene-talon.json
 	{
 		"id": "sceneStart_t",
-		"content": ["Emma walks; heading up the final flight of stairs and rounding the final corner -- she’s reluctant to walk any faster. She stands, lingering before the door, with a pit in her stomach keeping her from knocking. Soaking up the last bits of courage left in her, Emma’s knuckles wrap the wood.<br><br>A hollow thud.<br><br>Not a moment goes by before a low but distinct voice beckoned her. It was Dean Simon."],
+		"content": ["{name|protagonist} walks; heading up the final flight of stairs and rounding the final corner -- she’s reluctant to walk any faster. She stands, lingering before the door, with a pit in her stomach keeping her from knocking. Soaking up the last bits of courage left in her, {name|protagonist}’s knuckles wrap the wood.<br><br>A hollow thud.<br><br>Not a moment goes by before a low but distinct voice beckoned her. It was {name|authorityFigure}."],
 		"choices": [
 			{"gotoId": "emmaEnter_t"}
-		]
+		],
+		"effects": [
+			"decr confidence 1",		//lowering Emma's confidence by one for the fear of what the meeting might hold
+		],
 	},
 
 //setting the scene
 	{
 		"id": "emmaEnter_t",
 		"choiceLabel": "\"it's open\"",
-		"content": "Emma’s stiff arm pushed past the door.<br>Dean Simon was sitting behind his desk -- face in a bundle of papers -- not looking up. To Emma, he did not feel like a friend at this moment; or even a colleague. He felt like a boss.<br><br>Emma lifted her head to speak.<br><br>\"Simon,\"  she said. The word caught in her throat. She cleared it -- a guttural sound.",
+		"content": "{name|protagonist}’s stiff arm pushed past the door.<br>{name|authorityFigure} was sitting behind his desk -- face in a bundle of papers -- not looking up. To {name|protagonist}, he did not feel like a friend at this moment, or even a colleague; he felt like a boss.<br><br>{name|protagonist} lifted her head to speak.<br><br>\"{name|authorityFigure},\"  she said. The word caught in her throat. She cleared it -- a guttural sound.",
 		"choices": [
 			{"gotoId": "speakCont_t"}
 		],
@@ -22,8 +25,8 @@
 	},
 	{
 		"id": "speakCont_t",
-		"choiceLabel": "\"You{ifStateCondition|confidence lte 5|, uh..|} wanted to speak with me?\"",
-		"content": "Dean Simon suspended his attention on the papers and raised his eyes to meet Emma’s gaze.<br>\"Emma...\" he said.<br><br>Perhaps it was in Emma’s nature to over analyze when she was nervous, or perhaps it was the neutral tone in which he said her name, but she was unable to tell if he was upset or just calm. In many ways Emma felt like she was at the principal's office, only this time she {ifStateCondition|confidence lte 5|knew|didn’t know} why she was there. The Dean continued,<br><br>\"...do you know why I wanted to speak with you?\"",
+		"choiceLabel": "\"You{ifStateCondition|confidence lt 5|, uh..|} wanted to speak with me?\"",
+		"content": "{name|authorityFigure} suspended his attention on the papers and raised his eyes to meet {name|protagonist}’s gaze.<br>\"{name|protagonist}...\" he said.<br><br>Perhaps it was in {name|protagonist}’s nature to over analyze when she was nervous, or perhaps it was the neutral tone in which he said her name, but she was unable to tell if he was upset or just calm. In many ways {name|protagonist} felt like she was at the principal's office, only this time she {ifStateCondition|confidence lt 5|knew|didn’t know} why she was there. The Dean continued,<br><br>\"...do you know why I wanted to speak with you?\"",
 		"choices": [
 			{"gotoId": "emmaRespondsYes_t"},
 			{"gotoId": "emmaRespondsNo_t"}
@@ -37,42 +40,56 @@
 	{
 		"id": "emmaRespondsYes_t",
 		"choiceLabel": "\"I think I do.\"",
-		"content": "Dean Simon nodded at Emma’s acknowledgment; it was solemn and kind.<br>\"What’s going on, Emma. It feels like night-and-day from where we were just a month ago.\"<br>Emma’s hands found their way to the hem of her blouse. She picked at a loose thread as she struggled for words.<br>\"It’s just{ifStateCondition|confidence lte 5|...\" She hesitated. There was a long moment of silence. \"Just...\"|...}",
+		"content": "{name|authorityFigure} nodded at {name|protagonist}’s acknowledgment; it was solemn and kind.<br>\"What’s going on, {name|protagonist}. It feels like night-and-day from where we were just a month ago.\"<br>{name|protagonist}’s hands found their way to the hem of her blouse. She picked at a loose thread.<br>\"It’s just{ifStateCondition|confidence lt 5|...\" She hesitated. There was a long moment of silence. \"Just...\"|...}",
 		"effects": [
 			"set troubleWithLecture true"
 		],
 	},
+
+//setting tension to 4
 	{
 		"id": "emmaRespondsNo_t",
 		"choiceLabel": "\"No, I don’t think so.\"",
-		"content": "\"You don’t?\" Simon took his glasses off and massaged the red indentations that had formed on the bridge of his nose. He spoke carefully, \"Emma, it’s about your performance these past few lectures.\"<br><br>Emma looked at the Dean{ifStateCondition|confidence lte 5| and a sour frown formed across her face|.}.",
+		"content": "\"You don’t?\" {name|authorityFigure} took his glasses off and massaged the red indentations that had formed on the bridge of his nose. He spoke carefully, \"{name|protagonist}, it’s about your performance these past few lectures.\"<br><br>{name|protagonist} looked at the Dean{ifStateCondition|confidence lt 5| and a sour frown formed across her face|.}.",
 		"effects": [
-			"incr tension 4"
+			"set tension 4"
 		],
 		"choices":[
 			{"gotoId": "emmaAnnoyed_t"}
 		],
 	},
+
+//upping the tension by 2
 	{
 		"id": "emmaAnnoyed_t",
 		"choiceLabel": "\"And…? what about the performances of my lectures?\"",
-		"content": "Emma stood, her face tight -- hot -- looking at the Dean, anticipating what he might say next. Simon placed his glasses softly on the table and directed his full attention toward Emma.<br>\"I don’t know what’s gotten into you lately? Your {lectures/seminars} have been in a slow decline since day one.\" The Dean shook his head and looked hard. \"Emma, are you alright? Is everything okay at home?\"",
+		"content": "{name|protagonist} stood, her face tight -- hot -- looking at the Dean, anticipating what he might say next. {name|authorityFigure} placed his glasses softly on the table and directed his full attention toward {name|protagonist}.<br>\"I don’t know what’s gotten into you lately? Your {lectures/seminars} have been in a slow decline since day one.\" The Dean shook his head and looked hard. \"{name|protagonist}, are you alright? Is everything okay at home?\"",
 		"effects": [
-			"incr tension 2"
+			"set tension 6",
+			"set troubleWithLecture true"
 		],
 		"choices": [
 			{"gotoId": "emmaAngerRise_t"},
 			{"gotoId": "emmaAngerSoften_t"}
 		]
 	},
-
 //tension 10 path to Ian
 	{
 		"id": "emmaAngerRise_t",
-		"choiceLabel": "\"Don’t patronize me, Simon!\"",
+		"choiceLabel": "\"Don’t patronize me, {name|authorityFigure}!\"",
 		"content": "\"You have no right to speak to me that way!\"",
 		"effects": [
-			"incr tension 4",
+			"set tension 10",
+			"set troubleWithLecture true"
+		]
+	},
+//tension lowers
+	{
+		"id": "emmaAngerSoften_t",
+		"choiceLabel": "\"I... I'm not sure what to say.\"",
+		"content": "\"Things don't feel like they did before. They're just... different. Somehow.\"",
+		"effects": [
+			"set tension 4",
 			"set troubleWithLecture true"
 		]
 	}
