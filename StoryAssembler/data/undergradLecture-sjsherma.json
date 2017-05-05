@@ -45,6 +45,7 @@ Eager student’s Blind Optimism? (starts high)
 [
   {
     "id": "establishStudents",
+    "choiceLabel" : "Continue",
     "content": "{ifStateCondition|questionsLeft eq 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft lt 4|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. With most of the class half asleep, there are, sadly, only three hands begging to be called on. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. Was your class not engaging enough? Nerves knot in your belly. You hope you can survive the questions.|Oh well, you'll take what you can get.}",
     "choices" : [
       {"gotoId" : "elikaIntro"},
