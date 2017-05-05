@@ -89,7 +89,6 @@
 		"choiceLabel": "\"I... I'm not sure what to say.\"",
 		"content": "\"Things don't feel like they did before. They're just... different. Somehow.\"",
 		"effects": [
-			"set tension 4",
 			"set troubleWithLecture true"
 		]
 	}
