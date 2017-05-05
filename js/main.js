@@ -42,6 +42,8 @@ requirejs.config({
 		"undergradLecture_sjsherma" : "../StoryAssembler/data/undergradLecture-sjsherma.json",
 
 		"travel_placeholder" : "../StoryAssembler/data/travel_placeholder.json",
+		"familyDinner_placeholder" : "../StoryAssembler/data/familyDinner_placeholder.json",
+
 
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 
