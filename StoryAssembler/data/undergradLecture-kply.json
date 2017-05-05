@@ -66,6 +66,7 @@
 	{
 		"id": "seatNumber",
 		"choiceLabel": "Look at all the seats",
+		"unavailableChoiceLabel": "Already counted the seats",
 		"content": "Your eyes quickly jump across all the seats in the room. {ifStateCondition|lecture eq true|There are easily enough seats for 200 students.|The room itself is not large but it is packed full of students who look eager to learn.} Seeing the faces watching in anticipation {ifStateCondition|composure gte 5|excites you.|applies more pressure than you are ready for.}",
 		"effects": [
 			"incr roomObjects 1"
@@ -80,6 +81,7 @@
 	{
 		"id": "frontDesk",
 		"choiceLabel": "Glance down at your workstation",
+		"unavailableChoiceLabel": "Already examined your workstation",
 		"content": "The table in front of you is organized with an abundance of supplies. {ifStateCondition|composure gte 5| You will put all of them to good use.| It's actually a little overwhelming.}",
 		"effects": [
 			"incr roomObjects 1"
@@ -92,6 +94,7 @@
 	{
 		"id": "whiteBoard",
 		"choiceLabel": "Check out the whiteboard",
+		"unavailableChoiceLabel": "Already checked out the whiteboard",
 		"content": "At the front of the room {ifStateCondition|lecture eq true|are 3 large whiteboards arranged side-by-side. A lot of room to work with.|is a large whiteboard. Just enough space to work with.}",
 		"effects": [
 			"incr roomObjects 1"
@@ -308,18 +311,39 @@
     	"id": "followUpAnswer1",
     	"choiceLabel": "\"The changes are more impactful than you think\"",
     	"content": "\"Well, {ifStateCondition|composure lt 5|uhhh,|}the impact of climate change is much larger than you think. {ifStateCondition|composure lt 5|If I remember correctly... |}The sea level has been steadily rising for the past 200 years. It is projected to rise another 1 to 4 feet in the next century. That is enough to cause many low sea level areas to flood. We have also see an increase in frequency of very strong hurricanes, which I'm sure is something you would rather not happen.\"",
+    	"effects": [
+    		"decr optimism 1",
+    		"decr hope 1"
+    	],
+    	"choices": [{
+    		"gotoId": "establishStudents"
+    	}]
     },
 
     {
     	"id": "followUpAnswer2",
     	"choiceLabel": "\"It is still our home\"",
     	"content": "\"We were fortunate enough to be born on this planet so it is our duty to take car of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations.\"",
+    	"effects": [
+    		"incr optimism 1",
+    		"incr hope 1"
+    	],
+    	"choices": [{
+    		"gotoId": "establishStudents"
+    	}]
     },
 
     {
     	"id": "followUpAsnwer3",
     	"choiceLabel": "\"Well, you don't have to care\"",
-    	"content": "\"Whether you care or not is up to you. You're right, we won't be around to see all of the artic ice melt and swallow up all of the land, or to feel the temperature increase to unbarable levels. But with just a little effort from each of us, we could prevent our decendants from having to experience the slow death of our wonderful planet.\""
+    	"content": "\"Whether you care or not is up to you. You're right, we won't be around to see all of the artic ice melt and swallow up all of the land, or to feel the temperature increase to unbarable levels. But with just a little effort from each of us, we could prevent our decendants from having to experience the slow death of our wonderful planet.\"",
+    	"effects": [
+    		"decr optimism 1",
+    		"decr curiosity 1"
+    	],
+    	"choices": [{
+    		"gotoId": "establishStudents"
+    	}]
     },
 
 	{
