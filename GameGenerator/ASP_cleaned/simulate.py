@@ -16,7 +16,7 @@ modifiers = {'increase': lambda x,y:  x+y,
 
 def solve(*args):
     """Run clingo with the provided argument list and return the parsed JSON result."""
-    print_args =  ['clingo']+list(args)
+    print_args =  ['clingo']+list(args) + [' | tr [:space:] \\\\n | sort ']
     args = ['clingo','--outf=2']+list(args)
 
     
@@ -286,6 +286,7 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
         fitness = 0
         earliest_reached = {}
         latest_reached = {}
+        seen = {}
         for simulations in range(simulation_count):     
             for free_var,set_var in zip(free_variables,individual):
                 free_var[1][0] = set_var
@@ -296,6 +297,9 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
                     if rule not in earliest_reached:
                         earliest_reached[rule] = float('inf')
                         latest_reached[rule] = float('-inf')
+                    if rule not in seen:
+                        seen[rule] = set()
+                    seen[rule].add(step_ind)
                     earliest_reached[rule] = min(step_ind,earliest_reached[rule])
                     latest_reached[rule] = max(step_ind,latest_reached[rule])
         for outcome in rules:
@@ -303,10 +307,16 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
                 latest_reached[outcome] = depth*2
             if outcome not in earliest_reached:
                 earliest_reached[outcome] = depth*2
-        
+            if outcome not in seen:
+                seen[outcome] = set()
         outcome_weight = 1000
         fitness += outcome_weight*(len(outcome_reached)-len(rules))
 
+        misses = 0
+        for rule in rules:
+            misses += depth - len(seen[rule])
+        fitness += misses * -1
+        
         end_weight = 5
 
         for outcome in rules:
@@ -443,7 +453,8 @@ if __name__ == '__main__':
             best = fit
             best_ind = ind
     print best
-
+    print '======================================'
+    
     for free_var,set_var in zip(free_variables,best_ind):
         free_var[1][0] = set_var
     find_and_replace = []
@@ -594,6 +605,7 @@ if __name__ == '__main__':
         out_string = out_string.replace(f,r)
     print out_string
 
+    print '======================================'
     labels = {}
     for o in ['label']:
         for oo in out[o]:
