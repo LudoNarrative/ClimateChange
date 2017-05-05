@@ -165,66 +165,6 @@ Eager student’s Blind Optimism? (starts high)
     "conditions" : ["enthusiasticStudent eq true"]
   },
 
-  //franklinIntro
-
-    {
-      "id" : "franklinIntro",
-      "unavailableChoiceLabel" : "Already called on {name|skepticStudent}.",
-      "choiceLabel" : "Call on the student who delicately raised his hand with a skeptical frown.",
-      "content" : "{name|skepticStudent} has a frown on his face, reports that his mom is an influential business partner for an oil company who has scientists working on these issues and asks a question that suggests that global warming is just a conspiracy.",
-      "choices" : [
-        {"gotoId" : "logicResponse"},
-        {"gotoId" : "valueResponse"},
-        {"gotoId" : "sourResponse"}
-        ],
-      "effects" : [
-        "set skepticalStudent true",
-        "incr talkToStudent 1",
-      ],
-    },
-
-    {
-      "id" : "logicResponse",
-      "choiceLabel" : "Turn to the facts",
-      "content" : "Facts facts facts.",
-      "effects" : [
-        "incr optimism 1",
-        "incr hope 1",
-        "incr curiosity 1",
-      ],
-    },
-
-    {
-      "id" : "sourResponse",
-      "choiceLabel" : "\"Listen here you little -\"",
-      "content" : "wOw, what a conspiracy, trying to get us clean air and water, how horrible",
-      "effects" : [
-        "decr skepticCuriosity 2",
-      ],
-    },
-
-    {
-      "id" : "valueResponse",
-      "choiceLabel" : "Appeal to his values",
-      "content" : "if u dont want to do anything unless it affects you too, lets see u like money? and living? listen up kid, you fail to take care of the earth the earth can no longer take care of you. nor give you money. hah. so there.",
-      "effects" : [
-        "incr optimism 1",
-        "incr hope 1",
-        "incr curiosity 1",
-      ]
-    },
-
-    {
-      "id" : "franklinFollowUp",
-      "choiceLabel" : "Yes",
-      "content" : "if this works",
-      "choices" : [
-        {"gotoId" : "franklinQuestion2"},
-        {"gotoId" : "questionBrige"}
-      ],
-      "conditions" : ["skepticalStudent eq true"]
-    },
-
     //aiden
 
     {
