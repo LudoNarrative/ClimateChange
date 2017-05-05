@@ -29,8 +29,8 @@
             {"gotoId":"aConcreteReasoni"}
         ],
         "conditions" : [
-            "troubleWithLecture eq true"//,
-            //"tension gte 5",
+            "troubleWithLecture eq true",
+            "tension gte 5"//,
             //"tension lt 10"
         ],
         "effects" : [
@@ -66,7 +66,8 @@
                 {
                     "id": "theyAreDisruptivei",
                     "choiceLabel" : "{ifStateCondition|optimism lt 3|They're aggressive. There is this one that tries to disprove everything I say.|They are constantly fighting with the information I am telling them.}",
-                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barelly holding together. \"They shouldn't have to agree with you right off the bat, should they?\"</p>"
+                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barelly holding together. \"They shouldn't have to agree with you right off the bat, should they?\"</p>"//,
+                    //"effects" : "set reasonForTroubleTrue"
                 },
         {
             "id": "maybeImNervousi",
@@ -137,6 +138,13 @@
                     "set pathChoiceMade true"
                 ]
             },
+            {
+                "id" : "tempHighStarti",
+                "request" : {"gotoId" : "highTensionStarti"},
+                "conditions" : [
+                    "troubleWithLecture eq true"
+                ]
+            },
     {
         "id": "highTensionStarti",
         "choiceLabel" : "high tension start",
@@ -147,8 +155,8 @@
             {"gotoId":"sayNothingi"}
         ],
         "conditions" : [
-            "troubleWithLecture eq true"//,
-            //"tension gte 10"
+            "troubleWithLecture eq true",
+            "tension gte 10"
         ],
         "effects" : [
             "set deanReaction true",
@@ -277,7 +285,8 @@
         ],
         "conditions" : [
             "pathChoiceMade eq true",
-            "reasonForTrouble eq true"
+            "reasonForTrouble eq true",
+            "tension gte 5"
         ],
         "effects" : [
             "set deanReaction true"
