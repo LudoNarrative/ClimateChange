@@ -107,6 +107,9 @@ Eager student’s Blind Optimism? (starts high)
   ],
   "conditions" : [
     "composure gte 5"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
   ]
 },
 
@@ -122,6 +125,9 @@ Eager student’s Blind Optimism? (starts high)
   ],
   "conditions" : [
     "composure lt 5"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
   ]
 },
 
@@ -137,6 +143,9 @@ Eager student’s Blind Optimism? (starts high)
   ],
   "conditions" : [
     "composure gte 5"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
   ]
 },
 
@@ -150,6 +159,9 @@ Eager student’s Blind Optimism? (starts high)
   ],
   "conditions" : [
     "composure lt 5"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
   ]
 },
 
@@ -161,6 +173,10 @@ Eager student’s Blind Optimism? (starts high)
     "decr optimism 2",
     "decr hope 1",
     "decr curiosity 1",
+    "decr composure 1"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
   ]
 },
 
@@ -172,14 +188,51 @@ Eager student’s Blind Optimism? (starts high)
     {"gotoId" : "elikaQuestion2"},
     {"gotoId" : "questionBrige"}
   ],
+  "effects" : "set followUp true",
   "conditions" : ["enthusiasticStudent eq true"]
 },
 
 {
   "id" : "elikaQuestion2",
   "choiceLabel" : "Take another question.",
-  "content" : "\"So,\" {name|enthusiasticStudent} " 
-}
+  "content" : "\"So,\" {name|enthusiasticStudent} says, \"do you think we'll be able to stop the acidity from rising?\"",
+  "choices" : [
+    {"gotoId" : "positiveResponse"},
+    {"gotoId" : "negativeResponse"},
+    {"gotoId" : "curtResponse"}
+  ]
+},
+
+{
+  "id" : "positiveResponse",
+  "choiceLabel" : "I think so.",
+  "content" : "\"I mean, we've already come so far with technology and science,\" you say. \"I'm sure that now that we are aware of the problems too much CO2 is causing we can fix them.\" <br/></br> {name|enthusiasticStudent}'s eyes brighten.'",
+  "effects" : [
+    "incr optimism 1",
+    "incr hope 1",
+    "decr curiosity 1",
+  ],
+},
+
+{
+  "id" : "negativeResponse",
+  "choiceLabel" : "I doubt it.",
+  "content" : "\"As far as we've come with technology and science, change takes course over a long period of time,\" you say. \"We'll have to undo a lot of effects we've already made, and sometimes fixing's more difficult to do.\" <br/> {name|enthusiasticStudent} looks down, but is nodding in what you hope is understanding.",
+  "effects" : [
+    "decr optimism 1",
+    "decr hope 1",
+    "incr curiosity 1"
+  ]
+},
+
+{
+  "id" : "curtResponse",
+  "choiceLabel" : "Don't be ridiculous.",
+  "content" : "\"I mean, if you think about it, we've come so far with technology and science that a lot of damage has already been done,\" you say. \"Not to mention it's hard giving up the comfort and convenience of things like cars to try and make a difference in the amount of CO2 we already release daily.\" <br/><br/> {name|enthusiasticStudent} avoids your gaze.",
+  "effects" : [
+    "decr composure 1"
+  ]
+},
 
     //aiden
 
@@ -277,5 +330,46 @@ Eager student’s Blind Optimism? (starts high)
           {"gotoId" : "questionBrige"}
         ],
         "conditions" : ["shyStudent eq true"]
+      },
+
+      {
+        "id" : "aidenQuestion2",
+        "choiceLabel" : "Take another question.",
+        "content" : "\"So, um,\" comes {name|shyStudent}'s soft voice. \"Then - what can <i>I</> do?\"",
+        "choices" : [
+          {"gotoId" : "academicResponse"},
+          {"gotoId" : "localResponse"},
+          {"gotoId" : "hopelessResponse"}
+        ],
+        "effects" : [
+          "set followUp true"
+        ]
+      },
+
+      {
+        "id" : "academicResponse",
+        "choiceLabel" : "Educate.",
+        "content" : "\"Teach yourself about what's going on and how you can help - and teach others. There are the little things you hear about, like recycling and the like, and other things like volunteering at beaches. There's also the path of becoming a professor,\" you say. <i>Like me,</i> you think.",
+        "effects" : [
+          "incr hope 1"
+        ]
+      },
+
+      {
+        "id" : "localResponse",
+        "choiceLabel" : "Find out what you can do within your community.",
+        "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
+        "effects" : [
+          "incr hope 1"
+        ]
+      },
+
+      {
+        "id" : "hopelessResponse",
+        "choiceLabel" : "There's nothing you can do.",
+        "content" : "\"We're all doomed,\" you helpfully inform them. \"No matter what you do.\" <br/><br/> {name|shyStudent} doesn't look particularly inspired.",
+        "effects" : [
+          "decr hope 1"
+        ]
       },
 ]
