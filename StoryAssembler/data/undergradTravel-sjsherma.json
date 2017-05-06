@@ -1,0 +1,37 @@
+[
+  {
+  "id": "dealWithSomeone",
+  "content": "dealWithSomeone CONTENT",
+  "choiceLabel": "CHOICE CONTENT",
+  "effects": [
+    "set dealWithSomeone true"
+  ],
+  "choices": [{
+    "gotoId": "readSomething"
+  }]
+
+  },
+
+  {
+    "id": "readSomething",
+    "content": "readSomething CONTENT",
+    "choiceLabel": "CHOICE CONTENT",
+    "effects": [
+      "set readSomething true"
+    ],
+    "choices": [{
+      "gotoId": "acceptOrDeclineSomething"
+    }]
+  },
+
+  {
+    "id": "outroForLanding",
+    "content": "outroForLanding CONTENT",
+    "choiceLabel": "CHOICE CONTENT",
+    "effects": [
+      "set outroForLanding true"
+    ],
+    "choices": []
+  }
+
+]
