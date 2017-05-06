@@ -1,5 +1,5 @@
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin",
-	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!travel_placeholder", "text!familyDinner_placeholder", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, travel_placeholder, familyDinner_placeholder, globalData) {
+	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, globalData) {
 
 	/*
 		Initializing function
@@ -506,7 +506,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "outroForLanding eq true"}
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
-			dataFiles: ["text!travel_placeholder"],
+			dataFiles: ["text!undergradTravel_kply","text!undergradTravel_sjsherma"],
 /*
 			dataFiles: [
 				"text!undergradDean_talon",
@@ -565,8 +565,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "parentsOfferSupport eq true"}
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
-			dataFiles: ["text!familyDinner_placeholder"],
+			dataFiles: ["text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon", "text!undergradFamilyDinner_irapopor"],
 /*
+
+
 			dataFiles: [
 				"text!undergradDean_talon",
 				"text!undergradDean_irapopor",
@@ -998,7 +1000,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "dinner",
-				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				aspFilepaths: ['tempgames/games_5_5/games_5_5_1.lp','tempgames/games_5_5/games_5_5_2.lp','tempgames/games_5_5/games_5_5_3.lp','tempgames/games_5_5/games_5_5_4.lp','tempgames/games_5_5/games_5_5_5.lp','tempgames/games_5_5/games_5_5_6.lp','tempgames/games_5_5/games_5_5_7.lp','tempgames/games_5_5/games_5_5_8.lp','tempgames/games_5_5/games_5_5_9.lp','tempgames/games_5_5/games_5_5_10.lp','tempgames/games_5_5/games_5_5_11.lp','tempgames/games_5_5/games_5_5_12.lp','tempgames/games_5_5/games_5_5_13.lp','tempgames/games_5_5/games_5_5_14.lp','tempgames/games_5_5/games_5_5_15.lp','tempgames/games_5_5/games_5_5_16.lp','tempgames/games_5_5/games_5_5_17.lp','tempgames/games_5_5/games_5_5_18.lp','tempgames/games_5_5/games_5_5_19.lp','tempgames/games_5_5/games_5_5_20.lp','tempgames/games_5_5/games_5_5_21.lp','tempgames/games_5_5/games_5_5_22.lp','tempgames/games_5_5/games_5_5_23.lp','tempgames/games_5_5/games_5_5_24.lp','tempgames/games_5_5/games_5_5_25.lp','tempgames/games_5_5/games_5_5_26.lp','tempgames/games_5_5/games_5_5_27.lp','tempgames/games_5_5/games_5_5_28.lp','tempgames/games_5_5/games_5_5_29.lp','tempgames/games_5_5/games_5_5_30.lp','tempgames/games_5_5/games_5_5_31.lp','tempgames/games_5_5/games_5_5_32.lp','tempgames/games_5_5/games_5_5_33.lp','tempgames/games_5_5/games_5_5_34.lp','tempgames/games_5_5/games_5_5_35.lp','tempgames/games_5_5/games_5_5_36.lp','tempgames/games_5_5/games_5_5_37.lp','tempgames/games_5_5/games_5_5_38.lp','tempgames/games_5_5/games_5_5_39.lp','tempgames/games_5_5/games_5_5_40.lp','tempgames/games_5_5/games_5_5_41.lp','tempgames/games_5_5/games_5_5_42.lp','tempgames/games_5_5/games_5_5_43.lp','tempgames/games_5_5/games_5_5_44.lp','tempgames/games_5_5/games_5_5_45.lp','tempgames/games_5_5/games_5_5_46.lp','tempgames/games_5_5/games_5_5_47.lp','tempgames/games_5_5/games_5_5_48.lp','tempgames/games_5_5/games_5_5_49.lp','tempgames/games_5_5/games_5_5_50.lp'],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
 			{
