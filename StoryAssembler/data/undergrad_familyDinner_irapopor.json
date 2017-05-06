@@ -7,7 +7,7 @@
 			"set momChallenges true"
 		],
 		"choices": [{
-			"gotoId": "emmaDefends"
+			"gotoId": "emmaDefendsIan"
 		}]
 	},
 
@@ -19,7 +19,7 @@
 			"set emmaDefends true"
 		],
 		"choices": [{
-			"gotoId" : "otherParentDefends"
+			"gotoId" : "otherParentDefendsIan"
 		}]
 	},
 
