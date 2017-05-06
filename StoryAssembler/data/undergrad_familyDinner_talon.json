@@ -1,0 +1,50 @@
+//undergrad_familyDinner_talon.json
+[
+	{
+		"id": "familyAsksSubject_t",
+		"content": "familyAsksSubject CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set familyAsksSubject true"
+		],
+		"choices": [{
+			"gotoId": "dadChallenges"
+		}]
+	},
+//Emma has gone global and dad likes local
+	{
+		"id": "dadChallenges_t",
+		"content": "dadChallenges CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set dadChallenges true"
+		],
+		"choices": [{
+			"gotoId": "momChallenges"
+		}]
+	},
+
+	{
+		"id": "emmaDefends_t",
+		"content": "emmaDefends CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set emmaDefends true"
+		],
+		"choices": [{
+			"gotoId" : "otherParentDefends"
+		}]
+	},
+//Mom supports Emma's choice in going global because mom likes global
+	{
+		"id": "otherParentDefends_t",
+		"content": "otherParentDefends CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set otherParentDefends true"
+		],
+		"choices": [{
+			"gotoId" : "parentsOfferSupport"
+		}]
+	}
+]
