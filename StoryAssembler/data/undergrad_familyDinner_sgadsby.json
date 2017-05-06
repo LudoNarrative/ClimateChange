@@ -1,0 +1,36 @@
+[
+{
+		"id": "familyIsFamily",
+		"content": "familyIsFamily CONTENT",
+		"effects": [
+			"set familyIsFamily true"
+		],
+		"choices": [{
+			"gotoId": "atDinner"
+		}]
+	},
+
+	{
+		"id": "atDinner",
+		"content": "atDinner CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set atDinner true"
+		],
+		"choices": [{
+			"gotoId": "establishDinnerQuality"
+		}]
+	},
+
+	{
+		"id": "establishDinnerQuality",
+		"content": "establishDinnerQuality CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set establishDinnerQuality true"
+		],
+		"choices": [{
+			"gotoId": "familyAsksSubject"
+		}]
+	}
+]
