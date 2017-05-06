@@ -30,7 +30,7 @@
 			"set establishDinnerQuality true"
 		],
 		"choices": [{
-			"gotoId": "familyAsksSubject"
+			"gotoId": "familyAsksSubject_t"
 		}]
 	}
 ]
