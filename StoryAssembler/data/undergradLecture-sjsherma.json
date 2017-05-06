@@ -78,7 +78,7 @@ Eager student’s Blind Optimism? (starts high)
   "choices" : [
     {"gotoId" : "elikaNext"}
   ]
-}
+},
 
 {
   "id" : "elikaNext",

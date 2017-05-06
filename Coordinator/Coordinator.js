@@ -414,6 +414,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set talkToStudent 0",
 				"set followUp false",
 				"set lectureEnd false",
+				"set roomObjects 0",
 
 				"set composure 10",
 				"set curiosity 3",
