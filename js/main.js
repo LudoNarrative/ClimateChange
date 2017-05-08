@@ -41,9 +41,14 @@ requirejs.config({
 		"undergradLecture_kply" : "../StoryAssembler/data/undergradLecture-kply.json",
 		"undergradLecture_sjsherma" : "../StoryAssembler/data/undergradLecture-sjsherma.json",
 
-		"travel_placeholder" : "../StoryAssembler/data/travel_placeholder.json",
-		"familyDinner_placeholder" : "../StoryAssembler/data/familyDinner_placeholder.json",
+		"undergradTravel_sjsherma" :  "../StoryAssembler/data/undergradTravel-sjsherma.json",
+		"undergradTravel_kply" : "../StoryAssembler/data/undergradTravel-kply.json",
+		//"travel_placeholder" : "../StoryAssembler/data/travel_placeholder.json",
+		//"familyDinner_placeholder" : "../StoryAssembler/data/familyDinner_placeholder.json",
 
+		"undergradFamilyDinner_sgadsby" : "../StoryAssembler/data/undergrad_familyDinner_sgadsby.json",
+		"undergradFamilyDinner_talon" : "../StoryAssembler/data/undergrad_familyDinner_talon.json",
+		"undergradFamilyDinner_irapopor" : "../StoryAssembler/data/undergrad_familyDinner_irapopor.json",
 
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 

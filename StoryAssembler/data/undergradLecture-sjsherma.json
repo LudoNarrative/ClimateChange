@@ -45,6 +45,7 @@ Eager student’s Blind Optimism? (starts high)
 [
   {
     "id": "establishStudents",
+    "choiceLabel" : "Continue",
     "content": "{ifStateCondition|questionsLeft eq 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft lt 4|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. With most of the class half asleep, there are, sadly, only three hands begging to be called on. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. Was your class not engaging enough? Nerves knot in your belly. You hope you can survive the questions.|Oh well, you'll take what you can get.}",
     "choices" : [
       {"gotoId" : "elikaIntro"},
@@ -62,168 +63,177 @@ Eager student’s Blind Optimism? (starts high)
 
   {
 		"id": "questionBridge",
-		"choiceLabel": "Take another question.",
+		"choiceLabel": "Call on another student.",
 		"content": "You check the time. {ifStateCondition|composure lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
 		"repeatable": "true"
 	},
 
 //elika
 
-  {
-    "id" : "elikaIntro",
-    "unavailableChoiceLabel" : "Already called on {name|enthusiasticStudent}.",
-    "choiceLabel" : "Call on the student whose hand shot up high above her head.",
-    "content": "You call on {name|enthusiasticStudent} for perhaps the fifth time, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously as she says, \"So, I read that (carbon sequestion)\" <br/><br/> You find yourself hesitating. <i>{name|enthusiasticStudent} sure is excited about ()... but where is she getting her sources??</i>",
-    "effects" : [
-      "set enthusiasticStudent true",
-      "incr talkToStudent 1",
-      "decr questionsLeft 1",
-    ],
-    "choices" : [
-      {"condition" : "agreeWithElika eq true"},
-      {"condition" : "itsComplicatedElika eq true"},
-      {"gotoId" : "bluntResponse"}
-    ],
-  },
+{
+  "id" : "elikaIntro",
+  "unavailableChoiceLabel" : "Already called on {name|enthusiasticStudent}.",
+  "choiceLabel" : "Call on the student whose hand shot up high above her head.",
+  "content": "You call on {name|enthusiasticStudent} for perhaps the fifth time, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously as she says, \"So, I read that artificial carbon sequestion is a thing now - isn't that great? Wouldn't taking carbdon dioxide out of the atmosphere help with the acidity of the ocean?\"",
+  "choices" : [
+    {"gotoId" : "elikaNext"}
+  ]
+},
 
-  {
-    "id" : "encouragingResponse",
-    "choiceLabel" : "That is an excellent point, absolutely.",
-    "content" : "Looking around at all the bored and unconvinced faces, you decide to say, heck yeah, everything is awesomesauce. <br/><br/>{name|enthusiasticStudent} is absolutely delighted, though you notice faces that aren't as happy. You hope encouraging {name|enthusiasticStudent}'s optimism was an encouragement to act rather than an encouragement to sit back, thinking everything's all fine and dandy.",
-    "effects" : [
-      "incr optimism 1",
-      "incr hope 1",
-      "decr curiosity 1",
-      "set agreeWithElika true"
-    ],
-    "conditions" : [
-      "composure gte 3"
-    ]
-  },
+{
+  "id" : "elikaNext",
+  "choiceLabel" : "Continue",
+  "content" : "You find yourself hesitating. There is an eagerness in {name|enthusiasticStudent}'s eyes, a positivity that you might have lost amidst the research surrounding the rise in carbon dioxide - something you can't help but want to cling too. Yet there is also a naivety in her words that gives you pause.",
+  "effects" : [
+    "set enthusiasticStudent true",
+    "incr talkToStudent 1",
+    "decr questionsLeft 1",
+  ],
+  "choices" : [
+    {"condition" : "agreeWithElika eq true"},
+    {"condition" : "itsComplicatedElika eq true"},
+    {"gotoId" : "bluntResponse"}
+  ],
+},
 
-  {
-    "id" : "encouragingResponse2",
-    "choiceLabel" : "Y-yeah, absolutely!",
-    "content" : "You have absolutely no idea how to tell {name|enthusiasticStudent} that she's got some of her facts wrong, so you stammer out a general \"That - yes, that is a great point, {name|enthusiasticStudent}, thank you,\" and leave it there. Unfortunately, you can see the confusion in the faces of those who notice the flaws in {name|enthusiasticStudent}'s observation.",
-    "effects" : [
-      "incr optimism 1",
-      "incr hope 1",
-      "decr curiosity 1",
-      "set agreeWithElika true",
-    ],
-    "conditions" : [
-      "composure lt 3"
-    ]
-  },
+{
+  "id" : "encouragingResponse",
+  "choiceLabel" : "Yes, absolutely.",
+  "content" : "Looking around at all the bored and unconvinced faces, you decide to say, \"That is an excellent point, {name|enthusiasticStudent}. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\" <br/><br/>{name|enthusiasticStudent}'s face beams, though you notice faces that aren't as happy. You hope encouraging {name|enthusiasticStudent}'s optimism was an encouragement to act rather than an encouragement to sit back, thinking that there's nothing to worry about.",
+  "effects" : [
+    "incr optimism 1",
+    "incr hope 1",
+    "decr curiosity 1",
+    "set agreeWithElika true"
+  ],
+  "conditions" : [
+    "composure gte 5"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
+  ]
+},
 
-  {
-    "id" : "gentleResponse",
-    "choiceLabel" : "It's actually a bit more complicated than that.",
-    "content" : "(You explain the complications and correct some facts. If you have low composure you stumble across your reasoning and don't manage to get your message across.) {name|enthusiasticStudent}'s face turns thoughtful.",
-    "effects" : [
-      "decr optimism 1",
-      "incr hope 1",
-      "incr curiosity 1",
-      "set itsComplicatedElika true"
-    ],
-    "conditions" : [
-      "composure gte 3"
-    ]
-  },
+{
+  "id" : "encouragingResponse2",
+  "choiceLabel" : "Y-yeah, absolutely!",
+  "content" : "You have absolutely no idea how to tell {name|enthusiasticStudent} that she's got some of her facts wrong, so you stammer out a general \"That - yes, that is a great point, {name|enthusiasticStudent}, thank you,\" and leave it there. Unfortunately, you can see the confusion in the faces of those who notice the flaws in {name|enthusiasticStudent}'s observation.",
+  "effects" : [
+    "incr optimism 1",
+    "incr hope 1",
+    "decr curiosity 1",
+    "set agreeWithElika true",
+  ],
+  "conditions" : [
+    "composure lt 5"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
+  ]
+},
 
-  {
-    "id" : "gentleResponse2",
-    "choiceLabel": "Er, um, actually, it might be a little more... complicated.",
-    "content" : "lots of stumnbling. {name|enthusiasticStudent} blinks at you. Then blinks again. \"...h-huh?\"",
-    "effects" : [
-      "decr curiosity 1",
-      "set itsComplicatedElika true",
-    ],
-    "conditions" : [
-      "composure lt 3"
-    ]
-  },
+{
+  "id" : "gentleResponse",
+  "choiceLabel" : "It's actually a bit more complicated than that.",
+  "content" : "\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would be lost.\" <br/><br/>You watch as {name|enthusiasticStudent}'s face turns thoughtful. \"And it shouldn't be the only thing that we rely on to help the environment. There's also clean energy to think about - if we don't have to depend on fossil fuels we wouldn't have to worry as much about CO2 emissions.\"",
+  "effects" : [
+    "decr optimism 1",
+    "incr hope 1",
+    "incr curiosity 1",
+    "set itsComplicatedElika true"
+  ],
+  "conditions" : [
+    "composure gte 5"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
+  ]
+},
 
-  {
-    "id" : "bluntResponse",
-    "choiceLabel" : "No, you've got your facts completely wrong.",
-    "content" : "(You tear apart {name|enthusiasticStudent} without regard to her feelings whatsoever.) {name|enthusiasticStudent} looks crushed. As well as many others.",
-    "effects" : [
-      "decr optimism 2",
-      "decr hope 1",
-      "decr curiosity 1",
-    ]
-  },
+{
+  "id" : "gentleResponse2",
+  "choiceLabel": "Er, um, actually, it might be a little more... complicated.",
+  "content" : "\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done in the plants themselves, not actually physically taking the carbon dioxide from the air.\" You halt awkwardly. \"Yeah.\" <br/><br/> {name|enthusiasticStudent} blinks at you. Then blinks again. \"...huh?\"",
+  "effects" : [
+    "decr curiosity 1",
+    "set itsComplicatedElika true",
+  ],
+  "conditions" : [
+    "composure lt 5"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
+  ]
+},
 
-  {
-    "id" : "elikaFollowUp",
-    "content" : "{name|enthusiasticStudent} looks like she wants to ask another question. Take it?",
-    "choices" : [
-      {"gotoId" : "elikaQuestion2"},
-      {"gotoId" : "questionBrige"}
-    ],
-    "conditions" : ["enthusiasticStudent eq true"]
-  },
+{
+  "id" : "bluntResponse",
+  "choiceLabel" : "No, you've got your facts completely wrong.",
+  "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But no, it's actually done at the power plants, either before or after the coal gets burned - and it would take a lot of energy, reducing the plant's output, which is not what our energy-hungry country wants right now. And frankly, it would be way better if we stuck to cleaner energies that already exist then trying to make coal 'clean'.\" <br/><br/>{name|enthusiasticStudent}'s smile had faded from her face a long time ago. As well as many others'.",
+  "effects" : [
+    "decr optimism 2",
+    "decr hope 1",
+    "decr curiosity 1",
+    "decr composure 1"
+  ],
+  "choices" : [
+    {"gotoId" : "elikaFollowUp"}
+  ]
+},
 
-  //franklinIntro
+{
+  "id" : "elikaFollowUp",
+  "choiceLabel" : "Continue",
+  "content" : "{name|enthusiasticStudent} looks like she wants to ask another question. Take it?",
+  "choices" : [
+    {"gotoId" : "elikaQuestion2"},
+    {"gotoId" : "questionBrige"}
+  ],
+  "effects" : "set followUp true",
+  "conditions" : ["enthusiasticStudent eq true"]
+},
 
-    {
-      "id" : "franklinIntro",
-      "unavailableChoiceLabel" : "Already called on {name|skepticStudent}.",
-      "choiceLabel" : "Call on the student who delicately raised his hand with a skeptical frown.",
-      "content" : "{name|skepticStudent} has a frown on his face, reports that his mom is an influential business partner for an oil company who has scientists working on these issues and asks a question that suggests that global warming is just a conspiracy.",
-      "choices" : [
-        {"gotoId" : "logicResponse"},
-        {"gotoId" : "valueResponse"},
-        {"gotoId" : "sourResponse"}
-        ],
-      "effects" : [
-        "set skepticalStudent true",
-        "incr talkToStudent 1",
-      ],
-    },
+{
+  "id" : "elikaQuestion2",
+  "choiceLabel" : "Take another question.",
+  "content" : "\"So,\" {name|enthusiasticStudent} says, \"do you think we'll be able to stop the acidity from rising?\"",
+  "choices" : [
+    {"gotoId" : "positiveResponse"},
+    {"gotoId" : "negativeResponse"},
+    {"gotoId" : "curtResponse"}
+  ]
+},
 
-    {
-      "id" : "logicResponse",
-      "choiceLabel" : "Turn to the facts",
-      "content" : "Facts facts facts.",
-      "effects" : [
-        "incr optimism 1",
-        "incr hope 1",
-        "incr curiosity 1",
-      ],
-    },
+{
+  "id" : "positiveResponse",
+  "choiceLabel" : "I think so.",
+  "content" : "\"I mean, we've already come so far with technology and science,\" you say. \"I'm sure that now that we are aware of the problems too much CO2 is causing we can fix them.\" <br/></br> {name|enthusiasticStudent}'s eyes brighten.'",
+  "effects" : [
+    "incr optimism 1",
+    "incr hope 1",
+    "decr curiosity 1",
+  ],
+},
 
-    {
-      "id" : "sourResponse",
-      "choiceLabel" : "\"Listen here you little -\"",
-      "content" : "wOw, what a conspiracy, trying to get us clean air and water, how horrible",
-      "effects" : [
-        "decr skepticCuriosity 2",
-      ],
-    },
+{
+  "id" : "negativeResponse",
+  "choiceLabel" : "I doubt it.",
+  "content" : "\"As far as we've come with technology and science, change takes course over a long period of time,\" you say. \"We'll have to undo a lot of effects we've already made, and sometimes fixing's more difficult to do.\" <br/> {name|enthusiasticStudent} looks down, but is nodding in what you hope is understanding.",
+  "effects" : [
+    "decr optimism 1",
+    "decr hope 1",
+    "incr curiosity 1"
+  ]
+},
 
-    {
-      "id" : "valueResponse",
-      "choiceLabel" : "Appeal to his values",
-      "content" : "if u dont want to do anything unless it affects you too, lets see u like money? and living? listen up kid, you fail to take care of the earth the earth can no longer take care of you. nor give you money. hah. so there.",
-      "effects" : [
-        "incr optimism 1",
-        "incr hope 1",
-        "incr curiosity 1",
-      ]
-    },
-
-    {
-      "id" : "franklinFollowUp",
-      "choiceLabel" : "Yes",
-      "content" : "if this works",
-      "choices" : [
-        {"gotoId" : "franklinQuestion2"},
-        {"gotoId" : "questionBrige"}
-      ],
-      "conditions" : ["skepticalStudent eq true"]
-    },
+{
+  "id" : "curtResponse",
+  "choiceLabel" : "Don't be ridiculous.",
+  "content" : "\"I mean, if you think about it, we've come so far with technology and science that a lot of damage has already been done,\" you say. \"Not to mention it's hard giving up the comfort and convenience of things like cars to try and make a difference in the amount of CO2 we already release daily.\" <br/><br/> {name|enthusiasticStudent} avoids your gaze.",
+  "effects" : [
+    "decr composure 1"
+  ]
+},
 
     //aiden
 
@@ -314,12 +324,53 @@ Eager student’s Blind Optimism? (starts high)
 
       {
         "id" : "aidenFollowUp",
-        "choiceLabel" : "Yes",
-        "content" : "J",
+        "choiceLabel" : "Continue",
+        "content" : "{name|shyStudent} looks like they have another question. Take it? Or call on another student?",
         "choices" : [
           {"gotoId" : "aidenQuestion2"},
           {"gotoId" : "questionBrige"}
         ],
         "conditions" : ["shyStudent eq true"]
+      },
+
+      {
+        "id" : "aidenQuestion2",
+        "choiceLabel" : "Take another question.",
+        "content" : "\"So, um,\" comes {name|shyStudent}'s soft voice. \"Then - what can <i>I</> do?\"",
+        "choices" : [
+          {"gotoId" : "academicResponse"},
+          {"gotoId" : "localResponse"},
+          {"gotoId" : "hopelessResponse"}
+        ],
+        "effects" : [
+          "set followUp true"
+        ]
+      },
+
+      {
+        "id" : "academicResponse",
+        "choiceLabel" : "Educate.",
+        "content" : "\"Teach yourself about what's going on and how you can help - and teach others. There are the little things you hear about, like recycling and the like, and other things like volunteering at beaches. There's also the path of becoming a professor,\" you say. <i>Like me,</i> you think.",
+        "effects" : [
+          "incr hope 1"
+        ]
+      },
+
+      {
+        "id" : "localResponse",
+        "choiceLabel" : "Find out what you can do within your community.",
+        "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
+        "effects" : [
+          "incr hope 1"
+        ]
+      },
+
+      {
+        "id" : "hopelessResponse",
+        "choiceLabel" : "There's nothing you can do.",
+        "content" : "\"We're all doomed,\" you helpfully inform them. \"No matter what you do.\" <br/><br/> {name|shyStudent} doesn't look particularly inspired.",
+        "effects" : [
+          "decr hope 1"
+        ]
       },
 ]
