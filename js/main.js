@@ -45,6 +45,7 @@ requirejs.config({
 
 		"Coordinator" : "../Coordinator/Coordinator",
 		"Display" : "Display",
+		"avatars" : "../assets/avatars/avatars.json",
 
 		"Phaser" : "../lib/phaser",
 		"jQuery": "../lib/jquery-3.0.0.min",

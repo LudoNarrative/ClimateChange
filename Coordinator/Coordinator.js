@@ -81,7 +81,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		{
 			id: "travel",
 			characters: {
-				"emma" : {name: "Emma", nickname: "Em", gender: "female" }
+				"protagonist" : {name: "Emma", nickname: "Em", gender: "female" }
 			},
 			wishlist: [
 				{ condition: "establishScene eq true"},
@@ -110,8 +110,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		{
 			id: "worker",
 			characters: {
-				"emma": {name: "Emma", nickname: "Em", gender: "female"},
-				"rick" : {name: "Rick", nickname: "Rick", gender: "male"}
+				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
+				"companion" : {name: "Rick", nickname: "Rick", gender: "male"}
 			},
 			wishlist: [
 				//{ condition: "reinforceSpecialty eq true" },		//this is triggered by grammars
@@ -143,10 +143,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		{
 			id: "lecture",
 			characters: {
-				"emma": {name: "Professor Banks", nickname: "Emma", gender: "female"},
-				"franklin": {name: "Franklin", nickname: "Franklin", gender: "male"},
-				"elika": {name: "Elika", nickname: "Elika", gender: "female"},
-				"miguel": {name: "Miguel", nickname: "Miguel", gender: "male"}
+				"protagonist": {name: "Professor Banks", nickname: "Emma", gender: "female"},
+				"student1": {name: "Franklin", nickname: "Franklin", gender: "male"},
+				"student2": {name: "Elika", nickname: "Elika", gender: "female"},
+				"student3": {name: "Miguel", nickname: "Miguel", gender: "male"}
 			},
 			wishlist: [
 				{ condition: "droppedKnowledge eq 1", order: "first"},
@@ -545,7 +545,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "dinner",
-				src : "dinner.png"
+				src : "lecturehall.png"
 			},
 			{
 				id : "dinner_argument",
@@ -589,196 +589,305 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		Returns pre-defined list of avatars...hypothetically in the future we could use some metric to pull avatars based on their state gating...
 	*/
 	var loadAvatars = function(id) {
-		var avatarSpec= [
+
+		var avatarSpec = [
 			{
-				id : "newExample",
-				avatars: [
+				sceneId : "newExample",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["introductions gt 0"]
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
+					{
+						id: "char1",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					},
+					{
+						id: "char2",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					},
+					{
+						id: "char3",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					},
+					{
+						id: "char4",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					}
 				]
 			},
 			{
-				id : "dinner",
-				avatars: [
+				sceneId : "dinner",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["patience gt 9"]
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["patience eq 8.9"]
+						id: "ally",
+						graphics: "char12",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
 					},
 					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["patience eq 8"]
-					},
+						id: "antagonist",
+						graphics: "char7",
+						age: "20s",
+						states: [	//happy, neutral, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
 				]
 			},
 			{
-				id : "dinner_argument",
-				avatars: [
+				sceneId : "travel",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 4"]
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ state: ["default"], tag: "happy" }
+						]
+					}
+				]	
+			},
+			{
+				sceneId : "worker",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ state: ["default"], tag: "happy" }
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
+						id: "companion",
+						graphics: "EmmaOld",
+						states: [
+							{ state: ["default"], tag: "happy" }
+						]
+					}
+				]	
+			},
+			{
+				sceneId : "lecture",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ state: ["default"], tag: "happy" }
+						]
 					},
 					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
+						id: "student1",
+						graphics: "EmmaOld",
+						states: [
+							{ state: ["default"], tag: "happy" }
+						]
 					},
+					{
+						id: "student2",
+						graphics: "EmmaOld",
+						states: [
+							{ state: ["default"], tag: "happy" }
+						]
+					},
+					{
+						id: "student3",
+						graphics: "EmmaOld",
+						states: [
+							{ state: ["default"], tag: "happy" }
+						]
+					}
+				]	
+			},
+			{
+				sceneId : "generalist",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					},
+					{
+						id: "ally",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					},
+					{
+						id: "antagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					}
 				]
 			},
 			{
-				id : "generalist",
-				avatars: [
+				sceneId : "dinner_argument",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 4"]
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
+						id: "ally",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
 					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
-					},
+						id: "antagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					}
 				]
 			},
 			{
-				id : "lecture",
-				avatars: [
+				sceneId : "undergradDinner",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 4"]
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
+						id: "academicFriend",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
 					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
-					},
+						id: "nonAcademicFriend",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					}
 				]
 			},
 			{
-				id : "worker",
-				avatars: [
+				sceneId : "undergradLecture",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 0"]
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
+						id: "skepticStudent",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
 					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
+						id: "shyStudent",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
-				]
+					{
+						id: "enthusiasticStudent",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					}
+				]	
 			},
 			{
-				id : "travel",
-				avatars: [
+				sceneId : "undergradDean",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 4"]
+						id: "protagonist",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
-					},
-					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
-					},
-				]
-			},
-			{
-				id : "undergradDinner",
-				avatars: [
-					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt -1000"]
-					},
-				]
-			},
-			{
-				id : "undergradLecture",
-				avatars: [
-					{
-						id: "happy",
-						src: "happy.png",
-						state: ["composure gt 4"]
-					},
-					{
-						id: "worried",
-						src: "worried.png",
-						state: ["composure eq 2"]
-					},
-					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["composure eq 0"]
-					},
-				]
-			},
-			{
-				id : "undergradDean",
-				avatars: [
-					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 4"]
-					},
-					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
-					},
-					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
-					},
-				]
-			},
+						id: "authorityFigure",
+						graphics: "EmmaOld",
+						states: [
+							{ tag: "happy", state: ["default"]}
+						]
+					}
+				]	
+			}
 		];
 
-		State.avatars = avatarSpec.filter(function(v) { return v.id === id; })[0].avatars;
+		State.avatars = avatarSpec.filter(function(v) { return v.sceneId === id; })[0].characters;
 
-		Display.setAvatar(State);
+		Display.setAvatars(State);
 	}
 
+	//validates the backgrounds and character avatars for the given scene
+	var validateArtAssets = function(id) {
+
+		var sceneData = getStorySpec(id);
+
+		for (char in sceneData.characters) {		//loop through to make sure each character has a default avatar
+			var passed = false;
+			for (var y=0; y < State.avatars.length; y++) {
+				if (State.avatars[y].id == char) {
+					for (var x=0; x < State.avatars[y].states.length; x++) {
+						if (State.avatars[y].states[x].state == "default") {
+							passed = true;
+						}
+					}
+				}
+			}
+			if (!passed) { 
+				console.warn("Warning! No default avatar set for " + char + "!");
+			}
+		}
+		//TODO: warn if there are characters in avatars that aren't in scene
+		//TODO: warn if avatar depends on state var that is not a scene state var
+	}
+
+
 	/*
-		This will eventually be replaced with more complex stuff before passing
+		This will eventually be replaced with more complex reasoning before passing
 		off to game.js
 	*/
 	var startGame = function(id) {
@@ -845,8 +954,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		init : init,
 		loadStoryMaterials : loadStoryMaterials,
 		loadAvatars : loadAvatars,
-		loadSceneIntro : loadSceneIntro,
 		loadBackground : loadBackground,
+		validateArtAssets : validateArtAssets,
+		loadSceneIntro : loadSceneIntro,
+
 		startGame : startGame,
 		getStorySpec : getStorySpec
 	}

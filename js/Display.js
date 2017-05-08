@@ -1,4 +1,4 @@
-define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) {
+define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Game, JSONEditor, avatarsData) {
 
 	var State;
 	var Coordinator;
@@ -34,6 +34,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 		if (loadIntro) { _coordinator.loadSceneIntro(id); }
 		_coordinator.loadStoryMaterials(id);
 		_coordinator.loadAvatars(id);
+		_coordinator.validateArtAssets(id);
 		_coordinator.startGame(id);
 	}
 
@@ -76,6 +77,8 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	var initSceneScreen = function(State, bg) {
 
 		$('body').html('');
+		$('body').css("background-image", "url('/assets/bgs/"+ bg +"')"); 
+
 		$('<div/>', {
 		    id: 'storyContainer'
 		    //text: ''
@@ -88,7 +91,6 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 
 		$('<div/>', {
 		    id: 'statsContainer',
-		    style: "background-image:url('/assets/bgs/"+ bg +"')"
 		    //text: ''
 		}).appendTo('body');
 
@@ -106,15 +108,6 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	}
 
 	var initStatsUI = function(State) {
-		$('<div/>', {
-		    id: 'charPic'
-		    //text: ''
-		}).appendTo('#statsContainer');
-
-		$('<div/>', {
-		    id: 'stats'
-		    //text: ''
-		}).appendTo('#statsContainer');
 
 		$('<div/>', {
 		    id: 'storyStats'
@@ -130,18 +123,63 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	/*
 		Sets avatar on-screen based on state
 	*/
-	var setAvatar = function(State) {
-		var theAvatar = false;
+	var setAvatars = function(State) {
+		
+		State.get("characters").forEach(function(char, pos) {
+			var url = false;
+			var defaultTag;
+			var avatar = State.avatars.filter(function( avatar ) { return avatar.id == char.id; })[0];
 
-		State.avatars.forEach(function(avatar, pos) {
-			var correctAvatar = State.isTrue(avatar.state);
-			if (correctAvatar) {
-				theAvatar = avatar;
+			for (var x=0; x < avatar.states.length; x++) {			//check all avatar states to find true one
+				var correctAvatar = false;
+				if (avatar.states[x].state[0] == "default") {
+					defaultTag = avatar.states[x].tag;
+				}
+				else {			//don't evaluate default avatars
+					var allTrue = true;
+					for (var y=0; y < avatar.states[x].state.length; y++) {
+						if (!State.isTrue(avatar.states[x].state[y])) {
+							allTrue = false;
+							break;
+						}
+					}
+					if (allTrue) {			//if it's valid...
+						url = getAvatar(avatar.graphics, avatar.age, avatar.states[x].tag);		//get avatar URL
+						break;
+					}
+				}
+			}
+
+			//fallback to default if no state valid
+			if (!url) { 
+
+				url = getAvatar(avatar.graphics, avatar.age, defaultTag); 
+			}
+
+			var picClass = "supportingChar";
+			if (pos == 0) { picClass = "mainChar" }
+
+			$('<div/>', {			//create avatarBox and stat-holding box for character
+			    id: 'charPic_' + char.id,
+			    class: picClass
+			}).appendTo('#statsContainer');
+			if (url) { 		//set avatar
+				//$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
+				$('#charPic_' + char.id).css("background-image", "url("+url+")"); 
 			}
 		});
-		if (theAvatar) {
-			$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
-		}
+		
+	}
+
+	//returns asset url for an avatar of a given tag, in a given set
+	var getAvatar = function(set, age, tag) {
+		var avatarsObj = HanSON.parse(avatarsData);
+		avatarSet = avatarsObj.filter(function( avatar ) { return avatar.character == set; })[0];
+		var ageIndex = false;
+		for (var x=0; x < avatarSet.ages.length; x++) { if (avatarSet.ages[x] == age) { ageIndex = x; }}
+		if (!ageIndex) { ageIndex = 0; }		//if no age provided, use first value
+
+		return "/assets/avatars/" + avatarSet.character + "/" + avatarSet.character + "_" + avatarSet.ages[ageIndex] + "_" + tag +".png"; 
 	}
 
 	/*
@@ -326,7 +364,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 			class: "diagButton",
 			text: "Run new JSON",
 			click: function() {
-				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, editor.get(), false);
+				Game.runGenerator(gameSpec, $("#ASPinput")[0].value.split("==========")[0], $("#ASPinput")[0].value.split("==========")[1], editor.get(), false);
 			}
 		})
 		.appendTo("#JSONEditorDiv");
@@ -366,7 +404,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 			class: "diagButton",
 			text: "Run ASP",
 			click: function() {
-				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, editor.get(), false);
+				Game.runGenerator(gameSpec, $("#ASPinput")[0].value.split("==========")[0], $("#ASPinput")[0].value.split("==========")[1], editor.get(), false);
 			}
 		})
 		.appendTo("#ASPEditor");
@@ -375,7 +413,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	return {
 		init : init,
 		initTitleScreen : initTitleScreen,
-		setAvatar : setAvatar,
+		setAvatars : setAvatars,
 		setStats : setStats,
 		setSceneIntro : setSceneIntro,
 		setSceneOutro : setSceneOutro,
