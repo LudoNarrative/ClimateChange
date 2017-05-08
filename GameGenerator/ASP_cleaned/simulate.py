@@ -133,7 +133,16 @@ def parse_game(result):
     
     for resource in result['resource']:        
         resources.append(prettify(resource[0]['terms'][0]))
-        
+
+
+    timers = {}
+    for timer in result['timer_logic']:
+        name = prettify(timer[0]['terms'][0])
+        time = int(prettify(timer[0]['terms'][1]['terms'][0]))
+        timers[name] = time
+
+
+
     entities = []
     for entity in result['entity']:        
         entities.append(prettify(entity[0]['terms'][0]))
@@ -179,6 +188,7 @@ def parse_game(result):
             rules[outcome]['preconditions']['compare'] = []
             rules[outcome]['preconditions']['other'] = []
             rules[outcome]['preconditions']['overlaps'] = []
+            rules[outcome]['preconditions']['timer_elapsed'] = []
             rules[outcome]['results'] = {}
             rules[outcome]['results']['modify'] = []
             rules[outcome]['results']['other'] = []
@@ -201,6 +211,8 @@ def parse_game(result):
                 elif prettify(terms[0]['terms'][2]) == 'true':
                     valence = True
                 rules[outcome]['preconditions']['overlaps'].append( (entity1,entity2,valence))
+        elif 'timer_elapsed' == terms[0]['predicate']:
+            rules[outcome]['preconditions']['timer_elapsed'].append(timers[prettify(terms[0]['terms'][0])])
         else:
             rules[outcome]['preconditions']['other'].append( prettify(terms[0]))
    
@@ -245,11 +257,17 @@ def run_once(rules,settings,player_model,depth):
             outcome_fails = random.random() > player_model[outcome]
             if outcome_fails:
                 continue
+            for condition in rules[outcome]['preconditions']['timer_elapsed']:
+                if timestep % condition != 0:
+                    outcome_fails = True
+                else:
+                    break
             
             for condition in rules[outcome]['preconditions']['compare']:
                 if not comparators[condition[0]](state[condition[1]], condition[2]):
                     outcome_fails = True
                     break
+            
             if outcome_fails:
                 continue
             for condition in rules[outcome]['preconditions']['overlaps']:
@@ -312,12 +330,7 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
         outcome_weight = 1000
         fitness += outcome_weight*(len(outcome_reached)-len(rules))
 
-        misses = 0
-        for rule in rules:
-            misses += depth - len(seen[rule])
-        fitness += misses * -1
-        
-        end_weight = 5
+        end_weight = 10
 
         for outcome in rules:
             has_mode_change = False
@@ -329,6 +342,9 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
                 fitness += -end_weight*(depth-earliest_reached[outcome])
                 fitness += end_weight*latest_reached[outcome]
                 #print outcome, earliest_reached[outcome],latest_reached[outcome],fitness
+            else:
+                fitness += (depth - len(seen[rule])) * -1
+
         return (fitness,)
     return score
 if __name__ == '__main__':
@@ -457,8 +473,10 @@ if __name__ == '__main__':
     
     for free_var,set_var in zip(free_variables,best_ind):
         free_var[1][0] = set_var
+
+    #Have to do find and replaces in this order since outcome and timer might include entity and resource names
     find_and_replace = []
-    for o in ['outcome','entity','resource','timer']:
+    for o in ['outcome','timer','entity','resource']:
         for oo in out[o]:
             for ooo in oo:
                 if 'terms' in ooo['terms'][0]:
@@ -466,16 +484,16 @@ if __name__ == '__main__':
                     replace = replace = find.replace('(','_').replace(',','_X_').replace(')','_XX_')
                     find = '{}({})'.format(o,find)
                     replace = '{}({})'.format(o,replace)
+                    print find,replace
                     find_and_replace.append((find,replace))
-  
     
     out_string = []
-    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer']:
+    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer_logic']:
         for oo in out[o]:
             for ooo in oo:
                 prettified = prettify(ooo).split('(')[0]
-                if 'entity' in prettified or 'resource' in prettified or 'timer' in prettified:
-                    out_string.append( prettify(ooo['terms'][0]))
+                if 'entity' in prettified or 'resource' in prettified:
+                    out_string.append( prettify(ooo['terms'][0])+'.')
                 else:
                     out_string.append( prettify(ooo)+'.')
         if len(out[o]) > 0:

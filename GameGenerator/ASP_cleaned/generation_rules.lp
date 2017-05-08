@@ -30,6 +30,8 @@ player_controls(Entity) :-  controlLogic(draggable(Entity)).
 player_controls(Entity) :-  action(move(Entity,direction(_,cursor))).
 player_controls(Entity) :-  action(move(Entity,direction(_,Other))),
 			    player_controls(Other).
+player_controls(Entity) :-  action(move(Entity,direction(_,Other))),
+			    static(Other).
 player_controls(Entity) :-  result(Outcome,move(Entity,direction(_))),
 			    precondition(control_event(EVENT),Outcome).
 
@@ -162,6 +164,8 @@ non_monotonic(Entity) :- not monotonic(Entity),
 trivial(Outcome) :- precondition(control_event(_),Outcome),
 		    1 {precondition(_,Outcome)} 1.
 
+trivial(Outcome) :- precondition(timer_elapsed(_),Outcome),
+		    1 {precondition(_,Outcome)} 1.
 trivial(tick).
 
 trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
