@@ -13,10 +13,19 @@ modes(narrative_gating;narrative_progress;game_loss;game_win).
 buttons(mouse;space;up_arrow;down_arrow;left_arrow;right_arrow).
 buttonStates(pressed;held).
 
-sprite(square;circle;triangle;pentagon;star).
-
+%sprite(square;circle;triangle;pentagon;star).
+sprite(circle).
 
 angle_direction(cw;ccw).
-colors(red;green;blue;yellow;magenta;cyan;white;gray;black).
+%colors(red;green;blue;yellow;magenta;cyan;white;gray;black).
+colors(red,1).
+colors(blue,2).
+colors(green,3).
+colors(yllow,4).
+colors(magenta,5).
+
+colors(C) :-
+    colors(C,N),
+    N <= max_entities.
 
 polarity(true;false).
