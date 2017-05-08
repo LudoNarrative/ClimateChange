@@ -19,13 +19,16 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 		//var aspGame = fs.readFileSync('./test/fixtures/asp-game-4.lp', 'utf8');
 		var aspGame = "";
+		var aspGameInstructions = "";
 		var initialPhaserFile ="";
 
 		jQuery.get(aspFilepath, function(data) {
-	    	aspGame = data;
+	    	aspGame = data.split("==========")[0];
+	    	aspGameInstructions = data.split("==========")[1];
+
 	    	jQuery.get('asp-phaser-generator-2/test/fixtures/initial-phaser-file.json', function(data2) {
 	    		initialPhaserFile = data2;
-	    		runGenerator(gameSpec, aspGame, initialPhaserFile, useGamestring);
+	    		runGenerator(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring);
 	    		Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, initialPhaserFile);		//create game diagnostics
 			});
 		});
@@ -34,7 +37,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 	}
 
-	var runGenerator = function(gameSpec, aspGame, initialPhaserFile, useGamestring){
+	var runGenerator = function(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring){
 		var generator = AspPhaserGenerator.AspPhaserGenerator(aspGame, initialPhaserFile);
 		var phaserProgram = AspPhaserGenerator.generate(generator.aspGame, generator.initialPhaser, true);
 
@@ -59,7 +62,13 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		var generatedGame = gameInitString + gameCode;
 
 		eval(generatedGame);
-		console.log(getAspGoals());
+
+		$('<div/>', {
+		    id: 'gameInstructions',
+		    html: aspGameInstructions
+		}).appendTo('#gameContainer');
+
+		//console.log(getAspGoals());
 	}
 
 return {

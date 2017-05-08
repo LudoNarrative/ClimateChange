@@ -1,0 +1,17 @@
+[
+	{
+		"character" : "char3",			//Emma
+		"ages" : ["20s"],
+		"tags" : ["happy", "neutral", "upset"]
+	},
+	{
+		"character" : "char12",			//Zanita
+		"ages" : ["20s"],
+		"tags" : ["happy", "neutral", "upset", "confused"]
+	},
+	{
+		"character" : "char7",			//Shelly
+		"ages" : ["20s"],
+		"tags" : ["happy", "neutral", "confused"]
+	}
+]
