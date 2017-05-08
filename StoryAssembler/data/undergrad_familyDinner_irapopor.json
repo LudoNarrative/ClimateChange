@@ -1,0 +1,49 @@
+[
+	{
+		"id": "momChallenges",
+		"content": "momChallenges CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set momChallenges true"
+		],
+		"choices": [{
+			"gotoId": "emmaDefendsIan"
+		}]
+	},
+
+	{
+		"id": "emmaDefendsIan",
+		"content": "emmaDefends CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set emmaDefends true"
+		],
+		"choices": [{
+			"gotoId" : "otherParentDefendsIan"
+		}]
+	},
+
+
+	{
+		"id": "otherParentDefendsIan",
+		"content": "otherParentDefends CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set otherParentDefends true"
+		],
+		"choices": [{
+			"gotoId" : "parentsOfferSupport"
+		}]
+	},
+
+	{
+		"id": "parentsOfferSupport",
+		"content": "parentsOfferSupport CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set parentsOfferSupport true"
+		]//,
+		//"choices": []
+	}
+
+]
