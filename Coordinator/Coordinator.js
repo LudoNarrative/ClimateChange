@@ -43,7 +43,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		}
 		State.set("mode", story.mode);
 		State.set("storyUIvars", story.UIvars);
-		Display.setStats("storyStats");
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 		StoryDisplay.addVarChangers(story.UIvars, StoryAssembler.clickChangeState);		//add controls to change variable values in story (in diagnostics panel)
 	}
@@ -355,13 +354,41 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set friendTension 0"			//scale of 1 to 10, ten is high tension
 			],
 			UIvars: [
-				"confidence",
-				"academicEnthusiasm",
-				"friendTension",
-				"academicFriendRelationship",
-				"nonAcademicFriendRelationship"
-
-
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "academicEnthusiasm",
+					"label" : "Academic Enthusiasm",
+					"characters" : ["protagonist"],
+					"affectedBy" : "narrative",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "academicFriendRelationship",
+					"label" : "Friendliness",
+					"characters" : ["academicFriend"],
+					"affectedBy" : "narrative",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "nonAcademicFriendRelationship",
+					"label" : "Friendliness",
+					"characters" : ["nonAcademicFriend"],
+					"affectedBy" : "narrative",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "friendTension",
+					"label" : "Tension",
+					"characters" : ["protagonist", "academicFriend", "nonAcademicFriend"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
 			],
 			mode: {
 				type: "dialogue",
@@ -1016,6 +1043,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		State.avatars = avatarSpec.filter(function(v) { return v.sceneId === id; })[0].characters;
 
 		Display.setAvatars(State);
+		Display.createStats();
 	}
 
 	//validates the backgrounds and character avatars for the given scene

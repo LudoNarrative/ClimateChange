@@ -157,7 +157,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		if (theMod[0] == "-") {
 			State.set(theVar, State.get(theVar) - 1);
 		}
-		Display.setStats("storyStats");			//refresh UI stat display
+		Display.setStats();					//refresh UI stat display
 		refreshNarrative();					//refresh currently displayed chunk in case it's different
 	}
 
@@ -383,7 +383,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		});
 		wishlist.removeSatisfiedWants();
 		if (typeof Display !== "undefined") {			//if we're not running tests, update the storyStats on the display
-			Display.setStats("storyStats");
+			Display.setStats();
 		}
 	}
 
