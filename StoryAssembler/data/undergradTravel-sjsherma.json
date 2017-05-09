@@ -5,7 +5,8 @@
     "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. What to do now?",
     "choices" : [
       {"condition" : "dealWithSomeone eq true"},
-      {"condition" : "readSomething eq true"},
+      {"gotoId" : "readNewspaper eq true"},
+      {"gotoId" : "readEmail eq true"}
     ],
     "repeatable" : "true"
   },
@@ -69,30 +70,24 @@
 //read that stuff
 
   {
-    "id": "readSomething",
-    "content": "readSomething CONTENT",
-    "choiceLabel": "CHOICE CONTENT",
+    "id": "readNewspaper",
+    "choiceLabel" : "Read the newspaper folded in your lap.",
+    "content": "You pick up the paper. It crinkles pleasantly in your hands as you flip it over and let it fall open under your fingers.",
     "effects": [
       "set readSomething true"
     ],
-    "choices": [
-      {"gotoId": "acceptOrDeclineSomething"}
-    ]
-  },
-
-  {
-    "id" : "newspaperHeadline",
-    "content" : "The headline about something that's happening in the world.",
-    "effects" : [
-      "set readSomething true"
+    "choices" : [
+      {"conditions" : "readNewspaper eq true"}
     ]
   },
 
   {
     "id" : "emmaNewspaper",
-    "content" : "You see yourself in the newspaper",
+    "choiceLabel" : "Look for your name.",
+    "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|see yourself on front page, see yourself on later pages, talking about whether you were good or bad}",
     "effects" : [
-      "set readSomething true"
+      "set readSomething true",
+      "set readNewspaper true"
     ],
     "conditions" : [
       "talksGiven gte 0"
@@ -100,8 +95,47 @@
   },
 
   {
+    "id" : "newspaperHeadline",
+    "choiceLabel" : "Scan the headlines.",
+    "content" : "The headline about something that's happening in the world. Perhaps a new act. Or a calamity. Or a new technology. Or an extinct species. Ranging from happy to sad to complicated.",
+    "effects" : [
+      "set readSomething true",
+      "set readNewspaper true"
+    ]
+  },
+
+  //email
+
+  {
+    "id": "readEmail",
+    "choiceLabel": "Read your email.",
+    "content" : "You open up your laptop and let your gaze run down the list of unread emails.",
+    "effects": [
+      "set readSomething true"
+    ],
+    "choices" : [
+      {"gotoId" : "acceptOrDeclineSomething"},
+      {"condition" : "readSomething eq true"},
+      {"condition" : "readSomething eq true"}
+    ]
+  },
+
+  {
+    "id" : "personalEmail",
+    "content" : "Friends and family email you about talks, whether to congradulate or to soothe. Zanita, Shelly, Mom, and Dad, depending on relationship wtih them all. probs the most fun",
+    "effects" : [
+      "set readSomething true"
+    ]
+  },
+
+  //personal emails
+
+  //stuff/placeholder
+
+  {
     "id" : "emailPetition",
-    "content" : "Someone sent an email asking you to sign a petition for a climate change issue",
+    "choiceLabel" : "Check your email.",
+    "content" : "Someone has you an email asking you to sign a petition for a climate change issue.",
     "effects" : [
       "set readSomething true"
     ]
