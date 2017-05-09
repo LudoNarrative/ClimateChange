@@ -1,182 +1,95 @@
 [
-<<<<<<< HEAD
 	//undergradDeanScene-talon.json
 	{
-		"id": "deanOffice",
-		"content": ["Emma enters the dean's office. Dean is ask his desk, working. Emma enters."],
+		"id": "sceneStart_t",
+		"content": ["{name|protagonist} walks; heading up the final flight of stairs and rounding the final corner -- she’s reluctant to walk any faster. She stands, lingering before the door, with a pit in her stomach keeping her from knocking. Soaking up the last bits of courage left in her, {name|protagonist}’s knuckles wrap the wood.<br><br>A hollow thud.<br><br>Not a moment goes by before a low but distinct voice beckoned her. It was {name|authorityFigure}."],
 		"choices": [
-			{"gotoId": "emmaQuestion"}
-		]
+			{"gotoId": "emmaEnter_t"}
+		],
+		"effects": [
+			"decr confidence 1",		//lowering Emma's confidence by one for the fear of what the meeting might hold
+		],
 	},
+
+//setting the scene
 	{
-		"id": "emmaQuestion",
-		"choiceLabel": "You wanted to see me, Dean Simon?",
-		"content": "Dean asks Emma if she knows why she is here. He asks if she understands. Emma responds:",
+		"id": "emmaEnter_t",
+		"choiceLabel": "\"it's open\"",
+		"content": "{name|protagonist}’s stiff arm pushed past the door.<br>{name|authorityFigure} was sitting behind his desk -- face in a bundle of papers -- not looking up. To {name|protagonist}, he did not feel like a friend at this moment, or even a colleague; he felt like a boss.<br><br>{name|protagonist} lifted her head to speak.<br><br>\"{name|authorityFigure},\"  she said. The word caught in her throat. She cleared it -- a guttural sound.",
 		"choices": [
-			{"gotoId": "emmaRespondsYes"},
-			{"gotoId": "emmaRespondsNo"}
+			{"gotoId": "speakCont_t"}
+		],
+		"effects": [
+			"set sceneSet true",
 		],
 	},
 	{
-		"id": "emmaRespondsYes",
-		"choiceLabel": "I think I do, yes.",
-		"content": "Emma explains that she thinks she understands what she is doing here.",
+		"id": "speakCont_t",
+		"choiceLabel": "\"You{ifStateCondition|confidence lt 5|, uh..|} wanted to speak with me?\"",
+		"content": "{name|authorityFigure} suspended his attention on the papers and raised his eyes to meet {name|protagonist}’s gaze.<br>\"{name|protagonist}...\" he said.<br><br>Perhaps it was in {name|protagonist}’s nature to over analyze when she was nervous, or perhaps it was the neutral tone in which he said her name, but she was unable to tell if he was upset or just calm. In many ways {name|protagonist} felt like she was at the principal's office, only this time she {ifStateCondition|confidence lt 5|knew|didn’t know} why she was there. The Dean continued,<br><br>\"...do you know why I wanted to speak with you?\"",
+		"choices": [
+			{"gotoId": "emmaRespondsYes_t"},
+			{"gotoId": "emmaRespondsNo_t"}
+		],
 		"effects": [
-			"set establishSetting true"
-			//Dean +1
+			"set sceneSet true",
+		],
+	},
+
+//This path might lead to Summer's path: tension 0
+	{
+		"id": "emmaRespondsYes_t",
+		"choiceLabel": "\"I think I do.\"",
+		"content": "{name|authorityFigure} nodded at {name|protagonist}’s acknowledgment; it was solemn and kind.<br>\"What’s going on, {name|protagonist}. It feels like night-and-day from where we were just a month ago.\"<br>{name|protagonist}’s hands found their way to the hem of her blouse. She picked at a loose thread.<br>\"It’s just{ifStateCondition|confidence lt 5|...\" She hesitated. There was a long moment of silence. \"Just...\"|...}",
+		"effects": [
+			"set troubleWithLecture true"
+		],
+	},
+
+//setting tension to 4
+	{
+		"id": "emmaRespondsNo_t",
+		"choiceLabel": "\"No, I don’t think so.\"",
+		"content": "\"You don’t?\" {name|authorityFigure} took his glasses off and massaged the red indentations that had formed on the bridge of his nose. He spoke carefully, \"{name|protagonist}, it’s about your performance these past few lectures.\"<br><br>{name|protagonist} looked at the Dean{ifStateCondition|confidence lt 5| and a sour frown formed across her face|.}.",
+		"effects": [
+			"set tension 4"
 		],
 		"choices":[
-			{"gotoId": "deanExplainsCalm"}
+			{"gotoId": "emmaAnnoyed_t"}
 		],
 	},
+
+//upping the tension by 2
 	{
-		"id": "emmaRespondsNo",
-		"choiceLabel": "I'm not sure that I do, no.",
-		"content": "Emma explains that she is confused and doesn't understand exactly why she is here.",
+		"id": "emmaAnnoyed_t",
+		"choiceLabel": "\"And…? what about the performances of my lectures?\"",
+		"content": "{name|protagonist} stood, her face tight -- hot -- looking at the Dean, anticipating what he might say next. {name|authorityFigure} placed his glasses softly on the table and directed his full attention toward {name|protagonist}.<br>\"I don’t know what’s gotten into you lately? Your {lectures/seminars} have been in a slow decline since day one.\" The Dean shook his head and looked hard. \"{name|protagonist}, are you alright? Is everything okay at home?\"",
 		"effects": [
-			"set establishSetting true",
-			//Dean -1
+			"set tension 6",
+			"set troubleWithLecture true"
 		],
-		"choices":[
-			{"gotoId": "deanExplainsAnnoyed"}
-		],
-	},
-	{
-		"id": "deanExplainsAnnoyed",
-		"choiceLabel": "Dean is frank with Emma.",
-		"content": "He tells her that her preformance is not everything it could be and asks again if she still doesn't understand the problem.",
 		"choices": [
-			{"gotoId": "emmaDefensive"},	//Table flip start. This might lead to local
-			{"gotoId": "emmaSubmissive"},	//she explains it's just a job... nothing more. This might lead to Research or LocalAction
-			{"gotoId": "emmaPassionate"},	//she explains that she is doing work to change the world, she needs to teach this way. This might lead to UN
-			{"gotoId": "emmaUnPassionate"}	//She explains that she just doesn't want to be a teacher anymore. This path might lead to local action or research
+			{"gotoId": "emmaAngerRise_t"},
+			{"gotoId": "emmaAngerSoften_t"}
 		]
 	},
+//tension 10 path to Ian
 	{
-		"id": "deanExplainsCalm",
-		"choiceLabel": "Dean is frank with Emma.",
-		"content": "He tells her that her preformance is not everything it could be and asks if there's something she might want to help her regarding her strugles.",
-		"choices": [
-			{"gotoId": "emmaDefensive"},	//Table flip start. This might lead to local
-			{"gotoId": "emmaSubmissive"},	//she explains it's just a job... nothing more. This might lead to Research or LocalAction
-			{"gotoId": "emmaPassionate"},	//she explains that she is doing work to change the world, she needs to teach this way. This might lead to UN
-			{"gotoId": "emmaUnPassionate"}	//She explains that she just doesn't want to be a teacher anymore. This path might lead to local action or research
+		"id": "emmaAngerRise_t",
+		"choiceLabel": "\"Don’t patronize me, {name|authorityFigure}!\"",
+		"content": "\"You have no right to speak to me that way!\"",
+		"effects": [
+			"set tension 10",
+			"set troubleWithLecture true"
 		]
 	},
+//tension lowers
 	{
-		"id": "emmaDefensive",
-		"choiceLabel": "Emma gets defensive and angry.",
-		"content": "Might blame the students, might freak out and blame the dean",
-		//this path will lead to Ian and the worse path
-		"choices": [
-			{"gotoId": "IanPath_1"},
+		"id": "emmaAngerSoften_t",
+		"choiceLabel": "\"I... I'm not sure what to say.\"",
+		"content": "\"Things don't feel like they did before. They're just... different. Somehow.\"",
+		"effects": [
+			"set troubleWithLecture true"
 		]
-	},
-	{
-		"id": "emmaSubmissive",
-		"choiceLabel": "Emma explains is't just a job.",
-		"content": "She understands that she's not as passionate as she could be, but it's just a job. 9 to 5. clock in, clock out.",
-		//this path will lead to Ian and the worse path
-		"choices": [
-			{"gotoId": "IanPath_2"},
-		]
-	},
-	{
-		"id": "emmaPassionate",
-		"choiceLabel": "Emma becomes angry, but only because she is so passionate about the work she's doing",
-		"content": "She is hard with the students but that's only because they're the only one's that can have the potential to change the world.",
-		//This path will lead to Summer and the better path
-		"choices": [
-			{"gotoId": "SummerPath_1"},
-		]
-	},
-	{
-		"id": "emmaUnPassionate",
-		"choiceLabel": "Emma explains that maybe teaching is not right for her.",
-		"content": "She's worked so hard for this, but maybe it's just not right for her. She's douting herself and doubts her abilities as a teacher.",
-		//This section will lead to Summer and the better path
-		"choices": [
-			{"gotoId": "SummerPath_2"},
-		]
-	},
-=======
-    /*
-    { condition: "sceneSet eq true"},
-    { condition: "troubleWithLecture eq true"},
-    { condition: "reasonForTrouble eq true"},
-    { condition: "pathChoiceMade eq true"},
-    { condition: "deanReaction eq true"},
-    */
-    {
-        "id": "setScene",
-        "content" : "setScene",
-        "effects" : ["set sceneSet true"]
-    },
-    {
-        "id": "whatWentWrong",
-        "content" : "whatWentWrong",
-        "conditions" : ["sceneSet eq true"],
-        "effects" : ["set troubleWithLecture true"]
-    },
-    {
-        // this is all possible reasons, will be multiple ids
-        "id": "reasonsItWentWrong1",
-        "content" : "reasonsItWentWrong1",
-        "effects" : [ "set reasonForTrouble true"]
-    },
-    {
-        // this is all possible reasons, will be multiple ids
-        "id": "reasonsItWentWrong2",
-        "content" : "reasonsItWentWrong2",
-        "effects" : [ "set reasonForTrouble true"]
-    },
-    {
-        // this is all possible reasons, will be multiple ids
-        "id": "reasonsItWentWrong3",
-        "content" : "reasonsItWentWrong3",
-        "effects" : [ "set reasonForTrouble true"]
-    },
-    {
-        // leaned academic
-        "id": "decidePath1",
-        "content" : "decidePath1",
-        "conditions" : ["reasonForTrouble eq true"],
-        "effects" : [ "set pathChoiceMade true"]
-    },
-    {
-        // middle of road
-        "id": "decidePath2",
-        "content" : "decidePath2",
-        "effects" : [ "set pathChoiceMade true"]
-    },
-    {
-        // leaned academic
-        "id": "decidePath3",
-        "content" : "decidePath3",
-        "effects" : [ "set pathChoiceMade true"]
-    },
-    {
-        "id": "deanOffersTransition",
-        "content" : "deanOffersTransition",
-        "effects" : ["set deanReaction true"]
-    },
-    {
-        "id": "deanOffersSupport",
-        "content" : "deanOffersSupport",
-        "effects" : ["set deanReaction true"]
-    },
-    {
-        "id": "loseComposure",
-        "content" : "loseComposure"
-    },
-    {
-        "id": "chanceToRecover",
-        "content" : "chanceToRecover"
-    },
-    {
-        "id": "forcedOutOfCareerPath",
-        "content" : "forcedOutOfCareerPath",
-        "effects" : ["set deanReaction true"]
-    }
->>>>>>> b1bfa6e37e545fcd0e157646955a1ded11d29ca2
+	}
 ]

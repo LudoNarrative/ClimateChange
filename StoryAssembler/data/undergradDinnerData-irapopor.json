@@ -55,7 +55,7 @@
 			"choiceLabel" : "<p>\"I dunno, it could be fun. In a scholarly sort of way.\"</p>",
 			"content": "<p>\"If you say so. That sounds like Stockholm Syndrome to me though.\" {name|nonAcademicFriend} rotates her hand around like she is swirling an invisble glass of boxed wine.</p><p>\"Well, that's out there now. But yes, {name|protagonist}, school is fun. It just doesn't sound that way when you say it out loud.\" {name|academicFriend} takes a big swig of water and almost chokes.</p>",
 			"effects" : [
-			//	"incr academicEnthusiasm 1"
+				"incr academicEnthusiasm 1"
 			]
 		},
 		{

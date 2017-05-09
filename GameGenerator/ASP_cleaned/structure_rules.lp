@@ -63,3 +63,108 @@ spawnsAtInitial(E) :-
 :-  precondition(_,O),
     result(O,add(E,_,location(Y,X))),
     not spawnsAtInitial(E).
+
+
+
+%%%%%%%%%%% TO NARROW IT DOWN EVEN MORE
+
+structure(dot,E) :-
+    initialize(add(E,_,location(middle,center))),
+    1 {initialize(add(E,_,_))} 1.
+
+structure(square,E) :-
+    initialize(add(E,_,location(top,left))),
+    initialize(add(E,_,location(bottom,left))),
+    initialize(add(E,_,location(top,right))),
+    initialize(add(E,_,location(bottom,right))),
+    4 {initialize(add(E,_,_))} 4.
+
+structure(diamond,E) :-
+    initialize(add(E,_,location(top,center))),
+    initialize(add(E,_,location(bottom,center))),
+    initialize(add(E,_,location(middle,left))),
+    initialize(add(E,_,location(middle,right))),
+    4 {initialize(add(E,_,_))} 4.
+
+structure(up_tri,E) :-
+    initialize(add(E,_,location(top,center))),
+    initialize(add(E,_,location(bottom,left))),
+    initialize(add(E,_,location(bottom,right))),
+    3 {initialize(add(E,_,_))} 3.
+
+structure(down_tri,E) :-
+    initialize(add(E,_,location(bottom,center))),
+    initialize(add(E,_,location(top,left))),
+    initialize(add(E,_,location(top,right))),
+    3 {initialize(add(E,_,_))} 3.
+
+structure(red_rover,E) :-
+    initialize(add(E,_,location(bottom,center))),
+    1 {initialize(add(E,_,_))} 1,
+    initialize(add(E2,_,location(top,center))),
+    1 {initialize(add(E2,_,_))} 1.
+    
+structure(red_rover,E2) :-
+    initialize(add(E,_,location(bottom,center))),
+    1 {initialize(add(E,_,_))} 1,
+    initialize(add(E2,_,location(top,center))),
+    1 {initialize(add(E2,_,_))} 1.
+
+structure(red_rover,E) :-
+    initialize(add(E,_,location(middle,left))),
+    1 {initialize(add(E,_,_))} 1,
+    initialize(add(E2,_,location(middle,right))),
+    1 {initialize(add(E2,_,_))} 1.
+    
+structure(red_rover,E2) :-
+    initialize(add(E,_,location(middle,left))),
+    1 {initialize(add(E,_,_))} 1,
+    initialize(add(E2,_,location(middle,right))),
+    1 {initialize(add(E2,_,_))} 1.
+
+
+
+structure(red_rover,E) :-
+    initialize(add(E,_,location(bottom,center))),
+    initialize(add(E,_,location(bottom,left))),
+    initialize(add(E,_,location(bottom,right))),
+    3 {initialize(add(E,_,_))} 3,
+    initialize(add(E2,_,location(top,center))),
+    initialize(add(E2,_,location(top,left))),
+    initialize(add(E2,_,location(top,right))),
+    3 {initialize(add(E2,_,_))} 3.
+    
+structure(red_rover,E2) :-
+    initialize(add(E,_,location(bottom,center))),
+    initialize(add(E,_,location(bottom,left))),
+    initialize(add(E,_,location(bottom,right))),
+    3 {initialize(add(E,_,_))} 3,
+    initialize(add(E2,_,location(top,center))),
+    initialize(add(E2,_,location(top,left))),
+    initialize(add(E2,_,location(top,right))),
+    3 {initialize(add(E2,_,_))} 3.
+
+structure(red_rover,E) :-
+    initialize(add(E,_,location(middle,left))),
+    initialize(add(E,_,location(top,left))),
+    initialize(add(E,_,location(bottom,left))),
+    3 {initialize(add(E,_,_))} 3,
+    initialize(add(E2,_,location(middle,right))),
+    initialize(add(E2,_,location(top,right))),
+    initialize(add(E2,_,location(bottom,right))),
+    3 {initialize(add(E2,_,_))} 3.
+    
+structure(red_rover,E2) :-
+    initialize(add(E,_,location(middle,left))),
+    initialize(add(E,_,location(top,left))),
+    initialize(add(E,_,location(bottom,left))),
+    3 {initialize(add(E,_,_))} 3,
+    initialize(add(E2,_,location(middle,right))),
+    initialize(add(E2,_,location(top,right))),
+    initialize(add(E2,_,location(bottom,right))),
+    3 {initialize(add(E2,_,_))} 3.
+
+
+:- entity(E), not structure(_,E).
+
+:- structure(S,_), 2 {structure(S,_)}.

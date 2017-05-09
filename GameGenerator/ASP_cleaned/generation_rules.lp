@@ -30,9 +30,14 @@ player_controls(Entity) :-  controlLogic(draggable(Entity)).
 player_controls(Entity) :-  action(move(Entity,direction(_,cursor))).
 player_controls(Entity) :-  action(move(Entity,direction(_,Other))),
 			    player_controls(Other).
+player_controls(Entity) :-  action(move(Entity,direction(_,Other))),
+			    static(Other).
 player_controls(Entity) :-  result(Outcome,move(Entity,direction(_))),
 			    precondition(control_event(EVENT),Outcome).
 
+computer_controls(Entity) :- not player_controls(Entity),
+			     entity(Entity),
+			     not static(Entity).
 
 player_controls_outcome(O) :- precondition(overlaps(E),O),
 			      player_controls(E).
@@ -86,8 +91,8 @@ reachableCondition(control_event(E))  :-
 reachableCondition(tick)  :-
     condition(tick).
 
-reachableCondition(timerElapsed(T)) :-
-    condition(timerElapsed(T)).
+reachableCondition(timer_elapsed(T)) :-
+    condition(timer_elapsed(T)).
 
 reachableCondition(overlaps(E1,E2,POLARITY)) :-
     reachableCondition(overlaps(E1)),
@@ -159,6 +164,8 @@ non_monotonic(Entity) :- not monotonic(Entity),
 trivial(Outcome) :- precondition(control_event(_),Outcome),
 		    1 {precondition(_,Outcome)} 1.
 
+trivial(Outcome) :- precondition(timer_elapsed(_),Outcome),
+		    1 {precondition(_,Outcome)} 1.
 trivial(tick).
 
 trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
@@ -168,5 +175,14 @@ trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
 			static(E2)},
 		    every_frame(Outcome).
 
-
+hand_eye_coordination(Outcome) :- precondition(overlaps(E), Outcome),
+				  computer_controls(E).
 		    
+
+hand_eye_coordination(Outcome) :- precondition(control_event(click(E)), Outcome),
+				  computer_controls(E).
+
+difficult(Outcome) :-
+    precondition(overlaps(E),Outcome),
+    precondition(control_event(click(E)), Outcome),
+    computer_controls(E).

@@ -16,7 +16,7 @@ modifiers = {'increase': lambda x,y:  x+y,
 
 def solve(*args):
     """Run clingo with the provided argument list and return the parsed JSON result."""
-    print_args =  ['clingo']+list(args)
+    print_args =  ['clingo']+list(args) + [' | tr [:space:] \\\\n | sort ']
     args = ['clingo','--outf=2']+list(args)
 
     
@@ -133,7 +133,16 @@ def parse_game(result):
     
     for resource in result['resource']:        
         resources.append(prettify(resource[0]['terms'][0]))
-        
+
+
+    timers = {}
+    for timer in result['timer_logic']:
+        name = prettify(timer[0]['terms'][0])
+        time = int(prettify(timer[0]['terms'][1]['terms'][0]))
+        timers[name] = time
+
+
+
     entities = []
     for entity in result['entity']:        
         entities.append(prettify(entity[0]['terms'][0]))
@@ -179,6 +188,7 @@ def parse_game(result):
             rules[outcome]['preconditions']['compare'] = []
             rules[outcome]['preconditions']['other'] = []
             rules[outcome]['preconditions']['overlaps'] = []
+            rules[outcome]['preconditions']['timer_elapsed'] = []
             rules[outcome]['results'] = {}
             rules[outcome]['results']['modify'] = []
             rules[outcome]['results']['other'] = []
@@ -201,6 +211,8 @@ def parse_game(result):
                 elif prettify(terms[0]['terms'][2]) == 'true':
                     valence = True
                 rules[outcome]['preconditions']['overlaps'].append( (entity1,entity2,valence))
+        elif 'timer_elapsed' == terms[0]['predicate']:
+            rules[outcome]['preconditions']['timer_elapsed'].append(timers[prettify(terms[0]['terms'][0])])
         else:
             rules[outcome]['preconditions']['other'].append( prettify(terms[0]))
    
@@ -245,11 +257,17 @@ def run_once(rules,settings,player_model,depth):
             outcome_fails = random.random() > player_model[outcome]
             if outcome_fails:
                 continue
+            for condition in rules[outcome]['preconditions']['timer_elapsed']:
+                if timestep % condition != 0:
+                    outcome_fails = True
+                else:
+                    break
             
             for condition in rules[outcome]['preconditions']['compare']:
                 if not comparators[condition[0]](state[condition[1]], condition[2]):
                     outcome_fails = True
                     break
+            
             if outcome_fails:
                 continue
             for condition in rules[outcome]['preconditions']['overlaps']:
@@ -286,6 +304,7 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
         fitness = 0
         earliest_reached = {}
         latest_reached = {}
+        seen = {}
         for simulations in range(simulation_count):     
             for free_var,set_var in zip(free_variables,individual):
                 free_var[1][0] = set_var
@@ -296,6 +315,9 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
                     if rule not in earliest_reached:
                         earliest_reached[rule] = float('inf')
                         latest_reached[rule] = float('-inf')
+                    if rule not in seen:
+                        seen[rule] = set()
+                    seen[rule].add(step_ind)
                     earliest_reached[rule] = min(step_ind,earliest_reached[rule])
                     latest_reached[rule] = max(step_ind,latest_reached[rule])
         for outcome in rules:
@@ -303,11 +325,12 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
                 latest_reached[outcome] = depth*2
             if outcome not in earliest_reached:
                 earliest_reached[outcome] = depth*2
-        
+            if outcome not in seen:
+                seen[outcome] = set()
         outcome_weight = 1000
         fitness += outcome_weight*(len(outcome_reached)-len(rules))
 
-        end_weight = 5
+        end_weight = 10
 
         for outcome in rules:
             has_mode_change = False
@@ -319,6 +342,9 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
                 fitness += -end_weight*(depth-earliest_reached[outcome])
                 fitness += end_weight*latest_reached[outcome]
                 #print outcome, earliest_reached[outcome],latest_reached[outcome],fitness
+            else:
+                fitness += (depth - len(seen[rule])) * -1
+
         return (fitness,)
     return score
 if __name__ == '__main__':
@@ -442,12 +468,15 @@ if __name__ == '__main__':
         if fit > best:
             best = fit
             best_ind = ind
-    print best
-
+    #print best
+    #print '======================================'
+    
     for free_var,set_var in zip(free_variables,best_ind):
         free_var[1][0] = set_var
+
+    #Have to do find and replaces in this order since outcome and timer might include entity and resource names
     find_and_replace = []
-    for o in ['outcome','entity','resource','timer']:
+    for o in ['outcome','timer','entity','resource']:
         for oo in out[o]:
             for ooo in oo:
                 if 'terms' in ooo['terms'][0]:
@@ -455,16 +484,16 @@ if __name__ == '__main__':
                     replace = replace = find.replace('(','_').replace(',','_X_').replace(')','_XX_')
                     find = '{}({})'.format(o,find)
                     replace = '{}({})'.format(o,replace)
+                    print find,replace
                     find_and_replace.append((find,replace))
-  
     
     out_string = []
-    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer']:
+    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer_logic']:
         for oo in out[o]:
             for ooo in oo:
                 prettified = prettify(ooo).split('(')[0]
-                if 'entity' in prettified or 'resource' in prettified or 'timer' in prettified:
-                    out_string.append( prettify(ooo['terms'][0]))
+                if 'entity' in prettified or 'resource' in prettified:
+                    out_string.append( prettify(ooo['terms'][0])+'.')
                 else:
                     out_string.append( prettify(ooo)+'.')
         if len(out[o]) > 0:
@@ -594,18 +623,19 @@ if __name__ == '__main__':
         out_string = out_string.replace(f,r)
     print out_string
 
+    print '=========='
     labels = {}
     for o in ['label']:
         for oo in out[o]:
             for label in oo:
                 labels[prettify(label['terms'][0])] = prettify(label['terms'][1])
-
+    print '<ul>'
     for o in ['reading']:
         for oo in out[o]:
             for ooo in oo:
                 reading = prettify(ooo)
                 if 'goal' in reading:
-                    print "The goal is to " + prettify(ooo['terms'][0]['terms'][0]) + " " + labels[prettify(ooo['terms'][1]['terms'][0])]
+                    print "<li>The goal is to " + prettify(ooo['terms'][0]['terms'][0]) + " " + labels[prettify(ooo['terms'][1]['terms'][0])]+'</li>'
 
 
     will_dos = []
@@ -629,14 +659,15 @@ if __name__ == '__main__':
                    'left_arrow':'left key',
                    'right_arrow':'right key'}
     if will_dos:
-        print '\nThey will do this by'
+        print '\n<li>They will do this by<ul>'
 
         for outcome_ind,outcome in enumerate(will_dos):
+            print '<li>'
             for ind,precond in enumerate(outcome2precond[outcome]):
                 precond = precond['terms'][0]
                 if 'overlaps' == precond['predicate']:
                     if 'true' == precond['terms'][2]['predicate']:
-                        print '\tattempting to make a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' touch'
+                        print 'attempting to make a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' touch'
                     else:
                         print '\tattempting to keep a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' from touching'
                 elif 'control_event' == precond['predicate']:
@@ -653,15 +684,15 @@ if __name__ == '__main__':
                         print '\t at the same time as'
                     elif ind < len(outcome2precond[outcome])-1:
                         print '\t and'
-            if outcome_ind < len(will_dos)-1:
-                print '\n\tor\n'
-
+            print '</li>'
+        print '</ul></li>'
   
                 
     if avoids:
-        print '\nThey will avoid'
+        print '<li>They will avoid<ul>'
 
         for outcome_ind,outcome in enumerate(avoids):
+            print '<li>'
             for ind,precond in enumerate(outcome2precond[outcome]):
                 precond = precond['terms'][0]
                 if 'overlaps' == precond['predicate']:
@@ -683,20 +714,22 @@ if __name__ == '__main__':
                         print '\t at the same time as'
                     elif ind < len(outcome2precond[outcome])-1:
                         print '\t and'
-            if outcome_ind < len(will_dos)-1:
-                print '\n\tor\n'
+            print '</li>'
+        print '</ul>'
 
 
-    print '\nThe player controls the game by'
+    print '<li>The player controls the game by<ul>'
     for oo in out['controlLogic']:
-        print ''
+
         for ooo in oo:
+            print '<li>'
             ooo = ooo['terms'][0]
             if 'draggable' == ooo['predicate']:
                 entity = ooo['terms'][0]['terms'][0]
                 print '\tclicking-and-dragging {}s'.format(labels[prettify(entity)])
             else:
                 print prettify(ooo)
+            print '</li>'
 
     direction_mapping = {'towards':'towards',
                          'away':'away from'}
@@ -705,19 +738,21 @@ if __name__ == '__main__':
             pretty = prettify(ooo)
             ooo = ooo['terms'][0]
             if 'move' in pretty and 'cursor' in pretty:
-                print '\tthe {} moves {} the cursor'.format(labels[prettify(ooo['terms'][0]['terms'][0])],direction_mapping[prettify(ooo['terms'][1]['terms'][0])])
+                print '<li>\tthe {} moves {} the cursor'.format(labels[prettify(ooo['terms'][0]['terms'][0])],direction_mapping[prettify(ooo['terms'][1]['terms'][0])]) + '</li>'
      
     for oo in out['condition']:
         for ooo in oo:
             pretty = prettify(ooo)
             precond = ooo['terms'][0]
             if 'control_event' in pretty:
+                print '<li>'
                 if 'click' ==  precond['terms'][0]['predicate']:
                     print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0]['terms'][0])]
                 elif 'button' == precond['terms'][0]['predicate']:
                     verb = precond['terms'][0]['terms'][1]['predicate']
                     button = precond['terms'][0]['terms'][0]['predicate']
                     print '\t{} the {}'.format(press_mapping[verb],key_mapping[button])
+                print '</li>'
 
     sprites = {}
     for oo in out['initialize']:
@@ -732,7 +767,8 @@ if __name__ == '__main__':
                     sprites[entity]['sprite'] = prettify(ooo['terms'][1])
                 if 'set_color' in pretty:
                     sprites[entity]['color'] = prettify(ooo['terms'][1])
-    print ''
+    print '</ul>'
     
     for sprite in sorted(sprites):
-        print 'A ' +  labels[sprite] + ' looks like a ' + sprites[sprite]['color'] + ' ' + sprites[sprite]['sprite']
+        print '<li>A ' +  labels[sprite] + ' looks like a ' + sprites[sprite]['color'] + ' ' + sprites[sprite]['sprite']+'</li>'
+    print '</ul>'

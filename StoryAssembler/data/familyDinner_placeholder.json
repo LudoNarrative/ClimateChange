@@ -1,0 +1,110 @@
+[{
+		"id": "familyIsFamily",
+		"content": "familyIsFamily CONTENT",
+		"effects": [
+			"set familyIsFamily true"
+		],
+		"choices": [{
+			"gotoId": "atDinner"
+		}]
+	},
+
+	{
+		"id": "atDinner",
+		"content": "atDinner CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set atDinner true"
+		],
+		"choices": [{
+			"gotoId": "establishDinnerQuality"
+		}]
+	},
+
+	{
+		"id": "establishDinnerQuality",
+		"content": "establishDinnerQuality CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set establishDinnerQuality true"
+		],
+		"choices": [{
+			"gotoId": "familyAsksSubject"
+		}]
+	},
+
+	{
+		"id": "familyAsksSubject",
+		"content": "familyAsksSubject CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set familyAsksSubject true"
+		],
+		"choices": [{
+			"gotoId": "dadChallenges"
+		}]
+	},
+
+	{
+		"id": "dadChallenges",
+		"content": "dadChallenges CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set dadChallenges true"
+		],
+		"choices": [{
+			"gotoId": "momChallenges"
+		}]
+	},
+
+	{
+		"id": "momChallenges",
+		"content": "momChallenges CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set momChallenges true"
+		],
+		"choices": [{
+			"gotoId": "emmaDefends"
+		}]
+	},
+
+	{
+		"id": "emmaDefends",
+		"content": "emmaDefends CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set emmaDefends true"
+		],
+		"choices": [{
+			"gotoId" : "otherParentDefends"
+		}]
+	},
+
+
+	{
+		"id": "otherParentDefends",
+		"content": "otherParentDefends CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set otherParentDefends true"
+		],
+		"choices": [{
+			"gotoId" : "parentsOfferSupport"
+		}]
+	},
+
+
+	{
+		"id": "parentsOfferSupport",
+		"content": "parentsOfferSupport CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set parentsOfferSupport true"
+		],
+		"choices": []
+	},
+
+
+
+]
