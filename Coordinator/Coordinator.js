@@ -677,23 +677,23 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var sceneBgs = [
 			{
 				id : "newExample",
-				src : "dinner.png"
+				src : "lecturehall.png"
 			},
 			{
 				id : "dinner",
-				src : "dinner.png"
+				src : "lecturehall.png"
 			},
 			{
 				id : "dinner_argument",
-				src : "dinner.png"
+				src : "lecturehall.png"
 			},
 			{
 				id : "generalist",
-				src : "dinner.png"
+				src : "lecturehall.png"
 			},
 			{
 				id : "lecture",
-				src : "lecture.png"
+				src : "lecturehall.png"
 			},
 			{
 				id : "worker",
@@ -701,27 +701,27 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "travel",
-				src : "travel.png"
+				src : "airplane.png"
 			},
 			{
 				id : "undergradDinner",
-				src : "travel.png"
+				src : "beach.png"
 			},
 			{
 				id : "undergradLecture",
-				src : "lecture.png"
+				src : "lecturehall.png"
 			},
 			{
 				id : "undergradDean",
-				src : "lecture.png"
+				src : "cafe.png"
 			},
 			{
 				id : "undergradTravel",
-				src : "lecture.png"
+				src : "airplane.png"
 			},
 			{
 				id : "undergradFamilyDinner",
-				src : "lecture.png"
+				src : "lecturehall.png"
 			},
 
 		]
@@ -735,8 +735,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var loadAvatars = function(id) {
 		var avatarSpec= [
 			{
-				id : "newExample",
-				avatars: [
+				sceneId : "newExample",
+				characters: [
 					{
 						id: "happy",
 						src: "happy.png",
@@ -745,48 +745,37 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				]
 			},
 			{
-				id : "dinner",
-				avatars: [
+				sceneId : "dinner",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["patience gt 9"]
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["patience eq 8.9"]
+						id: "ally",
+						graphics: "char12",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
 					},
 					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["patience eq 8"]
-					},
+						id: "antagonist",
+						graphics: "char7",
+						age: "20s",
+						states: [	//happy, neutral, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
 				]
 			},
 			{
-				id : "dinner_argument",
-				avatars: [
-					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 4"]
-					},
-					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
-					},
-					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
-					},
-				]
-			},
-			{
-				id : "generalist",
-				avatars: [
+				sceneId : "dinner_argument",
+				characters: [
 					{
 						id: "happy",
 						src: "happy.png",
@@ -805,8 +794,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				]
 			},
 			{
-				id : "lecture",
-				avatars: [
+				sceneId : "generalist",
+				characters: [
 					{
 						id: "happy",
 						src: "happy.png",
@@ -825,8 +814,28 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				]
 			},
 			{
-				id : "worker",
-				avatars: [
+				sceneId : "lecture",
+				characters: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
+			},
+			{
+				sceneId : "worker",
+				characters: [
 					{
 						id: "happy",
 						src: "happy.png",
@@ -845,8 +854,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				]
 			},
 			{
-				id : "travel",
-				avatars: [
+				sceneId : "travel",
+				characters: [
 					{
 						id: "happy",
 						src: "happy.png",
@@ -865,100 +874,172 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				]
 			},
 			{
-				id : "undergradDinner",
-				avatars: [
+				sceneId : "undergradDinner",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt -1000"]
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
 					},
+					{
+						id: "academicFriend",
+						graphics: "char12",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					},
+					{
+						id: "nonAcademicFriend",
+						graphics: "char7",
+						age: "20s",
+						states: [	//happy, neutral, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
+				]
+
+			},
+			{
+				sceneId : "undergradLecture",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
+					},
+					{
+						id: "skepticStudent",
+						graphics: "char12",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					},
+					{
+						id: "shyStudent",
+						graphics: "char7",
+						age: "20s",
+						states: [	//happy, neutral, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					},
+					{
+						id: "enthusiasticStudent",
+						graphics: "char7",
+						age: "20s",
+						states: [	//happy, neutral, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
 				]
 			},
 			{
-				id : "undergradLecture",
-				avatars: [
+				sceneId : "undergradDean",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["composure gt 4"]
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["composure eq 2"]
-					},
-					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["composure eq 0"]
-					},
+						id: "authorityFigure",
+						graphics: "char12",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
 				]
 			},
 			{
-				id : "undergradDean",
-				avatars: [
+				sceneId : "undergradTravel",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 4"]
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
-					},
-					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
-					},
+						id: "passenger",
+						graphics: "char12",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
 				]
 			},
 			{
-				id : "undergradTravel",
-				avatars: [
+				sceneId : "undergradFamilyDinner",
+				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["composure gt 4"]
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
 					},
 					{
-						id: "worried",
-						src: "worried.png",
-						state: ["composure eq 2"]
+						id: "dad",
+						graphics: "char12",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
 					},
 					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["composure eq 0"]
-					},
-				]
-			},
-			{
-				id : "undergradFamilyDinner",
-				avatars: [
-					{
-						id: "happy",
-						src: "happy.png",
-						state: ["confidence gt 4"]
-					},
-					{
-						id: "worried",
-						src: "worried.png",
-						state: ["confidence eq 2"]
-					},
-					{
-						id: "stressed",
-						src: "stressed.png",
-						state: ["confidence eq 0"]
-					},
+						id: "mom",
+						graphics: "char7",
+						age: "20s",
+						states: [	//happy, neutral, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
 				]
 			}
 		];
 
-		State.avatars = avatarSpec.filter(function(v) { return v.id === id; })[0].avatars;
+		State.avatars = avatarSpec.filter(function(v) { return v.sceneId === id; })[0].characters;
 
-		Display.setAvatar(State);
+		Display.setAvatars(State);
+	}
+
+	//validates the backgrounds and character avatars for the given scene
+	var validateArtAssets = function(id) {
+
+		var sceneData = getStorySpec(id);
+
+		for (char in sceneData.characters) {		//loop through to make sure each character has a default avatar
+			var passed = false;
+			for (var y=0; y < State.avatars.length; y++) {
+				if (State.avatars[y].id == char) {
+					for (var x=0; x < State.avatars[y].states.length; x++) {
+						if (State.avatars[y].states[x].state == "default") {
+							passed = true;
+						}
+					}
+				}
+			}
+			if (!passed) { 
+				console.warn("Warning! No default avatar set for " + char + "!");
+			}
+		}
+		//TODO: warn if there are characters in avatars that aren't in scene
+		//TODO: warn if avatar depends on state var that is not a scene state var
 	}
 
 	/*
@@ -1039,8 +1120,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		init : init,
 		loadStoryMaterials : loadStoryMaterials,
 		loadAvatars : loadAvatars,
-		loadSceneIntro : loadSceneIntro,
 		loadBackground : loadBackground,
+		validateArtAssets : validateArtAssets,
+		loadSceneIntro : loadSceneIntro,
+
 		startGame : startGame,
 		getStorySpec : getStorySpec
 	}
