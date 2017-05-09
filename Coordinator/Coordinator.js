@@ -1,5 +1,5 @@
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin",
-	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, globalData) {
+	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, globalData) {
 
 	/*
 		Initializing function
@@ -7,7 +7,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 
 		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean"];	//order of scenes
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner"];	//order of scenes
 		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -81,7 +81,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		{
 			id: "travel",
 			characters: {
-				"protagonist" : {name: "Emma", nickname: "Em", gender: "female" }
+				"emma" : {name: "Emma", nickname: "Em", gender: "female" }
 			},
 			wishlist: [
 				{ condition: "establishScene eq true"},
@@ -110,8 +110,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		{
 			id: "worker",
 			characters: {
-				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
-				"companion" : {name: "Rick", nickname: "Rick", gender: "male"}
+				"emma": {name: "Emma", nickname: "Em", gender: "female"},
+				"rick" : {name: "Rick", nickname: "Rick", gender: "male"}
 			},
 			wishlist: [
 				//{ condition: "reinforceSpecialty eq true" },		//this is triggered by grammars
@@ -143,10 +143,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		{
 			id: "lecture",
 			characters: {
-				"protagonist": {name: "Professor Banks", nickname: "Emma", gender: "female"},
-				"student1": {name: "Franklin", nickname: "Franklin", gender: "male"},
-				"student2": {name: "Elika", nickname: "Elika", gender: "female"},
-				"student3": {name: "Miguel", nickname: "Miguel", gender: "male"}
+				"emma": {name: "Professor Banks", nickname: "Emma", gender: "female"},
+				"franklin": {name: "Franklin", nickname: "Franklin", gender: "male"},
+				"elika": {name: "Elika", nickname: "Elika", gender: "female"},
+				"miguel": {name: "Miguel", nickname: "Miguel", gender: "male"}
 			},
 			wishlist: [
 				{ condition: "droppedKnowledge eq 1", order: "first"},
@@ -414,6 +414,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set talkToStudent 0",
 				"set followUp false",
 				"set lectureEnd false",
+				"set roomObjects 0",
 
 				"set composure 10",
 				"set curiosity 3",
@@ -453,7 +454,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "deanReaction eq true"},
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
-			//dataFiles: ["text!undergradDinnerData_irapopor"],
+			//dataFiles: ["text!undergradDean_sgadsby"],
 
 			dataFiles: [
 				"text!undergradDean_talon",
@@ -469,14 +470,141 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set deanReaction false",
 				"set tension 0",
 
-				"set confidence 5"
+				"set confidence 5",
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				"set composure 5"
 			],
 			UIvars: [
+				"tension"
 
 			],
 			mode: {
 				type: "dialogue",
 				initiator: "authorityFigure",
+				responder: "protagonist"
+			}
+		},
+		//undergrad travel scene
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "undergradTravel",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"passenger": {name: "Phil", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "onAPlane eq true"},
+				{ condition: "reminisce eq true"},
+				{ condition: "talkExposition eq true"},
+				{ condition: "dealWithSomeone eq true"},
+				{ condition: "readSomething eq true"},
+				{ condition: "acceptOrDeclineSomething eq true"},
+				{ condition: "outroForLanding eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!undergradTravel_kply","text!undergradTravel_sjsherma"],
+/*
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set onAPlane false",
+				"set reminisce false",
+				"set talkExposition false",
+				"set dealWithSomeone false",
+				"set readSomething false",
+				"set acceptOrDeclineSomething false",
+				"set outroForLanding false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				
+				"set composure 5",
+				"set carbonFootprint 0",
+				"set fame 0"
+			],
+			UIvars: [
+				"carbonFootprint",
+				"composure",
+				"fame"
+
+			],
+			mode: {
+				type: "narration"
+			}
+		},
+		//undergrad family dinner scene
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "undergradFamilyDinner",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"dad": {name: "Dad", gender: "male"},
+				"mom": {name: "Mom", gender: "female"}
+			},
+			wishlist: [
+				{ condition: "familyIsFamily eq true"},
+				{ condition: "atDinner eq true"},
+				{ condition: "establishDinnerQuality eq true"},
+				{ condition: "familyAsksSubject eq true"},
+				{ condition: "dadChallenges eq true"},
+				{ condition: "momChallenges eq true"},
+				{ condition: "emmaDefends eq true"},
+				{ condition: "otherParentDefends eq true"},
+				{ condition: "parentsOfferSupport eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon", "text!undergradFamilyDinner_irapopor"],
+/*
+
+
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set familyIsFamily false",
+				"set atDinner false",
+				"set establishDinnerQuality false",
+				"set familyAsksSubject false",
+				"set dadChallenges false",
+				"set momChallenges false",
+				"set emmaDefends false",
+				"set otherParentDefends false",
+				"set parentsOfferSupport false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				
+				"set confidence 5",
+				"set hope 5",
+				"set tension 5"
+			],
+			UIvars: [
+				"confidence",
+				"hope",
+				"tension"
+
+			],
+			mode: {
+				type: "dialogue",
+				initiator: "mom",
 				responder: "protagonist"
 			}
 		}
@@ -528,6 +656,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id : "undergradDean",
 				text : "<p>TODO: Scene description</p>"
+			},
+			{
+				id : "undergradTravel",
+				text : "<p>TODO: Scene description</p>"
+			},
+			{
+				id : "undergradFamilyDinner",
+				text : "<p>TODO: Scene description</p>"
 			}
 
 
@@ -545,7 +681,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "dinner",
-				src : "lecturehall.png"
+				src : "dinner.png"
 			},
 			{
 				id : "dinner_argument",
@@ -579,6 +715,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				id : "undergradDean",
 				src : "lecture.png"
 			},
+			{
+				id : "undergradTravel",
+				src : "lecture.png"
+			},
+			{
+				id : "undergradFamilyDinner",
+				src : "lecture.png"
+			},
 
 		]
 		var sceneBg = sceneBgs.filter(function(v) { return v.id === id; })[0].src;
@@ -589,305 +733,236 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		Returns pre-defined list of avatars...hypothetically in the future we could use some metric to pull avatars based on their state gating...
 	*/
 	var loadAvatars = function(id) {
-
-		var avatarSpec = [
+		var avatarSpec= [
 			{
-				sceneId : "newExample",
-				characters: [
+				id : "newExample",
+				avatars: [
 					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "happy",
+						src: "happy.png",
+						state: ["introductions gt 0"]
 					},
-					{
-						id: "char1",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					},
-					{
-						id: "char2",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					},
-					{
-						id: "char3",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					},
-					{
-						id: "char4",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					}
 				]
 			},
 			{
-				sceneId : "dinner",
-				characters: [
+				id : "dinner",
+				avatars: [
 					{
-						id: "protagonist",
-						graphics: "char3",
-						age: "20s",
-						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "happy"}
-						]
+						id: "happy",
+						src: "happy.png",
+						state: ["patience gt 9"]
 					},
 					{
-						id: "ally",
-						graphics: "char12",
-						age: "20s",
-						states: [	//happy, neutral, upset, confused
-							{ state: ["default"], tag: "happy" }
-						]
+						id: "worried",
+						src: "worried.png",
+						state: ["patience eq 8.9"]
 					},
 					{
-						id: "antagonist",
-						graphics: "char7",
-						age: "20s",
-						states: [	//happy, neutral, confused
-							{ state: ["default"], tag: "happy" }
-						]
-					}
+						id: "stressed",
+						src: "stressed.png",
+						state: ["patience eq 8"]
+					},
 				]
 			},
 			{
-				sceneId : "travel",
-				characters: [
+				id : "dinner_argument",
+				avatars: [
 					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ state: ["default"], tag: "happy" }
-						]
-					}
-				]	
-			},
-			{
-				sceneId : "worker",
-				characters: [
-					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ state: ["default"], tag: "happy" }
-						]
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
 					},
 					{
-						id: "companion",
-						graphics: "EmmaOld",
-						states: [
-							{ state: ["default"], tag: "happy" }
-						]
-					}
-				]	
-			},
-			{
-				sceneId : "lecture",
-				characters: [
-					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ state: ["default"], tag: "happy" }
-						]
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
 					},
 					{
-						id: "student1",
-						graphics: "EmmaOld",
-						states: [
-							{ state: ["default"], tag: "happy" }
-						]
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
 					},
-					{
-						id: "student2",
-						graphics: "EmmaOld",
-						states: [
-							{ state: ["default"], tag: "happy" }
-						]
-					},
-					{
-						id: "student3",
-						graphics: "EmmaOld",
-						states: [
-							{ state: ["default"], tag: "happy" }
-						]
-					}
-				]	
-			},
-			{
-				sceneId : "generalist",
-				characters: [
-					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					},
-					{
-						id: "ally",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					},
-					{
-						id: "antagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					}
 				]
 			},
 			{
-				sceneId : "dinner_argument",
-				characters: [
+				id : "generalist",
+				avatars: [
 					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
 					},
 					{
-						id: "ally",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
 					},
 					{
-						id: "antagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					}
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
 				]
 			},
 			{
-				sceneId : "undergradDinner",
-				characters: [
+				id : "lecture",
+				avatars: [
 					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
 					},
 					{
-						id: "academicFriend",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
 					},
 					{
-						id: "nonAcademicFriend",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					}
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
 				]
 			},
 			{
-				sceneId : "undergradLecture",
-				characters: [
+				id : "worker",
+				avatars: [
 					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 0"]
 					},
 					{
-						id: "skepticStudent",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
 					},
 					{
-						id: "shyStudent",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
 					},
-					{
-						id: "enthusiasticStudent",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					}
-				]	
+				]
 			},
 			{
-				sceneId : "undergradDean",
-				characters: [
+				id : "travel",
+				avatars: [
 					{
-						id: "protagonist",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
 					},
 					{
-						id: "authorityFigure",
-						graphics: "EmmaOld",
-						states: [
-							{ tag: "happy", state: ["default"]}
-						]
-					}
-				]	
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
+			},
+			{
+				id : "undergradDinner",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt -1000"]
+					},
+				]
+			},
+			{
+				id : "undergradLecture",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["composure gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["composure eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["composure eq 0"]
+					},
+				]
+			},
+			{
+				id : "undergradDean",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
+			},
+			{
+				id : "undergradTravel",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["composure gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["composure eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["composure eq 0"]
+					},
+				]
+			},
+			{
+				id : "undergradFamilyDinner",
+				avatars: [
+					{
+						id: "happy",
+						src: "happy.png",
+						state: ["confidence gt 4"]
+					},
+					{
+						id: "worried",
+						src: "worried.png",
+						state: ["confidence eq 2"]
+					},
+					{
+						id: "stressed",
+						src: "stressed.png",
+						state: ["confidence eq 0"]
+					},
+				]
 			}
 		];
 
-		State.avatars = avatarSpec.filter(function(v) { return v.sceneId === id; })[0].characters;
+		State.avatars = avatarSpec.filter(function(v) { return v.id === id; })[0].avatars;
 
-		Display.setAvatars(State);
+		Display.setAvatar(State);
 	}
-
-	//validates the backgrounds and character avatars for the given scene
-	var validateArtAssets = function(id) {
-
-		var sceneData = getStorySpec(id);
-
-		for (char in sceneData.characters) {		//loop through to make sure each character has a default avatar
-			var passed = false;
-			for (var y=0; y < State.avatars.length; y++) {
-				if (State.avatars[y].id == char) {
-					for (var x=0; x < State.avatars[y].states.length; x++) {
-						if (State.avatars[y].states[x].state == "default") {
-							passed = true;
-						}
-					}
-				}
-			}
-			if (!passed) { 
-				console.warn("Warning! No default avatar set for " + char + "!");
-			}
-		}
-		//TODO: warn if there are characters in avatars that aren't in scene
-		//TODO: warn if avatar depends on state var that is not a scene state var
-	}
-
 
 	/*
-		This will eventually be replaced with more complex reasoning before passing
+		This will eventually be replaced with more complex stuff before passing
 		off to game.js
 	*/
 	var startGame = function(id) {
@@ -915,8 +990,18 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
 			{
-				id: "dinner",
+				id: "undergradTravel",
 				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "undergradFamilyDinner",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "dinner",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_1.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_2.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_3.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_4.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_6.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_7.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_9.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_10.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_11.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_12.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_13.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_14.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_15.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_16.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_17.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_18.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_19.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_21.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_22.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_23.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_24.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_25.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_26.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_27.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_28.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_29.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_30.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_31.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_34.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_35.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_36.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_37.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_38.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_39.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_41.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_42.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_43.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_45.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_46.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_47.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_48.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_49.lp','asp-phaser-generator-2/test/fixtures/lectureGames-5-5-2017/tempgames/games_5_5/games_5_5_50.lp'],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
 			{
@@ -954,10 +1039,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		init : init,
 		loadStoryMaterials : loadStoryMaterials,
 		loadAvatars : loadAvatars,
-		loadBackground : loadBackground,
-		validateArtAssets : validateArtAssets,
 		loadSceneIntro : loadSceneIntro,
-
+		loadBackground : loadBackground,
 		startGame : startGame,
 		getStorySpec : getStorySpec
 	}

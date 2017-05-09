@@ -1,8 +1,19 @@
 
     
+:- action(move(Entity,direction(away,_))),
+   not action(apply_restitution(Entity,Entity)).
 
-:-  precondition(overlaps(E1,E2,POLARITY),O),
-    precondition(control_event(click(E3)),O).
+
+
+:- action(move(Entity,direction(towards,_))),
+   not action(apply_restitution(Entity,Entity)).
+
+:- action(move(Entity,direction(towards,Other))),
+   not action(apply_restitution(Entity,Other)).
+
+
+%:-  precondition(overlaps(E1,E2,POLARITY),O),
+%    precondition(control_event(click(E3)),O).
     
 :- outcome(outcome(o(N))), N >= 2, not outcome(outcome(o(N-1))).
 :- resource(resource(r(N))), N >= 2, not resource(resource(r(N-1))).
@@ -24,6 +35,14 @@
 
 :- condition(overlaps(entity(e(N)),entity(e(N2)),_)),
    N2 < N.
+
+:- action(move(entity(e(E1)),direction(_,entity(e(E2))))),
+   E2 < E1.
+
+:- not condition(control_event(click(entity(e(E1))))),
+   condition(control_event(click(entity(e(E2))))),
+   entity(e(E1)),
+   E1 < E2.
 
 :- precondition(overlaps(E1,E2,_),O),
    precondition(control_event(_),O),
@@ -100,6 +119,8 @@ different_precondition(O1,O2) :-
    action(delete(Entity)),
    not action(add(Entity,_,_)).
 
+:- action(add(Entity,_,_)),
+   not action(delete(Entity)).
 
 % only allow something to decrease on tick if it can be increased
 :- result(tick, modify(decrease,R)),
@@ -137,8 +158,8 @@ different_precondition(O1,O2) :-
 
 
 % Don't let something move away from the cursor if we need to click on it.
-:- result(O, move(E, direction(away,cursor))),
-   condition(control_event(click(E))).
+%:- result(O, move(E, direction(away,cursor))),
+%   condition(control_event(click(E))).
 
 :- precondition(timer_elapsed(T),Outcome), 2 { precondition(C,Outcome)}.
 
@@ -157,8 +178,8 @@ different_precondition(O1,O2) :-
 
 :- 2{result(O,modify(_,R))}, resource(R), outcome(O).
 
-:- precondition(control_event(click(Entity)),Outcome),
-   precondition(overlaps(Entity),Outcome).
+%:- precondition(control_event(click(Entity)),Outcome),
+%   precondition(overlaps(Entity),Outcome).
 
 
 %:- precondition(overlaps(E,E,P),O),
@@ -307,5 +328,35 @@ movement(move(E,D)) :- action(move(E,D)).
 :- player_model(Outcome,player_will_attempt),
    trivial(Outcome).
 
+:- initialize(set_color(E1,C)),
+   initialize(set_color(E2,C)),
+   initialize(set_sprite(E1,S)),
+   initialize(set_sprite(E2,S)),
+   E1 != E2.
+   
 
+:- player_controls(entity(e(E2))),
+   not player_controls(entity(e(E1))),
+   entity(entity(e(E1))),
+   E1 < E2.
 
+%% :- condition(overlaps(E1,E2,true)),
+%%    result(O,move(E1,direction(away,E2))),
+%%    result(O2, move(E1,_)),
+%%    speed(E,O,S),
+%%    speed(E,O2,S2),
+%%    S >= S2,
+%%    O != O2.
+	   
+   
+
+:- precondition(compare(_,_),O),
+   result(O, move(_,_)).
+
+:- precondition(compare(_,_),O),
+   result(O, rotates(_,_,_)).
+
+:- precondition(timer_elapsed(_),O1),
+   result(O1,modify(increase,R)),
+   precondition(timer_elapsed(_),O2),
+   result(O2,modify(decrease,R)).

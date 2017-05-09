@@ -13,6 +13,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		var useGamestring = false;		//if true, will use the gameString variable in the gameSpec as the game code to eval
 
 		var aspFilepath = gameSpec.aspFilepaths[Math.floor(Math.random()*gameSpec.aspFilepaths.length)];		//pick a random aspfile if there are 1+
+		console.log("PICKING GAME FILE: " , aspFilepath)
 
 		//var fs = require('fs');
 		//var AspPhaserGenerator = require('asp-phaser-generator/index');

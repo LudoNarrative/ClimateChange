@@ -14,6 +14,7 @@
     result(Outcome,modify(decrease,property(Entity2,health))).
 
 
+
 {reading(hurt,relation(Entity1,Entity2)) } :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,delete(Entity2)).
@@ -65,6 +66,11 @@
     result(Outcome,add(Entity1,_,_)),
     result(Outcome,modify(decrease,Resource1)).
 
+{reading(hand_eye_coordination,game )} :-
+    reading(good,Outcome),
+    hand_eye_coordination(Outcome).
+    
+
 {reading(goal(Action),Thing) } :-
     goal(Action,Thing).
 
@@ -75,6 +81,7 @@
 {reading(goal(produce),Resource) } :-
     precondition(compare(ge,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
+
 
     
 {reading(goal(reduce),Resource) } :-
@@ -157,19 +164,19 @@ reading(good,Outcome) :-
 
 
 reading(good,Outcome) :-
-    result(Outcome,delete(Entity,_)),
+    result(Outcome,delete(Entity)),
     reading(bad,Entity).
 
 reading(good,Outcome) :-
-    result(Outcome,add(Entity,_)),
+    result(Outcome,add(Entity,_,_)),
     reading(good,Entity).
 
 reading(bad,Outcome) :-
-    result(Outcome,delete(Entity,_)),
+    result(Outcome,delete(Entity)),
     reading(good,Entity).
 
 reading(bad,Outcome) :-
-    result(Outcome,add(Entity,_)),
+    result(Outcome,add(Entity,_,_)),
     reading(bad,Entity).
 
 
