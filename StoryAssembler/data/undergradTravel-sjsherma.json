@@ -1,16 +1,72 @@
 [
-  {
-  "id": "dealWithSomeone",
-  "content": "dealWithSomeone CONTENT",
-  "choiceLabel": "CHOICE CONTENT",
-  "effects": [
-    "set dealWithSomeone true"
-  ],
-  "choices": [{
-    "gotoId": "readSomething"
-  }]
 
+  {
+    "id" : "freeTime",
+    "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. What to do now?",
+    "choices" : [
+      {"condition" : "dealWithSomeone eq true"},
+      {"condition" : "readSomething eq true"},
+    ],
+    "repeatable" : "true"
   },
+
+  // People to deal with - each changes based on fame?
+
+  {
+    "id" : "recognizeEmma",
+    "choiceLabel" : "Find out why the person sitting next to you is staring at you.",
+    "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Banks? The speaker at {ifStateCondition}?\"",
+    "effects" : [
+      "set dealWithSomeone true"
+    ],
+    "conditions" : [
+      "fame gte 5"
+    ],
+    "choices" : [
+      {"gotoId" : "continueTalk"},
+      {"gotoId" : "stopTalk"},
+      {"gotoId" : "rudeTalk"}
+    ]
+  },
+
+  {
+    "id" : "continueTalk",
+    "choiceLabel" : "Yep, that's me.",
+    "content" : "You fellow rider's eyes light up. \"I thought so! I {ifStateCondition}!",
+  },
+
+  {
+    "id" : "stopTalk",
+    "choiceLabel" : "I'm afraid you have the wrong person.",
+    "content" : "You manage a polite smile. \"Sorry, you must have the wrong person.\". <br/><br/> \"Oh! I'm so sorry! I thought - never mind, I'll leave you alone then.\" Flushing and shifting uncomfortably in their seat, they turn to look out the window.",
+  },
+
+  {
+    "id" : "rudeTalk",
+    "choiceLabel" : "Who wants to know?",
+    "content" : "\"Oh, of course! Sorry!\" they say, somehow unfazed by the rudeness of the question. \"I'm Daniel Schmit, nice to meet you! I {ifStateCondition}\"",
+  },
+
+  {
+    "id" : "nosyPerson",
+    "choiceLabel" : "You turn to talk to the person who's leaning very, very close to you.",
+    "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,
+    \" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"{ifStateCondition}. Funny, huh?\"",
+    "effects" : [
+      "set dealWithSomeone true"
+    ],
+  },
+
+  {
+    "id" : "friendlyPerson",
+    "choiceLabel" : "Chat with the friendly-looking person sitting next to you.",
+    "content" : "Friendly person strikes up a conversation out of friendliness. Turns out you're going to the same destination",
+    "effects" : [
+      "set dealWithSomeone true"
+    ],
+  },
+
+//read that stuff
 
   {
     "id": "readSomething",
@@ -19,10 +75,55 @@
     "effects": [
       "set readSomething true"
     ],
-    "choices": [{
-      "gotoId": "acceptOrDeclineSomething"
-    }]
+    "choices": [
+      {"gotoId": "acceptOrDeclineSomething"}
+    ]
   },
+
+  {
+    "id" : "newspaperHeadline",
+    "content" : "The headline about something that's happening in the world.",
+    "effects" : [
+      "set readSomething true"
+    ]
+  },
+
+  {
+    "id" : "emmaNewspaper",
+    "content" : "You see yourself in the newspaper",
+    "effects" : [
+      "set readSomething true"
+    ],
+    "conditions" : [
+      "talksGiven gte 0"
+    ]
+  },
+
+  {
+    "id" : "emailPetition",
+    "content" : "Someone sent an email asking you to sign a petition for a climate change issue",
+    "effects" : [
+      "set readSomething true"
+    ]
+  },
+
+  {
+    "id" : "organizationEmail",
+    "content" : "A group (local, lobbists, activists) asks for support/money or gives news/info",
+    "effects" : [
+      "set readSomething true"
+    ]
+  },
+
+  {
+    "id" : "personalEmail",
+    "content" : "Friends and family email you about talks, whether to congradulate or to soothe. Zanita, Shelly, Mom, and Dad, depending on relationship wtih them all. probs the most fun",
+    "effects" : [
+      "set readSomething true"
+    ]
+  },
+
+//the landings!
 
   {
     "id": "outroForLanding",
@@ -31,7 +132,6 @@
     "effects": [
       "set outroForLanding true"
     ],
-    "choices": []
-  }
+  },
 
 ]
