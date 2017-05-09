@@ -77,8 +77,37 @@ Stats CSS
     left:0px;
 }
 
-.mainChar, .supportingChar {
+.statContainer {
     display: inline-block;
+    width:330px;
+}
+
+.stat {
+    background-color:#00aeef;
+    margin-bottom:5px;
+    height: 20px;
+    padding: 5px;
+    -webkit-transition: width 1s;
+    transition: 1s;
+}
+
+.stat-label {
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+}
+
+.barContainer {
+    float: left;
+    width: 160px;
+    position:relative;
+    top:30px;
+}
+
+.statContainer:first-child {
+    width:440px !important;
+}
+
+.mainChar, .supportingChar {
+    float:left;
     box-sizing: border-box;             /*makes sure border is on the inside */
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -98,8 +127,8 @@ Stats CSS
 }
 
 .supportingChar {
-    height: 250px;
-    width: 220px;
+    height: 190px;
+    width: 160px;
     background-position-y:top;
 }
 
