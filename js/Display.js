@@ -159,10 +159,15 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 			var picClass = "supportingChar";
 			if (pos == 0) { picClass = "mainChar" }
 
+			$('<div/>', {
+				id: char.id,
+				class: 'statContainer'
+			}).appendTo('#statsContainer');
+
 			$('<div/>', {			//create avatarBox and stat-holding box for character
 			    id: 'charPic_' + char.id,
 			    class: picClass
-			}).appendTo('#statsContainer');
+			}).appendTo('#' + char.id);
 			if (url) { 		//set avatar
 				//$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
 				$('#charPic_' + char.id).css("background-image", "url("+url+")"); 
@@ -184,31 +189,74 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 
 	/*
 	Called by story and game systems to change stat displayed, or add it
+	containerId: which container to update...if set to "all" updates all containers
 	*/
 
-	var setStats = function(containerId) {
+	var createStats = function() {
 		var stats = State.get("storyUIvars");
-		$("#"+containerId).html('');
 
 		if (typeof stats !== "undefined") {
+
+			State.get("characters").forEach(function(char, pos) {
+				$('<div/>', {		//make progressbar divs
+			    	class: 'barContainer',
+			    	id: char.id + "_barContainer"
+				}).appendTo("#"+char.id);
+			});
+
+			
+
 			stats.forEach(function(stat, pos) {
-				$('<div/>', {
-					id: stat+'Container',
-			    	class: 'stat'
-				}).appendTo("#"+containerId);
+				/*
+				"varName" : "confidence",
+				"label" : "Confidence",
+				"characters" : ["protagonist"],
+				"affectedBy" : "both",
+				"range" : [0,10]
+				*/
+				for (var x=0; x < stat.characters.length; x++) { //for each character...
 
-				$('<span/>', {
-			    	class: 'statLabel',
-			    	text: stat + ": "
-				}).appendTo('#'+stat+'Container');
+					$('<div/>', {		//make progressbar divs
+						id: stat.characters[x] + "_" + stat.varName,
+				    	class: 'stat',
+				    	html: "<div class='stat-label'>"+ stat.label + "</div>"
+					}).appendTo("#"+stat.characters[x] + "_barContainer");
 
-				$('<span/>', {
-			    	class: 'statValue',
-			    	text: State.get(stat)
-				}).appendTo('#'+stat+'Container');
+					setBarWidth(stat.characters[x] + "_" + stat.varName);
+
+				}
 			});
 		}
 	};
+
+	var setStats = function() {
+		var stats = State.get("storyUIvars");
+
+		stats.forEach(function(stat, pos) {
+				/*
+				"varName" : "confidence",
+				"label" : "Confidence",
+				"characters" : ["protagonist"],
+				"affectedBy" : "both",
+				"range" : [0,10]
+				*/
+				for (var x=0; x < stat.characters.length; x++) { //for each character...
+					setBarWidth(stat.characters[x] + "_" + stat.varName);
+				}
+			});
+
+	}
+
+	//sets stat bar width
+	var setBarWidth = function(statDivId) {
+		var character = statDivId.split("_")[0];
+		var statName = statDivId.split("_")[1];
+		var stat = State.getBlackboard().storyUIvars.filter(function(thing,i){ 
+			return thing.varName == statName;
+		})[0];
+		var newWidth = State.get(statName)/(stat.range[1] - stat.range[0]) * 100;
+		$("#" + statDivId).css("width", newWidth + "%");
+	}
 
 	//sets the intro screen for each scene
 	var setSceneIntro = function(sceneText) {
@@ -414,6 +462,7 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 		init : init,
 		initTitleScreen : initTitleScreen,
 		setAvatars : setAvatars,
+		createStats : createStats,
 		setStats : setStats,
 		setSceneIntro : setSceneIntro,
 		setSceneOutro : setSceneOutro,

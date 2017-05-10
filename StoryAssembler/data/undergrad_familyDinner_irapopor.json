@@ -1,49 +1,168 @@
 [
 	{
-		"id": "momChallenges",
-		"content": "momChallenges CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"id": "momChallengesi",
+		"content": "mom challenges you",
 		"effects": [
 			"set momChallenges true"
 		],
-		"choices": [{
-			"gotoId": "emmaDefendsIan"
-		}]
+		"choices": [
+			{"gotoId": "listenToMomi"},
+			{"gotoId": "reluctantToMomi"}
+		]
 	},
+		{
+			"id": "listenToMomi",
+			"choiceLabel" : "hear mom out",
+			"content": "You hear mom's argument",
+			"choices" : [
+				{"gotoId" : "agressiveDefensei"},
+				{"gotoId" : "mildDefensei"},
+				{"gotoId" : "friendlyDefensei"}
+			]
+		},
+		{
+			"id": "reluctantToMomi",
+			"choiceLabel" : "you aren't sure bout this",
+			"content": "You hear mom's argument",
+			"choices" : [
+				{"gotoId" : "agressiveDefensei"},
+				{"gotoId" : "mildDefensei"},
+				{"gotoId" : "friendlyDefensei"}
+			]
+		},
+			{
+				"id": "agressiveDefensei",
+				"choiceLabel" : "hear mom out",
+				"content": "You hear mom's argument",
+				"effects": [
+					"set emmaDefends true"
+				]
+			},
+			{
+				"id": "mildDefensei",
+				"choiceLabel" : "hear mom out",
+				"content": "You hear mom's argument",
+				"effects": [
+					"set emmaDefends true"
+				]
+			},
+			{
+				"id": "friendlyDefensei",
+				"choiceLabel" : "hear mom out",
+				"content": "You hear mom's argument",
+				"effects": [
+					"set emmaDefends true"
+				]
+			},
+
 
 	{
-		"id": "emmaDefendsIan",
-		"content": "emmaDefends CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
-		"effects": [
-			"set emmaDefends true"
-		],
-		"choices": [{
-			"gotoId" : "otherParentDefendsIan"
-		}]
-	},
-
-
-	{
-		"id": "otherParentDefendsIan",
-		"content": "otherParentDefends CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"id": "dadDefendsi",
+		"content": "dad defends you",
 		"effects": [
 			"set otherParentDefends true"
 		],
-		"choices": [{
-			"gotoId" : "parentsOfferSupport"
-		}]
+		"choices": [
+			{"gotoId" : "thanksDadi"},
+			{"gotoId" : "noThanksDadi"}
+		],
+		"conditions" : [
+			"academicEnthusiasm lte 6"
+		]
 	},
+		{
+			"id": "thanksDadi",
+			"choiceLabel" : "thank dad",
+			"content": "mom responds"
+		},
+		{
+			"id": "noThanksDadi",
+			"choiceLabel" : "I don't need your help dad",
+			"content": "dad responds"
+		},
+
 
 	{
-		"id": "parentsOfferSupport",
+		"id": "parentsOfferSupportHighi",
 		"content": "parentsOfferSupport CONTENT",
 		"choiceLabel": "CHOICE CONTENT",
 		"effects": [
 			"set parentsOfferSupport true"
-		]//,
-		//"choices": []
-	}
+		],
+		"choices": [
+			{"gotoId" : "makeAJokei"},
+			{"gotoId" : "thankThemi"},
+			{"gotoId" : "stayQuieti"}
+		],
+		"conditions": [
+			"academicEnthusiasm gt 8",
+			"otherParentDefends eq true"
+		]
+	},
+
+	{
+		"id": "parentsOfferSupportMidi",
+		"content": "parentsOfferSupport CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set parentsOfferSupport true"
+		],
+		"choices": [
+			{"gotoId" : "makeAJokei"},
+			{"gotoId" : "thankThemi"},
+			{"gotoId" : "stayQuieti"}
+		],
+		"conditions": [
+			"academicEnthusiasm lte 8",
+			"academicEnthusiasm gte 5",
+			"otherParentDefends eq true"
+		]
+	},
+
+	{
+		"id": "parentsOfferSupportLowi",
+		"content": "parentsOfferSupport CONTENT",
+		"choiceLabel": "CHOICE CONTENT",
+		"effects": [
+			"set parentsOfferSupport true"
+		],
+		"choices": [
+			{"gotoId" : "makeAJokei"},
+			{"gotoId" : "thankThemi"},
+			{"gotoId" : "stayQuieti"}
+		],
+		"conditions": [
+			"academicEnthusiasm lt 5",
+			"otherParentDefends eq true"
+		]
+	},
+		{
+			"id": "makeAJokei",
+			"choiceLabel" : "thank parents",
+			"content": "Parent's respond",
+			"choices" : [
+				{"gotoId" : "stayQuieti"},
+				{"gotoId" : "thankThemi"}
+			]
+		},
+		{
+			"id": "thankThemi",
+			"choiceLabel" : "thank parents",
+			"content": "Parent's respond"
+		},
+		{
+			"id": "stayQuieti",
+			"choiceLabel" : "stay quiet",
+			"content": "Parent's respond",
+			"choices" : [
+				{"gotoId" : "remainQuieti"},
+				{"gotoId" : "thankThemi"}
+			]
+		},
+			{
+				"id": "remainQuieti",
+				"choiceLabel" : "remain quiet",
+				"content": "parentsRespondMore"
+			}
 
 ]
