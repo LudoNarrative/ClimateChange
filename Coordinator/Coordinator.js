@@ -451,10 +451,34 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set questionsLeft 4",
 			],
 			UIvars: [
-				"composure",
-				"curiosity",
-				"hope",
-				"optimism",
+			{
+					"varName" : "composure",
+					"label" : "Composure",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "curiosity",
+					"label" : "Curiosity",
+					"characters" : ["skepticStudent"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "hope",
+					"label" : "Hope",
+					"characters" : ["shyStudent"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "optimism",
+					"label" : "Optimism",
+					"characters" : ["enthusiasticStudent"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
 			],
 			mode: {
 				type: "monologue",
@@ -505,7 +529,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set composure 5"
 			],
 			UIvars: [
-				"tension"
+				{
+					"varName" : "tension",
+					"label" : "Tension",
+					"characters" : ["protagonist","authorityFigure"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
 
 			],
 			mode: {
@@ -561,10 +591,27 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set fame 0"
 			],
 			UIvars: [
-				"carbonFootprint",
-				"composure",
-				"fame"
-
+				{
+					"varName" : "carbonFootprint",
+					"label" : "Carbon Footprint",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "composure",
+					"label" : "Composure",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "fame",
+					"label" : "Fame",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
 			],
 			mode: {
 				type: "narration"
@@ -624,9 +671,27 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set tension 5"
 			],
 			UIvars: [
-				"confidence",
-				"hope",
-				"tension"
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "hope",
+					"label" : "Hope",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "tension",
+					"label" : "Tension",
+					"characters" : ["protagonist", "dad", "mom"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
 
 			],
 			mode: {
@@ -1004,25 +1069,25 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					},
 					{
 						id: "skepticStudent",
-						graphics: "char12",
+						graphics: "char9",
 						age: "20s",
-						states: [	//happy, neutral, upset, confused
+						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "happy" }
 						]
 					},
 					{
 						id: "shyStudent",
-						graphics: "char7",
+						graphics: "char8",
 						age: "20s",
-						states: [	//happy, neutral, confused
+						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "happy" }
 						]
 					},
 					{
 						id: "enthusiasticStudent",
-						graphics: "char7",
+						graphics: "char2",
 						age: "20s",
-						states: [	//happy, neutral, confused
+						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "happy" }
 						]
 					}
@@ -1041,9 +1106,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					},
 					{
 						id: "authorityFigure",
-						graphics: "char12",
-						age: "20s",
-						states: [	//happy, neutral, upset, confused
+						graphics: "char1",
+						age: "50s",
+						states: [	//"happy", "neutral", "disappointed"
 							{ state: ["default"], tag: "happy" }
 						]
 					}
@@ -1062,9 +1127,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					},
 					{
 						id: "passenger",
-						graphics: "char12",
-						age: "20s",
-						states: [	//happy, neutral, upset, confused
+						graphics: "char9",
+						age: "40s",
+						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "happy" }
 						]
 					}
@@ -1076,24 +1141,24 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					{
 						id: "protagonist",
 						graphics: "char3",
-						age: "20s",
+						age: "40s",
 						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "happy"}
 						]
 					},
 					{
 						id: "dad",
-						graphics: "char12",
-						age: "20s",
-						states: [	//happy, neutral, upset, confused
+						graphics: "char4",
+						age: "40s",
+						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "happy" }
 						]
 					},
 					{
 						id: "mom",
-						graphics: "char7",
-						age: "20s",
-						states: [	//happy, neutral, confused
+						graphics: "char5",
+						age: "50s",
+						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "happy" }
 						]
 					}
