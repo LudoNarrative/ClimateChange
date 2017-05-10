@@ -79,7 +79,7 @@ Stats CSS
 
 .statContainer {
     display: inline-block;
-    width:330px;
+    width:300px;
 }
 
 .stat {
@@ -97,7 +97,7 @@ Stats CSS
 
 .barContainer {
     float: left;
-    width: 160px;
+    width: 130px;
     position:relative;
     top:30px;
 }
@@ -123,7 +123,7 @@ Stats CSS
 .mainChar {
     height: 300px;
     width: 275px;
-    background-position-y:bottom;
+    background-position-y:top;
 }
 
 .supportingChar {
