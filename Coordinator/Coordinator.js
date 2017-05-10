@@ -679,13 +679,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					"range" : [0,10]
 				},
 				{
-					"varName" : "hope",
-					"label" : "Hope",
-					"characters" : ["protagonist"],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				},
-				{
 					"varName" : "tension",
 					"label" : "Tension",
 					"characters" : ["protagonist", "dad", "mom"],
