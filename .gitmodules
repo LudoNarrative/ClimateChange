@@ -1,3 +1,5 @@
 [submodule "asp-phaser-generator-2"]
 	path = asp-phaser-generator-2
 	url = https://github.com/LudoNarrative/asp-phaser-generator-2.git
+[submodules "asp-phaser-generator-2"]
+	branch = master
