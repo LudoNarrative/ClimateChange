@@ -1,33 +1,211 @@
 //undergrad_familyDinner_talon.json
 [
 	{
+		"id": "atDinner",
+		"content": "PRELOAD SETS",
+		"effects": [
+			"set atDinner true",
+			"set familyIsFamily true",
+			"set establishDinnerQuality true"
+		],
+	},
+//%dinosaurs
+//Quality of dinner will leave Emma in one of three states: <-9,8 - 5,4->.
+//Correspoding to one of three different 'feelings' for the dinner: Emma pays (good) >= 9, 8 <= Emma pays (rough) <= 5, They pay <= 4.
+//Start of dinner, chit-chat after quality is established
+
+//Start with 9 or greater
+	{
+		"id": "talonScene_start_t",
+		"content": "No matter what happens in Emma’s life, she can always count on her family to be there for her.<br><i>We’re all sitting down to a nice dinner</i>, Emma thinks, <i>this hasn’t happened in so long!</i><br>And a smile began to grow across her face.",
+		"effects": [],
+		"choices": [{
+			"gotoId": "familyAsksSubject_t"
+		}],
+		"conditions": [
+			"establishDinnerQuality eq true",
+		]
+	},
+	{
 		"id": "familyAsksSubject_t",
-		"content": "familyAsksSubject CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"choiceLabel": "The waiter walked out with their food",
+		"content": "The food came around the table and Emma reminisced on the dinner she shared with her friends so long ago. It felt like a lifetime since then. However, sitting here, tonight, with her family around her, made feel warm and they all ate and drank and, for the moment, were happy.",
+		"effects": [],
+		"choices": [{
+			"gotoId": "familyAsksSubject_cont_t"
+		}],
+		"conditions": [
+			"establishDinnerQuality eq true",
+		]
+	},
+	{
+		"id": "familyAsksSubject_cont_t",
+		"choiceLabel": "Continue",
+		"content": "Emma’s mother finally broke the silence, \"So, Emma,\" she said through clattering of flatware and murmurs of talking all around, \"why don’t you tell your father and I what you’re working on now\".<br><br>They both looked at Emma, her father, through a half-slurped mouth full of pasta, and her mother who was casually nursing a glass of wine.",
+		"effects": [],
+		"choices": [{
+			"gotoId": "familyAsksSubject_cont2_t"
+		}],
+		"conditions": [
+			"establishDinnerQuality eq true",
+		]
+	},
+// //Start between 8 and 5 inclusive
+// 	{
+// 		"id": "familyAsksSubject_start_t",
+// 		"content": "After establising the quality of the meal, they all finally begin to relax and enjoy some conversation.",
+// 		"effects": [],
+// 		"choices": [{
+// 			"gotoId": "familyAsksSubject_cont_t"
+// 		}],
+// 		"conditions": [
+// 			"establishDinnerQuality eq true",
+// 		]
+// 	},
+// //Start less than or equal to 4
+// 	{
+// 		"id": "familyAsksSubject_start_t",
+// 		"content": "After establising the quality of the meal, they all finally begin to relax and enjoy some conversation.",
+// 		"effects": [],
+// 		"choices": [{
+// 			"gotoId": "familyAsksSubject_cont_t"
+// 		}],
+// 		"conditions": [
+// 			"establishDinnerQuality eq true",
+// 		]
+// 	},
+
+
+//After chit-chat, family asks subject -> leads to three answers from Emma:
+//	1)Emma explains her work with local and clean-up
+//	2)Emma explains her work with global and UN
+//	3)Emma explains her work with the university and "middle-of-the-road"
+	{
+		"id": "familyAsksSubject_cont2_t",
+		"choiceLabel": "Continue",
+		"content": "Emma hard swallowed a bite that stuck in her throat. \"Well…\" she started. She knew she might want to choose her words carefully.",
 		"effects": [
 			"set familyAsksSubject true"
 		],
-		"choices": [{
-			"gotoId": "dadChallenges_t"
-		}]
+		"choices": [
+			{"gotoId": "emmaRespons1_local"},		//Lead to IAN's PATH
+			{"gotoId": "emmaRespons2_uni"},			//Lead to split
+			{"gotoId": "emmaRespons3_UN"}			//Lead to TALON's PATH
+		],
+		"conditions": [
+			"establishDinnerQuality eq true",
+		]
 	},
+
+//Reponding locally will cause mom challenge and dad defend (IAN PATH)
+	{
+		"id": "emmaRespons1_local",
+		"choiceLabel": "\"...I’ve been doing a lot of good work with a local group.\"",
+		"content": "Emma begins to explain \"It's great work, really! It's going to do good things to help the local environment!\"",
+		"effects": [
+			"set academicEnthusiasm 0",
+			"set familyAsksSubject true",
+		],
+		"choices": [],
+		"conditions": [
+			"establishDinnerQuality eq true",
+		]
+	},
+
+//Responding uni will prompt another question and eventually branch the path back to one of the binary paths
+	{
+		"id": "emmaRespons2_uni",
+		"choiceLabel": "\"...At the University, it’s been really great with this new group of students.\"",
+		"content": "\"Things are going so well at the school,\" Emma started. \"My children are really making me happy these days!\"<br>\"I love that you still call them ‘children’, pumpkin.\" Emma’s father said with pride.<br>\"Haha I guess they’re not children anymore, Dad, you’re right.\" Emma said.",
+		"effects": [],
+		"choices": [
+			{"gotoId": "emmaRespons2_uni2"}
+		],
+		"conditions": [
+			"familyAsksSubject eq true",
+		]
+	},
+	{
+		"id": "emmaRespons2_uni2",
+		"choiceLabel": "Continue",
+		"content": "\"What kind of work are you doing with them, Em?\" Emma’s mother said from across the table.<br>\"It’s less about what we’re doing, and more about the impacts I can have on them for the future.\" Emma was excitedly waving her fork in the air as she spoke.",
+		"effects": [
+			"set academicEnthusiasm 5",
+		],
+		"choices": [
+			{"gotoId": "followUp_global"},
+			{"gotoId": "followUp_local"}
+		],
+		"conditions": [
+			"familyAsksSubject eq true",
+		]
+	},
+		//This responce will side Emma with global action -> dad challenge, mom defend (TALON PATH)
+			{
+				"id": "followUp_global",
+				"choiceLabel": "\"To be able to inspire for future, and possibly global change, is an amazing feeling!\"",
+				"content": "Emma explains how she feels that influencing the students to think locally is the best course of action because of x, y, and z. Dad listens, nodding with a smile on his face and a noodle hanging out of his mouth. Mom listens as she drinks more and more wine, slowly becoming more and more drunk and angry.",
+				"effects": [
+					"set academicEnthusiasm 10",
+				],
+				"choices": [],
+				"conditions": [
+					"familyAsksSubject eq true",
+				]
+			},
+		//This responce will side Emma with local action -> mom challenge, dad defend (IAN PATH)
+			{
+				"id": "followUp_local",
+				"choiceLabel": "\"When I can inspire a student to get involved in local change, there’s no better feeling!\"",
+				"content": "Emma explains that there's nothing more important than imparting early the importance of someone who always strives for global action. Mom watched on with a brilliant smile on her face, happily de-vaining a shrimp. Dad listens as he crushes a hard baguette in his bare hands and tears chunks off with his bear teeth.",
+				"effects": [
+					"set academicEnthusiasm 0",		//Leading to IAN PATH
+				],
+				"choices": [{
+					"gotoId": "dadChallenges_t"
+				}],
+				"conditions": [
+					"familyAsksSubject eq true",
+				]
+			},
+
+//Responding globally will cause dad to challenge and mom to defend (TALON PATH)
+	{
+		"id": "emmaRespons3_UN",
+		"choiceLabel": "\"...Working closely with the UN, I think I’m affecting things on a global scale.\"",
+		"content": "\"It’s like I’m affecting so many lives on such a large scale, it’s amazing!\" Emma said, waving her fork around in excitement.<br>\"That’s right, sweetie. It’s got to start at the top!\" Emma’s mother said, big smile on her face.",
+		"effects": [
+			"set academicEnthusiasm 10",
+		],
+		"choices": [{
+			"gotoId": "dadChallenges_t",
+		}],
+		"conditions": [
+			"familyAsksSubject eq true",
+		]
+	},
+
+
 //Emma has gone global and dad likes local
 	{
 		"id": "dadChallenges_t",
-		"content": "dadChallenges CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"choiceLabel": "Emma’s father looked consirned.",
+		"content": "He spoke:<br>\"But, Emma, you are still pushing the value of local action, right? I mean, there’s no global change in we’re not putting any care of effort into the little things.\" Emma looked at her father. She was worried that this might happen, climate change was always a sticky subject for her family. It’s why she was always so passionate about it now.",
 		"effects": [
 			"set dadChallenges true"
 		],
 		"choices": [{
-			"gotoId": "momChallenges"
+			"gotoId": "emmaDefends_t"
 		}]
 	},
-
+//Emma defending her choices as dad challenges
 	{
 		"id": "emmaDefends_t",
-		"content": "emmaDefends CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"choiceLabel": "",
+		"content": "\"Of course, Dad, there will always be room for the little things. I just think that if I can make a global impact with the work I’m doing, I can make a global change!\" Emma slumped slightly in her chair; she first looked at her plate of food; less appetizing, then looked at her mother.",
+		"conditions": [
+			"dadChallenges eq true",
+		],
 		"effects": [
 			"set emmaDefends true"
 		],
@@ -38,13 +216,12 @@
 //Mom supports Emma's choice in going global because mom likes global
 	{
 		"id": "otherParentDefends_t",
-		"content": "otherParentDefends CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"content": "\"I agree with Emma.\" Emma’s mother said. \"It’s a big world out there. It’s important for our little girl to care about the local issues, but she’s got bigger fish to fry!\" She gave Emma a little wink, and Emma sat up a bit taller in her chair.",
 		"effects": [
 			"set otherParentDefends true"
 		],
 		"choices": [{
 			"gotoId" : "parentsOfferSupport"
 		}]
-	}
+	},
 ]
