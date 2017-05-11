@@ -1287,7 +1287,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		];
 
 		var gameSpec = gameResources.filter(function(v) { return v.id === id; })[0];		//grab all filepaths for our id
-		Game.init(gameSpec, State, Display);
+		Game.init(gameSpec, State, Display, this);
 	}
 
 	return {
