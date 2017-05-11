@@ -1034,7 +1034,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						graphics: "char3",
 						age: "20s",
 						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "happy"}
+							{ state: ["default"], tag: "neutral"},
+							{ state: ["friendTension gte 2"], tag: "upset"}
 						]
 					},
 					{

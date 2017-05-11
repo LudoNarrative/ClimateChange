@@ -384,6 +384,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		wishlist.removeSatisfiedWants();
 		if (typeof Display !== "undefined") {			//if we're not running tests, update the storyStats on the display
 			Display.setStats();
+			Display.setAvatars();
 		}
 	}
 
