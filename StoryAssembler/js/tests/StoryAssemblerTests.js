@@ -453,8 +453,86 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 
 			//-----------------------------------------------------------
 
-			
-
+			//If there are three choices, correctly choose it first
+			resetTest();
+			State.set("droppedKnowledge", 0 );
+			State.set("academicEnthusiasm", 2);
+			wl = Wishlist.create([{ condition: "setVars eq true", order: "first" }, { condition: "droppedKnowledge gte 2", persistent: true }, { condition: "establishSetting eq true"}, { condition: "respondToChallenge eq true"} ], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{    
+			        "id": "setVars",
+			        "content" : "sets initial vars",
+					"choices" : [ 
+						{"gotoId": "HighAcademic"},
+						{"gotoId": "LowAcademic"},
+						{"gotoId": "MediumAcademic"}
+					],
+					"effects" : ["set setVars true"]
+			    },
+				{	
+			        "id": "MediumAcademic",
+					"choiceLabel": "Medium Academic",
+			        "content" : "medium academic enthusiasm",
+					 "effects" : ["set academicEnthusiasm 6"],//,"set familyIsFamily true"]
+			    },
+				{
+			         
+			        "id": "LowAcademic",
+					"choiceLabel": "Low Academic",
+			        "content" : "low academic enthusiasm",
+					"effects" : ["set academicEnthusiasm 4"],//,"set familyIsFamily true"]
+			    },
+				{	
+			        "id": "HighAcademic",
+					"choiceLabel": "High Academic",
+			        "content" : "high academic enthusiasm",
+					"effects" : ["set academicEnthusiasm 10"],//,"set familyIsFamily true"]
+			    },
+				{
+					"id": "familyIsFamily",
+					"content": "at dinner with family",
+					"choices": [
+						{"gotoId": "atDinnerYouPay"},
+						{"gotoId": "atDinnerTheyPay"}
+					],
+					"effects": [
+						"set familyIsFamily true",
+					],
+				},
+					{
+					"id": "atDinnerYouPay",
+					"choiceLabel": "you treat your family to dinner",
+					"content": "treat your family",
+					"conditions" : [
+						"academicEnthusiasm gt 4",
+					],
+					"effects": [
+						"set atDinner true","set youArePaying true"
+					],
+				},
+				{
+					"id": "atDinnerTheyPay",
+					"choiceLabel": "parents are paying for dinner.",
+					"content": "family treats you",
+					"conditions" : [
+						"academicEnthusiasm lt 5",
+					],
+					"effects": [
+						"set atDinner true","set youArePaying false", //potentially raise tension here
+					]
+				},
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+			assert.deepEqual(html(getStoryEl()), "sets initial vars", "Correct chunk is chosen to begin");
+			/*
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "Oh, ok. Right.", "Simple goto works correctly.");
+			assert.deepEqual(contentForChoice(1), "Continue","Proper continue");
+			clickChoice(1);
+			assert.deepEqual(getStoryEl(1), undefined, "Displays chunk just once, not multiple times");
+			assert.deepEqual(countChildren(getChoiceEl()), 1, "There should be only one child");
+			*/
 /*
 			//dynamic chunks brought in as choices should be valid if the root chunk making the request has an effect that would make their state pre-condition true
 			resetTest();
