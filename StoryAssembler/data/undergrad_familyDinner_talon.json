@@ -1,14 +1,5 @@
 //undergrad_familyDinner_talon.json
 [
-	{
-		"id": "atDinner",
-		"content": "PRELOAD SETS",
-		"effects": [
-			"set atDinner true",
-			"set familyIsFamily true",
-			"set establishDinnerQuality true"
-		],
-	},
 //%dinosaurs
 //Quality of dinner will leave Emma in one of three states: <-9,8 - 5,4->.
 //Correspoding to one of three different 'feelings' for the dinner: Emma pays (good) >= 9, 8 <= Emma pays (rough) <= 5, They pay <= 4.
