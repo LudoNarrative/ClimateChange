@@ -30,7 +30,7 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 
 	var startScene = function(_coordinator, id, loadIntro) {
 		var bg = _coordinator.loadBackground(id);
-		initSceneScreen(State, bg);
+		initSceneScreen(State, bg, id);
 		if (loadIntro) { _coordinator.loadSceneIntro(id); }
 		_coordinator.loadAvatars(id);
 		_coordinator.validateArtAssets(id);
@@ -74,7 +74,8 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 		}).appendTo('body');
 	}
 
-	var initSceneScreen = function(State, bg) {
+	//builds the scene divs
+	var initSceneScreen = function(State, bg, id) {
 
 		$('body').html('');
 		$('body').css("background-image", "url('/assets/bgs/"+ bg +"')"); 
@@ -213,8 +214,6 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 				}
 			});
 
-			
-
 			stats.forEach(function(stat, pos) {
 				/*
 				"varName" : "confidence",
@@ -266,6 +265,15 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 			return thing.varName == statName;
 		})[0];
 		var newWidth = State.get(statName)/(stat.range[1] - stat.range[0]) * 100;
+
+		if (statsContainer.firstChild !== null && typeof statsContainer.firstChild.children[1].children[2] !== "undefined") {
+			var statName1 = statsContainer.firstChild.children[1].firstChild.id;
+			var statName2 = statsContainer.firstChild.children[1].children[2].id;
+
+			if (statDivId == statName1 || statDivId == statName2) {		//if it's a big stat, increase appropriately
+				newWidth *= 2;
+			}
+		}
 		$("#" + statDivId).css("width", newWidth + "%");
 	}
 
