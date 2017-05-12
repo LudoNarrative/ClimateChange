@@ -27,7 +27,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 		jQuery.get(aspFilepath, function(data) {
 	    	aspGame = data.split("==========")[0];
-	    	aspGameInstructions = data.split("==========")[1];
+	    	aspGameInstructions = iconParse(data.split("==========")[1]);
 
 	    	jQuery.get('asp-phaser-generator-2/test/fixtures/initial-phaser-file.json', function(data2) {
 	    		initialPhaserFile = data2;
@@ -40,6 +40,23 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 		//var initialPhaserFile = fs.readFileSync('./test/fixtures/initial-phaser-file-generated.json', 'utf8');
 
+	}
+
+	//parses icons for entities in the game into their respective shapes / colors
+	var iconParse = function(rawString) {
+		var newString = rawString;
+
+		while (newString.indexOf("[[") > -1) {
+			var start = newString.indexOf("[[");
+			var end = newString.substring(start, newString.length).indexOf("]]") + start;
+			var icon = newString.substring(start+2,end);
+			var theImg = icon.split("|")[1];
+			var theColor = icon.split("|")[0];
+
+			var replacement = "<div class='descIcon "+ theColor +"' style=\"-webkit-mask-box-image: url('assets/sprites/"+ theImg +".png')\"></div>";
+			newString = newString.replace(newString.substring(start,end+2), replacement);
+		}
+		return newString;
 	}
 
 	var runGenerator = function(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring){
