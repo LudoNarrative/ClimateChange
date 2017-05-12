@@ -5,8 +5,8 @@
     "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. What to do now?",
     "choices" : [
       {"condition" : "dealWithSomeone eq true"},
-      {"gotoId" : "readNewspaper eq true"},
-      {"gotoId" : "readEmail eq true"}
+      {"gotoId" : "readNewspaper"},
+      {"gotoId" : "readEmail"}
     ],
     "repeatable" : "true"
   },
@@ -185,7 +185,7 @@
   {
     "id" : "zanitaEmail",
     "choiceLabel" : "Read an email from Zanita.",
-    "content" : "\"Heya, Em! I heard you're doing some traveling now - I'm so proud of you! Didn't I tell you that academia was the way to go? Look at you now, spreading knowledge all over the world. I can't wait for you to tell me all about it. <br/><br/> Talk to you soon! <br/> Zanita\"",
+    "content" : "Heya, Em! I heard you're doing some traveling now - I'm so proud of you! Didn't I tell you that academia was the way to go? Look at you now, spreading knowledge all over the world. I can't wait for you to tell me all about it. <br/><br/> Talk to you soon! <br/> Zanita",
     "effects" : [
       "set readFamily true"
     ]
@@ -194,7 +194,7 @@
   {
     "id" : "shellyEmail",
     "choiceLabel" : "Read an email from Shelly.",
-    "content" : "\"EMMMMMMMAAAA WHAT IS THIS I HEAR ABOUT YOU TRAVELING?? That's so cool!! You sure are making it big, huh? Or trying to at least, haha - just don't forget us little guys back at home, alright? We may be taking it locally, but we're making changes right with you. Don't let that head of yours inflate too much, 'kay? Love you! <br/><br/>Shelly\"",
+    "content" : "EMMMMMMMAAAA WHAT IS THIS I HEAR ABOUT YOU TRAVELING?? That's so cool!! You sure are making it big, huh? Or trying to at least, haha - just don't forget us little guys back at home, alright? We may be taking it locally, but we're making changes right with you. Don't let that head of yours inflate too much, 'kay? Love you! <br/><br/>Shelly,",
     "effects" : [
       "set readFamily true"
     ]
@@ -203,7 +203,7 @@
   {
     "id" : "momEmail",
     "choiceLabel" : "Read an email from Mom.",
-    "content" : "\"Sweetheart, I just need you to know just how excited I am for you. Make sure to eat a big meal before your big talk, okay? But not too much, you wouldn't want bodily functions to get in the way of your speech ~ <br/><br/> Mom <3",
+    "content" : "Sweetheart, I just need you to know just how excited I am for you. Make sure to eat a big meal before your big talk, okay? But not too much, you wouldn't want bodily functions to get in the way of your speech ~ <br/><br/> Mom <3",
     "effects" : [
       "set readFamily true"
     ]
