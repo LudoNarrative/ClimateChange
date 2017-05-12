@@ -108,7 +108,9 @@
 		"id": "emmaRespons2_uni",
 		"choiceLabel": "\"...At the University, it’s been really great with this new group of students.\"",
 		"content": "\"Things are going so well at the school,\" Emma started. \"My children are really making me happy these days!\"<br>\"I love that you still call them ‘children’, pumpkin.\" Emma’s father said with pride.<br>\"Haha I guess they’re not children anymore, Dad, you’re right.\" Emma said.",
-		"effects": [],
+		"effects": [
+			"set familyAsksSubject true",
+		],
 		"choices": [
 			{"gotoId": "emmaRespons2_uni2"}
 		],
@@ -122,6 +124,7 @@
 		"content": "\"What kind of work are you doing with them, Em?\" Emma’s mother said from across the table.<br>\"It’s less about what we’re doing, and more about the impacts I can have on them for the future.\" Emma was excitedly waving her fork in the air as she spoke.",
 		"effects": [
 			"set academicEnthusiasm 5",
+			"set familyAsksSubject true",
 		],
 		"choices": [
 			{"gotoId": "followUp_global"},
@@ -137,9 +140,12 @@
 				"choiceLabel": "\"To be able to inspire for future, and possibly global change, is an amazing feeling!\"",
 				"content": "Emma explains how she feels that influencing the students to think locally is the best course of action because of x, y, and z. Dad listens, nodding with a smile on his face and a noodle hanging out of his mouth. Mom listens as she drinks more and more wine, slowly becoming more and more drunk and angry.",
 				"effects": [
-					"set academicEnthusiasm 10",
+					"set academicEnthusiasm 10",		//Leading to TALON PATH
+					"set familyAsksSubject true",
 				],
-				"choices": [],
+				"choices": [{
+					"gotoId": "dadChallenges_t",
+				}],
 				"conditions": [
 					"familyAsksSubject eq true",
 				]
@@ -151,10 +157,9 @@
 				"content": "Emma explains that there's nothing more important than imparting early the importance of someone who always strives for global action. Mom watched on with a brilliant smile on her face, happily de-vaining a shrimp. Dad listens as he crushes a hard baguette in his bare hands and tears chunks off with his bear teeth.",
 				"effects": [
 					"set academicEnthusiasm 0",		//Leading to IAN PATH
+					"set familyAsksSubject true",
 				],
-				"choices": [{
-					"gotoId": "dadChallenges_t"
-				}],
+				"choices": [],
 				"conditions": [
 					"familyAsksSubject eq true",
 				]
@@ -167,6 +172,7 @@
 		"content": "\"It’s like I’m affecting so many lives on such a large scale, it’s amazing!\" Emma said, waving her fork around in excitement.<br>\"That’s right, sweetie. It’s got to start at the top!\" Emma’s mother said, big smile on her face.",
 		"effects": [
 			"set academicEnthusiasm 10",
+			"set familyAsksSubject true",
 		],
 		"choices": [{
 			"gotoId": "dadChallenges_t",
@@ -180,7 +186,7 @@
 //Emma has gone global and dad likes local
 	{
 		"id": "dadChallenges_t",
-		"choiceLabel": "Emma’s father looked consirned.",
+		"choiceLabel": "Emma’s father looked concerned.",
 		"content": "He spoke:<br>\"But, Emma, you are still pushing the value of local action, right? I mean, there’s no global change in we’re not putting any care of effort into the little things.\" Emma looked at her father. She was worried that this might happen, climate change was always a sticky subject for her family. It’s why she was always so passionate about it now.",
 		"effects": [
 			"set dadChallenges true"
@@ -192,7 +198,7 @@
 //Emma defending her choices as dad challenges
 	{
 		"id": "emmaDefends_t",
-		"choiceLabel": "",
+		"choiceLabel": "Continue",
 		"content": "\"Of course, Dad, there will always be room for the little things. I just think that if I can make a global impact with the work I’m doing, I can make a global change!\" Emma slumped slightly in her chair; she first looked at her plate of food; less appetizing, then looked at her mother.",
 		"conditions": [
 			"dadChallenges eq true",
@@ -207,7 +213,11 @@
 //Mom supports Emma's choice in going global because mom likes global
 	{
 		"id": "otherParentDefends_t",
-		"content": "\"I agree with Emma.\" Emma’s mother said. \"It’s a big world out there. It’s important for our little girl to care about the local issues, but she’s got bigger fish to fry!\" She gave Emma a little wink, and Emma sat up a bit taller in her chair.",
+		"choiceLabel": "Continue",
+		"content": "\"I agree with Emma.\" Her mother said. \"It’s a big world out there. It’s important for our little girl to care about the local issues, but she’s got bigger fish to fry!\" She gave Emma a little wink, and Emma sat up a bit taller in her chair.",
+		"conditions": [
+			"dadChallenges eq true",
+		],
 		"effects": [
 			"set otherParentDefends true"
 		],
