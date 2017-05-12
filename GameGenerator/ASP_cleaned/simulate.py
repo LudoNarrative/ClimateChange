@@ -640,13 +640,13 @@ if __name__ == '__main__':
         for oo in out[o]:
             for label in oo:
                 labels[prettify(label['terms'][0])] = prettify(label['terms'][1])
-
+    print '<ul>'
     for o in ['reading']:
         for oo in out[o]:
             for ooo in oo:
                 reading = prettify(ooo)
                 if 'goal' in reading:
-                    print "The goal is to " + prettify(ooo['terms'][0]['terms'][0]) + " " + labels[prettify(ooo['terms'][1])]
+                    print "<li>The goal is to " + prettify(ooo['terms'][0]) + " " + labels[prettify(ooo['terms'][1])]+'</li>'
 
 
     will_dos = []
@@ -670,14 +670,15 @@ if __name__ == '__main__':
                    'left_arrow':'left key',
                    'right_arrow':'right key'}
     if will_dos:
-        print '\nThey will do this by'
+        print '\n<li>They will do this by<ul>'
 
         for outcome_ind,outcome in enumerate(will_dos):
+            print '<li>'
             for ind,precond in enumerate(outcome2precond[outcome]):
                 precond = precond['terms'][0]
                 if 'overlaps' == precond['predicate']:
                     if 'true' == precond['terms'][2]['predicate']:
-                        print '\tattempting to make a ' + labels[prettify(precond['terms'][1])] + ' and ' + labels[prettify(precond['terms'][0])] + ' touch'
+                        print 'attempting to make a ' + labels[prettify(precond['terms'][1])] + ' and ' + labels[prettify(precond['terms'][0])] + ' touch'
                     else:
                         print '\tattempting to keep a ' + labels[prettify(precond['terms'][1])] + ' and ' + labels[prettify(precond['terms'][0])] + ' from touching'
                 elif 'control_event' == precond['predicate']:
@@ -694,15 +695,15 @@ if __name__ == '__main__':
                         print '\t at the same time as'
                     elif ind < len(outcome2precond[outcome])-1:
                         print '\t and'
-            if outcome_ind < len(will_dos)-1:
-                print '\n\tor\n'
-
+            print '</li>'
+        print '</ul></li>'
   
                 
     if avoids:
-        print '\nThey will avoid'
+        print '<li>They will avoid<ul>'
 
         for outcome_ind,outcome in enumerate(avoids):
+            print '<li>'
             for ind,precond in enumerate(outcome2precond[outcome]):
                 precond = precond['terms'][0]
                 if 'overlaps' == precond['predicate']:
@@ -724,20 +725,22 @@ if __name__ == '__main__':
                         print '\t at the same time as'
                     elif ind < len(outcome2precond[outcome])-1:
                         print '\t and'
-            if outcome_ind < len(will_dos)-1:
-                print '\n\tor\n'
+            print '</li>'
+        print '</ul>'
 
 
-    print '\nThe player controls the game by'
+    print '<li>The player controls the game by<ul>'
     for oo in out['controlLogic']:
-        print ''
+
         for ooo in oo:
+            print '<li>'
             ooo = ooo['terms'][0]
             if 'draggable' == ooo['predicate']:
                 entity = ooo['terms'][0]
                 print '\tclicking-and-dragging {}s'.format(labels[prettify(entity)])
             else:
                 print prettify(ooo)
+            print '</li>'
 
     direction_mapping = {'towards':'towards',
                          'away':'away from'}
@@ -746,19 +749,21 @@ if __name__ == '__main__':
             pretty = prettify(ooo)
             ooo = ooo['terms'][0]
             if 'move' in pretty and 'cursor' in pretty:
-                print '\tthe {} moves {} the cursor'.format(labels[prettify(ooo['terms'][0])],direction_mapping[prettify(ooo['terms'][1]['terms'][0])])
+                print '<li>\tthe {} moves {} the cursor'.format(labels[prettify(ooo['terms'][0])],direction_mapping[prettify(ooo['terms'][1])]) + '</li>'
      
     for oo in out['condition']:
         for ooo in oo:
             pretty = prettify(ooo)
             precond = ooo['terms'][0]
             if 'control_event' in pretty:
+                print '<li>'
                 if 'click' ==  precond['terms'][0]['predicate']:
                     print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0])]
                 elif 'button' == precond['terms'][0]['predicate']:
                     verb = precond['terms'][0]['terms'][1]['predicate']
                     button = precond['terms'][0]['terms'][0]['predicate']
                     print '\t{} the {}'.format(press_mapping[verb],key_mapping[button])
+                print '</li>'
 
     sprites = {}
     for oo in out['initialize']:
@@ -773,7 +778,8 @@ if __name__ == '__main__':
                     sprites[entity]['sprite'] = prettify(ooo['terms'][1])
                 if 'set_color' in pretty:
                     sprites[entity]['color'] = prettify(ooo['terms'][1])
-    print ''
+    print '</ul>'
     
     for sprite in sorted(sprites):
-        print 'A ' +  labels[sprite] + ' looks like a ' + sprites[sprite]['color'] + ' ' + sprites[sprite]['sprite']
+        print '<li>A ' +  labels[sprite] + ' looks like a ' + sprites[sprite]['color'] + ' ' + sprites[sprite]['sprite']+'</li>'
+    print '</ul>'

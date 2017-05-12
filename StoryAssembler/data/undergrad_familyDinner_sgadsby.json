@@ -1,36 +1,94 @@
 [
 {
 		"id": "familyIsFamily",
-		"content": "familyIsFamily CONTENT",
-		"effects": [
-			"set familyIsFamily true"
+		"content": "At dinner with family. Family is good. You want to catch up with them",
+		"choices": [
+			//{"gotoId": "atDinnerTheyPay"}, //used to get around giant pictures blocking the option
+			{"gotoId": "atDinnerYouPay"},
+			{"gotoId": "atDinnerTheyPay"}
 		],
-		"choices": [{
-			"gotoId": "atDinner"
-		}]
-	},
-
-	{
-		"id": "atDinner",
-		"content": "atDinner CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
 		"effects": [
-			"set atDinner true"
+			"set familyIsFamily true",
+		],
+	},
+	{
+		"id": "atDinnerYouPay",
+		"choiceLabel": "you treat your family to dinner",
+		"content": "you are at dinner with family. You're treating your family to a nice dinner.",
+		"choices": [
+			//{"gotoId": "AcademicDinner"}, //used to get around the giant pictures blocking the option
+			{"gotoId": "UNDinner"},
+			{"gotoId": "AcademicDinner"},
+		],
+		"conditions" : [
+			"academicEnthusiasm gt 4",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying true"
+		],
+	},
+	{
+		"id": "atDinnerTheyPay",
+		"choiceLabel": "parents are paying for dinner.",
+		"content": "you are at dinner with family. they are paying for you. You feel slightly awkward that they're paying for you",
+			"conditions" : [
+			"academicEnthusiasm lt 5",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying false", //potentially raise tension here
 		],
 		"choices": [{
 			"gotoId": "establishDinnerQuality"
 		}]
 	},
-
+{
+        "id": "UNDinner",
+		"choiceLabel": "you say you're glad to be able to catch up with them after all your travels.",
+		"conditions" : [
+			"academicEnthusiasm gt 8",
+			"youArePaying eq true"
+		],
+		"request": {"gotoId": "establishDinnerQualityAcademic"},
+	//	"effects" : [" "]
+    },
 	{
-		"id": "establishDinnerQuality",
-		"content": "establishDinnerQuality CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+        "id": "AcademicDinner",
+		"choiceLabel": "you say you're glad you found some time to meet with them after grading papers.",
+		"conditions" : [
+			"academicEnthusiasm gt 4",
+			"academicEnthusiasm lt 9",
+			"youArePaying eq true"
+		],
+		"request": {"gotoId": "establishDinnerQualityAcademic"},
+	//	"effects" : [" "]
+    },
+	{
+		"id": "establishDinnerQualityAcademic",
+		"content": "on either UN path or academic path. Dinner quality is either kinda fancy or modest depending on the route.",
+		"conditions" : [
+			"academicEnthusiasm gt 4",
+			"youArePaying eq true"
+		],
 		"effects": [
 			"set establishDinnerQuality true"
 		],
-		"choices": [{
-			"gotoId": "familyAsksSubject_t"
-		}]
+		//"choices": [{
+		//	"gotoId": "familyAsksSubject_t"
+		//}]
+	},
+	{
+		"id": "establishDinnerQuality",
+		"choiceLabel": "you mention you're glad to see them after all your activist work",
+		"content": "on local activist path. Dinner quality is okay, nothing too fancy but you still feel slightly embarrassed to have your parents paying for you",
+		"conditions" : [
+			"academicEnthusiasm lt 5",
+			"youArePaying eq false"
+		],
+		"effects": [
+			"set establishDinnerQuality true" //possibly raise tension here
+		],
+		//"choices": [{
+		//	"gotoId": "familyAsksSubject_t"
+		//}]
 	}
 ]

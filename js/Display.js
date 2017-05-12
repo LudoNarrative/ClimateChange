@@ -1,4 +1,4 @@
-define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) {
+define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Game, JSONEditor, avatarsData) {
 
 	var State;
 	var Coordinator;
@@ -30,10 +30,11 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 
 	var startScene = function(_coordinator, id, loadIntro) {
 		var bg = _coordinator.loadBackground(id);
-		initSceneScreen(State, bg);
+		initSceneScreen(State, bg, id);
 		if (loadIntro) { _coordinator.loadSceneIntro(id); }
-		_coordinator.loadStoryMaterials(id);
 		_coordinator.loadAvatars(id);
+		_coordinator.validateArtAssets(id);
+		_coordinator.loadStoryMaterials(id);
 		_coordinator.startGame(id);
 	}
 
@@ -73,9 +74,12 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 		}).appendTo('body');
 	}
 
-	var initSceneScreen = function(State, bg) {
+	//builds the scene divs
+	var initSceneScreen = function(State, bg, id) {
 
 		$('body').html('');
+		$('body').css("background-image", "url('/assets/bgs/"+ bg +"')"); 
+
 		$('<div/>', {
 		    id: 'storyContainer'
 		    //text: ''
@@ -88,7 +92,6 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 
 		$('<div/>', {
 		    id: 'statsContainer',
-		    style: "background-image:url('/assets/bgs/"+ bg +"')"
 		    //text: ''
 		}).appendTo('body');
 
@@ -106,15 +109,6 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	}
 
 	var initStatsUI = function(State) {
-		$('<div/>', {
-		    id: 'charPic'
-		    //text: ''
-		}).appendTo('#statsContainer');
-
-		$('<div/>', {
-		    id: 'stats'
-		    //text: ''
-		}).appendTo('#statsContainer');
 
 		$('<div/>', {
 		    id: 'storyStats'
@@ -130,47 +124,158 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	/*
 		Sets avatar on-screen based on state
 	*/
-	var setAvatar = function(State) {
-		var theAvatar = false;
+	var setAvatars = function() {
+		
+		if (typeof State.get("characters") !== "undefined") {
+			State.get("characters").forEach(function(char, pos) {
+			var url = false;
+			var defaultTag;
+			var avatar = State.avatars.filter(function( avatar ) { return avatar.id == char.id; })[0];
 
-		State.avatars.forEach(function(avatar, pos) {
-			var correctAvatar = State.isTrue(avatar.state);
-			if (correctAvatar) {
-				theAvatar = avatar;
+			for (var x=0; x < avatar.states.length; x++) {			//check all avatar states to find true one
+				var correctAvatar = false;
+				if (avatar.states[x].state[0] == "default") {
+					defaultTag = avatar.states[x].tag;
+				}
+				else {			//don't evaluate default avatars
+					var allTrue = true;
+					for (var y=0; y < avatar.states[x].state.length; y++) {
+						if (!State.isTrue(avatar.states[x].state[y])) {
+							allTrue = false;
+							break;
+						}
+					}
+					if (allTrue) {			//if it's valid...
+						url = getAvatar(avatar.graphics, avatar.age, avatar.states[x].tag);		//get avatar URL
+						break;
+					}
+				}
 			}
-		});
-		if (theAvatar) {
-			$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
-		}
+
+			//fallback to default if no state valid
+			if (!url) { 
+
+				url = getAvatar(avatar.graphics, avatar.age, defaultTag); 
+			}
+
+			var picClass = "supportingChar";
+			if (pos == 0) { picClass = "mainChar" }
+
+			if (document.getElementById(char.id) == null){			//if div doesn't exist, create it
+				$('<div/>', {
+					id: char.id,
+					class: 'statContainer'
+				}).appendTo('#statsContainer');
+
+				$('<div/>', {			//create avatarBox and stat-holding box for character
+				    id: 'charPic_' + char.id,
+				    class: picClass
+				}).appendTo('#' + char.id);
+
+				createStats();
+			}
+			
+			if (url) { 		//set avatar
+				//$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
+				$('#charPic_' + char.id).css("background-image", "url("+url+")"); 
+			}
+			});
+		}	
+	}
+
+	//returns asset url for an avatar of a given tag, in a given set
+	var getAvatar = function(set, age, tag) {
+		var avatarsObj = HanSON.parse(avatarsData);
+		avatarSet = avatarsObj.filter(function( avatar ) { return avatar.character == set; })[0];
+		var ageIndex = false;
+		for (var x=0; x < avatarSet.ages.length; x++) { if (avatarSet.ages[x] == age) { ageIndex = x; }}
+		if (!ageIndex) { ageIndex = 0; }		//if no age provided, use first value
+
+		return "/assets/avatars/" + avatarSet.character + "/" + avatarSet.character + "_" + avatarSet.ages[ageIndex] + "_" + tag +".png"; 
 	}
 
 	/*
 	Called by story and game systems to change stat displayed, or add it
+	containerId: which container to update...if set to "all" updates all containers
 	*/
 
-	var setStats = function(containerId) {
+	var createStats = function() {
 		var stats = State.get("storyUIvars");
-		$("#"+containerId).html('');
 
 		if (typeof stats !== "undefined") {
+
+			State.get("characters").forEach(function(char, pos) {
+
+				if (document.getElementById(char.id + "_barContainer") == null) {
+					$('<div/>', {		//make progressbar divs
+				    	class: 'barContainer',
+				    	id: char.id + "_barContainer"
+					}).appendTo("#"+char.id);
+				}
+			});
+
 			stats.forEach(function(stat, pos) {
-				$('<div/>', {
-					id: stat+'Container',
-			    	class: 'stat'
-				}).appendTo("#"+containerId);
+				/*
+				"varName" : "confidence",
+				"label" : "Confidence",
+				"characters" : ["protagonist"],
+				"affectedBy" : "both",
+				"range" : [0,10]
+				*/
+				for (var x=0; x < stat.characters.length; x++) { //for each character...
 
-				$('<span/>', {
-			    	class: 'statLabel',
-			    	text: stat + ": "
-				}).appendTo('#'+stat+'Container');
+					if (document.getElementById(stat.characters[x] + "_" + stat.varName) == null) {
+						$('<div/>', {		//make progressbar divs
+							id: stat.characters[x] + "_" + stat.varName,
+					    	class: 'stat',
+					    	html: "<div class='stat-label'>"+ stat.label + "</div>"
+						}).appendTo("#"+stat.characters[x] + "_barContainer");
+					}
 
-				$('<span/>', {
-			    	class: 'statValue',
-			    	text: State.get(stat)
-				}).appendTo('#'+stat+'Container');
+					setBarWidth(stat.characters[x] + "_" + stat.varName);
+
+				}
 			});
 		}
 	};
+
+	var setStats = function() {
+		var stats = State.get("storyUIvars");
+
+		stats.forEach(function(stat, pos) {
+				/*
+				"varName" : "confidence",
+				"label" : "Confidence",
+				"characters" : ["protagonist"],
+				"affectedBy" : "both",
+				"range" : [0,10]
+				*/
+				for (var x=0; x < stat.characters.length; x++) { //for each character...
+					setBarWidth(stat.characters[x] + "_" + stat.varName);
+				}
+			});
+
+	}
+
+	//sets stat bar width
+	var setBarWidth = function(statDivId) {
+		var character = statDivId.split("_")[0];
+		var statName = statDivId.split("_")[1];
+		var stat = State.getBlackboard().storyUIvars.filter(function(thing,i){ 
+			return thing.varName == statName;
+		})[0];
+		var newWidth = State.get(statName)/(stat.range[1] - stat.range[0]) * 100;
+
+		if (statsContainer.firstChild !== null && typeof statsContainer.firstChild.children[1].children[2] !== "undefined") {
+			var statName1 = statsContainer.firstChild.children[1].firstChild.id;
+			var statName2 = statsContainer.firstChild.children[1].children[2].id;
+
+			if (statDivId == statName1 || statDivId == statName2) {		//if it's a big stat, increase appropriately
+				newWidth *= 2;
+			}
+		}
+		$("#" + statDivId).css("width", newWidth + "%");
+	}
 
 	//sets the intro screen for each scene
 	var setSceneIntro = function(sceneText) {
@@ -326,7 +431,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 			class: "diagButton",
 			text: "Run new JSON",
 			click: function() {
-				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, editor.get(), false);
+				Game.runGenerator(gameSpec, $("#ASPinput")[0].value.split("==========")[0], $("#ASPinput")[0].value.split("==========")[1], editor.get(), false);
 			}
 		})
 		.appendTo("#JSONEditorDiv");
@@ -366,7 +471,7 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 			class: "diagButton",
 			text: "Run ASP",
 			click: function() {
-				Game.runGenerator(gameSpec, $("#ASPinput")[0].value, editor.get(), false);
+				Game.runGenerator(gameSpec, $("#ASPinput")[0].value.split("==========")[0], $("#ASPinput")[0].value.split("==========")[1], editor.get(), false);
 			}
 		})
 		.appendTo("#ASPEditor");
@@ -375,7 +480,8 @@ define(["Game", "jsonEditor", "jQuery", "jQueryUI"], function(Game, JSONEditor) 
 	return {
 		init : init,
 		initTitleScreen : initTitleScreen,
-		setAvatar : setAvatar,
+		setAvatars : setAvatars,
+		createStats : createStats,
 		setStats : setStats,
 		setSceneIntro : setSceneIntro,
 		setSceneOutro : setSceneOutro,
