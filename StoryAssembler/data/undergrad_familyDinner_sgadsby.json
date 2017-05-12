@@ -1,9 +1,39 @@
 [
+{    
+        "id": "AcademicEnthusiasmsetEmma",
+        "content" : "sets academic enthusiasm",
+		"choices" : [ 
+			//{"gotoId": "HighAcademic"},
+			{"gotoId": "MediumAcademic"},
+			{"gotoId": "LowAcademic"},
+		],
+		"effects" : ["set familyIsFamily true"]
+    },
+	{	
+        "id": "MediumAcademic",
+		"choiceLabel": "Medium Academic",
+        "content" : "This is medium academic enthusiasm Emma. She is in academics here.",
+		"effects" : ["set academicEnthusiasm 6"],
+		//"effects" : ["set academicEnthusiasm 6","set familyIsFamily true"]
+    },
+	{
+        "id": "LowAcademic",
+		"choiceLabel": "Low Academic",
+        "content" : "This is low academic enthusiasm Emma. She is local activist here.",
+		"effects" : ["set academicEnthusiasm 4"],
+		//"effects" : ["set academicEnthusiasm 4","set familyIsFamily true"]
+    },
+	{	
+        "id": "HighAcademic",
+		"choiceLabel": "High Academic",
+        "content" : "This is high academic enthusiasm Emma. She goes to the UN here.",
+		"effects" : ["set academicEnthusiasm 10"],
+		//"effects" : ["set academicEnthusiasm 10","set familyIsFamily true"]
+    },
 {
 		"id": "familyIsFamily",
-		"content": "At dinner with family. Family is good. You want to catch up with them",
+		"content": "You walk into the restaurant and see your parents already sitting down at a table. This is slightly embarrassing as you meant to get here before them. You walk up to the table and say, <p> \"Hey mom, Hey dad.\" </p> They both get up and take turns hugging and greeting you.",
 		"choices": [
-			//{"gotoId": "atDinnerTheyPay"}, //used to get around giant pictures blocking the option
 			{"gotoId": "atDinnerYouPay"},
 			{"gotoId": "atDinnerTheyPay"}
 		],
@@ -12,11 +42,38 @@
 		],
 	},
 	{
-		"id": "atDinnerYouPay",
+		"id": "atDinnerYouPay", 
 		"choiceLabel": "you treat your family to dinner",
-		"content": "you are at dinner with family. You're treating your family to a nice dinner.",
+		"content": "\"Thanks for inviting us out for dinner. I feel like we haven't seen you in ages.\" You smile at your mom, <p> \"Yea well work keeps me busy. I'm happy with it though. I enjoy being able to talk and educate people about climate change.\" </p> Your dad shakes his head but doesn't look mad, <p> \"You <i> could </i> do the same thing on a local level.\" </p>",
 		"choices": [
-			//{"gotoId": "AcademicDinner"}, //used to get around the giant pictures blocking the option
+			{"gotoId": "atDinnerYouPayContinue"},
+		],
+		"conditions" : [
+			"academicEnthusiasm gt 4",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying true","incr tension 1"
+		],
+	},
+	{
+		"id": "atDinnerYouPayContinue", 
+		"choiceLabel": "respond to dad",
+		"content": "You sigh and groan softly. <p> \"Dad... I love my job the way it is. Global change is just as good as local.\" </p> <p>\"Alright Em. If you say so.\" </p> You sigh and know that he's not convinced... But it's fine. Action is still action, no matter what form it takes.  Sometimes you think your parents don't realize there isn't one form of action better than the other.",
+		"choices": [
+			{"gotoId": "changeSubject"},
+		],
+		"conditions" : [
+			"academicEnthusiasm gt 4",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying true","incr tension 1"
+		],
+	},
+	{
+		"id": "changeSubject", 
+		"choiceLabel": "you decide to try and change the subject",
+		"content": "\"Anyways, dinner's on me. I have some money and I want to do something nice for you guys.\" <p>\"Oh how thoughtful, thank you Em.\" </p> You smile as your mom gives you a quick hug before everyone sits back down at the table.",
+		"choices": [
 			{"gotoId": "UNDinner"},
 			{"gotoId": "AcademicDinner"},
 		],
@@ -29,66 +86,102 @@
 	},
 	{
 		"id": "atDinnerTheyPay",
-		"choiceLabel": "parents are paying for dinner.",
-		"content": "you are at dinner with family. they are paying for you. You feel slightly awkward that they're paying for you",
+		"choiceLabel": "your parents are paying for you.", 
+		"content": "\"Thanks for coming out tonight. I feel like we haven't seen you in ages.\" <p>\"Yea, I've been busy working with the locals. Shelly's been helping me.\" </p> Your dad laughs a bit at this, <p> \"I always liked her. She knows what's important.\" </p> You sigh at this. You know your parents share different views on how action should be taken. But least they care.",
 			"conditions" : [
 			"academicEnthusiasm lt 5",
 		],
 		"effects": [
-			"set atDinner true","set youArePaying false", //potentially raise tension here
+			"set atDinner true","set youArePaying false","incr tension 1"
 		],
-		"choices": [{
-			"gotoId": "establishDinnerQuality"
-		}]
+		"choices": [
+		{"gotoId": "atDinnerTheyPayContinue" },
+		]
+	},
+	{
+		"id": "atDinnerTheyPayContinue",
+		"choiceLabel": "you thank them for paying for dinner.", 
+		"content": "You smile a bit sheepishly at your parents \"Thanks for you know...um... paying for dinner and all. I realize I don't have a lot but-\" Your dad interjects, <p> \"I understand that helping with the locals may not pay too well, but that doesn't matter. It's not problem, really. We just wanted to catch with you again. It's been too long.\"</p>",
+			"conditions" : [
+			"academicEnthusiasm lt 5",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying false","decr confidence 1"
+		],
+		"choices": [
+		{"gotoId": "establishDinnerQuality" },
+		]
 	},
 {
         "id": "UNDinner",
-		"choiceLabel": "you say you're glad to be able to catch up with them after all your travels.",
+		"choiceLabel": "say you're glad to see them after all your travels.",
 		"conditions" : [
 			"academicEnthusiasm gt 8",
 			"youArePaying eq true"
 		],
 		"request": {"gotoId": "establishDinnerQualityAcademic"},
-	//	"effects" : [" "]
     },
 	{
         "id": "AcademicDinner",
-		"choiceLabel": "you say you're glad you found some time to meet with them after grading papers.",
+		"choiceLabel": "say you're glad you found time to see them after grading papers.",
 		"conditions" : [
 			"academicEnthusiasm gt 4",
 			"academicEnthusiasm lt 9",
 			"youArePaying eq true"
 		],
 		"request": {"gotoId": "establishDinnerQualityAcademic"},
-	//	"effects" : [" "]
     },
 	{
-		"id": "establishDinnerQualityAcademic",
-		"content": "on either UN path or academic path. Dinner quality is either kinda fancy or modest depending on the route.",
+		"id": "establishDinnerQualityAcademic", 
+		"content": "You relax in your seat as you look at your parents. You've been meaning to do this for awhile. You've been so caught up {ifStateCondition|academicEnthusiasm gt 8|with all your trips and talks around the world. It can get exciting but exhausting sometimes.|with all your teaching and grading. It's a lot of work but it's rewarding to see your students grow and learn.} You look around the  restaurant you picked. It's {ifStateCondition|academicEnthusiasm gt 8|kind of fancy|modest} but it has great food. You've been here with some friends {rnd|once|a few times}.",
+		"choices": [
+			{"gotoId": "establishDinnerQualityAcademicContinue"},
+		],
 		"conditions" : [
 			"academicEnthusiasm gt 4",
 			"youArePaying eq true"
 		],
 		"effects": [
-			"set establishDinnerQuality true"
+			"set establishDinnerQuality true","decr tension 1"
 		],
-		//"choices": [{
-		//	"gotoId": "familyAsksSubject_t"
-		//}]
 	},
 	{
-		"id": "establishDinnerQuality",
-		"choiceLabel": "you mention you're glad to see them after all your activist work",
-		"content": "on local activist path. Dinner quality is okay, nothing too fancy but you still feel slightly embarrassed to have your parents paying for you",
+		"id": "establishDinnerQualityAcademicContinue",
+		"choiceLabel": "you listen to your parents",
+		"content": "\"This place is {ifStateCondition|academicEnthusiasm gt 8|kind of fancy|nice and modest}. You're so sweet for taking your old parents out for dinner.\" You laugh at your mom's comment <p> \"You guys aren't <i> that </i> old. Besides, it's been too long since I've seen you guys. I'm sure you have plenty of questions for me anyways.\" </p> Everyone laughs at the comment, knowing how true it is.",
+		"conditions" : [
+			"academicEnthusiasm gt 4",
+			"youArePaying eq true"
+		],
+		"effects": [
+			"set establishDinnerQuality true","decr tension 1"
+		],
+	},
+	{
+		"id": "establishDinnerQuality", 
+		"choiceLabel": "you look around the restaurant",
+		"content": "You try to relax in your seat. At this time in your life, you thought your parents wouldn't have to pay for you. You sigh and look around the restaurant. It's a nice, modest place. You look at the menu and try not to feel a small blush creep up on your cheeks. It has nothing too extravagant but it still makes you feel embarrassed.",
+		"conditions" : [
+			"academicEnthusiasm lt 5",
+			"youArePaying eq false"
+		],
+		"choices": [
+		{"gotoId": "establishDinnerQualityContinue" },
+		],
+		"effects": [
+			"set establishDinnerQuality true","decr confidence 1"
+		],
+	},
+	{
+		"id": "establishDinnerQualityContinue", 
+		"choiceLabel": "you listen to your dad reassure you",
+		"content": "Your dad places a reassuring hand on your shoulder. \"Em. Really, it's fine. You don't need to be embarrassed. You're doing great local work to help preserve the environment. You always have worried too much. Honestly, it's fine.\" You try to give a convincing smile but it falls a bit flat. ",
 		"conditions" : [
 			"academicEnthusiasm lt 5",
 			"youArePaying eq false"
 		],
 		"effects": [
-			"set establishDinnerQuality true" //possibly raise tension here
+			"set establishDinnerQuality true"
 		],
-		//"choices": [{
-		//	"gotoId": "familyAsksSubject_t"
-		//}]
 	}
 ]

@@ -1027,7 +1027,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						graphics: "char3",
 						age: "20s",
 						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "happy"}
+							{ state: ["default"], tag: "neutral"},
+							{ state: ["friendTension gte 2"], tag: "upset"}
 						]
 					},
 					{
@@ -1286,7 +1287,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		];
 
 		var gameSpec = gameResources.filter(function(v) { return v.id === id; })[0];		//grab all filepaths for our id
-		Game.init(gameSpec, State, Display);
+		Game.init(gameSpec, State, Display, this);
 	}
 
 	return {

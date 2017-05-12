@@ -30,11 +30,11 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 
 	var startScene = function(_coordinator, id, loadIntro) {
 		var bg = _coordinator.loadBackground(id);
-		initSceneScreen(State, bg);
+		initSceneScreen(State, bg, id);
 		if (loadIntro) { _coordinator.loadSceneIntro(id); }
-		_coordinator.loadStoryMaterials(id);
 		_coordinator.loadAvatars(id);
 		_coordinator.validateArtAssets(id);
+		_coordinator.loadStoryMaterials(id);
 		_coordinator.startGame(id);
 	}
 
@@ -74,7 +74,8 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 		}).appendTo('body');
 	}
 
-	var initSceneScreen = function(State, bg) {
+	//builds the scene divs
+	var initSceneScreen = function(State, bg, id) {
 
 		$('body').html('');
 		$('body').css("background-image", "url('/assets/bgs/"+ bg +"')"); 
@@ -123,9 +124,10 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 	/*
 		Sets avatar on-screen based on state
 	*/
-	var setAvatars = function(State) {
+	var setAvatars = function() {
 		
-		State.get("characters").forEach(function(char, pos) {
+		if (typeof State.get("characters") !== "undefined") {
+			State.get("characters").forEach(function(char, pos) {
 			var url = false;
 			var defaultTag;
 			var avatar = State.avatars.filter(function( avatar ) { return avatar.id == char.id; })[0];
@@ -159,21 +161,26 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 			var picClass = "supportingChar";
 			if (pos == 0) { picClass = "mainChar" }
 
-			$('<div/>', {
-				id: char.id,
-				class: 'statContainer'
-			}).appendTo('#statsContainer');
+			if (document.getElementById(char.id) == null){			//if div doesn't exist, create it
+				$('<div/>', {
+					id: char.id,
+					class: 'statContainer'
+				}).appendTo('#statsContainer');
 
-			$('<div/>', {			//create avatarBox and stat-holding box for character
-			    id: 'charPic_' + char.id,
-			    class: picClass
-			}).appendTo('#' + char.id);
+				$('<div/>', {			//create avatarBox and stat-holding box for character
+				    id: 'charPic_' + char.id,
+				    class: picClass
+				}).appendTo('#' + char.id);
+
+				createStats();
+			}
+			
 			if (url) { 		//set avatar
 				//$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
 				$('#charPic_' + char.id).css("background-image", "url("+url+")"); 
 			}
-		});
-		
+			});
+		}	
 	}
 
 	//returns asset url for an avatar of a given tag, in a given set
@@ -198,13 +205,14 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 		if (typeof stats !== "undefined") {
 
 			State.get("characters").forEach(function(char, pos) {
-				$('<div/>', {		//make progressbar divs
-			    	class: 'barContainer',
-			    	id: char.id + "_barContainer"
-				}).appendTo("#"+char.id);
-			});
 
-			
+				if (document.getElementById(char.id + "_barContainer") == null) {
+					$('<div/>', {		//make progressbar divs
+				    	class: 'barContainer',
+				    	id: char.id + "_barContainer"
+					}).appendTo("#"+char.id);
+				}
+			});
 
 			stats.forEach(function(stat, pos) {
 				/*
@@ -216,11 +224,13 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 				*/
 				for (var x=0; x < stat.characters.length; x++) { //for each character...
 
-					$('<div/>', {		//make progressbar divs
-						id: stat.characters[x] + "_" + stat.varName,
-				    	class: 'stat',
-				    	html: "<div class='stat-label'>"+ stat.label + "</div>"
-					}).appendTo("#"+stat.characters[x] + "_barContainer");
+					if (document.getElementById(stat.characters[x] + "_" + stat.varName) == null) {
+						$('<div/>', {		//make progressbar divs
+							id: stat.characters[x] + "_" + stat.varName,
+					    	class: 'stat',
+					    	html: "<div class='stat-label'>"+ stat.label + "</div>"
+						}).appendTo("#"+stat.characters[x] + "_barContainer");
+					}
 
 					setBarWidth(stat.characters[x] + "_" + stat.varName);
 
@@ -255,6 +265,15 @@ define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Ga
 			return thing.varName == statName;
 		})[0];
 		var newWidth = State.get(statName)/(stat.range[1] - stat.range[0]) * 100;
+
+		if (statsContainer.firstChild !== null && typeof statsContainer.firstChild.children[1].children[2] !== "undefined") {
+			var statName1 = statsContainer.firstChild.children[1].firstChild.id;
+			var statName2 = statsContainer.firstChild.children[1].children[2].id;
+
+			if (statDivId == statName1 || statDivId == statName2) {		//if it's a big stat, increase appropriately
+				newWidth *= 2;
+			}
+		}
 		$("#" + statDivId).css("width", newWidth + "%");
 	}
 
