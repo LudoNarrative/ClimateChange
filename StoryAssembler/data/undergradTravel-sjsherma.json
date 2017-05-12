@@ -123,7 +123,7 @@
     ],
     "choices" : [
       {"gotoId" : "emmaNewspaper"},
-      {"gotoId" : "readNewspaper eq true"}
+      {"condition" : "readNewspaper eq true"}
     ]
   },
 
@@ -248,6 +248,11 @@
         "set outroForLanding true"
       ],
       "repeatable" : "true",
+      "conditions" : [
+        "dealWithSomeone eq true",
+        "readNewspaper eq true",
+        "readEmail eq true"
+      ]
     },
 
 
