@@ -292,7 +292,7 @@ def run_once(rules,settings,player_model,depth):
                 next_state[action][0] -= 1
                 state[action][0] = max(0,state[action][0])
                 
-        history.append(rules_fired)
+        history.append((rules_fired, {s:v for s,v in next_state.items()}))
         for s,v in next_state.items():
             state[s] = v
     return history
@@ -305,12 +305,14 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
         earliest_reached = {}
         latest_reached = {}
         seen = {}
+        highest = {}
         for simulations in range(simulation_count):     
             for free_var,set_var in zip(free_variables,individual):
                 free_var[1][0] = set_var
             history =  run_once(rules,settings,player_model,depth)
+            
             for step_ind,step in enumerate(history):
-                for rule in step:
+                for rule in step[0]:
                     outcome_reached.add(rule)
                     if rule not in earliest_reached:
                         earliest_reached[rule] = float('inf')
@@ -320,6 +322,11 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
                     seen[rule].add(step_ind)
                     earliest_reached[rule] = min(step_ind,earliest_reached[rule])
                     latest_reached[rule] = max(step_ind,latest_reached[rule])
+                for v in step[1]:
+                    if v not in highest:
+                        highest[v] = -1
+                    if highest[v] < step[1][v][0]:
+                        highest[v] = step[1][v][0]
         for outcome in rules:
             if outcome not in latest_reached:
                 latest_reached[outcome] = depth*2
@@ -332,6 +339,11 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
 
         end_weight = 10
 
+        for v in highest:
+            if highest[v] > 10:
+                fitness -= 2*(highest[v]-10)
+        
+        
         for outcome in rules:
             has_mode_change = False
             for action in rules[outcome]['results']['other']:
@@ -468,8 +480,8 @@ if __name__ == '__main__':
         if fit > best:
             best = fit
             best_ind = ind
-    #print best
-    #print '======================================'
+    print best
+    print '=========='
     
     for free_var,set_var in zip(free_variables,best_ind):
         free_var[1][0] = set_var
@@ -484,11 +496,10 @@ if __name__ == '__main__':
                     replace = replace = find.replace('(','_').replace(',','_X_').replace(')','_XX_')
                     find = '{}({})'.format(o,find)
                     replace = '{}({})'.format(o,replace)
-                    print find,replace
                     find_and_replace.append((find,replace))
     
     out_string = []
-    for o in ['entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer_logic']:
+    for o in ['label','entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer_logic']:
         for oo in out[o]:
             for ooo in oo:
                 prettified = prettify(ooo).split('(')[0]
@@ -635,7 +646,7 @@ if __name__ == '__main__':
             for ooo in oo:
                 reading = prettify(ooo)
                 if 'goal' in reading:
-                    print "<li>The goal is to " + prettify(ooo['terms'][0]['terms'][0]) + " " + labels[prettify(ooo['terms'][1]['terms'][0])]+'</li>'
+                    print "<li>The goal is to " + prettify(ooo['terms'][0]) + " " + labels[prettify(ooo['terms'][1])]+'</li>'
 
 
     will_dos = []
@@ -667,12 +678,12 @@ if __name__ == '__main__':
                 precond = precond['terms'][0]
                 if 'overlaps' == precond['predicate']:
                     if 'true' == precond['terms'][2]['predicate']:
-                        print 'attempting to make a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' touch'
+                        print 'attempting to make a ' + labels[prettify(precond['terms'][1])] + ' and ' + labels[prettify(precond['terms'][0])] + ' touch'
                     else:
-                        print '\tattempting to keep a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' from touching'
+                        print '\tattempting to keep a ' + labels[prettify(precond['terms'][1])] + ' and ' + labels[prettify(precond['terms'][0])] + ' from touching'
                 elif 'control_event' == precond['predicate']:
                     if 'click' ==  precond['terms'][0]['predicate']:
-                        print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0]['terms'][0])]
+                        print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0])]
                     elif 'button' == precond['terms'][0]['predicate']:
                         verb = precond['terms'][0]['terms'][1]['predicate']
                         button = precond['terms'][0]['terms'][0]['predicate']
@@ -697,12 +708,12 @@ if __name__ == '__main__':
                 precond = precond['terms'][0]
                 if 'overlaps' == precond['predicate']:
                     if 'true' == precond['terms'][2]['predicate']:
-                        print '\tattempting to make a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' touch'
+                        print '\tattempting to make a ' + labels[prettify(precond['terms'][1])] + ' and ' + labels[prettify(precond['terms'][0])] + ' touch'
                     else:
-                        print '\tattempting to keep a ' + labels[prettify(precond['terms'][1]['terms'][0])] + ' and ' + labels[prettify(precond['terms'][0]['terms'][0])] + ' from touching'
+                        print '\tattempting to keep a ' + labels[prettify(precond['terms'][1])] + ' and ' + labels[prettify(precond['terms'][0])] + ' from touching'
                 elif 'control_event' == precond['predicate']:
                     if 'click' ==  precond['terms'][0]['predicate']:
-                        print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0]['terms'][0])]
+                        print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0])]
                     elif 'button' == precond['terms'][0]['predicate']:
                         verb = precond['terms'][0]['terms'][1]['predicate']
                         button = precond['terms'][0]['terms'][0]['predicate']
@@ -725,7 +736,7 @@ if __name__ == '__main__':
             print '<li>'
             ooo = ooo['terms'][0]
             if 'draggable' == ooo['predicate']:
-                entity = ooo['terms'][0]['terms'][0]
+                entity = ooo['terms'][0]
                 print '\tclicking-and-dragging {}s'.format(labels[prettify(entity)])
             else:
                 print prettify(ooo)
@@ -738,7 +749,7 @@ if __name__ == '__main__':
             pretty = prettify(ooo)
             ooo = ooo['terms'][0]
             if 'move' in pretty and 'cursor' in pretty:
-                print '<li>\tthe {} moves {} the cursor'.format(labels[prettify(ooo['terms'][0]['terms'][0])],direction_mapping[prettify(ooo['terms'][1]['terms'][0])]) + '</li>'
+                print '<li>\tthe {} moves {} the cursor'.format(labels[prettify(ooo['terms'][0])],direction_mapping[prettify(ooo['terms'][1])]) + '</li>'
      
     for oo in out['condition']:
         for ooo in oo:
@@ -747,7 +758,7 @@ if __name__ == '__main__':
             if 'control_event' in pretty:
                 print '<li>'
                 if 'click' ==  precond['terms'][0]['predicate']:
-                    print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0]['terms'][0])]
+                    print '\tclicking on a ' + labels[prettify(precond['terms'][0]['terms'][0])]
                 elif 'button' == precond['terms'][0]['predicate']:
                     verb = precond['terms'][0]['terms'][1]['predicate']
                     button = precond['terms'][0]['terms'][0]['predicate']
@@ -760,7 +771,7 @@ if __name__ == '__main__':
             pretty = prettify(ooo)
             if 'set_sprite' in pretty or 'set_color' in pretty:
                 ooo = ooo['terms'][0]
-                entity = prettify(ooo['terms'][0]['terms'][0])
+                entity = prettify(ooo['terms'][0])
                 if entity not in sprites:
                     sprites[entity] = {}
                 if 'set_sprite' in pretty:

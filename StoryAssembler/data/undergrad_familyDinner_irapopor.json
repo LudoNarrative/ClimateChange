@@ -1,19 +1,23 @@
 [
 	{
 		"id": "momChallengesi",
-		"content": "mom challenges you",
+		"content": "<p>\"Emma, are you sure this where you want to be going.\" {name|mom} pulls her glass up to cover her lips. \"Remember when we visited the UN when we were looking at colleges. I’d never seen you so excited. Are you not... excited anymore?\"</p>",
 		"effects": [
 			"set momChallenges true"
 		],
 		"choices": [
 			{"gotoId": "listenToMomi"},
 			{"gotoId": "reluctantToMomi"}
+		],
+		"conditions" : [
+			"academicEnthusiasm lte 6",
+			"familyAsksSubject eq true"
 		]
 	},
 		{
 			"id": "listenToMomi",
-			"choiceLabel" : "hear mom out",
-			"content": "You hear mom's argument",
+			"choiceLabel" : "\"Don't worry about it {name|mom}.\"",
+			"content": "<p>\"Are you sure? It's just that you always talked about how you wanted to make your impact. I'm worried you won't be able to make it there if you're focused on school talks and cleanups.\"</p>",
 			"choices" : [
 				{"gotoId" : "agressiveDefensei"},
 				{"gotoId" : "mildDefensei"},
@@ -22,8 +26,8 @@
 		},
 		{
 			"id": "reluctantToMomi",
-			"choiceLabel" : "you aren't sure bout this",
-			"content": "You hear mom's argument",
+			"choiceLabel" : "\"Where are you goin with this?\"",
+			"content": "<p>\"It's just that you always talked about how you wanted to make your impact. I'm worried you won't be able to make it there if you're focused on school talks and cleanups.\"</p>",
 			"choices" : [
 				{"gotoId" : "agressiveDefensei"},
 				{"gotoId" : "mildDefensei"},
@@ -32,33 +36,36 @@
 		},
 			{
 				"id": "agressiveDefensei",
-				"choiceLabel" : "hear mom out",
-				"content": "You hear mom's argument",
+				"choiceLabel" : "\"Look, I'm doing what I want. I'd appreciate it if you not question me.\"",
+				"content": "<p>She clasps her hands and looks at her plate. \"I just want you to be true to yourself. I know it's been tough but you can still bounce back.\" </p>",
 				"effects": [
-					"set emmaDefends true"
+					"set emmaDefends true",
+					"incr tension 2",
+					"decr confidence 1"
 				]
 			},
 			{
 				"id": "mildDefensei",
-				"choiceLabel" : "hear mom out",
-				"content": "You hear mom's argument",
+				"choiceLabel" : "\"It's a different path for sure, but that doesn't mean I can't make my mark.\"",
+				"content": "<p>\"Oh, oh of course you will!\" She tries to smile, but her tired eyes look out of place.</p>",
 				"effects": [
 					"set emmaDefends true"
 				]
 			},
 			{
 				"id": "friendlyDefensei",
-				"choiceLabel" : "hear mom out",
-				"content": "You hear mom's argument",
+				"choiceLabel" : "\"I know you got my back {name|mom}, but I think you'll be quiet stunned how much difference a simple act can make.\"",
+				"content": "<p>She smirks. \"I... I'll be looking forward to it.\"</p>",
 				"effects": [
-					"set emmaDefends true"
+					"set emmaDefends true",
+					"incr confidence 2"
 				]
 			},
 
 
 	{
 		"id": "dadDefendsi",
-		"content": "dad defends you",
+		"content": "<p>\"Lighten up on the girl, sweetie,\" {name|dad} says, mid chew. He raises his fork in a declaration of knowledge. \"People spend all this time in big meetings arguing about money and getting nowhere. Sure, it’s a nice idea to get everyone in the planet on the same page, but in reality it’s just a pipe dream.\"</p>",
 		"effects": [
 			"set otherParentDefends true"
 		],
@@ -67,25 +74,31 @@
 			{"gotoId" : "noThanksDadi"}
 		],
 		"conditions" : [
-			"academicEnthusiasm lte 6"
+			"academicEnthusiasm lte 6",
+			"momChallenges eq true"
 		]
 	},
 		{
 			"id": "thanksDadi",
-			"choiceLabel" : "thank dad",
-			"content": "mom responds"
+			"choiceLabel" : "\"I wouldn't put in quite those words, but thanks for backing me up {name|dad}\"",
+			"content": "{name|dad} gives a triumphant shrug. {name|mom} nods and for a moment it looks like she has something to add, but she thinks better of it. She gestures to the waiter. \"I'll see if they can't get us a desert menu.\"",
+			"effects": [
+				"decr tension 2"
+			]
 		},
 		{
 			"id": "noThanksDadi",
-			"choiceLabel" : "I don't need your help dad",
-			"content": "dad responds"
+			"choiceLabel" : "\"I don't need you fighting my battles {name|dad}\"",
+			"content": "<p>\"I just wanted to help... is all.\" {name|dad} seems to retreat inside himself as he continues to eat. {name|mom} sits quietly. \"I think I'll ask them for the desert menu,\" she mutters.</p>",
+			"effects" : [
+				"incr tension 2"
+			]
 		},
 
 
 	{
 		"id": "parentsOfferSupportHighi",
-		"content": "parentsOfferSupport CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"content": "<p>\"I didn't mean to come off as agressive or anything.\" {name|dad} raises his arms in defense. {ifStateCondition|tension lte 6|Does he think he's on trial?|} \"Just offerin' a concern, ya know?\" {ifStateCondition|tension lte 6|Mom places a her hand on his. \"But at the end of the day,|{name|mom} looks you in the eyes. \"Just remember} we both trust your judgement.\"</p>",
 		"effects": [
 			"set parentsOfferSupport true"
 		],
@@ -95,34 +108,14 @@
 			{"gotoId" : "stayQuieti"}
 		],
 		"conditions": [
-			"academicEnthusiasm gt 8",
-			"otherParentDefends eq true"
-		]
-	},
-
-	{
-		"id": "parentsOfferSupportMidi",
-		"content": "parentsOfferSupport CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
-		"effects": [
-			"set parentsOfferSupport true"
-		],
-		"choices": [
-			{"gotoId" : "makeAJokei"},
-			{"gotoId" : "thankThemi"},
-			{"gotoId" : "stayQuieti"}
-		],
-		"conditions": [
-			"academicEnthusiasm lte 8",
-			"academicEnthusiasm gte 5",
+			"academicEnthusiasm gte 7",
 			"otherParentDefends eq true"
 		]
 	},
 
 	{
 		"id": "parentsOfferSupportLowi",
-		"content": "parentsOfferSupport CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"content": "<p>\"I'm sorry if anything I said came off as rash,\" {name|mom} adds. \"You know I always have your best interests in mind. I guess sometimes I just need to remember you know what you should do better than anyone else.\" {ifStateCondition|tension lte 6|She smiles to dad and he smiles back.|}</p>",
 		"effects": [
 			"set parentsOfferSupport true"
 		],
@@ -132,14 +125,14 @@
 			{"gotoId" : "stayQuieti"}
 		],
 		"conditions": [
-			"academicEnthusiasm lt 5",
+			"academicEnthusiasm lte 6",
 			"otherParentDefends eq true"
 		]
 	},
 		{
 			"id": "makeAJokei",
-			"choiceLabel" : "thank parents",
-			"content": "Parent's respond",
+			"choiceLabel" : "\"Makes sense. I am the best after all.\"",
+			"content": "<p>{ifStateCondition|tension lte 6|Mom laughs and spits a bit of her wine on the table.|Mom pulls her face into a smile} \"Yes, you most definetly are.\" {name|dad} nods{ifStateCondition|tension lte 6| his head in complete agreeance.|.}</p>",
 			"choices" : [
 				{"gotoId" : "stayQuieti"},
 				{"gotoId" : "thankThemi"}
@@ -147,13 +140,13 @@
 		},
 		{
 			"id": "thankThemi",
-			"choiceLabel" : "thank parents",
-			"content": "Parent's respond"
+			"choiceLabel" : "\"Thanks. {ifStateCondition|tension lte 6|Both of you, really.|Really...} Thank you.\"",
+			"content": "<p>There's a little sparkle in your mom's eyes. She asks for the check {ifStateCondition|tension lte 6|as dad begins to pick at her plate with his fork. You wonder if they have any plans this time next month. Maybe you can do this again.|as dad finishes his plate. You wonder when you'll have another chance to sit down with them like this.}</p>"
 		},
 		{
 			"id": "stayQuieti",
-			"choiceLabel" : "stay quiet",
-			"content": "Parent's respond",
+			"choiceLabel" : "Stay quiet.",
+			"content": "<p>{ifStateCondition|tension lte 6|\"Oh!\" Mom's head bounces up.|} \"I know you're busy and all but there was some movie your dad wanted to see about some {ifStateCondition|tension lte 6|superhero that's a ninja-\"</p><p>\"He's a viking.\"</p><p>\"Yes a viking.\" Mom rolls her eyes. |dumb superhero. }\"Anyway maybe you'd like to tag along.\"</p>",
 			"choices" : [
 				{"gotoId" : "remainQuieti"},
 				{"gotoId" : "thankThemi"}
@@ -161,8 +154,8 @@
 		},
 			{
 				"id": "remainQuieti",
-				"choiceLabel" : "remain quiet",
-				"content": "parentsRespondMore"
+				"choiceLabel" : "Remain quiet.",
+				"content": "<p>\"{ifStateCondition|tension lte 6|You don't have to decide now. I'll text you the details and you can get back to me.\"|Maybe next time.\"} {name|mom} asks for the check as {name|dad} {ifStateCondition|tension lte 6|begins to pick at her plate with his fork. You wonder if they have any plans this time next month. Maybe you can do this again.|finishes his plate. You wonder when you'll have another chance to sit down with them like this.}</p>"
 			}
 
 ]
