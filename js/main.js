@@ -50,10 +50,13 @@ requirejs.config({
 		"undergradFamilyDinner_talon" : "../StoryAssembler/data/undergrad_familyDinner_talon.json",
 		"undergradFamilyDinner_irapopor" : "../StoryAssembler/data/undergrad_familyDinner_irapopor.json",
 
+		"sjsherma_testfile" : "../StoryAssembler/data/sjsherma-testfile.json",
+
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 
 		"Coordinator" : "../Coordinator/Coordinator",
 		"Display" : "Display",
+		"avatars" : "../assets/avatars/avatars.json",
 
 		"Phaser" : "../lib/phaser",
 		"jQuery": "../lib/jquery-3.0.0.min",

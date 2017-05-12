@@ -2,31 +2,39 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 	var Display;
 	var State;
+	var Coordinator;
 /*
 	Initializes the game
 */
-	var init = function(gameSpec, _State, _Display) {
+	var init = function(gameSpec, _State, _Display, _Coordinator) {
 
 		Display = _Display;
 		State = _State;
+		Coordinator = _Coordinator;
 
 		var useGamestring = false;		//if true, will use the gameString variable in the gameSpec as the game code to eval
 
 		var aspFilepath = gameSpec.aspFilepaths[Math.floor(Math.random()*gameSpec.aspFilepaths.length)];		//pick a random aspfile if there are 1+
+		console.log("PICKING GAME FILE: " , aspFilepath)
 
 		//var fs = require('fs');
 		//var AspPhaserGenerator = require('asp-phaser-generator/index');
 
 		//var aspGame = fs.readFileSync('./test/fixtures/asp-game-4.lp', 'utf8');
 		var aspGame = "";
+		var aspGameInstructions = "";
 		var initialPhaserFile ="";
 
 		jQuery.get(aspFilepath, function(data) {
-	    	aspGame = data;
+	    	aspGame = data.split("==========")[0];
+	    	aspGameInstructions = data.split("==========")[1];
+
 	    	jQuery.get('asp-phaser-generator-2/test/fixtures/initial-phaser-file.json', function(data2) {
 	    		initialPhaserFile = data2;
-	    		runGenerator(gameSpec, aspGame, initialPhaserFile, useGamestring);
-	    		Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, initialPhaserFile);		//create game diagnostics
+	    		runGenerator(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring);
+	    		if (document.getElementById("gameDiagnostics") == null) {
+	    			Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, initialPhaserFile);		//create game diagnostics
+	    		}
 			});
 		});
 
@@ -34,7 +42,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 	}
 
-	var runGenerator = function(gameSpec, aspGame, initialPhaserFile, useGamestring){
+	var runGenerator = function(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring){
 		var generator = AspPhaserGenerator.AspPhaserGenerator(aspGame, initialPhaserFile);
 		var phaserProgram = AspPhaserGenerator.generate(generator.aspGame, generator.initialPhaser, true);
 
@@ -59,7 +67,24 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		var generatedGame = gameInitString + gameCode;
 
 		eval(generatedGame);
-		console.log(getAspGoals());
+
+		if (document.getElementById("gameInstructions") == null) {
+			$('<div/>', {
+			    id: 'gameInstructions',
+			    html: aspGameInstructions
+			}).appendTo('#gameContainer');
+		}
+		else { $("gameInstructions").html(aspGameInstructions); }
+			if (document.getElementById("rerollGame") == null) {
+			$('<div/>', {
+				id: 'rerollGame',
+				text: 'Reroll'
+			}).click(function() { 
+				Coordinator.startGame(State.get("currentScene"));
+			}).appendTo('#gameContainer');
+		}
+
+		//console.log(getAspGoals());
 	}
 
 return {
