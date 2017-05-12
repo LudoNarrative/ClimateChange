@@ -13,10 +13,12 @@
 
   // People to deal with - each changes based on fame?
 
+
+//person one
   {
     "id" : "recognizeEmma",
     "choiceLabel" : "Find out why the person sitting next to you is staring at you.",
-    "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Banks? The speaker at {ifStateCondition}?\"",
+    "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Banks?\"",
     "effects" : [
       "set dealWithSomeone true"
     ],
@@ -33,7 +35,7 @@
   {
     "id" : "continueTalk",
     "choiceLabel" : "Yep, that's me.",
-    "content" : "You fellow rider's eyes light up. \"I thought so! I {ifStateCondition}!",
+    "content" : "You fellow rider's eyes light up. \"I thought so! I saw your talk! I thought you were {ifStateCondition|confidence gte 5|amazing! You really made me rethink some things - and think about things I usually wouldn't. It was truly inspiring, I have to say.|rather shaky in your talk - nervous? I totally get that. I know I get nervous from time to time - don't worry, practice makes perfect, right?}\"",
   },
 
   {
@@ -45,29 +47,72 @@
   {
     "id" : "rudeTalk",
     "choiceLabel" : "Who wants to know?",
-    "content" : "\"Oh, of course! Sorry!\" they say, somehow unfazed by the rudeness of the question. \"I'm Daniel Schmit, nice to meet you! I {ifStateCondition}\"",
+    "content" : "\"Oh, of course! Sorry!\" they say, somehow unfazed by the rudeness of the question. \"I'm Daniel Schmit, nice to meet you! I saw your talk the other day - you were {ifStateCondition|confidence gte 5|quite wonderful! I mean, you certainly seemed nicer back then...|rather interesting. I guessed you were nervous, but maybe my first impression was wrong...}\"",
   },
+
+  //person two
 
   {
     "id" : "nosyPerson",
     "choiceLabel" : "You turn to talk to the person who's leaning very, very close to you.",
-    "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,
-    \" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"{ifStateCondition}. Funny, huh?\"",
+    "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,\" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"'Global Warming Is At An All Time High'. Funny, huh?\"",
     "effects" : [
       "set dealWithSomeone true"
     ],
+    "choices" : [
+      {"gotoId" : "sharpTalk2"},
+      {"gotoId" : "innocentQuestion"}
+    ]
   },
+
+  {
+    "id" : "sharpTalk2",
+    "choiceLabel" : "I don't see how global warming's funny.",
+    "content" : "Their eyebrows furrow. \"Oh, you're one of those people, are you? Don't worry, dear, it was pretty cold this year round. Spring came late again and everything, so the cold weather's lasting longer.\"",
+    "choices" : [
+      {"gotoId" : "teachLesson"},
+      {"gotoId" : "dontBother"}
+    ]
+  },
+
+  {
+    "id" : "teachLesson",
+    "choiceLabel" : "Tell them about why global warming is legitimate.",
+    "content" : "\"You see, there's a difference between weather and climate,\" you explain {ifStateCondition|confidence gte 5|patiently.|with a hint of frustration.} \"Even if it's pretty cold in one area, the global temperature has been proven by science to be slowly rising. Which causes problems all over the world.\" <br/> Your fellow passenger looks thoughtful. \"Huh,\" They say.",
+    "effects" : [
+      "incr confidence 1"
+    ]
+  },
+
+  {
+    "id" : "dontBother",
+    "choiceLabel" : "Don't bother.",
+    "content" : "\"If you say so,\" you sigh as you gaze out the window. The logical fallacies in the statement is itching at you, but you've decided to stay silent.",
+  },
+
+  {
+    "id" : "innocentQuestion",
+    "choiceLabel" : "What do you mean?",
+    "content" : "They blink. \"Well, you know,\" they say. \"People always say 'global warming, how horrible!' but after a while you have to wonder if it's all bologne. Like, my mother would always say it's a some government conspiracy, but she was a conspiracy nut. Me, I always wonder whenever the weather gets really cold, you know? That's what science is, isn't it - questioning things?",
+    "choices" : [
+      {"gotoId" : "teachLesson"},
+      {"gotoId" : "dontBother"}
+    ]
+  },
+
+  //person three
 
   {
     "id" : "friendlyPerson",
     "choiceLabel" : "Chat with the friendly-looking person sitting next to you.",
-    "content" : "Friendly person strikes up a conversation out of friendliness. Turns out you're going to the same destination",
+    "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. You almost forget about your worries as you approach your destination.",
     "effects" : [
-      "set dealWithSomeone true"
+      "set dealWithSomeone true",
+      "incr confidence 1"
     ],
   },
 
-//read that stuff
+  //read newspaper
 
   {
     "id": "readNewspaper",
@@ -77,29 +122,44 @@
       "set readSomething true"
     ],
     "choices" : [
-      {"conditions" : "readNewspaper eq true"}
+      {"gotoId" : "emmaNewspaper"},
+      {"gotoId" : "readNewspaper eq true"}
     ]
   },
 
   {
     "id" : "emmaNewspaper",
     "choiceLabel" : "Look for your name.",
-    "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|see yourself on front page, see yourself on later pages, talking about whether you were good or bad}",
+    "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|fame gte 5|You find yourself on the front page, much to your surprise and delight.|You find a little snippet about your talk later in the news.} {ifStateCondition|confidence gte 5|The article gushes over your poise and intellect, and you can't help but smile, your face flushed.|The article wasn't very kind, but you're not surprised. You were painfully aware of how well you did there.}",
     "effects" : [
       "set readSomething true",
       "set readNewspaper true"
     ],
-    "conditions" : [
-      "talksGiven gte 0"
-    ]
   },
 
   {
     "id" : "newspaperHeadline",
     "choiceLabel" : "Scan the headlines.",
-    "content" : "The headline about something that's happening in the world. Perhaps a new act. Or a calamity. Or a new technology. Or an extinct species. Ranging from happy to sad to complicated.",
+    "content" : "'Global Warming Is At An All Time High. Researchers around the world are more alarmed than ever at the ...'",
     "effects" : [
-      "set readSomething true",
+      "set readNewspaper true"
+    ]
+  },
+
+  {
+    "id" : "newspaperStory",
+    "choiceLabel" : "Check out the technology section.",
+    "content" : "Carbon capture and storage technology is now available for commerical use! There are some that argue implementation should be required for energy plants; others more argue that the procedure takes too much energy; more others argue that our focus should be more on clean energy rather than continuing to rely on fossil fuels...",
+    "effects" : [
+      "set readNewspaper true"
+    ]
+  },
+
+  {
+    "id" : "newspaperInterview",
+    "choiceLabel" : "Read an article.",
+    "content" : "We managed to interview the CEO of a prominent oil company...",
+    "effects" : [
       "set readNewspaper true"
     ]
   },
@@ -115,57 +175,80 @@
     ],
     "choices" : [
       {"gotoId" : "acceptOrDeclineSomething"},
-      {"condition" : "readSomething eq true"},
-      {"condition" : "readSomething eq true"}
-    ]
-  },
-
-  {
-    "id" : "personalEmail",
-    "content" : "Friends and family email you about talks, whether to congradulate or to soothe. Zanita, Shelly, Mom, and Dad, depending on relationship wtih them all. probs the most fun",
-    "effects" : [
-      "set readSomething true"
+      {"condition" : "readFamily eq true"},
+      {"condition" : "readEmail eq true"}
     ]
   },
 
   //personal emails
 
-  //stuff/placeholder
+  {
+    "id" : "zanitaEmail",
+    "choiceLabel" : "Read an email from Zanita.",
+    "content" : "\"Heya, Em! I heard you're doing some traveling now - I'm so proud of you! Didn't I tell you that academia was the way to go? Look at you now, spreading knowledge all over the world. I can't wait for you to tell me all about it. <br/><br/> Talk to you soon! <br/> Zanita\"",
+    "effects" : [
+      "set readFamily true"
+    ]
+  },
+
+  {
+    "id" : "shellyEmail",
+    "choiceLabel" : "Read an email from Shelly.",
+    "content" : "\"EMMMMMMMAAAA WHAT IS THIS I HEAR ABOUT YOU TRAVELING?? That's so cool!! You sure are making it big, huh? Or trying to at least, haha - just don't forget us little guys back at home, alright? We may be taking it locally, but we're making changes right with you. Don't let that head of yours inflate too much, 'kay? Love you! <br/><br/>Shelly\"",
+    "effects" : [
+      "set readFamily true"
+    ]
+  },
+
+  {
+    "id" : "momEmail",
+    "choiceLabel" : "Read an email from Mom.",
+    "content" : "\"Sweetheart, I just need you to know just how excited I am for you. Make sure to eat a big meal before your big talk, okay? But not too much, you wouldn't want bodily functions to get in the way of your speech ~ <br/><br/> Mom <3",
+    "effects" : [
+      "set readFamily true"
+    ]
+  },
+
+  {
+    "id" : "dadEmail",
+    "choiceLabel" : "Read an email from Dad.",
+    "content" : "Hey sweetpea, if you feel nervous or like you've messed up, remember, you can always come to me, alright? Lots of hugs and kisses. <br/><br/> Dad",
+    "effects" : [
+      "set readFamily true"
+    ]
+  },
+
+  //regualr emails
 
   {
     "id" : "emailPetition",
-    "choiceLabel" : "Check your email.",
-    "content" : "Someone has you an email asking you to sign a petition for a climate change issue.",
+    "choiceLabel" : "Click on an email urging you to sign a petition.",
+    "content" : "Someone has you an email asking you to sign a petition for a climate change issue. You can't help the feeling of obligation.",
     "effects" : [
-      "set readSomething true"
+      "set readEmail true"
     ]
   },
 
   {
     "id" : "organizationEmail",
-    "content" : "A group (local, lobbists, activists) asks for support/money or gives news/info",
+    "choiceLabel" : "Click on an email from the Sierra Club.",
+    "content" : "Your favorite grassroots environmental organization has sent you your weekly newsletter.",
     "effects" : [
-      "set readSomething true"
+      "set readEmail true"
     ]
   },
 
-  {
-    "id" : "personalEmail",
-    "content" : "Friends and family email you about talks, whether to congradulate or to soothe. Zanita, Shelly, Mom, and Dad, depending on relationship wtih them all. probs the most fun",
-    "effects" : [
-      "set readSomething true"
-    ]
-  },
+  //the landings!
 
-//the landings!
+    {
+      "id": "outroForLanding",
+      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|confidence gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+      "choiceLabel": "The plane is landing.",
+      "effects": [
+        "set outroForLanding true"
+      ],
+      "repeatable" : "true",
+    },
 
-  {
-    "id": "outroForLanding",
-    "content": "outroForLanding CONTENT",
-    "choiceLabel": "CHOICE CONTENT",
-    "effects": [
-      "set outroForLanding true"
-    ],
-  },
 
 ]
