@@ -33,9 +33,9 @@ hasSymmetry(initialize(add(ENTITY,C,L))) :-
     initialize(add(ENTITY,C,L2)),
     in_between(L,L1,L2).
 
-:- initialize(add(ENTITY,C,L)),
-   not hasSymmetry(initialize(add(ENTITY,C,L))),
-   many(ENTITY).
+%:- initialize(add(ENTITY,C,L)),
+%   not hasSymmetry(initialize(add(ENTITY,C,L))),
+%   many(ENTITY).
 
 
 hasSymmetry(result(O,add(ENTITY,C,L))) :-
@@ -47,12 +47,12 @@ hasSymmetry(result(O,add(ENTITY,C,Other))) :-
     result(O,add(ENTITY,C,Other)),
     entity(Other).
 
-:- result(O,add(ENTITY,C,L)),
-   not hasSymmetry(result(O,C,ENTITY,L)),
-   2 {result(O,add(ENTITY,_,location(Y,X)))}.
+%:- result(O,add(ENTITY,C,L)),
+%   not hasSymmetry(result(O,C,ENTITY,L)),
+%   2 {result(O,add(ENTITY,_,location(Y,X)))}.
 
-:- total_count(Entity,Count),
-   Count > 12.
+%:- total_count(Entity,Count),
+%   Count > 12.
 
 
 spawnsAtInitial(E) :-

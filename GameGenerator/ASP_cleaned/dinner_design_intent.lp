@@ -12,6 +12,12 @@
 #const max_resource_change_per = 2.
 #const max_conditions_per = 2.
 
+required(sharing).
+required(maintenance).
+
+label(resource(r(1)),satiation).
+label(entity(e(1)),food).
+label(entity(e(2)),friend).
 
 :- not reading(sharing,relation(entity(e(1)),entity(e(2)))).
 :- not reading(maintenance,resource(r(1))).
@@ -27,7 +33,6 @@
    N < 2.
 
 
-:- 0 {controlScheme(_,_)} 0.
 
 :- not constant(entity(e(2))).
 
