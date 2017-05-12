@@ -41,7 +41,7 @@
 
 :- not condition(control_event(click(entity(e(E1))))),
    condition(control_event(click(entity(e(E2))))),
-   entity(e(E1)),
+   entity(entity(e(E1))),
    E1 < E2.
 
 :- precondition(overlaps(E1,E2,_),O),

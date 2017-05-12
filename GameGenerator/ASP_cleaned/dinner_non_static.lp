@@ -15,9 +15,9 @@
 required(sharing).
 required(maintenance).
 
-label(r(1),satiation).
-label(e(1),food).
-label(e(2),friend).
+label(resource(r(1)),satiation).
+label(entity(e(1)),food).
+label(entity(e(2)),friend).
 
 
 :- not reading(sharing,relation(entity(e(1)),entity(e(2)))).
@@ -31,8 +31,6 @@ label(e(2),friend).
 :- total_count(entity(e(2)),N),
    N < 2.
 
-
-:- 0 {controlScheme(_,_)} 0.
 
 :- not constant(entity(e(2))).
 
