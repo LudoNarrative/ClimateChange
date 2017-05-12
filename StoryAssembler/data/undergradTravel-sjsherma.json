@@ -131,16 +131,21 @@
     "id" : "emmaNewspaper",
     "choiceLabel" : "Look for your name.",
     "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|fame gte 5|You find yourself on the front page, much to your surprise and delight.|You find a little snippet about your talk later in the news.} {ifStateCondition|confidence gte 5|The article gushes over your poise and intellect, and you can't help but smile, your face flushed.|The article wasn't very kind, but you're not surprised. You were painfully aware of how well you did there.}",
-    "effects" : [
-      "set readSomething true",
-      "set readNewspaper true"
-    ],
   },
 
   {
-    "id" : "newspaperHeadline",
+    "id" : "newspaperHeadline1",
     "choiceLabel" : "Scan the headlines.",
-    "content" : "'Global Warming Is At An All Time High. Researchers around the world are more alarmed than ever at the ...'",
+    "content" : "Scientists Build Mini Worlds In An Attempt to Simulate Climate Change (Not To Create Ridiculously Complicated Car Batteries)",
+    "effects" : [
+      "set readNewspaper true"
+    ]
+  },
+
+  {
+    "id" : "newspaperHeadline2",
+    "choiceLabel" : "Scan the headlines.",
+    "content" : "Man Swears That the Ocean Tried To Burn His Arms Off (Apparently the Acidity Was Too High)",
     "effects" : [
       "set readNewspaper true"
     ]
@@ -150,15 +155,6 @@
     "id" : "newspaperStory",
     "choiceLabel" : "Check out the technology section.",
     "content" : "Carbon capture and storage technology is now available for commerical use! There are some that argue implementation should be required for energy plants; others more argue that the procedure takes too much energy; more others argue that our focus should be more on clean energy rather than continuing to rely on fossil fuels...",
-    "effects" : [
-      "set readNewspaper true"
-    ]
-  },
-
-  {
-    "id" : "newspaperInterview",
-    "choiceLabel" : "Read an article.",
-    "content" : "We managed to interview the CEO of a prominent oil company...",
     "effects" : [
       "set readNewspaper true"
     ]
