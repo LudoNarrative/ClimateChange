@@ -32,8 +32,28 @@ body {
 }
 
 #gameInstructions {
-    width: 40%;
     margin-top: 330px;
+}
+
+.descIcon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0px 5px;
+    position: relative;
+    top: 4px;
+}
+
+.red {
+    background-color:red;
+}
+
+.green {
+    background-color:green;
+}
+
+.blue {
+    background-color:blue;
 }
 
 h1#title {
@@ -178,7 +198,7 @@ Story CSS
 #storyArea {
     background-color: #262626;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.35);
-    min-height: 200px;
+    min-height: 130px;
     padding: 25px;
 }
 #choiceArea {
