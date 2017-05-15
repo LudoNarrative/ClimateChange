@@ -161,18 +161,24 @@ non_monotonic(Entity) :- not monotonic(Entity),
 			     
 
 
-trivial(Outcome) :- precondition(control_event(_),Outcome),
+super_trivial(Outcome) :- precondition(control_event(_),Outcome),
 		    1 {precondition(_,Outcome)} 1.
 
-trivial(Outcome) :- precondition(timer_elapsed(_),Outcome),
+super_trivial(Outcome) :- precondition(timer_elapsed(_),Outcome),
 		    1 {precondition(_,Outcome)} 1.
-trivial(tick).
+super_trivial(tick).
+
+trivial(O) :- super_trivial(O).
 
 trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
 		    2 { player_controls(E1);
 			player_controls(E2);
 			static(E1);
 			static(E2)},
+		    every_frame(Outcome).
+
+trivial(Outcome) :- precondition(overlaps(E1,E1,_),Outcome),
+		    player_controls(E1),
 		    every_frame(Outcome).
 
 hand_eye_coordination(Outcome) :- precondition(overlaps(E), Outcome),
