@@ -45,17 +45,19 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	//parses icons for entities in the game into their respective shapes / colors
 	var iconParse = function(rawString) {
 		var newString = rawString;
+		if (typeof newString !== "undefined") {
+			while (newString.indexOf("[[") > -1) {
+				var start = newString.indexOf("[[");
+				var end = newString.substring(start, newString.length).indexOf("]]") + start;
+				var icon = newString.substring(start+2,end);
+				var theImg = icon.split("|")[1];
+				var theColor = icon.split("|")[0];
 
-		while (newString.indexOf("[[") > -1) {
-			var start = newString.indexOf("[[");
-			var end = newString.substring(start, newString.length).indexOf("]]") + start;
-			var icon = newString.substring(start+2,end);
-			var theImg = icon.split("|")[1];
-			var theColor = icon.split("|")[0];
-
-			var replacement = "<div class='descIcon "+ theColor +"' style=\"-webkit-mask-box-image: url('assets/sprites/"+ theImg +".png')\"></div>";
-			newString = newString.replace(newString.substring(start,end+2), replacement);
+				var replacement = "<div class='descIcon "+ theColor +"' style=\"-webkit-mask-box-image: url('assets/sprites/"+ theImg +".png')\"></div>";
+				newString = newString.replace(newString.substring(start,end+2), replacement);
+			}
 		}
+		else { newString == ""; }
 		return newString;
 	}
 
