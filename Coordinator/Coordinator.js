@@ -1,5 +1,5 @@
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin",
-	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!sjsherma_testfile", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, sjsherma_testfile, globalData) {
+	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!sjsherma_testfile","text!madreed_testfile", "text!talon_testfile","text!sgadsby_testfile","text!kply_testfile","text!irapopor_testfile", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, sjsherma_testfile, madreed_testfile, talon_testfile, sgadsby_testfile, kply_testfile, irapopor_testfile, globalData) {
 
 	/*
 		Initializing function
@@ -7,7 +7,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 
 		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "sereneTest"];	//order of scenes
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];	//order of scenes
 		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -744,6 +744,378 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			mode: {
 				type: "narration"
 			}
+		},
+		//IAN TEST -- Ian, use this area to add wishlist items
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "ianTest",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"UN1": {name: "Mikkel Retna", gender: "male"},
+				"UN2": {name: "Kurt Branegan", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "atUNMeeting eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!irapopor_testfile"],
+/*
+
+
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set atUNMeeting false",
+				"set representingResearchGroup false",
+				"set looksOverCommittee false",
+				"set introducesResearch false",
+				"set presentFacts false",
+				"set kurtInterrupts false",
+				"set lostTrainOfThought false",
+				"set callForLocalAction false",
+				"set endingArgument false",
+				"set emmaReflection false",
+				"set inHallway false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				
+				"set confidence 5",
+				"set persuasion 0",
+				"set composure 0"
+			],
+			UIvars: [
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "persuasion",
+					"label" : "Persuasion",
+					"characters" : ["UN1", "UN2"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "composure",
+					"label" : "Composure",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
+
+			],
+			mode: {
+				type: "narration"
+			}
+		},
+		//KEVIN TEST -- Kevin, use this area to add wishlist items
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "kevinTest",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"UN1": {name: "Mikkel Retna", gender: "male"},
+				"UN2": {name: "Kurt Branegan", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "atUNMeeting eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!kply_testfile"],
+/*
+
+
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set atUNMeeting false",
+				"set representingResearchGroup false",
+				"set looksOverCommittee false",
+				"set introducesResearch false",
+				"set presentFacts false",
+				"set kurtInterrupts false",
+				"set lostTrainOfThought false",
+				"set callForLocalAction false",
+				"set endingArgument false",
+				"set emmaReflection false",
+				"set inHallway false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				
+				"set confidence 5",
+				"set persuasion 0",
+				"set composure 0"
+			],
+			UIvars: [
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "persuasion",
+					"label" : "Persuasion",
+					"characters" : ["UN1", "UN2"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "composure",
+					"label" : "Composure",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
+
+			],
+			mode: {
+				type: "narration"
+			}
+		},
+		//TALON TEST -- Talon, use this area to add wishlist items
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "talonTest",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"UN1": {name: "Mikkel Retna", gender: "male"},
+				"UN2": {name: "Kurt Branegan", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "atUNMeeting eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!talon_testfile"],
+/*
+
+
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set atUNMeeting false",
+				"set representingResearchGroup false",
+				"set looksOverCommittee false",
+				"set introducesResearch false",
+				"set presentFacts false",
+				"set kurtInterrupts false",
+				"set lostTrainOfThought false",
+				"set callForLocalAction false",
+				"set endingArgument false",
+				"set emmaReflection false",
+				"set inHallway false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				
+				"set confidence 5",
+				"set persuasion 0",
+				"set composure 0"
+			],
+			UIvars: [
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "persuasion",
+					"label" : "Persuasion",
+					"characters" : ["UN1", "UN2"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "composure",
+					"label" : "Composure",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
+
+			],
+			mode: {
+				type: "narration"
+			}
+		},
+		//SUMMER TEST -- Summer, use this area to add wishlist items
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "summerTest",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"volunteer": {name: "Rodrigo", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "onABeach eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!sgadsby_testfile"],
+/*
+
+
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set onABeach false",
+				"set talkAboutSpecies false",
+				"set talkAboutUNPlan false",
+				"set rodrigoSaysPointless false",
+				"set emmaPositiveRejoinder false",
+				"set emmaNegativeRejoinder false",
+				"set rodrigoSadKnowledge false",
+				"set emmaPositiveSpin false",
+				"set emmaNegativeSpin false",
+				"set rodrigoSaysJob false",
+				"set sceneOutro false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				
+				"set patience 5",
+				"set optimism 0",
+				"set progression 0"
+			],
+			UIvars: [
+				{
+					"varName" : "patience",
+					"label" : "Patience",
+					"characters" : ["protagonist", "volunteer"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "optimism",
+					"label" : "Optimism",
+					"characters" : ["protagnoist", "volunteer"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "progression",
+					"label" : "Progression",
+					"characters" : ["protagonist"],
+					"affectedBy" : "game",
+					"range" : [0,10]
+				}
+
+			],
+			mode: {
+				type: "narration"
+			}
+		},
+		//MATT TEST -- Matt, use this area to add wishlist items
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "mattTest",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"volunteer": {name: "Rodrigo", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "onABeach eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!madreed_testfile"],
+/*
+
+
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set onABeach false",
+				"set talkAboutSpecies false",
+				"set talkAboutUNPlan false",
+				"set rodrigoSaysPointless false",
+				"set emmaPositiveRejoinder false",
+				"set emmaNegativeRejoinder false",
+				"set rodrigoSadKnowledge false",
+				"set emmaPositiveSpin false",
+				"set emmaNegativeSpin false",
+				"set rodrigoSaysJob false",
+				"set sceneOutro false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+				
+				"set patience 5",
+				"set optimism 0",
+				"set progression 0"
+			],
+			UIvars: [
+				{
+					"varName" : "patience",
+					"label" : "Patience",
+					"characters" : ["protagonist", "volunteer"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "optimism",
+					"label" : "Optimism",
+					"characters" : ["protagnoist", "volunteer"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "progression",
+					"label" : "Progression",
+					"characters" : ["protagonist"],
+					"affectedBy" : "game",
+					"range" : [0,10]
+				}
+			],
+			mode: {
+				type: "narration"
+			}
 		}
 		
 		]
@@ -806,6 +1178,26 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id : "sereneTest",
 				text : "<p>TODO: Scene description</p>"
+			},
+			{
+				id : "mattTest",
+				text : "<p>TODO: Scene description</p>"
+			},
+			{
+				id : "talonTest",
+				text : "<p>TODO: Scene description</p>"
+			},
+			{
+				id : "summerTest",
+				text : "<p>TODO: Scene description</p>"
+			},
+			{
+				id : "kevinTest",
+				text : "<p>TODO: Scene description</p>"
+			},
+			{
+				id : "ianTest",
+				text : "<p>TODO: Scene description</p>"
 			}
 
 
@@ -867,6 +1259,26 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "sereneTest",
+				src : "lecturehall.png"
+			},
+			{
+				id : "mattTest",
+				src : "lecturehall.png"
+			},
+			{
+				id : "ianTest",
+				src : "lecturehall.png"
+			},
+			{
+				id : "summerTest",
+				src : "lecturehall.png"
+			},
+			{
+				id : "kevinTest",
+				src : "lecturehall.png"
+			},
+			{
+				id : "talonTest",
 				src : "lecturehall.png"
 			},
 
@@ -1179,6 +1591,135 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					}
 				]
 			},
+			{
+				sceneId : "ianTest",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
+					},
+					{
+						id: "UN1",
+						graphics: "char11",
+						age: "40s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "neutral" }
+						]
+					},
+					{
+						id: "UN2",
+						graphics: "char10",
+						age: "30s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "neutral" }
+						]
+					}
+				]
+			},
+			{
+				sceneId : "talonTest",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
+					},
+					{
+						id: "UN1",
+						graphics: "char11",
+						age: "40s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "neutral" }
+						]
+					},
+					{
+						id: "UN2",
+						graphics: "char10",
+						age: "30s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "neutral" }
+						]
+					}
+				]
+			},
+			{
+				sceneId : "kevinTest",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
+					},
+					{
+						id: "UN1",
+						graphics: "char11",
+						age: "40s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "neutral" }
+						]
+					},
+					{
+						id: "UN2",
+						graphics: "char10",
+						age: "30s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "neutral" }
+						]
+					}
+				]
+			},
+			{
+				sceneId : "summerTest",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
+					},
+					{
+						id: "volunteer",
+						graphics: "char6",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
+				]
+			},
+			{
+				sceneId : "mattTest",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
+					},
+					{
+						id: "volunteer",
+						graphics: "char6",
+						age: "20s",
+						states: [	//happy, neutral, upset, confused
+							{ state: ["default"], tag: "happy" }
+						]
+					}
+				]
+			},
 		];
 
 		State.avatars = avatarSpec.filter(function(v) { return v.sceneId === id; })[0].characters;
@@ -1251,6 +1792,31 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "sereneTest",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "talonTest",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "ianTest",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "kevinTest",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "summerTest",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "mattTest",
 				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/game-10_2_handModified.lp'],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},

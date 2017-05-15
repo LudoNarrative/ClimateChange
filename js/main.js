@@ -51,6 +51,13 @@ requirejs.config({
 		"undergradFamilyDinner_irapopor" : "../StoryAssembler/data/undergrad_familyDinner_irapopor.json",
 
 		"sjsherma_testfile" : "../StoryAssembler/data/sjsherma-testfile.json",
+		"kply_testfile" : "../StoryAssembler/data/kply-testfile.json",
+		"irapopor_testfile" : "../StoryAssembler/data/irapopor-testfile.json",
+		"talon_testfile" : "../StoryAssembler/data/talon-testfile.json",
+		"sgadsby_testfile" : "../StoryAssembler/data/sgadsby-testfile.json",
+		"madreed_testfile" : "../StoryAssembler/data/madreed-testfile.json",
+
+
 
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
 
