@@ -50,6 +50,14 @@ requirejs.config({
 		"undergradFamilyDinner_talon" : "../StoryAssembler/data/undergrad_familyDinner_talon.json",
 		"undergradFamilyDinner_irapopor" : "../StoryAssembler/data/undergrad_familyDinner_irapopor.json",
 
+		"undergradUN_irapopor" : "../StoryAssembler/data/undergradUN-irapopor.json",
+		"undergradUN_kply" : "../StoryAssembler/data/undergradUN-kply.json",
+		"undergradUN_talon" : "../StoryAssembler/data/undergradUN-talon.json",
+
+		"undergradBeach_sjsherma" : "../StoryAssembler/data/undergradBeach-sjsherma.json",
+		"undergradBeach_madreed" : "../StoryAssembler/data/undergradBeach-madreed.json",
+		"undergradBeach_sgadsby" : "../StoryAssembler/data/undergradBeach-sgadsby.json",
+
 		"sjsherma_testfile" : "../StoryAssembler/data/sjsherma-testfile.json",
 		"kply_testfile" : "../StoryAssembler/data/kply-testfile.json",
 		"irapopor_testfile" : "../StoryAssembler/data/irapopor-testfile.json",

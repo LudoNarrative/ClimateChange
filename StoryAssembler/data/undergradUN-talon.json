@@ -1,0 +1,46 @@
+[
+	 {
+    "id": "presentFacts",
+    "choiceLabel": "presentFacts choice",
+    "content": "presentFacts content",
+    "choices" : [
+      {"gotoId" : "kurtInterrupts"}
+    ],
+    "effects" : [
+      "set presentFacts true"
+    ]
+  },
+{
+    "id": "kurtInterrupts",
+    "choiceLabel": "kurtInterrupts choice",
+    "content": "kurtInterrupts content",
+    "choices" : [
+      {"gotoId" : "lostTrainOfThought"}
+    ],
+    "effects" : [
+      "set kurtInterrupts true"
+    ]
+  },
+ {
+    "id": "lostTrainOfThought",
+    "choiceLabel": "lostTrainOfThought choice",
+    "content": "lostTrainOfThought content",
+    "choices" : [
+      {"gotoId" : "callForLocalAction"}
+    ],
+    "effects" : [
+      "set lostTrainOfThought true"
+    ]
+  },
+ {
+    "id": "callForLocalAction",
+    "choiceLabel": "callForLocalAction choice",
+    "content": "callForLocalAction content",
+    "choices" : [
+      {"gotoId" : "endingArgument"}
+    ],
+    "effects" : [
+      "set callForLocalAction true"
+    ]
+  },
+]
