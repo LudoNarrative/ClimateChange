@@ -3,8 +3,11 @@
   {
     "id" : "freeTime",
     "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. What to do now?",
+    "conditions":[
+      "onAPlane eq true"
+    ],
     "choices" : [
-      {"condition" : "dealWithSomeone eq true"},
+      {"condition" : "talkSomeone eq true"},
       {"gotoId" : "readNewspaper"},
       {"gotoId" : "readEmail"}
     ],
@@ -20,6 +23,7 @@
     "choiceLabel" : "Find out why the person sitting next to you is staring at you.",
     "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Banks?\"",
     "effects" : [
+      "set talkSomeone true",
       "set dealWithSomeone true"
     ],
     "conditions" : [
@@ -34,8 +38,8 @@
 
   {
     "id" : "continueTalk",
-    "choiceLabel" : "Yep, that's me.",
-    "content" : "You fellow rider's eyes light up. \"I thought so! I saw your talk! I thought you were {ifStateCondition|confidence gte 5|amazing! You really made me rethink some things - and think about things I usually wouldn't. It was truly inspiring, I have to say.|rather shaky in your talk - nervous? I totally get that. I know I get nervous from time to time - don't worry, practice makes perfect, right?}\"",
+    "choiceLabel" : "Yes, that's me.",
+    "content" : "You fellow rider's eyes light up. \"I thought so! I saw your talk! I thought you were {ifStateCondition|composure gte 5|amazing! You really made me rethink some things - and think about things I usually wouldn't. It was truly inspiring, I have to say.|rather shaky in your talk - nervous? I totally get that. I know I get nervous from time to time - don't worry, practice makes perfect, right?}\"",
   },
 
   {
@@ -47,7 +51,7 @@
   {
     "id" : "rudeTalk",
     "choiceLabel" : "Who wants to know?",
-    "content" : "\"Oh, of course! Sorry!\" they say, somehow unfazed by the rudeness of the question. \"I'm Daniel Schmit, nice to meet you! I saw your talk the other day - you were {ifStateCondition|confidence gte 5|quite wonderful! I mean, you certainly seemed nicer back then...|rather interesting. I guessed you were nervous, but maybe my first impression was wrong...}\"",
+    "content" : "\"Oh, of course! Sorry!\" they say, somehow unfazed by the rudeness of the question. \"I'm Daniel Schmit, nice to meet you! I saw your talk the other day - you were {ifStateCondition|composure gte 5|quite wonderful! I mean, you certainly seemed nicer back then...|rather interesting. I guessed you were nervous, but maybe my first impression was wrong...}\"",
   },
 
   //person two
@@ -57,7 +61,8 @@
     "choiceLabel" : "You turn to talk to the person who's leaning very, very close to you.",
     "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,\" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"'Global Warming Is At An All Time High'. Funny, huh?\"",
     "effects" : [
-      "set dealWithSomeone true"
+      "set talkSomeone true",
+      "set dealWithSomeone true",
     ],
     "choices" : [
       {"gotoId" : "sharpTalk2"},
@@ -78,9 +83,9 @@
   {
     "id" : "teachLesson",
     "choiceLabel" : "Tell them about why global warming is legitimate.",
-    "content" : "\"You see, there's a difference between weather and climate,\" you explain {ifStateCondition|confidence gte 5|patiently.|with a hint of frustration.} \"Even if it's pretty cold in one area, the global temperature has been proven by science to be slowly rising. Which causes problems all over the world.\" <br/> Your fellow passenger looks thoughtful. \"Huh,\" They say.",
+    "content" : "\"You see, there's a difference between weather and climate,\" you explain {ifStateCondition|composure gte 5|patiently.|with a hint of frustration.} \"Even if it's pretty cold in one area, the global temperature has been proven by science to be slowly rising. Which causes problems all over the world.\" <br/><br/> Your fellow passenger looks thoughtful. \"Huh,\" They say.",
     "effects" : [
-      "incr confidence 1"
+      "incr composure 1"
     ]
   },
 
@@ -107,8 +112,9 @@
     "choiceLabel" : "Chat with the friendly-looking person sitting next to you.",
     "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. You almost forget about your worries as you approach your destination.",
     "effects" : [
+      "set talkSomeone true",
       "set dealWithSomeone true",
-      "incr confidence 1"
+      "incr composure 1"
     ],
   },
 
@@ -130,13 +136,13 @@
   {
     "id" : "emmaNewspaper",
     "choiceLabel" : "Look for your name.",
-    "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|fame gte 5|You find yourself on the front page, much to your surprise and delight.|You find a little snippet about your talk later in the news.} {ifStateCondition|confidence gte 5|The article gushes over your poise and intellect, and you can't help but smile, your face flushed.|The article wasn't very kind, but you're not surprised. You were painfully aware of how well you did there.}",
+    "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|fame gte 5|You find yourself on the front page, much to your surprise and delight.|You find a little snippet about your talk later in the news.} {ifStateCondition|composure gte 5|The article gushes over your poise and intellect, and you can't help but smile, your face flushed.|The article wasn't very kind, but you're not surprised. You were painfully aware of how well you did there.}",
   },
 
   {
     "id" : "newspaperHeadline1",
     "choiceLabel" : "Scan the headlines.",
-    "content" : "Scientists Build Mini Worlds In An Attempt to Simulate Climate Change (Not To Create Ridiculously Complicated Car Batteries)",
+    "content" : "Scientists Build Mini Worlds In An Attempt to Simulate Climate Change <br/><br/> A team of researches run tests on a small-scale copy of an underwater ecosystem intended to simulate and observe the impact of climate change. The experiment reveals that the combination of higher temperatures and greater amounts of CO2 have domino effect on the ecosystem's inhabitants, which as worrying implications for fish as a food source.",
     "effects" : [
       "set readNewspaper true"
     ]
@@ -238,7 +244,8 @@
 
     {
       "id": "outroForLanding",
-      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|confidence gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+      "choiceLabel" : "The plane is landing.",
+      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
       "choiceLabel": "The plane is landing.",
       "effects": [
         "set outroForLanding true"

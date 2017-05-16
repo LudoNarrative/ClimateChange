@@ -1,0 +1,34 @@
+[
+ 
+{
+    "id": "endingArgument",
+    "choiceLabel": "endingArgument choice",
+    "content": "endingArgument content",
+    "choices" : [
+      {"gotoId" : "emmaReflection"}
+    ],
+    "effects" : [
+      "set endingArgument true"
+    ]
+  },
+ {
+    "id": "emmaReflection",
+    "choiceLabel": "emmaReflection choice",
+    "content": "emmaReflection content",
+    "choices" : [
+      {"gotoId" : "inHallway"}
+    ],
+    "effects" : [
+      "set emmaReflection true"
+    ]
+  },
+ {
+    "id": "inHallway",
+    "choiceLabel": "inHallway choice",
+    "content": "inHallway content",
+    "effects" : [
+      "set inHallway true"
+    ]
+  },
+
+]
