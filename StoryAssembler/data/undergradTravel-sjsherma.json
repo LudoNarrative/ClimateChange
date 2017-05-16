@@ -3,6 +3,9 @@
   {
     "id" : "freeTime",
     "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. What to do now?",
+    "conditions":[
+      "onAPlane eq true"
+    ],
     "choices" : [
       {"condition" : "talkSomeone eq true"},
       {"gotoId" : "readNewspaper"},
