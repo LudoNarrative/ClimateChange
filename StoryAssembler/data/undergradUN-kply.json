@@ -1,34 +1,78 @@
 [
- 
+/*
+        { condition: "atUNMeeting eq true"},
+        { condition: "representingResearchGroup eq true"},
+        { condition: "looksOverCommittee eq true"},
+        { condition: "introducesResearch eq true"},
+        { condition: "presentFacts eq true"},
+        { condition: "kurtInterrupts eq true"},
+        { condition: "lostTrainOfThought eq true"},
+        { condition: "callForLocalAction eq true"},
+        { condition: "endingArgument eq true"},
+        { condition: "emmaReflection eq true"},
+        { condition: "inHallway eq true"}
+*/
+
+
 {
-    "id": "endingArgument",
-    "choiceLabel": "endingArgument choice",
-    "content": "endingArgument content",
-    "choices" : [
-      {"gotoId" : "emmaReflection"}
-    ],
+    "id": "introduceResearch",
+    "content": "presentFacts content",
     "effects" : [
-      "set endingArgument true"
+      "set introducesResearch true"
+    ],
+    "conditions" : [
+      "looksOverCommittee eq true",
+      //"charactersIntroduced gte 2"
+    ]
+  },
+{
+    "id": "presentFacts",
+    "content": "presentFacts content, facts presented increasing",
+    "effects" : [
+      "set presentFacts true",
+      "incr factsPresented 2"
+    ],
+    "conditions" : [
+      "introducesResearch eq true"
+    ]
+  },
+{
+    "id": "kurtInterrupts",
+    "content": "kurtInterrupts content",
+    "effects" : [
+      "set kurtInterrupts true",
+      "incr factsPresented 1"
+    ], 
+    "conditions" : [
+      //"factsPresented gte 2",
+      "presentFacts eq true"
     ]
   },
  {
-    "id": "emmaReflection",
-    "choiceLabel": "emmaReflection choice",
-    "content": "emmaReflection content",
-    "choices" : [
-      {"gotoId" : "inHallway"}
-    ],
+    "id": "lostTrainOfThought",
+    "content": "lostTrainOfThought content",
     "effects" : [
-      "set emmaReflection true"
+      "set lostTrainOfThought true"
+    ],
+    "conditions" : [
+      "introducesResearch eq true"
     ]
   },
  {
-    "id": "inHallway",
-    "choiceLabel": "inHallway choice",
-    "content": "inHallway content",
+    "id": "callForLocalAction",
+    "content": "callForLocalAction content",
     "effects" : [
-      "set inHallway true"
+      "set callForLocalAction true",
+    ],
+    "conditions" : [
+      //"factsPresented gte 3",
+      "kurtInterrupts eq true"
     ]
   },
+ 
+
+
+
+
 
 ]
