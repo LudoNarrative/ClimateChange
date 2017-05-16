@@ -14,38 +14,40 @@
 
 */
 [
-    
-{
-    "id": "emmaNegativeSpin",
-    "choiceLabel": "emmaNegativeSpin choice",
-    "content": "emmaNegativeSpin content",
+  {
+    "id": "establishOnABeach",
+    "content": "establishOnABeach content",
     "choices" : [
-      {"gotoId" : "rodrigoSaysJob"}
+      {"gotoId" : "talkAboutSpecies"}
     ],
     "effects" : [
-      "set emmaNegativeSpin true"
+      "set onABeach true"
     ]
   },
 
   {
-    "id": "rodrigoSaysJob",
-    "choiceLabel": "rodrigoSaysJob choice",
-    "content": "rodrigoSaysJob content",
+		"id": "talkAboutSpecies",
+		"choiceLabel": "talkAboutSpecies choice",
+		"content": "talkAboutSpecies content",
     "choices" : [
-      {"gotoId" : "sceneOutro"}
+      {"gotoId" : "talkAboutUNPlan"}
     ],
     "effects" : [
-      "set rodrigoSaysJob true"
+      "set talkAboutSpecies true"
+    ]
+	},
+
+  {
+    "id": "talkAboutUNPlan",
+    "choiceLabel": "talkAboutUNPlan choice",
+    "content": "talkAboutUNPlan content",
+    "choices" : [
+      {"gotoId" : "rodrigoSaysPointless"}
+    ],
+    "effects" : [
+      "set talkAboutUNPlan true"
     ]
   },
 
-  {
-    "id": "sceneOutro",
-    "choiceLabel": "sceneOutro choice",
-    "content": "sceneOutro content",
-    "effects" : [
-      "set sceneOutro true"
-    ]
-  },
-   
+
 ]
