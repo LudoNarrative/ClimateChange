@@ -14,18 +14,6 @@
 
 */
 [
-  
-{
-    "id": "emmaPositiveRejoinder",
-    "choiceLabel": "emmaPositiveRejoinder choice",
-    "content": "emmaPositiveRejoinder content",
-    "choices" : [
-      {"gotoId" : "emmaNegativeRejoinder"}
-    ],
-    "effects" : [
-      "set emmaPositiveRejoinder true"
-    ]
-  },
 
   {
     "id": "emmaNegativeRejoinder",
@@ -52,15 +40,23 @@
   },
 
   {
-    "id": "emmaPositiveSpin",
-    "choiceLabel": "emmaPositiveSpin choice",
-    "content": "emmaPositiveSpin content",
-    "choices" : [
-      {"gotoId" : "emmaNegativeSpin"}
-    ],
-    "effects" : [
-      "set emmaPositiveSpin true"
-    ]
-  },
-  
+      "id": "emmaNegativeSpin",
+      "choiceLabel": "emmaNegativeSpin choice",
+      "content": "emmaNegativeSpin content",
+      "choices" : [
+        {"gotoId" : "rodrigoSaysJob"}
+      ],
+      "effects" : [
+        "set emmaNegativeSpin true"
+      ]
+    },
+
+    {
+      "id": "sceneOutro",
+      "choiceLabel": "sceneOutro choice",
+      "content": "sceneOutro content",
+      "effects" : [
+        "set sceneOutro true"
+      ]
+    },
 ]
