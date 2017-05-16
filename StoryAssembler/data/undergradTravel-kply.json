@@ -12,8 +12,9 @@
 
 
 	{
-		"id": "emailReceived",
-		"content": "Out of the corner of you eye, you see your phone's screen light up. \"Email received\" is what the screen reads.",
+		"id": "acceptOrDeclineSomething",
+		"choiceLabel": "Check business emails",
+		"content": "You scroll through the list of business emails. All of them are fairly generic, but one of them catches your eye.",
 		"repeatable": "true",
 		"effects": [
 			"set readSomething true"
