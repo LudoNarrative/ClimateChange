@@ -1,49 +1,214 @@
 [
   {
 		"id": "onAPlane",
-		"content": "ON A PLANE CONTENT",
+		"content": "Your eyes jolt open as you feel your surroundings rumbling. For one second, everything seems so foreign and mysterious, but you quickly remember where you are. Looking out of the window, you can see clouds of different shapes as far as the eye can see. And if you try really hard, you can also make out patches of ground thousands of feet below through the thinner layers of clouds.",
 		"effects": [
 			"set onAPlane true"
 		],
-		"choices": [{
-			"gotoId": "reminisce"
-		}]
+		
+		
 	},
 
+
+
 	{
-		"id": "reminisce",
-		"content": "REMINISCE CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"id": "acceptOrDeclineSomething",
+		"choiceLabel": "Check business emails",
+		"content": "You scroll through the list of business emails. All of them are fairly generic, but one of them catches your eye.",
+		"repeatable": "true",
 		"effects": [
-			"set reminisce true"
+			"set readSomething true"
 		],
-		"choices": [{
-			"gotoId": "talkExposition"
-		}]
+		"conditions":[
+			"onAPlane eq true"
+		]
+	},
+
+
+
+	
+
+  {
+		"id": "oldHighSchool",
+		"content": "The name in the email rang an odd bell in your head, so you continue to read. It was a rather short paragraph which said \"Hello Emma, I don't know if you remember me but I am Linda Jordana from your old high school. We heard that you have been doing very well in your efforts to educate people on the effects of climate change and would love if you could give a lecture here at Rapid City High!\"",
+		
+		"effects": [
+			"set acceptOrDeclineSomething true",
+		],
+		"choices": [
+			{"gotoId": "acceptOldHighSchool"},
+			{"gotoId": "declineOldHighSchool"}
+		]
 	},
 
 	{
-		"id": "talkExposition",
-		"content": "talkExposition CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
+		"id": "acceptOldHighSchool",
+		"choiceLabel": "Seems like a great opportunity",
+		"content": "Hmm, this seems like it would be a good opportunity to get some kids to help out the community. You remember how much fun you had in highschool volunteering at local events.",
+		"effects": [
+			"set nextTalk oldHighSchool",
+		]
+	},
+
+	{
+		"id": "declineOldHighSchool",
+		"choiceLabel": "I have better opportunities waiting for me",
+		"content": "While this does seem like a good opportunity, you would rather talk to a bigger audience of people who are capable of making a bigger impact than a hundred high school students.",
+		
+	},
+
+	{
+		"id": "oldHighSchoolExposition",
+		"content": "\"Rapid City High School: Home of the Eagles\". Never thought you'd be seeing that again. The gymnasium is smaller than you remember, but maybe that's due to most of the bleachers and sidelines being packed with all of the students.",
+		"conditions": [
+			"nextTalk eq oldHighSchool"
+		],
 		"effects": [
 			"set talkExposition true"
 		],
 		"choices": [{
-			"gotoId": "dealWithSomeone"
+			"gotoId": "oldHighSchoolExposition2"
 		}]
 	},
 
-  {
-		"id": "acceptOrDeclineSomething",
-		"content": "acceptOrDeclineSomething CONTENT",
-		"choiceLabel": "CHOICE CONTENT",
-		"effects": [
-			"set acceptOrDeclineSomething true"
-		],
+	{
+		"id": "oldHighSchoolExposition2",
+		"choiceLabel": "Begin lecture",
+		"content": "\"Hey everyone, it's great to be home!\" After being greeted with applause, you begin telling the students about how the climate is changing and what they can do to help. \"Just a few hours of community service each week can go a long way. We all have to do our part in protecting our home.\"",
 		"choices": [{
-			"gotoId": "outroForLanding"
+			"gotoId": "oldHighSchoolExposition3"
 		}]
 	},
+
+	{
+		"id": "oldHighSchoolExposition3",
+		"choiceLabel": "Finish up",
+		"content": "\"Hopefully I have inspired some of you today to do some good in the world and I hope to be back again some day!\" <p> Before departing, you meet with the principle, who greets you with an extended hand and thanks you for speaking today.",
+	},
+
+		{
+		"id": "reminisceOldHighSchool",
+		"content": "It was great being able to return home. Honestly, you never thought that you would ever be in that gymnasium again after your graduation. But after so many years, it still felt so familiar and everyone was so welcoming and respectful during your amazing talk which went perfectly.",
+		"conditions":[
+			"lastTalk eq oldHighSchool"
+		],
+		"effects": [
+			"set reminisce true"
+		],
+	},
+
+	{
+		"id": "televisedTalk",
+		"content": "Immediately after opening the email, you recognize the name of the company. They are the producers of a tv documentary series that is slowly gaining popularity. They want to televise one of your talks! You would be giving a lecture in a small theater, which would recorded and broadcast across the country.",
+		"conditions":[
+			"fame gte 5"
+		],
+		"choices": [
+			{"gotoId": "acceptTelevisedTalk"},
+			{"gotoId": "declineTelevisedTalk"}
+		],
+	},
+
+	{
+		"id": "acceptTelevisedTalk",
+		"choiceLabel": "Sounds like an amazing opportunity",
+		"content": "Wow this would be an easy way to spread your message to many people at a time. It would be crazy not to take advantage of this opportunity.",
+		"effects": [
+			"set nextTalk televisedTalk"
+		]
+	},
+
+	{
+		"id": "declineTelevisedTalk",
+		"choiceLabel": "Not the audience I am looking for",
+		"content": "The viewship of the show is not high enough to dedicate so much time to. Maybe the time would be better spent if you spoke to a group of influential people instead of random citizens flipping through the channels on their tv on a saturday night.",
+
+	},
+
+	{
+		"id": "televisedTalkExposition1",
+		"content": "Upon arriving to the studio, ",
+		"conditions":[
+			"nextTalk eq televisedTalk"
+		]
+	},
+
+	{
+		"id": "meetingWithCongressmen",
+		"content": "Upon opening the email, a huge wall of text is there to greet you. One line in particular catches your attention: \"We would like to invite you to join us in the white house and advise us on a bill we have been working on.\"",
+		"conditions": [
+			"fame gte 5"
+		],
+		"choices": [
+			{"gotoId": "acceptCongressmen"},
+			{"gotoId": "declineCongressmen"}
+		],
+
+	},
+
+	{
+		"id": "acceptCongressmen",
+		"choiceLabel": "This is a huge opportunity! ",
+		"content": "After reading through the email a few more times, it starts to sink it that you have been invited to the white house. This is the huge opportunity that you've been waiting for! A chance to make a huge impact on how the government handles climate change.",
+		"effects":[
+			"incr carbonFootprint 3",
+			"set lastTalk congressmen"
+		]
+	},
+
+	{
+		"id": "declineCongressmen",
+		"choiceLabel": "I'd rather promote local action",
+		"content": "This is no doubt a huge opportunity, but promoting local action seems like a better use of your time. There are kids that need motivating and students to be educating, so time can't be wasted in a room with politicians drafting up a bill."
+	},
+
+	{
+		"id": "tedTalks",
+		"content": "The email was an invitation to speak at a TED Talks convention. The invitation was rather generic, but the event is well known and the youtube video that will inevitably uploaded is guaranteed to get at least a couple thousand views.",
+		"conditions":[
+			"fame gte 3"
+		],
+		"choices": [
+			{"gotoId": "acceptTedTalks"},
+			{"gotoId": "declineTedTalks"}
+		],
+	},
+
+	{
+		"id": "acceptTedTalks",
+		"choiceLabel": "Definitely worth my time",
+		"content": "Wow! Having watched quite a few Ted Talks presentations in the past, you are definitely familiar with how influential some of the speakers can be. This is definitely an opportunity that you can't miss out on.",
+	},
+
+	{
+		"id": "declineTedTalks",
+		"choiceLabel": "Need to prioritize more climate change focused events",
+		"content": "There is no doubt that this would give you a lot of exposure, but there are presentations about all sorts of different topics, and I think that attending events with a greater focus on climate change would be a better use of time."
+	},
+
+	{
+		"id": "industrialCompany",
+		"content": "This is what the email said:\"My son Franklin was a student of yours back at UCSC and he has told me about the impact you have made on his views of climate change. I would like to meet with you to discuss cleaner alternative energy sources for the oil company that I work for.\"",
+		"conditions": [
+			"skepticalStudent eq true"
+		],
+		"choices": [
+			{"gotoId": "acceptIndustrialCompany"},
+			{"gotoId": "declineIndustrialCompany"}
+		],
+	},
+
+	{
+		"id": "acceptIndustrialCompany",
+		"choiceLabel": "Of course I will help!",
+		"content": "You remember her son from your lecture a few years ago. He was a little sceptical about climate change but you get a warm feeling knowing that you were able to change his views. The company that his mom works for is a large company and could influence other companies to tackle climate change like they aim to.",
+	},
+	
+	{
+		"id": "declineIndustrialCompany",
+		"choiceLabel": "Working with oil companies isn't my thing",
+		"content": "You remember her son from your lecture a few years ago. He was a little sceptical about climate change but you get a warm feeling, knowing that you were able to change his views. But working with oil companies isn't really your thing. So this one is a pass.",
+	},
+
 
 ]

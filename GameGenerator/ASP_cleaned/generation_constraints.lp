@@ -101,13 +101,6 @@ different_precondition(O1,O2) :-
    O1 != O2.
 
 
-% Don't increase a resource on a positive check of it
-:- result(Outcome,modify(increase,Resource)),
-  precondition(compare(ge,Resource),Outcome).
-% don't decrease a resource on negative check of it
-:- result(Outcome,modify(decrease,Resource)),
-   precondition(compare(le,Resource),Outcome).
-
 :- spatial_condition(E1,E2), not moves(E1), not moves(E2).
 
   
@@ -232,9 +225,11 @@ different_precondition(O1,O2) :-
 :-  result(O,modify(_,property(_,E))),
     result(O,delete(E)).
 
-:- condition(overlaps(e(E1),e(E2),POLARITY)),
+:- condition(overlaps(entity(e(E1)),entity(e(E2)),POLARITY)),
     E2 < E1.
     
+:- action(apply_restituion(entity(e(E1)),entity(e(E2)))),
+    E2 < E1.
     
 :-  precondition(control_event(click(E)),O),
     result(O,add(E,_,_)).
@@ -350,13 +345,29 @@ movement(move(E,D)) :- action(move(E,D)).
 	   
    
 
-:- precondition(compare(_,_),O),
-   result(O, move(_,_)).
+%:- precondition(compare(_,_),O),
+%   result(O, move(_,_)).
 
-:- precondition(compare(_,_),O),
-   result(O, rotates(_,_,_)).
+%:- precondition(compare(_,_),O),
+%   result(O, rotates(_,_,_)).
 
 :- precondition(timer_elapsed(_),O1),
    result(O1,modify(increase,R)),
    precondition(timer_elapsed(_),O2),
    result(O2,modify(decrease,R)).
+
+:- reading(good,O),
+   trivial(O).
+
+:- action(apply_restitution(E,E)),
+   static(E).
+
+
+:- condition(overlaps(E1,E2,true)),
+   action(move(E1,direction(away,E2))),
+   {action(move(E1,_))} 1.
+
+
+:- condition(overlaps(E1,E2,true)),
+   action(move(E2,direction(away,E1))),
+   {action(move(E2,_))} 1.

@@ -1,0 +1,53 @@
+/*
+
+        { condition: "onABeach eq true"},
+        { condition: "talkAboutSpecies eq true"},
+        { condition: "talkAboutUNPlan eq true"},
+        { condition: "rodrigoSaysPointless eq true"},
+        { condition: "emmaPositiveRejoinder eq true"},
+        { condition: "emmaNegativeRejoinder eq true"},
+        { condition: "rodrigoSadKnowledge eq true"},
+        { condition: "emmaPositiveSpin eq true"},
+        { condition: "emmaNegativeSpin eq true"},
+        { condition: "rodrigoSaysJob eq true"},
+        { condition: "sceneOutro eq true"}
+
+*/
+[
+  {
+    "id": "establishOnABeach",
+    "content": "establishOnABeach content",
+    "choices" : [
+      {"gotoId" : "talkAboutSpecies"}
+    ],
+    "effects" : [
+      "set onABeach true"
+    ]
+  },
+
+  {
+		"id": "talkAboutSpecies",
+		"choiceLabel": "talkAboutSpecies choice",
+		"content": "talkAboutSpecies content",
+    "choices" : [
+      {"gotoId" : "talkAboutUNPlan"}
+    ],
+    "effects" : [
+      "set talkAboutSpecies true"
+    ]
+	},
+
+  {
+    "id": "talkAboutUNPlan",
+    "choiceLabel": "talkAboutUNPlan choice",
+    "content": "talkAboutUNPlan content",
+    "choices" : [
+      {"gotoId" : "rodrigoSaysPointless"}
+    ],
+    "effects" : [
+      "set talkAboutUNPlan true"
+    ]
+  },
+
+
+]
