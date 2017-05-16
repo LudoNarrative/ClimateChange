@@ -295,7 +295,7 @@ over_time(Change,Resource) :-
 
 monotonic(Change,Resource) :-
     action(modify(Change,Resource)),
-    1 {action(modify(C,Resource))}.
+    1 {action(modify(C,Resource))} 1.
 monotonic(Resource) :-
     monotonic(_,Resource).
 
