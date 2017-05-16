@@ -18,48 +18,32 @@
 {
     "id": "atUNMeeting",
     "content": "atUNMeeting content",
-    "choices" : [
-      {"gotoId" : "representingResearchGroup"}
-    ],
     "effects" : [
-      "set atUNMeeting true"
+      "set atUNMeeting true",
+      "set charactersIntroduced 0",
+      "set factsPresented 0"
     ]
   },
  {
     "id": "representingResearchGroup",
-    "choiceLabel": "representingResearchGroup choice",
     "content": "representingResearchGroup content",
-    "choices" : [
-      {"gotoId" : "looksOverCommittee"}
-    ],
     "effects" : [
       "set representingResearchGroup true"
+    ],
+    "conditions" : [
+      "atUNMeeting eq true"
     ]
   },	
  {
     "id": "looksOverCommittee",
-    "choiceLabel": "looksOverCommittee choice",
     "content": "looksOverCommittee content",
-    "choices" : [
-      {"gotoId" : "introducesResearch"}
-    ],
     "effects" : [
-      "set looksOverCommittee true"
+      "set looksOverCommittee true",
+      "incr charactersIntroduced 2"
+    ],
+    "conditions" : [
+      "representingResearchGroup eq true"
     ]
   },
- {
-    "id": "introducesResearch",
-    "choiceLabel": "introducesResearch choice",
-    "content": "introducesResearch content",
-    "choices" : [
-      {"gotoId" : "presentFacts"}
-    ],
-    "effects" : [
-      "set introducesResearch true"
-    ]
-  },
- 
- 
-
 	//End of Ian's part
 ]

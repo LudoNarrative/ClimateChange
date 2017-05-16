@@ -1,46 +1,46 @@
 [
+/*
+        { condition: "atUNMeeting eq true"},
+        { condition: "representingResearchGroup eq true"},
+        { condition: "looksOverCommittee eq true"},
+        { condition: "introducesResearch eq true"},
+        { condition: "presentFacts eq true"},
+        { condition: "kurtInterrupts eq true"},
+        { condition: "lostTrainOfThought eq true"},
+        { condition: "callForLocalAction eq true"},
+        { condition: "endingArgument eq true"},
+        { condition: "emmaReflection eq true"},
+        { condition: "inHallway eq true"}
+*/
+
 	 {
-    "id": "presentFacts",
-    "choiceLabel": "presentFacts choice",
-    "content": "presentFacts content",
-    "choices" : [
-      {"gotoId" : "kurtInterrupts"}
-    ],
+    "id": "endingArgument",
+    "content": "endingArgument content",
     "effects" : [
-      "set presentFacts true"
-    ]
-  },
-{
-    "id": "kurtInterrupts",
-    "choiceLabel": "kurtInterrupts choice",
-    "content": "kurtInterrupts content",
-    "choices" : [
-      {"gotoId" : "lostTrainOfThought"}
+      "set endingArgument true"
     ],
-    "effects" : [
-      "set kurtInterrupts true"
+    "conditions" : [
+      "callForLocalAction eq true"
     ]
   },
  {
-    "id": "lostTrainOfThought",
-    "choiceLabel": "lostTrainOfThought choice",
-    "content": "lostTrainOfThought content",
-    "choices" : [
-      {"gotoId" : "callForLocalAction"}
-    ],
+    "id": "emmaReflection",
+    "content": "emmaReflection content",
     "effects" : [
-      "set lostTrainOfThought true"
+      "set emmaReflection true"
+    ],
+    "conditions" : [
+      "endingArgument eq true"
     ]
   },
  {
-    "id": "callForLocalAction",
-    "choiceLabel": "callForLocalAction choice",
-    "content": "callForLocalAction content",
-    "choices" : [
-      {"gotoId" : "endingArgument"}
-    ],
+    "id": "inHallway",
+    "content": "inHallway content",
     "effects" : [
-      "set callForLocalAction true"
+      "set inHallway true"
+    ],
+    "conditions" : [
+      "endingArgument eq true"
     ]
   },
 ]
