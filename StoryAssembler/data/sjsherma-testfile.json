@@ -236,7 +236,7 @@
       "set readEmail true"
     ]
   },
-
+ 
   {
     "id" : "organizationEmail",
     "choiceLabel" : "Click on an email from the Sierra Club.",
