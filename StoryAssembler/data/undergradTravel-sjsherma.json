@@ -130,7 +130,8 @@
     "choices" : [
       {"gotoId" : "emmaNewspaper"},
       {"condition" : "readNewspaper eq true"}
-    ]
+    ],
+    "repeatable" : "true"
   },
 
   {
@@ -179,7 +180,8 @@
       {"gotoId" : "acceptOrDeclineSomething"},
       {"condition" : "readFamily eq true"},
       {"condition" : "readEmail eq true"}
-    ]
+    ],
+    "repeatable" : "true"
   },
 
   //personal emails

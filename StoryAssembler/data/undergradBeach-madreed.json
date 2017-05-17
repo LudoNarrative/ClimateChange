@@ -16,14 +16,14 @@
 [
 
   {
-    "id": "rodrigoSaysPointless",
-    "choiceLabel": "rodrigoSaysPointless choice",
-    "content": "rodrigoSaysPointless content",
+    "id": "rodrigoSadKnowledge",
+    "choiceLabel": "rodrigoSadKnowledge choice.",
+    "content": "content",
     "choices" : [
-      {"gotoId" : "emmaPositiveRejoinder"}
+      {"gotoId" : "emmaPositiveSpin"}
     ],
     "effects" : [
-      "set rodrigoSaysPointless true"
+      "set rodrigoSadKnowledge true"
     ]
   },
 
@@ -36,15 +36,16 @@
     ]
   },
 
+
   {
-      "id": "emmaPositiveRejoinder",
-      "choiceLabel": "emmaPositiveRejoinder choice",
-      "content": "emmaPositiveRejoinder content",
+      "id": "emmaNegativeSpin",
+      "choiceLabel": "emmaNegativeSpin choice",
+      "content": "emmaNegativeSpin content",
       "choices" : [
-        {"gotoId" : "emmaNegativeRejoinder"}
+        {"gotoId" : "rodrigoSaysJob"}
       ],
       "effects" : [
-        "set emmaPositiveRejoinder true"
+        "set emmaNegativeSpin true"
       ]
     },
 
