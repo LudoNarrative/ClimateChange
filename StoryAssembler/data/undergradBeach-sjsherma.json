@@ -12,44 +12,67 @@
         { condition: "rodrigoSaysJob eq true"},
         { condition: "sceneOutro eq true"}
 
+
+        "What's the point?" Rodrigo muttered. "We're doing all this work, but will it even make a difference?"
+
 */
 [
 
   {
-    "id": "emmaNegativeRejoinder",
-    "choiceLabel": "emmaNegativeRejoinder choice",
-    "content": "emmaNegativeRejoinder content",
+    "id": "rodrigoSaysPointless",
+    "choiceLabel": "rodrigoSaysPointless choice",
+    "content": "rodrigoSaysPointless content",
+    "choices" : [
+      {"gotoId" : "emmaPositiveRejoinder"}
+    ],
+    "effects" : [
+      "set rodrigoSaysPointless true"
+    ]
+  },
+
+  {
+      "id": "emmaPositiveRejoinder",
+      "choiceLabel": "emmaPositiveRejoinder choice",
+      "content": "emmaPositiveRejoinder content",
+      "choices" : [
+        {"gotoId" : "emmaNegativeRejoinder"}
+      ],
+      "effects" : [
+        "set emmaPositiveRejoinder true"
+      ]
+    },
+
+  {
+    "id" : "reluctantNegativeRejoinder",
+    "choiceLabel" : "I guess you're have a point.",
+    "content" : "",
+    "effects" : [
+      "set emmaNegativeRejoinder true"
+    ],
+    "conditions" : [
+      "optimism lt 5"
+    ],
     "choices" : [
       {"gotoId" : "rodrigoSadKnowledge"}
     ],
-    "effects" : [
-      "set emmaNegativeRejoinder true"
-    ]
   },
 
   {
-    "id": "rodrigoSadKnowledge",
-    "choiceLabel": "rodrigoSadKnowledge choice",
-    "content": "rodrigoSadKnowledge content",
-    "choices" : [
-      {"gotoId" : "emmaPositiveSpin"}
+    "id" : "passionateNegativeRejoiner",
+    "choiceLabel" : "I know, right?",
+    "content" : "more facts",
+    "effects" : [
+      "set emmaNegativeRejoiner true"
     ],
-    "effects" : [
-      "set rodrigoSadKnowledge true"
-    ]
+    "conditions" : [
+      "optimism lt 5"
+    ],
+    "choices" : [
+      {"gotoId" : "rodrigoSadKnowledge"}
+    ],
   },
 
-  {
-      "id": "emmaNegativeSpin",
-      "choiceLabel": "emmaNegativeSpin choice",
-      "content": "emmaNegativeSpin content",
-      "choices" : [
-        {"gotoId" : "rodrigoSaysJob"}
-      ],
-      "effects" : [
-        "set emmaNegativeSpin true"
-      ]
-    },
+  
 
     {
       "id": "sceneOutro",
