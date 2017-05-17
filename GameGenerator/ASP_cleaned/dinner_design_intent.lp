@@ -1,7 +1,7 @@
 #const min_entities = 1.
 #const max_entities = 2.
-#const min_resources = 2.
-#const max_resources = 2.
+#const min_resources = 1.
+#const max_resources = 3.
 #const min_outcomes = 2.
 #const max_outcomes = 8.
 #const min_timers = 0.
@@ -34,8 +34,6 @@ label(entity(e(2)),friend).
 
 
 
-:- not constant(entity(e(2))).
-
 :- frivolous(_).
 :- monotonic(resource(_)).
 %:- action(add(entity(e(2)),_)).
@@ -43,4 +41,4 @@ label(entity(e(2)),friend).
 
 %:- not entity(entity(wall)).
 
-:- controlLogic(_).
+%:- controlLogic(_).

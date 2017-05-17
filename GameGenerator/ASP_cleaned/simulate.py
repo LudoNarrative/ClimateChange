@@ -137,8 +137,9 @@ def parse_game(result):
 
     timers = {}
     for timer in result['timer_logic']:
-        name = prettify(timer[0]['terms'][0])
+        name = prettify(timer[0]['terms'][0]['terms'][0])
         time = int(prettify(timer[0]['terms'][1]['terms'][0]))
+        print name
         timers[name] = time
 
 
@@ -439,8 +440,8 @@ if __name__ == '__main__':
     toolbox.decorate("individual", checkBounds(0.1, 10))
     toolbox.decorate("mate", checkBounds(0.1, 10))
     toolbox.decorate("mutate", checkBounds(0.1, 10))
-    pop = toolbox.population(n=20)
-    CXPB, MUTPB, NGEN = 0.5, 0.2, 40
+    pop = toolbox.population(n=50)
+    CXPB, MUTPB, NGEN = 0.5, 0.2, 50
   
     
     # Evaluate the entire population
@@ -488,14 +489,21 @@ if __name__ == '__main__':
 
     #Have to do find and replaces in this order since outcome and timer might include entity and resource names
     find_and_replace = []
-    for o in ['outcome','timer','entity','resource']:
+    for o in ['outcome','entity','resource']:
         for oo in out[o]:
             for ooo in oo:
                 if 'terms' in ooo['terms'][0]:
                     find = prettify(ooo['terms'][0]['terms'][0])
-                    replace = replace = find.replace('(','_').replace(',','_X_').replace(')','_XX_')
+                    replace =  find.replace('(','_').replace(',','_X_').replace(')','_XX_')
                     find = '{}({})'.format(o,find)
                     replace = '{}({})'.format(o,replace)
+                    find_and_replace.append((find,replace))
+    for o in ['timer']:
+        for oo in out[o]:
+            for ooo in oo:
+                if 'terms' in ooo['terms'][0]:
+                    find = prettify(ooo['terms'][0])
+                    replace =  find.replace('(','_').replace(',','_X_').replace(')','_XX_')
                     find_and_replace.append((find,replace))
     
     out_string = []
