@@ -16,7 +16,7 @@
 	},
 		{
 			"id": "listenToMomi",
-			"choiceLabel" : "\"Don't worry about it {name|mom}.\"",
+			"choiceLabel" : "\"Oh, there's nothing you need to worry about {name|mom}.\"",
 			"content": "<p>\"Are you sure? It's just that you always talked about how you wanted to make your impact. I'm worried you won't be able to make it there if you're focused on school talks and cleanups.\"</p>",
 			"choices" : [
 				{"gotoId" : "agressiveDefensei"},
@@ -26,7 +26,7 @@
 		},
 		{
 			"id": "reluctantToMomi",
-			"choiceLabel" : "\"Where are you goin with this?\"",
+			"choiceLabel" : "\"Could you elaborate, a little bit?\"",
 			"content": "<p>\"It's just that you always talked about how you wanted to make your impact. I'm worried you won't be able to make it there if you're focused on school talks and cleanups.\"</p>",
 			"choices" : [
 				{"gotoId" : "agressiveDefensei"},
@@ -36,8 +36,8 @@
 		},
 			{
 				"id": "agressiveDefensei",
-				"choiceLabel" : "\"Look, I'm doing what I want. I'd appreciate it if you not question me.\"",
-				"content": "<p>She clasps her hands and looks at her plate. \"I just want you to be true to yourself. I know it's been tough but you can still bounce back.\" </p>",
+				"choiceLabel" : "\"Look, I'm doing what I want to. I'd appreciate it if you not question me.\"",
+				"content": "<p>She clasps her hands and looks at her plate. \"I just want you to be true to yourself. I know it's been tough so far but you can still bounce back.\" </p>",
 				"effects": [
 					"set emmaDefends true",
 					"incr tension 2",
@@ -54,7 +54,7 @@
 			},
 			{
 				"id": "friendlyDefensei",
-				"choiceLabel" : "\"I know you got my back {name|mom}, but I think you'll be quiet stunned how much difference a simple act can make.\"",
+				"choiceLabel" : "\"I you are doing your best to support me {name|mom}, but I think you'll be quite stunned how much difference a simple act can make.\"",
 				"content": "<p>She smirks. \"I... I'll be looking forward to it.\"</p>",
 				"effects": [
 					"set emmaDefends true",
@@ -80,7 +80,7 @@
 	},
 		{
 			"id": "thanksDadi",
-			"choiceLabel" : "\"I wouldn't put in quite those words, but thanks for backing me up {name|dad}\"",
+			"choiceLabel" : "\"I wouldn't put in quite those words, but I appreciate the sentiment {name|dad}\"",
 			"content": "{name|dad} gives a triumphant shrug. {name|mom} nods and for a moment it looks like she has something to add, but she thinks better of it. She gestures to the waiter. \"I'll see if they can't get us a desert menu.\"",
 			"effects": [
 				"decr tension 2"
