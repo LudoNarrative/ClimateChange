@@ -16,34 +16,153 @@
 	//Ian's Part
 
 {
-    "id": "atUNMeeting",
-    "content": "atUNMeeting content",
+  "id": "atUNMeeting",
+  "content": "atUNMeeting content",
+  "choices" : [
+    {"gotoId" : "lowConfUNReply"},
+    {"gotoId" : "midConfUNReply"},
+    {"gotoId" : "highConfUNReply"}
+  ],
+  "effects" : [
+    "set atUNMeeting true",
+    "set charactersIntroduced 0",
+    "set factsPresented 0",
+    "set confidence 5"
+  ]
+},
+  {
+    "id": "lowConfUNReply",
+    "choiceLabel" : "low confidence",
+    "content": "low confidence reply to UN",
     "effects" : [
-      "set atUNMeeting true",
-      "set charactersIntroduced 0",
-      "set factsPresented 0"
+      "decr confidence 1"
     ]
   },
- {
-    "id": "representingResearchGroup",
-    "content": "representingResearchGroup content",
+
+  {
+    "id": "midConfUNReply",
+    "choiceLabel" : "mid confidence",
+    "content": "mid confidence reply to UN"
+  },
+
+  {
+    "id": "highConfUNReply",
+    "choiceLabel" : "high confidence",
+    "content": "high confidence reply to UN",
     "effects" : [
-      "set representingResearchGroup true"
-    ],
-    "conditions" : [
-      "atUNMeeting eq true"
-    ]
-  },	
- {
-    "id": "looksOverCommittee",
-    "content": "looksOverCommittee content",
-    "effects" : [
-      "set looksOverCommittee true",
-      "incr charactersIntroduced 2"
-    ],
-    "conditions" : [
-      "representingResearchGroup eq true"
+      "incr confidence 1"
     ]
   },
+
+{
+  "id": "representingResearchGroup",
+  "content": "representingResearchGroup content",
+  "choices" : [
+      {"gotoId" : "lowConfResearchReply"},
+      {"gotoId" : "midConfResearchReply"},
+      {"gotoId" : "highConfResearchReply"}
+    ],
+  "effects" : [
+    "set representingResearchGroup true"
+  ],
+  "conditions" : [
+    "atUNMeeting eq true"
+  ]
+},	
+
+  {
+    "id": "lowConfResearchReply",
+    "choiceLabel" : "low confidence",
+    "content": "low confidence reply to Research",
+    "effects" : [
+      "decr confidence 1"
+    ]
+  },
+
+  {
+    "id": "midConfResearchReply",
+    "choiceLabel" : "mid confidence",
+    "content": "mid confidence reply to Research"
+  },
+
+  {
+    "id": "highConfResearchReply",
+    "choiceLabel" : "high confidence",
+    "content": "high confidence reply to Research",
+    "effects" : [
+      "incr confidence 1"
+    ]
+  },
+
+//repeatable
+{
+  "id": "looksOverCommittee",
+  "content": "looksOverCommittee content",
+  "choiceLabel" : [
+    {"gotoId" : "Kurt"},
+    {"gotoId" : "Mikkel"}
+  ],
+  "effects" : [
+    "set looksOverCommittee true",
+    "incr charactersIntroduced 2"
+  ],
+  "conditions" : [
+    "representingResearchGroup eq true"
+  ]
+},
+
+  {
+    "id": "Kurt",
+    "choiceLabel" : "kurt",
+    "content": "kurt description",
+    "choices" : [
+      {"gotoId" : "lowConfResearchKurt"},
+      {"gotoId" : "highConfResearchKurt"}
+    ]
+  },
+
+    {
+      "id": "lowConfResearchKurt",
+      "choiceLabel" : "low confidence",
+      "content": "low confidence reply to Kurt",
+      "effects" : [
+        "decr confidence 1"
+      ]
+    },
+    {
+      "id": "highConfResearchKurt",
+      "choiceLabel" : "high confidence",
+      "content": "high confidence reply to Kurt",
+      "effects" : [
+        "incr confidence 1"
+      ]
+    },
+
+  {
+    "id": "Mikkel",
+    "choiceLabel" : "mikkel",
+    "content": "mikkel description",
+    "choices" : [
+      {"gotoId" : "lowConfResearchKurt"},
+      {"gotoId" : "highConfResearchKurt"}
+    ]
+  },
+
+    {
+      "id": "lowConfResearchMikkel",
+      "choiceLabel" : "low confidence",
+      "content": "low confidence reply to Kurt",
+      "effects" : [
+        "decr confidence 1"
+      ]
+    },
+    {
+      "id": "highConfResearchMikkel",
+      "choiceLabel" : "high confidence",
+      "content": "high confidence reply to Mikkel",
+      "effects" : [
+        "incr confidence 1"
+      ]
+    },
 	//End of Ian's part
 ]
