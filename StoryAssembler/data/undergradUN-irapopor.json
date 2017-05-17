@@ -1,0 +1,49 @@
+[
+/*
+				{ condition: "atUNMeeting eq true"},
+				{ condition: "representingResearchGroup eq true"},
+				{ condition: "looksOverCommittee eq true"},
+				{ condition: "introducesResearch eq true"},
+				{ condition: "presentFacts eq true"},
+				{ condition: "kurtInterrupts eq true"},
+				{ condition: "lostTrainOfThought eq true"},
+				{ condition: "callForLocalAction eq true"},
+				{ condition: "endingArgument eq true"},
+				{ condition: "emmaReflection eq true"},
+				{ condition: "inHallway eq true"}
+*/
+
+	//Ian's Part
+
+{
+    "id": "atUNMeeting",
+    "content": "atUNMeeting content",
+    "effects" : [
+      "set atUNMeeting true",
+      "set charactersIntroduced 0",
+      "set factsPresented 0"
+    ]
+  },
+ {
+    "id": "representingResearchGroup",
+    "content": "representingResearchGroup content",
+    "effects" : [
+      "set representingResearchGroup true"
+    ],
+    "conditions" : [
+      "atUNMeeting eq true"
+    ]
+  },	
+ {
+    "id": "looksOverCommittee",
+    "content": "looksOverCommittee content",
+    "effects" : [
+      "set looksOverCommittee true",
+      "incr charactersIntroduced 2"
+    ],
+    "conditions" : [
+      "representingResearchGroup eq true"
+    ]
+  },
+	//End of Ian's part
+]

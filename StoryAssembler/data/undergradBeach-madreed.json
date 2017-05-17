@@ -1,0 +1,64 @@
+/*
+
+        { condition: "onABeach eq true"},
+        { condition: "talkAboutSpecies eq true"},
+        { condition: "talkAboutUNPlan eq true"},
+        { condition: "rodrigoSaysPointless eq true"},
+        { condition: "emmaPositiveRejoinder eq true"},
+        { condition: "emmaNegativeRejoinder eq true"},
+        { condition: "rodrigoSadKnowledge eq true"},
+        { condition: "emmaPositiveSpin eq true"},
+        { condition: "emmaNegativeSpin eq true"},
+        { condition: "rodrigoSaysJob eq true"},
+        { condition: "sceneOutro eq true"}
+
+*/
+[
+
+  {
+    "id": "rodrigoSadKnowledge",
+    "choiceLabel": "rodrigoSadKnowledge choice.",
+    "content": "content",
+    "choices" : [
+      {"gotoId" : "emmaPositiveSpin"}
+    ],
+    "effects" : [
+      "set rodrigoSadKnowledge true"
+    ]
+  },
+
+  {
+    "id" : "emmaPositiveSpin",
+    "choiceLabel" : "emmaPositiveSpin choice",
+    "content" : "emmaPositiveSpin content",
+    "choices" : [
+      {"gotoId" : "emmaNegativeSpin"}
+    ]
+  },
+
+
+  {
+      "id": "emmaNegativeSpin",
+      "choiceLabel": "emmaNegativeSpin choice",
+      "content": "emmaNegativeSpin content",
+      "choices" : [
+        {"gotoId" : "rodrigoSaysJob"}
+      ],
+      "effects" : [
+        "set emmaNegativeSpin true"
+      ]
+    },
+
+  {
+    "id": "rodrigoSaysJob",
+    "choiceLabel": "rodrigoSaysJob choice",
+    "content": "rodrigoSaysJob content",
+    "choices" : [
+      {"gotoId" : "sceneOutro"}
+    ],
+    "effects" : [
+      "set rodrigoSaysJob true"
+    ]
+  },
+
+]
