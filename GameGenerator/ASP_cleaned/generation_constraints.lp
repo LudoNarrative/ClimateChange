@@ -18,7 +18,7 @@
 :- outcome(outcome(o(N))), N >= 2, not outcome(outcome(o(N-1))).
 :- resource(resource(r(N))), N >= 2, not resource(resource(r(N-1))).
 :- entity(entity(e(N))), N >= 2, not entity(entity(e(N-1))).
-:- timer(timer(t(N))), N >= 2, not timer(timer(t(N-1))).
+:- timer(t(N)), N >= 2, not timer(t(N-1)).
 
 
 :- outcome(O), not has_precondition(O).
@@ -107,10 +107,11 @@ different_precondition(O1,O2) :-
 % require entities
 :- entity(Entity), not required(Entity).
 
-% only destroy that which you can create
+% only destroy that which you can create, if it isn't intended to be depleted
 :-  required(Entity),
    action(delete(Entity)),
-   not action(add(Entity,_,_)).
+   not action(add(Entity,_,_)),
+   not reading(Entity,depletable).
 
 :- action(add(Entity,_,_)),
    not action(delete(Entity)).
