@@ -1,0 +1,46 @@
+[
+/*
+        { condition: "atUNMeeting eq true"},
+        { condition: "representingResearchGroup eq true"},
+        { condition: "looksOverCommittee eq true"},
+        { condition: "introducesResearch eq true"},
+        { condition: "presentFacts eq true"},
+        { condition: "kurtInterrupts eq true"},
+        { condition: "lostTrainOfThought eq true"},
+        { condition: "callForLocalAction eq true"},
+        { condition: "endingArgument eq true"},
+        { condition: "emmaReflection eq true"},
+        { condition: "inHallway eq true"}
+*/
+
+	 {
+    "id": "endingArgument",
+    "content": "endingArgument content",
+    "effects" : [
+      "set endingArgument true"
+    ],
+    "conditions" : [
+      "callForLocalAction eq true"
+    ]
+  },
+ {
+    "id": "emmaReflection",
+    "content": "emmaReflection content",
+    "effects" : [
+      "set emmaReflection true"
+    ],
+    "conditions" : [
+      "endingArgument eq true"
+    ]
+  },
+ {
+    "id": "inHallway",
+    "content": "inHallway content",
+    "effects" : [
+      "set inHallway true"
+    ],
+    "conditions" : [
+      "endingArgument eq true"
+    ]
+  },
+]

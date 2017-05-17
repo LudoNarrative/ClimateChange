@@ -1,0 +1,78 @@
+[
+/*
+        { condition: "atUNMeeting eq true"},
+        { condition: "representingResearchGroup eq true"},
+        { condition: "looksOverCommittee eq true"},
+        { condition: "introducesResearch eq true"},
+        { condition: "presentFacts eq true"},
+        { condition: "kurtInterrupts eq true"},
+        { condition: "lostTrainOfThought eq true"},
+        { condition: "callForLocalAction eq true"},
+        { condition: "endingArgument eq true"},
+        { condition: "emmaReflection eq true"},
+        { condition: "inHallway eq true"}
+*/
+
+
+{
+    "id": "introduceResearch",
+    "content": "presentFacts content",
+    "effects" : [
+      "set introducesResearch true"
+    ],
+    "conditions" : [
+      "looksOverCommittee eq true",
+      //"charactersIntroduced gte 2"
+    ]
+  },
+{
+    "id": "presentFacts",
+    "content": "presentFacts content, facts presented increasing",
+    "effects" : [
+      "set presentFacts true",
+      "incr factsPresented 2"
+    ],
+    "conditions" : [
+      "introducesResearch eq true"
+    ]
+  },
+{
+    "id": "kurtInterrupts",
+    "content": "kurtInterrupts content",
+    "effects" : [
+      "set kurtInterrupts true",
+      "incr factsPresented 1"
+    ], 
+    "conditions" : [
+      //"factsPresented gte 2",
+      "presentFacts eq true"
+    ]
+  },
+ {
+    "id": "lostTrainOfThought",
+    "content": "lostTrainOfThought content",
+    "effects" : [
+      "set lostTrainOfThought true"
+    ],
+    "conditions" : [
+      "introducesResearch eq true"
+    ]
+  },
+ {
+    "id": "callForLocalAction",
+    "content": "callForLocalAction content",
+    "effects" : [
+      "set callForLocalAction true",
+    ],
+    "conditions" : [
+      //"factsPresented gte 3",
+      "kurtInterrupts eq true"
+    ]
+  },
+ 
+
+
+
+
+
+]

@@ -1,0 +1,19 @@
+[
+    /*
+{ condition: "onABeach eq true"}
+    */
+	{    
+        "id": "begin",
+        "content" : "What a fun test zone!",
+		"choices" : [ 
+			{"gotoId": "end"},
+		]
+    },
+	{	
+        "id": "end",
+		"choiceLabel": "MY BIG CHOICE",
+        "content" : "setting onABeach to be true!",
+		"effects" : ["set onABeach true"]
+    },
+   
+]

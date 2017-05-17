@@ -45,12 +45,12 @@
                 {// good place for call back to lecture
                     "id": "theyDon'tCarei",
                     "choiceLabel" : "{ifStateCondition|hope lt 3|It's like they've stopped caring. One student seems close to dropping out.|They just don't seem to care that much.}",
-                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barelly holding together. \"And it is your job to make them care.\"</p>"
+                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barely holding together. \"And it is your job to make them care.\"</p>"
                 },
                 {
                     "id": "theyAreDisruptivei",
                     "choiceLabel" : "{ifStateCondition|optimism lt 3|They're aggressive. There is this one that tries to disprove everything I say.|They are constantly fighting with the information I am telling them.}",
-                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barelly holding together. \"They shouldn't have to agree with you right off the bat, should they?\"</p>"//,
+                    "content" : "<p>{name|authorityFigure} He looks calm, but he's barely holding together. \"They shouldn't have to agree with you right off the bat, should they?\"</p>"//,
                     //"effects" : "set reasonForTroubleTrue"
                 },
         {
@@ -77,7 +77,7 @@
                 {
                     "id": "iShouldLeavei",
                     "choiceLabel" : "{ifStateCondition|composure gte 3|Maybe, but I guess I'm just not the one to hand it off. I need to be out there, seeing my difference.|But what if I burn them... I should avoid the uh... torch thing.}",
-                    "content" : "<p>\"{if|StateCondition|composure gte 3|The real world can feel far away sometimes, away from all our polished classrooms and rennovated labs.\"|\"Um, yes. Duly noted.\"} He smirks, but his skin pulls too far. It looks like it might hurt. \"I definetly didn't think this would be the way our conversation would go, but I haven't seen you this confident since you joined.\"</p>",
+                    "content" : "<p>\"{if|StateCondition|composure gte 3|The real world can feel far away sometimes, away from all our polished classrooms and rennovated labs.\"|\"Um, yes. Duly noted.\"} He smirks, but his grin is a bit too wide. It looks like it might hurt. \"I definitely didn't think this would be the way our conversation would go, but I haven't seen you this confident since you joined.\"</p>",
                     "effects" : [
                         "set pathChoiceMade true"
                     ]

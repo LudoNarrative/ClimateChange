@@ -12,11 +12,13 @@
 
 
 	{
-		"id": "emailReceived",
-		"content": "Out of the corner of you eye, you see your phone's screen light up. \"Email received\" is what the screen reads.",
+		"id": "acceptOrDeclineSomething",
+		"choiceLabel": "Check business emails",
+		"content": "You scroll through the list of business emails. All of them are fairly generic, but one of them catches your eye.",
 		"repeatable": "true",
 		"effects": [
-			"set readSomething true"
+			"set readSomething true",
+			"set haveOffer true"
 		],
 		"conditions":[
 			"onAPlane eq true"
@@ -30,7 +32,9 @@
   {
 		"id": "oldHighSchool",
 		"content": "The name in the email rang an odd bell in your head, so you continue to read. It was a rather short paragraph which said \"Hello Emma, I don't know if you remember me but I am Linda Jordana from your old high school. We heard that you have been doing very well in your efforts to educate people on the effects of climate change and would love if you could give a lecture here at Rapid City High!\"",
-		
+		"conditions": [
+			"haveOffer eq true"
+		],
 		"effects": [
 			"set acceptOrDeclineSomething true",
 		],
@@ -58,7 +62,7 @@
 
 	{
 		"id": "oldHighSchoolExposition",
-		"content": "\"Rapid City High School: Home of the Eagles\". Never thought you'd be seeing that again. The gymnasium is smaller than you remember, but maybe that's due to most of the bleachers and sidelines being packed with all of the students.",
+		"content": "\"Rapid City High School: Home of the Eagles\". Never thought you'd ever be going back there again. North Dakota isn't that far away from LA and wouldn't be that much trouble at all. You start asking yourself, \"Hmm, what should I talk about?\"",
 		"conditions": [
 			"nextTalk eq oldHighSchool"
 		],
@@ -66,23 +70,22 @@
 			"set talkExposition true"
 		],
 		"choices": [{
-			"gotoId": "oldHighSchoolExposition2"
-		}]
-	},
-
-	{
-		"id": "oldHighSchoolExposition2",
-		"choiceLabel": "Begin lecture",
-		"content": "\"Hey everyone, it's great to be home!\" After being greeted with applause, you begin telling the students about how the climate is changing and what they can do to help. \"Just a few hours of community service each week can go a long way. We all have to do our part in protecting our home.\"",
-		"choices": [{
+			"gotoId": "oldHighSchoolExposition2",
 			"gotoId": "oldHighSchoolExposition3"
 		}]
 	},
 
 	{
+		"id": "oldHighSchoolExposition2",
+		"choiceLabel": "The importance of helping out the community",
+		"content": "\"I've got it!\" A few heads turn your way as you realize that you just yelled out loud. But you have decided that you will use your talk to urge the students to volunteer at local events and help out the community.",
+		
+	},
+
+	{
 		"id": "oldHighSchoolExposition3",
-		"choiceLabel": "Finish up",
-		"content": "\"Hopefully I have inspired some of you today to do some good in the world and I hope to be back again some day!\" <p> Before departing, you meet with the principle, who greets you with an extended hand and thanks you for speaking today.",
+		"choiceLabel": "The importance of learning about climate change",
+		"content": "\"I've got it!\" A few heads turn your way as you realize that you just yelled out loud. But you have decided that you will use your talk to educate the students about the importance about studying climate change.",
 	},
 
 		{
@@ -98,9 +101,13 @@
 
 	{
 		"id": "televisedTalk",
-		"content": "Immediately after opening the email, you recognize the name of the company. They are the producers of a tv documentary series that is slowly gaining popularity. They want to televise one of your talks! You would be giving a lecture in a small theater, which would recorded and broadcast across the country.",
+		"content": "Immediately after opening the email, you recognize the name of the company. They are the producers of a tv documentary series that is slowly gaining popularity. They want to televise one of your talks!",
 		"conditions":[
-			"fame gte 5"
+			"fame gte 5",
+			"haveOffer eq true"
+		],
+		"effects": [
+			"set acceptOrDeclineSomething true",
 		],
 		"choices": [
 			{"gotoId": "acceptTelevisedTalk"},
@@ -126,7 +133,7 @@
 
 	{
 		"id": "televisedTalkExposition1",
-		"content": "Upon arriving to the studio, ",
+		"content": "",
 		"conditions":[
 			"nextTalk eq televisedTalk"
 		]
@@ -136,7 +143,11 @@
 		"id": "meetingWithCongressmen",
 		"content": "Upon opening the email, a huge wall of text is there to greet you. One line in particular catches your attention: \"We would like to invite you to join us in the white house and advise us on a bill we have been working on.\"",
 		"conditions": [
-			"fame gte 5"
+			"fame gte 5",
+			"haveOffer eq true"
+		],
+		"effects": [
+			"set acceptOrDeclineSomething true",
 		],
 		"choices": [
 			{"gotoId": "acceptCongressmen"},
@@ -165,7 +176,11 @@
 		"id": "tedTalks",
 		"content": "The email was an invitation to speak at a TED Talks convention. The invitation was rather generic, but the event is well known and the youtube video that will inevitably uploaded is guaranteed to get at least a couple thousand views.",
 		"conditions":[
-			"fame gte 3"
+			"fame gte 3",
+			"haveOffer eq true"
+		],
+		"effects": [
+			"set acceptOrDeclineSomething true",
 		],
 		"choices": [
 			{"gotoId": "acceptTedTalks"},
@@ -189,7 +204,11 @@
 		"id": "industrialCompany",
 		"content": "This is what the email said:\"My son Franklin was a student of yours back at UCSC and he has told me about the impact you have made on his views of climate change. I would like to meet with you to discuss cleaner alternative energy sources for the oil company that I work for.\"",
 		"conditions": [
-			"skepticalStudent eq true"
+			"skepticalStudent eq true",
+			"haveOffer eq true"
+		],
+		"effects": [
+			"set acceptOrDeclineSomething true",
 		],
 		"choices": [
 			{"gotoId": "acceptIndustrialCompany"},
@@ -208,6 +227,27 @@
 		"choiceLabel": "Working with oil companies isn't my thing",
 		"content": "You remember her son from your lecture a few years ago. He was a little sceptical about climate change but you get a warm feeling, knowing that you were able to change his views. But working with oil companies isn't really your thing. So this one is a pass.",
 	},
+
+	{
+		"id": "universityLecture",
+		"content": "It was another invitation to be a guest lecturer, but this time, it was for NYU. You think for a moment and recall that an old colleague of yours is now a professor at NYU, so maybe it'd be a fun experience.",
+		"conditions": [
+			"haveOffer eq true"
+		],
+		"effects": [
+			"set acceptOrDeclineSomething true",
+		],
+		"choices": [
+			{"gotoId": "acceptUniversityLecture"},
+			{"gotoId": "declineUniversityLecture"}
+		],
+	},
+
+	{
+		"id": "acceptUniversityLecture",
+		"content": "placeholder"
+	},
+
 
 
 ]
