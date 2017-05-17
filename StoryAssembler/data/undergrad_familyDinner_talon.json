@@ -97,7 +97,7 @@
 			"set academicEnthusiasm 0",
 			"set familyAsksSubject true",
 		],
-		"choices": [],
+		//"choices": [],
 		"conditions": [
 			"establishDinnerQuality eq true",
 		]
