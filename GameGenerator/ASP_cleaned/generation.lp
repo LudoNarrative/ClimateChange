@@ -50,9 +50,9 @@ outcome(O) :- standard_outcome(O).
 
 {max_timer(M)} :- M =min_timers..max_timers.
 
-timer(timer(t(M))) :- M = 1..N, max_timer(N).
+timer(t(M)) :- M = 1..N, max_timer(N).
 
-1 {timer_logic(T,scalar(N),loop): speed_values(N)} 1 :- timer(T).
+1 {timer_logic(timer(T),scalar(N),loop): speed_values(N)} 1 :- timer(T).
 
 
 
@@ -239,10 +239,10 @@ result(outcome(click_to_move(ENTITY)),move(ENTITY,direction(forward))) :-
    angle_direction(DIR), angle_speeds(AMOUNT)} 1 :- 
     outcome(outcome(click_to_move(ENTITY))).
 
-1 {result(timer_elapsed(timer(click_to_move(ENTITY))),  rotates(ENTITY,DIR,scalar(AMOUNT))) :
+1 {result(timer_elapsed(click_to_move(ENTITY)),  rotates(ENTITY,DIR,scalar(AMOUNT))) :
    angle_direction(DIR),
    angle_speeds_discrete(AMOUNT);
-   result(timer_elapsed(timer(click_to_move(ENTITY))),  rotate_to(ENTITY,random_int(0,360)))} 1 :-
+   result(timer_elapsed(click_to_move(ENTITY)),  rotate_to(ENTITY,random_int(0,360)))} 1 :-
     timer(click_to_move(ENTITY)).
 
 
@@ -366,25 +366,25 @@ result(tick,move(ENTITY,direction(towards,OTHER))) :- chases(ENTITY,OTHER).
 
 result(tick,move(ENTITY,direction(away,OTHER))) :- flees(ENTITY,OTHER).
 
-timer(timer(patrol(ENTITY))) :- behavior(ENTITY,patrol).
+timer(patrol(ENTITY)) :- behavior(ENTITY,patrol).
 
-precondition(timer_elapsed(timer(patrol(ENTITY))),outcome(patrol(ENTITY))) :- behavior(ENTITY,patrol).
+precondition(timer_elapsed(patrol(ENTITY)),outcome(patrol(ENTITY))) :- behavior(ENTITY,patrol).
 1 {result(outcome(patrol(ENTITY)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
    angle_direction(DIRECTION),
    angle_speeds_discrete(AMOUNT)} 1 :- behavior(ENTITY,patrol).
 
 result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,patrol).
 
-timer(timer(pingpong(ENTITY))) :- behavior(ENTITY,pingpong).
+timer(pingpong(ENTITY)) :- behavior(ENTITY,pingpong).
 
-precondition(timer_elapsed(timer(pingpong(ENTITY))),outcome(pingpong(ENTITY))) :- behavior(ENTITY,pingpong).
+precondition(timer_elapsed(pingpong(ENTITY)),outcome(pingpong(ENTITY))) :- behavior(ENTITY,pingpong).
 result(outcome(pingpong(ENTITY)), rotates(ENTITY, cw,scalar(180))) :- behavior(ENTITY,pingpong).
 
 result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,pingpong).
 
-timer(timer(wander(ENTITY))) :- behavior(ENTITY,wander).
+timer(wander(ENTITY)) :- behavior(ENTITY,wander).
 
-precondition(timer_elapsed(timer(wander(ENTITY))),outcome(wander(ENTITY))) :- behavior(ENTITY,wander).
+precondition(timer_elapsed(wander(ENTITY)),outcome(wander(ENTITY))) :- behavior(ENTITY,wander).
 result(outcome(wander(ENTITY)), rotate_to(ENTITY,random_int(scalar(0),scalar(360)))) :- behavior(ENTITY,wander).
 
 result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,wander).
