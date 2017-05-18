@@ -748,7 +748,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				
 				"set confidence 5",
 				"set persuasion 0",
-				"set composure 0"
+				"set composure 0",
+
+				"set charactersIntroduced 0",
+				"set factsPresented 0"
 			],
 			UIvars: [
 				{

@@ -12,30 +12,111 @@
         { condition: "emmaReflection eq true"},
         { condition: "inHallway eq true"}
 */
-
-
 {
-    "id": "introduceResearch",
+    "id": "introduceResearchPart1",
     "content": "presentFacts content",
     "effects" : [
       "set introducesResearch true"
     ],
     "conditions" : [
       "looksOverCommittee eq true",
-      //"charactersIntroduced gte 2"
+      "charactersIntroduced gte 4"
+    ],
+    "choices": [{
+      "gotoId": "introduceResearchPart2"
+    }]
+    
+  },
+
+{
+    "id": "introduceResearchPart2",
+    "choiceLabel": "continue introducing research",
+    "content": "presentMoreFacts content",
+    "effects" : [
+      "set introducesResearch true"
+    ],
+    
+    "choices":[
+      {"gotoId": "introduceResearch1"},
+      {"gotoId": "introduceResearch2"},
+      {"gotoId": "introduceResearch3"}
     ]
   },
+
+  {
+    "id": "introduceResearch1",
+    "choiceLabel": "Shy introduction",
+    "content": "Present the info in a reserved way",
+    "effects": [
+      "decr confidence 1"
+    ],
+  },
+
+  {
+    "id": "introduceResearch2",
+    "choiceLabel": "Professional introduction",
+    "content": "Present the info in a normal, professional manner",
+    "effects": [
+      "incr confidence 1"
+    ],
+  },
+
+  {
+    "id": "introduceResearch3",
+    "choiceLabel": "Confident introduction",
+    "content": "Present the info in a very confident manner with a compelling intro",
+    "effects": [
+      "incr confidence 1"
+    ],
+  },
+
 {
     "id": "presentFacts",
-    "content": "presentFacts content, facts presented increasing",
+    "content": "Bridge to present facts",
+    "repeatable": "true",
     "effects" : [
       "set presentFacts true",
-      "incr factsPresented 2"
     ],
     "conditions" : [
       "introducesResearch eq true"
+    ],
+    "choices": [
+      {"condition": "factsPresented incr 1"},
+      {"condition": "factsPresented incr 1"},
+      {"condition": "factsPresented incr 1"},
+    ],
+  },
+
+  {
+    "id": "veryUnpersuasiveFact1",
+    "choiceLabel": "brief description of fact",
+    "content": "Provide fact that is very unpersuasive",
+    "effects": [
+      "decr persuasion 2",
+      "incr factsPresented 1"
     ]
   },
+
+
+  {
+    "id": "neutralFact1",
+    "choiceLabel": "brief description of fact",
+    "content": "Provide fact that is neutral and doesn't get any reaction",
+    "effects":[
+      "incr factsPresented 1"
+    ]
+  },
+
+  {
+    "id": "persuasiveFact1",
+    "choiceLabel": "brief description of fact",
+    "content": "Provide fact that is persuasive and gets a positive reaction",
+    "effects": [
+      "incr persuasion 1",
+      "incr factsPresented 1"
+    ]
+  },
+  
 {
     "id": "kurtInterrupts",
     "content": "kurtInterrupts content",
@@ -44,7 +125,7 @@
       "incr factsPresented 1"
     ], 
     "conditions" : [
-      //"factsPresented gte 2",
+      "factsPresented gte 4",
       "presentFacts eq true"
     ]
   },
@@ -52,10 +133,48 @@
     "id": "lostTrainOfThought",
     "content": "lostTrainOfThought content",
     "effects" : [
-      "set lostTrainOfThought true"
+      "set lostTrainOfThought true",
+      "decr confidence 2",
     ],
     "conditions" : [
+      "composure lte 3",
       "introducesResearch eq true"
+    ],
+    "choices":[
+      {"gotoId": "makeThingsWorse"},
+      {"gotoId": "slightRecovery"},
+      {"gotoId": "turnItAround"}
+    ]
+  },
+
+  {
+    "id": "makeThingsWorse",
+    "choiceLabel": "try to recover but nope",
+    "content": "Try to recover but dig yourself into a deeper hole",
+    "effects": [
+      "decr confidence 1",
+      "decr persuasion 1"
+    ]
+  },
+
+  {
+    "id": "slightRecovery",
+    "choiceLabel": "play it off",
+    "content": "You get away with the mistep and they barely notice",
+    "effects": [
+      "incr confidence 2",
+      "decr persuasion 1"
+    ]
+  },
+
+  {
+    "id": "turnItAround",
+    "choiceLabel": "use it to your advantage",
+    "content": "You end up turning it around and gaining more confidence",
+    "effects": [
+      "incr confidence 3",
+      "incr composure 1",
+      "incr persuasion 1"
     ]
   },
  {
@@ -65,7 +184,7 @@
       "set callForLocalAction true",
     ],
     "conditions" : [
-      //"factsPresented gte 3",
+      "factsPresented gte 3",
       "kurtInterrupts eq true"
     ]
   },

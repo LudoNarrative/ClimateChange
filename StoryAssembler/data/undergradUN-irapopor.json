@@ -16,12 +16,26 @@
 	//Ian's Part
 
 {
-  "id": "atUNMeeting",
-  "content": "atUNMeeting content",
+  "id": "atUNMeetingI",
+  "content": "<p>The projector buzzes to life and your oh so lovely powerpoint beams onto the screen. That took longer than it need. You turn back to your laptop and begin reviewing your slides.</p>",
   "choices" : [
-    {"gotoId" : "lowConfUNReply"},
-    {"gotoId" : "midConfUNReply"},
-    {"gotoId" : "highConfUNReply"}
+    {"gotoId" : "theBigDayI"},
+  ],
+  "effects" : [
+    "set atUNMeeting true",
+    "set charactersIntroduced 0",
+    "set factsPresented 0",
+    "set confidence 5"
+  ]
+},
+{
+  "id": "theBigDayI",
+  "choiceLabel" : "Today's the big day.",
+  "content": "<p>Today you will be giving your presentation to the UN's Climate Change committee. </p>",
+  "choices" : [
+    {"gotoId" : "lowConfUNReplyI"},
+    {"gotoId" : "midConfUNReplyI"},
+    {"gotoId" : "highConfUNReplyI"}
   ],
   "effects" : [
     "set atUNMeeting true",
@@ -31,7 +45,7 @@
   ]
 },
   {
-    "id": "lowConfUNReply",
+    "id": "lowConfUNReplyI",
     "choiceLabel" : "low confidence",
     "content": "low confidence reply to UN",
     "effects" : [
@@ -40,13 +54,13 @@
   },
 
   {
-    "id": "midConfUNReply",
+    "id": "midConfUNReplyI",
     "choiceLabel" : "mid confidence",
     "content": "mid confidence reply to UN"
   },
 
   {
-    "id": "highConfUNReply",
+    "id": "highConfUNReplyI",
     "choiceLabel" : "high confidence",
     "content": "high confidence reply to UN",
     "effects" : [
@@ -55,12 +69,12 @@
   },
 
 {
-  "id": "representingResearchGroup",
+  "id": "representingResearchGroupI",
   "content": "representingResearchGroup content",
   "choices" : [
-      {"gotoId" : "lowConfResearchReply"},
-      {"gotoId" : "midConfResearchReply"},
-      {"gotoId" : "highConfResearchReply"}
+      {"gotoId" : "lowConfResearchReplyI"},
+      {"gotoId" : "midConfResearchReplyI"},
+      {"gotoId" : "highConfResearchReplyI"}
     ],
   "effects" : [
     "set representingResearchGroup true"
@@ -71,7 +85,7 @@
 },	
 
   {
-    "id": "lowConfResearchReply",
+    "id": "lowConfResearchReplyI",
     "choiceLabel" : "low confidence",
     "content": "low confidence reply to Research",
     "effects" : [
@@ -80,13 +94,13 @@
   },
 
   {
-    "id": "midConfResearchReply",
+    "id": "midConfResearchReplyI",
     "choiceLabel" : "mid confidence",
     "content": "mid confidence reply to Research"
   },
 
   {
-    "id": "highConfResearchReply",
+    "id": "highConfResearchReplyI",
     "choiceLabel" : "high confidence",
     "content": "high confidence reply to Research",
     "effects" : [
@@ -96,33 +110,36 @@
 
 //repeatable
 {
-  "id": "looksOverCommittee",
+  "id": "looksOverCommitteeI",
   "content": "looksOverCommittee content",
-  "choiceLabel" : [
-    {"gotoId" : "Kurt"},
-    {"gotoId" : "Mikkel"}
+  "choices" : [
+    {"gotoId" : "KurtI"},
+    {"gotoId" : "MikkelI"}
   ],
   "effects" : [
-    "set looksOverCommittee true",
-    "incr charactersIntroduced 2"
+    "set looksOverCommittee true"
   ],
   "conditions" : [
     "representingResearchGroup eq true"
-  ]
+  ],
+  "repeatable" : "true"
 },
 
   {
-    "id": "Kurt",
+    "id": "KurtI",
     "choiceLabel" : "kurt",
     "content": "kurt description",
     "choices" : [
-      {"gotoId" : "lowConfResearchKurt"},
-      {"gotoId" : "highConfResearchKurt"}
+      {"gotoId" : "lowConfResearchKurtI"},
+      {"gotoId" : "highConfResearchKurtI"}
+    ],
+    "effects" : [
+      "incr charactersIntroduced 1"
     ]
   },
 
     {
-      "id": "lowConfResearchKurt",
+      "id": "lowConfResearchKurtI",
       "choiceLabel" : "low confidence",
       "content": "low confidence reply to Kurt",
       "effects" : [
@@ -130,7 +147,7 @@
       ]
     },
     {
-      "id": "highConfResearchKurt",
+      "id": "highConfResearchKurtI",
       "choiceLabel" : "high confidence",
       "content": "high confidence reply to Kurt",
       "effects" : [
@@ -139,17 +156,20 @@
     },
 
   {
-    "id": "Mikkel",
+    "id": "MikkelI",
     "choiceLabel" : "mikkel",
     "content": "mikkel description",
     "choices" : [
-      {"gotoId" : "lowConfResearchKurt"},
-      {"gotoId" : "highConfResearchKurt"}
+      {"gotoId" : "lowConfResearchMikkelI"},
+      {"gotoId" : "highConfResearchMikkelI"}
+    ],
+    "effects" : [
+      "incr charactersIntroduced 1"
     ]
   },
 
     {
-      "id": "lowConfResearchMikkel",
+      "id": "lowConfResearchMikkelI",
       "choiceLabel" : "low confidence",
       "content": "low confidence reply to Kurt",
       "effects" : [
@@ -157,7 +177,7 @@
       ]
     },
     {
-      "id": "highConfResearchMikkel",
+      "id": "highConfResearchMikkelI",
       "choiceLabel" : "high confidence",
       "content": "high confidence reply to Mikkel",
       "effects" : [
