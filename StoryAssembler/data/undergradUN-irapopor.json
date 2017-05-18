@@ -56,7 +56,7 @@
   {
     "id": "midConfUNReplyI",
     "choiceLabel" : "I've prepared for this. I'm as ready as I can be.",
-    "content": "<p>The delegates should be any minute.</p>"
+    "content": "<p>The delegates should be here any minute.</p>"
   },
 
   {
@@ -70,7 +70,7 @@
 
 {
   "id": "representingResearchGroupI",
-  "content": "<p>\"It doesn't matter what technological breathroughs we push, if we can't educate people about the mistakes we are making then we are right back where we are started.\" You recite the lines of your speech under your breath. In just a few minutes you'll be arguing to some of the world's foremost leaders in the fight against Climate Change to increasing funding towards local education programs.</p>",
+  "content": "<p>\"It doesn't matter what technological breakthroughs we push, if we can't educate people about the mistakes we are making then we are right back where we started.\" You recite the lines of your speech under your breath. In just a few minutes you'll be arguing to some of the world's foremost leaders in the fight against Climate Change to increasing funding towards local education programs.</p>",
   "choices" : [
       {"gotoId" : "lowConfResearchReplyI"},
       {"gotoId" : "midConfResearchReplyI"},
@@ -86,8 +86,8 @@
 
   {
     "id": "lowConfResearchReplyI",
-    "choiceLabel" : "low confidence",
-    "content": "low confidence reply to Research",
+    "choiceLabel" : "This is a waste of money. I shouldn't be asking for this.",
+    "content": "<p>The world is flooding and you are asking for cash to set up some workshops. Nice.</p>",
     "effects" : [
       "decr confidence 1"
     ]
@@ -95,14 +95,14 @@
 
   {
     "id": "midConfResearchReplyI",
-    "choiceLabel" : "mid confidence",
-    "content": "mid confidence reply to Research"
+    "choiceLabel" : "I'm going to have to really sell this.",
+    "content": "With the way the world is right now, every penny counts. No room for mistakes."
   },
 
   {
     "id": "highConfResearchReplyI",
-    "choiceLabel" : "high confidence",
-    "content": "high confidence reply to Research",
+    "choiceLabel" : "I'm going to be the one to push this through.",
+    "content": "<p>Being stuck in UN conference halls day to day can make delegates lose sight of the lives of everyday people. You'll shake things up.</p>",
     "effects" : [
       "incr confidence 1"
     ]
@@ -111,7 +111,7 @@
 //repeatable
 {
   "id": "looksOverCommitteeI",
-  "content": "looksOverCommittee content",
+  "content": "<p>{ifStateCondition|charactersIntroduced lte 1|The delegates are begining to file in. They talk amongst themselves as they settle into their seats. Some come to you and greet themselves. There are maybe nine or ten of them, but there are only two that you are concerned about. Mikkel Retna and Kurt Branegan|There is still some rambling as the delegates file into their seats.}</p>",
   "choices" : [
     {"gotoId" : "KurtI"},
     {"gotoId" : "MikkelI"}
@@ -127,8 +127,8 @@
 
   {
     "id": "KurtI",
-    "choiceLabel" : "kurt",
-    "content": "kurt description",
+    "choiceLabel" : "Kurt Branegan",
+    "content": "<p>Kurt meanders about the delegates, patting backs and shaking hands with an egregous grin on his face all the way. He reminds you of a highschool varsity quarterback from an 80s movie. He'll probabaly have a thing or two to say about your presentation.</p>",
     "choices" : [
       {"gotoId" : "lowConfResearchKurtI"},
       {"gotoId" : "highConfResearchKurtI"}
@@ -140,16 +140,16 @@
 
     {
       "id": "lowConfResearchKurtI",
-      "choiceLabel" : "low confidence",
-      "content": "low confidence reply to Kurt",
+      "choiceLabel" : "There is no way I'm going to get through to him.",
+      "content": "<p>You turn to your laptop to get one last look at your slides before everyone settles in.</p>",
       "effects" : [
         "decr confidence 1"
       ]
     },
     {
       "id": "highConfResearchKurtI",
-      "choiceLabel" : "high confidence",
-      "content": "high confidence reply to Kurt",
+      "choiceLabel" : "Bring it Kurt.",
+      "content": "<p>You lock eyes with him. He turns his attention from socializing and takes a seat. It looks like you have his attenton.</p>",
       "effects" : [
         "incr confidence 1"
       ]
@@ -157,8 +157,8 @@
 
   {
     "id": "MikkelI",
-    "choiceLabel" : "mikkel",
-    "content": "mikkel description",
+    "choiceLabel" : "Mikkel Retna",
+    "content": "<p>Mikkel immediately takes a seat. He folds his hands and waits patiently for you to begin. He looks soft spoken, but his tenure in the UN has given him tremendous swing over other delegates. You're probably not getting anything done if you don't get through to him.</p>",
     "choices" : [
       {"gotoId" : "lowConfResearchMikkelI"},
       {"gotoId" : "highConfResearchMikkelI"}
@@ -170,16 +170,16 @@
 
     {
       "id": "lowConfResearchMikkelI",
-      "choiceLabel" : "low confidence",
-      "content": "low confidence reply to Kurt",
+      "choiceLabel" : "I hope I don't disappoint him.",
+      "content": "You turn your attention towards the other delegates as they quiet down.",
       "effects" : [
         "decr confidence 1"
       ]
     },
     {
       "id": "highConfResearchMikkelI",
-      "choiceLabel" : "high confidence",
-      "content": "high confidence reply to Mikkel",
+      "choiceLabel" : "Good thing I aim to please.",
+      "content": "<p>You nod to Mikkel and he nods back.</p>",
       "effects" : [
         "incr confidence 1"
       ]
