@@ -31,7 +31,7 @@
 {
   "id": "theBigDayI",
   "choiceLabel" : "Today's the big day.",
-  "content": "<p>Today you will be giving your presentation to the UN's Climate Change committee. </p>",
+  "content": "<p>Today you will be giving your presentation to the UN's Climate Change committee. You're set up in the first floor of the UN's conference building, within earshot of the famous General Assembly Building. Famous speakers and thinkers stand in front of the assembly to make rousing speeches about the future of the world. They come here to the conference building to get things done.</p>",
   "choices" : [
     {"gotoId" : "lowConfUNReplyI"},
     {"gotoId" : "midConfUNReplyI"},
@@ -46,8 +46,8 @@
 },
   {
     "id": "lowConfUNReplyI",
-    "choiceLabel" : "low confidence",
-    "content": "low confidence reply to UN",
+    "choiceLabel" : "They're are going to eat me alive.",
+    "content": "<p>You're, what, the fifth meeting they have to go to today. Just hope they don't walk out midway through.</p>",
     "effects" : [
       "decr confidence 1"
     ]
@@ -55,14 +55,14 @@
 
   {
     "id": "midConfUNReplyI",
-    "choiceLabel" : "mid confidence",
-    "content": "mid confidence reply to UN"
+    "choiceLabel" : "I've prepared for this. I'm as ready as I can be.",
+    "content": "<p>The delegates should be any minute.</p>"
   },
 
   {
     "id": "highConfUNReplyI",
-    "choiceLabel" : "high confidence",
-    "content": "high confidence reply to UN",
+    "choiceLabel" : "I hope they can keep up with me.",
+    "content": "<p>They won't know what hit them.</p>",
     "effects" : [
       "incr confidence 1"
     ]
@@ -70,7 +70,7 @@
 
 {
   "id": "representingResearchGroupI",
-  "content": "representingResearchGroup content",
+  "content": "<p>\"It doesn't matter what technological breathroughs we push, if we can't educate people about the mistakes we are making then we are right back where we are started.\" You recite the lines of your speech under your breath. In just a few minutes you'll be arguing to some of the world's foremost leaders in the fight against Climate Change to increasing funding towards local education programs.</p>",
   "choices" : [
       {"gotoId" : "lowConfResearchReplyI"},
       {"gotoId" : "midConfResearchReplyI"},
