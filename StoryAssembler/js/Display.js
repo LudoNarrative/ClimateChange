@@ -145,7 +145,7 @@ define([], function() {
 			}).appendTo("#varChangers");
 			$('<span/>', {
 				class: "varLabel",
-				text: storyVar + ": "
+				text: storyVar.label + ": "
 			}).appendTo(row);
 			$('<span/>', {
 				class: "varIncrease",
