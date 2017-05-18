@@ -118,12 +118,6 @@ define([], function() {
 			var diagEl = makeEl("div", "");
 			diagEl.id = "storyDiagnostics";
 			document.getElementsByTagName('body')[0].appendChild(diagEl);
-			pathEl = makeEl("div", "<div class='dHeader'>Best Path:</div><div class='pathArea'></div>");
-			diagEl.appendChild(pathEl);
-			wishlistEl = makeEl("div", "<div class='dHeader'>Wishlist Is Now:</div><div class='wishlistArea'></div>");
-			diagEl.appendChild(wishlistEl);
-			stateEl = makeEl("div", "<div class='dHeader'>State:</div><div class='stateArea'></div>");
-			diagEl.appendChild(stateEl);
 
 			$('<div/>', {
 				id: "varChangers"
@@ -133,6 +127,15 @@ define([], function() {
 				class: "dHeader",
 				text: "Change State Vars"
 			}).appendTo("#varChangers");
+
+			pathEl = makeEl("div", "<div class='dHeader'>Best Path:</div><div class='pathArea'></div>");
+			diagEl.appendChild(pathEl);
+			wishlistEl = makeEl("div", "<div class='dHeader'>Wishlist Is Now:</div><div class='wishlistArea'></div>");
+			diagEl.appendChild(wishlistEl);
+			stateEl = makeEl("div", "<div class='dHeader'>State:</div><div class='stateArea'></div>");
+			diagEl.appendChild(stateEl);
+
+			
 
 		}
 
