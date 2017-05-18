@@ -1,4 +1,4 @@
-define(["Game", "jsonEditor", "text!avatars", "jQuery", "jQueryUI"], function(Game, JSONEditor, avatarsData) {
+define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"], function(Game, JSONEditor, HealthBar, avatarsData) {
 
 	var State;
 	var Coordinator;
