@@ -154,10 +154,10 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	//used in Diagnostics panel buttons to change a UI var (theVar) by some amount like +1 or -1 (theMod)
 	var clickChangeState = function(theVar, theMod) {
 		if (theMod[0] == "+") {
-			State.set(theVar, State.get(theVar) + 1);
+			State.set(theVar.varName, State.get(theVar.varName) + 1);
 		}
 		if (theMod[0] == "-") {
-			State.set(theVar, State.get(theVar) - 1);
+			State.set(theVar.varName, State.get(theVar.varName) - 1);
 		}
 		Display.setStats();					//refresh UI stat display
 		refreshNarrative();					//refresh currently displayed chunk in case it's different
