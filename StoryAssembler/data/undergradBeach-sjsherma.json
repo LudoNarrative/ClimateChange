@@ -15,39 +15,111 @@
 
         "What's the point?" Rodrigo muttered. "We're doing all this work, but will it even make a difference?"
 
+        ways to structure
+        one increasing optimism
+        one decreasing optimism
+        one dependant on facts
+
+        condition: optimism > 5
+          passionate - incr optimism, decr patience
+          rude - decr optimism, decr patience
+          gentle - incr optimism, incr patience
+        condition: optimism < 5
+          reluctant - incr optimism, incr patience
+          passionate - decr optimism, decr patience
+          disillusioned - decr optimism, decr patience
+        facts!
+
+        I don't know what to write i feel like the original was already perfect like what else could i add i mean how do i even start?
+
+        perhaps
+
+        What's the point, Rodrigo says, moving the crabs? the earth is still burning
+        emma: passionately says that we're making a DIFFERENCE okay we're saving crabs
+              rudely says that we wouldn't be doing this if it wasn't important
+              gently says that the crabs will be safer on the other side of the bay
+
+        emma: reluctantly says i guess you're right
+              passionately says i know right?? will this really do something
+              disillusionly says we need a distraction from the very fact.
+                we'll keep doing things in order to avoid thinkiing about our impeding doom.
+
+        perhaps first just have emma and rodrigo talk
+            
 */
 [
 
   {
     "id": "rodrigoSaysPointless",
-    "choiceLabel": "rodrigoSaysPointless choice",
-    "content": "rodrigoSaysPointless content",
+    "content": "\"What's the point?\" Rodrigo muttered. \"We're doing all this work, but who knows if it matters in the end. Maybe the end's the sun burning the earth.\"",
     "choices" : [
-      {"gotoId" : "emmaPositiveRejoinder"}
+      {"condition" : "emmaRejoinder eq true"},
+      {"condition" : "emmaRejoinder eq true"},
+      {"condition" : "emmaRejoinder eq true"}
     ],
     "effects" : [
       "set rodrigoSaysPointless true"
-    ]
+    ],
+    "conditions" : [
+      "onABeach eq true"
+    ],
   },
 
   {
-      "id": "emmaPositiveRejoinder",
-      "choiceLabel": "emmaPositiveRejoinder choice",
+      "id": "passionatePositiveRejoinder",
+      "choiceLabel": "\"",
       "content": "emmaPositiveRejoinder content",
       "choices" : [
         {"gotoId" : "emmaNegativeRejoinder"}
       ],
       "effects" : [
-        "set emmaPositiveRejoinder true"
+        "set emmaPositiveRejoinder true",
+        "set emmaRejoiner true"
+      ],
+      "conditions" : [
+        "optimism gte 5"
       ]
-    },
+  },
+
+  {
+      "id": "rudePositiveRejoinder",
+      "choiceLabel": "\"",
+      "content": "emmaPositiveRejoinder content",
+      "choices" : [
+        {"gotoId" : "emmaNegativeRejoinder"}
+      ],
+      "effects" : [
+        "set emmaPositiveRejoinder true",
+        "set emmaRejoiner true"
+      ],
+      "conditions" : [
+        "optimism gte 5"
+      ]
+  },
+
+  {
+      "id": "gentlePositiveRejoinder",
+      "choiceLabel": "\"",
+      "content": "emmaPositiveRejoinder content",
+      "choices" : [
+        {"gotoId" : "emmaNegativeRejoinder"}
+      ],
+      "effects" : [
+        "set emmaPositiveRejoinder true",
+        "set emmaRejoiner true"
+      ],
+      "conditions" : [
+        "optimism gte 5"
+      ]
+  },
 
   {
     "id" : "reluctantNegativeRejoinder",
     "choiceLabel" : "I guess you're have a point.",
     "content" : "",
     "effects" : [
-      "set emmaNegativeRejoinder true"
+      "set emmaNegativeRejoinder true",
+      "set emmaRejoiner true"
     ],
     "conditions" : [
       "optimism lt 5"
@@ -62,7 +134,8 @@
     "choiceLabel" : "I know, right?",
     "content" : "more facts",
     "effects" : [
-      "set emmaNegativeRejoiner true"
+      "set emmaNegativeRejoiner true",
+      "set emmaRejoiner true"
     ],
     "conditions" : [
       "optimism lt 5"
@@ -72,14 +145,29 @@
     ],
   },
 
-  
+  {
+    "id" : "disillusionedNegativeRejoiner",
+    "choiceLabel" : "?",
+    "content" : "more facts",
+    "effects" : [
+      "set emmaNegativeRejoiner true",
+      "set emmaRejoiner true"
+    ],
+    "conditions" : [
+      "optimism lt 5"
+    ],
+    "choices" : [
+      {"gotoId" : "rodrigoSadKnowledge"}
+    ],
+  },
 
-    {
-      "id": "sceneOutro",
-      "choiceLabel": "sceneOutro choice",
-      "content": "sceneOutro content",
-      "effects" : [
-        "set sceneOutro true"
-      ]
-    },
+
+  {
+    "id": "sceneOutro",
+    "choiceLabel": "sceneOutro choice",
+    "content": "sceneOutro content",
+    "effects" : [
+      "set sceneOutro true"
+    ]
+  },
 ]
