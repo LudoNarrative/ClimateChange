@@ -3,6 +3,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	var Display;
 	var State;
 	var Coordinator;
+	var gameIndex = -999
 /*
 	Initializes the game
 */
@@ -13,9 +14,22 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		Coordinator = _Coordinator;
 
 		var useGamestring = false;		//if true, will use the gameString variable in the gameSpec as the game code to eval
+		var aspFilepath;
+		if(gameIndex === -999){
+			gameIndex = Math.floor(Math.random()*gameSpec.aspFilepaths.length);
+			//aspFilepath = gameSpec.aspFilepaths[Math.floor(Math.random()*gameSpec.aspFilepaths.length)];		//pick a random aspfile if there are 1+
+		}
+		aspFilepath = gameSpec.aspFilepaths[gameIndex];
+		console.log("PICKING GAME FILE: " , aspFilepath);
+		console.log("PICKING GAME INDEX: " , gameIndex);
 
-		var aspFilepath = gameSpec.aspFilepaths[Math.floor(Math.random()*gameSpec.aspFilepaths.length)];		//pick a random aspfile if there are 1+
-		console.log("PICKING GAME FILE: " , aspFilepath)
+		//increment game index for next roll out.
+		gameIndex += 1;
+		if(gameIndex >= gameSpec.aspFilepaths.length){
+			gameIndex = 0;
+		}
+		
+
 
 		//var fs = require('fs');
 		//var AspPhaserGenerator = require('asp-phaser-generator/index');
