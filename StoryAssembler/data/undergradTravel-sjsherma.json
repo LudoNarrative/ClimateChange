@@ -136,23 +136,18 @@
 
   {
     "id" : "emmaNewspaper",
+    "unavailableChoiceLabel" : "You haven't gone to a talk yet.",
     "choiceLabel" : "Look for your name.",
     "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|fame gte 5|You find yourself on the front page, much to your surprise and delight.|You find a little snippet about your talk later in the news.} {ifStateCondition|composure gte 5|The article gushes over your poise and intellect, and you can't help but smile, your face flushed.|The article wasn't very kind, but you're not surprised. You were painfully aware of how well you did there.}",
+    "conditions" : [
+      "acceptOrDeclineSomething eq true"
+    ]
   },
 
   {
     "id" : "newspaperHeadline1",
     "choiceLabel" : "Scan the headlines.",
     "content" : "Scientists Build Mini Worlds In An Attempt to Simulate Climate Change <br/><br/> A team of researches run tests on a small-scale copy of an underwater ecosystem intended to simulate and observe the impact of climate change. The experiment reveals that the combination of higher temperatures and greater amounts of CO2 have domino effect on the ecosystem's inhabitants, which as worrying implications for fish as a food source.",
-    "effects" : [
-      "set readNewspaper true"
-    ]
-  },
-
-  {
-    "id" : "newspaperHeadline2",
-    "choiceLabel" : "Scan the headlines.",
-    "content" : "Man Swears That the Ocean Tried To Burn His Arms Off (Apparently the Acidity Was Too High)",
     "effects" : [
       "set readNewspaper true"
     ]
@@ -166,6 +161,16 @@
       "set readNewspaper true"
     ]
   },
+
+  {
+    "id" : "newspaperNoMore",
+    "choiceLabel" : "Flip through the pages.",
+    "content" : "Bad news is often more juicier. You feel your stomach sink as your eyes scan over gloomy stories and finally set the newspaper aside.",
+    "effects" : [
+      "set readNewspaper true"
+    ],
+    "repeatable" : "true"
+  }
 
   //email
 
@@ -226,8 +231,8 @@
 
   {
     "id" : "emailPetition",
-    "choiceLabel" : "Click on an email urging you to sign a petition.",
-    "content" : "Someone has you an email asking you to sign a petition for a climate change issue. You can't help the feeling of obligation.",
+    "choiceLabel" : "Click on an email whose subject line screams \"Stop the mistreatment of baby crabs!.\"",
+    "content" : "Someone has you an email asking you to sign a petition. You can't help the feeling of obligation.",
     "effects" : [
       "set readEmail true"
     ]
