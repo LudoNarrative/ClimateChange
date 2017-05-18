@@ -32,6 +32,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	var continueScene = function(optChunkId) {
 		
 		var bestPath;
+		var effectsApplied = false;
 
 		if (typeof State.get("speaker") == "undefined") { State.set("speaker", Character.getBestSpeaker(State, 1, "content")); }
 		
@@ -57,16 +58,17 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 			if (chunk.content) {	//if there was no chunk content, it already grounded out recursively and displayed with displayChunkText(), so we shouldn't redo that here
 				handleEffects(chunk);			//apply this chunk's effects before running bestPath
+				effectsApplied = true;			//flag that we've applied effects
 				bestPath = getBestPath(chunkLibrary, optChunkId);		//look for path from here
 
 				StoryDisplay.diagnose({
-				path: bestPath,
-				wishlist: wishlist,
-				state: State.getBlackboard()
+					path: bestPath,
+					wishlist: wishlist,
+					state: State.getBlackboard()
 				});
 
 				if (bestPath) {		//if we found one, handle it
-					handleFoundPath(optChunkId, bestPath);
+					handleFoundPath(optChunkId, bestPath, effectsApplied);
 				}
 				
 				else {		// otherwise do a blind search
@@ -74,7 +76,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 					bestPath = getBestPath(chunkLibrary);		//do a blind search
 
 					if (bestPath) {
-						handleFoundPath(optChunkId, bestPath);
+						handleFoundPath(optChunkId, bestPath, effectsApplied);
 					}
 
 					else {
@@ -104,7 +106,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 					var chunk = chunkLibrary.get(bestPath.route[0]);
 
-					handleFoundPath(bestPath.route[0], bestPath);
+					handleFoundPath(bestPath.route[0], bestPath, effectsApplied);
 				}
 				
 			}
@@ -222,10 +224,10 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		}
 	}
 
-	var handleFoundPath = function(chunkId, bestPath) {
+	var handleFoundPath = function(chunkId, bestPath, effectsApplied) {
 	
 		//var chunkWithText = chunkId ? chunkId : bestPath.route[0];
-		doChunkText(chunkId, bestPath);
+		doChunkText(chunkId, bestPath, effectsApplied);
 		doChunkChoices(chunkId, bestPath.choiceDetails);
 
 		// Remove this chunk from consideration, unless it has the 'repeatable' flag.
@@ -235,12 +237,14 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		
 	}
 
-	var doChunkText = function(chunkId, bestPath) {
+	var doChunkText = function(chunkId, bestPath, effectsApplied) {
 		var chunk = chunkLibrary.get(chunkId);
 		State.set("currentTextId", chunkId);			//set current text id so we can reference it later
 
-		// Handle effects
-		handleEffects(chunk);
+		// Handle effects if not applied yet
+		if (typeof effectsApplied !== undefined && effectsApplied == false) {
+			handleEffects(chunk);
+		}
 
 		var chunkForText = chunk;
 		var routePos = 0;
@@ -381,8 +385,9 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			}
 			else { State.change(effect); }
 		});
+		console.log("handledEffects for fragment " + chunk.id);
 		wishlist.removeSatisfiedWants();
-		if (typeof Display !== "undefined") {			//if we're not running tests, update the storyStats on the display
+		if (typeof Display !== "undefined" && State.get('displayType') !== "editor") {			//if we're not running tests, update the storyStats on the display
 			Display.setStats();
 			Display.setAvatars();
 		}
