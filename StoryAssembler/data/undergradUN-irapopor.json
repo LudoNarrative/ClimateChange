@@ -111,7 +111,7 @@
 //repeatable
 {
   "id": "looksOverCommitteeI",
-  "content": "<p>{ifStateCondition|charactersIntroduced lte 1|The delegates are begining to file in. They talk amongst themselves as they settle into their seats. Some come to you and greet themselves. There are maybe nine or ten of them, but there are only two that you are concerned about. Mikkel Retna and Kurt Branegan|There is still some rambling as the delegates file into their seats.}</p>",
+  "content": "<p>{ifStateCondition|charactersIntroduced lt 1|The delegates are begining to file in. They talk amongst themselves as they settle into their seats. Some come to you and greet themselves. There are maybe nine or ten of them, but there are only two that you are concerned about. Mikkel Retna and Kurt Branegan|There is still some rambling as the delegates file into their seats.}</p>",
   "choices" : [
     {"gotoId" : "KurtI"},
     {"gotoId" : "MikkelI"}
@@ -128,7 +128,7 @@
   {
     "id": "KurtI",
     "choiceLabel" : "Kurt Branegan",
-    "content": "<p>Kurt meanders about the delegates, patting backs and shaking hands with an egregous grin on his face all the way. He reminds you of a highschool varsity quarterback from an 80s movie. He'll probabaly have a thing or two to say about your presentation.</p>",
+    "content": "<p>Kurt meanders about the delegates, patting backs and shaking hands with an egregious grin on his face all the way. He reminds you of a highschool varsity quarterback from an 80s movie. He'll probabaly have a thing or two to say about your presentation.</p>",
     "choices" : [
       {"gotoId" : "lowConfResearchKurtI"},
       {"gotoId" : "highConfResearchKurtI"}
