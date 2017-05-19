@@ -111,7 +111,7 @@
 //repeatable
 {
   "id": "looksOverCommitteeI",
-  "content": "<p>{ifStateCondition|charactersIntroduced lt 1|The delegates are begining to file in. They talk amongst themselves as they settle into their seats. Some come to you and greet themselves. There are maybe nine or ten of them, but there are only two that you are concerned about. Mikkel Retna and Kurt Branegan|There is still some rambling as the delegates file into their seats.}</p>",
+  "content": "<p>{ifStateCondition|charactersIntroduced lt 1|The delegates are begining to file in. They talk amongst themselves as they settle into their seats. Some come to you and greet themselves. There are maybe 19 or 20 of them, but there are only two that you are concerned about. Mikkel Retna and Kurt Branegan|There is still some rambling as the delegates file into their seats.}</p>",
   "choices" : [
     {"gotoId" : "KurtI"},
     {"gotoId" : "MikkelI"}
