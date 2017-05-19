@@ -16,38 +16,141 @@
 [
   {
     "id": "establishOnABeach",
-    "content": "establishOnABeach content",
+    "content": "You walk up to the beach and the smell of the ocean hits you. You smile and look around the beach. It's a decent sized group of people that came to help. You mumble \"Too bad Shelly isn't here. She'd love this.\" ",
     "choices" : [
-      {"gotoId" : "talkAboutSpecies"}
+	{"gotoId" : "waveToFriend"},
+	{"gotoId" : "LookAround"},
     ],
     "effects" : [
       "set onABeach true"
     ]
   },
-
+    {
+    "id": "waveToFriend",
+    "choiceLabel": "wave at co worker Rodrigo",
+    "content": "You wave at him before running up. <p>\"Hey Rodrigo. Ready to start the project?\"</p> He shrugs in response, which slightly annoys you. You know that he's more pessimistic about current events then you but you hope you can convince him this time. ",
+	 "choices" : [
+	{"gotoId" : "optimisticResponse"},
+	{"gotoId" : "giveUpTheFight"}
+	],
+	 "effects" : [
+      "set onABeach true"
+    ]
+  },
   {
-		"id": "talkAboutSpecies",
-		"choiceLabel": "talkAboutSpecies choice",
-		"content": "talkAboutSpecies content",
+    "id": "optimisticResponse",
+    "choiceLabel": "\"Oh come on Rodrigo, things will be great.\"",
+    "content": " \"Come on, you can't find anything good about this project? We're helping a species survive.\" He sighs and shakes his head at you, something that is all too common in conversations with him. <p>\"We're <i> possibly </i> helping them. Or we could be harming them. who knows.\"</p>",
+	 "choices" : [
+	{"gotoId" : "positiveSpeciesTalk"},
+	{"gotoId" : "slightlyNegSpeciesTalk"}
+	],
+	 "effects" : [
+      "set onABeach true"
+    ]
+  },
+  {
+    "id": "giveUpTheFight",
+    "choiceLabel": "shrug and drop the topic",
+    "content": "You shake your head and let the topic drop. Rodrigo isn't exactly inspirational. At least he usually has facts to back up his pessimism, even if they lean towards the negative side of the data. <p>\"So, why don't we talk about the species we're saving today?\" </p> ",
+	 "choices" : [
+	{"gotoId" : "positiveSpeciesTalk"},
+	{"gotoId" : "slightlyNegSpeciesTalk"}
+	],
+	 "effects" : [
+      "set onABeach true"
+    ]
+  },
+    {
+    "id": "LookAround",
+    "choiceLabel": "look around the beach some more",
+    "content": "You look around and admire everything being set up. Relocating species is never easy, but well worth it. <p> \"Hey Emma, looks like we have a <i> long </i> day ahead of us.\" </p> You turn around and notice it's your coworker Rodrigo. He's not the most...ehm...optimistic person. But least he usually has facts to back it up.",
+	 "choices" : [
+	{"gotoId" : "positiveSpeciesTalk"},
+	{"gotoId" : "slightlyNegSpeciesTalk"}
+	],
+	 "effects" : [
+      "set onABeach true"
+    ]
+  },
+ 
+ 
+  {
+		"id": "positiveSpeciesTalk", //confident option. can also be low confidence but optimism causes your argument to be better
+		"choiceLabel": "\"Ready to start saving the crabs?\"",
+		"request": {"gotoId": "talkAboutSpecies"},
+		"effects": [
+			"set lessConfident false"
+		],
+	},
+{
+		"id": "slightlyNegSpeciesTalk", //less confident option. can still be high or low optimism. just far less convincing.
+		"choiceLabel": "\"So um....Let's talk about the crabs we're saving shall we?.\"",
+		"request": {"gotoId": "talkAboutSpecies"},
+		"effects": [
+			"set lessConfident true"
+		],
+	},
+	
+  {
+  //horseshoe crab extinct. saving a crab species.
+		"id": "talkAboutSpecies", 
+		"content": " {ifStateCondition|lessConfident eq true| \"So um....we're moving them to make sure they live longer.\" <p>\"Yea Em,I know that. We all know that. We wouldn't be here if that wasn't the case.\" </p>| \"I guess so. I mean I'm here aren't I? Time to keep another species alive for what like a year? <i> What fun. </i> \" } You sigh at the response. You knew {ifStateCondition|lessConfident eq true|you'd probably fumble a bit.|he'd get pessimistic about this}. You open your mouth to speak but he says, <p>\"We already lost the horsehoe crab, what's the big deal about moving these crabs?\" </p>",
     "choices" : [
-      {"gotoId" : "talkAboutUNPlan"}
+		{"gotoId" : "stillImportant"},
+		{"gotoId" : "slightlySassyEmma"}
     ],
+	"conditions" : [
+			"onABeach eq true",
+		],
     "effects" : [
       "set talkAboutSpecies true"
     ]
 	},
-
+	{
+		"id": "stillImportant", 
+		"choiceLabel": "\"We can prevent that from happening again with these crabs\"",
+		"request": {"gotoId": "crabResponse"},
+	},
+	{
+		"id": "slightlySassyEmma", 
+		"choiceLabel": "\"Maybe it's not a big deal <i> to you </i> but it's important to keep them alive\"",
+		"request": {"gotoId": "crabResponse"},
+	},
+	
+	 {
+    "id": "crabResponse",
+    "content": "\"We may have lost one species, which is truly a tragedy, but we can still prevent it from happening again. We shouldn't let <i> all </i> the crab species die just because <i> one </i> sadly did.\" You notice he just sighs and shakes his head as response. This is usually how conversations go between you two, friendly but a lot of \"agreeing to disagree\" moments.",
+	"choices" : [
+     {"gotoId" : "confidentOption"},
+	  {"gotoId" : "shyOption"}
+    ],
+  },
+{
+		"id": "confidentOption", 
+		"choiceLabel": "\"isn't it great we got funding from the UN to do this?\"",
+		"request": {"gotoId": "talkAboutUNPlan"},
+		"effects": [
+			"set shyResponse false", "set talkAboutUNPlan true"
+		],
+	},
+	{
+		"id": "shyOption", 
+		"choiceLabel": "\"so....about the UN plan that brought us together....\"",
+		"request": {"gotoId": "talkAboutUNPlan"},
+		"effects": [
+			"set shyResponse true", "set talkAboutUNPlan true"
+		],
+	},
   {
     "id": "talkAboutUNPlan",
-    "choiceLabel": "talkAboutUNPlan choice",
-    "content": "talkAboutUNPlan content",
-    "choices" : [
-      {"gotoId" : "rodrigoSaysPointless"}
-    ],
+    "content": " {ifStateCondition|shyReponse eq true|\"Alright. Who made it anyways? I guess we should thank them for prolonging their lives, even if just slightly.\"|\"Least i'm getting paid to help a species live longer, even if it's only slightly.\"} You sigh in response<p> \"You don't know that it'll only be slightly.\" </p> <p>\"The facts don't lie Em. Anyways, least it's a paid job, unlike other jobs we've done.\"</p> ",
+	"conditions" : [
+			"onABeach eq true",
+		],
     "effects" : [
       "set talkAboutUNPlan true"
     ]
   },
-
 
 ]
