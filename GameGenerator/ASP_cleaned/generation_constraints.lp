@@ -244,10 +244,9 @@ different_precondition(O1,O2) :-
 
 % Phaser doesn't allow this
 :-  controlLogic(draggable(E)),
-    condition(collide(E,_)).
+    action(apply_restitution(E,_)).
 :-  controlLogic(draggable(E)),
-    condition(collide(_,E)).
-
+    action(apply_restitution(_,E)).
 
 :- precondition(overlaps(E1,E2,true),O),
    result(O,move(E1,_)).
@@ -336,21 +335,6 @@ movement(move(E,D)) :- action(move(E,D)).
    entity(entity(e(E1))),
    E1 < E2.
 
-%% :- condition(overlaps(E1,E2,true)),
-%%    result(O,move(E1,direction(away,E2))),
-%%    result(O2, move(E1,_)),
-%%    speed(E,O,S),
-%%    speed(E,O2,S2),
-%%    S >= S2,
-%%    O != O2.
-	   
-   
-
-%:- precondition(compare(_,_),O),
-%   result(O, move(_,_)).
-
-%:- precondition(compare(_,_),O),
-%   result(O, rotates(_,_,_)).
 
 :- precondition(timer_elapsed(_),O1),
    result(O1,modify(increase,R)),
@@ -372,3 +356,18 @@ movement(move(E,D)) :- action(move(E,D)).
 :- condition(overlaps(E1,E2,true)),
    action(move(E2,direction(away,E1))),
    {action(move(E2,_))} 1.
+
+{label(entity(E),E)} :- entity(entity(E)).
+{label(resource(E),E)} :- resource(resoruce(E)).
+:- 2 {label(E,_)}, entity(E).
+:- 2 {label(E,_)}, resource(E).
+:- entity(E), not label(E,_).
+:- resource(E), not label(E,_).
+
+:-  controlLogic(draggable(E)),
+    action(move(E,_)).
+
+:- precondition(control_event(click(E)),O),
+   precondition(overlaps(E),O),
+   computer_controls(E).
+

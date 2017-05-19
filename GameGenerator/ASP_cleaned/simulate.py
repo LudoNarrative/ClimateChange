@@ -32,7 +32,7 @@ def solve(*args):
         print err
     with open('dump.lp','w') as outfile:
         result = json.loads(out)
-        witness = result['Call'][0]['Witnesses'][0]['Value']
+        witness = result['Call'][0]['Witnesses'][-1]['Value']
         for atom in sorted(witness):
             outfile.write(atom +'\n')
             
@@ -40,7 +40,7 @@ def solve(*args):
 
 def solve_randomly(*args):
     """Like solve() but uses a random sign heuristic with a random seed."""
-    args = list(args[0]) + ["--sign-def=3",'--rand-freq=0.2',"--seed="+str(random.randint(0,1<<30))]
+    args = list(args[0]) + ["--sign-def=3","--seed="+str(random.randint(0,1<<30))]
     return solve(*args)   
 
 def parse_terms(arguments):
@@ -440,8 +440,8 @@ if __name__ == '__main__':
     toolbox.decorate("individual", checkBounds(0.1, 10))
     toolbox.decorate("mate", checkBounds(0.1, 10))
     toolbox.decorate("mutate", checkBounds(0.1, 10))
-    pop = toolbox.population(n=50)
-    CXPB, MUTPB, NGEN = 0.5, 0.2, 50
+    pop = toolbox.population(n=100)
+    CXPB, MUTPB, NGEN = 0.5, 0.2, 100
   
     
     # Evaluate the entire population
@@ -489,6 +489,13 @@ if __name__ == '__main__':
 
     #Have to do find and replaces in this order since outcome and timer might include entity and resource names
     find_and_replace = []
+    for o in ['timer']:
+        for oo in out[o]:
+            for ooo in oo:
+                if 'terms' in ooo['terms'][0]:
+                    find = prettify(ooo['terms'][0])
+                    replace =  find.replace('(','_').replace(',','_X_').replace(')','_XX_')
+                    find_and_replace.append((find,replace))
     for o in ['outcome','entity','resource']:
         for oo in out[o]:
             for ooo in oo:
@@ -497,13 +504,6 @@ if __name__ == '__main__':
                     replace =  find.replace('(','_').replace(',','_X_').replace(')','_XX_')
                     find = '{}({})'.format(o,find)
                     replace = '{}({})'.format(o,replace)
-                    find_and_replace.append((find,replace))
-    for o in ['timer']:
-        for oo in out[o]:
-            for ooo in oo:
-                if 'terms' in ooo['terms'][0]:
-                    find = prettify(ooo['terms'][0])
-                    replace =  find.replace('(','_').replace(',','_X_').replace(')','_XX_')
                     find_and_replace.append((find,replace))
     
     out_string = []
