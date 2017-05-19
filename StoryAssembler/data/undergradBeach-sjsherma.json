@@ -161,9 +161,12 @@
     "choiceLabel" : "What do you mean?",
     "content" : "\"If you think about it, will doing all this work really do anything for these crabs? I mean, sure, we may be moving them out of the dangers of this beach, but how do we know they're better off where they're going? What if it's more dangerous there?\" {name|volunteer} looks away. \"They might end up dying off anyway.\"",
     "choices" : [
-      {"condition" : "emmaRejoinder eq true"},
-      {"condition" : "emmaRejoinder eq true"},
-      {"condition" : "emmaRejoinder eq true"}
+      {"gotoId" : "passionatePositiveRejoinder"},
+      {"gotoId" : "rudePositiveRejoinder"},
+      {"gotoId" : "gentlePositiveRejoinder"},
+      {"gotoId" : "reluctantNegativeRejoinder"},
+      {"gotoId" : "passionateNegativeRejoiner"},
+      {"gotoId" : "disillusionedNegativeRejoiner"}
     ],
     "effects" : [
       "set rodrigoSaysPointless true"
@@ -175,9 +178,12 @@
     "choiceLabel" : "How could you say that!?",
     "content" : "\"{name|volunteer} bristles. \"Well, think about it! Does any of what we're doing mean anything? I mean, sure, we may be moving them out of the dangers of this beach, but how do we know they'll be better off where they're going?\" His gaze drops to the sand. \"They might end up dead either way.\"",
     "choices" : [
-      {"condition" : "emmaRejoinder eq true"},
-      {"condition" : "emmaRejoinder eq true"},
-      {"condition" : "emmaRejoinder eq true"}
+      {"gotoId" : "passionatePositiveRejoinder"},
+      {"gotoId" : "rudePositiveRejoinder"},
+      {"gotoId" : "gentlePositiveRejoinder"},
+      {"gotoId" : "reluctantNegativeRejoinder"},
+      {"gotoId" : "passionateNegativeRejoiner"},
+      {"gotoId" : "disillusionedNegativeRejoiner"}
     ],
     "effects" : [
       "set rodrigoSaysPointless true",
@@ -190,9 +196,12 @@
     "choiceLabel" : "That's depressing.",
     "content" : "{name|volunteer} shrugs. \"Well, can you blame me? If you think about it, does any of this have a point? I mean, sure, we may be moving the crabs out of the dangers of this beach, but how do we know they're better off where they're going?\" His gaze drops from your face. \"They might end up dying anyway.\"",
     "choices" : [
-      {"condition" : "emmaRejoinder eq true"},
-      {"condition" : "emmaRejoinder eq true"},
-      {"condition" : "emmaRejoinder eq true"}
+      {"gotoId" : "passionatePositiveRejoinder"},
+      {"gotoId" : "rudePositiveRejoinder"},
+      {"gotoId" : "gentlePositiveRejoinder"},
+      {"gotoId" : "reluctantNegativeRejoinder"},
+      {"gotoId" : "passionateNegativeRejoiner"},
+      {"gotoId" : "disillusionedNegativeRejoiner"}
     ],
     "effects" : [
       "set rodrigoSaysPointless true",
@@ -207,7 +216,7 @@
       "content": "emmaPositiveRejoinder content",
       "effects" : [
         "set emmaPositiveRejoinder true",
-        "set emmaRejoiner true"
+        "set emmaRejoiner1 true"
       ],
       "conditions" : [
         "optimism gte 1"
@@ -220,7 +229,7 @@
       "content": "\"Listen up, {name|volunteer}. We wouldn't be here if the research hadn't been done and if the decision hadn't been made. You really think these jobs are chosen nilly-willy? We are here for a reason - and a damn good one at that.\"",
       "effects" : [
         "set emmaPositiveRejoinder true",
-        "set emmaRejoiner true"
+        "set emmaRejoiner2 true"
       ],
       "conditions" : [
         "optimism gte 1"
@@ -233,7 +242,7 @@
       "content": "\"They'll be more protected on the other side of the bay,\" you say reassuringly. \"So we are helping them, no matter how 'meaningless' it seems right now.",
       "effects" : [
         "set emmaPositiveRejoinder true",
-        "set emmaRejoiner true",
+        "set emmaRejoiner3 true",
         "incr patience 1"
       ],
       "conditions" : [
@@ -247,7 +256,7 @@
     "content" : "\"There's no guarantee they'll be able to adapt to their new surroundings quickly enough, or if the other side of the bay gets messed up as well,\" you sigh.",
     "effects" : [
       "set emmaNegativeRejoinder true",
-      "set emmaRejoiner true"
+      "set emmaRejoiner1 true"
     ],
     "conditions" : [
       "optimism lt 1"
@@ -260,7 +269,7 @@
     "content" : "You glare at the sand. \"Who knows if they'll adapt to their new surroundings. Who knows if the ocean will get even more acidic as time goes by. Who knows if the sun will bake the Earth sometime in the next million years. Who cares. This sucks.",
     "effects" : [
       "set emmaNegativeRejoiner true",
-      "set emmaRejoiner true",
+      "set emmaRejoiner2 true",
       "decr optimism 1"
     ],
     "conditions" : [
@@ -274,7 +283,7 @@
     "content" : "\"It's not like we're doing harm,\" you say. \"And even if it might not mean much in the grand scheme of things, or if it's really pointless and they're die anyway, is there a reason not to move them out of harm's way?\"",
     "effects" : [
       "set emmaNegativeRejoiner true",
-      "set emmaRejoiner true",
+      "set emmaRejoiner3 true",
       "incr optimism 1"
     ],
     "conditions" : [
