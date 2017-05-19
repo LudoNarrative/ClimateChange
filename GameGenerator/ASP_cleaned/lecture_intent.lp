@@ -1,5 +1,5 @@
-#const min_entities = 2.
-#const max_entities = 2.
+#const min_entities = 1.
+#const max_entities = 3.
 #const min_resources = 1.
 #const max_resources = 2.
 #const min_outcomes = 2.
@@ -17,8 +17,9 @@ required(hand_eye_coordination).
 
 label(resource(r(1)),concentration).
 label(entity(e(1)),e1).
-label(entity(e(2)),e2).
-label(entity(e(3)),e3).
+
+
+
 :- not reading(hand_eye_coordination,game).
 :- not reading(maintenance,resource(r(1))).
 :- not action(mode_change(game_loss)).
