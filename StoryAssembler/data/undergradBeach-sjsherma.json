@@ -44,14 +44,122 @@
               disillusionly says we need a distraction from the very fact.
                 we'll keep doing things in order to avoid thinkiing about our impeding doom.
 
-        perhaps first just have emma and rodrigo talk
-            
+        perhaps first just have emma and rodrigo talk about things like the weather and finding the little guys and stuff
+          can have a few casual choices that impact optimism for the main beat
+
+        for example :
+          how are you doing so far (progression)
+            high, optimistic:
+              Fantastic! I think we'll be able to get done really soon!
+            high, pessimistic:
+              Pretty well so far, but it's always possible our luck will run out.
+            low, optimistic:
+              Not well, but I'm sure things will pick up!
+            low, pessimistic:
+              Just barely trudging along. Ugh.
+
+          no point in killing ourselves in this heat
+
 */
 [
 
   {
-    "id": "rodrigoSaysPointless",
-    "content": "\"What's the point?\" Rodrigo muttered. \"We're doing all this work, but who knows if it matters in the end. Maybe the end's the sun burning the earth.\"",
+    "id" : "hotDay",
+    "content" : "\"Anyway,\" {name|volunteer} says, running a hand through his hair. \"How'd you manage to get yourself on this beach, anyway?\"",
+    "choices" : [
+      {"gotoId" : "straightReply"},
+      {"gotoId" : "avoidReply"}
+    ],
+  },
+
+  {
+    "id" : "straightReply",
+    "choiceLabel" : "I used to be in academics. Didn't work out.",
+    "content" : "{name|volunteer} chuckles. \"Places of higher learning not for you? Or were you not for places of higher learning?\" <br/><br/> Your face is unimpressed. \"Sorry, sorry, I shouldn't be talking. Left college for the circus, if you can believe it. Wanted to be a lion tamer. Somehow ended up chasing after crabs. How're you doing on that, by the way?\"",
+    "choices" : [
+      {"gotoId" : "lowProgress1"},
+      {"gotoId" : "lowProgress2"}
+    ]
+  },
+
+  {
+    "id" : "avoidReply",
+    "choiceLabel" : "Figured local work's the best place to help out.",
+    "content" : "\"Help who, again? The wildlife? The community? The planet?\" {name|volunteer} chuckles. \"Don't get me wrong, I love animals - wanted to be a lion tamer back when I was young and wild - but sometimes they just take so much work I wonder if they're worth it. How're you doing on finding the lot?\"",
+    "choices" : [
+      {"gotoId" : "lowProgress1"},
+      {"gotoId" : "lowProgress2"}
+    ]
+  },
+
+  // progression
+
+  {
+    "id" : "lowProgress1",
+    "choiceLabel" : "Not as well as I hoped, but I'm sure things will pick up.",
+    "content" : "\"If you say so. As for me, I say don't fuss too much over these guys. They're probably going to die off anyway.\"",
+    "choices" : [
+      {"gotoId" : "surprisedResponse"},
+      {"gotoId" : "angryResponse"},
+      {"gotoId" : "coolResponse"},
+    ],
+    "effects" : [
+      "set positiveProgress true",
+      "incr optimism 1",
+    ],
+  },
+
+  {
+    "id" : "lowProgress2",
+    "choiceLabel" : "Just barely trudging along. Ugh.",
+    "content" : "\"Wow, that sucks. Ah well, no use going crazy over these guys. They're probably going to die off anyway.\"",
+    "choices" : [
+      {"gotoId" : "surprisedResponse"},
+      {"gotoId" : "angryResponse"},
+      {"gotoId" : "coolResponse"},
+    ],
+    "effects" : [
+      "set negativeProgress true",
+      "decr optimism 1",
+    ],
+  },
+
+  {
+    "id" : "highProgress1",
+    "choiceLabel" : "Doing great! I think we might actually be able to finish by the end of today.",
+    "content" : "\"Sure. The sooner the better. Sometimes I can't believe we're trudging along in the hot sun for some creatures who are going to end up dying anyway.\"",
+    "choices" : [
+      {"gotoId" : "surprisedResponse"},
+      {"gotoId" : "angryResponse"},
+      {"gotoId" : "coolResponse"},
+    ],
+    "effects" : [
+      "set positiveProgress true",
+      "incr optimism 1",
+    ]
+  },
+
+  {
+    "id" : "highProgress2",
+    "choiceLabel" : "Pretty well so far, but it's always possible our luck will run out.",
+    "content" : "\"Yup. Which sucks, really. Doing all this work when in the end it means nothing.\"",
+    "choices" : [
+      {"gotoId" : "surprisedResponse"},
+      {"gotoId" : "angryResponse"},
+      {"gotoId" : "coolResponse"},
+    ],
+    "effects" : [
+      "set negativeProgress true",
+      "decr optimism 1",
+    ],
+  },
+
+  // response
+
+  {
+    "id" : "surprisedResponse",
+    "choiceLabel" : "What do you mean?",
+    "content" : "\"If you think about it, will doing all this work really do anything for these crabs? I mean, sure, we may be moving them out of the dangers of this beach, but how do we know they're better off where they're going? What if it's more dangerous there?\" {name|volunteer} looks away. \"They might end up dying off anyway.\"",
     "choices" : [
       {"condition" : "emmaRejoinder eq true"},
       {"condition" : "emmaRejoinder eq true"},
@@ -60,114 +168,129 @@
     "effects" : [
       "set rodrigoSaysPointless true"
     ],
-    "conditions" : [
-      "onABeach eq true"
+  },
+
+  {
+    "id" : "angryResponse",
+    "choiceLabel" : "How could you say that!?",
+    "content" : "\"{name|volunteer} bristles. \"Well, think about it! Does any of what we're doing mean anything? I mean, sure, we may be moving them out of the dangers of this beach, but how do we know they'll be better off where they're going?\" His gaze drops to the sand. \"They might end up dead either way.\"",
+    "choices" : [
+      {"condition" : "emmaRejoinder eq true"},
+      {"condition" : "emmaRejoinder eq true"},
+      {"condition" : "emmaRejoinder eq true"}
+    ],
+    "effects" : [
+      "set rodrigoSaysPointless true",
+      "decr patience 1"
+    ],
+  },
+
+  {
+    "id" : "coolResponse",
+    "choiceLabel" : "That's depressing.",
+    "content" : "{name|volunteer} shrugs. \"Well, can you blame me? If you think about it, does any of this have a point? I mean, sure, we may be moving the crabs out of the dangers of this beach, but how do we know they're better off where they're going?\" His gaze drops from your face. \"They might end up dying anyway.\"",
+    "choices" : [
+      {"condition" : "emmaRejoinder eq true"},
+      {"condition" : "emmaRejoinder eq true"},
+      {"condition" : "emmaRejoinder eq true"}
+    ],
+    "effects" : [
+      "set rodrigoSaysPointless true",
+      "incr patience 1"
     ],
   },
 
   {
       "id": "passionatePositiveRejoinder",
-      "choiceLabel": "\"",
+      "choiceLabel": "Of course they're going to live!",
+      "content" : "\"Don't say that! Of course they're going to live - better yet, thrive, and multiply, and finally get off the endangered species list,\" you say passionately. \"We've looked into the other side of the bay - the water's most definitely safer.\"",
       "content": "emmaPositiveRejoinder content",
-      "choices" : [
-        {"gotoId" : "emmaNegativeRejoinder"}
-      ],
       "effects" : [
         "set emmaPositiveRejoinder true",
         "set emmaRejoiner true"
       ],
       "conditions" : [
-        "optimism gte 5"
+        "optimism gte 1"
       ]
   },
 
   {
       "id": "rudePositiveRejoinder",
-      "choiceLabel": "\"",
-      "content": "emmaPositiveRejoinder content",
-      "choices" : [
-        {"gotoId" : "emmaNegativeRejoinder"}
-      ],
+      "choiceLabel": "Seriously? Why do you think we're here in the first place?",
+      "content": "\"Listen up, {name|volunteer}. We wouldn't be here if the research hadn't been done and if the decision hadn't been made. You really think these jobs are chosen nilly-willy? We are here for a reason - and a damn good one at that.\"",
       "effects" : [
         "set emmaPositiveRejoinder true",
         "set emmaRejoiner true"
       ],
       "conditions" : [
-        "optimism gte 5"
+        "optimism gte 1"
       ]
   },
 
   {
       "id": "gentlePositiveRejoinder",
-      "choiceLabel": "\"",
-      "content": "emmaPositiveRejoinder content",
-      "choices" : [
-        {"gotoId" : "emmaNegativeRejoinder"}
-      ],
+      "choiceLabel": "Trust me, we're going a good thing. Every little thing counts.",
+      "content": "\"They'll be more protected on the other side of the bay,\" you say reassuringly. \"So we are helping them, no matter how 'meaningless' it seems right now.",
       "effects" : [
         "set emmaPositiveRejoinder true",
-        "set emmaRejoiner true"
+        "set emmaRejoiner true",
+        "incr patience 1"
       ],
       "conditions" : [
-        "optimism gte 5"
+        "optimism gte 1"
       ]
   },
 
   {
     "id" : "reluctantNegativeRejoinder",
     "choiceLabel" : "I guess you're have a point.",
-    "content" : "",
+    "content" : "\"There's no guarantee they'll be able to adapt to their new surroundings quickly enough, or if the other side of the bay gets messed up as well,\" you sigh.",
     "effects" : [
       "set emmaNegativeRejoinder true",
       "set emmaRejoiner true"
     ],
     "conditions" : [
-      "optimism lt 5"
-    ],
-    "choices" : [
-      {"gotoId" : "rodrigoSadKnowledge"}
+      "optimism lt 1"
     ],
   },
 
   {
     "id" : "passionateNegativeRejoiner",
     "choiceLabel" : "I know, right?",
-    "content" : "more facts",
+    "content" : "You glare at the sand. \"Who knows if they'll adapt to their new surroundings. Who knows if the ocean will get even more acidic as time goes by. Who knows if the sun will bake the Earth sometime in the next million years. Who cares. This sucks.",
     "effects" : [
       "set emmaNegativeRejoiner true",
-      "set emmaRejoiner true"
+      "set emmaRejoiner true",
+      "decr optimism 1"
     ],
     "conditions" : [
-      "optimism lt 5"
-    ],
-    "choices" : [
-      {"gotoId" : "rodrigoSadKnowledge"}
+      "optimism lt 1"
     ],
   },
 
   {
     "id" : "disillusionedNegativeRejoiner",
-    "choiceLabel" : "?",
-    "content" : "more facts",
+    "choiceLabel" : "Well. The Earth is going to blow up sometime in the future, apparently, so why not do something like this?",
+    "content" : "\"It's not like we're doing harm,\" you say. \"And even if it might not mean much in the grand scheme of things, or if it's really pointless and they're die anyway, is there a reason not to move them out of harm's way?\"",
     "effects" : [
       "set emmaNegativeRejoiner true",
-      "set emmaRejoiner true"
+      "set emmaRejoiner true",
+      "incr optimism 1"
     ],
     "conditions" : [
-      "optimism lt 5"
-    ],
-    "choices" : [
-      {"gotoId" : "rodrigoSadKnowledge"}
+      "optimism lt 1"
     ],
   },
 
 
   {
     "id": "sceneOutro",
-    "choiceLabel": "sceneOutro choice",
-    "content": "sceneOutro content",
+    "content": "\"Welp. There's the whistle. Shift's over, I'll see you later, {protagonist|nickname},\" Rodrigo says. You quietly watch him leave.",
     "effects" : [
       "set sceneOutro true"
+    ],
+    "conditions" : [
+      "rodrigoSaysJob eq true"
     ]
   },
 ]
