@@ -16,34 +16,173 @@
 	//Ian's Part
 
 {
-    "id": "atUNMeeting",
-    "content": "atUNMeeting content",
+  "id": "atUNMeetingI",
+  "content": "<p>The projector buzzes to life and your oh so lovely powerpoint beams onto the screen. That took longer than it need. You turn back to your laptop and begin reviewing your slides.</p>",
+  "choices" : [
+    {"gotoId" : "theBigDayI"},
+  ],
+  "effects" : [
+    "set atUNMeeting true",
+    "set charactersIntroduced 0",
+    "set factsPresented 0",
+    "set confidence 5"
+  ]
+},
+{
+  "id": "theBigDayI",
+  "choiceLabel" : "Today's the big day.",
+  "content": "<p>Today you will be giving your presentation to the UN's Climate Change committee. You're set up in the first floor of the UN's conference building, within earshot of the famous General Assembly Building. Famous speakers and thinkers stand in front of the assembly to make rousing speeches about the future of the world. They come here to the conference building to get things done.</p>",
+  "choices" : [
+    {"gotoId" : "lowConfUNReplyI"},
+    {"gotoId" : "midConfUNReplyI"},
+    {"gotoId" : "highConfUNReplyI"}
+  ],
+  "effects" : [
+    "set atUNMeeting true",
+    "set charactersIntroduced 0",
+    "set factsPresented 0",
+    "set confidence 5"
+  ]
+},
+  {
+    "id": "lowConfUNReplyI",
+    "choiceLabel" : "They're are going to eat me alive.",
+    "content": "<p>You're, what, the fifth meeting they have to go to today. Just hope they don't walk out midway through.</p>",
     "effects" : [
-      "set atUNMeeting true",
-      "set charactersIntroduced 0",
-      "set factsPresented 0"
+      "decr confidence 1"
     ]
   },
- {
-    "id": "representingResearchGroup",
-    "content": "representingResearchGroup content",
+
+  {
+    "id": "midConfUNReplyI",
+    "choiceLabel" : "I've prepared for this. I'm as ready as I can be.",
+    "content": "<p>The delegates should be here any minute.</p>"
+  },
+
+  {
+    "id": "highConfUNReplyI",
+    "choiceLabel" : "I hope they can keep up with me.",
+    "content": "<p>They won't know what hit them.</p>",
     "effects" : [
-      "set representingResearchGroup true"
-    ],
-    "conditions" : [
-      "atUNMeeting eq true"
-    ]
-  },	
- {
-    "id": "looksOverCommittee",
-    "content": "looksOverCommittee content",
-    "effects" : [
-      "set looksOverCommittee true",
-      "incr charactersIntroduced 2"
-    ],
-    "conditions" : [
-      "representingResearchGroup eq true"
+      "incr confidence 1"
     ]
   },
+
+{
+  "id": "representingResearchGroupI",
+  "content": "<p>\"It doesn't matter what technological breakthroughs we push, if we can't educate people about the mistakes we are making then we are right back where we started.\" You recite the lines of your speech under your breath. In just a few minutes you'll be arguing to some of the world's foremost leaders in the fight against Climate Change to increasing funding towards local education programs.</p>",
+  "choices" : [
+      {"gotoId" : "lowConfResearchReplyI"},
+      {"gotoId" : "midConfResearchReplyI"},
+      {"gotoId" : "highConfResearchReplyI"}
+    ],
+  "effects" : [
+    "set representingResearchGroup true"
+  ],
+  "conditions" : [
+    "atUNMeeting eq true"
+  ]
+},	
+
+  {
+    "id": "lowConfResearchReplyI",
+    "choiceLabel" : "This is a waste of money. I shouldn't be asking for this.",
+    "content": "<p>The world is flooding and you are asking for cash to set up some workshops. Nice.</p>",
+    "effects" : [
+      "decr confidence 1"
+    ]
+  },
+
+  {
+    "id": "midConfResearchReplyI",
+    "choiceLabel" : "I'm going to have to really sell this.",
+    "content": "With the way the world is right now, every penny counts. No room for mistakes."
+  },
+
+  {
+    "id": "highConfResearchReplyI",
+    "choiceLabel" : "I'm going to be the one to push this through.",
+    "content": "<p>Being stuck in UN conference halls day to day can make delegates lose sight of the lives of everyday people. You'll shake things up.</p>",
+    "effects" : [
+      "incr confidence 1"
+    ]
+  },
+
+//repeatable
+{
+  "id": "looksOverCommitteeI",
+  "content": "<p>{ifStateCondition|charactersIntroduced lt 1|The delegates are begining to file in. They talk amongst themselves as they settle into their seats. Some come to you and greet themselves. There are maybe nine or ten of them, but there are only two that you are concerned about. Mikkel Retna and Kurt Branegan|There is still some rambling as the delegates file into their seats.}</p>",
+  "choices" : [
+    {"gotoId" : "KurtI"},
+    {"gotoId" : "MikkelI"}
+  ],
+  "effects" : [
+    "set looksOverCommittee true"
+  ],
+  "conditions" : [
+    "representingResearchGroup eq true"
+  ],
+  "repeatable" : "true"
+},
+
+  {
+    "id": "KurtI",
+    "choiceLabel" : "Kurt Branegan",
+    "content": "<p>Kurt meanders about the delegates, patting backs and shaking hands with an egregious grin on his face all the way. He reminds you of a highschool varsity quarterback from an 80s movie. He'll probabaly have a thing or two to say about your presentation.</p>",
+    "choices" : [
+      {"gotoId" : "lowConfResearchKurtI"},
+      {"gotoId" : "highConfResearchKurtI"}
+    ],
+    "effects" : [
+      "incr charactersIntroduced 1"
+    ]
+  },
+
+    {
+      "id": "lowConfResearchKurtI",
+      "choiceLabel" : "There is no way I'm going to get through to him.",
+      "content": "<p>You turn to your laptop to get one last look at your slides before everyone settles in.</p>",
+      "effects" : [
+        "decr confidence 1"
+      ]
+    },
+    {
+      "id": "highConfResearchKurtI",
+      "choiceLabel" : "Bring it Kurt.",
+      "content": "<p>You lock eyes with him. He turns his attention from socializing and takes a seat. It looks like you have his attenton.</p>",
+      "effects" : [
+        "incr confidence 1"
+      ]
+    },
+
+  {
+    "id": "MikkelI",
+    "choiceLabel" : "Mikkel Retna",
+    "content": "<p>Mikkel immediately takes a seat. He folds his hands and waits patiently for you to begin. He looks soft spoken, but his tenure in the UN has given him tremendous swing over other delegates. You're probably not getting anything done if you don't get through to him.</p>",
+    "choices" : [
+      {"gotoId" : "lowConfResearchMikkelI"},
+      {"gotoId" : "highConfResearchMikkelI"}
+    ],
+    "effects" : [
+      "incr charactersIntroduced 1"
+    ]
+  },
+
+    {
+      "id": "lowConfResearchMikkelI",
+      "choiceLabel" : "I hope I don't disappoint him.",
+      "content": "You turn your attention towards the other delegates as they quiet down.",
+      "effects" : [
+        "decr confidence 1"
+      ]
+    },
+    {
+      "id": "highConfResearchMikkelI",
+      "choiceLabel" : "Good thing I aim to please.",
+      "content": "<p>You nod to Mikkel and he nods back.</p>",
+      "effects" : [
+        "incr confidence 1"
+      ]
+    },
 	//End of Ian's part
 ]
