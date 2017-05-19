@@ -216,6 +216,7 @@
       "content": "emmaPositiveRejoinder content",
       "effects" : [
         "set emmaPositiveRejoinder true",
+        "set emmaNegativeRejoiner true",
         "set emmaRejoiner1 true"
       ],
       "conditions" : [
@@ -229,6 +230,7 @@
       "content": "\"Listen up, {name|volunteer}. We wouldn't be here if the research hadn't been done and if the decision hadn't been made. You really think these jobs are chosen nilly-willy? We are here for a reason - and a damn good one at that.\"",
       "effects" : [
         "set emmaPositiveRejoinder true",
+        "set emmaNegativeRejoiner true",
         "set emmaRejoiner2 true"
       ],
       "conditions" : [
@@ -242,6 +244,7 @@
       "content": "\"They'll be more protected on the other side of the bay,\" you say reassuringly. \"So we are helping them, no matter how 'meaningless' it seems right now.",
       "effects" : [
         "set emmaPositiveRejoinder true",
+        "set emmaNegativeRejoiner true",
         "set emmaRejoiner3 true",
         "incr patience 1"
       ],
@@ -255,7 +258,8 @@
     "choiceLabel" : "I guess you're have a point.",
     "content" : "\"There's no guarantee they'll be able to adapt to their new surroundings quickly enough, or if the other side of the bay gets messed up as well,\" you sigh.",
     "effects" : [
-      "set emmaNegativeRejoinder true",
+      "set emmaPositiveRejoinder true",
+      "set emmaNegativeRejoiner true",
       "set emmaRejoiner1 true"
     ],
     "conditions" : [
@@ -268,6 +272,7 @@
     "choiceLabel" : "I know, right?",
     "content" : "You glare at the sand. \"Who knows if they'll adapt to their new surroundings. Who knows if the ocean will get even more acidic as time goes by. Who knows if the sun will bake the Earth sometime in the next million years. Who cares. This sucks.",
     "effects" : [
+      "set emmaPositiveRejoinder true",
       "set emmaNegativeRejoiner true",
       "set emmaRejoiner2 true",
       "decr optimism 1"
@@ -282,6 +287,7 @@
     "choiceLabel" : "Well. The Earth is going to blow up sometime in the future, apparently, so why not do something like this?",
     "content" : "\"It's not like we're doing harm,\" you say. \"And even if it might not mean much in the grand scheme of things, or if it's really pointless and they're die anyway, is there a reason not to move them out of harm's way?\"",
     "effects" : [
+      "set emmaPositiveRejoinder true",
       "set emmaNegativeRejoiner true",
       "set emmaRejoiner3 true",
       "incr optimism 1"
