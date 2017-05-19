@@ -43,8 +43,31 @@ requirejs.config({
 		"undergradLecture_kply" : "../data/undergradLecture-kply.json",
 		"undergradLecture_sjsherma" : "../data/undergradLecture-sjsherma.json",
 
+		"undergradTravel_sjsherma" :  "../data/undergradTravel-sjsherma.json",
+		"undergradTravel_kply" : "../data/undergradTravel-kply.json",
+
+		"undergradFamilyDinner_sgadsby" : "../data/undergrad_familyDinner_sgadsby.json",
+		"undergradFamilyDinner_talon" : "../data/undergrad_familyDinner_talon.json",
+		"undergradFamilyDinner_irapopor" : "../data/undergrad_familyDinner_irapopor.json",
+
+		"undergradUN_irapopor" : "../data/undergradUN-irapopor.json",
+		"undergradUN_kply" : "../data/undergradUN-kply.json",
+		"undergradUN_talon" : "../data/undergradUN-talon.json",
+
+		"undergradBeach_sjsherma" : "../data/undergradBeach-sjsherma.json",
+		"undergradBeach_madreed" : "../data/undergradBeach-madreed.json",
+		"undergradBeach_sgadsby" : "../data/undergradBeach-sgadsby.json",
+
+		"sjsherma_testfile" : "../data/sjsherma-testfile.json",
+		"kply_testfile" : "../data/kply-testfile.json",
+		"irapopor_testfile" : "../data/irapopor-testfile.json",
+		"talon_testfile" : "../data/talon-testfile.json",
+		"sgadsby_testfile" : "../data/sgadsby-testfile.json",
+		"madreed_testfile" : "../data/madreed-testfile.json",
+
 		"Coordinator" : "../../Coordinator/Coordinator",
 		"Display" : "../../js/Display",
+		"avatars" : "../../assets/avatars/avatars.json",
 
 		"Phaser" : "../../lib/phaser",
 		"jQuery": "../../lib/jquery-3.0.0.min",
@@ -946,7 +969,7 @@ requirejs(
 			createGraph();
 		});
 
-		for (var x=-1; x <= 50; x+=5) {
+		for (var x=-1; x <= 500; x+=5) {
 			var val;
 			if (x==-1) { val = 0;} else { val = x; }
 			$("#iterSelect").append($('<option>', {value: val, text: val+1}));

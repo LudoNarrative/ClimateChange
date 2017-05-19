@@ -18,6 +18,7 @@ requirejs.config({
 		"Templates": "../StoryAssembler/js/Templates",
 		"Character": "../StoryAssembler/js/Character",
 		"Hanson": "../StoryAssembler/js/Hanson",
+		"HealthBar" : "../lib/healthbarstandalone",
 
 		"globalData" : "../StoryAssembler/data/global.json",
 		"travelData" : "../StoryAssembler/data/travel.json", 
@@ -77,6 +78,7 @@ requirejs.config({
 		"jQuery": "../lib/jquery-3.0.0.min",
 		"jQueryUI": "../lib/jquery-ui.min",
 		"jsonEditor": "../lib/jsonEditor/jsoneditor",
+
 
 		"Game" : "../GameGenerator/js/game",
 		"AspPhaserGenerator" : "../asp-phaser-generator-2/index",
