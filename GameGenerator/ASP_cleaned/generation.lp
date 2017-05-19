@@ -21,7 +21,7 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
     number_to_place(Entity,NumberToPlace).
 
 
-speed_values(1;2;4).
+speed_values(2;3;4).
 
 1 {speed(E,S) : speed_values(S)} 1 :-
     entity(E),
