@@ -585,7 +585,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set composure 5",
 				"set carbonFootprint 0",
 				"set fame 0"
@@ -665,7 +665,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set confidence 5",
 				"set hope 5",
 				"set tension 5"
@@ -745,7 +745,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set confidence 5",
 				"set persuasion 0",
 				"set composure 0",
@@ -832,7 +832,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set patience 5",
 				"set optimism 0",
 				"set progression 0"
@@ -902,7 +902,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set composure 5",
 				"set carbonFootprint 0",
 				"set fame 0"
@@ -959,7 +959,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set confidence 5",
 				"set persuasion 0",
 				"set composure 0"
@@ -1034,7 +1034,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set confidence 5",
 				"set persuasion 0",
 				"set composure 0"
@@ -1109,7 +1109,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set confidence 5",
 				"set persuasion 0",
 				"set composure 0"
@@ -1183,7 +1183,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set patience 5",
 				"set optimism 0",
 				"set progression 0"
@@ -1257,7 +1257,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
-				
+
 				"set patience 5",
 				"set optimism 0",
 				"set progression 0"
@@ -1289,7 +1289,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				type: "narration"
 			}
 		}
-		
+
 		]
 
 		if (id == "all") { return storySpec; }
@@ -1802,20 +1802,24 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					{
 						id: "protagonist",
 						graphics: "char3",
-						age: "20s",
+						age: "40s",
 						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "happy"}
-						]
+							{ state: ["default"], tag: "neutral"},
+							{ state: ["patience lt 3"], tag: "upset"},
+							{ state: ["patience gte 5"], tag: "happy"},
+
+						],
 					},
 					{
 						id: "volunteer",
 						graphics: "char6",
 						age: "20s",
 						states: [	//happy, neutral, upset, confused
-							{ state: ["default"], tag: "happy" }
-						]
-					}
-				]
+							{ state: ["patience lt 3"], tag: "upset"},
+							{ state: ["default"], tag: "neutral" },
+						],
+					},
+				],
 			},
 			{
 				sceneId : "sereneTest",
@@ -1991,7 +1995,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					}
 				}
 			}
-			if (!passed) { 
+			if (!passed) {
 				console.warn("Warning! No default avatar set for " + char + "!");
 			}
 		}
