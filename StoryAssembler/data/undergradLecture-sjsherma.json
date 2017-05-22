@@ -189,7 +189,7 @@ Eager student’s Blind Optimism? (starts high)
     {"gotoId" : "elikaQuestion2"},
     {"gotoId" : "questionBrige"}
   ],
-  "effects" : "set followUp true",
+  "effects" : ["set followUp true"],
   "conditions" : ["enthusiasticStudent eq true"]
 },
 
