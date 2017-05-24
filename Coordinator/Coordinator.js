@@ -1764,8 +1764,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					{
 						id: "protagonist",
 						graphics: "char3",
-						age: "20s",
+						age: "40s",
 						states: [	//happy, neutral, upset
+							{ state: ["confidence gte 7"], tag: "happy"},
+							{ state: ["composure gte 7"], tag: "happy"},
+							{ state: ["confidence lte 3"], tag: "upset"},
+							{ state: ["composure lte 3"], tag: "upset"},
 							{ state: ["default"], tag: "happy"}
 						]
 					},
@@ -1773,15 +1777,20 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						id: "UN1",
 						graphics: "char11",
 						age: "40s",
-						states: [	//happy, neutral, upset, confused
-							{ state: ["default"], tag: "neutral" }
+						states: [	//neutral, smug, upset
+							{ state: ["default"], tag: "neutral" },
+							{ state: ["persuasion gte 8"], tag: "smug"},
+							{ state: ["persuasion lte 3"], tag: "upset"}
+							
 						]
 					},
 					{
 						id: "UN2",
 						graphics: "char10",
 						age: "30s",
-						states: [	//happy, neutral, upset, confused
+						states: [	//neutral, smug, upset
+							{ state: ["persuasion lte 3"], tag: "smug"},
+							{ state: ["persuasion gte 8"], tag: "upset"},
 							{ state: ["default"], tag: "neutral" }
 						]
 					}

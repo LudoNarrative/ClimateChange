@@ -371,3 +371,6 @@ movement(move(E,D)) :- action(move(E,D)).
    precondition(overlaps(E),O),
    computer_controls(E).
 
+
+:- trivial_outcome(O),
+   player_model(O,player_will_avoid).
