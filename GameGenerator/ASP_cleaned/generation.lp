@@ -388,3 +388,6 @@ precondition(timer_elapsed(wander(ENTITY)),outcome(wander(ENTITY))) :- behavior(
 result(outcome(wander(ENTITY)), rotate_to(ENTITY,random_int(scalar(0),scalar(360)))) :- behavior(ENTITY,wander).
 
 result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,wander).
+
+
+result(tick,apply_restitution(E,E)) :- entity(E).

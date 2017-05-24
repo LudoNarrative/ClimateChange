@@ -28,7 +28,7 @@
     {
     "id": "waveToFriend",
     "choiceLabel": "wave at co worker Rodrigo",
-    "content": "You wave at him before running up. <p>\"Hey Rodrigo. Ready to start the project?\"</p> He shrugs in response, which slightly annoys you. You know that he's more pessimistic about current events then you but you hope you can convince him this time. ",
+    "content": "You wave at him before running up. <p>\"Hey Rodrigo. Ready to start the project?\"</p> He shrugs in response, which slightly annoys you. You know that he's more pessimistic about current events then you but you hope you can convince him otherwise this time. ",
 	 "choices" : [
 	{"gotoId" : "optimisticResponse"},
 	{"gotoId" : "giveUpTheFight"}
@@ -74,7 +74,6 @@
     ]
   },
  
- 
   {
 		"id": "positiveSpeciesTalk", //confident option. can also be low confidence but optimism causes your argument to be better
 		"choiceLabel": "\"Ready to start saving the crabs?\"",
@@ -95,7 +94,7 @@
   {
   //horseshoe crab extinct. saving a crab species.
 		"id": "talkAboutSpecies", 
-		"content": " {ifStateCondition|lessConfident eq true| \"So um....we're moving them to make sure they live longer.\" <p>\"Yea Em,I know that. We all know that. We wouldn't be here if that wasn't the case.\" </p>| \"I guess so. I mean I'm here aren't I? Time to keep another species alive for what like a year? <i> What fun. </i> \" } You sigh at the response. You knew {ifStateCondition|lessConfident eq true|you'd probably fumble a bit.|he'd get pessimistic about this}. You open your mouth to speak but he says, <p>\"We already lost the horsehoe crab, what's the big deal about moving these crabs?\" </p>",
+		"content": " {ifStateCondition|lessConfident eq true| \"So um....we're moving them to make sure they live longer.\" <p>\"Yea Em,I know that. We all know that. We wouldn't be here if that wasn't the case.\" </p>| \"I guess so. I mean I'm here aren't I? Time to keep another species alive for what like a year? <i> What fun. </i> \" } You sigh at the response. {ifStateCondition|lessConfident eq true|You knew you'd probably fumble a bit.|} You open your mouth to speak but he says, <p>\"We already lost the horsehoe crab, what's the big deal about moving these crabs?\" </p>",
     "choices" : [
 		{"gotoId" : "stillImportant"},
 		{"gotoId" : "slightlySassyEmma"}
@@ -120,7 +119,7 @@
 	
 	 {
     "id": "crabResponse",
-    "content": "\"We may have lost one species, which is truly a tragedy, but we can still prevent it from happening again. We shouldn't let <i> all </i> the crab species die just because <i> one </i> sadly did.\" You notice he just sighs and shakes his head as response. This is usually how conversations go between you two, friendly but a lot of \"agreeing to disagree\" moments.",
+    "content": "\"We may have lost one species, which is truly a tragedy, but we can still prevent it from happening again. We shouldn't let <i> all </i> the crab species die just because <i> one </i> sadly did.\" You notice he just sighs and shakes his head as a response. This is usually how conversations go between you two, friendly but a lot of \"agreeing to disagree\" moments.",
 	"choices" : [
      {"gotoId" : "confidentOption"},
 	  {"gotoId" : "shyOption"}
@@ -144,7 +143,7 @@
 	},
   {
     "id": "talkAboutUNPlan",
-    "content": " {ifStateCondition|shyReponse eq true|\"Alright. Who made it anyways? I guess we should thank them for prolonging their lives, even if just slightly.\"|\"Least i'm getting paid to help a species live longer, even if it's only slightly.\"} You sigh in response<p> \"You don't know that it'll only be slightly.\" </p> <p>\"The facts don't lie Em. Anyways, least it's a paid job, unlike other jobs we've done.\"</p> ",
+    "content": " {ifStateCondition|shyReponse eq true|\"Alright. Who made it anyways? I guess we should thank them for prolonging their lives, even if just slightly.\"|\"Least I'm getting paid to help a species live longer, even if it's only slightly.\"} You sigh in response<p> \"You don't know that it'll only be slightly.\" </p> <p>\"The facts don't lie Em. Anyways, least it's a paid job, unlike other jobs we've done.\"</p> ",
 	"conditions" : [
 			"onABeach eq true",
 		],
@@ -152,5 +151,4 @@
       "set talkAboutUNPlan true"
     ]
   },
-
 ]
