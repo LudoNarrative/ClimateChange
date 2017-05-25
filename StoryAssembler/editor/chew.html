@@ -16,9 +16,7 @@
   <style>
       #exportDiv { display:none; }
       #exportDiv textarea { height: 200px; width: 400px; }
-      .form-group textarea {
-        height: 300px;
-      }
+      .well-sm textarea { height:200px; }
       body { margin: 20px; }
       /*
       @font-face { font-family: lazyDog; src: url('src/GOODDC__.TTF'); } 
@@ -34,6 +32,7 @@
   <h4>I'm ready to do write stories! (❀U ^́&#969;^̀ U❀) ~ &#10084;</h4> 
   <button type="button" id="importButton" onClick="importJSON()">Import JSON</button>
   <button type="button" id="exportButton" onClick="exportJSON()">Export JSON</button>
+  <button type="button" id="restoreButton" onClick="restoreEditor()" style="float:right">Restore Backup</button>
   <input type='file' accept='file_extension|json|JSON' onchange="openFile(event)" id="importField" style="display:none"><br>
   <div id="exportDiv"><textarea></textarea></div>
   <div id='editor_holder'></div>
@@ -60,6 +59,11 @@
             headerTemplate: "{{self.id}}",
             //oneOf: {
             properties: {
+              notes: {
+                title: "Notes",
+                type: "string",
+                format: "textarea"
+              },
               id: {
                 title: "ID",
                 type: "string",
@@ -99,7 +103,9 @@
                     "text": {
                       "title": "Text",
                       "type" : "string",
-                      "format" : "textarea"
+                      "format" : "textarea",
+                      "input_height" : "300px",
+                      "default" : "placeholder"
                     }
                   },
                   "required": ["text"]

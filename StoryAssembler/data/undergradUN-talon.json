@@ -13,33 +13,241 @@
         { condition: "inHallway eq true"}
 */
 
-	 {
-    "id": "endingArgument",
-    "content": "endingArgument content",
+//Ending of presentation: Can provide some way to sum up your game performance / choices so far
+//Emma reflects on how things went: Emma's reflection on how she thought it went
+//Depending on preformance, friendly/unfriendly character interaction: Either Kurt or Mikkel offer congrats / "you changed my mind" or smirking "too bad" ha ha
+
+/*
+Paths:
+Confidence:
+0<=bad<=3, 4<=medium<=7, 8<=good<=10
+persuasion:
+0<=bad<=3, 4<=medium<=7, 8<=good<=10
+*/
+
+//Setting up the initial scene. This will be the same for every path
+  {
+    "id": "talonSceneStart_t",
+    "content": "As the last echoes of your words begin to fade, a soft chorus of chatting begins. You look around the room, lights shine in your eyes. {ifStateCondition|confidence gte 5|They put a little sparkle in them|They're brighter than you thought they'd be for such a small conference.}<br><br>You stand,{ifStateCondition|confidence gte 5|back straight|back stiff} in front of your laptop close the lid. {ifStateCondition|confidence gte 5||<em>At least it’s over</em>.} Your eyes bounce from person to person.",
+    "effects" : [],
+    "conditions" : [
+      "callForLocalAction eq true"    //This concludes Kevin's scene coming in
+    ]
+  },
+
+//endingArgument choices
+  {
+    "id": "endingArgument_good_t",
+    "choiceLabel" : "\"Thank You\"",
+    "content": "The room applauds once more. You’re eyes fall on someone in particular -- Kurt. A small part of yourself is thankful they didn’t give you a mic to hold for your speech. You would have definitely been more tempted, at that moment, to outstretch your arm and drop it in front of the attendees.",
     "effects" : [
-      "set endingArgument true"
+      "set endingArgument true",
+      {"gotoId" : "emmaReflection_start_t"},
     ],
     "conditions" : [
+      "confidence gte 8",
       "callForLocalAction eq true"
     ]
   },
- {
-    "id": "emmaReflection",
-    "content": "emmaReflection content",
+  {
+    "id": "endingArgument_med_t",
+    "choiceLabel" : "\"Thank You\"",
+    "content": "The room applauds once more. The water you’d brought with you wasn’t enough to help address the dryness in your throat.<br><br><em>At least it’s over. The next one will go better.</em><br>Your eyes reluctantly land on Kurt. He was applauding, slow, sitting comfortably in his chair.<br><br><em>Maybe a drink in the hotel lobby until my flight?</em><br><br><em>Yeah… That seems about right, right about now.</em>",
+    "effects" : [
+      "set endingArgument true",
+      {"gotoId" : "emmaReflection_start_t"},
+    ],
+    "conditions" : [
+      "confidence gte 4",
+      "confidence lte 7",
+      "callForLocalAction eq true"
+    ]
+  },
+  {
+    "id": "endingArgument_bad_t",
+    "choiceLabel" : "\"Thank You\"",
+    "content": "The room applauds once more. You avoid landing on the seat which you know Kurt is sitting in as you nod toward everyone -- a plastic smile glued to your face. Every fiber of your being tells you to walk quickly out of the room and back to your hotel room but that would be very unprofessional.<br><br><em>You can throw up later</em>, you tell yourself.",
+    "effects" : [
+      "set endingArgument true",
+      {"gotoId" : "emmaReflection_start_t"},
+    ],
+    "conditions" : [
+      "confidence lte 3",
+      "callForLocalAction eq true"
+    ]
+  },
+
+//emmaReflection start
+  {
+    "id": "emmaReflection_start_t",
+    "content": "You turn and take your leave, stage right, walking quickly {ifStateCondition|confidence gte 5| ,but not too quickly, |}to the door. The participants of this UN Climate Change Council presentation begin to stir and stand and talk amongst themselves before finally making their way to the door. You take your post, just outside the door, fingers laced together (to keep them from fidgeting) as you softly thank them for their time. You listen to the half-started sentences and broken murmurs of what they thought of your talk.",
     "effects" : [
       "set emmaReflection true"
     ],
     "conditions" : [
       "endingArgument eq true"
     ]
-  },
- {
-    "id": "inHallway",
-    "content": "inHallway content",
+  }, 
+
+//GOOD//
+  {
+    "id": "emmaReflection_good1_t",
+    "content": "You’re waiting for Mikkel. You know he likes to mingle, he’ll probably be one of the last ones out.<br>Kurt exits from the doors and begins walking away.<br><br>\"Kurt!\" You yell -- loud. Several members of the council turn and look at you; you’re only looking at one -- Kurt.<br>\"Emma,\" he says, matter-of-factly, looking back at you. He walks straight into the outpouring of people to greet you.<br>\"Kurt,\" you look him in the eyes. He’s a good few inches taller than you but you tower over him at this moment. You extend your hand to meet his, grip -- hard -- and shake. His expression changed in your favor as you realize you’ve caught him off guard. You pounce.",
     "effects" : [
-      "set inHallway true"
+      {"gotoId" : "emmaReflection_good2_t"},
     ],
     "conditions" : [
+      "confidence gte 8",
+      "emmaReflection eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_good2_t",
+    "choiceLabel": "\"Kurt, you seemed a bit shaken by the end of my presentation,\"",
+    "content": "You held his hard firm, \"I hope I didn’t make you feel too bad in there.\"<br>\"Not at all, Emma. I…\" He hesitated. A small spark shot through you. \"...I’m big enough to admit that I have been defeated.\" His grip on your hand slackened; yours did, too. \"You did good. You’ve convinced me to change the way I think.\"",
+    "effects" : [
+      {"gotoId" : "emmaReflection_good3_t"},
+    ],
+    "conditions" : [
+      "confidence gte 8",
+      "emmaReflection eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_good3_t",
+    "choiceLabel": "\"That makes me happy,\" you say.",
+    "content": "At that moment, Mikkel walks out from the conference room. You raise your hand to grab his attention but Kurt interrupts your action.<br>\"Mikkel!\" Kurt boasts, and Mikkel turns to your direction. \"Mikkel, have you met Emma?\"<br><br>Your eyes light and your back straightens as Kurt turns and smiles at you. He places a hand on your shoulder, gentle, and extends an arm towards Mikkel for your benefit.",
+    "effects" : [
+      {"gotoId" : "emmaReflection_good4_t"},
+    ],
+    "conditions" : [
+      "confidence gte 8",
+      "emmaReflection eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_good4_t",
+    "choiceLabel": "Continue",
+    "content": "Mikkel speaks: \"no,\" he says, \"but I knew I needed to shake your hand before I left the conference today.\"<br>\"It’s good to meet you, Mikkel, I’m Emma.\"<br>\"I know who you are. Everyone knows who <em>you</em> are, now.\"<br>\"Oh…\" You blush.<br><br>\"Don’t be modest, Emma, you changed hearts and minds in there this evening.\"<br>\"She changed my mind,\" Kurt said.<br>\"Good work, Emma.\"<br>\"Yeah, Good work.\"<br>Emma felt tears begin to well in her eyes and forced them down. \"Thank you,\" she said, \"both of you.\"<br>They all shook hands and took their respect leaves. Emma set her path back towards the hotel.",
+    "effects" : [
+      {"gotoId" : "emmaReflection_good5_t"},
+    ],
+    "conditions" : [
+      "confidence gte 8",
+      "emmaReflection eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_good5_t",
+    "choiceLabel": "Continue",
+    "content": "Maybe a bath. You thought. A bath and a good book before my flight. That sounds good. You walked through the cold breeze of the city to your hotel, looking at the sunset colors in the clouds as you went.",
+    "effects" : [
+      "set emmaReflection true"
+    ],
+    "conditions" : [
+      "confidence gte 8",
+      "emmaReflection eq true"
+    ]
+  },
+
+//MED//
+  {
+    "id": "emmaReflection_med1_t",
+    "content": "You’re waiting for Mikkel. You know he likes to mingle, he’ll probably be one of the last ones out.<br>Kurt exits from the doors and begins walking away from you.<br><br>You clear your throat -- loud. Several members of the council turn and look at you; you’re only looking at one -- Kurt.<br>\"Emma,\" he says, matter-of-factly, looking back at you. He walks straight into the outpouring of people to greet you. \"Emma,\" he says again, \"I’ve did my research on you.\"<br>\"Kurt,\" you say, a hand outstretched, \"I’ve also done my research.\"<br><br>He takes your hand and grips it -- firm -- you grip back just as firm.",
+    "effects" : [
+      {"gotoId" : "emmaReflection_med2_t"},
+    ],
+    "conditions" : [
+      "confidence gte 4",
+      "confidence lte 7",
+      "emmaReflection eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_med2_t",
+    "choiceLabel": "\"You almost convinced me, sweetheart,\" Kurt said.",
+    "content": "\"Don’t call me sweetheart, cupcake.\"<br>\"My apologies,\" Kurt pauses, deliberately, before speaking again, \"ma’am.\" He said with a smile.<br>\"I come from a land in time where my mama would have smacked me upside my head if I didn’t respect my elders.\"<br><em>Ohh... it’s on.</em> You think.<br>\"Your mother sounds like a smart lady, Kurt. I would’ve probably smacked you upside your head, too, if I had the chance.\" You say, returning Kurt’s smile.",
+    "effects" : [
+      {"gotoId" : "emmaReflection_med3_t"},
+    ],
+    "conditions" : [
+      "confidence gte 4",
+      "confidence lte 7",
+      "emmaReflection eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_med3_t",
+    "choiceLabel": "Continue",
+    "content": "At that moment, Mikkel walks out from the conference room.<br>\"Mikkel,\" you bost! \"Just the man I wanted to see.\" You quickly turn your attention back to Kurt and exclaim \"it’s been a pleasure, but I have some real business to attend to.\" Kurt looks to where you are gesturing.<br><br>\"Senior Mikkel, eh?\" Kurt exclaims.<br><br>Mikkel makes his way to you and Kurt. He is very business in the way he presents himself.<br>\"Good evening, Emma. That was a lovely presentation tonight.\"",
+    "effects" : [
+      {"gotoId" : "emmaReflection_med4_t"},
+    ],
+    "conditions" : [
+      "confidence gte 4",
+      "confidence lte 7",
+      "emmaReflection eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_med4_t",
+    "choiceLabel": "\"Thank you, Mikkel.\"",
+    "content": "\"That is very kind of you to say.\" You look at Mikkel and Kurt \"Yes, Emma, very good. It’s a shame you won’t be getting the money you requested.\"Emma looked at Kurt. As nice as it was to come back at Kurt’s smug sense of self, she simply looked at him in that moment. At that moment, she had not much else to say.\"Emma,\" Mikkel said. Emma’s eyes wavered to a place past Mikkel’s shoulders. \"Emma, look at me.\" Mikkel said again. You looked. \"Sometimes it takes more than one round to knock ‘em down.\"Emma began to slither into herself. Mikkel continued. \"Sometimes it takes a lifetime and even then you might not see the change that you want to see.\" You looked at Mikkel. Mikkel placed warm hand on your shoulder. \"And you know what? That’s okay.\" Emma swallowed the lump in her throat. \"You are doing the best you can and that’s all you can say.\"",
+    "effects" : [
+      {"gotoId" : "emmaReflection_med5_t"},
+    ],
+    "conditions" : [
+      "confidence gte 4",
+      "confidence lte 7",
+      "emmaReflection eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_med5_t",
+    "choiceLabel": "\"Thank you, Mikkel.\"",
+    "content": "Kurt turned away and began to walk with the crowd.<br>\"And sometimes you need a drink!\" He said, turning back to Emma and Mikkel as he left, laughing.<br>You studied the pattern on the floor.<br>\"And sometimes you’ll meet someone like that, that’s just miserable for no good reason. And that’s okay, too.\" Mikkel sounded like he’d given this speech before; You took it nonetheless.\"It’ll get there… Someday.\" You say.<br>\"Yes it will. I’ve got to run. It was nice speaking with you.\"<br>Mikkel joined the crowd as they all went their separate ways. You, however, lingered.<br><em>Maybe I’ll have that drink.</em> You think to yourself. <em>A toast to my presentation well done.</em>",
+    "effects" : [
+      "set emmaReflection true"
+    ],
+    "conditions" : [
+      "confidence gte 4",
+      "confidence lte 7",
+      "emmaReflection eq true"
+    ]
+  },
+
+//BAD//
+  {
+    "id": "emmaReflection_bad1_t",
+    "content": "You’re waiting for Mikkel. You know he likes to mingle, he’ll probably be one of the last ones out.<br>Kurt exits from the doors and begins walking away from you. You stand stiff -- primal -- and hope the threat will not recognize the prey.<br>This was not the person you were expecting from what you knew about him -- though you knew very little to begin with. He turns your way. You swallow, your mouth dry.<br>\"Emma,\" he says, matter-of-factly. He walks into the outpouring of people to greet you. \"Emma,\" he says again. \"I did my research on you, Emma.\"<br>You can’t look him in the eyes. He was standing very close to you. He places a hand on your shoulder; firm.",
+    "effects" : [
+      {"gotoId" : "emmaReflection_bad2_t"},
+    ],
+    "conditions" : [
+      "confidence lte 3",
+      "endingArgument eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_bad2_t",
+    "choiceLabel": "\"Yes… Uh, well…\" you stammer.",
+    "content": "\"I wanted to introduce myself to you,\" he interrupted. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br>\"That’s...\" you start again. You still can’t look him in the eye. You feel your face turning into a grimace as your back presses against the wall. Your gaze shifts past Kurt and you see that Mikkel walked out of the door. \"Excuse --\"",
+    "effects" : [
+      {"gotoId" : "emmaReflection_bad3_t"},
+    ],
+    "conditions" : [
+      "confidence lte 3",
+      "endingArgument eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_bad3_t",
+    "content": "\"I’m Kurt Brannigan,\" Kurt Brannigan said. \"It’s too bad about your speech tonight, but give me a call if you’re willing to set those <em>high</em> morals of yours down for a minute and join a team that’s doing real work.\" Kurt turned and took his leave. You could hear him laughing as he walked away. You don’t wait for your shock to subside before you turn and walk the opposite direction, back towards your hotel, and waited for when you can get on your plane and go home.",
+    "effects" : [
+      "set emmaReflection true"
+    ],
+    "conditions" : [
+      "confidence lte 3",
       "endingArgument eq true"
     ]
   },
