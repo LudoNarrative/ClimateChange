@@ -358,7 +358,7 @@ movement(move(E,D)) :- action(move(E,D)).
    {action(move(E2,_))} 1.
 
 {label(entity(E),E)} :- entity(entity(E)).
-{label(resource(E),E)} :- resource(resoruce(E)).
+{label(resource(E),E)} :- resource(resource(E)).
 :- 2 {label(E,_)}, entity(E).
 :- 2 {label(E,_)}, resource(E).
 :- entity(E), not label(E,_).
@@ -372,5 +372,14 @@ movement(move(E,D)) :- action(move(E,D)).
    computer_controls(E).
 
 
-:- trivial_outcome(O),
+:- trivial(O),
    player_model(O,player_will_avoid).
+
+
+satisfies(ge,increase).
+satisfies(le,decrease).
+
+:- not over_time(Change,Resource),
+   precondition(compare(Dir,Resource),O),
+   player_model(O,player_will_attempt),
+   satisfies(Dir,Change).
