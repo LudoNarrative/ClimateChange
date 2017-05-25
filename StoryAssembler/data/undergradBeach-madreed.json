@@ -130,7 +130,7 @@
 			}
 		],
 		"conditions": [
-			"confidence gt 5"
+			"hope gt 5"
 		]
 	},
 	{
