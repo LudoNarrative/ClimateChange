@@ -101,47 +101,57 @@ function formatContent(stuff) {
 }
 
 //delete unused fields before export
-function deleteUnusedStuff(stuff) {
+function deleteUnusedStuff(data) {
+	var stuff = data;
+
 	for (var i=0; i < stuff.length; i++) {
 		if(typeof stuff[i].conditions !== 'undefined'){
 			if (stuff[i].conditions.length == 0){
-				delete stuff[i].conditions
+				delete stuff[i].conditions;
 			}
 		}
 		if(typeof stuff[i].choiceLabel !== 'undefined'){
 			if (stuff[i].choiceLabel.length == 0){
-				delete stuff[i].choiceLabel
+				delete stuff[i].choiceLabel;
 			}
 		}
 		if(typeof stuff[i].effects !== 'undefined'){
 			if (stuff[i].effects.length == 0){
-				delete stuff[i].effects
+				delete stuff[i].effects;
 			}
 		}
 		if(typeof stuff[i].choices !== 'undefined'){
 			if (stuff[i].choices.length == 0){
-				delete stuff[i].choices
+				delete stuff[i].choices;
 			}
 		}
 
 		if(typeof stuff[i].speaker !== 'undefined'){
 			if (stuff[i].speaker.length == 0){
-				delete stuff[i].speaker
+				delete stuff[i].speaker;
 			}
 		}
 
 		if(typeof stuff[i].speaker !== 'undefined'){
 			if (stuff[i].speaker.length == 0){
-				delete stuff[i].speaker
+				delete stuff[i].speaker;
 			}
 		}
 
-		if (stuff[i].unavailableChoiceLabel !== 'undefined' && stuff[i].unavailableChoiceLabel.length ==0) {
-			delete stuff[i].unavailableChoiceLabel;
+		if (stuff[i].unavailableChoiceLabel !== 'undefined') {
+			if (stuff[i].unavailableChoiceLabel.length == 0) {
+				delete stuff[i].unavailableChoiceLabel;
+			}
 		}
 
 		if (!stuff[i].repeatable) {
 			delete stuff[i].repeatable;
+		}
+
+		if (typeof stuff[i].notes !== 'undefined') {
+			if (stuff[i].notes.length == 0) {
+				delete stuff[i].notes;
+			}
 		}
 	}
 	return stuff;
@@ -344,4 +354,17 @@ function importJSON() {
 	var confirmed = confirm("Anything currently in the editor will be erased! Import?");
 	if (confirmed) { document.getElementById('importField').click(); }
 }
+
+function restoreEditor() {
+	var lastEditorVal = localStorage.getItem('lastEditorVal');
+	if (lastEditorVal !== null) {
+		editor.setValue(JSON.parse(lastEditorVal));
+	}
+}
+
+editor.on('change',function() {
+	if (JSON.stringify(editor.getValue()) !== "[]") {
+  		localStorage.setItem('lastEditorVal', JSON.stringify(editor.getValue()));
+  	}
+});
 
