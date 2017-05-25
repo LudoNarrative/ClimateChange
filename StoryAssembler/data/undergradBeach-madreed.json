@@ -1,64 +1,254 @@
 /*
 
-        { condition: "onABeach eq true"},
-        { condition: "talkAboutSpecies eq true"},
-        { condition: "talkAboutUNPlan eq true"},
-        { condition: "rodrigoSaysPointless eq true"},
-        { condition: "emmaPositiveRejoinder eq true"},
-        { condition: "emmaNegativeRejoinder eq true"},
-        { condition: "rodrigoSadKnowledge eq true"},
-        { condition: "emmaPositiveSpin eq true"},
-        { condition: "emmaNegativeSpin eq true"},
-        { condition: "rodrigoSaysJob eq true"},
-        { condition: "sceneOutro eq true"}
+				{ condition: "onABeach eq true"},
+				{ condition: "talkAboutSpecies eq true"},
+				{ condition: "talkAboutUNPlan eq true"},
+				{ condition: "rodrigoSaysPointless eq true"},
+				{ condition: "emmaPositiveRejoinder eq true"},
+				{ condition: "emmaNegativeRejoinder eq true"},
+				{ condition: "rodrigoSadKnowledge eq true"},
+				{ condition: "emmaPositiveSpin eq true"},
+				{ condition: "emmaNegativeSpin eq true"},
+				{ condition: "rodrigoSaysJob eq true"},
+				{ condition: "sceneOutro eq true"}
 
 */
 [
-
-  {
-    "id": "rodrigoSadKnowledge",
-    "choiceLabel": "rodrigoSadKnowledge choice.",
-    "content": "content",
-    "choices" : [
-      {"gotoId" : "emmaPositiveSpin"}
-    ],
-    "effects" : [
-      "set rodrigoSadKnowledge true"
-    ]
-  },
-
-  {
-    "id" : "emmaPositiveSpin",
-    "choiceLabel" : "emmaPositiveSpin choice",
-    "content" : "emmaPositiveSpin content",
-    "choices" : [
-      {"gotoId" : "emmaNegativeSpin"}
-    ]
-  },
-
-
-  {
-      "id": "emmaNegativeSpin",
-      "choiceLabel": "emmaNegativeSpin choice",
-      "content": "emmaNegativeSpin content",
-      "choices" : [
-        {"gotoId" : "rodrigoSaysJob"}
-      ],
-      "effects" : [
-        "set emmaNegativeSpin true"
-      ]
-    },
-
-  {
-    "id": "rodrigoSaysJob",
-    "choiceLabel": "rodrigoSaysJob choice",
-    "content": "rodrigoSaysJob content",
-    "choices" : [
-      {"gotoId" : "sceneOutro"}
-    ],
-    "effects" : [
-      "set rodrigoSaysJob true"
-    ]
-  },
-
+	{
+		//"choiceLabel": "rodrigoSadKnowledge choice.",
+		"id": "rodrigoSadKnowledge",
+		"speaker": "volunteer",
+		"content": "\"{name|protagonist}, You an intelligent woman, you must know that this relocation won't change anything. The water is going to hell.\"",
+		"choices": [
+			{
+				"gotoId": "avoidingTruthAboutCrabs"
+			}
+		],
+		"effects": [
+			"set rodrigoSadKnowledge true",
+			"decr hope 1"
+		]
+	},
+	{
+		"id": "avoidingTruthAboutCrabs",
+		"choiceLabel": "\"what do you mean?\"",
+		"speaker": "protagonist",
+		"content": "\"We are doing something good, do you really think this won't help {name|volunteer}?\"",
+		"choices": [
+			{
+				"gotoId": "crabAnswer"
+			}
+		]
+	},
+	{
+		"id": "crabAnswer",
+		"choiceLabel": "\"You know that's not what I mean\"",
+		"speaker": "volunteer",
+		"content": "\"Crab fishers have been pulling up corpses since 2002, do you really think you an save this species by moving them down the coast?",
+		"choices": [
+			{
+				"gotoId": "hopefulCrabResponse"
+			}
+		],
+		"effects": [
+			"decr hope .5"
+		]
+	},
+	{
+		"id": "hopefulCrabResponse",
+		"choiceLabel": "\"We can save them!\"",
+		"content": "You pull a crab from the sand, it snaps and flails silently as its orange-red body lifted into the air. \"look at this crab, what do you see {name|volunteer}?\" ",
+		"choices": [
+			{
+				"gotoId": "rudeCrabResponse"
+			}
+		],
+		"effects": [
+			"incr hope 1"
+		]
+	},
+	{
+		"id": "rudeCrabResponse",
+		"choiceLabel": "\"Just a dumb crab\"",
+		"speaker": "volunteer",
+		"content": "\"If these crabs are not smart enough to move down the coast on their own why should we be saving them?\"",
+		"choices": [
+			{
+				"gotoId": "defendSamantha"
+			},
+			{
+				"gotoId": "somberSaveAnswer"
+			},
+			{
+				"gotoId": "simpleSaveAnswer"
+			}
+		]
+	},
+	{
+		"id": "defendSamantha",
+		"choiceLabel": "\"How could you say that!\"",
+		"content": "As you say this you turn away from {name|volunteer} slightly as if to protect the flailing crab you still hold. \"Don't say things like that, or you will hurt Samantha's feelings!\"",
+		"choices": [
+			{
+				"gotoId": "maleCrabRevelation"
+			}
+		],
+		"effects": [
+			"incr hope 1"
+		]
+	},
+	{
+		"id": "maleCrabRevelation",
+		"choiceLabel": "Show him Samantha's sad face.",
+		"content": "You hold Samantha out to {name|volunteer} so he can see how hurtful his words are, he takes a close look at Samanthat then says, \"That's a male crab {name|protagonist}.\"",
+		"choices": [
+			{
+				"gotoId": "allKnowingEmma"
+			},
+			{
+				"gotoId": "steryotipicalPessemist"
+			}
+		]
+	},
+	{
+		"id": "steryotipicalPessemist",
+		"choiceLabel": "\"I don't need your steryotypes!\"",
+		"content": "you go to reassuringly smooch Samantha on top of his head however the threatening snipping and snapping of his claws prevent you from doing so.",
+		"choices": [
+			{
+				"gotoId": "horseshoeCrabDilema"
+			}
+		]
+	},
+	{
+		"id": "allKnowingEmma",
+		"choiceLabel": "\"I knew that.\"",
+		"content": "\"Is there a problem with the name I chose {name|volunteer}? can a male crab not have a beautiful name like Samantha?\" Emma's voice is stern and confident, Samantha seems to like that.",
+		"choices": [
+			{
+				"gotoId": "horseshoeCrabDilema"
+			}
+		],
+		"conditions": [
+			"confidence gt 5"
+		]
+	},
+	{
+		"id": "somberSaveAnswer",
+		"choiceLabel": "\"we aren't saving them.\"",
+		"content": "\"I am not doing this for them, as much as I like these crabs I know their time is short. I am prolonging their lives and setting an example at the same time. I can't sit at home knowing these crabs are suffocating to death.\"",
+		"choices": [
+			{
+				"gotoId": "horseshoeCrabDilema"
+			}
+		],
+		"speaker": "portagonist",
+		"effects": [
+			"incr hope 2"
+		]
+	},
+	{
+		"id": "simpleSaveAnswer",
+		"choiceLabel": "\"I like them\"",
+		"content": "\"Well I love these creatures, they deserve a helping hand in their time of need.",
+		"choices": [
+			{
+				"gotoId": "horseshoeCrabDilema"
+			}
+		]
+	},
+	{
+		"id": "horseshoeCrabDilema",
+		"choiceLabel": "\"let me ask you a question.\"",
+		"content": "\"When is the last time you saw a horseshoe crab?",
+		"speaker": "volunteer",
+		"choices": [
+			{
+				"gotoId": "defensiveCrabStatement"
+			},
+			{
+				"gotoId": "theCrabExtinction"
+			}
+		]
+	},
+	{
+		"id": "theCrabExtinction",
+		"choiceLabel": "\"over 10 years ago\"",
+		"speaker": "protagonist",
+		"content": "\"You know how long it's been. the last known sighting was 8 years ago, and aside from a few in captivity they are all but extinct. Is that the point you were getting to?",
+		"choices": [
+			{
+				"gotoId": "apologyFromExtinction"
+			}
+		],
+		"effects": [
+			"decr hope 1"
+		]
+	},
+	{
+		"id": "defensiveCrabStatement",
+		"choiceLabel": "\"This isn't the same\"",
+		"speaker": "protagonist",
+		"content": "\"This isn't the horseshoe crab, we don't use this species for medicine, we just need regulations put into place so that crabbers won't catch them and then they will be safe. The beach we are moving them to is safer, we have learned a lot from our efforts to protect eh horseshoe crab.",
+		"choices": [
+			{
+				"gotoId": "apologyFromExtinction"
+			}
+		],
+		"effects": [
+			"incr hope .5"
+		]
+	},
+	{
+		"id": "apologyFromExtinction",
+		"choiceLabel": "\"I'm sorry Emma\"",
+		"speaker": "volunteer",
+		"content": "\"I'm sorry, I just wanted to put what we're doing into perspective considering it didn't work last time. I just don't see why it matters.",
+		"choices": [
+			{
+				"condition": "emmaNegativeSpin eq true"
+			}
+		]
+	},
+	{
+		"id": "emmaPositiveSpin",
+		"content": "You do your best to keep a smile on your face as you say, \"Our efforts will pay off, after relocating these crabs their time will be extended enough for the UN to put enviromental measures into effect.\" You stare at your crab, \"I think they will tough it out, I believe in them. What we are doing matters. I know they will be dead, and it's improbable our effors will help anything, but I know it's better than nothing.\" ",
+		"conditions": [
+			"hope gt 5"
+		],
+		"effects": [
+			"set emmaPositiveSpin true",
+			"set emmaNegativeSpin true"
+		]
+	},
+	{
+		"id": "emmaNegativeSpin",
+		"content": "\"Why does it matter? What do you think it feels like to suffocate little by little in the air that you breath. These crabs have done nothing but live their lives as we pollute our planet until the water they live has no oxygen left. What do you think it's like to live in garbage to the point you are entagled in it to where you starve? I am trying to atone for what our species has done, but it seems that that doesn't matter to you.",
+		"effects": [
+			"set emmaPositiveSpin true",
+			"set emmaNegativeSpin true"
+		],
+		"conditions": [
+			"hope lte 5"
+		],
+		"speaker": "protagonist"
+	},
+	{
+		"id": "jobPosative",
+		"choiceLabel": "\"At least it's a job.\"",
+		"speaker": "volunteer",
+		"content": "\"I mean maybe people will get some awareness but we have been trying for years. If there were laws being made to protect nature maybe then what we are doing would matter.\"",
+		"effects": [
+			"set rodrigoSaysJob true"
+		]
+	},
+	{
+		"id": "jobNegative",
+		"choiceLabel": "\"We can't help them.\"",
+		"speaker": "volunteer",
+		"content": "\"I know how you feel but there is no way we can fix this on our own. All this is to me is a job. I feel you should detach yourself from this species {name|protagonist}.\"",
+		"effects": [
+			"set rodrigoSaysJob true"
+		]
+	}
 ]
