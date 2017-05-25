@@ -10,6 +10,9 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
 1 {initialize(set_color(Entity,Color)) : colors(Color)} 1 :-
     entity(Entity).
 
+:- entity(entity(e(N))),
+   not colors(C,N),
+   initialize(set_color(entity(e(N)),C)).
 1 { initialize(add(Entity,scalar(1),location(Row,Col))) : row(Row), col(Col) } 1 :-
     singular(Entity).
 
@@ -391,3 +394,4 @@ result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,wander).
 
 
 result(tick,apply_restitution(E,E)) :- entity(E).
+

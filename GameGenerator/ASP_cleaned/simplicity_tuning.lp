@@ -26,9 +26,11 @@ overlaps(N) :- N =  {condition(overlaps(E))}.
 avatar_controls(4) :- controlScheme(_,tank;_,asteroids;_,cardinal).
 avatar_controls(2) :- controlScheme(_,horizontal;_,vertical).
 avatar_controls(0) :- not controlScheme(_,tank;_,asteroids;_,cardinal;_,horizontal;_,vertical).
-preconditions_allowed(N) :- N = 6 + A  + C - D,
+preconditions_allowed(N) :- N = (E+2)*(R+2) + A  + C - D,
 			    overlaps(A),
-			    avatar_controls(C),
+			    max_entity(E),
+			    max_resource(R),
+			 			    avatar_controls(C),
 			    D  = {controlLogic(_)}.
 %% :~ N + 1 {precondition(_,_)},
 %%    preconditions_allowed(N). [ 1@1 ]

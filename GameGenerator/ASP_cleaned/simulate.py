@@ -338,7 +338,7 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
         outcome_weight = 1000
         fitness += outcome_weight*(len(outcome_reached)-len(rules))
 
-        end_weight = 10
+        end_weight = 50
 
         for v in highest:
             if highest[v] > 10:
@@ -356,7 +356,7 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
                 fitness += end_weight*latest_reached[outcome]
                 #print outcome, earliest_reached[outcome],latest_reached[outcome],fitness
             else:
-                fitness += (depth - len(seen[rule])) * -1
+                fitness += (depth - len(seen[rule])) * -10
 
         return (fitness,)
     return score
@@ -440,8 +440,8 @@ if __name__ == '__main__':
     toolbox.decorate("individual", checkBounds(0.1, 10))
     toolbox.decorate("mate", checkBounds(0.1, 10))
     toolbox.decorate("mutate", checkBounds(0.1, 10))
-    pop = toolbox.population(n=100)
-    CXPB, MUTPB, NGEN = 0.5, 0.2, 100
+    pop = toolbox.population(n=50)
+    CXPB, MUTPB, NGEN = 0.5, 0.2, 25
   
     
     # Evaluate the entire population

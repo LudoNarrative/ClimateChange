@@ -1,7 +1,7 @@
 #const min_entities = 1.
 #const max_entities = 3.
-#const min_resources = 1.
-#const max_resources = 2.
+#const min_resources = 3.
+#const max_resources = 3.
 #const min_outcomes = 2.
 #const max_outcomes = 6.
 #const min_timers = 0.
@@ -12,16 +12,20 @@
 #const max_resource_change_per = 2.
 #const max_conditions_per = 2.
 
-required(maintenance).
-required(hand_eye_coordination).
 
-label(resource(r(1)),concentration).
-label(entity(e(1)),e1).
+required(tradeoff).
 
-:- not reading(hand_eye_coordination,game).
-:- not reading(maintenance,resource(r(1))).
-:- not action(mode_change(game_loss)).
-:- 2 {action(mode_change(N))}.
+label(resource(r(1)),co2).
+label(resource(r(2)),fame).
+label(resource(r(3)),money).
+
+:- not reading(good,fame).
+:- not reading(good,money).
+:- not reading(bad,co2).
+
+:- not reading(tradeoff,_).
+
+:- 1 {action(mode_change(N))}.
 
 :- not computer_controls(_).
 :- 0 {behavior(_,_)} 0.
