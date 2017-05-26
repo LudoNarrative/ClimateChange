@@ -59,6 +59,12 @@ requirejs.config({
 		"undergradBeach_madreed" : "../StoryAssembler/data/undergradBeach-madreed.json",
 		"undergradBeach_sgadsby" : "../StoryAssembler/data/undergradBeach-sgadsby.json",
 
+		"undergradFaculty_sjsherma" : "../StoryAssembler/data/undergradFaculty-sjsherma.json",
+		"undergradFaculty_madreed" : "../StoryAssembler/data/undergradFaculty-madreed.json",
+		"undergradFaculty_kply" : "../StoryAssembler/data/undergradFaculty-kply.json",
+
+
+
 		"sjsherma_testfile" : "../StoryAssembler/data/sjsherma-testfile.json",
 		"kply_testfile" : "../StoryAssembler/data/kply-testfile.json",
 		"irapopor_testfile" : "../StoryAssembler/data/irapopor-testfile.json",
