@@ -17,5 +17,3 @@ player_model(Outcome ,player_will_avoid) :- player_controls_outcome(Outcome),  r
 player_model(Outcome, undetermined) :- outcome(Outcome), not player_model(Outcome ,player_will_attempt),
 				       not player_model(Outcome ,must_happen),
 				       not player_model(Outcome,player_will_avoid).
-
-:- outcome(Outcome), not player_model(Outcome,_).

@@ -10,9 +10,6 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
 1 {initialize(set_color(Entity,Color)) : colors(Color)} 1 :-
     entity(Entity).
 
-:- entity(entity(e(N))),
-   not colors(C,N),
-   initialize(set_color(entity(e(N)),C)).
 1 { initialize(add(Entity,scalar(1),location(Row,Col))) : row(Row), col(Col) } 1 :-
     singular(Entity).
 
@@ -26,9 +23,10 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
 
 speed_values(2;3;4).
 
-1 {speed(E,S) : speed_values(S)} 1 :-
+1 {speed(E,O,S) : speed_values(S)} 1 :-
     entity(E),
-    not static(E).				     
+    not static(E),
+    result(O,move(E,_)).				     
 	      
 
 
@@ -180,8 +178,6 @@ indirectControls(click_and_drag;
 {controlScheme(ENTITY,SCHEME) : indirectControls(SCHEME)} 1 :- entity(ENTITY).
 
 
-:- 2 {controlScheme(ENTITY,SCHEME)},
-   entity(ENTITY).
 
 
 
@@ -353,19 +349,15 @@ behaviors(chase;
 {behavior(ENTITY,BEHAVIOR) : behaviors(BEHAVIOR)} 2 :- entity(ENTITY).
 
 
-:- behavior(ENTITY,_), controlScheme(ENTITY,_).
 
 
 1 {chases(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,chase).
-
-:- chases(ENTITY,ENTITY).
 
 result(tick,move(ENTITY,direction(towards,OTHER))) :- chases(ENTITY,OTHER).
 
 
 1 {flees(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,flee).
 
-:- flees(ENTITY,ENTITY).
 
 result(tick,move(ENTITY,direction(away,OTHER))) :- flees(ENTITY,OTHER).
 
@@ -393,5 +385,5 @@ result(outcome(wander(ENTITY)), rotate_to(ENTITY,random_int(scalar(0),scalar(360
 result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,wander).
 
 
-result(tick,apply_restitution(E,E)) :- entity(E).
+result(tick,apply_restitution(E,E)) :- entity(E) , not static(E).
 

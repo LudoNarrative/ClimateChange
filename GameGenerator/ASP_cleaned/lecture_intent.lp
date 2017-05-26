@@ -12,14 +12,22 @@
 #const max_resource_change_per = 2.
 #const max_conditions_per = 2.
 
-required(maintenance).
-required(hand_eye_coordination).
 
-label(resource(r(1)),concentration).
+
+required(hand_eye_coordination).
+:- not reading(hand_eye_coordination,game).
+
+label(resource(r(1)),concentration) :- reading(good,resource(r(1))).
+label(resource(r(1)),stress) :- reading(bad,resource(r(1))).
+
+:- 2 {label(resource(r(1)))}.
+
 label(entity(e(1)),e1).
 
-:- not reading(hand_eye_coordination,game).
+required(maintenance).
 :- not reading(maintenance,resource(r(1))).
+
+
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
 
@@ -34,3 +42,4 @@ label(entity(e(1)),e1).
 %% :- player_model(Outcome ,player_will_attempt),
 %%    precondition(overlaps(E1,E2,_),Outcome),
 %%    3 {precondition(_,Outcome)} 3.
+

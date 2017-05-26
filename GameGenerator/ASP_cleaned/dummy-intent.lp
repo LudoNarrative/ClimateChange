@@ -13,6 +13,10 @@
 #const max_conditions_per = 2.
 
 
-hastimer :- timer(_).
+required(hand_eye_coordination).
+:- not reading(hand_eye_coordination,game).
 
-:- not hastimer.
+:- not result(_,move(E1,direction(towards,E2))),
+   computer_controls(E1),
+   entity(E1),
+   entity(E2).

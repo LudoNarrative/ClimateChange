@@ -699,7 +699,7 @@ if __name__ == '__main__':
                    'left_arrow':'left key',
                    'right_arrow':'right key'}
     if will_dos:
-        print '\n<li>They will do this by<ul>'
+        print '\n<li>The player will do this by<ul>'
 
         for outcome_ind,outcome in enumerate(will_dos):
             print '<li>'
@@ -729,7 +729,7 @@ if __name__ == '__main__':
   
                 
     if avoids:
-        print '<li>They will avoid<ul>'
+        print '<li>The player will avoid<ul>'
 
         for outcome_ind,outcome in enumerate(avoids):
             print '<li>'
