@@ -325,12 +325,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			//dataFiles: ["text!undergradDinnerData_irapopor"],
 
 			dataFiles: [
-				"text!undergradDinnerData_kevin",
 				"text!undergradDinnerData_talon",
 				"text!undergradDinnerData_irapopor",
-				"text!undergradDinnerData_sgadsby",
-				"text!undergradDinnerData_madreed",
-				"text!undergradDinnerData_sjsherma"],
+				"text!undergradDinnerData_sgadsby"],
 
 			startState: [
 				"set establishFriends false",
