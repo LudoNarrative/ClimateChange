@@ -138,7 +138,7 @@ function deleteUnusedStuff(data) {
 			}
 		}
 
-		if (stuff[i].unavailableChoiceLabel !== 'undefined') {
+		if (typeof stuff[i].unavailableChoiceLabel !== 'undefined') {
 			if (stuff[i].unavailableChoiceLabel.length == 0) {
 				delete stuff[i].unavailableChoiceLabel;
 			}
