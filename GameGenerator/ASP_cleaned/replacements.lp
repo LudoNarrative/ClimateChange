@@ -10,24 +10,24 @@ initialize(set_draggable(E,true)) :-
 replace(result(O,move(E,D)),result(O,apply_impulse(E,D,scalar(S)))) :-
     precondition(overlaps(_),O),
     result(O,move(E,D)),
-    speed(E,S).
+    speed(E,O,S).
 
 replace(result(O,move(E,D)),result(O,apply_impulse(E,D,scalar(S)))) :-
   not_every_frame(O),
   result(O,move(E,D)),
-    speed(E,S).
+    speed(E,O,S).
 
 replace(result(O,move(E,direction(D))),result(O,moves(E,D,scalar(S)))) :-
     result(O,move(E,direction(D))),
     every_frame(O),
-    speed(E,S).
+    speed(E,O,S).
 
 replace(result(O,move(E,direction(towards,D))),result(O,move_towards(E,D,scalar(S)))) :-
     result(O,move(E,direction(towards,D))),
     every_frame(O),
-    speed(E,S).
+    speed(E,O,S).
 
 replace(result(O,move(E,direction(away,D))),result(O,move_away(E,D,scalar(S)))) :-
     result(O,move(E,direction(away,D))),
     every_frame(O),
-    speed(E,S).
+    speed(E,O,S).

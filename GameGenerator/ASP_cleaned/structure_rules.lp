@@ -60,10 +60,6 @@ spawnsAtInitial(E) :-
     result(O,add(E,C,L)),
     initialize(add(E,C,L)).
 
-:-  precondition(_,O),
-    result(O,add(E,_,location(Y,X))),
-    not spawnsAtInitial(E).
-
 
 
 %%%%%%%%%%% TO NARROW IT DOWN EVEN MORE
@@ -164,7 +160,3 @@ structure(red_rover,E2) :-
     initialize(add(E2,_,location(bottom,right))),
     3 {initialize(add(E2,_,_))} 3.
 
-
-:- entity(E), not structure(_,E).
-
-:- structure(S,_), 2 {structure(S,_)}.

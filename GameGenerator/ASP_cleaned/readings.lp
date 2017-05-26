@@ -311,10 +311,6 @@ reading_about(Thing) :-
 reading_about(Thing) :-
     reading(Action,relation(_,Thing)).
 
-:- resource(R),
-   not reading_about(R).
-:- entity(E),
-   not reading_about(E).
 
 
 outcome_creates_condition(Outcome,compare(le,Resource)) :-
@@ -338,9 +334,4 @@ outcome_enables(O1,O3) :-
     outcome_enables(O1,O2),
     outcome_enables(O2,O3).
 
-:- reading(grinding,Resource),
-   result(Outcome,modify(_,Resource)),
-   not player_controls_outcome(Outcome).
 
-
-:- reading(Reading,_), not required(Reading).
