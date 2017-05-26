@@ -1,197 +1,259 @@
 [
-/*
-        { condition: "atUNMeeting eq true"},
-        { condition: "representingResearchGroup eq true"},
-        { condition: "looksOverCommittee eq true"},
-        { condition: "introducesResearch eq true"},
-        { condition: "presentFacts eq true"},
-        { condition: "kurtInterrupts eq true"},
-        { condition: "lostTrainOfThought eq true"},
-        { condition: "callForLocalAction eq true"},
-        { condition: "endingArgument eq true"},
-        { condition: "emmaReflection eq true"},
-        { condition: "inHallway eq true"}
-*/
-{
+  {
     "id": "introduceResearchPart1",
-    "content": "presentFacts content",
-    "effects" : [
-      "set introducesResearch true"
+    "content": "As the room slowly grows quieter, the sound of your beating heart becomes more distinct. It's fast, but steady. <p>\"Hello,{ifStateCondition|composure lte 3|\" that came out choppier than you would've liked. After clearing your throat, you continue with \"|} thank you for taking the time to listen to what I have to say today.\"</p>",
+    "choices": [
+      {
+        "gotoId": "introduceResearchPart2"
+      }
     ],
-    "conditions" : [
+    "conditions": [
       "looksOverCommittee eq true",
-      "charactersIntroduced gte 4"
+      "charactersIntroduced gte 2"
     ],
-    "choices": [{
-      "gotoId": "introduceResearchPart2"
-    }]
-    
-  },
-
-{
-    "id": "introduceResearchPart2",
-    "choiceLabel": "continue introducing research",
-    "content": "presentMoreFacts content",
-    "effects" : [
+    "effects": [
       "set introducesResearch true"
-    ],
-    
-    "choices":[
-      {"gotoId": "introduceResearch1"},
-      {"gotoId": "introduceResearch2"},
-      {"gotoId": "introduceResearch3"}
     ]
   },
-
   {
-    "id": "introduceResearch1",
+    "id": "introduceResearchPart2",
+    "choiceLabel": "Provide main argument",
+    "content": "\"All of us in this room know that climate change is a huge problem. But not everyone out there knows it. That is why we must turn more of our focus towards educating the general public about the effects of climate change and how they can help.\"",
+    "choices": [
+      {
+        "gotoId": "introduceResearchShy"
+      },
+      {
+        "gotoId": "introduceResearchProfessional"
+      },
+      {
+        "gotoId": "introduceResearchConfident"
+      }
+    ]
+  },
+  {
+    "id": "introduceResearchShy",
     "choiceLabel": "Shy introduction",
-    "content": "Present the info in a reserved way",
+    "content": "\"Well, if it is ok with all of you, I would like to present my research now.\" <p>You interpret the silence as permission to proceed.</p>",
     "effects": [
       "decr confidence 1"
-    ],
+    ]
   },
-
   {
-    "id": "introduceResearch2",
+    "id": "introduceResearchProfessional",
     "choiceLabel": "Professional introduction",
-    "content": "Present the info in a normal, professional manner",
+    "content": "\"I have been conducting research about climate change and putting together a plan to educate the public about how they can help fight against it.\"",
     "effects": [
       "incr confidence 1"
-    ],
+    ]
   },
-
   {
-    "id": "introduceResearch3",
+    "id": "introduceResearchConfident",
     "choiceLabel": "Confident introduction",
-    "content": "Present the info in a very confident manner with a compelling intro",
+    "content": "\"If we can educate the general public about just how big of an issue climate change is, we can get entire communities to help us out. It will take a little bit of funding, but it will be paid back very quickly when millions of people join us in this fight against climate change.\"",
     "effects": [
       "incr confidence 1"
-    ],
+    ]
   },
-
-{
+  {
     "id": "presentFacts",
-    "content": "Bridge to present facts",
     "repeatable": "true",
-    "effects" : [
-      "set presentFacts true",
+    "content": "Glancing down at your notecards, you pick from a few prepared facts to get them on your side.",
+    "choices": [
+      {
+        "condition": "factsPresented incr 1"
+      },
+      {
+        "condition": "factsPresented incr 1"
+      },
+      {
+        "condition": "factsPresented incr 1"
+      }
     ],
-    "conditions" : [
+    "conditions": [
       "introducesResearch eq true"
     ],
-    "choices": [
-      {"condition": "factsPresented incr 1"},
-      {"condition": "factsPresented incr 1"},
-      {"condition": "factsPresented incr 1"},
-    ],
+    "effects": [
+      "set presentFacts true"
+    ]
   },
-
   {
     "id": "veryUnpersuasiveFact1",
-    "choiceLabel": "brief description of fact",
+    "choiceLabel": "brief description of very unpersuasive fact",
     "content": "Provide fact that is very unpersuasive",
     "effects": [
       "decr persuasion 2",
       "incr factsPresented 1"
     ]
   },
-
-
   {
-    "id": "neutralFact1",
-    "choiceLabel": "brief description of fact",
-    "content": "Provide fact that is neutral and doesn't get any reaction",
-    "effects":[
+    "id": "unpersuasiveFact1",
+    "choiceLabel": "brief description of unpersuasive fact",
+    "content": "Provide fact that is very unpersuasive",
+    "effects": [
+      "decr persuasion 1",
       "incr factsPresented 1"
     ]
   },
-
+  {
+    "id": "neutralFact1",
+    "choiceLabel": "brief description of neutral fact",
+    "content": "Provide fact that is neutral and doesn't get any reaction",
+    "effects": [
+      "incr factsPresented 1"
+    ]
+  },
   {
     "id": "persuasiveFact1",
-    "choiceLabel": "brief description of fact",
+    "choiceLabel": "brief description of persuasive fact",
     "content": "Provide fact that is persuasive and gets a positive reaction",
     "effects": [
       "incr persuasion 1",
       "incr factsPresented 1"
     ]
   },
-  
-{
-    "id": "kurtInterrupts",
-    "content": "kurtInterrupts content",
-    "effects" : [
-      "set kurtInterrupts true",
+  {
+    "id": "veryPersuasiveFact1",
+    "choiceLabel": "brief description of very persuasive fact",
+    "content": "Provide fact that is persuasive and gets a positive reaction",
+    "effects": [
+      "incr persuasion 2",
       "incr factsPresented 1"
-    ], 
-    "conditions" : [
-      "factsPresented gte 4",
-      "presentFacts eq true"
     ]
   },
- {
-    "id": "lostTrainOfThought",
-    "content": "lostTrainOfThought content",
-    "effects" : [
-      "set lostTrainOfThought true",
-      "decr confidence 2",
+  {
+    "id": "kurtInterrupts",
+    "content": "Out of the corner of your eye, you see Kurt's hand slightly rise as he loudly clears his throat.  <p>\"Sorry for the interruption but I couldn't help but I just had a thought.\" </p>",
+    "choices": [
+      {
+        "condition": "kurtInterrupts eq true"
+      }
     ],
-    "conditions" : [
+    "conditions": [
+      "factsPresented gte 2",
+      "presentFacts eq true"
+    ],
+    "effects": [
+      "incr factsPresented 1"
+    ]
+  },
+  {
+    "id": "kurtInterruptsGood",
+    "content": "\"I understand your point, but am still unsure if funding education is the right decision. Would it not be more efficient to just dump the money into things like renewable energy or technology to clean up our oceans?\"",
+    "effects": [
+      "set kurtInterrupts true"
+    ],
+    "choiceLabel": "Listen to what Kurt has to say",
+    "choices":[{
+      "gotoId": "respondToKurt"
+    }]
+  },
+  {
+    "id": "kurtInterruptsBad",
+    "content": "\"All of this just makes no sense to me, why not just use the money to directly fund renewable energy or technology to clean up our oceans? Wouldn't that just be faster?\"",
+    "effects": [
+      "set kurtInterrupts true"
+    ],
+    "choiceLabel": "Listen to what Kurt has to say",
+    "choices":[
+      {"gotoId": "respondToKurtGood"},
+      {"gotoId": "respondToKurtBad"}
+    ]
+  },
+
+  {
+    "id": "respondToKurtGood",
+    "content": "After taking a second to process the question, a small smile slowly emerges on your face. \"While it true that funding those things would be very beneficial to current efforts to stop climate change, funding education would help a lot more in the long run.\"",
+    "choiceLabel": "\"You need to look at the bigger picture\"",
+    "choices": [{
+      "gotoId": "respondToKurtGood2"
+    }]
+  },
+
+  {
+    "id": "respondToKurtGood2",
+    "content": "\"Not only will educating the general public incentivize people to go out and help out locally, it would also urge thousands more to study climate change at a professional level and contribute to the fight against it later on. We will have more people than ever working towards the same goal.\"",
+    "choiceLabel": "Explain why education is needed",
+    "effects": [
+      "incr composure 2"
+    ]
+  },
+
+
+
+  {
+    "id": "respondToKurtBad",
+    "content": "Hmm he makes a good point. <p>\"I understand your point, but I believe that funding education will be more effective in the long run.\"</p><p>You hope that your facts are good enough to make up for your poor answer.</p>",
+    "choiceLabel": "He's right",
+    "effects":[
+     "decr composure 1"
+   ]
+  },
+
+
+
+
+  {
+    "id": "lostTrainOfThought",
+    "content": "You look down at your notes for a reminder of what to present next. Somehow, every word written on the notecards look so foreign. Scanning the cards again, you are still lost and can't remember what the last thing you said was.",
+    "choices": [
+      {
+        "gotoId": "makeThingsWorse"
+      },
+      {
+        "gotoId": "slightRecovery"
+      },
+      {
+        "gotoId": "turnItAround"
+      }
+    ],
+    "conditions": [
       "composure lte 3",
       "introducesResearch eq true"
     ],
-    "choices":[
-      {"gotoId": "makeThingsWorse"},
-      {"gotoId": "slightRecovery"},
-      {"gotoId": "turnItAround"}
+    "effects": [
+      "set lostTrainOfThought true",
+      "decr confidence 2"
     ]
   },
 
   {
     "id": "makeThingsWorse",
-    "choiceLabel": "try to recover but nope",
-    "content": "Try to recover but dig yourself into a deeper hole",
+    "choiceLabel": "Try to ignore the fumble",
+    "content": "It's ok, everyone makes mistakes. It's just about how well you pick yourself up...which is hard to do when you have completely lost track of where you are. You fumble through your notecards and find the conclusion of your presentation.",
     "effects": [
       "decr confidence 1",
       "decr persuasion 1"
     ]
   },
-
   {
     "id": "slightRecovery",
-    "choiceLabel": "play it off",
-    "content": "You get away with the mistep and they barely notice",
+    "content": "You look up to the audience and take a deep breath. Everyone makes mistakes. You look back down at your notes and backtrack to your last sentence, continuing like nothing ever happened.",
     "effects": [
       "incr confidence 2",
       "decr persuasion 1"
-    ]
+    ],
+    "choiceLabel": "Take a breath"
   },
-
   {
     "id": "turnItAround",
-    "choiceLabel": "use it to your advantage",
-    "content": "You end up turning it around and gaining more confidence",
+    "content": "You look up at the panel, all their eyes are fixated on you, waiting for the next piece of evidence. <p>\"Haha sorry, there are so many good reasons to support my side, I don't know which one to choose from.\"</p><p>A brief moment of laughter occurs, after which you continue the presentation like nothing happened.</p>",
     "effects": [
       "incr confidence 3",
       "incr composure 1",
       "incr persuasion 1"
-    ]
-  },
- {
-    "id": "callForLocalAction",
-    "content": "callForLocalAction content",
-    "effects" : [
-      "set callForLocalAction true",
     ],
-    "conditions" : [
+    "choiceLabel": "Crack a joke"
+  },
+  {
+    "id": "callForLocalAction",
+    "content": "\"So as you can all see, the best thing we can do is to increase funding for climate change education. We need to teach the importance of combating climate change and urge kids and adults to go out and help out in their local efforts to clean up our planet.\"",
+    "conditions": [
       "factsPresented gte 3",
       "kurtInterrupts eq true"
+    ],
+    "effects": [
+      "set callForLocalAction true"
     ]
-  },
- 
-
-
-
-
-
+  }
 ]
