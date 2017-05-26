@@ -1,0 +1,118 @@
+[
+  {
+    "id": "elikaPresentation",
+    "choiceLabel": "elika_presents",
+    "content": "Elika presents her dissertation on the extinction of the human race",
+    "effects": [
+      "set studentPresentation true"
+    ]
+  },
+
+  {
+    "id": "aidenPresentation",
+    "choiceLabel": "aiden_presents",
+    "content": "Aiden presents their dissertation on the impact of climate change and how that may cause the extinction of the falcon",
+    "effects": [
+      "set studentPresentation true"
+    ]
+  },
+
+  {
+    "id": "emmaAsksAiden",
+    "choiceLabel": "emma_aiden_question",
+    "content": "Emma decides on what to ask Aiden",
+    "choices": [
+      {
+        "gotoId": "aidenSoftball"
+      },
+      {
+        "gotoId": "aidenMiddle"
+      },
+      {
+        "gotoId": "aidenHardcore"
+      }
+    ],
+    "effects": [
+      "set emmaAsks true"
+    ]
+  },
+
+  {
+    "id": "aidenSoftball",
+    "choiceLabel": "aiden_softball",
+    "content": "Asks soft question"
+  },
+
+  {
+    "id": "aidenMiddle",
+    "choiceLabel": "aiden_middle",
+    "content": "asks general question"
+  },
+
+  {
+    "id": "aidenHardcore",
+    "choiceLabel": "aiden_hard",
+    "content": "plays devil's advocate/challenging question"
+  },
+
+  {
+    "id": "",
+    "content": "placeholder"
+  }
+
+  {
+  "id": "audienceAsksElika",
+  "choiceLabel": "audience_elika_question",
+  "content": "audience asks elika a question",
+  "choices": [
+    {
+      "gotoId": "emmaHelpElika"
+    },
+    {
+      "gotoId": "emmaNoHelpElika"
+    }
+  ]
+  },
+
+  {
+    "id": "emmaHelpElika",
+    "choiceLabel": "emma_help_elika",
+    "content": "Emma steps in"
+  },
+
+  {
+    "id": "emmaNoHelpElika",
+    "choiceLabel": "emma_not_elika",
+    "content": "Emma stays out of it"
+  },
+
+  {
+    "id": "audienceAsksAiden",
+    "choiceLabel": "audience_aiden_question",
+    "content": "audience asks aiden a question",
+    "choices": [
+      {
+        "gotoId": "emmaHelpAiden"
+      },
+      {
+        "gotoId": "emmaNoHelpAiden"
+      }
+    ],
+    "effects": [
+      "set  "
+    ]
+  },
+
+  {
+    "id": "emmaHelpAiden",
+    "choiceLabel": "emma_help_aiden",
+    "content": "Emma helps aiden"
+  },
+
+  {
+    "id": "emmaNoHelpAiden",
+    "choiceLabel": "emma_no_aiden",
+    "content": "emma stays out of it"
+  },
+
+]
