@@ -5,15 +5,17 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
 [
   {
     "id": "elikaPresentation",
-    "choiceLabel": "Continue",
-    "content": "{name|enthusiasticStudent} hops up next to where her first slide was blossoming upon the screen, beaming at the three of you. \"Hello, everyone!\" she says, her arm sweeping up into the air. \"I'm super pleased to present to you my dissertation: a vigorous look into the ultimate extinction of the human race!\"",
+    "content": "Élika hops up next to where her first slide was blossoming upon the screen, beaming at the three of you. \"Hello, everyone!\" she says, her arm sweeping up into the air. \"I'm super pleased to present to you my dissertation: a vigorous look into the ultimate extinction of the human race!\"",
     "choices" : [
       {"gotoId" : "ohMy"},
       {"gotoId" : "thisInteresting"},
       {"gotoId" : "thisUnexpected"}
     ],
     "effects": [
-      "set studentPresentation true"
+      "set studentGivesPresentation true"
+    ],
+    "conditions" : [
+      "establishAudience eq true"
     ]
   },
 
@@ -43,7 +45,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
 
   {
     "id" : "elikaPresentsSlide1",
-    "content" : "{name|enthusiasticStudent} is practically dancing on the tips of her toes. \"Specifically, I will be discussing the ridiculously high extinction rates of other species, how those correlate with human activity, and how such rates relate to how long human beings will be able to continue their existence on this planet!\" <br/><br/>... She looks <i>so</i> excited for this.",
+    "content" : "Élika is practically dancing on the tips of her toes. \"Specifically, I will be discussing the ridiculously high extinction rates of other species, how those correlate with human activity, and how such rates relate to how long human beings will be able to continue their existence on this planet!\" <br/><br/>... She looks <i>so</i> excited for this.",
     "choices" : [
       {"gotoId" : "elikaPresentsSlide2"},
     ]
@@ -52,16 +54,60 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id" : "elikaPresentsSlide2",
     "choiceLabel" : "Continue",
-    "content" : "\"Taking into account the species we are currently aware of "
-  }
+    "content" : "\"Taking into account the species we are aware of, the current extinction rate has risen to over one hundred times higher since the last study thirty years ago - which is just one of the signs that we're about to experience the 'Sixth Great Extinction.'\" The next slide reveals a stock photo of a smiling businessman. \"And the culprit? Humans, naturally!",
+    "choices" : [
+      {"gotoId" : "elikaPresentsSlide3"}
+    ]
+  },
+
+  {
+    "id" : "elikaPresentsSlide3",
+    "choiceLabel" : "Continue.",
+    "content" : "\"Overhunting. Overfishing. Overlogging. Introducing invasive species. Releasing an overabundance of greenhouse gases in our atmosphere. Human activity has caused climate change so drastic that the global temperature has risen, the chemistry of the oceans have shifted, and the very face of our planet has been rearranged in accordance to our wants.\"",
+  },
+
+  {
+    "id" : "elikaPresentsSlide4",
+    "choiceLabel" : "Continue",
+    "content" : "\"Thus, I have dug deep into the effects of human activity in order to answer the question of just how long humans can adapt and last to the consequences, before falling victim to our own handiwork, like so many species before us have already.\"",
+    "choices" : [
+      {"gotoId" : "howFascinating"},
+      {"gotoId" : "howMorbid"},
+      {"gotoId" : "howRelevant"},
+    ],
+  },
+
+  {
+    "id" : "howFascinating",
+    "choiceLabel" : "How fascinating.",
+    "request" : {
+      "gotoId" : "emmaAsksElika"
+    },
+  },
+
+  {
+    "id" : "howMorbid",
+    "choiceLabel" : "How morbid.",
+    "request" : {
+      "gotoId" : "emmaAsksElika"
+    },
+  },
+
+  {
+    "id" : "howRelevant",
+    "choiceLabel" : "How relevant.",
+    "request" : {
+      "gotoId" : "emmaAsksElika"
+    },
+  },
 
   {
     "id": "aidenPresentation",
     "choiceLabel": "aiden_presents",
     "content": "Aiden presents their dissertation on the impact of climate change and how that may cause the extinction of the falcon",
     "effects": [
-      "set studentPresentation true"
-    ]
+      "set studentGivesPresentation true"
+    ],
   },
 
   {
@@ -80,7 +126,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
       }
     ],
     "effects": [
-      "set emmaAsks true"
+      "set emmaAsksQuestion true"
     ]
   },
 
@@ -113,6 +159,9 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
     {
       "gotoId": "emmaNoHelpElika"
     }
+  ],
+  "effects" : [
+    "set audienceAsksQuestion true"
   ]
   },
 
@@ -141,7 +190,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
       }
     ],
     "effects": [
-      "set  "
+      "set audienceAsksQuestion true"
     ]
   },
 
