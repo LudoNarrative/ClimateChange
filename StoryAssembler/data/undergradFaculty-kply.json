@@ -1,3 +1,6 @@
+
+
+//Comment Test
 [
   {
     "id": "establishSetting",
@@ -17,13 +20,24 @@
     ]
   },
   {
-    "id": "establishClimateChange",
-    "content": "establishClimateChange",
+    "id": "establishClimateChangeEffects",
+    "content": "establishClimateChangeEffects",
     "conditions": [
       "establishAudience eq true"
     ],
     "effects": [
-      "set establishClimateChange true"
+      "set establishClimateChangeEffects true"
+    ]
+  },
+  {
+    "id": "emmaAsksElika",
+    "content": "Emma asks Elika a question after her presentation",
+    "effects": [
+      "set emmaAsksQuestion true"
+    ],
+    "conditions": [
+      "enthusiasticStudent eq true",
+      "studentGivesPresentation eq true"
     ]
   },
   {
