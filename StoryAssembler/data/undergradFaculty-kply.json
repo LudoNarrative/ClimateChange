@@ -1,0 +1,39 @@
+[
+  {
+    "id": "establishSetting",
+    "content": "establishSetting",
+    "effects": [
+      "set establishSetting true"
+    ]
+  },
+  {
+    "id": "establishAudience",
+    "content": "establishAudience",
+    "conditions": [
+      "establishSetting eq true"
+    ],
+    "effects": [
+      "set establishAudience true"
+    ]
+  },
+  {
+    "id": "establishClimateChange",
+    "content": "establishClimateChange",
+    "conditions": [
+      "establishAudience eq true"
+    ],
+    "effects": [
+      "set establishClimateChange true"
+    ]
+  },
+  {
+    "id": "outro",
+    "content": "outro",
+    "effects":[
+      "set outro true"
+    ],
+    "conditions":[
+      "facultyDeliberate eq true",
+    ]
+  }
+]
