@@ -1,12 +1,59 @@
+/*Sources:
+http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-animals-conservation-science-world/
+*/
+
 [
   {
     "id": "elikaPresentation",
-    "choiceLabel": "elika_presents",
-    "content": "Elika presents her dissertation on the extinction of the human race",
+    "choiceLabel": "Continue",
+    "content": "{name|enthusiasticStudent} hops up next to where her first slide was blossoming upon the screen, beaming at the three of you. \"Hello, everyone!\" she says, her arm sweeping up into the air. \"I'm super pleased to present to you my dissertation: a vigorous look into the ultimate extinction of the human race!\"",
+    "choices" : [
+      {"gotoId" : "ohMy"},
+      {"gotoId" : "thisInteresting"},
+      {"gotoId" : "thisUnexpected"}
+    ],
     "effects": [
       "set studentPresentation true"
     ]
   },
+
+  {
+  "id": "ohMy",
+  "choiceLabel": "...Oh my.",
+  "request": {
+    "gotoId": "elikaPresentsSlide1"
+   }
+  },
+
+  {
+    "id": "thisInteresting",
+    "choiceLabel": "This sounds interesting.",
+    "request": {
+      "gotoId": "elikaPresentsSlide1"
+    }
+  },
+
+  {
+    "id": "thisUnexpected",
+    "choiceLabel": "...Was not expecting that.",
+    "request": {
+      "gotoId": "elikaPresentsSlide1"
+    }
+  },
+
+  {
+    "id" : "elikaPresentsSlide1",
+    "content" : "{name|enthusiasticStudent} is practically dancing on the tips of her toes. \"Specifically, I will be discussing the ridiculously high extinction rates of other species, how those correlate with human activity, and how such rates relate to how long human beings will be able to continue their existence on this planet!\" <br/><br/>... She looks <i>so</i> excited for this.",
+    "choices" : [
+      {"gotoId" : "elikaPresentsSlide2"},
+    ]
+  },
+
+  {
+    "id" : "elikaPresentsSlide2",
+    "choiceLabel" : "Continue",
+    "content" : "\"Taking into account the species we are currently aware of "
+  }
 
   {
     "id": "aidenPresentation",
@@ -54,11 +101,6 @@
     "choiceLabel": "aiden_hard",
     "content": "plays devil's advocate/challenging question"
   },
-
-  {
-    "id": "",
-    "content": "placeholder"
-  }
 
   {
   "id": "audienceAsksElika",
