@@ -2132,7 +2132,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "undergradBeach",
-				aspFilepaths: : ["GameGenerator/ASP_cleaned/games/lecture_10.lp",
+				aspFilepaths:  ["GameGenerator/ASP_cleaned/games/lecture_10.lp",
 "GameGenerator/ASP_cleaned/games/lecture_11.lp",
 "GameGenerator/ASP_cleaned/games/lecture_12.lp",
 "GameGenerator/ASP_cleaned/games/lecture_13.lp",
