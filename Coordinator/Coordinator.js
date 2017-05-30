@@ -1477,7 +1477,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradDinner",
-				src : "beach.png"
+				src : "dinner.png"
 			},
 			{
 				id : "undergradLecture",
@@ -1485,7 +1485,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradDean",
-				src : "cafe.png"
+				src : "office.png"
 			},
 			{
 				id : "undergradTravel",
@@ -1493,15 +1493,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradFamilyDinner",
-				src : "lecturehall.png"
+				src : "dinner.png"
 			},
 			{
 				id : "undergradUN",
-				src : "lecturehall.png"
+				src : "UNroom.png"
 			},
 			{
 				id : "undergradBeach",
-				src : "lecturehall.png"
+				src : "beach.png"
 			},
 			{
 				id : "undergradFaculty",
