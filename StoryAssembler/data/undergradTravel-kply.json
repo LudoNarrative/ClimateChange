@@ -36,7 +36,7 @@
 
   {
 		"id": "oldHighSchool",
-		"choiceLabel": "\"Come speak at our school!\""
+		"choiceLabel": "\"Come speak at our school!\"",
 		"content": "The name in the email rang an odd bell in your head, so you continue to read. It was a rather short paragraph which said \"Hello Emma, I don't know if you remember me but I am Linda Jordana from your old high school. We heard that you have been doing very well in your efforts to educate people on the effects of climate change and would love if you could give a lecture here at Rapid City High!\"",
 		"conditions": [
 			"haveOffer eq true"
