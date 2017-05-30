@@ -1,4 +1,19 @@
 
+:- action(move(Entity,direction(towards,Other))),
+   not result(tick,apply_restitution(Entity,Other)),
+   entity(Other).
+
+
+:- not player_controls(_).
+
+:- action(move(Entity,direction(away,_))),
+   not action(apply_restitution(Entity,Entity)).
+
+
+
+:- action(move(Entity,direction(towards,_))),
+   not action(apply_restitution(Entity,Entity)).
+
 
 :- 2{precondition(compare(_,_),O)},
    outcome(O).
@@ -89,11 +104,6 @@
    entity(E).
    
 
-% Phaser doesn't allow this
-:-  controlLogic(draggable(E)),
-    action(apply_restitution(E,_)).
-:-  controlLogic(draggable(E)),
-    action(apply_restitution(_,E)).
 
 :- precondition(overlaps(E1,E2,true),O),
    result(O,move(E1,_)).
@@ -235,17 +245,6 @@ satisfies(le,decrease).
    satisfies(Dir,Change).
 
     
-:- action(move(Entity,direction(away,_))),
-   not action(apply_restitution(Entity,Entity)).
-
-
-
-:- action(move(Entity,direction(towards,_))),
-   not action(apply_restitution(Entity,Entity)).
-
-:- action(move(Entity,direction(towards,Other))),
-   not action(apply_restitution(Entity,Other)).
-
 
 %:-  precondition(overlaps(E1,E2,POLARITY),O),
 %    precondition(control_event(click(E3)),O).
@@ -434,8 +433,8 @@ different_precondition(O1,O2) :-
 
 :- precondition(timer_elapsed(T),O),
    result(O,rotates(E,_,_)),
-   result(tick, move(E,scalar(V))),
-   timer_logic(timer(T),scalar(DT)),
+   speed(E,tick,scalar(V)),
+   timer_logic(timer(T),scalar(DT),loop),
    60*DT*V > 200.
 
 
@@ -491,3 +490,21 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE)), trivial(O).
    
   
 :- frivolous(R), not allowed(frivolous(R)).
+
+%It shouldn't be the case that the only way that a player controls something is by making it move towards (or away) from itself
+:- player_controls(E),
+   action(move(E,direction(_,E))),
+   1 {action(move(E,_))} 1,
+   1 {player_controls(_)} 1.
+
+
+player_controls_resource(R,Dir) :-
+    result(O,modify(R,Dir)),
+    player_controls(O).
+
+:- resource(R),
+   precondition(compare(R,_),O),
+   player_controls(O),
+   not player_controls_resource(R,_).
+   
+%:- monotonic(R), not allowed(monotonic(R)).

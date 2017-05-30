@@ -12,11 +12,3 @@
 #const max_resource_change_per = 2.
 #const max_conditions_per = 2.
 
-
-required(hand_eye_coordination).
-:- not reading(hand_eye_coordination,game).
-
-:- not result(_,move(E1,direction(towards,E2))),
-   computer_controls(E1),
-   entity(E1),
-   entity(E2).
