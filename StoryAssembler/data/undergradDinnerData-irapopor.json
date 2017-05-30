@@ -13,10 +13,7 @@
     "conditions": [
       "EmmaJobFutureBeat eq true",
       "academicEnthusiasm gt 4",
-      {
-        "variable": "EmmaClassTypeBeat",
-        "value": "true"
-      }
+      "EmmaClassTypeBeat eq true"
     ],
     "effects": [
       "set friendIsInAcademia true"
@@ -52,10 +49,7 @@
     "conditions": [
       "establishFriendsEmmaJobFutureBeat eq true",
       "academicEnthusiasm lte 3",
-      {
-        "variable": "EmmaClassTypeBeat",
-        "value": "true"
-      }
+      "EmmaClassTypeBeat eq true"
     ],
     "effects": [
       "set friendIsInAcademia true",
@@ -101,11 +95,12 @@
     "content": "<p>{name|nonAcademicFriend} and {name|academicFriend} begin to bicker. Accusations of laziness and ignorance bounce back and forth like they're ping pong balls.</p><p>\"I'm sorry getting a degree was too hard for you {name|nonAcademicFriend}, but that's your problem.\"</p><p>\"Honestly? If you need other people to validate your success then fine, be my guess.\"</p>",
     "conditions": [
       "friendIsInAcademia eq true",
-      "friendIsNotInAcademia gt true"
+   //   "friendIsNotInAcademia gt true"     //JG
     ],
+    /*
     "choices" : [
       {"gotoId": ""}
-    ],
+    ],*/
     "effects": [
       "set friendTensionRelieved true"
     ]
@@ -116,7 +111,7 @@
       "content": "<p>\"What {nickname|protagonist}, you too?\" {name|nonAcademicFriend} sighs. \"No, you're right. Just because it isn't what I would do doesn't mean it's wrong. I guess I'm just stubborn. Surprise!\"</p>",
       "conditions": [
         "friendIsInAcademia eq true",
-        "friendIsNotInAcademia gt true"
+       // "friendIsNotInAcademia gt true"   //JG
       ],
       "effects": [
         "incr academicEnthusiasm 1",
@@ -129,7 +124,7 @@
       "content": "<p>{name|academicFriend} goes a little pale, as if she's stunned by her own behaviour. \"You're right {nickname|protagonist}. Sorry {nickname|nonAcademicFriend}, that wasn't me talking. I'm just a bit overwhelmed with teaching lately.\"</p>",
       "conditions": [
         "friendIsInAcademia eq true",
-        "friendIsNotInAcademia gt true"
+       // "friendIsNotInAcademia gt true"     //JG
       ],
       "effects": [
         "decr academicEnthusiasm 1",
@@ -142,7 +137,7 @@
       "content": "<p>\"{name|academicFriend} please, now you are just sounding childish.\"</p><p>\"Oh, jeez prof, this won't bring down my participation points, will it?\" Shelly waves her hand in dismissal. The two go quiet and focus on their food.</p>",
       "conditions": [
         "friendIsInAcademia eq true",
-        "friendIsNotInAcademia gt true"
+        //"friendIsNotInAcademia gt true"   //JG
       ],
       "effects": [
         "incr tension 1"
