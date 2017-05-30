@@ -478,14 +478,16 @@ different_precondition(O1,O2) :-
    player_controls(E2).
 
 
-
+trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE)), trivial(O).
 % don't allow for "running out of gas" unless there's a trivial way to get gas
 :- precondition(compare(ge,R),O),
    player_model(O,player_will_attempt),
-   not trivial(O2),
-   result(O2,modify(increase,R)).
+   not trivial_resource(increase,R).
 % don't allow for "running out of gas" unless there's a trivial way to get gas
 :- precondition(compare(le,R),O),
    player_model(O,player_will_attempt),
-   not trivial(O2),
-   result(O2,modify(decrease,R)).
+   not trivial_resource(decrease,R).
+   
+   
+  
+:- frivolous(R), not allowed(frivolous(R)).
