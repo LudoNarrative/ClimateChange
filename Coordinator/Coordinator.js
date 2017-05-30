@@ -1,5 +1,5 @@
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_kevin",
-	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!undergradUN_kply", "text!undergradUN_talon", "text!undergradUN_irapopor", "text!undergradBeach_madreed", "text!undergradBeach_sjsherma", "text!undergradBeach_sgadsby", "text!sjsherma_testfile","text!madreed_testfile", "text!talon_testfile","text!sgadsby_testfile","text!kply_testfile","text!irapopor_testfile", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, undergradUN_kply, undergradUN_talon, undergradUN_irapopor, undergradBeach_madreed, undergradBeach_sjsherma, undergradBeach_sgadsby, sjsherma_testfile, madreed_testfile, talon_testfile, sgadsby_testfile, kply_testfile, irapopor_testfile, globalData) {
+	"text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDinnerData_madreed", "text!undergradDinnerData_sjsherma", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!undergradUN_kply", "text!undergradUN_talon", "text!undergradUN_irapopor", "text!undergradBeach_madreed", "text!undergradBeach_sjsherma", "text!undergradBeach_sgadsby", "text!undergradFaculty_kply", "text!undergradFaculty_madreed", "text!undergradFaculty_sjsherma", "text!sjsherma_testfile","text!madreed_testfile", "text!talon_testfile","text!sgadsby_testfile","text!kply_testfile","text!irapopor_testfile", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_kevin, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDinnerData_madreed, undergradDinnerData_sjsherma, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, undergradUN_kply, undergradUN_talon, undergradUN_irapopor, undergradBeach_madreed, undergradBeach_sjsherma, undergradBeach_sgadsby, undergradFaculty_kply, undergradFaculty_madreed, undergradFaculty_sjsherma, sjsherma_testfile, madreed_testfile, talon_testfile, sgadsby_testfile, kply_testfile, irapopor_testfile, globalData) {
 
 	/*
 		Initializing function
@@ -7,7 +7,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	var init = function() {
 
 		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];	//order of scenes
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];	//order of scenes
 		State.set("scenes", scenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -325,12 +325,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			//dataFiles: ["text!undergradDinnerData_irapopor"],
 
 			dataFiles: [
-				"text!undergradDinnerData_kevin",
 				"text!undergradDinnerData_talon",
 				"text!undergradDinnerData_irapopor",
-				"text!undergradDinnerData_sgadsby",
-				"text!undergradDinnerData_madreed",
-				"text!undergradDinnerData_sjsherma"],
+				"text!undergradDinnerData_sgadsby"],
 
 			startState: [
 				"set establishFriends false",
@@ -865,6 +862,63 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				type: "narration"
 			}
 		},
+		//undergrad Faculty scene
+		{
+			/*
+				currently these wishlist items all proceed sequentially
+			*/
+			id: "undergradFaculty",
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"defendee": {name: "Emma's former student", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "establishSetting eq true"},
+				{ condition: "establishAudience eq true"},
+				{ condition: "establishClimateChangeEffects eq true"},
+				{ condition: "studentGivesPresentation eq true"},
+				{ condition: "emmaAsksQuestion eq true"},
+				{ condition: "audienceAsksQuestion eq true"},
+				{ condition: "facultyDeliberation eq true"},
+				{ condition: "congratsToStudent eq true"}
+			],
+			//if you just want to use one file, uncomment this and comment out the big block below
+			dataFiles: ["text!undergradFaculty_madreed", "text!undergradFaculty_kply", "text!undergradFaculty_sjsherma"],
+/*
+
+
+			dataFiles: [
+				"text!undergradDean_talon",
+				"text!undergradDean_irapopor",
+				"text!undergradDean_sgadsby"
+			],
+*/
+			startState: [
+				"set establishSetting false",
+				"set establishAudience false",
+				"set establishClimateChangeEffects false",
+				"set studentGivesPresentation false",
+				"set emmaAsksQuestion false",
+				"set audienceAsksQuestion false",
+				"set facultyDeliberation false",
+				"set congratsToStudent false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+
+				"set patience 5",
+				"set optimism 0",
+				"set progression 0"
+			],
+			UIvars: [
+	
+			],
+			mode: {
+				type: "narration"
+			}
+		},
 		//SERENE TEST -- Serene, use this area to add wishlist items
 		{
 			/*
@@ -1356,6 +1410,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				text : "<p>TODO: Scene description</p>"
 			},
 			{
+				id : "undergradFaculty",
+				text : "<p>TODO: Scene description</p>"
+			},
+			{
 				id : "sereneTest",
 				text : "<p>TODO: Scene description</p>"
 			},
@@ -1443,6 +1501,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradBeach",
+				src : "lecturehall.png"
+			},
+			{
+				id : "undergradFaculty",
 				src : "lecturehall.png"
 			},
 			{
@@ -1822,6 +1884,28 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				],
 			},
 			{
+				sceneId : "undergradFaculty",
+				characters: [
+					{
+						id: "protagonist",
+						graphics: "char3",
+						age: "40s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "neutral"}
+
+						],
+					},
+					{
+						id: "defendee",
+						graphics: "char6",
+						age: "20s",
+						states: [	
+							{ state: ["default"], tag: "neutral" }
+						],
+					},
+				],
+			},
+			{
 				sceneId : "sereneTest",
 				characters: [
 					{
@@ -2073,6 +2157,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 "asp-phaser-generator-2/test/fixtures/games-5-26/games-5_36/lecture_5_26_7.lp",
 "asp-phaser-generator-2/test/fixtures/games-5-26/games-5_36/lecture_5_26_8.lp",
 "asp-phaser-generator-2/test/fixtures/games-5-26/games-5_36/lecture_5_26_9.lp"],
+				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
+			},
+			{
+				id: "undergradFaculty",
+				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/games-5-18/lecture_test_10.lp'],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
 			{
