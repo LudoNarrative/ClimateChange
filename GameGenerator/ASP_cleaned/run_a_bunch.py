@@ -2,13 +2,15 @@ import sys
 import os
 
 filename = sys.argv[1]
-args = sys.argv[2:]
+to_make = int(sys.argv[2])
+
+args = sys.argv[3:]
 
 
-for ii in range(1,26):
+for ii in range(1,to_make):
     print ii
-    print ('python simulate.py {} > {}_{}.lp'.format(' '.join(args),filename,ii))
-    os.system('python simulate.py {} > {}_{}.lp'.format(' '.join(args),filename,ii))
+    print ('python simulate.py {} -s {} > {}_{}.lp'.format(' '.join(args),ii,filename,ii))
+    os.system('python simulate.py {} -s {} > {}_{}.lp'.format(' '.join(args),ii,filename,ii))
     output = []
     with open('{}_{}.lp'.format(filename,ii)) as infile:
         found = False

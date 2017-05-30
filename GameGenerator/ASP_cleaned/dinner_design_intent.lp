@@ -3,7 +3,7 @@
 #const min_resources = 1.
 #const max_resources = 3.
 #const min_outcomes = 2.
-#const max_outcomes = 8.
+#const max_outcomes = 16.
 #const min_timers = 0.
 #const max_timers = 2.
 
