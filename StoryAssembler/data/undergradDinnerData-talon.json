@@ -13,17 +13,19 @@
 { condition: "inactivityIsBad eq true"}, ME
 { condition: "outro eq true"}, ME
 */
-//
-
-
-
-
-
 
 //Establish Dinner Scene - START
 //
 	{
 		"id": "sceneSetUp0_t",
+		"content": "They are friends, Sometimes they hate eschother, sometimes they love eachother.",
+		"conditions": [],
+		"effects": [
+			{"set establishFriends true"}
+		]
+	},
+	{
+		"id": "sceneSetUp1_t",
 		"content": "They are friends, Sometimes they hate eschother, sometimes they love eachother.",
 		"conditions": [],
 		"effects": [
@@ -41,13 +43,14 @@
 			{"set establishSettingDinner true"}
 		]
 	},
-//Tension in the room will only happen if both scenes
+	
+//friendIsInAcademia & friendIsNotInAcademia & there hasn't been enough tension
 	{
 		"id": "tensionInTheRoom0_t",
 		"choiceLabel": "Tension in the room has been triggered.",
 		"choices" : [],
 		"conditions": [
-			{"condition": "tension gte 7"},
+			{"condition": "tension lt 4"},
 			{"condition": "friendIsInAcademia eq true"},
 			{"condition": "friendIsNotInAcademia eq true"}
 		],
@@ -71,8 +74,20 @@
 		"id": "thatsAllFolks0_t",
 		"choiceLabel": "We're all done, this is HAPPENING NOW!",
 		"conditions": [
-			"checkinWithDisagreer eq true"
+			{"condition": "establishFriends eq true"},
+			{"condition": "establishSettingDinner eq true"},
+			{"condition": "establishDefenseTomorrow eq true"},
+			{"condition": "EmmaJobFutureBeat eq true"},
+			{"condition": "EmmaClassTypeBeat eq true"},
+			{"condition": "friendIsInAcademia eq true"},
+			{"condition": "friendIsNotInAcademia eq true"},
+			{"condition": "friendTension gte 4"},
+			{"condition": "friendTensionRelieved eq true"},
+			{"condition": "checkinWithDisagreer eq true"},
+			{"condition": "inactivityIsBad eq true"}
 		],
-		"effects": []
+		"effects": [
+			"set outro true"
+		]
 	}
 ]
