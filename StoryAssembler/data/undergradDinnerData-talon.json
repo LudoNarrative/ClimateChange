@@ -21,7 +21,7 @@
 		"content": "They are friends, Sometimes they hate eschother, sometimes they love eachother.",
 		"conditions": [],
 		"effects": [
-			{"set establishFriends true"}
+			"set establishFriends true"
 		]
 	},
 	{
@@ -29,7 +29,7 @@
 		"content": "They are friends, Sometimes they hate eschother, sometimes they love eachother.",
 		"conditions": [],
 		"effects": [
-			{"set establishFriends true"}
+			"set establishFriends true"
 		]
 	},
 //
@@ -40,10 +40,10 @@
 			{"condition": "establishFriends eq true"},
 		],
 		"effects": [
-			{"set establishSettingDinner true"}
+			"set establishSettingDinner true"
 		]
 	},
-	
+
 //friendIsInAcademia & friendIsNotInAcademia & there hasn't been enough tension
 	{
 		"id": "tensionInTheRoom0_t",
@@ -55,7 +55,7 @@
 			{"condition": "friendIsNotInAcademia eq true"}
 		],
 		"effects": [
-			{"set friendTension true"}
+			"set friendTension true"
 		]
 	},
 //This scene will establish that they both agree that pond scum is bad
