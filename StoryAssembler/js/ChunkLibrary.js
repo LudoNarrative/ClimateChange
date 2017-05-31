@@ -11,7 +11,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 
 	var requiredFields = [];
 	//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
-	var optionalFields = ["id", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available"];
+	var optionalFields = ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available"];
 
 	// Validates and adds a chunk to the library.
 	var addChunk = function(chunk) {
