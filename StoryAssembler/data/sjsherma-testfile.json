@@ -1,267 +1,48 @@
 [
 
+  //elika presents
+
   {
-    "id" : "freeTime",
-    "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. What to do now?",
+    "id": "elikaPresentation",
+    "content": "Élika hops up next to where her first slide was blossoming upon the screen, beaming at the three of you. \"Hello, everyone!\" she says, her arm sweeping up into the air. \"I'm super pleased to present to you my dissertation: a vigorous look into the ultimate extinction of the human race!\"",
     "choices" : [
-      {"condition" : "talkSomeone eq true"},
-      {"gotoId" : "readNewspaper"},
-      {"gotoId" : "readEmail"}
+      {"gotoId" : "ohMy"},
+      {"gotoId" : "thisInteresting"},
+      {"gotoId" : "thisUnexpected"}
     ],
-    "effects" : [
-      "dealWithSomeone eq true"
-    ],
-    "condition" : [
-      "onAPlane eq true"
-    ],
-    "repeatable" : "true"
-  },
-
-  // People to deal with - each changes based on fame?
-
-
-//person one
-  {
-    "id" : "recognizeEmma",
-    "choiceLabel" : "Find out why the person sitting next to you is staring at you.",
-    "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Banks?\"",
-    "effects" : [
-      "set talkSomeone true",
-      "set dealWithSomeone true"
+    "effects": [
+      "set studentGivesPresentation true"
     ],
     "conditions" : [
-      "fame gte 5"
-    ],
+      "establishAudience eq true"
+    ]
+  },
+
+  {
+  "id": "ohMy",
+  "choiceLabel": "...Oh my.",
+  "request": {"gotoId": "elikaPresentsSlide1"},
+  },
+
+  {
+    "id": "thisInteresting",
+    "choiceLabel": "This sounds interesting.",
+    "request": {"gotoId": "elikaPresentsSlide1"},
+  },
+
+  {
+    "id": "thisUnexpected",
+    "choiceLabel": "...Was not expecting that.",
+    "request": {"gotoId": "elikaPresentsSlide1"},
+  },
+
+  {
+    "id" : "elikaPresentsSlide1",
+    "content" : "Élika is practically dancing on the tips of her toes. \"Specifically, I will be discussing the ridiculously high extinction rates of other species, how those correlate with human activity, and how such rates relate to how long human beings will be able to continue their existence on this planet!\" <br/><br/>... She looks <i>so</i> excited for this.",
     "choices" : [
-      {"gotoId" : "continueTalk"},
-      {"gotoId" : "stopTalk"},
-      {"gotoId" : "rudeTalk"}
+      {"gotoId" : "elikaPresentsSlide2"},
     ]
   },
-
-  {
-    "id" : "continueTalk",
-    "choiceLabel" : "Yes, that's me.",
-    "content" : "You fellow rider's eyes light up. \"I thought so! I saw your talk! I thought you were {ifStateCondition|composure gte 5|amazing! You really made me rethink some things - and think about things I usually wouldn't. It was truly inspiring, I have to say.|rather shaky in your talk - nervous? I totally get that. I know I get nervous from time to time - don't worry, practice makes perfect, right?}\"",
-  },
-
-  {
-    "id" : "stopTalk",
-    "choiceLabel" : "I'm afraid you have the wrong person.",
-    "content" : "You manage a polite smile. \"Sorry, you must have the wrong person.\". <br/><br/> \"Oh! I'm so sorry! I thought - never mind, I'll leave you alone then.\" Flushing and shifting uncomfortably in their seat, they turn to look out the window.",
-  },
-
-  {
-    "id" : "rudeTalk",
-    "choiceLabel" : "Who wants to know?",
-    "content" : "\"Oh, of course! Sorry!\" they say, somehow unfazed by the rudeness of the question. \"I'm Daniel Schmit, nice to meet you! I saw your talk the other day - you were {ifStateCondition|composure gte 5|quite wonderful! I mean, you certainly seemed nicer back then...|rather interesting. I guessed you were nervous, but maybe my first impression was wrong...}\"",
-  },
-
-  //person two
-
-  {
-    "id" : "nosyPerson",
-    "choiceLabel" : "You turn to talk to the person who's leaning very, very close to you.",
-    "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,\" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"'Global Warming Is At An All Time High'. Funny, huh?\"",
-    "effects" : [
-      "set talkSomeone true",
-      "set dealWithSomeone true",
-    ],
-    "choices" : [
-      {"gotoId" : "sharpTalk2"},
-      {"gotoId" : "innocentQuestion"}
-    ]
-  },
-
-  {
-    "id" : "sharpTalk2",
-    "choiceLabel" : "I don't see how global warming's funny.",
-    "content" : "Their eyebrows furrow. \"Oh, you're one of those people, are you? Don't worry, dear, it was pretty cold this year round. Spring came late again and everything, so the cold weather's lasting longer.\"",
-    "choices" : [
-      {"gotoId" : "teachLesson"},
-      {"gotoId" : "dontBother"}
-    ]
-  },
-
-  {
-    "id" : "teachLesson",
-    "choiceLabel" : "Tell them about why global warming is legitimate.",
-    "content" : "\"You see, there's a difference between weather and climate,\" you explain {ifStateCondition|composure gte 5|patiently.|with a hint of frustration.} \"Even if it's pretty cold in one area, the global temperature has been proven by science to be slowly rising. Which causes problems all over the world.\" <br/><br/> Your fellow passenger looks thoughtful. \"Huh,\" They say.",
-    "effects" : [
-      "incr composure 1"
-    ]
-  },
-
-  {
-    "id" : "dontBother",
-    "choiceLabel" : "Don't bother.",
-    "content" : "\"If you say so,\" you sigh as you gaze out the window. The logical fallacies in the statement is itching at you, but you've decided to stay silent.",
-  },
-
-  {
-    "id" : "innocentQuestion",
-    "choiceLabel" : "What do you mean?",
-    "content" : "They blink. \"Well, you know,\" they say. \"People always say 'global warming, how horrible!' but after a while you have to wonder if it's all bologne. Like, my mother would always say it's a some government conspiracy, but she was a conspiracy nut. Me, I always wonder whenever the weather gets really cold, you know? That's what science is, isn't it - questioning things?",
-    "choices" : [
-      {"gotoId" : "teachLesson"},
-      {"gotoId" : "dontBother"}
-    ],
-    "effects" : [
-      "set dealWithSomeone true"
-    ]
-  },
-
-  //person three
-
-  {
-    "id" : "friendlyPerson",
-    "choiceLabel" : "Chat with the friendly-looking person sitting next to you.",
-    "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. You almost forget about your worries as you approach your destination.",
-    "effects" : [
-      "set talkSomeone true",
-      "set dealWithSomeone true",
-      "incr composure 1"
-    ],
-  },
-
-  //read newspaper
-
-  {
-    "id": "readNewspaper",
-    "choiceLabel" : "Read the newspaper folded in your lap.",
-    "content": "You pick up the paper. It crinkles pleasantly in your hands as you flip it over and let it fall open under your fingers.",
-    "effects": [
-      "set readSomething true"
-    ],
-    "choices" : [
-      {"gotoId" : "emmaNewspaper"},
-      {"condition" : "readNewspaper eq true"}
-    ]
-  },
-
-  {
-    "id" : "emmaNewspaper",
-    "choiceLabel" : "Look for your name.",
-    "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|fame gte 5|You find yourself on the front page, much to your surprise and delight.|You find a little snippet about your talk later in the news.} {ifStateCondition|composure gte 5|The article gushes over your poise and intellect, and you can't help but smile, your face flushed.|The article wasn't very kind, but you're not surprised. You were painfully aware of how well you did there.}",
-  },
-
-  {
-    "id" : "newspaperHeadline1",
-    "choiceLabel" : "Scan the headlines.",
-    "content" : "Scientists Build Mini Worlds In An Attempt to Simulate Climate Change <br/><br/> A team of researches run tests on a small-scale copy of an underwater ecosystem intended to simulate and observe the impact of climate change. The experiment reveals that the combination of higher temperatures and greater amounts of CO2 have domino effect on the ecosystem's inhabitants, which as worrying implications for fish as a food source.",
-    "effects" : [
-      "set readNewspaper true"
-    ]
-  },
-
-  {
-    "id" : "newspaperHeadline2",
-    "choiceLabel" : "Scan the headlines.",
-    "content" : "Man Swears That the Ocean Tried To Burn His Arms Off (Apparently the Acidity Was Too High)",
-    "effects" : [
-      "set readNewspaper true"
-    ]
-  },
-
-  {
-    "id" : "newspaperStory",
-    "choiceLabel" : "Check out the technology section.",
-    "content" : "Carbon capture and storage technology is now available for commerical use! There are some that argue implementation should be required for energy plants; others more argue that the procedure takes too much energy; more others argue that our focus should be more on clean energy rather than continuing to rely on fossil fuels...",
-    "effects" : [
-      "set readNewspaper true"
-    ]
-  },
-
-  //email
-
-  {
-    "id": "readEmail",
-    "choiceLabel": "Read your email.",
-    "content" : "You open up your laptop and let your gaze run down the list of unread emails.",
-    "effects": [
-      "set readSomething true"
-    ],
-    "choices" : [
-      {"gotoId" : "acceptOrDeclineSomething"},
-      {"condition" : "readFamily eq true"},
-      {"condition" : "readEmail eq true"}
-    ]
-  },
-
-  //personal emails
-
-  {
-    "id" : "zanitaEmail",
-    "choiceLabel" : "Read an email from Zanita.",
-    "content" : "Heya, Em! I heard you're doing some traveling now - I'm so proud of you! Didn't I tell you that academia was the way to go? Look at you now, spreading knowledge all over the world. I can't wait for you to tell me all about it. <br/><br/> Talk to you soon! <br/> Zanita",
-    "effects" : [
-      "set readFamily true"
-    ]
-  },
-
-  {
-    "id" : "shellyEmail",
-    "choiceLabel" : "Read an email from Shelly.",
-    "content" : "EMMMMMMMAAAA WHAT IS THIS I HEAR ABOUT YOU TRAVELING?? That's so cool!! You sure are making it big, huh? Or trying to at least, haha - just don't forget us little guys back at home, alright? We may be taking it locally, but we're making changes right with you. Don't let that head of yours inflate too much, 'kay? Love you! <br/><br/>Shelly,",
-    "effects" : [
-      "set readFamily true"
-    ]
-  },
-
-  {
-    "id" : "momEmail",
-    "choiceLabel" : "Read an email from Mom.",
-    "content" : "Sweetheart, I just need you to know just how excited I am for you. Make sure to eat a big meal before your big talk, okay? But not too much, you wouldn't want bodily functions to get in the way of your speech ~ <br/><br/> Mom <3",
-    "effects" : [
-      "set readFamily true"
-    ]
-  },
-
-  {
-    "id" : "dadEmail",
-    "choiceLabel" : "Read an email from Dad.",
-    "content" : "Hey sweetpea, if you feel nervous or like you've messed up, remember, you can always come to me, alright? Lots of hugs and kisses. <br/><br/> Dad",
-    "effects" : [
-      "set readFamily true"
-    ]
-  },
-
-  //regualr emails
-
-  {
-    "id" : "emailPetition",
-    "choiceLabel" : "Click on an email urging you to sign a petition.",
-    "content" : "Someone has you an email asking you to sign a petition for a climate change issue. You can't help the feeling of obligation.",
-    "effects" : [
-      "set readEmail true"
-    ]
-  },
- 
-  {
-    "id" : "organizationEmail",
-    "choiceLabel" : "Click on an email from the Sierra Club.",
-    "content" : "Your favorite grassroots environmental organization has sent you your weekly newsletter.",
-    "effects" : [
-      "set readEmail true"
-    ]
-  },
-
-  //the landings!
-
-    {
-      "id": "outroForLanding",
-      "choiceLabel" : "The plane is landing.",
-      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
-      "effects": [
-        "set outroForLanding true"
-      ],
-      "conditions" : [
-        "dealWithSomeone eq true",
-        "readNewspaper eq true",
-        "readEmail eq true"
-      ],
-      "repeatable" : "true",
-    },
 
 
 ]

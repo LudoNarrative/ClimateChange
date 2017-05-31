@@ -913,7 +913,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set progression 0"
 			],
 			UIvars: [
-	
+
 			],
 			mode: {
 				type: "narration"
@@ -927,44 +927,41 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			id: "sereneTest",
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
-				"passenger": {name: "Phil", gender: "male"}
+				"defendee": {name: "Emma's former student", gender: "male"}
 			},
 			wishlist: [
-				{ condition: "dealWithSomeone eq true"}
+				{ condition: "establishSetting eq true"},
+				{ condition: "establishAudience eq true"},
+				{ condition: "establishClimateChangeEffects eq true"},
+				{ condition: "studentGivesPresentation eq true"},
+				{ condition: "emmaAsksQuestion eq true"},
+				{ condition: "audienceAsksQuestion eq true"},
+				{ condition: "facultyDeliberation eq true"},
+				{ condition: "congratsToStudent eq true"}
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
 			dataFiles: ["text!sjsherma_testfile"],
-/*
 
-
-			dataFiles: [
-				"text!undergradDean_talon",
-				"text!undergradDean_irapopor",
-				"text!undergradDean_sgadsby"
-			],
-*/
 			startState: [
-				"set onAPlane false",
-				"set reminisce false",
-				"set talkExposition false",
-				"set dealWithSomeone false",
-				"set readSomething false",
-				"set acceptOrDeclineSomething false",
-				"set outroForLanding false",
+				"set establishSetting false",
+				"set establishAudience false",
+				"set establishClimateChangeEffects false",
+				"set studentGivesPresentation false",
+				"set emmaAsksQuestion false",
+				"set audienceAsksQuestion false",
+				"set facultyDeliberation false",
+				"set congratsToStudent false",
 
 				"set academicEnthusiasm 0",			//global stat
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
 
-				"set composure 5",
-				"set carbonFootprint 0",
-				"set fame 0"
+				"set patience 5",
+				"set optimism 0",
+				"set progression 0"
 			],
 			UIvars: [
-				"carbonFootprint",
-				"composure",
-				"fame"
 
 			],
 			mode: {
@@ -1843,7 +1840,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 							{ state: ["default"], tag: "neutral" },
 							{ state: ["persuasion gte 8"], tag: "smug"},
 							{ state: ["persuasion lte 3"], tag: "upset"}
-							
+
 						]
 					},
 					{
@@ -1899,7 +1896,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						id: "defendee",
 						graphics: "char6",
 						age: "20s",
-						states: [	
+						states: [
 							{ state: ["default"], tag: "neutral" }
 						],
 					},
