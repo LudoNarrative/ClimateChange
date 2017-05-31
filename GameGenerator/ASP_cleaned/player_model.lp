@@ -8,6 +8,9 @@ player_model(tick,must_happen).
 
 player_model(Outcome ,player_will_attempt) :- player_controls_outcome(Outcome), reading(good,Outcome), not reading(tradeoff,Outcome).
 
+player_model(Outcome,player_will_attempt) :- player_controls_outcome(Outcome).
+player_model(Outcome,player_will_attempt) :- result(Outcome, move(Entity,_)),
+					     player_controls(Entity).
 
 player_model(Outcome ,player_might_attempt) :- player_controls_outcome(Outcome),  reading(tradeoff,Outcome).
 
