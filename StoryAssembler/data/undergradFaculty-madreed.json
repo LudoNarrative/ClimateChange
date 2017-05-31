@@ -1,1 +1,57 @@
-[]
+[
+  {
+    "notes": "CHECKLIST\n-Viewpoint, global\n•Franklin's presentation is about the negative effects behind the Eco-car movement.\n•Facts about the company, then jump to questions.\n[scepticalStudent = true]",
+    "id": "franklinPresentation",
+    "choiceLabel": "Franklin begins his presentation",
+    "content": "Franklin's presentation opens on a slide of a photo of him with an older model electric car. Then he begins, \"the green movement has been making a push for a switch to electric cars for decades, and while in theory electric vehicles are better for the environment there are dozens of underlying issues in which need to be studied. First what we must consider is what type of pollution goes into making cars. Being the son of CEOs in both the oil industry and recently the electric car industry,  I have first hand experience as to the dark side that these companies like to keep hidden.\"",
+    "choices": [
+      {
+        "gotoId": "franklinPresentationPart2"
+      }
+    ],
+    "conditions": [
+      "scepticalStudent eq true"
+    ]
+  },
+  {
+    "notes": "Here Franklin talks about how there still need to be reforms other than switching to electric cars.",
+    "id": "franklinPresentationPart2",
+    "choiceLabel": "Slide 2",
+    "content": "placeholder",
+    "choices": [
+      {
+        "gotoId": "franklinPresentationPart3"
+      }
+    ]
+  },
+  {
+    "id": "franklinPresentationPart3",
+    "content": "Franklin's third slide is of him sitting on a rock staring off into a dirty, busy quarry. \"The electric car company doesn't only have an adverse effect on our climate, they also pollute large sections of land during mining operations. Besides the expected damage of digging up large sections of land, it is common to use acid baths and dump toxic dirt right back into the environment.\" Franklin goes on for over an hour, his audience is captivated by the slides and videos he shares, it's almost as if you are watching a documentary with the speaker right in front of you. From picture to picture you can see how Franklin becomes more aware of the damage he has been close to all his life.",
+    "notes": "inspiration from https://www.wired.com/2016/03/teslas-electric-cars-might-not-green-think/ \nHere Franklin goes into more depth on the environmentally damaging effects of electric vehicles.",
+    "choiceLabel": "Slide 3"
+  },
+  {
+    "id": "franklinPresentationPart3",
+    "content": "placeholder"
+  },
+  {
+    "id": "emmaAsksFranklin",
+    "content": "placeholder"
+  },
+  {
+    "id": "audienceAsksFranklin",
+    "content": "placeholder"
+  },
+  {
+    "id": "facultyDeliberateFranklin",
+    "content": "placeholder"
+  },
+  {
+    "id": "facultyDeliberateElika",
+    "content": "placeholder"
+  },
+  {
+    "id": "facultyDeliberateAiden",
+    "content": "placeholder"
+  }
+]
