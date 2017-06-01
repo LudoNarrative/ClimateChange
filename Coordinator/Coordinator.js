@@ -348,7 +348,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set nonAcademicFriendRelationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
 				"set confidence 5",				//scale of 1 to 10, 10 highest
 				"set academicEnthusiasm 5",		//scale of 1 to 10, 10 highest
-				"set friendTension 0"			//scale of 1 to 10, ten is high tension
+				"set friendTension 0",			//scale of 1 to 10, ten is high tension
+				"set tension 0"
 			],
 			UIvars: [
 				{
