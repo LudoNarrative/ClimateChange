@@ -373,7 +373,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set nonAcademicFriendRelationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
 				"set confidence 5",				//scale of 1 to 10, 10 highest
 				"set academicEnthusiasm 5",		//scale of 1 to 10, 10 highest
-				"set friendTension 0"			//scale of 1 to 10, ten is high tension
+				"set friendTension 0",			//scale of 1 to 10, ten is high tension
+				"set tension 0"
 			],
 			UIvars: [
 				{
@@ -2220,31 +2221,32 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "dinner",
-    				aspFilepaths: ["GameGenerator/ASP_cleaned/games/dinner__10.lp",
-"GameGenerator/ASP_cleaned/games/dinner__11.lp",
-"GameGenerator/ASP_cleaned/games/dinner__12.lp",
-"GameGenerator/ASP_cleaned/games/dinner__13.lp",
-"GameGenerator/ASP_cleaned/games/dinner__14.lp",
-"GameGenerator/ASP_cleaned/games/dinner__15.lp",
-"GameGenerator/ASP_cleaned/games/dinner__16.lp",
-"GameGenerator/ASP_cleaned/games/dinner__17.lp",
-"GameGenerator/ASP_cleaned/games/dinner__18.lp",
-"GameGenerator/ASP_cleaned/games/dinner__19.lp",
-"GameGenerator/ASP_cleaned/games/dinner__1.lp",
-"GameGenerator/ASP_cleaned/games/dinner__20.lp",
-"GameGenerator/ASP_cleaned/games/dinner__21.lp",
-"GameGenerator/ASP_cleaned/games/dinner__22.lp",
-"GameGenerator/ASP_cleaned/games/dinner__23.lp",
-"GameGenerator/ASP_cleaned/games/dinner__24.lp",
-"GameGenerator/ASP_cleaned/games/dinner__25.lp",
-"GameGenerator/ASP_cleaned/games/dinner__2.lp",
-"GameGenerator/ASP_cleaned/games/dinner__3.lp",
-"GameGenerator/ASP_cleaned/games/dinner__4.lp",
-"GameGenerator/ASP_cleaned/games/dinner__5.lp",
-"GameGenerator/ASP_cleaned/games/dinner__6.lp",
-"GameGenerator/ASP_cleaned/games/dinner__7.lp",
-"GameGenerator/ASP_cleaned/games/dinner__8.lp",
-"GameGenerator/ASP_cleaned/games/dinner__9.lp",
+    				aspFilepaths: [
+"GameGenerator/ASP_cleaned/games/dinner_1.lp",
+"GameGenerator/ASP_cleaned/games/dinner_2.lp",
+"GameGenerator/ASP_cleaned/games/dinner_3.lp",
+"GameGenerator/ASP_cleaned/games/dinner_4.lp",
+"GameGenerator/ASP_cleaned/games/dinner_5.lp",
+"GameGenerator/ASP_cleaned/games/dinner_6.lp",
+"GameGenerator/ASP_cleaned/games/dinner_7.lp",
+"GameGenerator/ASP_cleaned/games/dinner_8.lp",
+"GameGenerator/ASP_cleaned/games/dinner_9.lp",
+"GameGenerator/ASP_cleaned/games/dinner_10.lp",
+"GameGenerator/ASP_cleaned/games/dinner_11.lp",
+"GameGenerator/ASP_cleaned/games/dinner_12.lp",
+"GameGenerator/ASP_cleaned/games/dinner_13.lp",
+"GameGenerator/ASP_cleaned/games/dinner_14.lp",
+"GameGenerator/ASP_cleaned/games/dinner_15.lp",
+"GameGenerator/ASP_cleaned/games/dinner_16.lp",
+"GameGenerator/ASP_cleaned/games/dinner_17.lp",
+"GameGenerator/ASP_cleaned/games/dinner_18.lp",
+"GameGenerator/ASP_cleaned/games/dinner_19.lp",
+"GameGenerator/ASP_cleaned/games/dinner_20.lp",
+"GameGenerator/ASP_cleaned/games/dinner_21.lp",
+"GameGenerator/ASP_cleaned/games/dinner_22.lp",
+"GameGenerator/ASP_cleaned/games/dinner_23.lp",
+"GameGenerator/ASP_cleaned/games/dinner_24.lp",
+"GameGenerator/ASP_cleaned/games/dinner_25.lp",
 ],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},

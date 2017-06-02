@@ -40,5 +40,3 @@ label(entity(e(2)),friend).
 
 %:- not entity(entity(wall)).
 
-:- action(move(_,direction(away,cursor))).
-:- not action(move(_,direction(towards,cursor))).
