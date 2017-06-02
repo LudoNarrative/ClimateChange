@@ -25,12 +25,12 @@
     "effects": [
       "incr academicEnthusiasm 1"
     ],
-    "choiceLabel": "<p>I. Love. It.</p>"
+    "choiceLabel": "I. Love. It."
   },
   {
     "id": "tooMuchi",
-    "content": "<p>\"Nonsense. You have this in the bag\"</p><p>Do not succumb to the bourgeoisie {nickname|protagonist}}.\"</p><p>\"{name|nonAcademicFriend}, I'm still paying of students loans you know?\"</p><p>{name|nonAcademicFriend} keeps her eyes locked on {name|academicFriend} as she sips her drink.</p>",
-    "choiceLabel": "<p>\"Thanks {nickname|academicFriend} but isn't this a little preemptive.\"</p>"
+    "content": "<p>\"Nonsense. You have this in the bag\"</p><p>Do not succumb to the bourgeoisie {nickname|protagonist}.\"</p><p>\"{name|nonAcademicFriend}, I'm still paying off students loans you know?\"</p><p>{name|nonAcademicFriend} keeps her eyes locked on {name|academicFriend} as she sips her drink.</p>",
+    "choiceLabel": "\"Thanks {nickname|academicFriend} but isn't this a little preemptive.\""
   },
   {
     "id": "friendIsInAcademiaUnenthusiastici",
@@ -63,7 +63,7 @@
       "decr confidence 1",
       "decr academicEnthusiam 1"
     ],
-    "choiceLabel": "<p>Say nothing.</p>"
+    "choiceLabel": "Say nothing."
   },
   {
     "id": "grossi",
@@ -71,7 +71,7 @@
     "effects": [
       "incr confidence 1"
     ],
-    "choiceLabel": "<p>\"Jeez, {nickname|academicFriend}, that's pretty gross you threw up.\"</p>"
+    "choiceLabel": "\"Jeez, {nickname|academicFriend}, that's pretty gross you threw up.\""
   },
   {
     "id": "gotThisi",
@@ -80,38 +80,69 @@
       "incr confidence 1",
       "incr academicEnthusiasm 1"
     ],
-    "choiceLabel": "<p>\"You're right {nickname|academicFriend}, I got this.\"</p>"
-  },
-  {
-    "id": "friendNotInAcademici",
-    "content": "friendNotInAcademic",
-    "effects": [
-      "set friendIsNotInAcademia true"
-    ]
+    "choiceLabel": "\"You're right {nickname|academicFriend}, I got this.\""
   },
 
   {
+    "id": "friendNotInAcademici",
+    "content": "<p>{name|nonAcademicFriend} rests her elbows on the table and leans in. \"So, I dunno what you are doing next Friday, but I'm actually setting up a beach cleanup a little bit south of here.\"</p><p>\"Oh damn {name|nonAcademicFriend},\" {name|academicFriend} interjects. \"That's when Emma and I have our faculty meeting.\"</p>",
+    "effects": [
+      "set friendIsNotInAcademia true"
+    ],
+    "choices" : [
+      {"gotoId" : "iCanDoThati"},
+      {"gotoId" : "interestingi"},
+      {"gotoId" : "gottaPassi"}
+    ]
+  },
+    {
+      "id": "iCanDoThati",
+      "choiceLabel" : "\"I can probabaly be late to the meeting.\"",
+      "content": "<p>{name|academicFriend} sighs and shakes her head. {name|nonAcademicFriend} pumps her fist.</p>",
+      "effects": [
+        "decr academicEnthusiasm 1"
+      ]
+    },
+    {
+      "id": "interestingi",
+      "choiceLabel" : "\"A beach cleanup. That sounds... neat, I guess.\"",
+      "content": "<p>{name|nonAcademicFriend} leans back. \"We'll, I'll jot you down for probably not attending, in that case.\"</p>",
+      "effects": [
+        "incr tension 1"
+      ]
+    },
+    {
+      "id": "gottaPassi",
+      "choiceLabel" : "\"Sorry {nickname|nonAcademicFriend}, I can't miss work.\"",
+      "content": "<p>{name|nonAcademicFriend} waves her hand back and forth. \"Yeah, yeah I getcha. We'll plan something for next time.\"</p>",
+      "effects": [
+        "incr academicEnthusiasm 1"
+      ]
+    },
+
+  {
     "id": "fightBeginsAndTensionRelievedi",
-    "content": "<p>{name|nonAcademicFriend} and {name|academicFriend} begin to bicker. Accusations of laziness and ignorance bounce back and forth like they're ping pong balls.</p><p>\"I'm sorry getting a degree was too hard for you {name|nonAcademicFriend}, but that's your problem.\"</p><p>\"Honestly? If you need other people to validate your success then fine, be my guess.\"</p>",
+    "content": "<p>After a few choice words, {name|nonAcademicFriend} and {name|academicFriend} have begun to bicker. Accusations of laziness and ignorance bounce back and forth like they're ping pong balls.</p><p>\"I'm sorry getting a degree was too hard for you {name|nonAcademicFriend}, but that's your problem.\"</p><p>\"Honestly? If you need other people to validate your success then fine, be my guest.\"</p>",
     "conditions": [
       "friendIsInAcademia eq true",
-   //   "friendIsNotInAcademia gt true"     //JG
+      "friendIsNotInAcademia eq true"     
     ],
-    /*
     "choices" : [
-      {"gotoId": ""}
-    ],*/
+      {"gotoId": "sideZanitai"},
+      {"gotoId": "sideShellyi"},
+      {"gotoId": "neutrali"}
+    ],
     "effects": [
       "set friendTensionRelieved true"
     ]
   },
     {
       "id": "sideZanitai",
-      "choiceLabel" : "Come on {name|nonAcademicFriend}, you know it's not like that.",
+      "choiceLabel" : "\"Come on {name|nonAcademicFriend}, you know it's not like that.\"",
       "content": "<p>\"What {nickname|protagonist}, you too?\" {name|nonAcademicFriend} sighs. \"No, you're right. Just because it isn't what I would do doesn't mean it's wrong. I guess I'm just stubborn. Surprise!\"</p>",
       "conditions": [
         "friendIsInAcademia eq true",
-       // "friendIsNotInAcademia gt true"   //JG
+        "friendIsNotInAcademia eq true"   
       ],
       "effects": [
         "incr academicEnthusiasm 1",
@@ -124,7 +155,7 @@
       "content": "<p>{name|academicFriend} goes a little pale, as if she's stunned by her own behaviour. \"You're right {nickname|protagonist}. Sorry {nickname|nonAcademicFriend}, that wasn't me talking. I'm just a bit overwhelmed with teaching lately.\"</p>",
       "conditions": [
         "friendIsInAcademia eq true",
-       // "friendIsNotInAcademia gt true"     //JG
+        "friendIsNotInAcademia eq true"     
       ],
       "effects": [
         "decr academicEnthusiasm 1",
@@ -137,7 +168,7 @@
       "content": "<p>\"{name|academicFriend} please, now you are just sounding childish.\"</p><p>\"Oh, jeez prof, this won't bring down my participation points, will it?\" Shelly waves her hand in dismissal. The two go quiet and focus on their food.</p>",
       "conditions": [
         "friendIsInAcademia eq true",
-        //"friendIsNotInAcademia gt true"   //JG
+        "friendIsNotInAcademia eq true"   
       ],
       "effects": [
         "incr tension 1"
@@ -147,6 +178,11 @@
   {
     "id": "checkWithDisagreerShellyi",
     "content": "<p>{name|nonAcademicFriend} has begun fidgiting with utensils on the table. Right now she is setting up a wall of salt and pepper shakers. It looks like she might be feeling defensive. Maybe you should check in on her.</p>",
+    "choices" : [
+      {"gotoId": "maybeIshouldn'tShelli"},
+      {"gotoId": "positiveShelli"},
+      {"gotoId": "negativeShelli"}
+    ],
     "conditions": [
       "academicEnthusiasm gte 5",
       "friendTensionRelieved eq true"
@@ -158,11 +194,11 @@
     {
       "id": "maybeIshouldn'tShelli",
       "choiceLabel" : "How about I don't.",
-      "content" : "{name|nonAcademicFriend} finishes her dinner table structure and her eyes seem to glaze over as she scans it. It looks like she might be ready to leave.",
+      "content" : "{name|nonAcademicFriend} finishes her dinner table structure and her eyes seem to glaze over as she scans it. It looks like she might be ready to leave."
     },
     {
       "id": "positiveShelli",
-      "choiceLabel" : "You setting up some sort of barrier around your plate there.",
+      "choiceLabel" : "\"You setting up some sort of barrier around your plate there.\"",
       "content" : "<p>\"I'm defending my dinner from oncoming vegtable hordes.\" She winks at you and turns her attention back to the conversation.</p>",
       "effects" : "decr tension 1"
     },
@@ -175,6 +211,11 @@
   {
     "id": "checkwithDisagreerZanitai",
     "content": "<p>{name|academicFriend} keeps glancing into the kitchen as if she's worried something will burn. She readjusting herself in her seat. Maybe you should check in on her.</p>",
+    "choices" : [
+      {"gotoId": "maybeIshouldn'tZani"},
+      {"gotoId": "positiveZani"},
+      {"gotoId": "negativeZani"}
+    ],
     "conditions": [
       "academicEnthusiasm lte 4",
       "friendTensionRelieved eq true"
@@ -203,7 +244,7 @@
       "effects" : [
         "incr tension 1"
       ]
-    },
+    }
 ]
 
 
