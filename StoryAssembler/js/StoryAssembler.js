@@ -128,6 +128,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			else { temp = wishlist.bestPath(chunkLibrary, {startAt: startingPoint}); }
 
 			console.log("bestPath is: " , temp);
+			console.log("===================================================================================");
 			return temp;
 		}
 
@@ -137,6 +138,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			else { temp = wishlist.bestPath(chunkLibrary); }
 
 			console.log("bestPath is: ", temp);
+			console.log("===================================================================================");
 			return temp;
 			//return wishlist.bestPath(chunkLibrary);
 		}
