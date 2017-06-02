@@ -200,13 +200,13 @@
       "id": "positiveShelli",
       "choiceLabel" : "\"You setting up some sort of barrier around your plate there.\"",
       "content" : "<p>\"I'm defending my dinner from oncoming vegtable hordes.\" She winks at you and turns her attention back to the conversation.</p>",
-      "effects" : "decr tension 1"
+      "effects" : ["decr tension 1"]
     },
     {
       "id": "negativeShelli",
       "choiceLabel" : "<p>\"So {name|nonAcademicFriend}, how has your volunteering been going?\"</p>",
       "content" : "<p>\"Ehh, fine I guess. You probably don't want to hear about it though.\" She returns her focus to her construction.</p>",
-      "effects" : "incr tension 1"
+      "effects" : ["incr tension 1"]
     },
   {
     "id": "checkwithDisagreerZanitai",
