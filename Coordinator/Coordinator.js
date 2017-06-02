@@ -9,7 +9,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//selectable scenes from main menu
 		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];
 
-		var playGameScenes = ["dinner", "lecture", "travel", "worker"];		//scenes played when you hit Begin
+		//scenes played when you hit Begin
+		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean"];		
 		State.set("scenes", playGameScenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -51,7 +52,19 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 	//returns index of next scene
 	var getNextScene = function(currentScene) {
+		switch(currentScene) {
+			case "undergradDinner":
+				return 1;
+			case "undergradLecture": {
+				if (State.get('confidence') > 2) {
+					return 2;
+				}
+				else { return 3; }
+			}
+			case "undergradDean":
+				return 0;
 
+		}
 	}
 
 
@@ -2288,6 +2301,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		loadBackground : loadBackground,
 		validateArtAssets : validateArtAssets,
 		loadSceneIntro : loadSceneIntro,
+		getNextScene : getNextScene,
 
 		startGame : startGame,
 		getStorySpec : getStorySpec
