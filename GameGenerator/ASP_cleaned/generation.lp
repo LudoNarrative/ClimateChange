@@ -172,7 +172,8 @@ indirectControls(click_and_drag;
 	drawn_to_cursor;%;
 	repeled_from_cursor;
         click_to_spin;
-	click_to_move).
+	click_to_move;
+	click_to_chase).
 
 
 {controlScheme(ENTITY,SCHEME) : indirectControls(SCHEME)} 1 :- entity(ENTITY).
@@ -186,6 +187,7 @@ outcome(outcome(drawn_to_cursor(ENTITY))) :- controlScheme(ENTITY,drawn_to_curso
 outcome(outcome(repeled_from_cursor(ENTITY))) :- controlScheme(ENTITY,repeled_from_cursor). 
 outcome(outcome(click_to_spin(ENTITY))) :- controlScheme(ENTITY,click_to_spin).       
 outcome(outcome(click_to_move(ENTITY))) :- controlScheme(ENTITY,click_to_move).  
+outcome(outcome(click_to_chase(ENTITY))) :- controlScheme(ENTITY,click_to_chase).  
 
   
 %cursor is electromagnet
@@ -224,6 +226,24 @@ angle_speeds_discrete(10;20;30;45;60;90).
        precondition(control_event(click(ENTITY)),outcome(click_to_spin(ENTITY)))}.
 
 result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_spin(ENTITY))).
+
+
+
+1 {precondition(control_event(button(mouse, held)),outcome(click_to_chase(ENTITY)));
+   precondition(control_event(button(mouse, pressed)),outcome(click_to_chase(ENTITY)));
+   precondition(control_event(click(ENTITY)),outcome(click_to_chase(ENTITY)))
+   } 1:- 
+       outcome(outcome(click_to_chase(ENTITY))).
+1 {result(outcome(click_to_chase(ENTITY)), look_at(ENTITY,ENTITY2)) :
+   entity(ENTITY2)
+  } 1 :-
+    outcome(outcome(click_to_chase(ENTITY))),
+    1 {precondition(control_event(button(mouse, pressed)),outcome(click_to_chase(ENTITY)));
+       precondition(control_event(click(ENTITY)),outcome(click_to_chase(ENTITY)))}.
+
+result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_chase(ENTITY))).
+
+:- action(look_at(E,E)).
 
 %CLICK TO MOVE
 
@@ -363,7 +383,6 @@ result(tick,move(ENTITY,direction(away,OTHER))) :- flees(ENTITY,OTHER).
 
 timer(patrol(ENTITY)) :- behavior(ENTITY,patrol).
 
-precondition(timer_elapsed(patrol(ENTITY)),outcome(patrol(ENTITY))) :- behavior(ENTITY,patrol).
 1 {result(outcome(patrol(ENTITY)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
    angle_direction(DIRECTION),
    angle_speeds_discrete(AMOUNT)} 1 :- behavior(ENTITY,patrol).
@@ -387,3 +406,32 @@ result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,wander).
 
 result(tick,apply_restitution(E,E)) :- entity(E) , not static(E).
 
+
+%%%%%%%%%%%%%%%% GENERATION TUNING
+
+control_event(E,delete(E2)) :- 
+	precondition(control_event(E),O),
+	result(O,delete(E2)).
+control_event(E,add(E2)) :-
+	precondition(control_event(E),O),
+	result(O,add(E2,_)).
+
+control_event(E,modify(R)) :- 
+	precondition(control_event(E),O),
+	result(O,modify(D,R)).
+
+
+	
+resource_checks(N) :- N = {precondition(compare(_,_),_)}.
+
+:- resource_checks(N), N > 3.
+	
+		
+%#show precondition/2.
+#project resource/1.
+#project entity/1.
+#project timer/1.
+#project player_controls/1.
+#project behavior/2.
+#project controlScheme/2.
+#project controlLogic/1.
