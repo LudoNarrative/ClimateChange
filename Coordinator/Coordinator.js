@@ -6,9 +6,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var init = function() {
 
-		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];	//order of scenes
-		State.set("scenes", scenes);
+		//selectable scenes from main menu
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];
+
+		var playGameScenes = ["dinner", "lecture", "travel", "worker"];		//scenes played when you hit Begin
+		State.set("scenes", playGameScenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
 	}
@@ -45,6 +47,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		State.set("storyUIvars", story.UIvars);
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 		StoryDisplay.addVarChangers(story.UIvars, StoryAssembler.clickChangeState);		//add controls to change variable values in story (in diagnostics panel)
+	}
+
+	//returns index of next scene
+	var getNextScene = function(currentScene) {
+
 	}
 
 
@@ -286,9 +293,27 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set argue false"
 			],
 			UIvars: [
-				"confidence",
-				"patience",
-				"career"
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "patience",
+					"label" : "Patience",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "career",
+					"label" : "Career",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
 			],
 			mode: {
 				type: "dialogue",
