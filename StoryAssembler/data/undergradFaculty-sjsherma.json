@@ -111,7 +111,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id": "audienceAsksElika",
     "choiceLabel": "Continue",
-    "content": "Élika dons a contented smile as she surveys her audience. \"Does anyone have any questions?\" she says, as if she hadn't just thoroughly explained an impending doomsday. <br/><br/>\"Uh, yeah,\" says a lady with a hat adorned with feathers. \"How can you possibly be happy about that?!\"",
+    "content": "Élika dons a contented smile as she surveys her audience. \"Does anyone have any questions?\" she says, as if she hadn't just thoroughly explained an impending doomsday. <br/><br/>\"Uh, yeah,\" Franklin pipes up. \"How can you possibly be happy about that?!\"",
     "choices" : [
       {"gotoId" : "audienceAsksElika2"}
     ]
@@ -120,7 +120,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id" : "audienceAsksElika2",
     "choiceLabel" : "Continue",
-    "content" : "Élika's eyebrows lift. \"Happy?\" <br/><br/>\"Look at you!\" the woman sputters, gesturing wildly. <br/><br/>\"Y-you're saying all these horrible things with a smile on your face!\" <br/><br/>Said smile begins to falter. \"I - I, uh, I didn't mean -\"",
+    "content" : "Élika's eyebrows lift. \"Happy?\" <br/><br/>\"Look at you!\" Franklin sputters, gesturing wildly. <br/><br/>\"Y-you're saying all these horrible things with a smile on your face!\" <br/><br/>Said smile begins to falter. \"I - I, uh, I didn't mean -\"",
     "choices": [
       {
         "gotoId": "emmaHelpElika"
@@ -139,8 +139,8 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
 
   {
     "id": "emmaHelpElika",
-    "choiceLabel": "Step in - this lady's out of line.",
-    "content": "\"It's... difficult to explain...\" Elika says, voice strained, and you can't handle it anymore. As Elika's voice trails off, you take the opportunity to raise a hand and say, \"I don't believe that is a relevant question at the moment. Let's move on for the sake of time, shall we?\" <br/><br/> The lady's cheeks puffed up in indignation, but Elika's shoulders slump forward in relief.",
+    "choiceLabel": "Step in - Franklin's out of line here.",
+    "content": "\"It's... difficult to explain...\" Elika says, voice strained, and you can't handle it anymore. As Elika's voice trails off, you take the opportunity to raise a hand and say, \"I don't believe that is a relevant question at the moment. Let's move on for the sake of time, shall we?\" <br/><br/> Franklin's cheeks puffed up in indignation, but Elika's shoulders slump forward in relief.",
   },
 
   {
@@ -159,7 +159,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id" : "emmaNotHelps2",
     "choiceLabel" : "You cross your arms and watch as she takes a moment to gather herself with a breath.",
-    "content" : "\"It's not that I'm... glad, per se, it's more like I'm just dealing with the knowledge that this will end and our existence doesn't really matter in the grand scheme of things.\" The lady looks like she has more to say, but Elika quickly says \"Thank you. Any other questions?\"",
+    "content" : "\"It's not that I'm... glad, per se, it's more like I'm just dealing with the knowledge that this will end and our existence doesn't really matter in the grand scheme of things.\" Franklin's eyebrows furrow in concern, but Elika quickly says \"Thank you. Any other questions?\"",
     "choices" : [
       {"gotoId" : "emmaNotHelps3"}
     ]
@@ -227,7 +227,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
 
   {
     "id" :  "aidenPresentsSlide3",
-    "content" : "Aiden straightens their back. \"And so, I'll be presenting my thesis on how habit fragmentation, climate change, and science fraud has contributed to the undeserved end of a wonderful species,\" Aiden says. \"And how we can take care of more species in the future.\" Their eyes are blazing with passion.",
+    "content" : "Aiden straightens their back. \"And so, I'll be presenting my thesis on how habit fragmentation, climate change, and science fraud has contributed to the undeserved end of a wonderful species,\" Aiden says. \"And how we can take care of more species in the future by focusing locally.\" Their eyes are blazing with passion.",
     "choices" : [
       {"gotoId" : "aidenFinishes"}
     ]
@@ -237,13 +237,82 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
     "id" : "aidenFinishes",
     "choiceLabel" : "Continue",
     "content" : "After the hour is up, you wonder if it's unprofessional to cheer after Aiden wraps up their presentation and asks politely for questions.",
+    "choices" : [
+      {"gotoId" : "audienceAsksAiden"}
+    ]
   },
 
+  {
+    "id": "audienceAsksAiden",
+    "choiceLabel" : "Continue",
+    "content": "A lady wearing a hat adorned with feathers raises a hand, leaning forward. \"Ah, yes, hi, um,\" she says. \"Question. Don't we have more, um, important things to worry about than, ah - birds?\" <br/><br/> Aiden blinks at her. Their hands tighten around each other. \"S-sorry?\"",
+    "choices" : [
+      {"gotoId" : "audienceAsksAiden2"}
+    ],
+    "effects": [
+      "set audienceAsksQuestion true"
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
+  },
+
+  {
+    "id" : "audienceAsksAiden2",
+    "choiceLabel" : "Continue",
+    "content" : "\"Well, it's like you mentioned, dear. Climate change is, um, quite bothersome,\" says the lady. \"Many folks are losing their homes. Going hungry. Buying only one car! - shouldn't we, um, worry about our <i>own</i> kind first? What have these owls done for us?\" She flips her hair. \"Besides, it's just one species.\"",
+    "choices" : [
+      {"gotoId" : "ohShit"},
+      {"gotoId" : "wowPoint"},
+      {"gotoId" : "sheDead"},
+    ]
+  },
+
+  {
+    "id" : "ohShit",
+    "choiceLabel" : "Did she really just say that?",
+    "request" : "audienceAsksAiden3"
+  },
+
+  {
+    "id" : "wowPoint",
+    "choiceLabel" : "I mean. She has a point.",
+    "request" : "audienceAsksAiden3"
+  },
+
+  {
+    "id" : "sheDead",
+    "choiceLabel" : "She is now dead to me."
+  },
+
+  {
+    "id" : "audienceAsksAiden3",
+    "content" : "If you look closely, you can tell that Aiden's trembling. \"You,\" they breathe. \"You dare - dare <i>sit</i> there and - and ask how birds are <i>useful</i> with a flipping <i>feather</i> in your hat!\" <br/><br/> The lady's cheeks are growing red fast. ",
+    "choices": [
+      {
+        "gotoId": "emmaHelpAiden"
+      },
+      {
+        "gotoId": "emmaNoHelpAiden"
+      }
+    ],
+  },
+
+  {
+    "id": "emmaHelpAiden",
+    "choiceLabel": "I should probably step in.",
+    "content": "\"Alright, everyone, let's stay professional,\" you say quickly. Aiden blinks, then their eyes widen. \"A - apologies,\" they mumble. \"It's - you see, even if the forest owlet may not seem useful to <i>us</i>, they were still essential to their own ecosystem.\" Their gaze darts down. \"Not everything has to be about humankind.\"",
+  },
+
+  {
+    "id": "emmaNoHelpAiden",
+    "choiceLabel": "Where's the popcorn?",
+    "content": "Aiden inhales deeply. \"Look,\" they say. \"We're not the only beings on this planet. I think we can care about more living beings other than ourselves.\" <br/><br/>The lady's sputtering. \"I was just <i>saying</i> -\" <br/><br/>\"I know. Species extinction is just one problem - but it's still an important one. Every species keep the balance of the planet's ecosystems.\"",
+  },
 
   {
     "id": "emmaAsksAiden",
-    "choiceLabel": "emma_aiden_question",
-    "content": "Emma decides on what to ask Aiden",
+    "content": "Now, time for the panel's questions. Aiden shifts from one foot to the other, looking like they were trying to keep their hand-wringing as small as possible. You look down at your notes, drumming up questions in your head.",
     "choices": [
       {
         "gotoId": "aidenSoftball"
@@ -262,49 +331,29 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
 
   {
     "id": "aidenSoftball",
-    "choiceLabel": "aiden_softball",
-    "content": "Asks soft question"
-  },
-
-  {
-    "id": "aidenMiddle",
-    "choiceLabel": "aiden_middle",
-    "content": "asks general question"
-  },
-
-  {
-    "id": "aidenHardcore",
-    "choiceLabel": "aiden_hard",
-    "content": "plays devil's advocate/challenging question"
-  },
-
-  {
-    "id": "audienceAsksAiden",
-    "choiceLabel": "audience_aiden_question",
-    "content": "audience asks aiden a question",
-    "choices": [
-      {
-        "gotoId": "emmaHelpAiden"
-      },
-      {
-        "gotoId": "emmaNoHelpAiden"
-      }
-    ],
-    "effects": [
-      "set audienceAsksQuestion true"
+    "choiceLabel": "Could you elaborate on how focusing on local work would benefit endangered species?",
+    "content": "They seem to be focused locally, which has you secretly pleased. Let's see how much they can tell you about it. <br/><br/> Aiden perks up, looking almost excited. \"Well, even though there are laws on a federal level that can help, we can directly aid the recovery of endangered species locally.\"",
+    "choices" : [
+      {"gotoId" : "aSoftcore2"}
     ]
   },
 
   {
-    "id": "emmaHelpAiden",
-    "choiceLabel": "emma_help_aiden",
-    "content": "Emma helps aiden"
+    "id" : "aSoftcore2",
+    "choiceLabel" : "Continue",
+    "content" : "\"We can work to protect habitats from threats like logging, contaminated water, and invasive species, and - and help restore them, too!\" There lies a determined look on their face, their hands in fists before them. <br/><br/> You smile. <i>I like your passion, kid,</i> you can't help but think fondly, even though your previous student is a kid no more.",
   },
 
   {
-    "id": "emmaNoHelpAiden",
-    "choiceLabel": "emma_no_aiden",
-    "content": "emma stays out of it"
+    "id": "aidenMiddle",
+    "choiceLabel": "Why choose to focus on the forest owlet? Why is the loss of this species significant?",
+    "content": "Aiden tilts their head. \"Um, well, I believe that the loss of any species makes a significant impact on the ecosystem they've left - owls in particular, they occupy a nocturnal niche, so they keep the nocturnal prey population under control. They keep the balance.\" They gesture a little more. \"Forest owlets are, um, endemic to India, so their presence is particularly important.\"",
+  },
+
+  {
+    "id": "aidenHardcore",
+    "choiceLabel": "Would it be too slow to focus on one species at a time?",
+    "content": "\"Focusing on each would mean greater chance of recovery because of the work spent on them; perhaps focusing on groups?\""
   },
 
 ]
