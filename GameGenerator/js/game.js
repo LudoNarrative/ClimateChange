@@ -90,7 +90,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 
 		//var gameInitString = "game = new Phaser.Game(400, 300, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update }, false);";
-		var gameInitString = "game = new Phaser.Game(600, 500, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update }, true);";
+		var gameInitString = "game = new Phaser.Game(600, 400, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update }, true);";
 
 		//var generatedGame = gameInitString + gameLogicStrings.filter(function(v) { return v.id === id; })[0].gameString;
 
@@ -117,6 +117,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 				id: 'rerollGame',
 				text: 'Reroll'
 			}).click(function() { 
+				console.log("click!");
 				Coordinator.startGame(State.get("currentScene"));
 			}).appendTo('#gameContainer');
 		}
