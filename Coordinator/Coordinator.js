@@ -6,9 +6,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var init = function() {
 
-		//var scenes = ["dinner", "lecture", "travel", "worker" ];	//order of scenes
-		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];	//order of scenes
-		State.set("scenes", scenes);
+		//selectable scenes from main menu
+		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];
+
+		//scenes played when you hit Begin
+		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean"];		
+		State.set("scenes", playGameScenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
 	}
@@ -45,6 +48,23 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		State.set("storyUIvars", story.UIvars);
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 		StoryDisplay.addVarChangers(story.UIvars, StoryAssembler.clickChangeState);		//add controls to change variable values in story (in diagnostics panel)
+	}
+
+	//returns index of next scene
+	var getNextScene = function(currentScene) {
+		switch(currentScene) {
+			case "undergradDinner":
+				return 1;
+			case "undergradLecture": {
+				if (State.get('confidence') > 2) {
+					return 2;
+				}
+				else { return 3; }
+			}
+			case "undergradDean":
+				return 0;
+
+		}
 	}
 
 
@@ -286,9 +306,27 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set argue false"
 			],
 			UIvars: [
-				"confidence",
-				"patience",
-				"career"
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "patience",
+					"label" : "Patience",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "career",
+					"label" : "Career",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
 			],
 			mode: {
 				type: "dialogue",
@@ -348,7 +386,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set nonAcademicFriendRelationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
 				"set confidence 5",				//scale of 1 to 10, 10 highest
 				"set academicEnthusiasm 5",		//scale of 1 to 10, 10 highest
-				"set friendTension 0"			//scale of 1 to 10, ten is high tension
+				"set friendTension 0",			//scale of 1 to 10, ten is high tension
+				"set tension 0"
 			],
 			UIvars: [
 				{
@@ -913,7 +952,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set progression 0"
 			],
 			UIvars: [
-	
+
 			],
 			mode: {
 				type: "narration"
@@ -927,44 +966,41 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			id: "sereneTest",
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
-				"passenger": {name: "Phil", gender: "male"}
+				"defendee": {name: "Emma's former student", gender: "male"}
 			},
 			wishlist: [
-				{ condition: "dealWithSomeone eq true"}
+				{ condition: "establishSetting eq true"},
+				{ condition: "establishAudience eq true"},
+				{ condition: "establishClimateChangeEffects eq true"},
+				{ condition: "studentGivesPresentation eq true"},
+				{ condition: "emmaAsksQuestion eq true"},
+				{ condition: "audienceAsksQuestion eq true"},
+				{ condition: "facultyDeliberation eq true"},
+				{ condition: "congratsToStudent eq true"}
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
 			dataFiles: ["text!sjsherma_testfile"],
-/*
 
-
-			dataFiles: [
-				"text!undergradDean_talon",
-				"text!undergradDean_irapopor",
-				"text!undergradDean_sgadsby"
-			],
-*/
 			startState: [
-				"set onAPlane false",
-				"set reminisce false",
-				"set talkExposition false",
-				"set dealWithSomeone false",
-				"set readSomething false",
-				"set acceptOrDeclineSomething false",
-				"set outroForLanding false",
+				"set establishSetting false",
+				"set establishAudience false",
+				"set establishClimateChangeEffects false",
+				"set studentGivesPresentation false",
+				"set emmaAsksQuestion false",
+				"set audienceAsksQuestion false",
+				"set facultyDeliberation false",
+				"set congratsToStudent false",
 
 				"set academicEnthusiasm 0",			//global stat
 				"set curiosity 5",	//global stat
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
 
-				"set composure 5",
-				"set carbonFootprint 0",
-				"set fame 0"
+				"set patience 5",
+				"set optimism 0",
+				"set progression 0"
 			],
 			UIvars: [
-				"carbonFootprint",
-				"composure",
-				"fame"
 
 			],
 			mode: {
@@ -1843,7 +1879,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 							{ state: ["default"], tag: "neutral" },
 							{ state: ["persuasion gte 8"], tag: "smug"},
 							{ state: ["persuasion lte 3"], tag: "upset"}
-							
+
 						]
 					},
 					{
@@ -1899,7 +1935,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						id: "defendee",
 						graphics: "char6",
 						age: "20s",
-						states: [	
+						states: [
 							{ state: ["default"], tag: "neutral" }
 						],
 					},
@@ -2198,31 +2234,32 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "dinner",
-    				aspFilepaths: ["GameGenerator/ASP_cleaned/games/dinner__10.lp",
-"GameGenerator/ASP_cleaned/games/dinner__11.lp",
-"GameGenerator/ASP_cleaned/games/dinner__12.lp",
-"GameGenerator/ASP_cleaned/games/dinner__13.lp",
-"GameGenerator/ASP_cleaned/games/dinner__14.lp",
-"GameGenerator/ASP_cleaned/games/dinner__15.lp",
-"GameGenerator/ASP_cleaned/games/dinner__16.lp",
-"GameGenerator/ASP_cleaned/games/dinner__17.lp",
-"GameGenerator/ASP_cleaned/games/dinner__18.lp",
-"GameGenerator/ASP_cleaned/games/dinner__19.lp",
-"GameGenerator/ASP_cleaned/games/dinner__1.lp",
-"GameGenerator/ASP_cleaned/games/dinner__20.lp",
-"GameGenerator/ASP_cleaned/games/dinner__21.lp",
-"GameGenerator/ASP_cleaned/games/dinner__22.lp",
-"GameGenerator/ASP_cleaned/games/dinner__23.lp",
-"GameGenerator/ASP_cleaned/games/dinner__24.lp",
-"GameGenerator/ASP_cleaned/games/dinner__25.lp",
-"GameGenerator/ASP_cleaned/games/dinner__2.lp",
-"GameGenerator/ASP_cleaned/games/dinner__3.lp",
-"GameGenerator/ASP_cleaned/games/dinner__4.lp",
-"GameGenerator/ASP_cleaned/games/dinner__5.lp",
-"GameGenerator/ASP_cleaned/games/dinner__6.lp",
-"GameGenerator/ASP_cleaned/games/dinner__7.lp",
-"GameGenerator/ASP_cleaned/games/dinner__8.lp",
-"GameGenerator/ASP_cleaned/games/dinner__9.lp",
+    				aspFilepaths: [
+"GameGenerator/ASP_cleaned/games/dinner_1.lp",
+"GameGenerator/ASP_cleaned/games/dinner_2.lp",
+"GameGenerator/ASP_cleaned/games/dinner_3.lp",
+"GameGenerator/ASP_cleaned/games/dinner_4.lp",
+"GameGenerator/ASP_cleaned/games/dinner_5.lp",
+"GameGenerator/ASP_cleaned/games/dinner_6.lp",
+"GameGenerator/ASP_cleaned/games/dinner_7.lp",
+"GameGenerator/ASP_cleaned/games/dinner_8.lp",
+"GameGenerator/ASP_cleaned/games/dinner_9.lp",
+"GameGenerator/ASP_cleaned/games/dinner_10.lp",
+"GameGenerator/ASP_cleaned/games/dinner_11.lp",
+"GameGenerator/ASP_cleaned/games/dinner_12.lp",
+"GameGenerator/ASP_cleaned/games/dinner_13.lp",
+"GameGenerator/ASP_cleaned/games/dinner_14.lp",
+"GameGenerator/ASP_cleaned/games/dinner_15.lp",
+"GameGenerator/ASP_cleaned/games/dinner_16.lp",
+"GameGenerator/ASP_cleaned/games/dinner_17.lp",
+"GameGenerator/ASP_cleaned/games/dinner_18.lp",
+"GameGenerator/ASP_cleaned/games/dinner_19.lp",
+"GameGenerator/ASP_cleaned/games/dinner_20.lp",
+"GameGenerator/ASP_cleaned/games/dinner_21.lp",
+"GameGenerator/ASP_cleaned/games/dinner_22.lp",
+"GameGenerator/ASP_cleaned/games/dinner_23.lp",
+"GameGenerator/ASP_cleaned/games/dinner_24.lp",
+"GameGenerator/ASP_cleaned/games/dinner_25.lp",
 ],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
@@ -2264,6 +2301,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		loadBackground : loadBackground,
 		validateArtAssets : validateArtAssets,
 		loadSceneIntro : loadSceneIntro,
+		getNextScene : getNextScene,
 
 		startGame : startGame,
 		getStorySpec : getStorySpec

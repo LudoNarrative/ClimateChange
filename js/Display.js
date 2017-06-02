@@ -293,9 +293,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var setSceneOutro = function(endText) {
 
-		var nextIndex = State.get("scenes").findIndex(function(scene) {
+		/*
+		var nextIndex = State.get("scenes").findIndex(function(scene) {		//doof
 			return (scene == State.get("currentScene"));
 		}) + 1;
+		*/
+		var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
 		$( "#blackout" ).delay(1600).fadeIn( "slow", function() {
 	    	$("#sceneIntro").html(endText);
 
@@ -304,20 +307,22 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	    	}).appendTo("#sceneIntro");
 	    	var stats = State.get("storyUIvars");
 	    	stats.forEach(function(stat, pos) {
-				$('<div/>', {
-					id: stat+'ContainerOutro',
-			    	class: 'stat'
-				}).appendTo("#sceneIntro");
+	    		if ($.inArray("protagonist", stat.characters) !== -1) {
+					$('<div/>', {
+						id: stat.varName+'ContainerOutro',
+				    	class: 'stat'
+					}).appendTo("#sceneIntro");
 
-				$('<span/>', {
-			    	class: 'statLabel',
-			    	text: stat + ": "
-				}).appendTo('#'+stat+'ContainerOutro');
+					$('<span/>', {
+				    	class: 'statLabel',
+				    	text: stat.label + ": "
+					}).appendTo('#'+stat.varName+'ContainerOutro');
 
-				$('<span/>', {
-			    	class: 'statValue',
-			    	text: State.get(stat)
-				}).appendTo('#'+stat+'ContainerOutro');
+					$('<span/>', {
+				    	class: 'statValue',
+				    	text: State.get(stat.varName)
+					}).appendTo('#'+stat.varName+'ContainerOutro');
+				}
 			});
 
 

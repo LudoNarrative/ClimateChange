@@ -1,58 +1,74 @@
 [
 /*
-{ "condition": "establishFriends eq true" }, ME
-{ condition: "establishSettingDinner eq true" }, ME
-{ condition: "establishDefenseTomorrow eq true" },
-{ condition: "EmmaJobFutureBeat eq true" },
-{ condition: "EmmaClassTypeBeat eq true" },
-{ condition: "friendIsInAcademia eq true" },
-{ condition: "friendIsNotInAcademia eq true"},
-{ condition: "friendTension gte 4"}, ME
-{ condition: "friendTensionRelieved eq true"},
-{ condition: "checkinWithDisagreer eq true"},
-{ condition: "inactivityIsBad eq true"}, ME
-{ condition: "outro eq true"}, ME
+{condition: "establishFriends eq true" }, ME
+{condition: "establishSettingDinner eq true" }, ME
+{condition: "establishDefenseTomorrow eq true" },
+{condition: "EmmaJobFutureBeat eq true" },
+{condition: "EmmaClassTypeBeat eq true" },
+{condition: "friendIsInAcademia eq true" },
+{condition: "friendIsNotInAcademia eq true"},
+{condition: "friendTension gte 4"}, ME
+{condition: "friendTensionRelieved eq true"},
+{condition: "checkinWithDisagreer eq true"},
+{condition: "inactivityIsBad eq true"}, ME
+{condition: "outro eq true"}, ME
 */
-//
-
-
-
-
-
 
 //Establish Dinner Scene - START
 //
 	{
 		"id": "sceneSetUp0_t",
-		"content": "They are friends, Sometimes they hate eschother, sometimes they love eachother.",
+		"content": "You looked around the living room -- you wonder if it would still be called a living room if the dining area and the kitchen all flowed into one. Your mind wouldn’t stop running; you wondered where you were for a moment.",
+		"conditions": [],
+		"effects": []
+	},
+	{
+		"id": "sceneSetUp1_t",
+		"content": "\"Hey!\" Zanita shouted, excitedly. You attention is finally broken. \"You made it, welcome!\"<br>\"Thank you,\" you say, still looking around at all the clean walls and swept floors.<br>\"About time,\" another voice yells from the kitchen. You look. It was Shelly; she was already holding a glass of wine, leaning against a kitchen chair.<br>\"Be nice, Shelly, it you 10 mins to find the door the first time.\"<br>\"That was intentional…\"<br>\"I’m sure it was.\" Zanita said and turned her attention back to you. \"Let me take your coat. Would you like some wine?\" She asked with a smile.",
 		"conditions": [],
 		"effects": [
-			{"set establishFriends true"}
+			"set establishFriends true"
 		]
+	},
+
+	{
+		"id": "wineQuestion0_t",
+		"choiceLabel": "",
+		"content": "",
+		"conditions": [],
+		"effects": []
+	},
+	{
+		"id": "wineQuestion1_t",
+		"choiceLabel": "",
+		"content": "",
+		"conditions": [],
+		"effects": []
 	},
 //
 	{
 		"id": "theSceneIsDinner0_t",
 		"choiceLabel": "The scene is set up and the scene is dinner",
 		"conditions": [
-			{"condition": "establishFriends eq true"},
+			"establishFriends eq true",
 		],
 		"effects": [
-			{"set establishSettingDinner true"}
+			"set establishSettingDinner true"
 		]
 	},
-//Tension in the room will only happen if both scenes
+
+//friendIsInAcademia & friendIsNotInAcademia & there hasn't been enough tension
 	{
 		"id": "tensionInTheRoom0_t",
 		"choiceLabel": "Tension in the room has been triggered.",
 		"choices" : [],
 		"conditions": [
-			{"condition": "tension gte 7"},
-			{"condition": "friendIsInAcademia eq true"},
-			{"condition": "friendIsNotInAcademia eq true"}
+			"tension lt 4",
+			"friendIsInAcademia eq true",
+			"friendIsNotInAcademia eq true"
 		],
 		"effects": [
-			{"set friendTension true"}
+			"set friendTension true"
 		]
 	},
 //This scene will establish that they both agree that pond scum is bad
@@ -61,8 +77,8 @@
 		"choiceLabel": "Inactivity Is Pond Scum, Emma, Pond Scum!",
 		"choices": [],
 		"conditions": [
-			{"condition": "friendIsInAcademia eq true"},
-			{"condition": "friendIsNotInAcademia eq true"}
+			"friendIsInAcademia eq true",
+			"friendIsNotInAcademia eq true"
 		],
 		"effects": []
 	},
@@ -71,8 +87,20 @@
 		"id": "thatsAllFolks0_t",
 		"choiceLabel": "We're all done, this is HAPPENING NOW!",
 		"conditions": [
-			"checkinWithDisagreer eq true"
+			"establishFriends eq true",
+			"establishSettingDinner eq true",
+			"establishDefenseTomorrow eq true",
+			"EmmaJobFutureBeat eq true",
+			"EmmaClassTypeBeat eq true",
+			"friendIsInAcademia eq true",
+			"friendIsNotInAcademia eq true",
+			"friendTension gte 4",
+			"friendTensionRelieved eq true",
+			"checkinWithDisagreer eq true",
+			"inactivityIsBad eq true"
 		],
-		"effects": []
+		"effects": [
+			"set outro true"
+		]
 	}
 ]
