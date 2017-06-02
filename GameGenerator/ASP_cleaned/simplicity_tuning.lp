@@ -91,7 +91,7 @@ readings(N) :- N = {reading(_,_)}.
 %#minimize {N : results(N)}.
 
 %things(N) :- N = A + B,
-%	     A = {precondition(_,_)},
-%	     B = {result(_,_)}.
+%%	     A = {precondition(_,_)},
+	     %B = {result(_,_)}.
 
 %#minimize {N: things(N)}.
