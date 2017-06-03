@@ -3,7 +3,8 @@
 		"id": "momChallengesi",
 		"content": "<p>\"Emma, are you sure this where you want to be going.\" {name|mom} pulls her glass up to cover her lips. \"Remember when we visited the UN when we were looking at colleges. I’d never seen you so excited. Are you not... excited anymore?\"</p>",
 		"effects": [
-			"set momChallenges true"
+			"set momChallenges true",
+			"set dadChallenges true"
 		],
 		"choices": [
 			{"gotoId": "listenToMomi"},

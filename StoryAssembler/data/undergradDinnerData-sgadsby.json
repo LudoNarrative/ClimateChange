@@ -13,32 +13,88 @@
 { condition: "inactivityIsBad eq true"},
 { condition: "outro eq true"},
 */
-//condition i'm working on: establishDefenseTomorrow, EmmaJobFutureBeat, EmmaClassTypeBeat. probably have around 14 "clicks" at worst.
+//condition i'm working on: establishDefenseTomorrow, EmmaJobFutureBeat, EmmaClassTypeBeat. takes about 11 or 12 clicks to go through the entire section.
 		{
 		"id": "establishDefenseTomorrowBeat",
-		"content": "Emma and friends talk about her defense tomorrow.",
+		"content": "\"So Em, Ready for that defense tomorrow?\"",
 		"choices" : [
-			{"gotoId": "EmmaWorriedAboutDefenseBeat"},
+			{"gotoId": "yes"},
+			{"gotoId": "maybeNotSure"},
 		],
 		"effects" : [
 			"set establishDefenseTomorrow true"
 		],
+		"conditions" : [
+		//	"establishSettingDinner eq true"
+		]
 	},
-	
-		{
-		"id": "EmmaWorriedAboutDefenseBeat",
-		"choiceLabel": "talk about why you're worried",
-		"content": "Emma worries about her defense. friends try to reassure her.",
+	// \"Besides, we've heard your defense plenty Em, it's good\" You smile and hug both your friends. \"Thanks guys. I'm glad you're here with me tonight.\" \"We wouldn't want to be anywhere else Em.
+	{
+		"id": "yes",
+		"choiceLabel": "\"Yea, I'll be fine tomorrow.\"",
+		"content": "\"It'll be great. I'll finish it and then I'll get my PhD.\" Both of your friends smile at you. <p> \"I'm sure it'll go off without a hitch. We've heard it plenty of time. Now are you sure you're not worried?\" </p>",
 		"choices" : [
-			{"gotoId": "EmmaJobFutureBeat"},
+			{"gotoId": "imSure"},
+			{"gotoId": "maybeNotSure"},
+		],
+		"effects" : [
+			"incr confidence 1"
 		],
 	},
 	{
-		"id": "EmmaJobFutureBeat",
-		"choiceLabel": "talk about job you've secured",
-		"content": "Emma talks about already having a job.",
+		"id": "imSure",
+		"choiceLabel": "\"I'm sure.\"",
+		"content": "You smile a bit as Zanita pokes your side. \"You <i> sure </i> about that? You can't lie to us Em.\" You laugh softly at that. <p>\"I mean, of course I'm nervous. But it's nothing more then what'd you expect to have. I'll be fine.\" </p>  <p>\"Well if you need to, you can always talk to us. We're you're best friends Em.\" </p>",
 		"choices" : [
-			{"gotoId": "EmmaClassTypeBeat"},
+			{"gotoId": "smileAtFriends"},
+			{"gotoId": "hugThem"},
+		],
+		"effects" : [
+			"incr academicEnthusiasm 1"
+		],
+	},
+	{
+		"id": "maybeNotSure",
+		"choiceLabel": "\"Well...um....maybe?\"",
+		"content": "\"Em, it'll be okay. It's normal to feel nervous. Hell, I was nervous when I gave my defense. But we've heard your defense hundreds of times. It's perfect. There's no way they wouldn't give it to you.\" <p>\"I have to agree with Zanita, it's a great defense. You'll have to tell us all about how it went afterwards.\" </p> You relax a bit hearing this.",
+		"choices" : [
+			{"gotoId": "smileAtFriends"},
+			{"gotoId": "hugThem"},
+		],
+		"effects" : [
+			"decr confidence 1"
+		],
+	},
+	{
+		"id": "smileAtFriends",
+		"choiceLabel": "You smile at your two friends",
+		"content": "Even if they like to butt heads all the time, you feel so incredibly lucky to have them. \"Thanks guys, now I guess we should eat?\" <p> \"Yes. Let's eat!\" </p> You laugh a bit before starting to eat.",
+		"choices" : [
+			{"gotoId": "EmmaJobFutureBeat"},
+		],
+		"effects" : [
+			"incr confidence 1"
+		],
+	},
+	{
+		"id": "hugThem",
+		"choiceLabel": "You try to hug them",
+		"content": "You go in for a hug but get pushed off. You laugh a bit at this. \"Aww nobody wants a hug?\" <p>\"We can hug later. The food is gonna be cold at this rate.\" </p> You laugh louder and shake your head.",
+		"choices" : [
+			{"gotoId": "EmmaJobFutureBeat"},
+		],
+		"effects" : [
+			"incr confidence 1"
+		],
+	},
+
+	{
+		"id": "EmmaJobFutureBeat",
+		"choiceLabel": "\"You guys want to hear about my new job?\"",
+		"content": "\"You got a job afterwards? What's it about?\"  <p> \"I get to teach my own class.\" </p> <p> \"That sounds-\" </p> You hear boring and exciting at the same time. You pray they don't start arguing, but it seems by some miracle they don't. <p>\"Sure you don't want to come do some local work with me?\"</p>",
+		"choices" : [
+			{"gotoId": "sure"},
+			{"gotoId": "maybeAnotherTime"},
 		],
 		"effects" : [
 			"set EmmaJobFutureBeat true"
@@ -47,15 +103,38 @@
 			"establishDefenseTomorrow eq true"
 		]
 	},
+	{
+		"id": "sure",
+		"choiceLabel": "\"Sure. After the defense?\"",
+		"content": "\"I have some time in between my defense and my job. I could help out a bit then.\" You notice Zanita rolling her eyes but you look over and Shelly looks so happy. You don't regret saying yes. <p>\"Thanks Em! Knew you wouldn't forget about us locals in the mix of academics.\" </p>",
+		"choices" : [
+			{"gotoId": "EmmaClassTypeBeat"},
+		],
+		"conditions" : [
+			"establishDefenseTomorrow eq true"
+		]
+	},
+	{
+		"id": "maybeAnotherTime",
+		"choiceLabel": "\"Maybe another time\"",
+		"content": "\"I kind of wanted to relax a bit afterwards....\" You notice Shelly deflates a bit. <p> \"Oh um...Okay then...\" </p>You feel your stomach knot a bit, you didn't mean to make her sad. <p>\"You know what? Why don't I just give you a rain check on it instead? Just give me a heads up when next one is happening.\" </p>",
+		"choices" : [
+			{"gotoId": "EmmaClassTypeBeat"},
+		],
+		"effects" : [
+			"incr academicEnthusiasm 1", "decr confidence 1"
+		],
+		"conditions" : [
+			"establishDefenseTomorrow eq true"
+		]
+	},
 		{
 		"id": "EmmaClassTypeBeat",
-		"choiceLabel": "talk about how you'll style your job",
-		"content": "Emma talks about her style of her job after her defense",
+		"choiceLabel": "\"Should we talk about my class now?\"",
+		"content": "\"So Em! How are you setting your class up?\" <p>\"Sure you don't want to turn down the job and do local work full time?\" </p> <p>\"Yes Shelly. As much as I like local work, I want to do academics.\"</p> You laugh at the contrasting expressions on your friends. One looks annoyed and the other looks so happy.",
 		"choices" : [
 			{"gotoId": "classSize"},
 			{"gotoId": "classStyle"},
-			{"gotoId": "className"},
-			{"gotoId": "classSubject"}
 		],
 		"effects" : [
 			"set EmmaClassTypeBeat true"
@@ -66,8 +145,8 @@
 	},
 			{
 		"id": "classSize",
-		"choiceLabel": "talk about class size",
-		"content": "you think about what size you want the class",
+		"choiceLabel": "\"So, the size of the class....\"",
+		"content": "\"Yea Em, what were you thinking?\" You look down at your dinner as you think about it, you've been so worried about your defense you completely forgot about most of your class plans. <p> \"Well....\" </p>",
 		"choices" : [
 			{"gotoId": "smol"},
 			{"gotoId": "large"}
@@ -75,59 +154,57 @@
 	},
 	{
 		"id": "smol",
-		"choiceLabel": "says she'll teach a small class",
-		"content": "Emma talks about the idea of teaching a small class.",
+		"choiceLabel": "\"Small sounds better\"",
+		"content": "\"It's okay Em. You can have a few, more dedicated students\" <p>\"How do you know they'll be dedicated?\" </p> Emma sighs and speaks up before they can start <i> another </i> fight. They're infamous for their fights. <p> \"I'm sure they'll be dedicated. Or at least some will. You only need a few to make a difference.\" </p>",
 		"choices" : [
-			{"gotoId": "className"},
 			{"gotoId": "classStyle"},
-			{"gotoId": "classSubject"},
-			{"gotoId": "nothingLeftToSay"} //happens when you go through at least style and size
+			{"gotoId": "nothingLeftToSay"} //happens when you go through style and size
 		],
 		"effects" : [
-			"set classSize true"
+			"set classSize true","incr tension 1", "incr academicEnthusiasm 1","incr confidence 1","set smol true"
+		],
+	},
+			
+	{
+		"id": "large",
+		"choiceLabel": "\"Give me the large class, I can handle it!\"",
+		"content": "Zantia laughs as she says \"That a girl! I know you can handle it.\" You smile and look at your friends, <p>\"Plus I can help shape the minds of lots of students.\"</p> <p>\"Or they'll just ignore you and forget everything after the class\" </p>",
+		"choices" : [
+			{"gotoId": "argue1"},
+			{"gotoId": "argue2"}
+		],
+		"effects" : [
+			"set classSize true","incr academicEnthusiasm 1","set large true","incr confidence 2"
 		],
 	},
 	{
-		"id": "large",
-		"choiceLabel": "says she'll teach a large class",
-		"content": "Emma talks about the idea of teaching a large class.",
+        "id": "argue1", 
+		"choiceLabel": "sigh before saying \"Shelly....\"",
+		"request": {"gotoId": "largeContinued"},
+    },
+	{
+        "id": "argue2", 
+		"choiceLabel": "rub temple in frustration.",
+		"request": {"gotoId": "largeContinued"},
+    },
+	{
+		"id": "largeContinued",
+		"content": "\"Must you <i> always </i> be a downer Shelly?! Can you not for once out of respect?\" You sigh and look down at your dinner. It suddenly seems a lot less appetizing then before. Although you'll probably get your appetite back. As soon as they stop fighting.... ",
 		"choices" : [
-			{"gotoId": "className"},
 			{"gotoId": "classStyle"},
-			{"gotoId": "classSubject"},
 			{"gotoId": "nothingLeftToSay"}
 		],
 		"effects" : [
-			"set classSize true"
+			"set classSize true","incr tension 1","decr confidence 1"
 		],
-	},
-	
-			{
-		"id": "className",
-		"choiceLabel": "consider mentioning name",
-		"content": "you think about mentioning a class name but decide not to.",
-		"choices" : [
-			{"gotoId": "classSize"},
-			{"gotoId": "classStyle"},
-			{"gotoId": "classSubject"},
-			{"gotoId": "nothingLeftToSay"}
-		],
-	},
-			{
-		"id": "classSubject",
-		"choiceLabel": "talk about subject of class",
-		"content": "Emma mentions her topic of the class.",
-		"choices" : [
-			{"gotoId": "classSize"},
-			{"gotoId": "classStyle"},
-			{"gotoId": "className"},
-			{"gotoId": "nothingLeftToSay"}
-		],
+		"conditions" : [
+			"large eq true"
+		]
 	},
 			{
 		"id": "classStyle",
-		"choiceLabel": "talk about style of class",
-		"content": "Emma thinks about how she wants her class to be styled",
+		"choiceLabel": "\"So, what about the style do you wanna hear?\"",
+		"content": "\"Anything you can tell us!\" You laugh at Zanita's excitement. Or maybe her excitement is just because you'll be working together. Either way, least one of your friends likes your job. <p> \"I hadn't thought about it much, but it could be...\" </p>",
 		"choices" : [
 			{"gotoId": "lecture"},
 			{"gotoId": "seminar"},
@@ -135,38 +212,37 @@
 	},
 				{
 		"id": "lecture",
-		"choiceLabel": "mention it'll be lecture style",
-		"content": "says she'll take on the challlenge of it being lecture styled",
+		"choiceLabel": "\"lecture style sounds nice\"",
+		"content": "\"A lecture styled class could be fun. I could get all my information out first and then have them ask questions.\" <p>\"Or you could get dead silence after the lecture and it would be awkward.\"</p> <p> \"<i>Shelly.</i>\" </p> You sigh and shake your head before saying <p>\"Anyways, I'm sure it'll be fine. If not... I can adapt.\"</p>",
 		"choices" : [
 			{"gotoId": "classSize"},
-			{"gotoId": "classSubject"},
-			{"gotoId": "className"},
 			{"gotoId": "nothingLeftToSay"}
 		],
 		"effects" : [
-			"set classStyle true"
+			"set classStyle true","incr academicEnthusiasm 1","set lecture true","incr confidence 1","incr tension 1"
 		],
 	},
 				{
 		"id": "seminar",
-		"choiceLabel": "mention it'll be a seminar style",
-		"content": "says she rather stay with the seminar styled work.",
+		"choiceLabel": "\"seminar styled class could be interesting \"",
+		"content": "\"A seminar could be great. I could share my knowledge and then they can talk amongst themselves about it.\" Zanita glares at Shelly which makes you sigh. Why did you think this dinner would go any differently. <p>\"Well that's great. but you could do it on a local level as well.\"</p> Well that's sadly probably one of the nicest thing she's said about your job.",
 		"choices" : [
 			{"gotoId": "classSize"},
-			{"gotoId": "classSubject"},
-			{"gotoId": "className"},
 			{"gotoId": "nothingLeftToSay"}
 		],
 		"effects" : [
-			"set classStyle true"
+			"set classStyle true","incr academicEnthusiasm 1","set seminar true","incr tension 1"
 		],
 	},
 	{
 		"id": "nothingLeftToSay",
-		"choiceLabel": "you ran out of things to talk about",
-		"content": "you ask to move onto a new topic because you no longer have any ideas to say about your future teaching ideals",
+		"choiceLabel": "\"Why don't we move onto a new topic?\"",
+		"content": "\"That's all I have planned for now.\" <p> \"Awww Em. I'm sure you have more planned!\" </p> In your mind, you do have a bit more planned, but you might as well save Shelly from any more academic talking. You offer again to switch topics. Zantia sighs but agrees. Shelly attempts to hide a small smile but you notice it. Least you did <i> something </i> to keep them from starting a new fight",
 		"conditions" : [
-			"classStyle eq true", "classSize eq true"
+			"classStyle eq true", "classSize eq true",
+		],
+		"effects" : [
+		"incr confidence 1", "decr tension 1"
 		],
 	},
 	

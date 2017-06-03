@@ -1,57 +1,141 @@
 [
   {
-    "notes": "CHECKLIST\n-Viewpoint, global\n•Franklin's presentation is about the negative effects behind the Eco-car movement.\n•Facts about the company, then jump to questions.\n[scepticalStudent = true]",
     "id": "franklinPresentation",
     "choiceLabel": "Franklin begins his presentation",
-    "content": "Franklin's presentation opens on a slide of a photo of him with an older model electric car. Then he begins, \"the green movement has been making a push for a switch to electric cars for decades, and while in theory electric vehicles are better for the environment there are dozens of underlying issues in which need to be studied. First what we must consider is what type of pollution goes into making cars. Being the son of CEOs in both the oil industry and recently the electric car industry,  I have first hand experience as to the dark side that these companies like to keep hidden.\"",
+    "conditions": [
+      "scepticalStudent eq true"
+    ],
+    "content": "\"Franklin's presentation opens on a slide of a photo of a younger Franklin with a recent model of electric car. Then he begins, \"the green movement has been making a push for a switch to electric cars for decades, and while in theory electric vehicles are better for the environment there are dozens of underlying issues in which need to be studied. First what we must consider is what type of pollution goes into making cars. Being the son of CEOs in both the oil industry and recently the electric car industry,  I have first hand experience as to the dark side that these companies like to keep hidden.\"",
     "choices": [
       {
         "gotoId": "franklinPresentationPart2"
       }
     ],
-    "conditions": [
-      "scepticalStudent eq true"
-    ]
+    "notes": "CHECKLIST-Viewpoint, global-Franklin's presentation is about the negative effects behind the Eco-car movement.-Facts about the company, then jump to questions.scepticalStudent = true"
   },
   {
-    "notes": "Here Franklin talks about how there still need to be reforms other than switching to electric cars.",
     "id": "franklinPresentationPart2",
     "choiceLabel": "Slide 2",
-    "content": "placeholder",
+    "content": "Franklin's second slide is a picture of Franklin siting on the hood of his car in front of a factory with billowing smokestacks. \"Electric vehicles may not emit carbon dioxide the same way as a fossil fuel burning vehicle does, however this does not mean they are not guilty when it comes to climate change. You must ask yourself where the energy is coming from, many cities run on fossil fuels or other methods that pollute the environment.\"",
     "choices": [
       {
         "gotoId": "franklinPresentationPart3"
       }
-    ]
+    ],
+    "notes": "Here Franklin talks about how there still need to be reforms other than switching to electric cars."
   },
   {
     "id": "franklinPresentationPart3",
-    "content": "Franklin's third slide is of him sitting on a rock staring off into a dirty, busy quarry. \"The electric car company doesn't only have an adverse effect on our climate, they also pollute large sections of land during mining operations. Besides the expected damage of digging up large sections of land, it is common to use acid baths and dump toxic dirt right back into the environment.\" Franklin goes on for over an hour, his audience is captivated by the slides and videos he shares, it's almost as if you are watching a documentary with the speaker right in front of you. From picture to picture you can see how Franklin becomes more aware of the damage he has been close to all his life.",
-    "notes": "inspiration from https://www.wired.com/2016/03/teslas-electric-cars-might-not-green-think/ \nHere Franklin goes into more depth on the environmentally damaging effects of electric vehicles.",
-    "choiceLabel": "Slide 3"
+    "choiceLabel": "Slide 3",
+    "content": "\"Franklin's presentation opens on a slide of a photo of him with one ofthe more recent models of electric car. Then he begins, \"the green movement has been making a push for a switch to electric cars for decades, and while in theory electric vehicles are better for the environment there are dozens of underlying issues in which need to be studied. First what we must consider is what type of pollution goes into making cars. Being the son of CEOs in both the oil industry and recently the electric car industry,  I have first hand experience as to the dark side that these companies like to keep hidden.\"",
+    "choices": [
+      {
+        "gotoId": "franklinPresentationEnd"
+      }
+    ],
+    "notes": "inspiration from https://www.wired.com/2016/03/teslas-electric-cars-might-not-green-think/ Here Franklin goes into more depth on the environmentally damaging effects of electric vehicles."
   },
   {
-    "id": "franklinPresentationPart3",
-    "content": "placeholder"
+    "id": "franklinPresentationEnd",
+    "choiceLabel": "Move on to questions",
+    "content": "Franklin's defense continues in this fashion, almost as if it were a documentary where the speaker was in front of you. Each proceeding slide displays a Franklin who is becoming more aware with the effect big business has on the planet. Franklin closes his defense by stating personal and local change isn't nearly enough to save the planet and only global reform of corporations has any chance to mend the damage we have done."
   },
   {
     "id": "emmaAsksFranklin",
-    "content": "placeholder"
+    "choiceLabel": "Open floor to questions",
+    "content": "\"Thank you Franklin, we will begin with instructor questions, then move on to the audience.\"",
+    "choices": [
+      {
+        "gotoId": "easyQuestionF"
+      },
+      {
+        "gotoId": "midQuestionF"
+      },
+      {
+        "gotoId": "hardQuestionF"
+      }
+    ]
+  },
+  {
+    "id": "easyQuestionF",
+    "choiceLabel": "easier question",
+    "speaker": "protagonist",
+    "content": "\"So tell me a little bit about what changed your views from when when you took my class years ago.\"",
+    "choices": [
+      {
+        "gotoId": "easyAnswerF"
+      }
+    ]
+  },
+  {
+    "id": "easyAnswerF",
+    "choiceLabel": "Franklin Smiles and responds",
+    "content": "\"I was naive years ago to think humans had little impact, it was hard for me to see how things accumulated. I only fully grasped our impact when my parents switched from the oil industry to the electric car industry. I asked to see how these luxury \"nature-friendly\" vehicles were made and it disgusted me. What made me passionate-\" ",
+    "choices": [
+      {
+        "gotoId": "audienceAsksFranklin"
+      }
+    ]
+  },
+  {
+    "id": "midQuestionF",
+    "speaker": "protagonist",
+    "content": "\"How do you propose we get legislation to enforce change to corporations?\"",
+    "choices": [
+      {
+        "gotoId": "midAnswerF"
+      }
+    ]
+  },
+  {
+    "id": "midAnswerF",
+    "choiceLabel": "Franklin looks to have planned on this question.",
+    "content": "\"Corporations are using dirty tactics and corruption to stay in power, all we have to do is expose illegal activities and make it widely known. As for any legislative body that doesn't properly punish these industries for illegal activity, their position will be threatened, they are just as responsible if they do not uphold proper punishment. If they wish to keep their job they will comply. And another-\"",
+    "choices": [
+      {
+        "gotoId": "audienceAsksFranklin"
+      }
+    ]
+  },
+  {
+    "id": "hardQuestionF",
+    "speaker": "protagonist",
+    "content": "\"How do you personally plan to make change, and what is the best method for everyone else to make change?\""
+  },
+  {
+    "id": "hardAnswerF",
+    "choiceLabel": "Franklin responds",
+    "content": "Franklin looks a bit uneasy, \"Well people will have to demand action be taken when illegal activities are taking place in legislation and industry. And if action fails to take place we will need to demand the immediate removal of whoever refused to take legislative action. People will need to convince news casters to cover issues until they are resolved, not until they find a new hot problem. As for someone born into wealth as myself-\"",
+    "choices": [
+      {
+        "gotoId": "audienceAsksFranklin"
+      }
+    ]
   },
   {
     "id": "audienceAsksFranklin",
-    "content": "placeholder"
+    "choiceLabel": "Franklin is cut off by an audience member.",
+    "content": "Elika, stands up and shouts, \"I just want to ask how it feels to know your previous company killed of an entire species of crab with the oil incident?\"\nFranklin is blindsided by this question and looks panicked."
+  },
+  {
+    "id": "letFranklinDefend",
+    "content": "Franklin is blindsided and makes a panicked attempt to save himself, \"That wasn't... that had nothing to do with me.\" He struggles for a few minutes to regain focus, but another faculty member "
+  },
+  {
+    "id": "defendFranklin",
+    "choiceLabel": "Defend Franklin",
+    "content": "before Franklin can flounder you step in \"Elika this is a highly inappropriate question to be asking, it has nothing to do with Franklin plans to change the future. We are over time anyway, we will move on to the assessment to avoid further interruption, I would like you all to leave."
   },
   {
     "id": "facultyDeliberateFranklin",
-    "content": "placeholder"
+    "content": "Franklin leaves the room and you begin discussing how well he did. \"So {name|protagonist} are you going pass the son of the people who killed the crabs?\" \"yes, I feel he did very well, and it's not kind of you to associate him with his parents actions, he seems to have had a real change of heart.\" "
   },
   {
     "id": "facultyDeliberateElika",
-    "content": "placeholder"
+    "content": "You and the other faculty look over your notes still shellshocked from the excitable woman studying the end times of humans. \"So {name|protagonist} does the extinction fanatic pass?\" \"While her presentation was abnormal I do believe knowing estimates on how long we have left is valuable to our species. So yes she passed.\""
   },
   {
     "id": "facultyDeliberateAiden",
-    "content": "placeholder"
+    "content": "\"How did they do {name|protagonist}?\" \"They did well and considering all the species that have been going extinct the last few years they have an important focus. They pass.\""
   }
 ]

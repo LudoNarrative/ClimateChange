@@ -18,6 +18,7 @@ requirejs.config({
 		"Templates": "Templates",
 		"Character": "Character",
 		"Hanson": "Hanson",
+		"HealthBar" : "../../lib/healthbarstandalone",
 
 		"globalData" : "../data/global.json",
 		"travelData" : "../data/travel.json", 
@@ -57,6 +58,10 @@ requirejs.config({
 		"undergradBeach_sjsherma" : "../data/undergradBeach-sjsherma.json",
 		"undergradBeach_madreed" : "../data/undergradBeach-madreed.json",
 		"undergradBeach_sgadsby" : "../data/undergradBeach-sgadsby.json",
+
+		"undergradFaculty_sjsherma" : "../data/undergradFaculty-sjsherma.json",
+		"undergradFaculty_madreed" : "../data/undergradFaculty-madreed.json",
+		"undergradFaculty_kply" : "../data/undergradFaculty-kply.json",
 
 		"sjsherma_testfile" : "../data/sjsherma-testfile.json",
 		"kply_testfile" : "../data/kply-testfile.json",
@@ -108,13 +113,14 @@ requirejs(
 	cycola( cytoscape, cola ); // register extension
 	regCose( cytoscape );
 
+	debugLeftToVisitLengths = [];
 	var levelData;
 	var globalData;
 	var story;
 	var graphData = [];
 	var leftToVisit = [];
 	playThroughs = [];
-	var currentScene = "generalist";		//starting scene (you can change this in the UI from the dropdown)
+	var currentScene = "undergradDinner";		//starting scene (you can change this in the UI from the dropdown)
 
 	var stories = Coordinator.getStorySpec("all");
 	var testStories = HanSON.parse(testData);
@@ -127,7 +133,7 @@ requirejs(
 	//var groupingCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice"];
 
 	var graphRootId = "";
-	iterNum = 4;				//number of playthroughs to run
+	iterNum = 4;				//number of playthroughs to run (offset by zero)
 	var iterStep = 0;
 	var idStepper = 0;
 	var deadendPaths = 1;
@@ -193,12 +199,12 @@ requirejs(
 
 	var simulateRunthroughs = function() {
 		
-		require("ChunkLibrary");
+		//require("ChunkLibrary");
 		resetStory();
 
 		addToGraph([]);
 		stepStory([]);
-		
+		console.log("iterStep = " + iterStep);
 		return graphData
 		//cleanUpDom();
 	}
@@ -488,8 +494,8 @@ requirejs(
 		var uniqueNodeId = graphData[graphData.length-1].data.id;		//grab last thing added to graphData
 		if (typeof uniqueNodeId == "undefined") { uniqueNodeId = graphData[graphData.length-2].data.id; }		//if it wasn't a node, grab next one up
 		
-		var newChoices = checkForNewChoices(graphData);			//check and see if there are any new choices
-		var endReached = false;
+		var newChoices = checkForNewChoices(graphData, clickPath);			//check and see if there are any new choices
+		//var endReached = false;
 			
 		if (newChoices.length > 0) {		//if there are new choices...
 			newChoices.forEach(function(newChoice, pos) {			//copy them to the leftToVisit with the path to them
@@ -500,7 +506,8 @@ requirejs(
 					leftToVisit.push(newChoice);		//add it to leftToVisit
 				}
 			});
-			
+		}
+			debugLeftToVisitLengths.push(leftToVisit.length);
 			var nextChoice = leftToVisit.pop();									//pop last item off array, which should be last choice currently available?
 			var temp = nextChoice.clickPath[nextChoice.clickPath.length-1];
 			clickPath.push({source: temp.source, dest: temp.dest, clickNum: temp.clickNum, choiceText: temp.choiceText});			//add it to clickPath
@@ -553,9 +560,17 @@ requirejs(
 				}
 			}
 
-			else { throw("Error! There was supposed to be a choice to pick but none is in the el!"); }
+			else { 
+				addToGraph(clickPath);
+				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
+					iterStep++;
+					console.log("A choice wasn't available? Starting over...");
+					var nextNode = leftToVisit.shift();
+					gotoChoice(nextNode.clickPath, story, levelData, globalData);
+				}
+			}
 
-		}
+		
 
 		
 	};
@@ -565,9 +580,17 @@ requirejs(
 		for (var x=0; x < leftToVisit.length; x++) {
 				var arrIdentifier = leftToVisit[x].chunkId + "_" + leftToVisit[x].clickPath.map(function(obj){return obj.clickNum}).join();
 				var objIdentifier = newChoice.chunkId + "_" + newChoice.clickPath.map(function(obj){return obj.clickNum}).join();
-			if (arrIdentifier == objIdentifier) {
+
+			if (arrIdentifier == objIdentifier) { return true; }
+			/*
+			var goodEnough = true;
+			for (var x=0; x < arrIdentifier.length-5; x++) {
+				if (arrIdentifier[x] !== objIdentifier[x]) { goodEnough = false; }
+			}
+			if (goodEnough) {
 				return true;
 			}
+			*/
 		}
 		return false;
 	}
@@ -599,29 +622,37 @@ requirejs(
 	}
 
 	//checks current choices and returns them if they aren't present in the graphData yet
-	var checkForNewChoices = function(graphData) {
+	var checkForNewChoices = function(graphData, clickPath) {
 
 		var newChoices = [];
 
+		function isClickPathIdentical(clickPath1, clickPath2) {		//helper function
+			
+			if (clickPath1.length !== clickPath2.length) { return false; }
+			
+			for (var x=0; x < clickPath1.length; x++) {
+				var string1 = clickPath1[x].dest + clickPath1[x].source;
+				var string2 = clickPath2[x].dest + clickPath2[x].source;
+				if (string1 !== string2) { return false; }
+			}
+			return true;
+		}
+
 		function isNew(graphData, theChoice) {		//helper function
-			var usedBefore = graphData.some(function(node) {
-				return theChoice.chunkId === node.data.id;
-			});
-			if (usedBefore) {		//if it's been used before, check if the path is different
-				
-				var hasNewPath = true;
-				for (var x=0; x < graphData.length; x++) {
-					var val = graphData[x];
-					if (JSON.stringify(val.data.clickPath) == JSON.stringify(theChoice.clickPath) && val.data.id == theChoice.chunkId) {
-						hasNewPath = false;
+
+			var usedBefore = false;
+			var usedBeforeIndex = -1;
+			for (var x=0; x < graphData.length; x++) {
+				if (typeof graphData[x].data.clickPath !== "undefined" && theChoice.chunkId == graphData[x].data.textId) {		//if it's been visited before...
+					var clickPathIdentical = isClickPathIdentical(graphData[x].data.clickPath, clickPath);
+					if (clickPathIdentical) {		//and the path to it is identical...
+						return false;			//it isn't new
 					}
 				}
-				return hasNewPath;
 			}
 
-			else {
-				return true;
-			}
+			return true;
+			
 		}
 
 		State.get("currentChoices").forEach(function(choice, pos) {
