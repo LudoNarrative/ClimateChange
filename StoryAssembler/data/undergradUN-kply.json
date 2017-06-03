@@ -77,19 +77,21 @@
       "set presentFacts true"
     ]
   },
+  /*
   {
     "id": "veryUnpersuasiveFact1",
-    "choiceLabel": "brief description of very unpersuasive fact",
-    "content": "Provide fact that is very unpersuasive",
+    "choiceLabel": "",
+    "content": "",
     "effects": [
       "decr persuasion 2",
       "incr factsPresented 1"
     ]
   },
+  */
   {
     "id": "unpersuasiveFact1",
-    "choiceLabel": "brief description of unpersuasive fact",
-    "content": "Provide fact that is very unpersuasive",
+    "choiceLabel": "CO2 levels are increasing",
+    "content": "Pointing at the powerpoint slide behind you, \"As you can see by the increasing slope of this line, CO2 levels are increasing faster than it ever has before.\"<p>By the looks of the panel members' faces, they are not impressed by your evidence.</p>",
     "effects": [
       "decr persuasion 1",
       "incr factsPresented 1"
@@ -97,30 +99,32 @@
   },
   {
     "id": "neutralFact1",
-    "choiceLabel": "brief description of neutral fact",
-    "content": "Provide fact that is neutral and doesn't get any reaction",
+    "choiceLabel": "Florida will be flooded",
+    "content": "\"One study that was conducted in Florida suggests that the rising sea level will swallow the majority of the state of Florida by the year 2040.\" <p>Murmurs between the panel members can be hear throughout the room, subsiding slowly after a few seconds.</p>",
     "effects": [
       "incr factsPresented 1"
     ]
   },
   {
     "id": "persuasiveFact1",
-    "choiceLabel": "brief description of persuasive fact",
-    "content": "Provide fact that is persuasive and gets a positive reaction",
+    "choiceLabel": "Renewable energy is not enough",
+    "content": "\"We all know that there are a lot of sources of renewable energy being developed, but it is countered by all the people in the world who still drive gas cars and power plants that still burn fossil fuels. They need to be educated on the benefits of renewable energy to get everyone on board and on our side.\"",
     "effects": [
       "incr persuasion 1",
       "incr factsPresented 1"
     ]
   },
+  /*
   {
     "id": "veryPersuasiveFact1",
-    "choiceLabel": "brief description of very persuasive fact",
+    "choiceLabel": "\"It was estimated in a study that ",
     "content": "Provide fact that is persuasive and gets a positive reaction",
     "effects": [
       "incr persuasion 2",
       "incr factsPresented 1"
     ]
   },
+  */
   {
     "id": "kurtInterrupts",
     "content": "Out of the corner of your eye, you see Kurt's hand slightly rise as he loudly clears his throat.  <p>\"Sorry for the interruption but I couldn't help but I just had a thought.\" </p>",
@@ -134,7 +138,7 @@
       "presentFacts eq true"
     ],
     "effects": [
-      "incr factsPresented 1"
+      "set kurtInterrupts true"
     ]
   },
   {
@@ -144,9 +148,10 @@
       "set kurtInterrupts true"
     ],
     "choiceLabel": "Listen to what Kurt has to say",
-    "choices":[{
-      "gotoId": "respondToKurt"
-    }]
+    "choices":[
+      {"gotoId": "respondToKurtGood"},
+      {"gotoId": "respondToKurtBad"}
+    ]
   },
   {
     "id": "kurtInterruptsBad",
