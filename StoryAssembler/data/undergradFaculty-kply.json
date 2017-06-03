@@ -1,4 +1,10 @@
-[
+[ {
+    "id": "dummyFragment",
+    "content": "dummy",
+    "effects":[
+      "set skepticalStudent true"
+    ]
+  },
   {
     "id": "establishSettingSkeptical ",
     "content": "You have been waiting for this day for a long time. It seems like it was just yesterday that Franklin stood up in your lecture and questioned the existence of climate change, and now you are about to watch his PhD defense about climate change as a member of the committee. ",
@@ -67,7 +73,6 @@
     "id": "panelMembers",
     "choiceLabel": "Look at other panel members",
     "content": "Sitting on either side of you are the other two panelists for the defense. To your right is professor Stephen Zhang, a well-known environmentalist who teaches at the university. And to your left is Dr. Mavery Winpun, an animal scientist who has published many articles regarding the importance of saving endangered species of insects. ",
-    
     "effects": [
       "set establishAudience true"
     ]
@@ -79,8 +84,8 @@
   },
   {
     "id": "otherAudience",
-    "content": "Looking around at the small audience in the room, you notice {ifStateCondition|skepticalStudent eq true|another one of your former students. Oh! It's Elika, a very enthusiastic student from your lecture many years ago.|}{ifStateCondition|enthusiasticStudent eq true|another one of your former students. Oh! It's Franklin, who you remember to be fairly skeptical about climate change.|}{ifStateCondition|shyStudent eq true|a few things that stand out. There were a few people in suits, a woman wearing a large sun hat with feathers in it, and professor Chance Nitton, on of the professors at the university.|}",
-    "choiceLabel": "Look around to other attendees"
+    "choiceLabel": "Look around to other attendees",
+    "content": "Looking around at the small audience in the room, you notice {ifStateCondition|skepticalStudent eq true|another one of your former students. Oh! It's Elika, a very enthusiastic student from your lecture many years ago.|}{ifStateCondition|enthusiasticStudent eq true|another one of your former students. Oh! It's Franklin, who you remember to be fairly skeptical about climate change.|}{ifStateCondition|shyStudent eq true|a few things that stand out. There were a few people in suits, a woman wearing a large sun hat with feathers in it, and professor Chance Nitton, on of the professors at the university.|}"
   },
   {
     "id": "establishClimateChangeEffects",
@@ -117,14 +122,44 @@
   {
     "id": "elikaEasyQuestion",
     "content": "You decide to help Elika by throwing her an easier question. <p>\"What can we do to slow down the extinction of all the different species of animals?\"</p>",
+    "choices": [
+      {
+        "gotoId": "elikaEasyQuestion"
+      }
+    ]
+  },
+  {
+    "id": "elikaAnswerEasy",
+    "content": "Elika paused for a moment before responding with a well thought out answer. She suggested a simple solution which consisted of limiting gas emissions and lowering the greenhouse gases in our atmosphere. After that is regulated, nature will take care of the rest and the wildlife population will start to grow again. ",
+    "choiceLabel": "Listen to Elika's answer"
   },
   {
     "id": "elikaMediumQuestion",
-    "content": "placeholder"
+    "content": "You decide to go with a more general question. <p>\"So what exactly is this great 'extinction' and how long until it happens?\"</p>",
+    "choices": [
+      {
+        "gotoId": "elikaAnswerMedium"
+      }
+    ]
+  },
+  {
+    "id": "elikaAnswerMedium",
+    "content": "Elika looks around the ceiling while trying to gather her thoughts. She responds with, \"well, the 6th great extinction, also known as the holocene extinction, is actually already here. It has been happening for decades now due to human activity and influence on the climate. It predicts that one half of Earth's higher life forms by the year 2100.\"",
+    "choiceLabel": "Listen to Elika's response"
   },
   {
     "id": "elikaHardQuestion",
-    "content": "placeholder"
+    "content": "You decide to challenge Elika a little bit. <p>\"I agree that overfishing and overhunting are huge problems, but fishing and hunting are also necessary to provide humanity with the resources we need to survive. My question is: How do we decide how much fishing or hunting we can do before it is too much?\"</p>",
+    "choices": [
+      {
+        "gotoId": "elikaAnswerHard"
+      }
+    ]
+  },
+  {
+    "id": "elikaAnswerHard",
+    "content": "With a smile on her face and no hesitation at all, Elika responds with, \"well obviously, it is different for each different species, but we can record the growth and decline of the population. So we can keep hunting and fishing a certain species, as long as the population of that species grows just as fast as it declines.\"",
+    "choiceLabel": "Listen to Elika's response"
   },
   {
     "id": "outro",
