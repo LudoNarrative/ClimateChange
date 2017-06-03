@@ -189,7 +189,8 @@
 		"choiceLabel": "Emma’s father looked concerned.",
 		"content": "He spoke:<br>\"But, Emma, you are still pushing the value of local action, right? I mean, there’s no global change in we’re not putting any care of effort into the little things.\" Emma looked at her father. She was worried that this might happen, climate change was always a sticky subject for her family. It’s why she was always so passionate about it now.",
 		"effects": [
-			"set dadChallenges true"
+			"set dadChallenges true",
+			"set momChallenges true"
 		],
 		"choices": [{
 			"gotoId": "emmaDefends_t"
