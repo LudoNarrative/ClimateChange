@@ -222,8 +222,5 @@
 		"effects": [
 			"set otherParentDefends true"
 		],
-		"choices": [{
-			"gotoId" : "parentsOfferSupport"
-		}]
 	},
 ]
