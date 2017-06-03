@@ -159,7 +159,6 @@
 					"set academicEnthusiasm 0",		//Leading to IAN PATH
 					"set familyAsksSubject true",
 				],
-				"choices": [],
 				"conditions": [
 					"familyAsksSubject eq true",
 				]
