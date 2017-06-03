@@ -28,22 +28,22 @@
     "id": "franklinPresentationPart3",
     "choiceLabel": "Slide 3",
     "content": "\"Franklin's presentation opens on a slide of a photo of him with one ofthe more recent models of electric car. Then he begins, \"the green movement has been making a push for a switch to electric cars for decades, and while in theory electric vehicles are better for the environment there are dozens of underlying issues in which need to be studied. First what we must consider is what type of pollution goes into making cars. Being the son of CEOs in both the oil industry and recently the electric car industry,  I have first hand experience as to the dark side that these companies like to keep hidden.\"",
-    "notes": "inspiration from https://www.wired.com/2016/03/teslas-electric-cars-might-not-green-think/ Here Franklin goes into more depth on the environmentally damaging effects of electric vehicles.",
     "choices": [
       {
         "gotoId": "franklinPresentationEnd"
       }
-    ]
+    ],
+    "notes": "inspiration from https://www.wired.com/2016/03/teslas-electric-cars-might-not-green-think/ Here Franklin goes into more depth on the environmentally damaging effects of electric vehicles."
   },
   {
     "id": "franklinPresentationEnd",
-    "content": "Franklin's defense continues in this fashion, almost as if it were a documentary where the speaker was in front of you. Each proceeding slide displays a Franklin who is becoming more aware with the effect big business has on the planet. Franklin closes his defense by stating personal and local change isn't nearly enough to save the planet and only global reform of corporations has any chance to mend the damage we have done.",
-    "choiceLabel": "Move on to questions"
+    "choiceLabel": "Move on to questions",
+    "content": "Franklin's defense continues in this fashion, almost as if it were a documentary where the speaker was in front of you. Each proceeding slide displays a Franklin who is becoming more aware with the effect big business has on the planet. Franklin closes his defense by stating personal and local change isn't nearly enough to save the planet and only global reform of corporations has any chance to mend the damage we have done."
   },
   {
     "id": "emmaAsksFranklin",
-    "content": "\"Thank you Franklin, we will begin with instructor questions, then move on to the audience.\"",
     "choiceLabel": "Open floor to questions",
+    "content": "\"Thank you Franklin, we will begin with instructor questions, then move on to the audience.\"",
     "choices": [
       {
         "gotoId": "easyQuestionF"
@@ -58,9 +58,9 @@
   },
   {
     "id": "easyQuestionF",
-    "content": "\"So tell me a little bit about what changed your views from when when you took my class years ago.\"",
     "choiceLabel": "easier question",
     "speaker": "protagonist",
+    "content": "\"So tell me a little bit about what changed your views from when when you took my class years ago.\"",
     "choices": [
       {
         "gotoId": "easyAnswerF"
@@ -69,8 +69,8 @@
   },
   {
     "id": "easyAnswerF",
-    "content": "\"I was naive years ago to think humans had little impact, it was hard for me to see how things accumulated. I only fully grasped our impact when my parents switched from the oil industry to the electric car industry. I asked to see how these luxury \"nature-friendly\" vehicles were made and it disgusted me. What made me passionate-\" ",
     "choiceLabel": "Franklin Smiles and responds",
+    "content": "\"I was naive years ago to think humans had little impact, it was hard for me to see how things accumulated. I only fully grasped our impact when my parents switched from the oil industry to the electric car industry. I asked to see how these luxury \"nature-friendly\" vehicles were made and it disgusted me. What made me passionate-\" ",
     "choices": [
       {
         "gotoId": "audienceAsksFranklin"
@@ -79,8 +79,8 @@
   },
   {
     "id": "midQuestionF",
-    "content": "\"How do you propose we get legislation to enforce change to corporations?\"",
     "speaker": "protagonist",
+    "content": "\"How do you propose we get legislation to enforce change to corporations?\"",
     "choices": [
       {
         "gotoId": "midAnswerF"
@@ -89,8 +89,8 @@
   },
   {
     "id": "midAnswerF",
-    "content": "\"Corporations are using dirty tactics and corruption to stay in power, all we have to do is expose illegal activities and make it widely known. As for any legislative body that doesn't properly punish these industries for illegal activity, their position will be threatened, they are just as responsible if they do not uphold proper punishment. If they wish to keep their job they will comply. And another-\"",
     "choiceLabel": "Franklin looks to have planned on this question.",
+    "content": "\"Corporations are using dirty tactics and corruption to stay in power, all we have to do is expose illegal activities and make it widely known. As for any legislative body that doesn't properly punish these industries for illegal activity, their position will be threatened, they are just as responsible if they do not uphold proper punishment. If they wish to keep their job they will comply. And another-\"",
     "choices": [
       {
         "gotoId": "audienceAsksFranklin"
@@ -99,13 +99,13 @@
   },
   {
     "id": "hardQuestionF",
-    "content": "\"How do you personally plan to make change, and what is the best method for everyone else to make change?\"",
-    "speaker": "protagonist"
+    "speaker": "protagonist",
+    "content": "\"How do you personally plan to make change, and what is the best method for everyone else to make change?\""
   },
   {
     "id": "hardAnswerF",
-    "content": "Franklin looks a bit uneasy, \"Well people will have to demand action be taken when illegal activities are taking place in legislation and industry. And if action fails to take place we will need to demand the immediate removal of whoever refused to take legislative action. People will need to convince news casters to cover issues until they are resolved, not until they find a new hot problem. As for someone born into wealth as myself-\"",
     "choiceLabel": "Franklin responds",
+    "content": "Franklin looks a bit uneasy, \"Well people will have to demand action be taken when illegal activities are taking place in legislation and industry. And if action fails to take place we will need to demand the immediate removal of whoever refused to take legislative action. People will need to convince news casters to cover issues until they are resolved, not until they find a new hot problem. As for someone born into wealth as myself-\"",
     "choices": [
       {
         "gotoId": "audienceAsksFranklin"
@@ -114,28 +114,28 @@
   },
   {
     "id": "audienceAsksFranklin",
-    "content": "Elika, stands up and shouts, \"I just want to ask how it feels to know your previous company killed of an entire species of crab with the oil incident?\"\nFranklin is blindsided by this question and looks panicked.",
-    "choiceLabel": "Franklin is cut off by an audience member."
+    "choiceLabel": "Franklin is cut off by an audience member.",
+    "content": "Elika, stands up and shouts, \"I just want to ask how it feels to know your previous company killed of an entire species of crab with the oil incident?\"\nFranklin is blindsided by this question and looks panicked."
   },
   {
     "id": "letFranklinDefend",
-    "content": ""
+    "content": "Franklin is blindsided and makes a panicked attempt to save himself, \"That wasn't... that had nothing to do with me.\" He struggles for a few minutes to regain focus, but another faculty member "
   },
   {
     "id": "defendFranklin",
-    "content": "before Franklin can flounder you step in \"Elika this is a highly inappropriate question to be asking, it has nothing to do with Franklin plans to change the future. We are over time anyway, we will move on to the assessment to avoid further interruption, I would like you all to leave.",
-    "choiceLabel": "Defend Franklin"
+    "choiceLabel": "Defend Franklin",
+    "content": "before Franklin can flounder you step in \"Elika this is a highly inappropriate question to be asking, it has nothing to do with Franklin plans to change the future. We are over time anyway, we will move on to the assessment to avoid further interruption, I would like you all to leave."
   },
   {
     "id": "facultyDeliberateFranklin",
-    "content": "placeholder"
+    "content": "Franklin leaves the room and you begin discussing how well he did. \"So {name|protagonist} are you going pass the son of the people who killed the crabs?\" \"yes, I feel he did very well, and it's not kind of you to associate him with his parents actions, he seems to have had a real change of heart.\" "
   },
   {
     "id": "facultyDeliberateElika",
-    "content": "placeholder"
+    "content": "You and the other faculty look over your notes still shellshocked from the excitable woman studying the end times of humans. \"So {name|protagonist} does the extinction fanatic pass?\" \"While her presentation was abnormal I do believe knowing estimates on how long we have left is valuable to our species. So yes she passed.\""
   },
   {
     "id": "facultyDeliberateAiden",
-    "content": "placeholder"
+    "content": "\"How did they do {name|protagonist}?\" \"They did well and considering all the species that have been going extinct the last few years they have an important focus. They pass.\""
   }
 ]
