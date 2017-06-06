@@ -356,7 +356,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "friendTension gte 4"},
 				{ condition: "friendTensionRelieved eq true"},
 				{ condition: "checkinWithDisagreer eq true"},
-				{ condition: "inactivityIsBad eq true", order: "first"},
+				{ condition: "inactivityIsBad eq true"},
 				{ condition: "outro eq true", order: "last"},
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
