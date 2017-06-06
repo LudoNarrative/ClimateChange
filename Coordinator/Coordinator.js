@@ -10,10 +10,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];
 
 		//scenes played when you hit Begin
-		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean"];		
+		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"];		
 		State.set("scenes", playGameScenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
+	}
+
+	//cleans all variables out of state that aren't supposed to cross over between scenes
+	var cleanState = function(id) {
+		State.set("characters", []);			//get rid of extraneous characters
 	}
 
 	/*
@@ -51,6 +56,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	}
 
 	//returns index of next scene
+	//available scenes: ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"]
 	var getNextScene = function(currentScene) {
 		switch(currentScene) {
 			case "undergradDinner":
@@ -61,9 +67,29 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				}
 				else { return 3; }
 			}
-			case "undergradDean":
+			case "undergradDean": {
+				return 4;
+			}
+			case "undergradTravel":
+				return 4;
+			case "undergradFamilyDinner": {
+				if (State.get('academicEnthusiasm' > 2)) {			//senior faculty branch
+					return 7;
+				}
+				if (State.get('fame') > 2) {		//UN branch
+					return 6;
+				}
+				if (State.get('localAction') > 2) {
+					return 5;
+				}
+			}
+			case "undergradBeach": 		//this should return epilogue eventually
 				return 0;
-
+			case "undergradUN": 		//this should return epilogue eventually
+				return 0;
+			
+			case "undergradFaculty": 		//this should return epilogue eventually
+				return 0;
 		}
 	}
 
@@ -2303,6 +2329,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		validateArtAssets : validateArtAssets,
 		loadSceneIntro : loadSceneIntro,
 		getNextScene : getNextScene,
+		cleanState : cleanState,
 
 		startGame : startGame,
 		getStorySpec : getStorySpec
