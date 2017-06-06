@@ -746,6 +746,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "looksOverCommittee eq true"},
 				{ condition: "introducesResearch eq true"},
 				{ condition: "presentFacts eq true"},
+				{ condition: "factsLooped eq 6"},
 				{ condition: "kurtInterrupts eq true"},
 				{ condition: "lostTrainOfThought eq true"},
 				{ condition: "callForLocalAction eq true"},
