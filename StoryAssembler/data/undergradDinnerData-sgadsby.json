@@ -13,7 +13,6 @@
 { condition: "inactivityIsBad eq true"},
 { condition: "outro eq true"},
 */
-//condition i'm working on: establishDefenseTomorrow, EmmaJobFutureBeat, EmmaClassTypeBeat. takes about 11 or 12 clicks to go through the entire section.
 		{
 		"id": "establishDefenseTomorrowBeat",
 		"content": "\"So Em, Ready for that defense tomorrow?\"",
