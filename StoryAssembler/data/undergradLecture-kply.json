@@ -2,13 +2,13 @@
 		"id": "establishScene",
 		"content": "Tap-tap-tap-tap. Your feet follow a steady rhythm as you head through the hallway to your first class. As you get near the room, you begin to feel a bit {ifStateCondition|composure gte 5|excited|uneasy}.",
 		"effects": [
-			
+
 			"set establishScene true",
 			"set lecture true",
 			"set composure 5"
 
 		]
-		
+
 	},
 
 	{
@@ -24,7 +24,7 @@
 		"choices": [{
 			"gotoId": "lookAround"
 		}]
-		
+
 	},
 
 	{
@@ -47,7 +47,7 @@
 		"choiceLabel": "Look around the room",
 		"content": "As your eyes scan the room, several things catch your attention.",
 		"repeatable": "true",
-		
+
 		"choices": [{
 				"gotoId": "seatNumber"
 			},
@@ -76,7 +76,7 @@
 		}]
 	},
 
-	
+
 
 	{
 		"id": "frontDesk",
@@ -121,7 +121,7 @@
 
 	{
 		"id": "lowConfidenceComposure",
-		
+
 		"choiceLabel": "Let's get this over with.",
 		"unavailableChoiceLabel": " ",
 		"content": "It is now time for class to begin but you find yourself at a lost for words. After a few seconds of silence, you manage to force out, \"Umm hi, I mean uhh, hello class.\" At this point, you are seriously considering running far away from here. \"We'll be learning about climate change. Haha sorry, this is my first lecture.\" The last sentence is accompanied by a few seconds of forced laughter.",
@@ -130,7 +130,7 @@
 		],
 		"conditions": [
 			"composure lt 5"
-			
+
 		],
 		"choices": [
 			{"gotoId": "lectureContent"}
@@ -153,7 +153,7 @@
 		"choices": [
 			{"gotoId": "lectureContent"}
 		]
-		
+
 	},
 
 	{
@@ -165,7 +165,7 @@
 			"set establishComposure true"
 		],
 		"conditions": [
-			
+
 			"composure gte 10"
 		],
 		"choices": [
@@ -180,7 +180,7 @@
 		"choices":[{
 			"gotoId": "lectureContent2"
 		}]
-		
+
 
 	},
 
@@ -191,7 +191,7 @@
 		"choices":[{
 			"gotoId": "lectureContent3"
 		}]
-		
+
 	},
 
 	{
@@ -292,7 +292,7 @@
       "content" : "Franklin's hand is once again in the air.",
       "choices" : [
         {"gotoId" : "franklinQuestion2"},
-        {"gotoId" : "questionBrige"}
+        {"gotoId" : "questionBridge"}
       ],
       "conditions" : ["skepticalStudent eq true"]
     },
@@ -348,6 +348,7 @@
 
 	{
 		"id": "lectureEndWell",
+		"choiceLabel" : "Continue",
 		"content": "As the end of the class period draws near, the eyes of every student are fixed on you, waiting for your permission to leave. \"Well, that concludes the first lecture. Sorry if it didn't go as smoothly as you were expecting, but we are all going to learn throughout this quarter. I'll see you all next time!\" The sound of books closing and backpacks being zipped up erupts all around the room and one-by-one, the students leave, some even flashing you a smile on the way out.",
 		"effects": [
 			"incr composure 3",
@@ -361,6 +362,7 @@
 
 	{
 		"id": "lectureEndOk",
+		"choiceLabel" : "Continue",
 		"content": "You hear a faint rustling of bags and papers. You realize that the class period has ended and students are becoming restless. \"Oh I'm sorry guys, I promise to get better at this as the quarter goes on. I'll see you all next time!\"",
 		"effects": [
 			"incr composure 1",
@@ -375,6 +377,7 @@
 
 	{
 		"id": "lectureEndBadly",
+		"choiceLabel" : "Continue",
 		"content": "You spot a few students leaving early and your eyes dart to the clock, afraid that you have gone past the end of the class period, but there's still a lot of time left. You are thrown off by what just happened and lose your train of though. \"Umm haha sorry everyone, I completely forgot what I was going to talk about next. Uhh there wasn't that much left anyways so I guess you're dismissed for today. I'll see you next time.\"",
 		"effects": [
 			"incr composure -2",
