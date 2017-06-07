@@ -25,10 +25,9 @@
 			"set establishDefenseTomorrow true"
 		],
 		"conditions" : [
-		//	"establishSettingDinner eq true"
+			"establishSettingDinner eq true"
 		]
 	},
-	// \"Besides, we've heard your defense plenty Em, it's good\" You smile and hug both your friends. \"Thanks guys. I'm glad you're here with me tonight.\" \"We wouldn't want to be anywhere else Em.
 	{
 		"id": "yes",
 		"choiceLabel": "\"Yea, I'll be fine tomorrow.\"",
@@ -38,7 +37,7 @@
 			{"gotoId": "maybeNotSure"},
 		],
 		"effects" : [
-			"incr confidence 1"
+			"incr confidence 1","EmmaDefenseFeeling eq true"
 		],
 	},
 	{
@@ -62,7 +61,7 @@
 			{"gotoId": "hugThem"},
 		],
 		"effects" : [
-			"decr confidence 1"
+			"decr confidence 1","EmmaDefenseFeeling eq true"
 		],
 	},
 	{
