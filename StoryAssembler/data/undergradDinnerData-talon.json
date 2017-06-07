@@ -22,8 +22,6 @@
 		"choices": [
 			{"gotoId" : "sceneSetUp1_t"},
 		],
-		"conditions": [],
-		"effects": []
 	},
 	{
 		"id": "sceneSetUp1_t",
@@ -33,7 +31,6 @@
 			{"gotoId" : "wineQuestion0_t"},
 			{"gotoId" : "wineQuestion1_t"},
 		],
-		"conditions": [],
 		"effects": [
 			"set establishFriends true"
 		]
@@ -46,7 +43,6 @@
 		"choices": [
 			{"gotoId" : "sceneSetUp_end_t"},
 		],
-		"conditions": [],
 		"effects": [
 			"incr tension 1"
 		]
@@ -58,7 +54,6 @@
 		"choices": [
 			{"gotoId" : "sceneSetUp_end_t"},
 		],
-		"conditions": [],
 		"effects": [
 			{"gotoId" : "sceneSetUp_end_t"},
 			"incr tension 1"
@@ -70,7 +65,6 @@
 		"id": "sceneSetUp_end_t",
 		"choiceLabel": "Continue",
 		"content": "\"Come on, Emma, take a seat. Dinner’s almost ready and you’re going to like it.\" Zanita pulled her hair back and tied it with the black band she keeps around her wrist.<br>You sit as Zanita places a clean, white plate and a steak knife before you. Shelly sits opposite you, energetically waiting for Zanita to bring out the main attraction.<br>\"Come on, Z! We’re starving.\"<br>Zanita comes out with a large silver serving plate.<br>\"Voila,\" Zanita says with a grand gesture, \"Beef Wellington a la Zanita!\"",
-		"conditions": [],
 		"effects": [
 			"set establishSettingDinner true",
 			"set establishFriends true"
@@ -90,31 +84,22 @@
 			"friendIsInAcademia eq true",
 			"friendIsNotInAcademia eq true"
 		],
-		"effects": []
 	},
 //Emma answers question
 	{
 		"id": "wineQuestion0_t",
 		"choiceLabel": "\"Of course it tastes so good, Zanita is an amazing cook!\"",
-		"choices" : [
-			{"gotoId" : "tensionInTheRoom1_t"},
-		],
-		"conditions": [],
-		"effects": [
-		]
+		"request": {"gotoId": "tensionInTheRoom1_t"}
 	},
 	{
 		"id": "wineQuestion1_t",
 		"choiceLabel": "\"Beef Wellington is not an easy dish to make….\"",
-		"choices" : [
-			{"gotoId" : "tensionInTheRoom1_t"},
-		],
-		"conditions": [],
-		"effects": []
+		"request": {"gotoId": "tensionInTheRoom1_t"}
 	},
 
 	{
 		"id": "tensionInTheRoom1_t",
+		"choiceLabel": "Continue",
 		"content": "\"Yeah, but….\" Shelly started to speak but Zanita interrupted her.\"But what, Shelly?\" Zanita looked hard across the table.<br><br><em>This happens every time those two get together.</em><br>\"It’s great, really, Z. Right, Shelly? Isn’t it great?\" You say, trying to save the situation.<br>\"Whatever, Shelly. You don’t like the way I cook? You can leave.\" Zanita says as a fork clatters to the table. The ringing in your ears makes you wince.<br><br>There’s a long silence at the table.<br><br>\"Don’t be so sensitive, Zanita…. It was just a joke.\"",
 		"choices" : [
 			{"gotoId" : "tensionInTheRoom2_t"}
@@ -124,13 +109,11 @@
 			"friendIsInAcademia eq true",
 			"friendIsNotInAcademia eq true"
 		],
-		"effects": []
 	},
 	{
 		"id": "tensionInTheRoom2_t",
+		"choiceLabel": "Continue",
 		"content": "Dinner pressed on, a bit worse for wear. The table was devoid of laughter or life; there were only muddled chewing and the occasional sip of wine or water from a glass. A pit in your stomach bringing up a taste like wine that’s turned. You take another bite of wellington.",
-		"choices" : [],
-		"conditions": [],
 		"effects": [
 			"incr tension 4"
 		]
@@ -147,7 +130,6 @@
 			"friendIsInAcademia eq true",
 			"friendIsNotInAcademia eq true"
 		],
-		"effects": []
 	},
 	{
 		"id": "inactivityIsPondScum1_t",
@@ -156,8 +138,6 @@
 		"choices": [
 			{"gotoId" : "inactivityIsPondScum2_t"},
 		],
-		"conditions": [],
-		"effects": []
 	},
 	{
 		"id": "inactivityIsPondScum2_t",
@@ -166,15 +146,11 @@
 		"choices": [
 			{"gotoId" : "inactivityIsPondScum3_t"},
 		],
-		"conditions": [],
-		"effects": []
 	},
 	{
 		"id": "inactivityIsPondScum3_t",
 		"choiceLabel": "Continue",
 		"content": "Zanita began to speak but Shelly interrupted.<br>\"We may have our differences, Zanita and I, but we both do what we think is the right thing to do.\" All attention was shifted to You at this moment. Your attention was still on the uneaten food on your plate. \"You have to do what you think is right but you can’t just do nothing.\"<br>\"I agree with Shelly on this one, Em.\" Zanita said. \"Nothing good will ever come from standing still and doing nothing.\"<br><br>\"Maybe you’re right.\" You say.<br>\"That’s right, we’re right!\" Shelly says. \"You’re gonna do great things, kid, but nothing will happen if you’re not there to do them!\"<br><br>The dinner continued, with hope between them that they can all do the things they know is",
-		"choices": [],
-		"conditions": [],
 		"effects": [
 			"set inactivityIsBad true"
 		]
@@ -205,21 +181,19 @@
 		"choices": [
 			{"gotoId" : "thatsAllFolks2_t"},
 		],
-		"conditions": [],
-		"effects": []
 	},
 	{
 		"id": "thatsAllFolks2_t",
+		"choiceLabel": "Continue",
 		"content": "\"It’s not. The last thing you needed was more stress and that’s exactly what I served you this evening… A big, heaping spoonful of stress on a silver platter!\" Zanita mimed the action of scooping from an imaginary bowl and slapping it down on the table.<br>\"Yeah…. Stress and dry Wellington!\" You say and start to laugh. Zanita laughs, too.<br><br>The three of you sit and talk for a few moments before it’s time to take your leave. You do have a big day tomorrow, after all.",
-		"conditions": [],
 		"choices": [
 			{"gotoId" : "thatsAllFolks3_t"},
 		],
 	},
 	{
 		"id": "thatsAllFolks3_t",
+		"choiceLabel": "Continue",
 		"content": "Zanita gives you a big hug and an even bigger kiss on the cheek.<br>\"You’re gonna do great tomorrow. I’ll be there early with my big ‘GO EMMA!’ sign!\" Zanita says still holding onto your shoulders.<br>\"Knock ‘em dead, kid.\" Shelly shoots you a finger gun and blows away the smoke.<br>Tomorrow will be upon you in less than 8 hours and your dissertation is less than 12. You can hardly wait. The anticipation is almost making you sick.",
-		"conditions": [],
 		"effects": [
 			"set outro true"
 		]
