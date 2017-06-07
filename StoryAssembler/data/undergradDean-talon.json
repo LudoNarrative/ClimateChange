@@ -2,7 +2,7 @@
 	//undergradDeanScene-talon.json
 	{
 		"id": "sceneStart_t",
-		"content": ["{name|protagonist} walks; heading up the final flight of stairs and rounding the final corner -- she’s reluctant to walk any faster. She stands, lingering before the door, with a pit in her stomach keeping her from knocking. Soaking up the last bits of courage left in her, {name|protagonist}’s knuckles wrap the wood.<br><br>A hollow thud.<br><br>Not a moment goes by before a low but distinct voice beckoned her. It was {name|authorityFigure}."],
+		"content": ["You walk; heading up the final flight of stairs and rounding the final corner -- you're reluctant to walk any faster so you stands, lingering before the door, with a pit in your stomach keeping you from knocking. Soaking up the last bits of courage left in yourself, your knuckles wrap the wood.<br><br>A hollow thud.<br><br>Not a moment goes by before a low but distinct voice beckoned her. It was {name|authorityFigure}."],
 		"choices": [
 			{"gotoId": "emmaEnter_t"}
 		],
@@ -15,7 +15,7 @@
 	{
 		"id": "emmaEnter_t",
 		"choiceLabel": "\"it's open\"",
-		"content": "{name|protagonist}’s stiff arm pushed past the door.<br>{name|authorityFigure} was sitting behind his desk -- face in a bundle of papers -- not looking up. To {name|protagonist}, he did not feel like a friend at this moment, or even a colleague; he felt like a boss.<br><br>{name|protagonist} lifted her head to speak.<br><br>\"{name|authorityFigure},\"  she said. The word caught in her throat. She cleared it -- a guttural sound.",
+		"content": "Your stiff arm pushes past the door.<br>{name|authorityFigure} was sitting behind his desk -- face in a bundle of papers -- not looking up. To you, he did not feel like a friend at this moment, or even a colleague; he felt like a boss.<br><br>You lift your head to speak.<br><br>\"{name|authorityFigure},\"  you say, the word catch in your throat -- a guttural sound.",
 		"choices": [
 			{"gotoId": "speakCont_t"}
 		],
@@ -26,7 +26,7 @@
 	{
 		"id": "speakCont_t",
 		"choiceLabel": "\"You{ifStateCondition|confidence lt 5|, uh..|} wanted to speak with me?\"",
-		"content": "{name|authorityFigure} suspended his attention on the papers and raised his eyes to meet {name|protagonist}’s gaze.<br>\"{name|protagonist}...\" he said.<br><br>Perhaps it was in {name|protagonist}’s nature to over analyze when she was nervous, or perhaps it was the neutral tone in which he said her name, but she was unable to tell if he was upset or just calm. In many ways {name|protagonist} felt like she was at the principal's office, only this time she {ifStateCondition|confidence lt 5|knew|didn’t know} why she was there. The Dean continued,<br><br>\"...do you know why I wanted to speak with you?\"",
+		"content": "{name|authorityFigure} suspended his attention on the papers and raised his eyes to meet your gaze.<br>\"{name|protagonist}...\" he said.<br><br>Perhaps it was in your nature to over analyze when you are nervous, or perhaps it was the neutral tone in which he said your name, but you are unable to tell if he was upset. In many ways you felt like she was at the principal's office, only this time you {ifStateCondition|confidence lt 5|knew|didn’t know} why you were there. The Dean continued,<br><br>\"...do you know why I wanted to speak with you?\"",
 		"choices": [
 			{"gotoId": "emmaRespondsYes_t"},
 			{"gotoId": "emmaRespondsNo_t"}
@@ -40,7 +40,7 @@
 	{
 		"id": "emmaRespondsYes_t",
 		"choiceLabel": "\"I think I do.\"",
-		"content": "{name|authorityFigure} nodded at {name|protagonist}’s acknowledgment; it was solemn and kind.<br>\"What’s going on, {name|protagonist}. It feels like night-and-day from where we were just a month ago.\"<br>{name|protagonist}’s hands found their way to the hem of her blouse. She picked at a loose thread.<br>\"It’s just{ifStateCondition|confidence lt 5|...\" She hesitated. There was a long moment of silence. \"Just...\"|...}",
+		"content": "{name|authorityFigure} nodded at your acknowledgment; it was solemn and kind.<br>\"What’s going on, {name|protagonist}. It feels like night-and-day from where we were just a month ago.\"<br>your hands found their way to the hem of your blouse. You picked at a loose thread.<br>\"It’s just{ifStateCondition|confidence lt 5|...\" You hesitate. There was a long moment of silence. \"Just...\"|...}",
 		"effects": [
 			"set troubleWithLecture true"
 		],
