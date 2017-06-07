@@ -10,7 +10,6 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 
 :- action(add(E,_,cursor)).
 
-
 %:- result(tick,rotates(_,_,_)).
 
 :- precondition(compare(_,_),O),
@@ -25,3 +24,9 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 	
 :- precondition(compare(_,_),O),
     result(O,move(_,_)).
+    
+    
+    
+% PROPERTIES DONT WORK
+:- condition(compare(_,property(_,_))).
+:- action(modify(_,property(_,_))).
