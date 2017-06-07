@@ -19,19 +19,22 @@
 	{
 		"id": "sceneSetUp0_t",
 		"content": "You looked around the living room -- you wonder if it would still be called a living room if the dining area and the kitchen all flowed into one. Your mind wouldn’t stop running; you wondered where you were for a moment.",
-		"conditions": [],
-		"effects": [
+		"choices": [
 			{"gotoId" : "sceneSetUp1_t"},
-		]
+		],
+		"conditions": [],
+		"effects": []
 	},
 	{
 		"id": "sceneSetUp1_t",
 		"choiceLabel": "Continue",
 		"content": "\"Hey!\" Zanita shouted, excitedly. You attention is finally broken. \"You made it, welcome!\"<br>\"Thank you,\" you say, still looking around at all the clean walls and swept floors.<br>\"About time,\" another voice yells from the kitchen. You look. It was Shelly; she was already holding a glass of wine, leaning against a kitchen chair.<br>\"Be nice, Shelly, it you 10 mins to find the door the first time.\"<br>\"That was intentional…\"<br>\"I’m sure it was.\" Zanita said and turned her attention back to you. \"Let me take your coat. Would you like some wine?\" She asked with a smile.",
-		"conditions": [],
-		"effects": [
+		"choices": [
 			{"gotoId" : "wineQuestion0_t"},
 			{"gotoId" : "wineQuestion1_t"},
+		],
+		"conditions": [],
+		"effects": [
 			"set establishFriends true"
 		]
 	},
@@ -40,9 +43,11 @@
 		"id": "wineQuestion0_t",
 		"choiceLabel": "\"Yes, I need to clear my head.\"",
 		"content": "\"That’s the spirit! Let me get a new bottle.\" Shelly said, to Zanita’s displeasure.<br>\"Just don’t go crazy, Em,\" Zanita said, \"you know you have a big day tomorrow.\"",
+		"choices": [
+			{"gotoId" : "sceneSetUp_end_t"},
+		],
 		"conditions": [],
 		"effects": [
-			{"gotoId" : "sceneSetUp_end_t"},
 			"incr tension 1"
 		]
 	},
@@ -50,6 +55,9 @@
 		"id": "wineQuestion1_t",
 		"choiceLabel": "\"No, my stomach…. It’s just…. I’m….\"",
 		"content": "\"Come on, Emma, you stick-in-the-mud,\" Shelly says, fiddling with the metal cage on a bottle of champagne.<br>\"That’s for after dinner, Shelly,\" Zanita says. She continues: \"and she doesn’t need to drink if she doesn’t want to.\" Zanita took the bottle from Shelly and put it back in the frig. \"And that’s not how you open one of those anyway….\"<br><br>Shelly put the steak knife down.",
+		"choices": [
+			{"gotoId" : "sceneSetUp_end_t"},
+		],
 		"conditions": [],
 		"effects": [
 			{"gotoId" : "sceneSetUp_end_t"},
@@ -88,34 +96,35 @@
 	{
 		"id": "wineQuestion0_t",
 		"choiceLabel": "\"Of course it tastes so good, Zanita is an amazing cook!\"",
-		"choices" : [],
+		"choices" : [
+			{"gotoId" : "tensionInTheRoom1_t"},
+		],
 		"conditions": [],
 		"effects": [
-			{"gotoId" : "tensionInTheRoom1_t"},
 		]
 	},
 	{
 		"id": "wineQuestion1_t",
 		"choiceLabel": "\"Beef Wellington is not an easy dish to make….\"",
-		"choices" : [],
-		"conditions": [],
-		"effects": [
+		"choices" : [
 			{"gotoId" : "tensionInTheRoom1_t"},
-		]
+		],
+		"conditions": [],
+		"effects": []
 	},
 
 	{
 		"id": "tensionInTheRoom1_t",
 		"content": "\"Yeah, but….\" Shelly started to speak but Zanita interrupted her.\"But what, Shelly?\" Zanita looked hard across the table.<br><br><em>This happens every time those two get together.</em><br>\"It’s great, really, Z. Right, Shelly? Isn’t it great?\" You say, trying to save the situation.<br>\"Whatever, Shelly. You don’t like the way I cook? You can leave.\" Zanita says as a fork clatters to the table. The ringing in your ears makes you wince.<br><br>There’s a long silence at the table.<br><br>\"Don’t be so sensitive, Zanita…. It was just a joke.\"",
-		"choices" : [],
+		"choices" : [
+			{"gotoId" : "tensionInTheRoom2_t"}
+		],
 		"conditions": [
 			"tension lt 4",
 			"friendIsInAcademia eq true",
 			"friendIsNotInAcademia eq true"
 		],
-		"effects": [
-			{"gotoId" : "tensionInTheRoom2_t"}
-		]
+		"effects": []
 	},
 	{
 		"id": "tensionInTheRoom2_t",
@@ -144,23 +153,25 @@
 		"id": "inactivityIsPondScum1_t",
 		"choiceLabel": "\"It’s not that.\" You stammer.",
 		"content": "\"It’s…\" You seem to lose your train of thought.<br>\"It’s what, Em?\"<br>\"It’s…. I don’t know. Maybe it’s just not for me.\"<br><br>Both Shelly and Zanita look at each other.<br>\"What do you mean?\" Shelly said.<br>\"Maybe I shouldn’t try to change the world.\" Emma said, forking at a bit of fat on her wellington. \"Maybe I should just take the teaching job, clock in, clock out, and not have to worry about so much pressure.\" Emma looked up at Zanita. \"I mean…. It’s just a job, right?\"",
-		"choices": [],
-		"conditions": [],
-		"effects": [
+		"choices": [
 			{"gotoId" : "inactivityIsPondScum2_t"},
-		]
+		],
+		"conditions": [],
+		"effects": []
 	},
 	{
 		"id": "inactivityIsPondScum2_t",
+		"choiceLabel": "Continue",
 		"content": "There was a long moment of silence as Shelly and Zanita looked at each other, both thinking of what to say next. Zanita eventually broke the silence.<br>\"You don’t really believe that. Do you, Em?\" She put her fork on her plate.<br>\"Well, you are pulling me one way, Shelly’s pulling me another way. Both paths are good enough, it’s just… What’s the right thing to do, you know? I don’t know if I even want it.\"<br><br>The food on your plate looked so good a moment ago. Now it just looks like a cold coagulated heap.",
-		"choices": [],
-		"conditions": [],
-		"effects": [
+		"choices": [
 			{"gotoId" : "inactivityIsPondScum3_t"},
-		]
+		],
+		"conditions": [],
+		"effects": []
 	},
 	{
 		"id": "inactivityIsPondScum3_t",
+		"choiceLabel": "Continue",
 		"content": "Zanita began to speak but Shelly interrupted.<br>\"We may have our differences, Zanita and I, but we both do what we think is the right thing to do.\" All attention was shifted to You at this moment. Your attention was still on the uneaten food on your plate. \"You have to do what you think is right but you can’t just do nothing.\"<br>\"I agree with Shelly on this one, Em.\" Zanita said. \"Nothing good will ever come from standing still and doing nothing.\"<br><br>\"Maybe you’re right.\" You say.<br>\"That’s right, we’re right!\" Shelly says. \"You’re gonna do great things, kid, but nothing will happen if you’re not there to do them!\"<br><br>The dinner continued, with hope between them that they can all do the things they know is",
 		"choices": [],
 		"conditions": [],
@@ -184,25 +195,26 @@
 			"checkinWithDisagreer eq true",
 			"inactivityIsBad eq true"
 		],
-		"effects": [
+		"choices": [
 			{"gotoId" : "thatsAllFolks1_t"},
-		]
+		],
 	},
 	{
 		"id": "thatsAllFolks1_t",
 		"content": "After a moment, Zanita makes her way back to the dinner table.<br>\"Shelly insisted that I leave her to the dishes.\" Zanita said, taking a seat next to you.<br>\"This dinner helped, thank you.\"<br>\"It was our pleasure.\" Zanita said, and paused. \"It’s hard sometimes, Em. Shelly and I…. it’s like we come from two different worlds.\"<br>\"It’s okay. I --\" You began to speak but Zanita waved a hand.",
-		"conditions": [],
-		"effects": [
+		"choices": [
 			{"gotoId" : "thatsAllFolks2_t"},
-		]
+		],
+		"conditions": [],
+		"effects": []
 	},
 	{
 		"id": "thatsAllFolks2_t",
 		"content": "\"It’s not. The last thing you needed was more stress and that’s exactly what I served you this evening… A big, heaping spoonful of stress on a silver platter!\" Zanita mimed the action of scooping from an imaginary bowl and slapping it down on the table.<br>\"Yeah…. Stress and dry Wellington!\" You say and start to laugh. Zanita laughs, too.<br><br>The three of you sit and talk for a few moments before it’s time to take your leave. You do have a big day tomorrow, after all.",
 		"conditions": [],
-		"effects": [
+		"choices": [
 			{"gotoId" : "thatsAllFolks3_t"},
-		]
+		],
 	},
 	{
 		"id": "thatsAllFolks3_t",
