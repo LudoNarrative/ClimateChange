@@ -1,56 +1,14 @@
-/*Establish Giving Lecture
-Establish Style of Class
-Establish Emma's Initial Composure
-Establish Students
-Pick Student to Call On
-Enthusiastic Student Conversation
-Shy Student Conversation
-Skeptical Student Conversation
-Follow-up Question
 
-Establish scene setting
-Establish details specific to her current career
-Establish Emma's Initial Composure
-Establish challenge
-Choose which character you talk to
-Convo to temper zealous enthusiasm of ally
-Convo to emphasize action over inaction
-Action to interact with skeptical character
-Repeat character interaction
-
-Wishlist items:
-
-condition: "establishScene eq true",
-condition: "establishDetails eq true",
-condition: "establishComposure eq true",
-condition: "establishStudents eq true",
-condition: "EnthusiasticStudent eq true",
-condition: "ShyStudent eq true",
-conditoin: "SkepticalStudent eq true",
-condition: "FollowUp eq true",
-condition: "LectureEnd eq true",
-
-Variables:
-Emma's Composure/Breath/Frustration
-“Current Student” (that Emma is speaking with)
-Skeptic’s curiosity (starts low)
-Shy student’s hope (starts medium)
-Eager student’s Blind Optimism? (starts high)
-
-"set career"
-"set composure eq 5"
-"set skepticCuriosity eq 3"
-"set shyHope eq 5"
-"set blindOptimism eq 7" */
 [
   {
     "id": "establishStudents",
     "choiceLabel" : "Continue",
-    "content": "{ifStateCondition|questionsLeft eq 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft lt 4|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. With most of the class half asleep, there are, sadly, only three hands begging to be called on. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. Was your class not engaging enough? Nerves knot in your belly. You hope you can survive the questions.|Oh well, you'll take what you can get.}",
+    "content": "{ifStateCondition|questionsLeft lte 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft eq 2|You have time for a couple more questions.|}{ifStateCondition|questionsLeft eq 3|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. You hope you can survive the questions.|Oh well, you'll take what you can get.}",
     "choices" : [
       {"gotoId" : "elikaIntro"},
       {"gotoId" : "franklinIntro"},
-      {"gotoId" : "aidenIntro"}
+      {"gotoId" : "aidenIntro"},
+      {"gotoId" : "outOfTime"},
     ],
     "effects" : [
       "set establishStudents true"
@@ -62,11 +20,14 @@ Eager student’s Blind Optimism? (starts high)
   },
 
   {
-		"id": "questionBridge",
-		"choiceLabel": "Call on another student.",
-		"content": "You check the time. {ifStateCondition|composure lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
-		"repeatable": "true"
-	},
+    "id" : "outOfTime",
+    "unavailableChoiceLabel" : "You still have time.",
+    "choiceLabel" : "Time to wrap up.",
+    "content" : "You lean back, feeling the relief and exhaustion end of time brings.",
+    "conditions" : [
+      "questionsLeft lte 0"
+    ]
+  },
 
 //elika
 
@@ -77,6 +38,9 @@ Eager student’s Blind Optimism? (starts high)
   "content": "You call on {name|enthusiasticStudent} for perhaps the fifth time, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously as she says, \"So, I read that artificial carbon sequestion is a thing now - isn't that great? Wouldn't taking carbdon dioxide out of the atmosphere help with the acidity of the ocean?\"",
   "choices" : [
     {"gotoId" : "elikaNext"}
+  ],
+  "effects" : [
+    "decr questionsLeft 1"
   ]
 },
 
@@ -90,42 +54,20 @@ Eager student’s Blind Optimism? (starts high)
     "decr questionsLeft 1",
   ],
   "choices" : [
-    {"condition" : "agreeWithElika eq true"},
-    {"condition" : "itsComplicatedElika eq true"},
+    {"gotoId" : "encouragingResponse"},
+    {"gotoId" : "gentleResponse"},
     {"gotoId" : "bluntResponse"}
   ],
 },
 
 {
   "id" : "encouragingResponse",
-  "choiceLabel" : "Yes, absolutely.",
-  "content" : "Looking around at all the bored and unconvinced faces, you decide to say, \"That is an excellent point, {name|enthusiasticStudent}. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\" <br/><br/>{name|enthusiasticStudent}'s face beams, though you notice faces that aren't as happy. You hope encouraging {name|enthusiasticStudent}'s optimism was an encouragement to act rather than an encouragement to sit back, thinking that there's nothing to worry about.",
+  "choiceLabel" : "Yeah, absolutely!",
+  "content" : "{ifStateCondition|composure gte 5|Looking around at all the bored and unconvinced faces, you decide to say,|You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out a general} \"That is an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|enthusiasticStudent} beams, though you notice faces that aren't as happy.",
   "effects" : [
     "incr optimism 1",
     "incr hope 1",
     "decr curiosity 1",
-    "set agreeWithElika true"
-  ],
-  "conditions" : [
-    "composure gte 5"
-  ],
-  "choices" : [
-    {"gotoId" : "elikaFollowUp"}
-  ]
-},
-
-{
-  "id" : "encouragingResponse2",
-  "choiceLabel" : "Y-yeah, absolutely!",
-  "content" : "You have absolutely no idea how to tell {name|enthusiasticStudent} that she's got some of her facts wrong, so you stammer out a general \"That - yes, that is a great point, {name|enthusiasticStudent}, thank you,\" and leave it there. Unfortunately, you can see the confusion in the faces of those who notice the flaws in {name|enthusiasticStudent}'s observation.",
-  "effects" : [
-    "incr optimism 1",
-    "incr hope 1",
-    "decr curiosity 1",
-    "set agreeWithElika true",
-  ],
-  "conditions" : [
-    "composure lt 5"
   ],
   "choices" : [
     {"gotoId" : "elikaFollowUp"}
@@ -135,31 +77,12 @@ Eager student’s Blind Optimism? (starts high)
 {
   "id" : "gentleResponse",
   "choiceLabel" : "It's actually a bit more complicated than that.",
-  "content" : "\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would be lost.\" <br/><br/>You watch as {name|enthusiasticStudent}'s face turns thoughtful. \"And it shouldn't be the only thing that we rely on to help the environment. There's also clean energy to think about - if we don't have to depend on fossil fuels we wouldn't have to worry as much about CO2 emissions.\"",
+  "content" : "{ifStateCondition|composure gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
   "effects" : [
     "decr optimism 1",
     "incr hope 1",
     "incr curiosity 1",
-    "set itsComplicatedElika true"
-  ],
-  "conditions" : [
-    "composure gte 5"
-  ],
-  "choices" : [
-    {"gotoId" : "elikaFollowUp"}
-  ]
-},
-
-{
-  "id" : "gentleResponse2",
-  "choiceLabel": "Er, um, actually, it might be a little more... complicated.",
-  "content" : "\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done in the plants themselves, not actually physically taking the carbon dioxide from the air.\" You halt awkwardly. \"Yeah.\" <br/><br/> {name|enthusiasticStudent} blinks at you. Then blinks again. \"...huh?\"",
-  "effects" : [
-    "decr curiosity 1",
-    "set itsComplicatedElika true",
-  ],
-  "conditions" : [
-    "composure lt 5"
+    "incr composure 1"
   ],
   "choices" : [
     {"gotoId" : "elikaFollowUp"}
@@ -169,13 +92,22 @@ Eager student’s Blind Optimism? (starts high)
 {
   "id" : "bluntResponse",
   "choiceLabel" : "No, you've got your facts completely wrong.",
-  "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But no, it's actually done at the power plants, either before or after the coal gets burned - and it would take a lot of energy, reducing the plant's output, which is not what our energy-hungry country wants right now. And frankly, it would be way better if we stuck to cleaner energies that already exist then trying to make coal 'clean'.\" <br/><br/>{name|enthusiasticStudent}'s smile had faded from her face a long time ago. As well as many others'.",
+  "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But no, it's actually done at the power plants, either before or after the coal gets burned - it would take a lot of energy, reducing the plant's output, which is not what our energy-hungry country wants right now.\"",
   "effects" : [
     "decr optimism 2",
     "decr hope 1",
     "decr curiosity 1",
     "decr composure 1"
   ],
+  "choices" : [
+    {"gotoId" : "bluntResponse2"}
+  ]
+},
+
+{
+  "id" : "bluntResponse2",
+  "choiceLabel" : "Continue",
+  "content" : "\"And frankly,\" you continue, \"it would be way better if we stuck to cleaner energies that already exist then trying to make coal 'clean'.\" <br/><br/>{name|enthusiasticStudent}'s smile had faded from her face a long time ago. As well as many others'.",
   "choices" : [
     {"gotoId" : "elikaFollowUp"}
   ]
@@ -187,10 +119,18 @@ Eager student’s Blind Optimism? (starts high)
   "content" : "{name|enthusiasticStudent} looks like she wants to ask another question. Take it?",
   "choices" : [
     {"gotoId" : "elikaQuestion2"},
-    {"gotoId" : "questionBrige"}
+    {"gotoId" : "questionBridge"}
   ],
-  "effects" : ["set followUp true"],
-  "conditions" : ["enthusiasticStudent eq true"]
+},
+
+{
+  "id": "questionBridge",
+  "choiceLabel": "Call on another student.",
+  "content": "You check the time. {ifStateCondition|composure lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
+  "repeatable" : "true",
+  "choices" : [
+    {"gotoId" : "establishStudents"}
+  ]
 },
 
 {
@@ -201,6 +141,10 @@ Eager student’s Blind Optimism? (starts high)
     {"gotoId" : "positiveResponse"},
     {"gotoId" : "negativeResponse"},
     {"gotoId" : "curtResponse"}
+  ],
+  "effects" : [
+    "decr questionsLeft 1",
+    "set followUp true"
   ]
 },
 
@@ -213,6 +157,9 @@ Eager student’s Blind Optimism? (starts high)
     "incr hope 1",
     "decr curiosity 1",
   ],
+  "choices" : [
+    {"gotoId" : "establishStudents"}
+  ]
 },
 
 {
@@ -222,7 +169,11 @@ Eager student’s Blind Optimism? (starts high)
   "effects" : [
     "decr optimism 1",
     "decr hope 1",
-    "incr curiosity 1"
+    "incr curiosity 1",
+    "incr composure 1"
+  ],
+  "choices" : [
+    {"gotoId" : "establishStudents"}
   ]
 },
 
@@ -232,6 +183,9 @@ Eager student’s Blind Optimism? (starts high)
   "content" : "\"I mean, if you think about it, we've come so far with technology and science that a lot of damage has already been done,\" you say. \"Not to mention it's hard giving up the comfort and convenience of things like cars to try and make a difference in the amount of CO2 we already release daily.\" <br/><br/> {name|enthusiasticStudent} avoids your gaze.",
   "effects" : [
     "decr composure 1"
+  ],
+  "choices" : [
+    {"gotoId" : "establishStudents"}
   ]
 },
 
@@ -257,9 +211,12 @@ Eager student’s Blind Optimism? (starts high)
       "content" : "Their eyes fall upon their desk. \"Even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'Geez, we've gone too far to turn back now. No one wants to give up their car.'\"",
       "choices" : [
           {"gotoId" : "hopefulResponse"},
-          {"condition" : "pessimisticResponses eq true"},
+          {"gotoId" : "pessimisticResponse"},
           {"gotoId" : "harshResponse"}
         ],
+      "effects" : [
+        "decr questionsLeft 1"
+      ],
       },
 
       {
@@ -270,6 +227,7 @@ Eager student’s Blind Optimism? (starts high)
           "incr optimism 1",
           "incr hope 1",
           "incr curiosity 1",
+          "incr composure 1"
         ],
         "choices" : [
           {"gotoId" : "hopefulResponse2"},
@@ -278,47 +236,48 @@ Eager student’s Blind Optimism? (starts high)
 
       {
         "id" : "hopefulResponse2",
+        "choiceLabel" : "Continue",
         "content" : "You smile at {name|shyStudent}. \"We're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything because it's hopeless, we'll never change. Then there's zero chance anything will get better.\"",
-      },
-
-      {
-        "id" : "pessimisticResponse",
-        "choiceLabel" : "Yeah, humankind sure has done a pretty good job at ruining the planet.",
-        "content" : "",
-        "effects" : [
-          "decr optimism 1",
-          "decr hope 1",
-          "decr curiosity 1",
-          "set pessimisticResponses true"
-        ],
-        "conditions" : [
-          "composure lt 3"
+        "choices" : [
+          {"gotoId" : "aidenFollowUp"}
         ]
       },
 
       {
-        "id" : "pessimisticResponse2",
+        "id" : "pessimisticResponse",
         "choiceLabel" : "Humans can never change.",
         "content" : "\"It's not looking good for us, sadly. {ifStateCondition|composure lt 3|Humans are selfish, greedy creatures who won't make a lick of different because we're too busy thinking about ourselves without even realizing that this is impacting us too!|Even if we were to suddenly stop emitting greenhouse gases, the earth would still warm about a degree Farenheit, so...}\" <br/><br/>You stop abruptly, noticing {name|shyStudent}'s face crumple.",
         "effects" : [
           "decr optimism 1",
           "decr hope 1",
           "decr curiosity 1",
-          "set pessimisticResponses true"
         ],
-        "conditions" : [
-          "composure gte 3"
+        "choices" : [
+          {"gotoId" : "aidenFollowUp"}
         ]
       },
 
       {
         "id" : "harshResponse",
         "choiceLabel" : "Don't be such a downer, kid.",
-        "content" : "\"That attitude is the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|shyStudent} shrinking back. You may have been a little too harsh. And unprofessional. Whoops. <br/><br> {ifStateCondition|composure gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
+        "content" : "\"That attitude is the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|shyStudent} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
         "effects" : [
           "incr optimism 1",
           "incr hope 1",
           "incr curiosity 1",
+          "decr composure 1"
+        ],
+        "choices" : [
+          {"gotoId" : "harshResponse2"}
+        ]
+      },
+
+      {
+        "id" : "harshResponse2",
+        "choiceLabel" : "Continue",
+        "content" : "{ifStateCondition|composure gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
+        "choices" : [
+          {"gotoId" : "aidenFollowUp"}
         ]
       },
 
@@ -328,7 +287,7 @@ Eager student’s Blind Optimism? (starts high)
         "content" : "{name|shyStudent} looks like they have another question. Take it? Or call on another student?",
         "choices" : [
           {"gotoId" : "aidenQuestion2"},
-          {"gotoId" : "questionBrige"}
+          {"gotoId" : "questionBridge"}
         ],
         "conditions" : ["shyStudent eq true"]
       },
@@ -343,7 +302,8 @@ Eager student’s Blind Optimism? (starts high)
           {"gotoId" : "hopelessResponse"}
         ],
         "effects" : [
-          "set followUp true"
+          "set followUp true",
+          "decr questionsLeft 1"
         ]
       },
 
@@ -353,6 +313,9 @@ Eager student’s Blind Optimism? (starts high)
         "content" : "\"Teach yourself about what's going on and how you can help - and teach others. There are the little things you hear about, like recycling and the like, and other things like volunteering at beaches. There's also the path of becoming a professor,\" you say. <i>Like me,</i> you think.",
         "effects" : [
           "incr hope 1"
+        ],
+        "choices" : [
+          {"gotoId" : "establishStudents"}
         ]
       },
 
@@ -362,6 +325,9 @@ Eager student’s Blind Optimism? (starts high)
         "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
         "effects" : [
           "incr hope 1"
+        ],
+        "choices" : [
+          {"gotoId" : "establishStudents"}
         ]
       },
 
@@ -371,6 +337,11 @@ Eager student’s Blind Optimism? (starts high)
         "content" : "\"We're all doomed,\" you helpfully inform them. \"No matter what you do.\" <br/><br/> {name|shyStudent} doesn't look particularly inspired.",
         "effects" : [
           "decr hope 1"
+        ],
+        "choices" : [
+          {"gotoId" : "establishStudents"}
         ]
       },
+
+
 ]
