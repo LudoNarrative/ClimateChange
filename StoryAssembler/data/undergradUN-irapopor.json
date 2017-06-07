@@ -120,7 +120,8 @@
     "set looksOverCommittee true"
   ],
   "conditions" : [
-    "representingResearchGroup eq true"
+    "representingResearchGroup eq true",
+    "charactersIntroduced lt 2"
   ],
   "repeatable" : "true"
 },
