@@ -55,6 +55,49 @@
       "incr confidence 1"
     ]
   },
+
+   {
+    "id": "lostTrainOfThought",
+    "content": "You look down at your notes for a reminder of what to present next. Somehow, every word written on the notecards look so foreign. Scanning the cards again, you are still lost and can't remember what the last thing you said was.",
+    "choices": [
+      {
+        "gotoId": "makeThingsWorse"
+      },
+      {
+        "gotoId": "slightRecovery"
+      },
+      {
+        "gotoId": "turnItAround"
+      }
+    ],
+    "conditions": [
+      "composure lte 3",
+      "introducesResearch eq true",
+      "factsPresented gte 2"
+    ],
+    "effects": [
+      "set lostTrainOfThought true",
+      "decr confidence 2"
+    ]
+  },
+
+   {
+    "id": "kurtInterrupts",
+    "content": "Out of the corner of your eye, you see Kurt's hand slightly rise as he loudly clears his throat.  <p>\"Sorry for the interruption but I couldn't help but I just had a thought.\" </p>",
+    "choices": [
+      {
+        "condition": "kurtInterrupts eq true"
+      }
+    ],
+    "conditions": [
+      "factsPresented gte 2",
+      "presentFacts eq true"
+    ],
+    "effects": [
+      "set kurtInterrupts true"
+    ]
+  },
+
   {
     "id": "presentFacts",
     "repeatable": "true",
@@ -74,7 +117,8 @@
       "introducesResearch eq true"
     ],
     "effects": [
-      "set presentFacts true"
+      "set presentFacts true",
+      "incr factsLooped 1"
     ]
   },
   /*
@@ -91,27 +135,33 @@
   {
     "id": "unpersuasiveFact1",
     "choiceLabel": "CO2 levels are increasing",
+    "unavailableChoiceLabel": "Already presented that fact",
     "content": "Pointing at the powerpoint slide behind you, \"As you can see by the increasing slope of this line, CO2 levels are increasing faster than it ever has before.\"<p>By the looks of the panel members' faces, they are not impressed by your evidence.</p>",
     "effects": [
       "decr persuasion 1",
-      "incr factsPresented 1"
+      "incr factsPresented 1",
+      "incr factsLooped 1"
     ]
   },
   {
     "id": "neutralFact1",
     "choiceLabel": "Florida will be flooded",
+    "unavailableChoiceLabel": "Already presented that fact",
     "content": "\"One study that was conducted in Florida suggests that the rising sea level will swallow the majority of the state of Florida by the year 2040.\" <p>Murmurs between the panel members can be hear throughout the room, subsiding slowly after a few seconds.</p>",
     "effects": [
-      "incr factsPresented 1"
+      "incr factsPresented 1",
+      "incr factsLooped 1"
     ]
   },
   {
     "id": "persuasiveFact1",
     "choiceLabel": "Renewable energy is not enough",
+    "unavailableChoiceLabel": "Already presented that fact",
     "content": "\"We all know that there are a lot of sources of renewable energy being developed, but it is countered by all the people in the world who still drive gas cars and power plants that still burn fossil fuels. They need to be educated on the benefits of renewable energy to get everyone on board and on our side.\"",
     "effects": [
       "incr persuasion 1",
-      "incr factsPresented 1"
+      "incr factsPresented 1",
+      "incr factsLooped 1"
     ]
   },
   /*
@@ -125,22 +175,7 @@
     ]
   },
   */
-  {
-    "id": "kurtInterrupts",
-    "content": "Out of the corner of your eye, you see Kurt's hand slightly rise as he loudly clears his throat.  <p>\"Sorry for the interruption but I couldn't help but I just had a thought.\" </p>",
-    "choices": [
-      {
-        "condition": "kurtInterrupts eq true"
-      }
-    ],
-    "conditions": [
-      "factsPresented gte 2",
-      "presentFacts eq true"
-    ],
-    "effects": [
-      "set kurtInterrupts true"
-    ]
-  },
+ 
   {
     "id": "kurtInterruptsGood",
     "content": "\"I understand your point, but am still unsure if funding education is the right decision. Would it not be more efficient to just dump the money into things like renewable energy or technology to clean up our oceans?\"",
@@ -198,29 +233,7 @@
 
 
 
-  {
-    "id": "lostTrainOfThought",
-    "content": "You look down at your notes for a reminder of what to present next. Somehow, every word written on the notecards look so foreign. Scanning the cards again, you are still lost and can't remember what the last thing you said was.",
-    "choices": [
-      {
-        "gotoId": "makeThingsWorse"
-      },
-      {
-        "gotoId": "slightRecovery"
-      },
-      {
-        "gotoId": "turnItAround"
-      }
-    ],
-    "conditions": [
-      "composure lte 3",
-      "introducesResearch eq true"
-    ],
-    "effects": [
-      "set lostTrainOfThought true",
-      "decr confidence 2"
-    ]
-  },
+ 
 
   {
     "id": "makeThingsWorse",
