@@ -1451,7 +1451,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradLecture",
-				text : "<p>You were able to secure a job as an adjunct professor in Environmental Sciences.</p><p>Dr. Tennerson, a senior faculty member, as been sent to evaluate how the class is going.</p><p>Choose what Emma says, but make sure to keep your cool!</p>"
+				text : "<p>Time for your first lecture! Choose what to say to the students and answer any questions that they may have about climate change. Careful though, a bad performance may lead to an unhappy dean!</p>"
 			},
 			{
 				id : "undergradDean",
