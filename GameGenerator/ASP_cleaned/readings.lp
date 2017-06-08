@@ -1,5 +1,55 @@
+reading(survive,Entity) :-
+    entity(Entity),
+    1 {reading(defend_against,Entity);
+       reading(dodge,Entity) }.
+{reading(defend_against,Entity)} :-
+    reading(hurt,relation(Entity,player)),
+    result(Outcome,delete(Entity)),
+    player_controls_outcome(Outcome).
+
+required(hurt) :- required(defend).
+{reading(dodge,Entity)} :-
+    reading(hurt,relation(Entity,player)),
+    precondition(overlaps(Entity),Outcome),
+    precondition(overlaps(Entity2),Outcome),
+    reading(bad,Outcome),
+    player_controls(Entity2).
+
+required(hurt) :- required(dodge).
+
+%%%%%%%%%%%%
+{reading(hurt,relation(Entity1,player)) } :-
+    precondition(overlaps(Entity1),Outcome),
+    reading(bad,Outcome),
+    computer_controls(Entity1).
+
+reading(help,relation(Entity,player))  :-
+    precondition(overlaps(Entity),Outcome),
+    reading(good,Outcome),
+    computer_controls(Entity).
+required(good) :- required(help).
+required(bad) :- required(hurt).
 
 
+{reading(help,relation(Entity1,player)) } :-
+    reading(help,relation(Entity1,Entity2)),
+    player_controls(Entity2).
+
+{reading(help,relation(Entity2,player)) } :-
+    reading(help,relation(Entity1,Entity2)),
+    player_controls(Entity1).
+
+
+{reading(hurt,relation(Entity1,player)) } :-
+    reading(hurt,relation(Entity1,Entity2)),
+    player_controls(Entity2).
+
+{reading(hurt,relation(Entity2,player)) } :-
+    reading(hurt,relation(Entity1,Entity2)),
+    player_controls(Entity1).
+
+
+%% HELPING ANOTHER ENTITY
 {reading(help,relation(Entity1,Entity2)) } :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(increase,property(Entity2,health))).

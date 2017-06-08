@@ -169,6 +169,7 @@ result(outcome(avatar(rotate_right)),rotates(ENTITY, cw))  :-
 
 indirectControls(click_and_drag;
 		 %click_and_click;click_and_aim;
+         orbit_the_cursor;
 	drawn_to_cursor;%;
 	repeled_from_cursor;
         click_to_spin;
@@ -182,6 +183,8 @@ indirectControls(click_and_drag;
 
 
 
+
+
 controlLogic(draggable(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
 outcome(outcome(drawn_to_cursor(ENTITY))) :- controlScheme(ENTITY,drawn_to_cursor).
 outcome(outcome(repeled_from_cursor(ENTITY))) :- controlScheme(ENTITY,repeled_from_cursor). 
@@ -189,19 +192,36 @@ outcome(outcome(click_to_spin(ENTITY))) :- controlScheme(ENTITY,click_to_spin).
 outcome(outcome(click_to_move(ENTITY))) :- controlScheme(ENTITY,click_to_move).  
 outcome(outcome(click_to_chase(ENTITY))) :- controlScheme(ENTITY,click_to_chase).  
 
+outcome(outcome(orbit_the_cursor(ENTITY))) :- controlScheme(ENTITY,orbit_the_cursor).  
+  
+  
   
 %cursor is electromagnet
 precondition(control_event(button(mouse, held)),outcome(drawn_to_cursor(ENTITY))) :- 
     outcome(outcome(drawn_to_cursor(ENTITY))). 
-result(outcome(drawn_to_cursor(ENTITY)), move(ENTITY,direction(towards,cursor))):-
+result(outcome(drawn_to_cursor(ENTITY)), move(ENTITY,direction(forward))):-
+    outcome(outcome(drawn_to_cursor(ENTITY))).
+
+result(outcome(drawn_to_cursor(ENTITY)), look_at(ENTITY,cursor)):-
     outcome(outcome(drawn_to_cursor(ENTITY))).
 
 %cursor is opposite polarity (well, same polarity) electromagnet
 precondition(control_event(button(mouse, held)),outcome(repeled_from_cursor(ENTITY))) :- 
     outcome(outcome(repeled_from_cursor(ENTITY))). 
-result(outcome(repeled_from_cursor(ENTITY)), move(ENTITY,direction(away,cursor))):-
+result(outcome(repeled_from_cursor(ENTITY)), move(ENTITY,direction(backward))):-
+    outcome(outcome(repeled_from_cursor(ENTITY))).
+result(outcome(repeled_from_cursor(ENTITY)), look_at(ENTITY,cursor)):-
     outcome(outcome(repeled_from_cursor(ENTITY))).
 
+%cursor is the sun, entity is the earth
+
+precondition(control_event(button(mouse, held)),outcome(orbit_the_cursor(ENTITY))) :- 
+    outcome(outcome(orbit_the_cursor(ENTITY))). 
+1 {result(outcome(orbit_the_cursor(ENTITY)), move(ENTITY,direction(LEFT_RIGHT))): left_right(LEFT_RIGHT)} 1:-
+    outcome(outcome(orbit_the_cursor(ENTITY))).
+result(outcome(orbit_the_cursor(ENTITY)), look_at(ENTITY,cursor)):-
+    outcome(outcome(orbit_the_cursor(ENTITY))).
+    
 1 {precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY)));
    precondition(control_event(button(mouse, pressed)),outcome(click_to_spin(ENTITY)));
    precondition(control_event(click(ENTITY)),outcome(click_to_spin(ENTITY)))
@@ -363,7 +383,8 @@ behaviors(chase;
 	  flee;
 	  patrol;
 	  pingpong;
-	  wander).
+	  wander,
+      orbit).
 
 
 {behavior(ENTITY,BEHAVIOR) : behaviors(BEHAVIOR)} 2 :- entity(ENTITY).
@@ -373,13 +394,21 @@ behaviors(chase;
 
 1 {chases(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,chase).
 
-result(tick,move(ENTITY,direction(towards,OTHER))) :- chases(ENTITY,OTHER).
+result(tick,move(ENTITY,direction(forward))) :- chases(ENTITY,OTHER).
+result(tick,move(ENTITY,look_at(ENTITY,OTHER))) :- chases(ENTITY,OTHER).
 
 
 1 {flees(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,flee).
+result(tick,move(ENTITY,direction(backward))) :- flees(ENTITY,OTHER).
+result(tick,move(ENTITY,look_at(ENTITY,OTHER))) :- flees(ENTITY,OTHER).
 
 
-result(tick,move(ENTITY,direction(away,OTHER))) :- flees(ENTITY,OTHER).
+1 {orbits(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,orbit).
+
+left_right(left;right).
+1 {result(tick,move(ENTITY,direction(LEFT_RIGHT))) : left_right(LEFT_RIGHT)} 1 :- orbits(ENTITY,OTHER).
+result(tick,move(ENTITY,look_at(ENTITY,OTHER))) :- orbits(ENTITY,OTHER).
+
 
 timer(patrol(ENTITY)) :- behavior(ENTITY,patrol).
 
@@ -422,16 +451,14 @@ control_event(E,modify(R)) :-
 
 
 	
-resource_checks(N) :- N = {precondition(compare(_,_),_)}.
+%resource_checks(N) :- N = {precondition(compare(_,_),_)}.
 
-:- resource_checks(N), N > 3.
+%:- resource_checks(N), N > 3.
 	
 		
 %#show precondition/2.
-#project resource/1.
-#project entity/1.
-#project timer/1.
 #project player_controls/1.
 #project behavior/2.
 #project controlScheme/2.
 #project controlLogic/1.
+

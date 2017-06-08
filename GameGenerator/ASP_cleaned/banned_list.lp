@@ -10,13 +10,10 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 
 :- action(add(E,_,cursor)).
 
-
 %:- result(tick,rotates(_,_,_)).
 
 :- precondition(compare(_,_),O),
     precondition(control_event(click(_)),O).
-	
-:- action(look_at(_,_)).
 
 
 % RUNNING OUT OF GAS
@@ -25,3 +22,9 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 	
 :- precondition(compare(_,_),O),
     result(O,move(_,_)).
+    
+    
+    
+% PROPERTIES DONT WORK
+:- condition(compare(_,property(_,_))).
+:- action(modify(_,property(_,_))).

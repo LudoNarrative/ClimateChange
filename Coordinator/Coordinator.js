@@ -10,10 +10,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];
 
 		//scenes played when you hit Begin
-		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean"];		
+		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"];		
 		State.set("scenes", playGameScenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
+	}
+
+	//cleans all variables out of state that aren't supposed to cross over between scenes
+	var cleanState = function(id) {
+		State.set("characters", []);			//get rid of extraneous characters
 	}
 
 	/*
@@ -51,6 +56,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	}
 
 	//returns index of next scene
+	//available scenes: ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"]
 	var getNextScene = function(currentScene) {
 		switch(currentScene) {
 			case "undergradDinner":
@@ -61,9 +67,29 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				}
 				else { return 3; }
 			}
-			case "undergradDean":
+			case "undergradDean": {
+				return 4;
+			}
+			case "undergradTravel":
+				return 4;
+			case "undergradFamilyDinner": {
+				if (State.get('academicEnthusiasm' > 2)) {			//senior faculty branch
+					return 7;
+				}
+				if (State.get('fame') > 2) {		//UN branch
+					return 6;
+				}
+				if (State.get('localAction') > 2) {
+					return 5;
+				}
+			}
+			case "undergradBeach": 		//this should return epilogue eventually
 				return 0;
-
+			case "undergradUN": 		//this should return epilogue eventually
+				return 0;
+			
+			case "undergradFaculty": 		//this should return epilogue eventually
+				return 0;
 		}
 	}
 
@@ -353,10 +379,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "EmmaClassTypeBeat eq true" },
 				{ condition: "friendIsInAcademia eq true" },
 				{ condition: "friendIsNotInAcademia eq true"},
-				{ condition: "friendTension gte 4"},
+				{ condition: "tension gte 4"},
 				{ condition: "friendTensionRelieved eq true"},
 				{ condition: "checkinWithDisagreer eq true"},
-				{ condition: "inactivityIsBad eq true", order: "first"},
+				{ condition: "inactivityIsBad eq true"},
 				{ condition: "outro eq true", order: "last"},
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
@@ -616,6 +642,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set readSomething false",
 				"set acceptOrDeclineSomething false",
 				"set outroForLanding false",
+				"set talksGiven 0",
 
 				"set academicEnthusiasm 0",			//global stat
 				"set curiosity 5",	//global stat
@@ -1424,11 +1451,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradLecture",
-				text : "<p>You were able to secure a job as an adjunct professor in Environmental Sciences.</p><p>Dr. Tennerson, a senior faculty member, as been sent to evaluate how the class is going.</p><p>Choose what Emma says, but make sure to keep your cool!</p>"
+				text : "<p>Time for your first lecture! Choose what to say to the students and answer any questions that they may have about climate change. Careful though, a bad performance may lead to an unhappy dean!</p>"
 			},
 			{
 				id : "undergradDean",
-				text : "<p>TODO: Scene description</p>"
+				text : "<p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprardy!</p>"
 			},
 			{
 				id : "undergradTravel",
@@ -1436,7 +1463,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradFamilyDinner",
-				text : "<p>TODO: Scene description</p>"
+				text : "<p>You are going out to dinner with your parents. It's been a while since you've had a chance to sit down with them and tell them about what you have been up to.</p><p>Can you keep the tension low while staying true to your beliefs?</p>"
 			},
 			{
 				id : "undergradUN",
@@ -1727,7 +1754,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						age: "20s",
 						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "neutral"},
-							{ state: ["friendTension gte 2"], tag: "upset"}
+							{ state: ["tension gte 2"], tag: "upset"}
 						]
 					},
 					{
@@ -2303,6 +2330,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		validateArtAssets : validateArtAssets,
 		loadSceneIntro : loadSceneIntro,
 		getNextScene : getNextScene,
+		cleanState : cleanState,
 
 		startGame : startGame,
 		getStorySpec : getStorySpec

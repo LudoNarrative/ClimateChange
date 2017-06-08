@@ -18,6 +18,57 @@
 
 
 //person one
+
+{
+  "id" : "nosyPerson",
+  "choiceLabel" : "You turn to talk to the person who's leaning very, very close to you.",
+  "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,\" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"'Global Warming Is At An All Time High'. Funny, huh?\"",
+  "effects" : [
+    "set talkSomeone true",
+    "set dealWithSomeone true",
+  ],
+  "choices" : [
+    {"gotoId" : "sharpTalk2"},
+    {"gotoId" : "innocentQuestion"}
+  ]
+},
+
+{
+  "id" : "sharpTalk2",
+  "choiceLabel" : "I don't see how global warming's funny.",
+  "content" : "Their eyebrows furrow. \"Oh, you're one of those people, are you? Don't worry, dear, it was pretty cold this year round. Spring came late again and everything, so the cold weather's lasting longer.\"",
+  "choices" : [
+    {"gotoId" : "teachLesson"},
+    {"gotoId" : "dontBother"}
+  ]
+},
+
+{
+  "id" : "teachLesson",
+  "choiceLabel" : "Tell them about why global warming is legitimate.",
+  "content" : "\"You see, there's a difference between weather and climate,\" you explain {ifStateCondition|composure gte 5|patiently.|with a hint of frustration.} \"Even if it's pretty cold in one area, the global temperature has been proven by science to be slowly rising. Which causes problems all over the world.\" <br/><br/> Your fellow passenger looks thoughtful. \"Huh,\" They say.",
+  "effects" : [
+    "incr composure 1"
+  ]
+},
+
+{
+  "id" : "dontBother",
+  "choiceLabel" : "Don't bother.",
+  "content" : "\"If you say so,\" you sigh as you gaze out the window. The logical fallacies in the statement is itching at you, but you've decided to stay silent.",
+},
+
+{
+  "id" : "innocentQuestion",
+  "choiceLabel" : "What do you mean?",
+  "content" : "They blink. \"Well, you know,\" they say. \"People always say 'global warming, how horrible!' but after a while you have to wonder if it's all bologne. Like, my mother would always say it's a some government conspiracy, but she was a conspiracy nut. Me, I always wonder whenever the weather gets really cold, you know? That's what science is, isn't it - questioning things?",
+  "choices" : [
+    {"gotoId" : "teachLesson"},
+    {"gotoId" : "dontBother"}
+  ]
+},
+
+//person two
   {
     "id" : "recognizeEmma",
     "choiceLabel" : "Find out why the person sitting next to you is staring at you.",
@@ -52,57 +103,6 @@
     "id" : "rudeTalk",
     "choiceLabel" : "Who wants to know?",
     "content" : "\"Oh, of course! Sorry!\" they say, somehow unfazed by the rudeness of the question. \"I'm Daniel Schmit, nice to meet you! I saw your talk the other day - you were {ifStateCondition|composure gte 5|quite wonderful! I mean, you certainly seemed nicer back then...|rather interesting. I guessed you were nervous, but maybe my first impression was wrong...}\"",
-  },
-
-  //person two
-
-  {
-    "id" : "nosyPerson",
-    "choiceLabel" : "You turn to talk to the person who's leaning very, very close to you.",
-    "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,\" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"'Global Warming Is At An All Time High'. Funny, huh?\"",
-    "effects" : [
-      "set talkSomeone true",
-      "set dealWithSomeone true",
-    ],
-    "choices" : [
-      {"gotoId" : "sharpTalk2"},
-      {"gotoId" : "innocentQuestion"}
-    ]
-  },
-
-  {
-    "id" : "sharpTalk2",
-    "choiceLabel" : "I don't see how global warming's funny.",
-    "content" : "Their eyebrows furrow. \"Oh, you're one of those people, are you? Don't worry, dear, it was pretty cold this year round. Spring came late again and everything, so the cold weather's lasting longer.\"",
-    "choices" : [
-      {"gotoId" : "teachLesson"},
-      {"gotoId" : "dontBother"}
-    ]
-  },
-
-  {
-    "id" : "teachLesson",
-    "choiceLabel" : "Tell them about why global warming is legitimate.",
-    "content" : "\"You see, there's a difference between weather and climate,\" you explain {ifStateCondition|composure gte 5|patiently.|with a hint of frustration.} \"Even if it's pretty cold in one area, the global temperature has been proven by science to be slowly rising. Which causes problems all over the world.\" <br/><br/> Your fellow passenger looks thoughtful. \"Huh,\" They say.",
-    "effects" : [
-      "incr composure 1"
-    ]
-  },
-
-  {
-    "id" : "dontBother",
-    "choiceLabel" : "Don't bother.",
-    "content" : "\"If you say so,\" you sigh as you gaze out the window. The logical fallacies in the statement is itching at you, but you've decided to stay silent.",
-  },
-
-  {
-    "id" : "innocentQuestion",
-    "choiceLabel" : "What do you mean?",
-    "content" : "They blink. \"Well, you know,\" they say. \"People always say 'global warming, how horrible!' but after a while you have to wonder if it's all bologne. Like, my mother would always say it's a some government conspiracy, but she was a conspiracy nut. Me, I always wonder whenever the weather gets really cold, you know? That's what science is, isn't it - questioning things?",
-    "choices" : [
-      {"gotoId" : "teachLesson"},
-      {"gotoId" : "dontBother"}
-    ]
   },
 
   //person three
@@ -255,15 +255,22 @@
       "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
       "choiceLabel": "The plane is landing.",
       "effects": [
-        "set outroForLanding true"
+        "set outroForLanding true",
+        "set dealWithSomeone false",
+        "set readNewspaper false",
+        "set readEmail false"
       ],
       "repeatable" : "true",
+    },
+
+    {
+      "id" : "endingScene",
+      "content" : "Well, you sure managed to get a lot out of your travels - and you've only been to three talks! Imagine how much farther you can go, how many more people you can reach... and as you look out the plane window, you can't wait for your next landing.",
       "conditions" : [
+        "talksGiven gte 3",
         "dealWithSomeone eq true",
         "readNewspaper eq true",
         "readEmail eq true"
       ]
     },
-
-
 ]
