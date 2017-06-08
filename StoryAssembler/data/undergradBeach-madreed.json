@@ -206,15 +206,20 @@
 		"content": "\"I'm sorry, I just wanted to put what we're doing into perspective considering it didn't work last time. I just don't see why it matters.",
 		"choices": [
 			{
-				"condition": "emmaNegativeSpin eq true"
+				"condition": "emmaPositiveSpin eq true"
 			}
 		]
 	},
 	{
 		"id": "emmaPositiveSpin",
+		"choiceLabel": "Tell him why it matters.",
 		"content": "You do your best to keep a smile on your face as you say, \"Our efforts will pay off, after relocating these crabs their time will be extended enough for the UN to put enviromental measures into effect.\" You stare at your crab, \"I think they will tough it out, I believe in them. What we are doing matters. I know they will be dead, and it's improbable our effors will help anything, but I know it's better than nothing.\" ",
 		"conditions": [
-			"hope gt 5"
+			"hope gt 5",
+			"rodrigoSadKnowledge eq true"
+		],
+		"choices": [
+			{"condition": "rodrigoSaysJob eq true"}
 		],
 		"effects": [
 			"set emmaPositiveSpin true",
@@ -223,13 +228,18 @@
 	},
 	{
 		"id": "emmaNegativeSpin",
+		"choiceLabel": "Tell him why it matters.",
 		"content": "\"Why does it matter? What do you think it feels like to suffocate little by little in the air that you breath. These crabs have done nothing but live their lives as we pollute our planet until the water they live has no oxygen left. What do you think it's like to live in garbage to the point you are entagled in it to where you starve? I am trying to atone for what our species has done, but it seems that that doesn't matter to you.",
 		"effects": [
 			"set emmaPositiveSpin true",
 			"set emmaNegativeSpin true"
 		],
+		"choices": [
+			{"condition": "rodrigoSaysJob eq true"}
+		],
 		"conditions": [
-			"hope lte 5"
+			"hope lte 5",
+			"rodrigoSadKnowledge eq true"
 		],
 		"speaker": "protagonist"
 	},
@@ -237,18 +247,26 @@
 		"id": "jobPosative",
 		"choiceLabel": "\"At least it's a job.\"",
 		"speaker": "volunteer",
+		"conditions": [
+			"optimism gte 3",
+			"rodrigoSadKnowledge eq true"
+		],
 		"content": "\"I mean maybe people will get some awareness but we have been trying for years. If there were laws being made to protect nature maybe then what we are doing would matter.\"",
 		"effects": [
 			"set rodrigoSaysJob true"
-		]
+		],
 	},
 	{
 		"id": "jobNegative",
 		"choiceLabel": "\"We can't help them.\"",
 		"speaker": "volunteer",
+		"conditions": [
+			"optimism lt 3",
+			"rodrigoSadKnowledge eq true"
+		],
 		"content": "\"I know how you feel but there is no way we can fix this on our own. All this is to me is a job. I feel you should detach yourself from this species {name|protagonist}.\"",
 		"effects": [
 			"set rodrigoSaysJob true"
-		]
+		],
 	}
 ]
