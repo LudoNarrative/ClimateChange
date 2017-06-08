@@ -24,6 +24,13 @@
     "unavailableChoiceLabel" : "You still have time.",
     "choiceLabel" : "Time to wrap up.",
     "content" : "You lean back, feeling the relief and exhaustion end of time brings.",
+    "effects" : [
+      "set followup true",
+      "set enthusiasticStudent true",
+      "set skepticalStudent true",
+      "set shyStudent true",
+      "set talkToStudent 3",
+    ],
     "conditions" : [
       "questionsLeft lte 0"
     ],
