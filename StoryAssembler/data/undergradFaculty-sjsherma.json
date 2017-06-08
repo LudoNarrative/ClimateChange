@@ -18,7 +18,8 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
       "set studentGivesPresentation true"
     ],
     "conditions" : [
-      "establishAudience eq true"
+      "establishAudience eq true",
+      "enthusiasticStudent eq true"
     ]
   },
 
@@ -184,6 +185,10 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
     "effects": [
       "set studentGivesPresentation true"
     ],
+    "conditions" : [
+      "establishAudience eq true",
+      "shyStudent eq true"
+    ]
   },
 
   {
@@ -222,7 +227,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id" : "heartSolid",
     "choiceLabel" : "Your heart is made of stone, darn it!",
-    "request": {"gotoId": "aidenPresentsSlide3"},  
+    "request": {"gotoId": "aidenPresentsSlide3"},
   },
   {
     "id" :  "aidenPresentsSlide3",
