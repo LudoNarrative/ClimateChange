@@ -31,9 +31,6 @@
 			{"gotoId" : "wineQuestion0_t"},
 			{"gotoId" : "wineQuestion1_t"},
 		],
-		"effects": [
-			"set establishFriends true"
-		]
 	},
 //Emma's choices
 	{
@@ -55,7 +52,6 @@
 			{"gotoId" : "sceneSetUp_end_t"},
 		],
 		"effects": [
-			{"gotoId" : "sceneSetUp_end_t"},
 			"incr tension 1"
 		]
 	},
