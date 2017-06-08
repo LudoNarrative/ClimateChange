@@ -379,7 +379,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "EmmaClassTypeBeat eq true" },
 				{ condition: "friendIsInAcademia eq true" },
 				{ condition: "friendIsNotInAcademia eq true"},
-				{ condition: "friendTension gte 4"},
+				{ condition: "tension gte 4"},
 				{ condition: "friendTensionRelieved eq true"},
 				{ condition: "checkinWithDisagreer eq true"},
 				{ condition: "inactivityIsBad eq true"},
