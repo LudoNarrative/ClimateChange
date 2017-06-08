@@ -72,8 +72,8 @@
 		"id": "tensionInTheRoom0_t",
 		"content": "The dinner went on as forks clicked against plates and Wellington was consumed amidst joyous conversation.<br>\"It’s so good, Z!\" You say, half chewing and already preparing your next bite.<br>\"Yeah,\" Shelly said, \"it’s surprising you managed to make it taste so good.\"<br>You and Zanita watch Shelly take another bite, a bit taken aback.",
 		"choices" : [
-			{"gotoId" : "wineQuestion0_t"},
-			{"gotoId" : "wineQuestion1_t"},
+			{"gotoId" : "beefQuestion0_t"},
+			{"gotoId" : "beefQuestion1_t"},
 		],
 		"conditions": [
 			"tension lt 4",
@@ -83,12 +83,12 @@
 	},
 //Emma answers question
 	{
-		"id": "wineQuestion0_t",
+		"id": "beefQuestion0_t",
 		"choiceLabel": "\"Of course it tastes so good, Zanita is an amazing cook!\"",
 		"request": {"gotoId": "tensionInTheRoom1_t"}
 	},
 	{
-		"id": "wineQuestion1_t",
+		"id": "beefQuestion1_t",
 		"choiceLabel": "\"Beef Wellington is not an easy dish to make….\"",
 		"request": {"gotoId": "tensionInTheRoom1_t"}
 	},
@@ -173,6 +173,7 @@
 	},
 	{
 		"id": "thatsAllFolks1_t",
+		"choiceLabel": "Continue",
 		"content": "After a moment, Zanita makes her way back to the dinner table.<br>\"Shelly insisted that I leave her to the dishes.\" Zanita said, taking a seat next to you.<br>\"This dinner helped, thank you.\"<br>\"It was our pleasure.\" Zanita said, and paused. \"It’s hard sometimes, Em. Shelly and I…. it’s like we come from two different worlds.\"<br>\"It’s okay. I --\" You began to speak but Zanita waved a hand.",
 		"choices": [
 			{"gotoId" : "thatsAllFolks2_t"},
