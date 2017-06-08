@@ -36,7 +36,7 @@
 			{"gotoId": "maybeNotSure"},
 		],
 		"effects" : [
-			"incr confidence 1","set EmmaDefenseFeeling eq true"
+			"incr confidence 1","set EmmaDefenseFeeling true"
 		],
 	},
 	{
@@ -60,7 +60,7 @@
 			{"gotoId": "hugThem"},
 		],
 		"effects" : [
-			"decr confidence 1","set EmmaDefenseFeeling eq true"
+			"decr confidence 1","set EmmaDefenseFeeling true"
 		],
 	},
 	{
