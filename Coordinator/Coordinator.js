@@ -1455,7 +1455,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradDean",
-				text : "<p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool!</p>""
+				text : "<p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprardy!</p>"
 			},
 			{
 				id : "undergradTravel",
@@ -1463,7 +1463,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradFamilyDinner",
-				text : "<p>TODO: Scene description</p>"
+				text : "<p>You are going out to dinner with your parents. It's been a while since you've had a chance to sit down with them and tell them about what you have been up to.</p><p>Can you keep the tension low while staying true to your beliefs?</p>"
 			},
 			{
 				id : "undergradUN",
