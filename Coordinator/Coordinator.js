@@ -642,6 +642,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set readSomething false",
 				"set acceptOrDeclineSomething false",
 				"set outroForLanding false",
+				"set talksGiven 0",
 
 				"set academicEnthusiasm 0",			//global stat
 				"set curiosity 5",	//global stat
