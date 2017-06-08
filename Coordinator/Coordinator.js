@@ -62,7 +62,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			case "undergradDinner":
 				return 1;
 			case "undergradLecture": {
-				if (State.get('confidence') > 2) {
+				if (State.get('composure') > 5) {
 					return 2;
 				}
 				else { return 3; }
@@ -73,13 +73,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			case "undergradTravel":
 				return 4;
 			case "undergradFamilyDinner": {
-				if (State.get('academicEnthusiasm' > 2)) {			//senior faculty branch
-					return 7;
-				}
-				if (State.get('fame') > 2) {		//UN branch
+				if (State.get('academicEnthusiasm' > 8)) {			//UN branch
 					return 6;
 				}
-				if (State.get('localAction') > 2) {
+				if (State.get('academicEnthusiasm') > 4 && State.get('academicEnthusiasm') < 9) {		//senior faculty branch
+					return 6;
+				}
+				if (State.get('academicEnthusiasm') < 5) {				//beach
 					return 5;
 				}
 			}
