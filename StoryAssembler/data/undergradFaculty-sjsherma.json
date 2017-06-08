@@ -46,6 +46,9 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
     "content" : "Élika is practically dancing on the tips of her toes. \"Specifically, I will be discussing the ridiculously high extinction rates of other species, how those correlate with human activity, and how such rates relate to how long human beings will be able to continue their existence on this planet!\" <br/><br/>... She looks <i>so</i> excited for this.",
     "choices" : [
       {"gotoId" : "elikaPresentsSlide2"},
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
     ]
   },
 
@@ -105,6 +108,9 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id" : "elikaFinishes",
     "content" : "After about an hour of detailed analysis on extinction rates, accompanied by slides plastered with brightly colored images and plenty of smiley-faces, Élika concludes with a rather well-reasoned prediction of the end of humankind using her previously-presented evidence. You can see your fellow faculty member on your right nodding her head.",
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
   },
 
   //audience asks elika
@@ -215,6 +221,9 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
     "choices" : [
       {"gotoId" : "heartPunch"},
       {"gotoId" : "heartRock"}
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
     ]
   },
 
@@ -234,6 +243,9 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
     "content" : "Aiden straightens their back. \"And so, I'll be presenting my thesis on how habit fragmentation, climate change, and science fraud has contributed to the undeserved end of a wonderful species,\" Aiden says. \"And how we can take care of more species in the future by focusing locally.\" Their eyes are blazing with passion.",
     "choices" : [
       {"gotoId" : "aidenFinishes"}
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
     ]
   },
 
@@ -300,6 +312,9 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
         "gotoId": "emmaNoHelpAiden"
       }
     ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
   },
 
   {
