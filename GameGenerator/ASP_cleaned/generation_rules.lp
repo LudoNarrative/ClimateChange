@@ -28,6 +28,7 @@ playerControls :- controlLogic(_).
 
 player_controls(Entity) :-  controlLogic(draggable(Entity)).
 player_controls(Entity) :-  action(move(Entity,direction(_,cursor))).
+player_controls(Entity) :-  action(look_at(Entity,cursor)).
 %player_controls(Entity) :-  result(Outcome,move(Entity,direction(_,_))),
 %			    precondition(control_event(EVENT),Outcome).
 

@@ -18,6 +18,7 @@ initialize(add(entity(e_1_XX_),scalar(1),location(bottom,right))).
 initialize(add(entity(e_2_XX_),scalar(1),location(top,left))).
 initialize(add(entity(e_2_XX_),scalar(1),location(bottom,center))).
 initialize(add(entity(e_2_XX_),scalar(1),location(top,right))).
+initialize(set_static(entity(e_2_XX_),true)).
 initialize(set_draggable(entity(e_1_XX_),true)).
 initialize(set_color(entity(e_1_XX_),red)).
 initialize(set_sprite(entity(e_1_XX_),circle)).
@@ -27,56 +28,69 @@ initialize(set_color(entity(e_2_XX_),blue)).
 controlLogic(draggable(entity(e_1_XX_))).
 
 timer_logic(timer(t_1_XX_),scalar(4),loop).
-timer_logic(timer(patrol_entity_e_2_XX__XX__XX_),scalar(2),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(7))).
-initialize(set_value(resource(r_2_XX_),scalar(2))).
+initialize(set_value(resource(r_1_XX_),scalar(8))).
+initialize(set_value(resource(r_2_XX_),scalar(6))).
 
-precondition(le(resource(r_1_XX_),scalar(6)),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),mode_change(narrative_gating)).
+precondition(timer_elapsed(t_1_XX_),outcome(o_1_XX_)).
+result(outcome(o_1_XX_),decrease(resource(r_1_XX_),scalar(1))).
+result(outcome(o_1_XX_),decrease(resource(r_2_XX_),scalar(8))).
 
+precondition(control_event(button(mouse,pressed)),outcome(o_2_XX_)).
 precondition(le(resource(r_2_XX_),scalar(0)),outcome(o_2_XX_)).
-precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(1))).
-result(outcome(o_2_XX_),delete(entity(e_1_XX_))).
+result(outcome(o_2_XX_),increase(resource(r_2_XX_),scalar(9))).
+result(outcome(o_2_XX_),add(entity(e_1_XX_),scalar(1),location(bottom,left))).
 
-precondition(timer_elapsed(t_1_XX_),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),add(entity(e_1_XX_),scalar(1),location(bottom,left))).
+precondition(overlaps(entity(e_1_XX_),entity(e_1_XX_),true),outcome(o_3_XX_)).
+result(outcome(o_3_XX_),decrease(resource(r_1_XX_),scalar(3))).
+result(outcome(o_3_XX_),delete(entity(e_1_XX_))).
 
-precondition(timer_elapsed(patrol_entity_e_2_XX__XX__XX_),outcome(patrol_entity_e_2_XX__XX__XX_)).
-result(outcome(patrol_entity_e_2_XX__XX__XX_),rotates(entity(e_2_XX_),ccw,scalar(10))).
-result(outcome(patrol_entity_e_2_XX__XX__XX_),decrease(resource(r_1_XX_),scalar(1))).
-result(outcome(patrol_entity_e_2_XX__XX__XX_),decrease(resource(r_2_XX_),scalar(6))).
+precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_4_XX_)).
+result(outcome(o_4_XX_),increase(resource(r_1_XX_),scalar(1))).
+result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
+
+precondition(le(resource(r_1_XX_),scalar(0)),outcome(o_5_XX_)).
+result(outcome(o_5_XX_),mode_change(narrative_gating)).
 
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
-result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
-result(tick,moves(entity(e_2_XX_),forward,scalar(4))).
 
 reading(goal(produce),resource(r_1_XX_)).
 reading(good,resource(r_1_XX_)).
-reading(produces,relation(location(bottom,left),entity(e_1_XX_))).
-reading(produces,relation(entity(e_2_XX_),resource(r_1_XX_))).
 reading(consumes,relation(entity(e_2_XX_),entity(e_1_XX_))).
-reading(bad,outcome(patrol_entity_e_2_XX__XX__XX_)).
-reading(good,outcome(o_2_XX_)).
+reading(bad,outcome(o_3_XX_)).
+reading(bad,outcome(o_1_XX_)).
+reading(good,outcome(o_4_XX_)).
 reading(sharing,relation(entity(e_1_XX_),entity(e_2_XX_))).
 reading(maintenance,resource(r_1_XX_)).
 reading(stakes(low),resource(r_2_XX_)).
-reading(outcome_helps,relation(outcome(o_2_XX_),resource(r_1_XX_))).
 ==========
 <ul>
 <li>The goal is to produce satiation</li>
 
 <li>The player will do this by<ul>
 <li>
-compare(le,resource(r(2)))
-	 at the same time as
 attempting to make a [[blue|circle]] and [[red|circle]] touch
 </li>
+<li>
+attempting to make a [[red|circle]] and [[red|circle]] touch
+</li>
+<li>
+	 pressing the mouse button
+	 at the same time as
+compare(le,resource(r(2)))
+</li>
 </ul></li>
+<li>The player will avoid<ul>
+<li>
+	attempting to make a [[red|circle]] and [[red|circle]] touch
+</li>
+</ul>
 <li>The player controls the game by<ul>
 <li>
 	clicking-and-dragging [[red|circle]]s
+</li>
+<li>
+	pressing the mouse button
 </li>
 </ul></ul>

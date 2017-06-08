@@ -46,23 +46,47 @@
 		"choiceLabel": "you treat your family to dinner",
 		"content": "\"Thanks for inviting us out for dinner. I feel like we haven't seen you in ages.\" You smile at your mom, <p> \"Yea well work keeps me busy. I'm happy with it though. I enjoy being able to talk and educate people about climate change.\" </p> Your dad shakes his head but doesn't look mad, <p> \"You <i> could </i> do the same thing on a local level.\" </p>",
 		"choices": [
-			{"gotoId": "atDinnerYouPayContinue"},
+			{"gotoId": "responseToDad1"},
+			{"gotoId": "responseToDad2"},
 		],
-		"conditions" : [
+		"conditions" : [		
 			"academicEnthusiasm gt 4",
 		],
 		"effects": [
 			"set atDinner true","set youArePaying true","incr tension 1"
+		],
+	},
+	{
+		"id": "responseToDad1", 
+		"choiceLabel": "you emit a small groan in response",
+		"request": {"gotoId": "atDinnerYouPayContinue"},
+		"conditions" : [
+			"academicEnthusiasm gt 4",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying true","set smallGroan true"
+		],
+	},
+	{
+		"id": "responseToDad2", 
+		"choiceLabel": "you sigh and mummur \"This argument again....\"",
+		"request": {"gotoId": "atDinnerYouPayContinue"},
+		"conditions" : [
+			"academicEnthusiasm gt 4",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying true","set smallGroan false"
 		],
 	},
 	{
 		"id": "atDinnerYouPayContinue", 
-		"choiceLabel": "respond to dad",
-		"content": "You sigh and groan softly. <p> \"Dad... I love my job the way it is. Global change is just as good as local.\" </p> <p>\"Alright Em. If you say so.\" </p> You sigh and know that he's not convinced... But it's fine. Action is still action, no matter what form it takes.  Sometimes you think your parents don't realize there isn't one form of action better than the other.",
+		"content": "{ifStateCondition|smallGroan eq true| \"Dad... I love my job the way it is. Global change is just as good as local.\" <p>\"Alright Em. If you say so.\" </p>| You rub your temples in frustration. You <i> really </i> do not want to have this argument again.} You are thankful to avoid {ifStateCondition|smallGroan eq false|all of the|some more of this} argument when your mom starts attempting to talk him down. You <i> really </i> don't know why what form of action matters so much to them. Action is action whether it's local or global. ",
 		"choices": [
-			{"gotoId": "changeSubject"},
+			{"gotoId": "changeSubject1"},
+			{"gotoId": "changeSubject2"},
 		],
 		"conditions" : [
+			"youArePaying eq true",
 			"academicEnthusiasm gt 4",
 		],
 		"effects": [
@@ -70,14 +94,38 @@
 		],
 	},
 	{
+		"id": "changeSubject1", 
+		"choiceLabel": "\"Anyways.... Moving on from this topic....\"",
+		"request": {"gotoId": "changeSubject"},
+		"conditions" : [
+			"youArePaying eq true",
+			"academicEnthusiasm gt 4",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying true","set smallGroan false"
+		],
+	},
+	{
+		"id": "changeSubject2", 
+		"choiceLabel": "\"So, how about we switch topics for now?\"",
+		"request": {"gotoId": "changeSubject"},
+		"conditions" : [
+			"youArePaying eq true",
+			"academicEnthusiasm gt 4",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying true","set smallGroan false"
+		],
+	},
+	{
 		"id": "changeSubject", 
-		"choiceLabel": "you decide to try and change the subject",
-		"content": "\"Anyways, dinner's on me. I have some money and I want to do something nice for you guys.\" <p>\"Oh how thoughtful, thank you Em.\" </p> You smile as your mom gives you a quick hug before everyone sits back down at the table.",
+		"content": "\"Dinner's on me. I have some money and I want to do something nice for you guys.\" <p>\"Oh how thoughtful, thank you Em.\" </p> You smile as your mom gives you a quick hug before everyone sits back down at the table.",
 		"choices": [
 			{"gotoId": "UNDinner"},
 			{"gotoId": "AcademicDinner"},
 		],
 		"conditions" : [
+			"youArePaying eq true",
 			"academicEnthusiasm gt 4",
 		],
 		"effects": [
@@ -87,7 +135,7 @@
 	{
 		"id": "atDinnerTheyPay",
 		"choiceLabel": "your parents are paying for you.", 
-		"content": "\"Thanks for coming out tonight. I feel like we haven't seen you in ages.\" <p>\"Yea, I've been busy working with the locals. Shelly's been helping me.\" </p> Your dad laughs a bit at this, <p> \"I always liked her. She knows what's important.\" </p> You sigh at this. You know your parents share different views on how action should be taken. But least they care.",
+		"content": "\"Thanks for coming out tonight. I feel like we haven't seen you in ages.\" <p>\"Yea, I've been busy working with the locals. Shelly's been helping me.\" </p> Your dad laughs a bit at this, <p> \"I always liked her. She knows what's important.\" </p>",
 			"conditions" : [
 			"academicEnthusiasm lt 5",
 		],
@@ -95,15 +143,38 @@
 			"set atDinner true","set youArePaying false","incr tension 1"
 		],
 		"choices": [
-		{"gotoId": "atDinnerTheyPayContinue" },
+		{"gotoId": "responseToDadTheyPay"},
+		{"gotoId": "responseToDadTheyPay1"},
 		]
 	},
 	{
-		"id": "atDinnerTheyPayContinue",
-		"choiceLabel": "you thank them for paying for dinner.", 
-		"content": "You smile a bit sheepishly at your parents \"Thanks for you know...um... paying for dinner and all. I realize I don't have a lot but-\" Your dad interjects, <p> \"I understand that helping with the locals may not pay too well, but that doesn't matter. It's not problem, really. We just wanted to catch with you again. It's been too long.\"</p>",
+		"id": "responseToDadTheyPay", 
+		"choiceLabel": "You sigh and shake your head.",
+		"request": {"gotoId": "atDinnerTheyPayContinueTest"},
+		"conditions" : [
+			"academicEnthusiasm lt 5",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying false","set shyResponse false"
+		],
+	},
+	{
+		"id": "responseToDadTheyPay1", 
+		"choiceLabel": "\"So um....Thanks for paying for dinner\"",
+		"request": {"gotoId": "atDinnerTheyPayContinueTest"},
+		"conditions" : [
+			"academicEnthusiasm lt 5",
+		],
+		"effects": [
+			"set atDinner true","set youArePaying false","set shyResponse true"
+		],
+	},
+	{
+		"id": "atDinnerTheyPayContinueTest",
+		"content": "{ifStateCondition|shyResponse eq true|You smile a bit sheepishly at your parents after saying that. \"|Sometimes your parents frustrate you with the local vs global action debate. But you decide to move on, \"Thanks for paying for dinner.} I realize I don't have a lot but-\"Your dad interjects, <p> \"I understand that helping with the locals may not pay too well, but that doesn't matter. It's not problem, really. We just wanted to catch with you again. It's been too long.\"</p>",
 			"conditions" : [
 			"academicEnthusiasm lt 5",
+			"youArePaying eq false"
 		],
 		"effects": [
 			"set atDinner true","set youArePaying false","decr confidence 1"
@@ -112,9 +183,10 @@
 		{"gotoId": "establishDinnerQuality" },
 		]
 	},
+	
 {
         "id": "UNDinner",
-		"choiceLabel": "say you're glad to see them after all your travels.",
+		"choiceLabel": "\"I'm glad to see you guys. Traveling has been a bit hectic.\"",
 		"conditions" : [
 			"academicEnthusiasm gt 8",
 			"youArePaying eq true"
@@ -122,8 +194,8 @@
 		"request": {"gotoId": "establishDinnerQualityAcademic"},
     },
 	{
-        "id": "AcademicDinner",
-		"choiceLabel": "say you're glad you found time to see them after grading papers.",
+        "id": "AcademicDinner", 
+		"choiceLabel": "\"I'm glad to see you guys, it's a nice break from grading papers.\"",
 		"conditions" : [
 			"academicEnthusiasm gt 4",
 			"academicEnthusiasm lt 9",
@@ -147,14 +219,14 @@
 	},
 	{
 		"id": "establishDinnerQualityAcademicContinue",
-		"choiceLabel": "you listen to your parents",
-		"content": "\"This place is {ifStateCondition|academicEnthusiasm gt 8|kind of fancy|nice and modest}. You're so sweet for taking your old parents out for dinner.\" You laugh at your mom's comment <p> \"You guys aren't <i> that </i> old. Besides, it's been too long since I've seen you guys. I'm sure you have plenty of questions for me anyways.\" </p> Everyone laughs at the comment, knowing how true it is.",
+		"choiceLabel": "\"So how do you like the place?\"",
+		"content": "\"This place is {ifStateCondition|academicEnthusiasm gt 8|kind of fancy|nice and modest}. You're so sweet for taking your old parents out for dinner.\" You laugh at your mom's comment <p> \"You guys aren't <i> that </i> old. Besides, it's been too long since I've seen you guys. I'm sure you have plenty of questions for me anyways.\" </p>",
 		"conditions" : [
 			"academicEnthusiasm gt 4",
 			"youArePaying eq true"
 		],
 		"effects": [
-			"set establishDinnerQuality true","decr tension 1"
+			"set establishDinnerQuality true","decr tension 1","incr confidence 1"
 		],
 	},
 	{
@@ -166,15 +238,25 @@
 			"youArePaying eq false"
 		],
 		"choices": [
-		{"gotoId": "establishDinnerQualityContinue" },
+		{"gotoId": "establishDinnerQuality1" },
+		{"gotoId": "establishDinnerQuality2" },
 		],
 		"effects": [
 			"set establishDinnerQuality true","decr confidence 1"
 		],
 	},
 	{
+        "id": "establishDinnerQuality1",
+		"choiceLabel": "\"So umm...\"",
+		"request": {"gotoId": "establishDinnerQualityContinue"},
+    },
+	{
+        "id": "establishDinnerQuality2",
+		"choiceLabel": "you look down at your lap in attempt to calm down",
+		"request": {"gotoId": "establishDinnerQualityContinue"},
+    },
+	{
 		"id": "establishDinnerQualityContinue", 
-		"choiceLabel": "you listen to your dad reassure you",
 		"content": "Your dad places a reassuring hand on your shoulder. \"Em. Really, it's fine. You don't need to be embarrassed. You're doing great local work to help preserve the environment. You always have worried too much. Honestly, it's fine.\" You try to give a convincing smile but it falls a bit flat. ",
 		"conditions" : [
 			"academicEnthusiasm lt 5",

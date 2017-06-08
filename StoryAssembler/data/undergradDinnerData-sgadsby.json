@@ -13,7 +13,6 @@
 { condition: "inactivityIsBad eq true"},
 { condition: "outro eq true"},
 */
-//condition i'm working on: establishDefenseTomorrow, EmmaJobFutureBeat, EmmaClassTypeBeat. takes about 11 or 12 clicks to go through the entire section.
 		{
 		"id": "establishDefenseTomorrowBeat",
 		"content": "\"So Em, Ready for that defense tomorrow?\"",
@@ -25,10 +24,9 @@
 			"set establishDefenseTomorrow true"
 		],
 		"conditions" : [
-		//	"establishSettingDinner eq true"
+			"establishSettingDinner eq true"
 		]
 	},
-	// \"Besides, we've heard your defense plenty Em, it's good\" You smile and hug both your friends. \"Thanks guys. I'm glad you're here with me tonight.\" \"We wouldn't want to be anywhere else Em.
 	{
 		"id": "yes",
 		"choiceLabel": "\"Yea, I'll be fine tomorrow.\"",
@@ -38,7 +36,7 @@
 			{"gotoId": "maybeNotSure"},
 		],
 		"effects" : [
-			"incr confidence 1"
+			"incr confidence 1","set EmmaDefenseFeeling true"
 		],
 	},
 	{
@@ -62,7 +60,7 @@
 			{"gotoId": "hugThem"},
 		],
 		"effects" : [
-			"decr confidence 1"
+			"decr confidence 1","set EmmaDefenseFeeling true"
 		],
 	},
 	{
