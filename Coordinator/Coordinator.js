@@ -379,7 +379,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "EmmaClassTypeBeat eq true" },
 				{ condition: "friendIsInAcademia eq true" },
 				{ condition: "friendIsNotInAcademia eq true"},
-				{ condition: "friendTension gte 4"},
+				{ condition: "tension gte 4"},
 				{ condition: "friendTensionRelieved eq true"},
 				{ condition: "checkinWithDisagreer eq true"},
 				{ condition: "inactivityIsBad eq true"},
@@ -642,6 +642,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set readSomething false",
 				"set acceptOrDeclineSomething false",
 				"set outroForLanding false",
+				"set talksGiven 0",
 
 				"set academicEnthusiasm 0",			//global stat
 				"set curiosity 5",	//global stat
@@ -1450,11 +1451,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradLecture",
-				text : "<p>You were able to secure a job as an adjunct professor in Environmental Sciences.</p><p>Dr. Tennerson, a senior faculty member, as been sent to evaluate how the class is going.</p><p>Choose what Emma says, but make sure to keep your cool!</p>"
+				text : "<p>Time for your first lecture! Choose what to say to the students and answer any questions that they may have about climate change. Careful though, a bad performance may lead to an unhappy dean!</p>"
 			},
 			{
 				id : "undergradDean",
-				text : "<p>TODO: Scene description</p>"
+				text : "<p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprardy!</p>"
 			},
 			{
 				id : "undergradTravel",
@@ -1462,7 +1463,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradFamilyDinner",
-				text : "<p>TODO: Scene description</p>"
+				text : "<p>You are going out to dinner with your parents. It's been a while since you've had a chance to sit down with them and tell them about what you have been up to.</p><p>Can you keep the tension low while staying true to your beliefs?</p>"
 			},
 			{
 				id : "undergradUN",
@@ -1753,7 +1754,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						age: "20s",
 						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "neutral"},
-							{ state: ["friendTension gte 2"], tag: "upset"}
+							{ state: ["tension gte 2"], tag: "upset"}
 						]
 					},
 					{

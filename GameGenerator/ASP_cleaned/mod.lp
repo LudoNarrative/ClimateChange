@@ -1,4 +1,7 @@
 
+:- outcome(O), not has_precondition(O).
+:- outcome(O), not has_result(O).
+
 :- action(move(Entity,direction(towards,Other))),
    not result(tick,apply_restitution(Entity,Other)),
    entity(Other).
@@ -179,44 +182,3 @@ movement(move(E,D)) :- action(move(E,D)).
 
 :- player_model(Outcome,player_will_attempt),
    trivial(Outcome).
-
-:- player_model(Outcome,player_will_avoid),
-   trivial(Outcome).
-
-:- initialize(set_color(E1,C)),
-   initialize(set_color(E2,C)),
-   initialize(set_sprite(E1,S)),
-   initialize(set_sprite(E2,S)),
-   E1 != E2.
-   
-
-:- player_controls(entity(e(E2))),
-   not player_controls(entity(e(E1))),
-   entity(entity(e(E1))),
-   E1 < E2.
-
-
-:- precondition(timer_elapsed(_),O1),
-   result(O1,modify(increase,R)),
-   precondition(timer_elapsed(_),O2),
-   result(O2,modify(decrease,R)).
-
-:- reading(good,O),
-   trivial(O).
-
-:- action(apply_restitution(E,E)),
-   static(E).
-
-
-:- condition(overlaps(E1,E2,true)),
-   action(move(E1,direction(away,E2))),
-   {action(move(E1,_))} 1.
-
-
-:- condition(overlaps(E1,E2,true)),
-   action(move(E2,direction(away,E1))),
-   {action(move(E2,_))} 1.
-
-{label(entity(E),E)} :- entity(entity(E)).
-{label(resource(E),E)} :- resource(resource(E)).
-:- 2 {label(E,_)}, entity(E).
