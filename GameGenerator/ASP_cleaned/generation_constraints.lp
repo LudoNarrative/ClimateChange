@@ -1,4 +1,7 @@
 
+:- outcome(O), not has_precondition(O).
+:- outcome(O), not has_result(O).
+
 :- action(move(Entity,direction(towards,Other))),
    not result(tick,apply_restitution(Entity,Other)),
    entity(Other).
@@ -254,9 +257,6 @@ satisfies(le,decrease).
 :- entity(entity(e(N))), N >= 2, not entity(entity(e(N-1))).
 :- timer(t(N)), N >= 2, not timer(t(N-1)).
 
-
-:- outcome(O), not has_precondition(O).
-:- outcome(O), not has_result(O).
 
 :- 2 {precondition(C,tick)}.
 
