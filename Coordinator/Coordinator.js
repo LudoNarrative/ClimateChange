@@ -12,7 +12,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//scenes played when you hit Begin
 		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"];		
 		State.set("scenes", playGameScenes);
-		Display.initTitleScreen(this, State, scenes);		//start up UI
+		Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up UI
 
 	}
 
