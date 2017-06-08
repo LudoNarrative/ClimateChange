@@ -457,12 +457,8 @@ control_event(E,modify(R)) :-
 	
 		
 %#show precondition/2.
-#project resource/1.
-#project entity/1.
-#project timer/1.
 #project player_controls/1.
 #project behavior/2.
 #project controlScheme/2.
 #project controlLogic/1.
-#project action/1.
-#project condition/1.
+
