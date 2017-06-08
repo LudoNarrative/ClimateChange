@@ -132,7 +132,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
     "effects" : [
       "set audienceAsksQuestion true"
     ],
-    "condition" : [
+    "conditions" : [
       "studentGivesPresentation eq true"
     ]
   },
@@ -201,7 +201,7 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id" : "theyExtinct",
     "choiceLabel" : "They're extinct, aren't they?",
-    "request" : {"gotoId" : "aidenPresentsSlide2"},
+    "request": {"gotoId": "aidenPresentsSlide2"},
   },
 
   {
@@ -216,15 +216,14 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id" : "heartPunch",
     "choiceLabel" : "You bring your hand to your heart.",
-    "request" : "aidenPresentsSlide3",
+    "request": {"gotoId": "aidenPresentsSlide3"},
   },
 
   {
     "id" : "heartSolid",
     "choiceLabel" : "Your heart is made of stone, darn it!",
-    "request" : "aidenPresentsSlide3",
+    "request": {"gotoId": "aidenPresentsSlide3"},  
   },
-
   {
     "id" :  "aidenPresentsSlide3",
     "content" : "Aiden straightens their back. \"And so, I'll be presenting my thesis on how habit fragmentation, climate change, and science fraud has contributed to the undeserved end of a wonderful species,\" Aiden says. \"And how we can take care of more species in the future by focusing locally.\" Their eyes are blazing with passion.",
@@ -271,13 +270,13 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id" : "ohShit",
     "choiceLabel" : "Did she really just say that?",
-    "request" : "audienceAsksAiden3"
+    "request" : {"gotoId" : "audienceAsksAiden3"},
   },
 
   {
     "id" : "wowPoint",
     "choiceLabel" : "I mean. She has a point.",
-    "request" : "audienceAsksAiden3"
+    "request" : {"gotoId": "audienceAsksAiden3"},
   },
 
   {
