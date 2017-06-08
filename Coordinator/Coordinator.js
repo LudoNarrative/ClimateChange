@@ -642,6 +642,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set readSomething false",
 				"set acceptOrDeclineSomething false",
 				"set outroForLanding false",
+				"set talksGiven 0",
 
 				"set academicEnthusiasm 0",			//global stat
 				"set curiosity 5",	//global stat
@@ -1450,7 +1451,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradLecture",
-				text : "<p>You were able to secure a job as an adjunct professor in Environmental Sciences.</p><p>Dr. Tennerson, a senior faculty member, as been sent to evaluate how the class is going.</p><p>Choose what Emma says, but make sure to keep your cool!</p>"
+				text : "<p>Time for your first lecture! Choose what to say to the students and answer any questions that they may have about climate change. Careful though, a bad performance may lead to an unhappy dean!</p>"
 			},
 			{
 				id : "undergradDean",
@@ -1753,7 +1754,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						age: "20s",
 						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "neutral"},
-							{ state: ["friendTension gte 2"], tag: "upset"}
+							{ state: ["tension gte 2"], tag: "upset"}
 						]
 					},
 					{

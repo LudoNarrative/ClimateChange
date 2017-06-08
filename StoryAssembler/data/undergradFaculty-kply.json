@@ -1,10 +1,43 @@
 [ {
     "id": "dummyFragment",
-    "content": "dummy",
-    "effects":[
+    "content": "select your character",
+    "effects": [
+      "set establishSetting true"
+    ],
+    "choices":[
+      {"gotoId": "setSkeptical"},
+      {"gotoId": "setEnthusiastic"},
+      {"gotoId": "setShy"}
+    ]
+  },
+
+  {
+    "id": "setSkeptical",
+    "content": "picked Franklin",
+    "choiceLabel": "Skeptical Franklin",
+    "effects": [
       "set skepticalStudent true"
     ]
   },
+
+    {
+    "id": "setEnthusiastic",
+    "content": "picked Elika",
+    "choiceLabel": "enthusiastic Elika",
+    "effects": [
+      "set enthusiasticStudent true"
+    ]
+  },
+
+    {
+    "id": "setShy",
+    "content": "picked Aiden",
+    "choiceLabel": "Shy Aiden",
+    "effects": [
+      "set shyStudent true"
+    ]
+  },
+
   {
     "id": "establishSettingSkeptical ",
     "content": "You have been waiting for this day for a long time. It seems like it was just yesterday that Franklin stood up in your lecture and questioned the existence of climate change, and now you are about to watch his PhD defense about climate change as a member of the committee. ",
@@ -121,6 +154,7 @@
   },
   {
     "id": "elikaEasyQuestion",
+    "choiceLabel": "Give her an easy question",
     "content": "You decide to help Elika by throwing her an easier question. <p>\"What can we do to slow down the extinction of all the different species of animals?\"</p>",
     "choices": [
       {
@@ -135,6 +169,7 @@
   },
   {
     "id": "elikaMediumQuestion",
+    "choiceLabel": "General question",
     "content": "You decide to go with a more general question. <p>\"So what exactly is this great 'extinction' and how long until it happens?\"</p>",
     "choices": [
       {
@@ -149,6 +184,7 @@
   },
   {
     "id": "elikaHardQuestion",
+    "choiceLabel": "Challenge her a little",
     "content": "You decide to challenge Elika a little bit. <p>\"I agree that overfishing and overhunting are huge problems, but fishing and hunting are also necessary to provide humanity with the resources we need to survive. My question is: How do we decide how much fishing or hunting we can do before it is too much?\"</p>",
     "choices": [
       {
