@@ -255,15 +255,22 @@
       "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
       "choiceLabel": "The plane is landing.",
       "effects": [
-        "set outroForLanding true"
+        "set outroForLanding true",
+        "set dealWithSomeone false",
+        "set readNewspaper false",
+        "set readEmail false"
       ],
       "repeatable" : "true",
+    },
+
+    {
+      "id" : "endingScene",
+      "content" : "Well, you sure managed to get a lot out of your travels - and you've only been to three talks! Imagine how much farther you can go, how many more people you can reach... and as you look out the plane window, you can't wait for your next landing.",
       "conditions" : [
+        "talksGiven gte 3",
         "dealWithSomeone eq true",
         "readNewspaper eq true",
         "readEmail eq true"
       ]
     },
-
-
 ]
