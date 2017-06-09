@@ -287,7 +287,8 @@ def run_once(rules,settings,player_model,depth):
 
             rules_fired.append(outcome)
             for action in rules[outcome]['results']['modify']:
-                next_state[action[1]] = [modifiers[action[0]](next_state[action[1]][0],action[2][0])]
+                if action[1] in next_state:
+                    next_state[action[1]] = [modifiers[action[0]](next_state[action[1]][0],action[2][0])]
             for action in rules[outcome]['results']['add']:
                 next_state[action][0] += 1
             for action in rules[outcome]['results']['delete']:
@@ -376,7 +377,8 @@ if __name__ == '__main__':
         depth = 20
         display = False
 
-        player_model_mappings = {'player_will_attempt':0.7,
+        player_model_mappings = {'player_must_do':0.9,
+                                'player_will_attempt':0.7,
                                  'undetermined':0.5,
                                  'must_happen':1,
                                  'player_will_avoid':0.2,

@@ -81,9 +81,6 @@
    not precondition(compare(_,_),O).
 
 
-:- result(O,delete(E)),
-    result(O,add(E,_,_)). 
-
     
 :-  result(Outcome,mode_change(game_loss;narrative_gating)),
     player_controls_outcome(Outcome).
@@ -100,8 +97,6 @@
 :-  precondition(control_event(click(E)),O),
     result(O,add(E,_,_)).
     
-:- action(modify(_,property(Property,E))),
-   not balanced(property(Property,E)).
 
 :- 5 { initialize(add(E,L,C))},
    entity(E).
@@ -508,3 +503,33 @@ player_controls_resource(R,Dir) :-
    not player_controls_resource(R,_).
    
 %:- monotonic(R), not allowed(monotonic(R)).
+
+
+:- action(look_at(E,E)).
+
+
+%%SIMPLICITY
+
+:- 3 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)},
+    entity(E1),
+    entity(E2),
+    polarity(POLARITY).
+
+
+:- 2 {result(O,add(E,_,_))}, outcome(O).
+
+:- 3 {precondition(_,Outcome)},
+   outcome(Outcome),
+   not has_overlaps(Outcome).
+:- 6 {precondition(_,Outcome)},
+   outcome(Outcome).
+
+:- 4 {result(Outcome,_)},
+   outcome(Outcome),
+   Outcome != tick.
+:- N + 1 {precondition(_,_)},
+   preconditions_allowed(N)  .
+
+
+:- N + 1 {result(_,_)},
+   preconditions_allowed(N).

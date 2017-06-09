@@ -1,26 +1,11 @@
 
-:- 3 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)},
-    entity(E1),
-    entity(E2),
-    polarity(POLARITY).
-
-
-:- 2 {result(O,add(E,_,_))}, outcome(O).
-
+   
 %preconditions_allowed_per(Outcome,N) :- N = 2 + A + B,
 %					A = {precondition(overlaps(E),Outcome)},
 %					B = {precondition(collide(E1,E2),Outcome)} ,
 %					outcome(Outcome).
 
 has_overlaps(Outcome) :- precondition(overlaps(E),Outcome).
-:- 3 {precondition(_,Outcome)},
-   outcome(Outcome),
-   not has_overlaps(Outcome).
-:- 6 {precondition(_,Outcome)},
-   outcome(Outcome).
-
-:- 4 {result(Outcome,_)},
-   outcome(Outcome).
 
 overlaps(N) :- N =  {condition(overlaps(E))}.
 avatar_controls(4) :- controlScheme(_,tank;_,asteroids;_,cardinal).
@@ -48,12 +33,6 @@ preconditions_allowed(N) :- N = (E+1)*(R+1) + A  + C - D,
 %%    preconditions_allowed(N). [ 1@2 ]
 
 
-:- N + 1 {precondition(_,_)},
-   preconditions_allowed(N)  .
-
-
-:- N + 1 {result(_,_)},
-   preconditions_allowed(N).
 
 
 simple(R) :- resource(R),
