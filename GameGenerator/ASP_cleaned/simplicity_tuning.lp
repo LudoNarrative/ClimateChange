@@ -79,8 +79,8 @@ complex(entities) :-
 
 
 readings(N) :- N = {reading(_,_)}.
-:- readings(N),
-   N > 15.
+%:- readings(N),
+%   N > 15.
 %#minimize { N : readings(N)}.
 
 
