@@ -10,7 +10,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];
 
 		//scenes played when you hit Begin
-		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"];		
+		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"];
 		State.set("scenes", playGameScenes);
 		Display.initTitleScreen(this, State, scenes);		//start up UI
 
@@ -87,7 +87,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				return 0;
 			case "undergradUN": 		//this should return epilogue eventually
 				return 0;
-			
+
 			case "undergradFaculty": 		//this should return epilogue eventually
 				return 0;
 		}
@@ -1459,7 +1459,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradTravel",
-				text : "<p>TODO: Scene description</p>"
+				text : "<p>Your accomplishments in the academic field has set you on a plane to travel all over the world, delivering talks about climate change. Aim for fame, but keep an eye on your global footprint!</p>"
 			},
 			{
 				id : "undergradFamilyDinner",
