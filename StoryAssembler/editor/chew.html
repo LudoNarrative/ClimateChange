@@ -88,32 +88,13 @@
                 format: "checkbox"
               },
 
-              //Content
-            content: {
-              "type": "object",
-              "format": "table",
-              "title": "Content",
-              "options": {
-                "keep_oneof_values": false,
-              },
-              "oneOf": [
-                {
-                  "title": "Text",
-                  "properties": {
-                    "text": {
-                      "title": "Text",
-                      "type" : "string",
-                      "format" : "textarea",
-                      "input_height" : "300px",
-                      "default" : "placeholder"
-                    }
-                  },
-                  "required": ["text"]
-                },
-                {
-                  "title": "Request",
-                  "properties": {
-                    "type": {
+
+ //Content
+
+            
+                  Request: {
+                  properties: {
+                    type: {
                       "title": "Type",
                       "type": "string",
                       "enum": [
@@ -126,10 +107,15 @@
                       "type": "string",
                     }
                   },
-                  "required": ["value"]
-                }
-              ]
+                 "required": ["value"]
+                },
+
+                   Content: {
+              type: "string",
+              format: "textarea"
             },
+
+                
 
             //Choices
             choices: {
