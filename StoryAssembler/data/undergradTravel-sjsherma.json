@@ -25,13 +25,14 @@
       {"gotoId" : "friendlyPerson"},
       {"gotoId" : "recognizeEmma"}
     ]
-  }
+  },
 
 
 //person one
 
 {
   "id" : "nosyPerson",
+  "unavailableChoiceLabel" : "You recognize this kind of person - you'd rather not talk to them again.",
   "choiceLabel" : "You turn to talk to the person who's leaning very, very close to you.",
   "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,\" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"'Global Warming Is At An All Time High'. Funny, huh?\"",
   "effects" : [
@@ -82,6 +83,7 @@
 //person two
   {
     "id" : "recognizeEmma",
+    "unavailableChoiceLabel" : "This person is facing away from you. They probably don't want to be disturbed.",
     "choiceLabel" : "Find out why the person sitting next to you is staring at you.",
     "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Richards?\"",
     "effects" : [
@@ -121,24 +123,36 @@
   {
     "id" : "friendlyPerson",
     "choiceLabel" : "Chat with the friendly-looking person sitting across the aisle.",
-    "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. You almost forget about your worries as you approach your destination.",
+    "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. At one point they ask the reason behind your travel.",
     "effects" : [
       "set talkSomeone true",
       "set dealWithSomeone true",
-      "incr composure 1"
+      "incr composure 1",
     ],
     "choices" : [
-      {"gotoId" : "talkStuff"}
-    ]
+      {"gotoId" : "doingImportant"},
+      {"gotoId" : "justDoingIt"},
+      {"gotoId" : "noReason"},
+    ],
   },
 
   {
-    "id" : "talkStuff",
-    "choiceLabel" : "Talk about stuff",
-    "content" : "You two talk about stuff."
+    "id" : "noReason",
+    "choiceLabel" : "Oh, just thought I'd go.",
+    "content" : "\"Oh, cool! I wish I could travel on a whim like that,\" they say wistfully.",
   },
 
-  //read newspaper
+  {
+    "id" : "doingImportant",
+    "choiceLabel" : "I'm planning to give an important talk about the effects of climate change.",
+    "content" : "\"Oh wow!\" they say, eyes wide. \"That does sound important! I wish you well!\"",
+  },
+
+  {
+    "id" : "justDoingIt",
+    "choiceLabel" : "I'm heading over to give a talk about climate change. No big deal.",
+    "content" : "\"Climate change? That sounds like quite the big deal,\" they say. \"I mean, climate change can impact all of us. I wish you well.\" ",
+  },
 
   {
     "id": "readNewspaper",
@@ -202,7 +216,7 @@
       "set readSomething true"
     ],
     "choices" : [
-      {"gotoId" : "acceptOrDeclineBusinessEmail"},
+      {"gotoId" : "acceptOrDeclineSomething"},
       {"condition" : "readFamily eq true"},
       {"condition" : "readEmail eq true"}
     ],
@@ -287,7 +301,7 @@
       "id" : "endingScene",
       "content" : "Well, you sure managed to get a lot out of your travels - and you've only been to three talks! Imagine how much farther you can go, how many more people you can reach... and as you look out the plane window, you can't wait for your next landing.",
       "conditions" : [
-        "talksGiven gte 3"
+        "talksGiven gte 3",
         "dealWithSomeone eq true",
         "readNewspaper eq true",
         "readEmail eq true"

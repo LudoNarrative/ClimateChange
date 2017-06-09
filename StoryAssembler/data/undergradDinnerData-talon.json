@@ -95,14 +95,6 @@
 		"id": "tensionInTheRoom1_t",
 		"choiceLabel": "Continue",
 		"content": "\"Yeah, but….\" Shelly started.<br><br>\"But what, Shelly?\" Zanita looked hard across the table.<br><br><em>This happens every time those two get together.</em><br>\"It’s great, really, Z. Right, Shelly? Isn’t it great?\" You say, trying to save the situation.<br>\"Whatever, Shelly. You don’t like the way I cook? You can leave.\" Zanita says as a fork clatters to the table. The ringing in your ears makes you wince.<br><br>There’s a long silence at the table.<br><br>\"Don’t be so sensitive, Zanita…. It was just a joke.\"",
-		"choices" : [
-			{"gotoId" : "tensionInTheRoom2_t"}
-		],
-		"conditions": [
-			"tension lt 4",
-			"friendIsInAcademia eq true",
-			"friendIsNotInAcademia eq true"
-		],
 		"effects": [
 			"incr tension 4"
 		]
