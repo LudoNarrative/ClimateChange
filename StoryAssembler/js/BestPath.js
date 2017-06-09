@@ -122,9 +122,11 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 		// If there are any wants with order "first", we simply return only those paths.
 		var firstWants = underscore.where(wants, {order: Number.NEGATIVE_INFINITY});
 		if (firstWants.length > 0) {
-			return pathsPrunedToWants(paths, firstWants.map(function(want){
+			var prunedPaths = pathsPrunedToWants(paths, firstWants.map(function(want){
 				return want.request;
 			}));
+			if (prunedPaths.length == 0) { console.log("Warning! we have 'firstWants' but no paths satisfy those wants!", firstWants); }
+			return prunedPaths;
 		}
 		
 		// If there are at least two wants with different numeric orders, return only the wants with the lowest defined order number. Done!
@@ -267,7 +269,7 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 		var pathToHere;
 		log(rLevel, "findAllSatisfyingPaths starting from '" + chunk.id + "' and satisfying wants: " + getWantVals(originalWants));
 		
-		var satisfiedWants = [];
+		var unsatisfiedWants = [];
 		var gotoFlag = false;
 		
 		//if there's a goto want, fulfill that and ignore all other wants
@@ -282,33 +284,35 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 
 		// Otherwise, determine: does this chunk directly make one or more Wants true, or make progress towards one of them being true?
 		if (!gotoFlag) {
-			originalWants.forEach(function(want) {
+			originalWants.forEach(function(want) {		//for each original want...
 				var satisfied = false;
-				if (want.type === "id") {
+				if (want.type === "id") {			//if the type is id, if the id matches it satisfies
 					satisfied = (chunk.id === want.val);
 					if (satisfied) log(rLevel, "-->id makes '" + want.val + "' true");
-				} else { // type === condition
+				} 
+				else {					//if condition, then if an effect makes it true, then it satisfies
 					if (chunk.effects) {
 						satisfied = State.wouldAnyMakeMoreTrue(chunk.effects, want.val);
 					}
 					if (satisfied) log(rLevel, "-->an effect makes '" + want.val + "' true");
 				}
+
 				if (satisfied) {
 					pathToHere = createPathOrAddWant(pathToHere, chunk.id, want);
 				} else {
-					satisfiedWants.push(want);
+					unsatisfiedWants.push(want);
 				}
 			});
 		}
 
-		if (satisfiedWants.length !== originalWants.length) {
-			log(rLevel, "--> remaining wants: " + (satisfiedWants.length ? getWantVals(satisfiedWants) : "none"));
-		} else {
-			log(rLevel, "nothing in " + chunk.id + " directly made any Wants true");
-		}
+		//log message
+		if (unsatisfiedWants.length !== originalWants.length) {
+			log(rLevel, "--> remaining wants: " + (unsatisfiedWants.length ? getWantVals(unsatisfiedWants) : "none"));
+		} else { log(rLevel, "nothing in " + chunk.id + " directly made any Wants true"); }
+
 		// If we still have unsatisfied wants, check for outgoing nodes; otherwise we can stop here.
 		var choiceDetails = [];
-		if (satisfiedWants.length > 0) { 
+		if (unsatisfiedWants.length > 0) { 
 			// See if any outgoing nodes can meet any of our wants. If so, add paths for each that start with this node, noting any satisfied Wants discovered along the way.
 			if (chunk.request) {
 				var req;
@@ -322,7 +326,7 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 					req = Request.byCondition(chunk.request.val);
 				}
 				log(rLevel, "We will now search for the request in chunk " + chunk.id + ".");
-				var validPaths = searchFromHere(paths, chunk, skipList, req, satisfiedWants, pathToHere, rLevel, false);
+				var validPaths = searchFromHere(paths, chunk, skipList, req, unsatisfiedWants, pathToHere, rLevel, false);
 				if (validPaths.length > 0 && validPaths[0].route) {
 					paths = addNewIfUnique(paths, validPaths);
 				}
@@ -332,7 +336,7 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 			// Even if we've satisfied all our wants, we need to recurse so we know what nodes this choice leads to.
 			log(rLevel, "We will now search through the " + chunk.choices.length + " choice(s) in chunk " + chunk.id + ".");
 
-			populateChoices(chunk, skipList, rLevel, paths, satisfiedWants, pathToHere, choiceDetails);
+			populateChoices(chunk, skipList, rLevel, paths, unsatisfiedWants, pathToHere, choiceDetails);
 
 			log(rLevel, "Search through choice(s) of " + chunk.id + " finished.")
 		}
@@ -355,7 +359,13 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 			// Otherwise, we found something and added it to paths.
 			paths.forEach(function(path) {
 				path.choiceDetails = choiceDetails;
+				if (typeof pathToHere !== "undefined") {
+					if (typeof pathToHere.satisfies !== "undefined") {
+						path.satisfies = path.satisfies.concat(pathToHere.satisfies);		//if pathToHere satisfied things, add that too
+					}
+				}
 			});
+
 			log(rLevel, "**> found these paths: " + pathsToStr(paths));	
 			return paths;
 		}
