@@ -37,6 +37,12 @@ define([], function() {
 		document.getElementById("storyArea").appendChild(el);
 	}
 
+	var getStoryText = function() {
+		var theSpan = document.getElementById("storyArea").getElementsByTagName("span")[0];
+		if (theSpan) { return theSpan.innerText; }
+		else { return undefined; }
+	}
+
 	// Add a choice to the choice window.
 	var addChoice = function(choice) {
 		var el = makeEl("div", choice.text, "choice");
@@ -244,6 +250,7 @@ define([], function() {
 		clearText: clearText,
 		clearChoices: clearChoices,
 		addStoryText: addStoryText,
+		getStoryText: getStoryText,
 		addChoice: addChoice,
 		diagnose: diagnose,
 		addVarChangers : addVarChangers
