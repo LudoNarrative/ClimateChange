@@ -93,6 +93,10 @@
       {"gotoId" : "iCanDoThati"},
       {"gotoId" : "interestingi"},
       {"gotoId" : "gottaPassi"}
+    ],
+    "conditions" : [
+      "EmmaClassTypeBeat eq true",
+      "EmmaJobFutureBeat eq true"
     ]
   },
     {
