@@ -18,6 +18,9 @@
 		//"choiceLabel": "rodrigoSadKnowledge choice.",
 		"id": "rodrigoSadKnowledge",
 		"speaker": "volunteer",
+		"conditions": [
+			"emmaPositiveRejoinder eq true"
+		],
 		"content": "\"{name|protagonist}, You an intelligent woman, you must know that this relocation won't change anything. The water is going to hell.\"",
 		"choices": [
 			{
