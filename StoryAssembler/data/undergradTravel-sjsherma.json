@@ -25,7 +25,7 @@
       {"gotoId" : "friendlyPerson"},
       {"gotoId" : "recognizeEmma"}
     ]
-  }
+  },
 
 
 //person one
@@ -121,21 +121,35 @@
   {
     "id" : "friendlyPerson",
     "choiceLabel" : "Chat with the friendly-looking person sitting across the aisle.",
-    "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. You almost forget about your worries as you approach your destination.",
+    "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. At one point they ask the reason behind your travel.",
     "effects" : [
       "set talkSomeone true",
       "set dealWithSomeone true",
-      "incr composure 1"
+      "incr composure 1",
     ],
     "choices" : [
-      {"gotoId" : "talkStuff"}
-    ]
+      {"gotoId" : "doingImportant"},
+      {"gotoId" : "justDoingIt"},
+      {"gotoId" : "noReason"},
+    ],
   },
 
   {
-    "id" : "talkStuff",
-    "choiceLabel" : "Talk about stuff",
-    "content" : "You two talk about stuff."
+    "id" : "noReason",
+    "choiceLabel" : "Oh, just thought I'd go.",
+    "content" : "\"Oh, cool! I wish I could travel on a whim like that,\" they say wistfully.",
+  },
+
+  {
+    "id" : "doingImportant",
+    "choiceLabel" : "I'm planning to give an important talk about the effects of climate change.",
+    "content" : "\"Oh wow!\" they say, eyes wide. \"That does sound important! I wish you well!\"",
+  },
+
+  {
+    "id" : "justDoingIt",
+    "choiceLabel" : "I'm heading over to give a talk about climate change. No big deal.",
+    "content" : "\"Climate change? That sounds like quite the big deal,\" they say. \"I mean, climate change can impact all of us. I wish you well.\" ",
   },
 
   //read newspaper
@@ -202,7 +216,7 @@
       "set readSomething true"
     ],
     "choices" : [
-      {"gotoId" : "acceptOrDeclineBusinessEmail"},
+      {"gotoId" : "acceptOrDeclineSomething"},
       {"condition" : "readFamily eq true"},
       {"condition" : "readEmail eq true"}
     ],
