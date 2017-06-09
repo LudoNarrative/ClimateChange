@@ -29,6 +29,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	}
 
 	var startScene = function(_coordinator, id, loadIntro) {
+
+		_coordinator.cleanState(id);
 		var bg = _coordinator.loadBackground(id);
 		initSceneScreen(State, bg, id);
 		if (loadIntro) { _coordinator.loadSceneIntro(id); }
@@ -38,7 +40,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		_coordinator.startGame(id);
 	}
 
-	var initTitleScreen = function(_Coordinator, _State, scenes) {
+	var initTitleScreen = function(_Coordinator, _State, scenes, playGameScenes) {
 
 		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
 		
@@ -52,7 +54,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			id: 'begin',
 			click: function() {
 				$( "#blackout" ).fadeIn( "slow", function() {
-	    			startScene(_Coordinator, scenes[0], true);
+	    			startScene(_Coordinator, playGameScenes[0], true);
   				});
 			}
 		}).appendTo('body');

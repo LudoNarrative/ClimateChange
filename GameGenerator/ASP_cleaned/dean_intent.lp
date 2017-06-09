@@ -12,7 +12,8 @@
 #const max_resource_change_per = 2.
 #const max_conditions_per = 2.
 
-required(sharing).
+required(survive).
+required(help).
 required(maintenance).
 
 label(resource(r(1)),composure).
@@ -22,7 +23,8 @@ label(entity(e(3)),harm).
 
 :- many(entity(e(1))).
 :- not reading(maintenance,resource(r(1))).
-
+:- not reading(survive,entity(e(3))).
+:- not reading(help,relation(entity(e(2)),player)).
 
 %:- action(add(entity(e(2)),_)).
 %:- action(delete(entity(e(2)))).
