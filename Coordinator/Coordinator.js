@@ -620,6 +620,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "onAPlane eq true"},
 				{ condition: "reminisce eq true"},
 				{ condition: "talkExposition eq true"},
+				{ condition: "talksGiven gte 3"},
 				{ condition: "dealWithSomeone eq true"},
 				{ condition: "readSomething eq true"},
 				{ condition: "acceptOrDeclineSomething eq true"},
