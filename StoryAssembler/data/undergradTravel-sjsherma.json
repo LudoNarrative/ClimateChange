@@ -7,7 +7,7 @@
       "onAPlane eq true"
     ],
     "choices" : [
-      {"condition" : "talkSomeone eq true"},
+      {"gotoId" : "talkSomeone"},
       {"gotoId" : "readNewspaper"},
       {"gotoId" : "readEmail"}
     ],
@@ -15,6 +15,17 @@
   },
 
   // People to deal with - each changes based on fame?
+
+  {
+    "id" : "talkSomeone",
+    "choiceLabel" : "Talk to a fellow passenger.",
+    "content" : "You look around at the people sitting near you.",
+    "choices" : [
+      {"gotoId" : "nosyPerson"},
+      {"gotoId" : "friendlyPerson"},
+      {"gotoId" : "recognizeEmma"}
+    ]
+  }
 
 
 //person one
@@ -72,7 +83,7 @@
   {
     "id" : "recognizeEmma",
     "choiceLabel" : "Find out why the person sitting next to you is staring at you.",
-    "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Banks?\"",
+    "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Richards?\"",
     "effects" : [
       "set talkSomeone true",
       "set dealWithSomeone true"
@@ -109,13 +120,22 @@
 
   {
     "id" : "friendlyPerson",
-    "choiceLabel" : "Chat with the friendly-looking person sitting next to you.",
+    "choiceLabel" : "Chat with the friendly-looking person sitting across the aisle.",
     "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. You almost forget about your worries as you approach your destination.",
     "effects" : [
       "set talkSomeone true",
       "set dealWithSomeone true",
       "incr composure 1"
     ],
+    "choices" : [
+      {"gotoId" : "talkStuff"}
+    ]
+  },
+
+  {
+    "id" : "talkStuff",
+    "choiceLabel" : "Talk about stuff",
+    "content" : "You two talk about stuff."
   },
 
   //read newspaper
@@ -267,7 +287,7 @@
       "id" : "endingScene",
       "content" : "Well, you sure managed to get a lot out of your travels - and you've only been to three talks! Imagine how much farther you can go, how many more people you can reach... and as you look out the plane window, you can't wait for your next landing.",
       "conditions" : [
-        "talksGiven gte 3",
+        "talksGiven gte 3"
         "dealWithSomeone eq true",
         "readNewspaper eq true",
         "readEmail eq true"

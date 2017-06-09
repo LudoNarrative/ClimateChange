@@ -10,7 +10,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest"];
 
 		//scenes played when you hit Begin
-		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"];		
+		var playGameScenes = ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"];
 		State.set("scenes", playGameScenes);
 		Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up UI
 
@@ -87,7 +87,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				return 0;
 			case "undergradUN": 		//this should return epilogue eventually
 				return 0;
-			
+
 			case "undergradFaculty": 		//this should return epilogue eventually
 				return 0;
 		}
@@ -620,6 +620,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "onAPlane eq true"},
 				{ condition: "reminisce eq true"},
 				{ condition: "talkExposition eq true"},
+				{ condition: "talksGiven gte 3"},
 				{ condition: "dealWithSomeone eq true"},
 				{ condition: "readSomething eq true"},
 				{ condition: "acceptOrDeclineSomething eq true"},
@@ -1459,7 +1460,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradTravel",
-				text : "<p>TODO: Scene description</p>"
+				text : "<p>Your accomplishments in the academic field has set you on a plane to travel all over the world, delivering talks about climate change. Aim for fame, but keep an eye on your global footprint!</p>"
 			},
 			{
 				id : "undergradFamilyDinner",
@@ -2227,7 +2228,32 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "undergradFaculty",
-				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/games-5-18/lecture_test_10.lp'],
+				aspFilepaths: [
+"GameGenerator/ASP_cleaned/games/dean_1.lp",
+"GameGenerator/ASP_cleaned/games/dean_2.lp",
+"GameGenerator/ASP_cleaned/games/dean_3.lp",
+"GameGenerator/ASP_cleaned/games/dean_4.lp",
+"GameGenerator/ASP_cleaned/games/dean_5.lp",
+"GameGenerator/ASP_cleaned/games/dean_6.lp",
+"GameGenerator/ASP_cleaned/games/dean_7.lp",
+"GameGenerator/ASP_cleaned/games/dean_8.lp",
+"GameGenerator/ASP_cleaned/games/dean_9.lp",
+"GameGenerator/ASP_cleaned/games/dean_10.lp",
+"GameGenerator/ASP_cleaned/games/dean_11.lp",
+"GameGenerator/ASP_cleaned/games/dean_12.lp",
+"GameGenerator/ASP_cleaned/games/dean_13.lp",
+"GameGenerator/ASP_cleaned/games/dean_14.lp",
+"GameGenerator/ASP_cleaned/games/dean_15.lp",
+"GameGenerator/ASP_cleaned/games/dean_16.lp",
+"GameGenerator/ASP_cleaned/games/dean_17.lp",
+"GameGenerator/ASP_cleaned/games/dean_18.lp",
+"GameGenerator/ASP_cleaned/games/dean_19.lp",
+"GameGenerator/ASP_cleaned/games/dean_20.lp",
+"GameGenerator/ASP_cleaned/games/dean_21.lp",
+"GameGenerator/ASP_cleaned/games/dean_22.lp",
+"GameGenerator/ASP_cleaned/games/dean_23.lp",
+"GameGenerator/ASP_cleaned/games/dean_24.lp",
+"GameGenerator/ASP_cleaned/games/dean_25.lp",],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
 			{

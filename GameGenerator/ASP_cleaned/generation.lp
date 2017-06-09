@@ -263,8 +263,6 @@ result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_spin(EN
 
 result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_chase(ENTITY))).
 
-:- action(look_at(E,E)).
-
 %CLICK TO MOVE
 
 precondition(control_event(button(mouse, pressed)),outcome(click_to_move(ENTITY))) :-
@@ -383,9 +381,10 @@ behaviors(chase;
 	  flee;
 	  patrol;
 	  pingpong;
-	  wander,
+	  wander;
       orbit).
-
+	  
+	  
 
 {behavior(ENTITY,BEHAVIOR) : behaviors(BEHAVIOR)} 2 :- entity(ENTITY).
 
@@ -454,11 +453,19 @@ control_event(E,modify(R)) :-
 %resource_checks(N) :- N = {precondition(compare(_,_),_)}.
 
 %:- resource_checks(N), N > 3.
-	
-		
+controlScheme(SCHEME) :- controlScheme(ENTITY,SCHEME).
+behavior(BEHAVIOR)  :-  behavior(ENTITY,BEHAVIOR) .
 %#show precondition/2.
 #project player_controls/1.
-#project behavior/2.
-#project controlScheme/2.
+#project behavior/1.
+#project controlScheme/1.
 #project controlLogic/1.
+#project pruned_action/1.
 
+pruned_action(add(E)) :- action(add(E,_,_)).
+pruned_action(delete(E)) :- action(delete(E)).
+pruned_action(modify(Dir,R)) :- action(modify(Dir,R)).
+pruned_action(rotates(E,D,V)) :- action(rotates(E,D,V)).
+pruned_action(rotate_to(E)) :- action(rotate_to(E)).
+pruned_action(look_at(E,E2)) :- action(look_at(E,E2)).
+pruned_aciton(move(E,D)) :- action(move(E,D)).
