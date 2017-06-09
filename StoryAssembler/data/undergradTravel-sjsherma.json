@@ -182,7 +182,7 @@
       "set readSomething true"
     ],
     "choices" : [
-      {"gotoId" : "acceptOrDeclineSomething"},
+      {"gotoId" : "acceptOrDeclineBusinessEmail"},
       {"condition" : "readFamily eq true"},
       {"condition" : "readEmail eq true"}
     ],
