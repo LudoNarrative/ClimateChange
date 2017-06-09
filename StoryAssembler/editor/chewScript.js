@@ -83,7 +83,7 @@ function formatEffects(stuff) {
 	}
 	return stuff;
 }
-
+/*
 function formatContent(stuff) {
 	for (var i=0; i < stuff.length; i++) {
 		if (typeof stuff[i].content !== "undefined" && typeof stuff[i].content.text !== "undefined") {
@@ -99,12 +99,23 @@ function formatContent(stuff) {
 
 	return stuff;
 }
+*/
 
 //delete unused fields before export
 function deleteUnusedStuff(data) {
 	var stuff = data;
 
 	for (var i=0; i < stuff.length; i++) {
+		if(stuff[i].Content !== 'undefined'){
+			if(stuff[i].Content == 0){
+				delete stuff[i].Content;
+			}
+		}
+			if(stuff[i].Request.value !== 'undefined'){
+				if(stuff[i].Request.value == 0){
+					delete stuff[i].Request;
+				}
+		}
 		if(typeof stuff[i].conditions !== 'undefined'){
 			if (stuff[i].conditions.length == 0){
 				delete stuff[i].conditions;
@@ -165,7 +176,7 @@ function formatJSON(stuff) {
 	stuff = formatEffects(stuff);
 	stuff = formatChoices(stuff);	
 	stuff = formatConditions(stuff);
-	stuff = formatContent(stuff);
+	//stuff = formatContent(stuff);
 
 	stuff = deleteUnusedStuff(stuff);			//delete unused fields
 
