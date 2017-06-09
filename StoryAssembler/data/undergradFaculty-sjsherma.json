@@ -332,6 +332,9 @@ http://news.nationalgeographic.com/2015/06/150623-sixth-extinction-kolbert-anima
   {
     "id": "emmaAsksAiden",
     "content": "Now, time for the panel's questions. Aiden shifts from one foot to the other, looking like they were trying to keep their hand-wringing as small as possible. You look down at your notes, drumming up questions in your head.",
+    "conditions": [
+      "shyStudent eq true"
+    ],
     "choices": [
       {
         "gotoId": "aidenSoftball"
