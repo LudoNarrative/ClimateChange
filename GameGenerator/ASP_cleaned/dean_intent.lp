@@ -3,7 +3,7 @@
 #const min_resources = 1.
 #const max_resources = 3.
 #const min_outcomes = 2.
-#const max_outcomes = 8.
+#const max_outcomes = 7.
 #const min_timers = 0.
 #const max_timers = 2.
 
@@ -32,3 +32,11 @@ label(entity(e(3)),harm).
 %:- not entity(entity(wall)).
 
 %:- controlLogic(_).
+
+
+outcomes(N) :- N = {outcome(O)}.
+:- outcomes(N),
+	N > max_outcomes.
+%#minimize{N : outcomes(N)}.
+
+%:-  action(modify(_,property(_,_))).
