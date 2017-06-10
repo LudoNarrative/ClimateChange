@@ -286,6 +286,16 @@
     ]
   },
 
+  {
+    "id" : "spamEmail",
+    "choiceLabel" : "Spam, spam, so much spam.",
+    "content" : "Spam, spam, so much spam.",
+    "effects" : [
+      "set readEmail true"
+    ],
+    "repeatable" : "true",
+  },
+
   //the landings!
 
     {
