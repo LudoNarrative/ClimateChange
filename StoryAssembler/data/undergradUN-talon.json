@@ -28,8 +28,10 @@ persuasion:
 //Setting up the initial scene. This will be the same for every path
   {
     "id": "talonSceneStart_t",
-    "content": "As the last echoes of your words begin to fade, a soft chorus of chatting begins. You look around the room, lights shine in your eyes. {ifStateCondition|confidence gte 5|They put a little sparkle in them|They're brighter than you thought they'd be for such a small conference.}<br><br>You stand,{ifStateCondition|confidence gte 5|back straight|back stiff} in front of your laptop close the lid. {ifStateCondition|confidence gte 5||<em>At least it’s over</em>.} Your eyes bounce from person to person.",
-    "effects" : [],
+    "content": "As the last echoes of your words begin to fade, a soft chorus of chatting begins. You look around the room, lights shine in your eyes. {ifStateCondition|confidence gte 5|They put a little sparkle in them|They're brighter than you thought they'd be for such a small conference.}<br><br>You stand,{ifStateCondition|confidence gte 5|back straight|back stiff} in front of your laptop close the lid. {ifStateCondition|confidence gte 5||<em>At least it’s over</em>.} Your eyes bounce from person to person.", 
+    "choices": [
+        {"gotoId" : "emmaReflection_start_t"},
+    ],
     "conditions" : [
       "callForLocalAction eq true"    //This concludes Kevin's scene coming in
     ]
