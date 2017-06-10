@@ -116,6 +116,9 @@
   ],
   "conditions": [
     "acceptOrDeclineSomething eq true"
+  ],
+  "choices" : [
+    {"gotoId" : "outroForLandingHS"}
   ]
 },
 
@@ -125,6 +128,9 @@
   "content": "While this does seem like a good opportunity, you would rather talk to a bigger audience of people who are capable of making a bigger impact than a hundred high school students.",
   "conditions": [
     "acceptOrDeclineSomething eq true"
+  ],
+  "choices" : [
+    {"gotoId" : "outroForLandingHS"}
   ]
 
 },
@@ -154,6 +160,9 @@
   "content": "Wow this would be an easy way to spread your message to many people at a time. It would be crazy not to take advantage of this opportunity.",
   "effects": [
     "set nextTalk televisedTalk"
+  ],
+  "choices" : [
+    {"gotoId" : "outroForLandingTT"}
   ]
 },
 
@@ -161,6 +170,9 @@
   "id": "declineTelevisedTalk",
   "choiceLabel": "Not the audience I am looking for",
   "content": "The viewship of the show is not high enough to dedicate so much time to. Maybe the time would be better spent if you spoke to a group of influential people instead of random citizens flipping through the channels on their tv on a saturday night.",
+  "choices" : [
+    {"gotoId" : "outroForLandingTT"}
+  ]
 
 },
 
@@ -197,13 +209,19 @@
   "effects":[
     "incr carbonFootprint 3",
     "set lastTalk congressmen"
+  ],
+  "choices" : [
+    {"gotoId" : "outroForLandingCM"}
   ]
 },
 
 {
   "id": "declineCongressmen",
   "choiceLabel": "I'd rather promote local action",
-  "content": "This is no doubt a huge opportunity, but promoting local action seems like a better use of your time. There are kids that need motivating and students to be educating, so time can't be wasted in a room with politicians drafting up a bill."
+  "content": "This is no doubt a huge opportunity, but promoting local action seems like a better use of your time. There are kids that need motivating and students to be educating, so time can't be wasted in a room with politicians drafting up a bill.",
+  "choices" : [
+    {"gotoId" : "outroForLandingCM"}
+  ]
 },
 
 {
@@ -227,12 +245,18 @@
   "id": "acceptTedTalks",
   "choiceLabel": "Definitely worth my time",
   "content": "Wow! Having watched quite a few Ted Talks presentations in the past, you are definitely familiar with how influential some of the speakers can be. This is definitely an opportunity that you can't miss out on.",
+  "choices" : [
+    {"gotoId" : "outroForLandingTeT"}
+  ]
 },
 
 {
   "id": "declineTedTalks",
   "choiceLabel": "Need to prioritize more climate change focused events",
-  "content": "There is no doubt that this would give you a lot of exposure, but there are presentations about all sorts of different topics, and I think that attending events with a greater focus on climate change would be a better use of time."
+  "content": "There is no doubt that this would give you a lot of exposure, but there are presentations about all sorts of different topics, and I think that attending events with a greater focus on climate change would be a better use of time.",
+  "choices" : [
+    {"gotoId" : "outroForLandingTeT"}
+  ]
 },
 
 {
@@ -256,12 +280,18 @@
   "id": "acceptIndustrialCompany",
   "choiceLabel": "Of course I will help!",
   "content": "You remember her son from your lecture a few years ago. He was a little sceptical about climate change but you get a warm feeling knowing that you were able to change his views. The company that his mom works for is a large company and could influence other companies to tackle climate change like they aim to.",
+  "choices" : [
+    {"gotoId" : "outroForLandingIC"}
+  ]
 },
 
 {
   "id": "declineIndustrialCompany",
   "choiceLabel": "Working with oil companies isn't my thing",
   "content": "You remember her son from your lecture a few years ago. He was a little sceptical about climate change but you get a warm feeling, knowing that you were able to change his views. But working with oil companies isn't really your thing. So this one is a pass.",
+  "choices" : [
+    {"gotoId" : "outroForLandingIC"}
+  ]
 },
 
 {
@@ -284,10 +314,16 @@
   "id": "acceptUniversityLecture",
   "choiceLabel": "Sounds like a fun opportunity",
   "content": "placeholder",
+  "choices" : [
+    {"gotoId" : "outroForLandingUL"}
+  ]
 },
 
 {
   "id": "declineUniversityLecture",
   "choiceLabel": "I'd love to see her again, but...",
   "content": "placeholder",
+  "choices" : [
+    {"gotoId" : "outroForLandingUL"}
+  ]
 },
