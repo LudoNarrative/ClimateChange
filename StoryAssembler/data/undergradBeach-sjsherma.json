@@ -54,6 +54,9 @@
       {"gotoId" : "straightReply"},
       {"gotoId" : "avoidReply"}
     ],
+    "conditions" : [
+      "talkAboutUNPlan eq true"
+    ]
   },
 
   {

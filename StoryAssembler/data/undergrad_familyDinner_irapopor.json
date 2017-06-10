@@ -99,7 +99,7 @@
 
 	{
 		"id": "parentsOfferSupportHighi",
-		"content": "<p>\"I didn't mean to come off as agressive or anything.\" {name|dad} raises his arms in defense. {ifStateCondition|tension lte 6|Does he think he's on trial?|} \"Just offerin' a concern, ya know?\" {ifStateCondition|tension lte 6|Mom places a her hand on his. \"But at the end of the day,|{name|mom} looks you in the eyes. \"Just remember} we both trust your judgement.\"</p>",
+		"content": "<p>\"I didn't mean to come off as agressive or anything.\" {name|dad} raises his arms in defense. {ifStateCondition|tension lte 6|Does he think he's on trial?|} \"Just offerin' a concern, ya know?\" {ifStateCondition|tension lte 6|Mom places a her hand on his.| } \"But at the end of the day,\" she looks you in the eyes, \"Just remember we both trust your judgement.\"</p>",
 		"effects": [
 			"set parentsOfferSupport true"
 		],
