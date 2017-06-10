@@ -1,6 +1,89 @@
 
+{
+  "id": "outroForLandingHS",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"conditions" : "highSchoolReminisce eq true"}
+  ]
+},
 
-//starting fragment
+{
+  "id": "outroForLandingTT",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "televisedTalkReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingCM",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "congressMeetingReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingTeT",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "tedTalkReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingIC",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "industrialCompanyReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingUL",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "universityLectureReminisce eq true"}
+  ]
+},
+
+
 
 //reminisce
 
