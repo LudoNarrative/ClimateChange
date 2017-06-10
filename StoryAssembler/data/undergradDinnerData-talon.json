@@ -3,8 +3,8 @@
 {condition: "establishFriends eq true" }, ME
 {condition: "establishSettingDinner eq true" }, ME
 {condition: "establishDefenseTomorrow eq true" },
-{condition: "EmmaJobFutureBeat eq true" },
-{condition: "EmmaClassTypeBeat eq true" },
+{condition: "{name|protagonist}JobFutureBeat eq true" },
+{condition: "{name|protagonist}ClassTypeBeat eq true" },
 {condition: "friendIsInAcademia eq true" },
 {condition: "friendIsNotInAcademia eq true"},
 {condition: "friendTension gte 4"}, ME
@@ -13,7 +13,7 @@
 {condition: "inactivityIsBad eq true"}, ME
 {condition: "outro eq true"}, ME
 */
-
+ 
 //Establish Dinner Scene - START
 //
 	{
@@ -26,17 +26,17 @@
 	{
 		"id": "sceneSetUp1_t",
 		"choiceLabel": "Continue",
-		"content": "\"Hey!\" Zanita shouted, excitedly. You attention is finally broken. \"You made it, welcome!\"<br>\"Thank you,\" you say.<br>\"About time,\" another voice yells from the kitchen. You look. It was Shelly; she was already holding a glass of wine, leaning against a kitchen chair.<br>\"Be nice, Shelly, it took you 10 mins to find the door the first time.\"<br>\"That was intentional…\"<br>\"I’m sure it was.\" Zanita said and turned her attention back to you. \"Let me take your coat. Would you like some wine?\" She asked with a smile.",
+		"content": "\"Hey!\" {name|academicFriend} shouted, excitedly. You attention is finally broken. \"You made it, welcome!\"<br>\"Thank you,\" you say.<br>\"About time,\" another voice yells from the kitchen. You look. It was {name|nonAcademicFriend}; she was already holding a glass of wine, leaning against a kitchen chair.<br>\"Be nice, {name|nonAcademicFriend}, it took you 10 mins to find the door the first time.\"<br>\"That was intentional…\"<br>\"I’m sure it was.\" {name|academicFriend} said and turned her attention back to you. \"Let me take your coat. Would you like some wine?\" She asked with a smile.",
 		"choices": [
 			{"gotoId" : "wineQuestion0_t"},
 			{"gotoId" : "wineQuestion1_t"},
 		],
 	},
-//Emma's choices
+//{name|protagonist}'s choices
 	{
 		"id": "wineQuestion0_t",
 		"choiceLabel": "\"Yes, I need to clear my head.\"",
-		"content": "\"That’s the spirit! Let me get a new bottle.\" Shelly said, to Zanita’s displeasure.<br>\"Just don’t go crazy, Em,\" Zanita said, \"you know you have a big day tomorrow.\"",
+		"content": "\"That’s the spirit! Let me get a new bottle.\" {name|nonAcademicFriend} said, to {name|academicFriend}’s displeasure.<br>\"Just don’t go crazy, {nickname|protagonist},\" {name|academicFriend} said, \"you know you have a big day tomorrow.\"",
 		"choices": [
 			{"gotoId" : "sceneSetUp_end_t"},
 		],
@@ -47,7 +47,7 @@
 	{
 		"id": "wineQuestion1_t",
 		"choiceLabel": "\"No, my stomach…. It’s just…. I’m….\"",
-		"content": "\"Come on, Emma, you stick-in-the-mud,\" Shelly says, fiddling with the metal cage on a bottle of champagne.<br>\"That’s for after dinner, Shelly,\" Zanita says. She continues: \"and she doesn’t need to drink if she doesn’t want to.\" Zanita took the bottle from Shelly and put it back in the frig. \"And that’s not how you open one of those anyway….\"<br><br>Shelly put the steak knife down.",
+		"content": "\"Come on, {name|protagonist}, you stick-in-the-mud,\" {name|nonAcademicFriend} says, fiddling with the metal cage on a bottle of champagne.<br>\"That’s for after dinner, {name|nonAcademicFriend},\" {name|academicFriend} says. She continues: \"and she doesn’t need to drink if she doesn’t want to.\" {name|academicFriend} took the bottle from {name|nonAcademicFriend} and put it back in the frig. \"And that’s not how you open one of those anyway….\"<br><br>{name|nonAcademicFriend} put the steak knife down.",
 		"choices": [
 			{"gotoId" : "sceneSetUp_end_t"},
 		],
@@ -59,17 +59,17 @@
 	{
 		"id": "sceneSetUp_end_t",
 		"choiceLabel": "Continue",
-		"content": "\"Come on, Emma, take a seat. Dinner’s almost ready and you’re going to like it.\" Zanita pulled her hair back and tied it with the black band she keeps around her wrist.<br>You sit as Zanita places a clean, white plate and a steak knife before you. Shelly sits opposite you, energetically waiting for Zanita to bring out the main attraction.<br>\"Come on, Z! We’re starving.\"<br>Zanita comes out with a large silver serving plate.<br>\"Voila,\" Zanita says with a grand gesture, \"Beef Wellington a la Zanita!\"",
+		"content": "\"Come on, {name|protagonist}, take a seat. Dinner’s almost ready and you’re going to like it.\" {name|academicFriend} pulled her hair back and tied it with the black band she keeps around her wrist.<br>You sit as {name|academicFriend} places a clean, white plate and a steak knife before you. {name|nonAcademicFriend} sits opposite you, energetically waiting for {name|academicFriend} to bring out the main attraction.<br>\"Come on, {nickname|academicFriend}! We’re starving.\"<br>{name|academicFriend} comes out with a large silver serving plate.<br>\"Voila,\" {name|academicFriend} says with a grand gesture, \"Beef Wellington a la {name|academicFriend}!\"",
 		"effects": [
 			"set establishSettingDinner true",
 			"set establishFriends true"
 		]
 	},
-
+ 
 //friendIsInAcademia & friendIsNotInAcademia & there hasn't been enough tension
 	{
 		"id": "tensionInTheRoom0_t",
-		"content": "The dinner went on as forks clicked against plates and Wellington was consumed amidst joyous conversation.<br>\"It’s so good, Z!\" You say, half chewing and already preparing your next bite.<br>\"Yeah,\" Shelly said, \"it’s surprising you managed to make it taste so good.\"<br>You and Zanita watch Shelly take another bite, a bit taken aback.",
+		"content": "The dinner went on as forks clicked against plates and Wellington was consumed amidst joyous conversation.<br>\"It’s so good, {nickname|academicFriend}!\" You say, half chewing and already preparing your next bite.<br>\"Yeah,\" {name|nonAcademicFriend} said, \"it’s surprising you managed to make it taste so good.\"<br>You and {name|academicFriend} watch {name|nonAcademicFriend} take another bite, a bit taken aback.",
 		"choices" : [
 			{"gotoId" : "beefQuestion0_t"},
 			{"gotoId" : "beefQuestion1_t"},
@@ -83,7 +83,7 @@
 //Emma answers question
 	{
 		"id": "beefQuestion0_t",
-		"choiceLabel": "\"Of course it tastes so good, Zanita is an amazing cook!\"",
+		"choiceLabel": "\"Of course it tastes so good, {name|academicFriend} is an amazing cook!\"",
 		"request": {"gotoId": "tensionInTheRoom1_t"}
 	},
 	{
@@ -94,16 +94,16 @@
 	{
 		"id": "tensionInTheRoom1_t",
 		"choiceLabel": "Continue",
-		"content": "\"Yeah, but….\" Shelly started.<br><br>\"But what, Shelly?\" Zanita looked hard across the table.<br><br><em>This happens every time those two get together.</em><br>\"It’s great, really, Z. Right, Shelly? Isn’t it great?\" You say, trying to save the situation.<br>\"Whatever, Shelly. You don’t like the way I cook? You can leave.\" Zanita says as a fork clatters to the table. The ringing in your ears makes you wince.<br><br>There’s a long silence at the table.<br><br>\"Don’t be so sensitive, Zanita…. It was just a joke.\"",
+		"content": "\"Yeah, but….\" {name|nonAcademicFriend} started.<br><br>\"But what, {name|nonAcademicFriend}?\" {name|academicFriend} looked hard across the table.<br><br><em>This happens every time those two get together.</em><br>\"It’s great, really, {nickname|academicFriend}. Right, {name|nonAcademicFriend}? Isn’t it great?\" You say, trying to save the situation.<br>\"Whatever, {name|nonAcademicFriend}. You don’t like the way I cook? You can leave.\" {name|academicFriend} says as a fork clatters to the table. The ringing in your ears makes you wince.<br><br>There’s a long silence at the table.<br><br>\"Don’t be so sensitive, {name|academicFriend}…. It was just a joke.\"",
 		"effects": [
 			"incr tension 4"
 		]
 	},
-
+ 
 //This scene will establish that they both agree that pond scum is bad
 	{
 		"id": "inactivityIsPondScum0_t",
-		"content": "Dinner presses on and you sigh inside of yourself with worry; or at least you thought you sighed only to yourself.<br>\"What’s the matter, Emma?\" Zanita said, a frown now present on her face.<br>\"Huh? Oh, nothing.\"<br>\"You don’t have to pretend everything’s fine. You remember how big a wreck I was before my dissertation defense, don’t you?\"<br><br>You did, she was a wreck.",
+		"content": "Dinner presses on and you sigh inside of yourself with worry; or at least you thought you sighed only to yourself.<br>\"What’s the matter, {name|protagonist}?\" {name|academicFriend} said, a frown now present on her face.<br>\"Huh? Oh, nothing.\"<br>\"You don’t have to pretend everything’s fine. You remember how big a wreck I was before my dissertation defense, don’t you?\"<br><br>You did, she was a wreck.",
 		"choices": [
 			{"gotoId" : "inactivityIsPondScum1_t"},
 		],
@@ -115,7 +115,7 @@
 	{
 		"id": "inactivityIsPondScum1_t",
 		"choiceLabel": "Continue",
-		"content": "Zanita began to speak but Shelly interrupted.<br>\"We may have our differences, Zanita and I, but we both do what we think is the right thing to do.\" All attention was shifted to You at this moment. Your attention was still on the uneaten food on your plate. \"You have to do what you think is right but you can’t just do nothing.\"<br>\"I agree with Shelly on this one, Em.\" Zanita said. \"Nothing good will ever come from standing still and doing nothing.\"<br><br>\"Maybe you’re right.\" You say.<br>\"That’s right, we’re right!\" Shelly says. \"You’re gonna do great things, kid, but nothing will happen if you’re not there to do them!\"<br><br>The dinner continued, you felt a littl better.",
+		"content": "{name|academicFriend} began to speak but {name|nonAcademicFriend} interrupted.<br>\"We may have our differences, {name|academicFriend} and I, but we both do what we think is the right thing to do.\" All attention was shifted to You at this moment. Your attention was still on the uneaten food on your plate. \"You have to do what you think is right but you can’t just do nothing.\"<br>\"I agree with {name|nonAcademicFriend} on this one, {nickname|protagonist}.\" {name|academicFriend} said. \"Nothing good will ever come from standing still and doing nothing.\"<br><br>\"Maybe you’re right.\" You say.<br>\"That’s right, we’re right!\" {name|nonAcademicFriend} says. \"You’re gonna do great things, kid, but nothing will happen if you’re not there to do them!\"<br><br>The dinner continued, you felt a littl better.",
 		"effects": [
 			"set inactivityIsBad true"
 		]
@@ -123,7 +123,7 @@
 //ENDING SCENE
 	{
 		"id": "thatsAllFolks0_t",
-		"content": "You press your fork against the plate collecting crumbs -- remnants of a great dinner, great conversation, and great friends.<br>Zanita began stacking plates on top of one another but Shelly interjected.<br>\"Absolutely not!\" Shelly grabbed the plate from Zanita and began collecting the plates from around the table herself. \"You cooked, I clean.\" Shelly wasn’t looking at Zanita as she continued speaking. \"It’s the least I could do after such a lovely meal.\"",
+		"content": "You press your fork against the plate collecting crumbs -- remnants of a great dinner, great conversation, and great friends.<br>{name|academicFriend} began stacking plates on top of one another but {name|nonAcademicFriend} interjected.<br>\"Absolutely not!\" {name|nonAcademicFriend} grabbed the plate from {name|academicFriend} and began collecting the plates from around the table herself. \"You cooked, I clean.\" {name|nonAcademicFriend} wasn’t looking at {name|academicFriend} as she continued speaking. \"It’s the least I could do after such a lovely meal.\"",
 		"conditions": [
 			"establishFriends eq true",
 			"establishSettingDinner eq true",
@@ -143,10 +143,11 @@
 	{
 		"id": "thatsAllFolks1_t",
 		"choiceLabel": "Continue",
-		"content": "Zanita gives you a big hug and an even bigger kiss on the cheek.<br>\"You’re gonna do great tomorrow. I’ll be there early with my big ‘GO EMMA!’ sign!\" Zanita says still holding onto your shoulders.<br>\"Knock ‘em dead, kid.\" Shelly shoots you a finger gun and blows away the smoke.<br>Tomorrow will be upon you in less than 8 hours and your dissertation is less than 12. You can hardly wait. The anticipation is almost making you sick.",
+		"content": "{name|academicFriend} gives you a big hug and an even bigger kiss on the cheek.<br>\"You’re gonna do great tomorrow. I’ll be there early with my big ‘GO {name|protagonist}!’ sign!\" {name|academicFriend} says still holding onto your shoulders.<br>\"Knock ‘em dead, kid.\" {name|nonAcademicFriend} shoots you a finger gun and blows away the smoke.<br>Tomorrow will be upon you in less than 8 hours and your dissertation is less than 12. You can hardly wait. The anticipation is almost making you sick.",
 		"effects": [
 			"set outro true"
 		]
 	}
 ]
-
+ 
+ 
