@@ -617,14 +617,15 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"passenger": {name: "Phil", gender: "male"}
 			},
 			wishlist: [
-				{ condition: "onAPlane eq true"},
-				{ condition: "reminisce eq true"},
-				{ condition: "talkExposition eq true"},
+				{ condition: "onAPlane eq true", persistent: true},
+				{ condition: "reminisce eq true", persistent: true},
+				{ condition: "talkExposition eq true", persistent: true},
 				{ condition: "talksGiven gte 3"},
 				{ condition: "dealWithSomeone eq true"},
 				{ condition: "readSomething eq true"},
-				{ condition: "acceptOrDeclineSomething eq true"},
-				{ condition: "outroForLanding eq true"}
+				{ condition: "acceptOrDeclineSomething eq true", persistent: true},
+				{ condition: "outroForLanding eq true", persistent: true},
+				{ condition: "goHome eq true"},
 			],
 			//if you just want to use one file, uncomment this and comment out the big block below
 			dataFiles: ["text!undergradTravel_kply","text!undergradTravel_sjsherma"],
