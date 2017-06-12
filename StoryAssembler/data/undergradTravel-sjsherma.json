@@ -297,7 +297,7 @@
   },
 
   //the landings!
-
+/*
     {
       "id": "outroForLandingHS",
       "choiceLabel" : "The plane is landing.",
@@ -381,6 +381,6 @@
         {"condition" : "universityLectureReminisce eq true"}
       ]
     },
-
+*/
 
 ]
