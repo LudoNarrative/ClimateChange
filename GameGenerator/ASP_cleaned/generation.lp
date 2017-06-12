@@ -202,7 +202,7 @@ precondition(control_event(button(mouse, held)),outcome(drawn_to_cursor(ENTITY))
 result(outcome(drawn_to_cursor(ENTITY)), move(ENTITY,direction(forward))):-
     outcome(outcome(drawn_to_cursor(ENTITY))).
 
-result(outcome(drawn_to_cursor(ENTITY)), look_at(ENTITY,cursor)):-
+result(outcome(drawn_to_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)):-
     outcome(outcome(drawn_to_cursor(ENTITY))).
 
 %cursor is opposite polarity (well, same polarity) electromagnet
@@ -210,7 +210,7 @@ precondition(control_event(button(mouse, held)),outcome(repeled_from_cursor(ENTI
     outcome(outcome(repeled_from_cursor(ENTITY))). 
 result(outcome(repeled_from_cursor(ENTITY)), move(ENTITY,direction(backward))):-
     outcome(outcome(repeled_from_cursor(ENTITY))).
-result(outcome(repeled_from_cursor(ENTITY)), look_at(ENTITY,cursor)):-
+result(outcome(repeled_from_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)):-
     outcome(outcome(repeled_from_cursor(ENTITY))).
 
 %cursor is the sun, entity is the earth
@@ -219,7 +219,7 @@ precondition(control_event(button(mouse, held)),outcome(orbit_the_cursor(ENTITY)
     outcome(outcome(orbit_the_cursor(ENTITY))). 
 1 {result(outcome(orbit_the_cursor(ENTITY)), move(ENTITY,direction(LEFT_RIGHT))): left_right(LEFT_RIGHT)} 1:-
     outcome(outcome(orbit_the_cursor(ENTITY))).
-result(outcome(orbit_the_cursor(ENTITY)), look_at(ENTITY,cursor)):-
+result(outcome(orbit_the_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)):-
     outcome(outcome(orbit_the_cursor(ENTITY))).
     
 1 {precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY)));
@@ -248,18 +248,16 @@ angle_speeds_discrete(10;20;30;45;60;90).
 result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_spin(ENTITY))).
 
 
-
+look_criterion(nearest;furthest;random).
 1 {precondition(control_event(button(mouse, held)),outcome(click_to_chase(ENTITY)));
    precondition(control_event(button(mouse, pressed)),outcome(click_to_chase(ENTITY)));
    precondition(control_event(click(ENTITY)),outcome(click_to_chase(ENTITY)))
    } 1:- 
        outcome(outcome(click_to_chase(ENTITY))).
-1 {result(outcome(click_to_chase(ENTITY)), look_at(ENTITY,ENTITY2)) :
-   entity(ENTITY2)
+1 {result(outcome(click_to_chase(ENTITY)), look_at(ENTITY,ENTITY2,CRITERION)) :
+   entity(ENTITY2), look_criterion(CRITERION)
   } 1 :-
-    outcome(outcome(click_to_chase(ENTITY))),
-    1 {precondition(control_event(button(mouse, pressed)),outcome(click_to_chase(ENTITY)));
-       precondition(control_event(click(ENTITY)),outcome(click_to_chase(ENTITY)))}.
+    outcome(outcome(click_to_chase(ENTITY))).
 
 result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_chase(ENTITY))).
 
@@ -337,30 +335,30 @@ place(location(X,Y)) :- location(X,Y).
 properties(health).
 
 % resources can increase
-{result(OUTCOME,modify(increase,property(Property,Entity)))
+{result(OUTCOME,modify(increase,property(Entity,Property)))
   : outcome(OUTCOME),entity(Entity),properties(Property)}.
 % or decrease
-{result(OUTCOME,modify(decrease,property(Property,Entity))) 
+{result(OUTCOME,modify(decrease,property(Entity,Property))) 
   : outcome(OUTCOME),entity(Entity),properties(Property)}.
 
 
-{result(OUTCOME,  move(ENTITY1,direction(towards,ENTITY2)))
- : outcome(OUTCOME),
- entity(ENTITY1),
- entity(ENTITY2)}.
+% {result(OUTCOME,  move(ENTITY1,direction(towards,ENTITY2)))
+ % : outcome(OUTCOME),
+ % entity(ENTITY1),
+ % entity(ENTITY2)}.
 
-{result(OUTCOME,  move(ENTITY1,direction(away,cursor)))
- : outcome(OUTCOME),
- entity(ENTITY1)}.
+% {result(OUTCOME,  move(ENTITY1,direction(away,cursor)))
+ % : outcome(OUTCOME),
+ % entity(ENTITY1)}.
 
-{result(OUTCOME,  move(ENTITY1,direction(towards,cursor)))
- : outcome(OUTCOME),
- entity(ENTITY1)}.
+% {result(OUTCOME,  move(ENTITY1,direction(towards,cursor)))
+ % : outcome(OUTCOME),
+ % entity(ENTITY1)}.
 
-{result(OUTCOME,  move(ENTITY1,direction(away,ENTITY2)))
- : outcome(OUTCOME),
- entity(ENTITY1),
- entity(ENTITY2)}.
+% {result(OUTCOME,  move(ENTITY1,direction(away,ENTITY2)))
+ % : outcome(OUTCOME),
+ % entity(ENTITY1),
+ % entity(ENTITY2)}.
 
 min_end_outcomes 
 {result(OUTCOME,mode_change(MODE)) : modes(MODE), outcome(OUTCOME)}
@@ -394,38 +392,38 @@ behaviors(chase;
 1 {chases(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,chase).
 
 result(tick,move(ENTITY,direction(forward))) :- chases(ENTITY,OTHER).
-result(tick,move(ENTITY,look_at(ENTITY,OTHER))) :- chases(ENTITY,OTHER).
+1{ result(tick,look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :- chases(ENTITY,OTHER).
 
 
 1 {flees(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,flee).
 result(tick,move(ENTITY,direction(backward))) :- flees(ENTITY,OTHER).
-result(tick,move(ENTITY,look_at(ENTITY,OTHER))) :- flees(ENTITY,OTHER).
+1{ result(tick,look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1  :- flees(ENTITY,OTHER).
 
 
 1 {orbits(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,orbit).
-
 left_right(left;right).
 1 {result(tick,move(ENTITY,direction(LEFT_RIGHT))) : left_right(LEFT_RIGHT)} 1 :- orbits(ENTITY,OTHER).
-result(tick,move(ENTITY,look_at(ENTITY,OTHER))) :- orbits(ENTITY,OTHER).
+1{ result(tick,look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :- orbits(ENTITY,OTHER).
 
 
 timer(patrol(ENTITY)) :- behavior(ENTITY,patrol).
-
+precondition(timer_elapsed(patrol(ENTITY)), outcome(patrol(ENTITY))) :- behavior(ENTITY,patrol).
 1 {result(outcome(patrol(ENTITY)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
    angle_direction(DIRECTION),
    angle_speeds_discrete(AMOUNT)} 1 :- behavior(ENTITY,patrol).
-
 result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,patrol).
 
-timer(pingpong(ENTITY)) :- behavior(ENTITY,pingpong).
 
+
+timer(pingpong(ENTITY)) :- behavior(ENTITY,pingpong).
 precondition(timer_elapsed(pingpong(ENTITY)),outcome(pingpong(ENTITY))) :- behavior(ENTITY,pingpong).
 result(outcome(pingpong(ENTITY)), rotates(ENTITY, cw,scalar(180))) :- behavior(ENTITY,pingpong).
-
 result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,pingpong).
 
-timer(wander(ENTITY)) :- behavior(ENTITY,wander).
 
+
+
+timer(wander(ENTITY)) :- behavior(ENTITY,wander).
 precondition(timer_elapsed(wander(ENTITY)),outcome(wander(ENTITY))) :- behavior(ENTITY,wander).
 result(outcome(wander(ENTITY)), rotate_to(ENTITY,random_int(scalar(0),scalar(360)))) :- behavior(ENTITY,wander).
 
@@ -442,7 +440,7 @@ control_event(E,delete(E2)) :-
 	result(O,delete(E2)).
 control_event(E,add(E2)) :-
 	precondition(control_event(E),O),
-	result(O,add(E2,_)).
+	result(O,add(E2,_,_)).
 
 control_event(E,modify(R)) :- 
 	precondition(control_event(E),O),
@@ -455,17 +453,20 @@ control_event(E,modify(R)) :-
 %:- resource_checks(N), N > 3.
 controlScheme(SCHEME) :- controlScheme(ENTITY,SCHEME).
 behavior(BEHAVIOR)  :-  behavior(ENTITY,BEHAVIOR) .
+
+project(player_controls(C)) :- player_controls(C).
+project(behavior(C)) :- behavior(C).
+
+project(controlScheme(C)) :- controlScheme(C).
+project(controlScheme(C)) :- controlScheme(C).
 %#show precondition/2.
-#project player_controls/1.
-#project behavior/1.
-#project controlScheme/1.
-#project controlLogic/1.
-#project pruned_action/1.
+#project project/1.
+%#project pruned_action/1.
 
 pruned_action(add(E)) :- action(add(E,_,_)).
 pruned_action(delete(E)) :- action(delete(E)).
 pruned_action(modify(Dir,R)) :- action(modify(Dir,R)).
 pruned_action(rotates(E,D,V)) :- action(rotates(E,D,V)).
 pruned_action(rotate_to(E)) :- action(rotate_to(E)).
-pruned_action(look_at(E,E2)) :- action(look_at(E,E2)).
+pruned_action(look_at(E,E2,C)) :- action(look_at(E,E2,C)).
 pruned_aciton(move(E,D)) :- action(move(E,D)).
