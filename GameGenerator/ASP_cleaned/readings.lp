@@ -170,7 +170,7 @@ required(goal(produce)) :- required(good).
     reading(goal(reduce),Resource).
 {reading(good,property(Player,health)) } :-
     player_controls(Player),
-    action(modify(_,property(plaery,health))).
+    action(modify(_,property(Player,health))).
 
 required(goal(reduce)) :- required(bad).
 
