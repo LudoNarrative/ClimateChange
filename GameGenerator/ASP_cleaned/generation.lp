@@ -181,10 +181,6 @@ indirectControls(click_and_drag;
 
 
 
-
-
-
-
 controlLogic(draggable(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
 outcome(outcome(drawn_to_cursor(ENTITY))) :- controlScheme(ENTITY,drawn_to_cursor).
 outcome(outcome(repeled_from_cursor(ENTITY))) :- controlScheme(ENTITY,repeled_from_cursor). 

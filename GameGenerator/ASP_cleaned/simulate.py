@@ -492,6 +492,10 @@ if __name__ == '__main__':
         for free_var,set_var in zip(free_variables,best_ind):
             free_var[1][0] = set_var
 
+        for o in ['project']:
+            for oo in out[o]:
+                for ooo in oo:
+                    print prettify(ooo)
         #Have to do find and replaces in this order since outcome and timer might include entity and resource names
         find_and_replace = []
         for o in ['timer']:

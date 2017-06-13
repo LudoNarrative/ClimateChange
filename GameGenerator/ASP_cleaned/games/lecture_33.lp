@@ -38,12 +38,12 @@ timer_logic(timer(t_1_XX_),scalar(3),loop).
 timer_logic(timer(t_2_XX_),scalar(2),loop).
 timer_logic(timer(pingpong_entity_e_3_XX__XX__XX_),scalar(3),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(7))).
-initialize(set_value(resource(r_2_XX_),scalar(4))).
+initialize(set_value(resource(r_1_XX_),scalar(4))).
+initialize(set_value(resource(r_2_XX_),scalar(5))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),decrease(property(entity(e_1_XX_),health),scalar(7))).
-result(outcome(o_1_XX_),decrease(resource(r_1_XX_),scalar(4))).
+result(outcome(o_1_XX_),decrease(property(entity(e_1_XX_),health),scalar(10))).
+result(outcome(o_1_XX_),decrease(resource(r_1_XX_),scalar(3))).
 result(outcome(o_1_XX_),add(entity(e_3_XX_),scalar(1),location(top,center))).
 
 precondition(le(resource(r_1_XX_),scalar(0)),outcome(o_2_XX_)).
@@ -55,12 +55,12 @@ result(outcome(o_3_XX_),add(entity(e_3_XX_),scalar(1),location(middle,center))).
 result(outcome(o_3_XX_),delete(entity(e_3_XX_))).
 
 precondition(control_event(button(mouse,held)),outcome(o_4_XX_)).
-precondition(ge(resource(r_2_XX_),scalar(8)),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),decrease_over_time(property(entity(e_3_XX_),health),scalar(7))).
-result(outcome(o_4_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(4))).
+precondition(ge(resource(r_2_XX_),scalar(1)),outcome(o_4_XX_)).
+result(outcome(o_4_XX_),decrease_over_time(property(entity(e_3_XX_),health),scalar(10))).
+result(outcome(o_4_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(6))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_5_XX_)).
-result(outcome(o_5_XX_),increase(property(entity(e_2_XX_),health),scalar(1))).
+result(outcome(o_5_XX_),increase(property(entity(e_2_XX_),health),scalar(10))).
 result(outcome(o_5_XX_),add(entity(e_1_XX_),scalar(1),location(middle,center))).
 result(outcome(o_5_XX_),delete(entity(e_1_XX_))).
 
@@ -74,7 +74,7 @@ result(outcome(orbit_the_cursor_entity_e_2_XX__XX__XX_),moves(entity(e_2_XX_),le
 
 precondition(timer_elapsed(pingpong_entity_e_3_XX__XX__XX_),outcome(pingpong_entity_e_3_XX__XX__XX_)).
 result(outcome(pingpong_entity_e_3_XX__XX__XX_),rotates(entity(e_3_XX_),cw,scalar(180))).
-result(outcome(pingpong_entity_e_3_XX__XX__XX_),decrease(property(entity(e_2_XX_),health),scalar(2))).
+result(outcome(pingpong_entity_e_3_XX__XX__XX_),decrease(property(entity(e_2_XX_),health),scalar(1))).
 result(outcome(pingpong_entity_e_3_XX__XX__XX_),add(entity(e_1_XX_),scalar(1),location(top,right))).
 
 precondition(tick,tick).

@@ -16,7 +16,7 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 
 % RUNNING OUT OF GAS
 :- precondition(compare(_,_),O),
-    precondition(control_event(_,_),O).
+    precondition(control_event(_),O).
 	
 :- precondition(compare(_,_),O),
     result(O,move(_,_)).

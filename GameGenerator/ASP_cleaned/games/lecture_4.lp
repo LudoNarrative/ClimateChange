@@ -38,10 +38,10 @@ timer_logic(timer(t_1_XX_),scalar(3),loop).
 timer_logic(timer(t_2_XX_),scalar(2),loop).
 
 initialize(set_value(resource(r_1_XX_),scalar(1))).
-initialize(set_value(resource(r_2_XX_),scalar(2))).
+initialize(set_value(resource(r_2_XX_),scalar(1))).
 
 precondition(timer_elapsed(t_2_XX_),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),decrease(property(entity(e_2_XX_),health),scalar(9))).
+result(outcome(o_1_XX_),decrease(property(entity(e_2_XX_),health),scalar(4))).
 result(outcome(o_1_XX_),increase(resource(r_1_XX_),scalar(1))).
 result(outcome(o_1_XX_),add(entity(e_1_XX_),scalar(1),location(middle,center))).
 
@@ -49,22 +49,22 @@ precondition(ge(resource(r_1_XX_),scalar(10)),outcome(o_2_XX_)).
 result(outcome(o_2_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_2_XX_),entity(e_3_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),decrease(resource(r_1_XX_),scalar(1))).
+result(outcome(o_3_XX_),decrease(resource(r_1_XX_),scalar(2))).
 result(outcome(o_3_XX_),add(entity(e_3_XX_),scalar(1),location(middle,center))).
 result(outcome(o_3_XX_),delete(entity(e_3_XX_))).
 
 precondition(overlaps(entity(e_2_XX_),entity(e_2_XX_),false),outcome(o_4_XX_)).
-precondition(ge(resource(r_2_XX_),scalar(9)),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(10))).
+precondition(ge(resource(r_2_XX_),scalar(3)),outcome(o_4_XX_)).
+result(outcome(o_4_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(5))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_5_XX_)).
-result(outcome(o_5_XX_),increase(property(entity(e_2_XX_),health),scalar(2))).
+result(outcome(o_5_XX_),increase(property(entity(e_2_XX_),health),scalar(1))).
 result(outcome(o_5_XX_),add(entity(e_1_XX_),scalar(1),location(top,right))).
 result(outcome(o_5_XX_),delete(entity(e_1_XX_))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_6_XX_)).
 result(outcome(o_6_XX_),increase(resource(r_1_XX_),scalar(1))).
-result(outcome(o_6_XX_),increase(resource(r_2_XX_),scalar(2))).
+result(outcome(o_6_XX_),increase(resource(r_2_XX_),scalar(1))).
 result(outcome(o_6_XX_),add(entity(e_3_XX_),scalar(1),location(bottom,right))).
 
 precondition(control_event(button(mouse,held)),outcome(orbit_the_cursor_entity_e_2_XX__XX__XX_)).
@@ -79,9 +79,9 @@ result(tick,moves(entity(e_2_XX_),forward,scalar(4))).
 result(tick,moves(entity(e_3_XX_),forward,scalar(4))).
 result(tick,moves(entity(e_3_XX_),backward,scalar(4))).
 result(tick,decrease_over_time(property(entity(e_1_XX_),health),scalar(1))).
-result(tick,decrease_over_time(property(entity(e_3_XX_),health),scalar(9))).
-result(tick,increase_over_time(property(entity(e_1_XX_),health),scalar(3))).
-result(tick,increase_over_time(property(entity(e_3_XX_),health),scalar(10))).
+result(tick,decrease_over_time(property(entity(e_3_XX_),health),scalar(7))).
+result(tick,increase_over_time(property(entity(e_1_XX_),health),scalar(9))).
+result(tick,increase_over_time(property(entity(e_3_XX_),health),scalar(5))).
 result(tick,increase_over_time(resource(r_1_XX_),scalar(1))).
 result(tick,moves(entity(e_2_XX_),right,scalar(4))).
 result(tick,look_at(entity(e_3_XX_),entity(e_2_XX_),nearest)).
