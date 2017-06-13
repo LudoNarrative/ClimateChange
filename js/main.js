@@ -26,14 +26,11 @@ requirejs.config({
 		"lectureData" : "../StoryAssembler/data/lecture.json", 
 		"dinnerData" : "../StoryAssembler/data/dinner.json",
 		"generalistData" : "../StoryAssembler/data/generalist.json",
-		//"undergradDinnerData" : "../StoryAssembler/data/undergradDinnerData.json",
 
-		"undergradDinnerData_kevin" : "../StoryAssembler/data/undergradDinnerData-kevin.json",
+
 		"undergradDinnerData_talon" : "../StoryAssembler/data/undergradDinnerData-talon.json",
 		"undergradDinnerData_irapopor" : "../StoryAssembler/data/undergradDinnerData-irapopor.json",
 		"undergradDinnerData_sgadsby" : "../StoryAssembler/data/undergradDinnerData-sgadsby.json",
-		"undergradDinnerData_madreed" : "../StoryAssembler/data/undergradDinnerData-madreed.json",
-		"undergradDinnerData_sjsherma" : "../StoryAssembler/data/undergradDinnerData-sjsherma.json",
 
 		"undergradDean_sgadsby" : "../StoryAssembler/data/undergradDean-sgadsby.json",
 		"undergradDean_talon" : "../StoryAssembler/data/undergradDean-talon.json",
@@ -44,8 +41,6 @@ requirejs.config({
 
 		"undergradTravel_sjsherma" :  "../StoryAssembler/data/undergradTravel-sjsherma.json",
 		"undergradTravel_kply" : "../StoryAssembler/data/undergradTravel-kply.json",
-		//"travel_placeholder" : "../StoryAssembler/data/travel_placeholder.json",
-		//"familyDinner_placeholder" : "../StoryAssembler/data/familyDinner_placeholder.json",
 
 		"undergradFamilyDinner_sgadsby" : "../StoryAssembler/data/undergrad_familyDinner_sgadsby.json",
 		"undergradFamilyDinner_talon" : "../StoryAssembler/data/undergrad_familyDinner_talon.json",
@@ -64,7 +59,6 @@ requirejs.config({
 		"undergradFaculty_kply" : "../StoryAssembler/data/undergradFaculty-kply.json",
 
 
-
 		"sjsherma_testfile" : "../StoryAssembler/data/sjsherma-testfile.json",
 		"kply_testfile" : "../StoryAssembler/data/kply-testfile.json",
 		"irapopor_testfile" : "../StoryAssembler/data/irapopor-testfile.json",
@@ -72,6 +66,15 @@ requirejs.config({
 		"sgadsby_testfile" : "../StoryAssembler/data/sgadsby-testfile.json",
 		"madreed_testfile" : "../StoryAssembler/data/madreed-testfile.json",
 
+
+		"finalDinner" : "../StoryAssembler/data/final/finalDinner.json",
+		"finalLecture" : "../StoryAssembler/data/final/finalLecture.json",
+		"finalDean" : "../StoryAssembler/data/final/finalDean.json",
+		"finalTravel" : "../StoryAssembler/data/final/finalTravel.json",
+		"finalFamilyDinner" : "../StoryAssembler/data/final/finalFamilyDinner.json",
+		"finalUN" : "../StoryAssembler/data/final/finalUN.json",
+		"finalBeach" : "../StoryAssembler/data/final/finalBeach.json",
+		"finalFaculty" : "../StoryAssembler/data/final/finalFaculty.json",
 
 
 		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
