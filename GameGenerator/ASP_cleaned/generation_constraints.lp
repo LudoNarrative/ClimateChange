@@ -1,6 +1,13 @@
+allowed(frivolous(Resource)) :- read_only(Resource).
+frivolous(Resource) :- read_only(Resource).
 
-player_doesnt_control :- not player_controls(_).
-double_dip(ENTITY,B,C) :- behavior(ENTITY,B), controlScheme(ENTITY,C).
+:- read_only(Resource),
+	action(modify(_,Resource)).
+	
+%player_doesnt_control :- not player_controls(_).
+:- not player_controls(_), not condition(control_event(_)).
+
+:- behavior(ENTITY,B), controlScheme(ENTITY,C).
 
 :- outcome(O), not has_precondition(O).
 :- outcome(O), not has_result(O).
@@ -33,13 +40,18 @@ double_dip(ENTITY,B,C) :- behavior(ENTITY,B), controlScheme(ENTITY,C).
 
 
 
+:- 2 {controlScheme(E,_)}, 
+	entity(E).
+
+
+
 :-  result(O,move(E2,direction(away,E1))),
     result(O2,move(E1,direction(away,E2))).
 
 
 :- result(O,add(E,_,_)), every_frame(O).
 
-:- 2{result(O,modify(_,R))}, resource(R), outcome(O).
+:- 2{result(O,modify(_,R))}, action(modify(_,R)), outcome(O).
 
 %:- precondition(control_event(click(Entity)),Outcome),
 %   precondition(overlaps(Entity),Outcome).
@@ -217,6 +229,20 @@ movement(move(E,D)) :- action(move(E,D)).
    action(move(E2,direction(away,E1))),
    {action(move(E2,_))} 1.
 
+  
+:- precondition(overlaps(E1,E2,_),O),
+	result(O,look_at(_,_)).		
+   
+:- precondition(overlaps(E1,E2,_),O),
+	result(O,move(_,_)).		
+
+:- precondition(overlaps(E1,E2,_),O),
+	result(O,rotates(_,_)).		
+      
+:- precondition(overlaps(E1,E2,_),O),
+	result(O,rotate_to(_,_)).	
+   
+   
 {label(entity(E),E)} :- entity(entity(E)).
 {label(resource(E),E)} :- resource(resource(E)).
 :- 2 {label(E,_)}, entity(E).
@@ -514,8 +540,6 @@ player_controls_resource(R,Dir) :-
 
 :- action(look_at(E,E,C)).
 
-:- read_only(Resource),
-	action(modify(_,Resource)).
 
 
 

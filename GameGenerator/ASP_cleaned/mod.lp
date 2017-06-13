@@ -1,2 +1,1 @@
-
-player_doesnt_control :- not player_controls(_).
+allowed(frivolous(Resource)) :- read_only(Resource).
