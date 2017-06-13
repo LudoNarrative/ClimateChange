@@ -28,7 +28,7 @@ playerControls :- controlLogic(_).
 
 player_controls(Entity) :-  controlLogic(draggable(Entity)).
 player_controls(Entity) :-  action(move(Entity,direction(_,cursor))).
-player_controls(Entity) :-  action(look_at(Entity,cursor)).
+player_controls(Entity) :-  action(look_at(Entity,cursor,_)).
 %player_controls(Entity) :-  result(Outcome,move(Entity,direction(_,_))),
 %			    precondition(control_event(EVENT),Outcome).
 
@@ -189,3 +189,17 @@ difficult(Outcome) :-
     precondition(overlaps(E),Outcome),
     precondition(control_event(click(E)), Outcome),
     computer_controls(E).
+
+	
+different_movement(E1,E2) :- action(move(E1,W)), not action(move(E2,W)), entity(E2).
+different_movement(E1,E2) :- action(look_at(E1,T,W)), not action(look_at(E2,T,W)), entity(E2).
+different_movement(E1,E2) :- action(rotate_to(E1,D)), not action(rotate_to(E2,D)), entity(E2).
+different_movement(E1,E2) :- action(rotates(E1,D,_)), not action(rotates(E2,D,_)), entity(E2).
+different_movement(E1,E2) :- controlLogic(draggable(E1)), not controlLogic(draggable(E2)), entity(E2).
+different_movement(E1,E2) :- different_movement(E2,E1).
+
+same_movement(E1,E2) :- entity(E1), entity(E2), not different_movement(E1,E2).
+
+
+
+	

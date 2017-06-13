@@ -17,14 +17,24 @@ required(help).
 required(maintenance).
 
 label(resource(r(1)),composure).
+label(resource(r(2)),tension).
 label(entity(e(1)),yourself).
 label(entity(e(2)),help).
 label(entity(e(3)),harm).
 
+
+read_only(resource(r(2))).
 :- many(entity(e(1))).
+
+:- not same_movement(entity(e(2)),entity(e(3))).
+:- not computer_controls(entity(e(2))).
+
 :- not reading(maintenance,resource(r(1))).
 :- not reading(survive,entity(e(3))).
 :- not reading(help,relation(entity(e(2)),player)).
+
+:- result(mode_change(_,_)).
+
 
 %:- action(add(entity(e(2)),_)).
 %:- action(delete(entity(e(2)))).

@@ -1,17 +1,14 @@
 label(resource(r_1_XX_),composure).
+label(resource(r(2)),tension).
 label(entity(e_1_XX_),yourself).
 label(entity(e_2_XX_),help).
 label(entity(e_3_XX_),harm).
-label(resource(r_2_XX_),r(2)).
-label(resource(r_3_XX_),r(3)).
 
 entity(e_1_XX_).
 entity(e_2_XX_).
 entity(e_3_XX_).
 
 resource(r_1_XX_).
-resource(r_2_XX_).
-resource(r_3_XX_).
 
 singular(entity(e_1_XX_)).
 
@@ -34,79 +31,94 @@ initialize(set_sprite(entity(e_3_XX_),circle)).
 initialize(set_color(entity(e_2_XX_),blue)).
 initialize(set_color(entity(e_3_XX_),green)).
 
-timer_logic(timer(patrol_entity_e_1_XX__XX__XX_),scalar(3),loop).
+timer_logic(timer(patrol_entity_e_2_XX__XX__XX_),scalar(2),loop).
+timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(2),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(4))).
-initialize(set_value(resource(r_2_XX_),scalar(0))).
-initialize(set_value(resource(r_3_XX_),scalar(10))).
+initialize(set_value(resource(r_1_XX_),scalar(6))).
 
-precondition(control_event(button(mouse,held)),outcome(click_to_chase_entity_e_3_XX__XX__XX_)).
-result(outcome(click_to_chase_entity_e_3_XX__XX__XX_),move_away(entity(e_2_XX_),entity(e_3_XX_),scalar(3))).
-result(outcome(click_to_chase_entity_e_3_XX__XX__XX_),move_towards(entity(e_1_XX_),cursor,scalar(3))).
+precondition(le(resource(r_1_XX_),scalar(2)),outcome(o_1_XX_)).
+result(outcome(o_1_XX_),mode_change(narrative_progress)).
 
-precondition(timer_elapsed(patrol_entity_e_1_XX__XX__XX_),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),decrease(resource(r_3_XX_),scalar(4))).
-
-precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),false),outcome(o_2_XX_)).
-precondition(le(resource(r_3_XX_),scalar(10)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease_over_time(resource(r_2_XX_),scalar(10))).
+precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(2))).
+result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(1))).
+result(outcome(o_2_XX_),delete(entity(e_2_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_3_XX_)).
-precondition(le(resource(r_2_XX_),scalar(4)),outcome(o_3_XX_)).
+result(outcome(o_3_XX_),decrease(property(entity(e_1_XX_),health),scalar(1))).
+result(outcome(o_3_XX_),decrease(resource(r_1_XX_),scalar(3))).
 result(outcome(o_3_XX_),delete(entity(e_3_XX_))).
 
-precondition(ge(resource(r_1_XX_),scalar(5)),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),mode_change(game_win)).
+precondition(control_event(button(mouse,held)),outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_)).
+result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),decrease_over_time(property(entity(e_2_XX_),health),scalar(6))).
+result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
+result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),left,scalar(3))).
 
-precondition(control_event(button(mouse,pressed)),outcome(patrol_entity_e_1_XX__XX__XX_)).
-precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(patrol_entity_e_1_XX__XX__XX_)).
-result(outcome(patrol_entity_e_1_XX__XX__XX_),rotates(entity(e_1_XX_),cw,scalar(10))).
-result(outcome(patrol_entity_e_1_XX__XX__XX_),increase(resource(r_1_XX_),scalar(1))).
-result(outcome(patrol_entity_e_1_XX__XX__XX_),add(entity(e_3_XX_),scalar(1),location(middle,right))).
+precondition(timer_elapsed(patrol_entity_e_2_XX__XX__XX_),outcome(patrol_entity_e_2_XX__XX__XX_)).
+result(outcome(patrol_entity_e_2_XX__XX__XX_),rotates(entity(e_2_XX_),cw,scalar(60))).
+result(outcome(patrol_entity_e_2_XX__XX__XX_),decrease(property(entity(e_3_XX_),health),scalar(3))).
+result(outcome(patrol_entity_e_2_XX__XX__XX_),add(entity(e_3_XX_),scalar(1),location(bottom,center))).
+
+precondition(timer_elapsed(patrol_entity_e_3_XX__XX__XX_),outcome(patrol_entity_e_3_XX__XX__XX_)).
+result(outcome(patrol_entity_e_3_XX__XX__XX_),rotates(entity(e_3_XX_),cw,scalar(60))).
+result(outcome(patrol_entity_e_3_XX__XX__XX_),add(entity(e_2_XX_),scalar(1),location(top,left))).
 
 precondition(tick,tick).
-result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
+result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,apply_restitution(entity(e_3_XX_),entity(e_3_XX_))).
-result(tick,moves(entity(e_1_XX_),forward,scalar(3))).
+result(tick,moves(entity(e_2_XX_),forward,scalar(3))).
 result(tick,moves(entity(e_3_XX_),forward,scalar(4))).
-result(tick,decrease_over_time(resource(r_1_XX_),scalar(9))).
+result(tick,decrease_over_time(property(entity(e_1_XX_),health),scalar(10))).
+result(tick,decrease_over_time(property(entity(e_3_XX_),health),scalar(7))).
+result(tick,increase_over_time(property(entity(e_3_XX_),health),scalar(1))).
+result(tick,increase_over_time(resource(r_1_XX_),scalar(3))).
+result(tick,moves(entity(e_1_XX_),right,scalar(3))).
+result(tick,look_at(entity(e_3_XX_),entity(e_1_XX_),random)).
+result(tick,look_at(entity(e_2_XX_),entity(e_1_XX_),random)).
+result(tick,look_at(entity(e_1_XX_),entity(e_2_XX_),furthest)).
 
-reading(goal(produce),resource(r_1_XX_)).
-reading(good,resource(r_1_XX_)).
-reading(produces,relation(entity(e_1_XX_),resource(r_1_XX_))).
+reading(good,property(entity(e_1_XX_),health)).
+reading(produces,relation(location(top,left),entity(e_2_XX_))).
+reading(produces,relation(location(bottom,center),entity(e_3_XX_))).
+reading(consumes,relation(entity(e_1_XX_),resource(r_1_XX_))).
+reading(goal(reduce),resource(r_1_XX_)).
+reading(bad,resource(r_1_XX_)).
 reading(bad,tick).
-reading(good,outcome(patrol_entity_e_1_XX__XX__XX_)).
+reading(bad,outcome(o_3_XX_)).
+reading(bad,outcome(o_2_XX_)).
+reading(good,outcome(o_3_XX_)).
+reading(good,outcome(o_2_XX_)).
+reading(good,entity(e_1_XX_)).
 reading(maintenance,resource(r_1_XX_)).
+reading(hurt,relation(entity(e_2_XX_),player)).
 reading(hurt,relation(entity(e_3_XX_),player)).
+reading(hurt,relation(entity(e_1_XX_),entity(e_2_XX_))).
 reading(hurt,relation(entity(e_1_XX_),entity(e_3_XX_))).
-reading(defend_against,entity(e_3_XX_)).
+reading(defend_against,entity(e_2_XX_)).
+reading(dodge,entity(e_3_XX_)).
+reading(survive,entity(e_2_XX_)).
 reading(survive,entity(e_3_XX_)).
 reading(help,relation(entity(e_2_XX_),player)).
-reading(chases,relation(entity(e_1_XX_),cursor)).
-reading(flees,relation(entity(e_2_XX_),entity(e_3_XX_))).
+reading(help,relation(entity(e_3_XX_),player)).
+reading(tradeoff,outcome(o_3_XX_)).
+reading(tradeoff,outcome(o_2_XX_)).
+reading(consts,relation(entity(e_3_XX_),property(entity(e_3_XX_),health))).
+reading(costs,relation(entity(e_3_XX_),property(entity(e_3_XX_),health))).
+reading(hand_eye_coordination,game).
+reading(stakes(high),property(entity(e_1_XX_),health)).
+reading(stakes(high),property(entity(e_2_XX_),health)).
+reading(stakes(high),property(entity(e_3_XX_),health)).
 reading(stakes(low),resource(r_1_XX_)).
-reading(stakes(low),resource(r_2_XX_)).
-reading(stakes(low),resource(r_3_XX_)).
-reading(grinding,resource(r_2_XX_)).
-reading(outcome_helps,relation(outcome(patrol_entity_e_1_XX__XX__XX_),resource(r_1_XX_))).
-reading(organization).
+reading(outcome_hurts,relation(outcome(o_2_XX_),resource(r_1_XX_))).
+reading(risk,outcome(o_3_XX_)).
+reading(grinding,property(entity(e_2_XX_),health)).
+reading(outcome_helps,relation(outcome(o_3_XX_),resource(r_1_XX_))).
+reading(outcome_helps,relation(outcome(o_2_XX_),property(entity(e_1_XX_),health))).
 ==========
 <ul>
-<li>The goal is to produce composure</li>
-
-<li>The player will do this by<ul>
-<li>
-	 pressing the mouse button
-	 at the same time as
-attempting to make a [[blue|circle]] and [[red|circle]] touch
-</li>
-</ul></li>
+<li>The goal is to reduce composure</li>
 <li>The player controls the game by<ul>
-<li>	the [[red|circle]] moves towards the cursor</li>
-<li>
-	pressing the mouse button
-</li>
 <li>
 	holding the mouse button
 </li>

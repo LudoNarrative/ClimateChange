@@ -1,4 +1,7 @@
 
+player_doesnt_control :- not player_controls(_).
+double_dip(ENTITY,B,C) :- behavior(ENTITY,B), controlScheme(ENTITY,C).
+
 :- outcome(O), not has_precondition(O).
 :- outcome(O), not has_result(O).
 
@@ -7,7 +10,6 @@
    entity(Other).
 
 
-:- not player_controls(_).
 
 :- action(move(Entity,direction(away,_))),
    not action(apply_restitution(Entity,Entity)).
@@ -85,7 +87,7 @@
 :-  result(Outcome,mode_change(game_loss;narrative_gating)),
     player_controls_outcome(Outcome).
 
-:-  result(O,modify(_,property(_,E))),
+:-  result(O,modify(_,property(E,_))),
     result(O,delete(E)).
 
 :- condition(overlaps(entity(e(E1)),entity(e(E2)),POLARITY)),
@@ -349,6 +351,10 @@ different_precondition(O1,O2) :-
 :- result(tick, modify(decrease,R)),
    not action(modify(increase,R)).
 
+% only allow something to decrease on tick if it can be increased
+:- result(tick, modify(increase,R)),
+   not action(modify(decrease,R)).
+
 
 % Don't check more than 1 collision
 :- 2 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)}, outcome(OUTCOME).
@@ -395,7 +401,6 @@ different_precondition(O1,O2) :-
 :- 2 {controlScheme(ENTITY,SCHEME)},
    entity(ENTITY).
 
-:- behavior(ENTITY,_), controlScheme(ENTITY,_).
 :- chases(ENTITY,ENTITY).
 
 :- flees(ENTITY,ENTITY).
@@ -421,6 +426,8 @@ different_precondition(O1,O2) :-
    not player_controls_outcome(Outcome).
 
 
+:- precondition(overlaps(entity(_)),Outcome),
+	result(Outcome,move(_,_)).
 
 
 
@@ -505,7 +512,12 @@ player_controls_resource(R,Dir) :-
 %:- monotonic(R), not allowed(monotonic(R)).
 
 
-:- action(look_at(E,E)).
+:- action(look_at(E,E,C)).
+
+:- read_only(Resource),
+	action(modify(_,Resource)).
+
+
 
 
 %%SIMPLICITY
@@ -531,5 +543,6 @@ player_controls_resource(R,Dir) :-
    preconditions_allowed(N)  .
 
 
-:- N + 1 {result(_,_)},
-   preconditions_allowed(N).
+
+   
+   
