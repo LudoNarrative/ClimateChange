@@ -1,0 +1,749 @@
+[
+{
+    "id": "dummyFragment",
+    "content": "select your character",
+    "effects": [
+      "set establishSetting true"
+    ],
+    "choices":[
+      {"gotoId": "setSkeptical"},
+      {"gotoId": "setEnthusiastic"},
+      {"gotoId": "setShy"}
+    ]
+  },
+
+  {
+    "id": "setSkeptical",
+    "content": "picked Franklin",
+    "choiceLabel": "Skeptical Franklin",
+    "effects": [
+      "set skepticalStudent true"
+    ]
+  },
+
+    {
+    "id": "setEnthusiastic",
+    "content": "picked Elika",
+    "choiceLabel": "enthusiastic Elika",
+    "effects": [
+      "set enthusiasticStudent true"
+    ]
+  },
+
+    {
+    "id": "setShy",
+    "content": "picked Aiden",
+    "choiceLabel": "Shy Aiden",
+    "effects": [
+      "set shyStudent true"
+    ]
+  },
+
+  {
+    "id": "establishSettingSkeptical",
+    "content": "You have been waiting for this day for a long time. It seems like it was just yesterday that Franklin stood up in your lecture and questioned the existence of climate change, and now you are about to watch his PhD defense about climate change as a member of the committee. ",
+    "choices": [
+      {
+        "gotoId": "establishAudience"
+      }
+    ],
+    "conditions": [
+      "skepticalStudent eq true"
+    ],
+    "effects": [
+      "set establishSetting true"
+    ]
+  },
+  {
+    "id": "establishSettingEnthusiastic",
+    "content": "You have been waiting for this day for a long time. It seems like it was just yesterday that Elika was a student in your lecture. She was always so eager to learn, and now you are about to watch her PhD defense about climate change as a member of the committee. ",
+    "choices": [
+      {
+        "gotoId": "establishAudience"
+      }
+    ],
+    "conditions": [
+      "enthusiasticStudent eq true"
+    ],
+    "effects": [
+      "set establishSetting true"
+    ]
+  },
+  {
+    "id": "establishSettingShy",
+    "content": "You have been waiting for this day for a long time. It seems like it was just yesterday that Aiden was a student in your lecture, a little shy, but always interested in learning. And now, you are about to watch their PhD defense about climate change as a member of the committee. ",
+    "choices": [
+      {
+        "gotoId": "establishAudience"
+      }
+    ],
+    "conditions": [
+      "shyStudent eq true"
+    ],
+    "effects": [
+      "set establishSetting true"
+    ]
+  },
+  {
+    "id": "establishAudience",
+    "repeatable": true,
+    "choiceLabel": "Placeholder Choice",
+    "content": "As {ifStateCondition|skepticalStudent eq true|Franklin|}{ifStateCondition|enthusiasticStudent eq true|Elika|}{ifStateCondition|shyStudent eq true|Aiden|} is preparing their presentation at the front of the room, you look around to the other audience members in the room.",
+    "choices": [
+      {
+        "gotoId": "panelMembers"
+      },
+      {
+        "gotoId": "friendsOfPresenter"
+      },
+      {
+        "gotoId": "otherAudience"
+      }
+    ],
+    "conditions": [
+      "establishSetting eq true"
+    ]
+  },
+  {
+    "id": "panelMembers",
+    "choiceLabel": "Look at other panel members",
+    "content": "Sitting on either side of you are the other two panelists for the defense. To your right is professor Stephen Zhang, a well-known environmentalist who teaches at the university. And to your left is Dr. Mavery Winpun, an animal scientist who has published many articles regarding the importance of saving endangered species of insects. ",
+    "effects": [
+      "set establishAudience true"
+    ],
+    "choices": [
+      {"condition": "studentGivesPresentation eq true"},
+    ],
+  },
+  {
+    "id": "friendsOfPresenter",
+      "choices": [
+      {"condition": "studentGivesPresentation eq true"},
+    ],
+    "choiceLabel": "The presenter seems to have friends here ",
+    "content": "It would seem that {ifStateCondition|skepticalStudent eq true|Franklin|}{ifStateCondition|enthusiasticStudent eq true|Elika|}{ifStateCondition|shyStudent eq true|Aiden|} has a fair number of supporters in the audience. From a couple of friends to former professors, all here to watch {ifStateCondition|skepticalStudent eq true|Franklin|}{ifStateCondition|enthusiasticStudent eq true|Elika|}{ifStateCondition|shyStudent eq true|Aiden|} present their defense."
+  },
+  {
+    "id": "otherAudience",
+      "choices": [
+      {"condition": "studentGivesPresentation eq true"},
+    ],
+    "choiceLabel": "Look around to other attendees",
+    "content": "Looking around at the small audience in the room, you notice {ifStateCondition|skepticalStudent eq true|another one of your former students. Oh! It's Elika, a very enthusiastic student from your lecture many years ago.|}{ifStateCondition|enthusiasticStudent eq true|another one of your former students. Oh! It's Franklin, who you remember to be fairly skeptical about climate change.|}{ifStateCondition|shyStudent eq true|a few things that stand out. There were a few people in suits, a woman wearing a large sun hat with feathers in it, and professor Chance Nitton, on of the professors at the university.|}"
+  },
+  {
+    "id": "establishClimateChangeEffects",
+    "content": "{ifStateCondition|skepticalStudent eq true|FranklinClimateChangePlaceholder|}{ifStateCondition|enthusiasticStudent eq true|Wondering what Elika will present in her defense, you recall that she has always been fascinated with wildlife. There is no doubt that she will be addressing the rapidly increasing extinction rate of animals.|}{ifStateCondition|shyStudent eq true|As Aiden sets up their slides, you examine the large picture in the center of the first slide. It is a well-shot picture of Aiden posing with a forest owlet. The picture must have been taken many years ago, considering the fact that the owlet, along with many other wildlife species, have all fallen victim to the rapidly increasing extinction rate.|}",
+    "conditions": [
+      "establishAudience eq true"
+    ],
+    "effects": [
+      "set establishClimateChangeEffects true"
+    ]
+  },
+  {
+    "id": "emmaAsksElika",
+    "content": "Looking down at your notes, you begin forming a question in your head to ask Elika.",
+    "choices": [
+      {
+        "gotoId": "elikaEasyQuestion"
+      },
+      {
+        "gotoId": "elikaMediumQuestion"
+      },
+      {
+        "gotoId": "elikaHardQuestion"
+      }
+    ],
+    "conditions": [
+      "enthusiasticStudent eq true",
+      "studentGivesPresentation eq true"
+    ],
+    "effects": [
+      "set emmaAsksQuestion true"
+    ]
+  },
+  {
+    "id": "elikaEasyQuestion",
+    "choiceLabel": "Give her an easy question",
+    "content": "You decide to help Elika by throwing her an easier question. <p>\"What can we do to slow down the extinction of all the different species of animals?\"</p>",
+    "choices": [
+      {
+        "gotoId": "elikaEasyQuestion"
+      }
+    ]
+  },
+  {
+    "id": "elikaAnswerEasy",
+    "content": "Elika paused for a moment before responding with a well thought out answer. She suggested a simple solution which consisted of limiting gas emissions and lowering the greenhouse gases in our atmosphere. After that is regulated, nature will take care of the rest and the wildlife population will start to grow again. ",
+    "choiceLabel": "Listen to Elika's answer"
+  },
+  {
+    "id": "elikaMediumQuestion",
+    "choiceLabel": "General question",
+    "content": "You decide to go with a more general question. <p>\"So what exactly is this great 'extinction' and how long until it happens?\"</p>",
+    "choices": [
+      {
+        "gotoId": "elikaAnswerMedium"
+      }
+    ]
+  },
+  {
+    "id": "elikaAnswerMedium",
+    "content": "Elika looks around the ceiling while trying to gather her thoughts. She responds with, \"well, the 6th great extinction, also known as the holocene extinction, is actually already here. It has been happening for decades now due to human activity and influence on the climate. It predicts that one half of Earth's higher life forms by the year 2100.\"",
+    "choiceLabel": "Listen to Elika's response"
+  },
+  {
+    "id": "elikaHardQuestion",
+    "choiceLabel": "Challenge her a little",
+    "content": "You decide to challenge Elika a little bit. <p>\"I agree that overfishing and overhunting are huge problems, but fishing and hunting are also necessary to provide humanity with the resources we need to survive. My question is: How do we decide how much fishing or hunting we can do before it is too much?\"</p>",
+    "choices": [
+      {
+        "gotoId": "elikaAnswerHard"
+      }
+    ]
+  },
+  {
+    "id": "elikaAnswerHard",
+    "content": "With a smile on her face and no hesitation at all, Elika responds with, \"well obviously, it is different for each different species, but we can record the growth and decline of the population. So we can keep hunting and fishing a certain species, as long as the population of that species grows just as fast as it declines.\"",
+    "choiceLabel": "Listen to Elika's response"
+  },
+  {
+    "id": "outro",
+    "content": "Before leaving, you pull {ifStateCondition|skepticalStudent eq true|Franklin|}{ifStateCondition|enthusiasticStudent eq true|Elika|}{ifStateCondition|shyStudent eq true|Aiden|} aside. <p>\"Overall, I am extremely proud to see how far you have come. I remember many years ago when you were the {ifStateCondition|skepticalStudent eq true|skeptical|}{ifStateCondition|enthusiasticStudent eq true|enthusiastic|}{ifStateCondition|shyStudent eq true|shy|} student in my class, and now, you have obtained your PhD. Keep working hard and continue making me proud.\"</p>",
+    "conditions": [
+      "facultyDeliberate eq true"
+    ],
+    "effects": [
+      "set outro true"
+    ]
+  },
+  {
+    "id": "franklinPresentation",
+    "choiceLabel": "Franklin begins his presentation",
+    "conditions": [
+     "establishAudience eq true",
+      "skepticalStudent eq true"
+    ],
+    "effects": [
+      "set studentGivesPresentation true"
+    ],
+    "content": "\"Franklin's presentation opens on a slide of a photo of a younger Franklin with a recent model of electric car. Then he begins, \"the green movement has been making a push for a switch to electric cars for decades, and while in theory electric vehicles are better for the environment there are dozens of underlying issues in which need to be studied. First what we must consider is what type of pollution goes into making cars. Being the son of CEOs in both the oil industry and recently the electric car industry,  I have first hand experience as to the dark side that these companies like to keep hidden.\"",
+    "choices": [
+      {
+        "gotoId": "franklinPresentationPart2"
+      }
+    ],
+    "notes": "CHECKLIST-Viewpoint, global-Franklin's presentation is about the negative effects behind the Eco-car movement.-Facts about the company, then jump to questions.scepticalStudent = true"
+  },
+  {
+    "id": "franklinPresentationPart2",
+    "choiceLabel": "Slide 2",
+    "content": "Franklin's second slide is a picture of Franklin siting on the hood of his car in front of a factory with billowing smokestacks. \"Electric vehicles may not emit carbon dioxide the same way as a fossil fuel burning vehicle does, however this does not mean they are not guilty when it comes to climate change. You must ask yourself where the energy is coming from, many cities run on fossil fuels or other methods that pollute the environment.\"",
+    "choices": [
+      {
+        "gotoId": "franklinPresentationPart3"
+      }
+    ],
+    "notes": "Here Franklin talks about how there still need to be reforms other than switching to electric cars."
+  },
+  {
+    "id": "franklinPresentationPart3",
+    "choiceLabel": "Slide 3",
+    "content": "\"Franklin's presentation opens on a slide of a photo of him with one ofthe more recent models of electric car. Then he begins, \"the green movement has been making a push for a switch to electric cars for decades, and while in theory electric vehicles are better for the environment there are dozens of underlying issues in which need to be studied. First what we must consider is what type of pollution goes into making cars. Being the son of CEOs in both the oil industry and recently the electric car industry,  I have first hand experience as to the dark side that these companies like to keep hidden.\"",
+    "choices": [
+      {
+        "gotoId": "franklinPresentationEnd"
+      }
+    ],
+    "notes": "inspiration from https://www.wired.com/2016/03/teslas-electric-cars-might-not-green-think/ Here Franklin goes into more depth on the environmentally damaging effects of electric vehicles."
+  },
+  {
+    "id": "franklinPresentationEnd",
+    "choiceLabel": "Move on to questions",
+    "content": "Franklin's defense continues in this fashion, almost as if it were a documentary where the speaker was in front of you. Each proceeding slide displays a Franklin who is becoming more aware with the effect big business has on the planet. Franklin closes his defense by stating personal and local change isn't nearly enough to save the planet and only global reform of corporations has any chance to mend the damage we have done."
+  },
+  {
+    "id": "emmaAsksFranklin",
+    "choiceLabel": "Open floor to questions",
+    "content": "\"Thank you Franklin, we will begin with instructor questions, then move on to the audience.\"",
+    "choices": [
+      {
+        "gotoId": "easyQuestionF"
+      },
+      {
+        "gotoId": "midQuestionF"
+      },
+      {
+        "gotoId": "hardQuestionF"
+      }
+    ],
+    "effects": [
+      "set emmaAsksQuestion true"
+    ]
+  },
+  {
+    "id": "easyQuestionF",
+    "choiceLabel": "easier question",
+    "speaker": "protagonist",
+    "content": "\"So tell me a little bit about what changed your views from when when you took my class years ago.\"",
+    "choices": [
+      {
+        "gotoId": "easyAnswerF"
+      }
+    ],
+    "conditions": [
+      "emmaAsksQuestion eq true",
+    ],
+  },
+  {
+    "id": "easyAnswerF",
+    "choiceLabel": "Franklin Smiles and responds",
+    "content": "\"I was naive years ago to think humans had little impact, it was hard for me to see how things accumulated. I only fully grasped our impact when my parents switched from the oil industry to the electric car industry. I asked to see how these luxury \"nature-friendly\" vehicles were made and it disgusted me. What made me passionate-\" ",
+    "conditions": [
+      "emmaAsksQuestion eq true",
+    ],
+    "choices": [
+      {
+        "gotoId": "audienceAsksFranklin"
+      }
+    ]
+  },
+  {
+    "id": "midQuestionF",
+    "conditions": [
+      "emmaAsksQuestion eq true",
+    ],
+    "speaker": "protagonist",
+    "content": "\"How do you propose we get legislation to enforce change to corporations?\"",
+    "choices": [
+      {
+        "gotoId": "midAnswerF"
+      }
+    ]
+  },
+  {
+    "id": "midAnswerF",
+    "choiceLabel": "Franklin looks to have planned on this question.",
+    "content": "\"Corporations are using dirty tactics and corruption to stay in power, all we have to do is expose illegal activities and make it widely known. As for any legislative body that doesn't properly punish these industries for illegal activity, their position will be threatened, they are just as responsible if they do not uphold proper punishment. If they wish to keep their job they will comply. And another-\"",
+    "choices": [
+      {
+        "gotoId": "audienceAsksFranklin"
+      }
+    ]
+  },
+  {
+    "id": "hardQuestionF",
+    "speaker": "protagonist",
+    "content": "\"How do you personally plan to make change, and what is the best method for everyone else to make change?\""
+  },
+  {
+    "id": "hardAnswerF",
+    "choiceLabel": "Franklin responds",
+    "content": "Franklin looks a bit uneasy, \"Well people will have to demand action be taken when illegal activities are taking place in legislation and industry. And if action fails to take place we will need to demand the immediate removal of whoever refused to take legislative action. People will need to convince news casters to cover issues until they are resolved, not until they find a new hot problem. As for someone born into wealth as myself-\"",
+    "choices": [
+      {
+        "gotoId": "audienceAsksFranklin"
+      }
+    ]
+  },
+  {
+    "id": "audienceAsksFranklin",
+    "choiceLabel": "Franklin is cut off by an audience member.",
+    "content": "Elika, stands up and shouts, \"I just want to ask how it feels to know your previous company killed of an entire species of crab with the oil incident?\"\nFranklin is blindsided by this question and looks panicked."
+  },
+  {
+    "id": "letFranklinDefend",
+    "content": "Franklin is blindsided and makes a panicked attempt to save himself, \"That wasn't... that had nothing to do with me.\" He struggles for a few minutes to regain focus, but another faculty member "
+  },
+  {
+    "id": "defendFranklin",
+    "choiceLabel": "Defend Franklin",
+    "content": "before Franklin can flounder you step in \"Elika this is a highly inappropriate question to be asking, it has nothing to do with Franklin plans to change the future. We are over time anyway, we will move on to the assessment to avoid further interruption, I would like you all to leave."
+  },
+  {
+    "id": "facultyDeliberateFranklin",
+    "content": "Franklin leaves the room and you begin discussing how well he did. \"So {name|protagonist} are you going pass the son of the people who killed the crabs?\" \"yes, I feel he did very well, and it's not kind of you to associate him with his parents actions, he seems to have had a real change of heart.\" "
+  },
+  {
+    "id": "facultyDeliberateElika",
+    "content": "You and the other faculty look over your notes still shellshocked from the excitable woman studying the end times of humans. \"So {name|protagonist} does the extinction fanatic pass?\" \"While her presentation was abnormal I do believe knowing estimates on how long we have left is valuable to our species. So yes she passed.\""
+  },
+  {
+    "id": "facultyDeliberateAiden",
+    "content": "\"How did they do {name|protagonist}?\" \"They did well and considering all the species that have been going extinct the last few years they have an important focus. They pass.\""
+  },
+  //elika presents
+
+  {
+    "id": "elikaPresentation",
+    "content": "Élika hops up next to where her first slide was blossoming upon the screen, beaming at the three of you. \"Hello, everyone!\" she says, her arm sweeping up into the air. \"I'm super pleased to present to you my dissertation: a vigorous look into the ultimate extinction of the human race!\"",
+    "choices" : [
+      {"gotoId" : "ohMy"},
+      {"gotoId" : "thisInteresting"},
+      {"gotoId" : "thisUnexpected"}
+    ],
+    "effects": [
+      "set studentGivesPresentation true"
+    ],
+    "conditions" : [
+      "establishAudience eq true",
+      "enthusiasticStudent eq true"
+    ]
+  },
+
+  {
+  "id": "ohMy",
+  "choiceLabel": "...Oh my.",
+  "request": {"gotoId": "elikaPresentsSlide1"},
+  },
+
+  {
+    "id": "thisInteresting",
+    "choiceLabel": "This sounds interesting.",
+    "request": {"gotoId": "elikaPresentsSlide1"},
+  },
+
+  {
+    "id": "thisUnexpected",
+    "choiceLabel": "...Was not expecting that.",
+    "request": {"gotoId": "elikaPresentsSlide1"},
+  },
+
+  {
+    "id" : "elikaPresentsSlide1",
+    "content" : "Élika is practically dancing on the tips of her toes. \"Specifically, I will be discussing the ridiculously high extinction rates of other species, how those correlate with human activity, and how such rates relate to how long human beings will be able to continue their existence on this planet!\" <br/><br/>... She looks <i>so</i> excited for this.",
+    "choices" : [
+      {"gotoId" : "elikaPresentsSlide2"},
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
+  },
+
+  {
+    "id" : "elikaPresentsSlide2",
+    "choiceLabel" : "Continue",
+    "content" : "\"Taking into account the species we are aware of, the current extinction rate has risen to over one hundred times higher since the last study thirty years ago - which is just one of the signs that we're about to experience the 'Sixth Great Extinction.'\" The next slide reveals a stock photo of a smiling businessman. \"And the culprit? Humans, naturally!",
+    "choices" : [
+      {"gotoId" : "elikaPresentsSlide3"}
+    ]
+  },
+
+  {
+    "id" : "elikaPresentsSlide3",
+    "choiceLabel" : "Continue.",
+    "content" : "\"Overhunting. Overfishing. Overlogging. Introducing invasive species. Releasing an overabundance of greenhouse gases in our atmosphere. Human activity has caused climate change so drastic that the global temperature has risen, the chemistry of the oceans have shifted, and the very face of our planet has been rearranged in accordance to our wants.\"",
+    "choices" : [
+      {"gotoId" : "elikaPresentsSlide4"}
+    ]
+  },
+
+  {
+    "id" : "elikaPresentsSlide4",
+    "choiceLabel" : "Continue",
+    "content" : "\"Thus, I have dug deep into the effects of human activity in order to answer the question of just how long humans can adapt and last to the consequences, before falling victim to our own handiwork, like so many species before us have already.\"",
+    "choices" : [
+      {"gotoId" : "howFascinating"},
+      {"gotoId" : "howMorbid"},
+      {"gotoId" : "howRelevant"},
+    ],
+  },
+
+  {
+    "id" : "howFascinating",
+    "choiceLabel" : "How fascinating.",
+    "request" : {
+      "gotoId" : "elikaFinishes"
+    },
+  },
+
+  {
+    "id" : "howMorbid",
+    "choiceLabel" : "How morbid.",
+    "request" : {
+      "gotoId" : "elikaFinishes"
+    },
+  },
+
+  {
+    "id" : "howRelevant",
+    "choiceLabel" : "How relevant.",
+    "request" : {
+      "gotoId" : "elikaFinishes"
+    },
+  },
+
+  {
+    "id" : "elikaFinishes",
+    "content" : "After about an hour of detailed analysis on extinction rates, accompanied by slides plastered with brightly colored images and plenty of smiley-faces, Élika concludes with a rather well-reasoned prediction of the end of humankind using her previously-presented evidence. You can see your fellow faculty member on your right nodding her head.",
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
+  },
+
+  //audience asks elika
+
+  {
+    "id": "audienceAsksElika",
+    "choiceLabel": "Continue",
+    "content": "Élika dons a contented smile as she surveys her audience. \"Does anyone have any questions?\" she says, as if she hadn't just thoroughly explained an impending doomsday. <br/><br/>\"Uh, yeah,\" Franklin pipes up. \"How can you possibly be happy about that?!\"",
+    "choices" : [
+      {"gotoId" : "audienceAsksElika2"}
+    ]
+  },
+
+  {
+    "id" : "audienceAsksElika2",
+    "choiceLabel" : "Continue",
+    "content" : "Élika's eyebrows lift. \"Happy?\" <br/><br/>\"Look at you!\" Franklin sputters, gesturing wildly. <br/><br/>\"Y-you're saying all these horrible things with a smile on your face!\" <br/><br/>Said smile begins to falter. \"I - I, uh, I didn't mean -\"",
+    "choices": [
+      {
+        "gotoId": "emmaHelpElika"
+      },
+      {
+        "gotoId": "emmaNoHelpElika"
+      }
+    ],
+    "effects" : [
+      "set audienceAsksQuestion true"
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
+  },
+
+  {
+    "id": "emmaHelpElika",
+    "choiceLabel": "Step in - Franklin's out of line here.",
+    "content": "\"It's... difficult to explain...\" Elika says, voice strained, and you can't handle it anymore. As Elika's voice trails off, you take the opportunity to raise a hand and say, \"I don't believe that is a relevant question at the moment. Let's move on for the sake of time, shall we?\" <br/><br/> Franklin's cheeks puffed up in indignation, but Elika's shoulders slump forward in relief.",
+  },
+
+  {
+    "id" : "emmaHelps2",
+    "choiceLabel" : "You nod to Elika to continue.",
+    "content" : "Elika's face quickly returns to its pleasant expression. \"I will say really quickly that everyone has coping methods in grappling with the knowledge that the world will end one day,\" she says with a shrug. \"That's all.\"",
+
+  },
+
+  {
+    "id": "emmaNoHelpElika",
+    "choiceLabel": "See how Élika handles this.",
+    "content": "You lean back in your chair and watch Elika fumble with her words, curious as to how your former student will handle the accusation. \"It's... difficult to explain,\" Elika manages to say. \"You see it's... it's not that...\"",
+  },
+
+  {
+    "id" : "emmaNotHelps2",
+    "choiceLabel" : "You cross your arms and watch as she takes a moment to gather herself with a breath.",
+    "content" : "\"It's not that I'm... glad, per se, it's more like I'm just dealing with the knowledge that this will end and our existence doesn't really matter in the grand scheme of things.\" Franklin's eyebrows furrow in concern, but Elika quickly says \"Thank you. Any other questions?\"",
+    "choices" : [
+      {"gotoId" : "emmaNotHelps3"}
+    ]
+  },
+
+  {
+    "id" : "emmaNotHelps3",
+    "choiceLabel" : "Continue",
+    "content" : "You smile, pleased to see her stand her ground. Her smile had returned to her face, but she still looks a little shaken.",
+  },
+
+//aiden presents
+
+  {
+    "id": "aidenPresentation",
+    "content": "Aiden holds their hands comfortably clasped in front of them, standing next to the screen with their gaze held high. You can see Aiden's thumb rub their other hand nervously. \"Hello,\" they say, their voice soft. \"I'm here to talk about the forest owlet - or the heteroglaux blewitti, to call it by its scientific name.\"",
+    "choices" : [
+      {"gotoId" : "largeTalons"},
+      {"gotoId" : "inIndia"},
+      {"gotoId" : "theyExtinct"},
+    ],
+    "effects": [
+      "set studentGivesPresentation true"
+    ],
+    "conditions" : [
+      "establishAudience eq true",
+      "shyStudent eq true"
+    ]
+  },
+
+  {
+    "id" : "largeTalons",
+    "choiceLabel" : "Aw, I love those little guys and their enormous talons.",
+    "request" : {"gotoId" : "aidenPresentsSlide2"},
+  },
+
+  {
+    "id" : "inIndia",
+    "choiceLabel" : "Ah yes, the one found in central India.",
+    "request" : {"gotoId" : "aidenPresentsSlide2"},
+  },
+
+  {
+    "id" : "theyExtinct",
+    "choiceLabel" : "They're extinct, aren't they?",
+    "request": {"gotoId": "aidenPresentsSlide2"},
+  },
+
+  {
+    "id" : "aidenPresentsSlide2",
+    "content" : "\"The forest owlet has been brought back from the very brink of extinction a couple of times, most notably in 1997, when they were rediscovered after 113 years of being recorded as extinct,\" Aiden says quietly. They close their eyes. \"Despite such efforts, they are now gone forever.\" For a moment, their voice wavers.",
+    "choices" : [
+      {"gotoId" : "heartPunch"},
+      {"gotoId" : "heartRock"}
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
+  },
+
+  {
+    "id" : "heartPunch",
+    "choiceLabel" : "You bring your hand to your heart.",
+    "request": {"gotoId": "aidenPresentsSlide3"},
+  },
+
+  {
+    "id" : "heartSolid",
+    "choiceLabel" : "Your heart is made of stone, darn it!",
+    "request": {"gotoId": "aidenPresentsSlide3"},
+  },
+  {
+    "id" :  "aidenPresentsSlide3",
+    "content" : "Aiden straightens their back. \"And so, I'll be presenting my thesis on how habit fragmentation, climate change, and science fraud has contributed to the undeserved end of a wonderful species,\" Aiden says. \"And how we can take care of more species in the future by focusing locally.\" Their eyes are blazing with passion.",
+    "choices" : [
+      {"gotoId" : "aidenFinishes"}
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
+  },
+
+  {
+    "id" : "aidenFinishes",
+    "choiceLabel" : "Continue",
+    "content" : "After the hour is up, you wonder if it's unprofessional to cheer after Aiden wraps up their presentation and asks politely for questions.",
+    "choices" : [
+      {"gotoId" : "audienceAsksAiden"}
+    ]
+  },
+
+  {
+    "id": "audienceAsksAiden",
+    "choiceLabel" : "Continue",
+    "content": "A lady wearing a hat adorned with feathers raises a hand, leaning forward. \"Ah, yes, hi, um,\" she says. \"Question. Don't we have more, um, important things to worry about than, ah - birds?\" <br/><br/> Aiden blinks at her. Their hands tighten around each other. \"S-sorry?\"",
+    "choices" : [
+      {"gotoId" : "audienceAsksAiden2"}
+    ],
+    "effects": [
+      "set audienceAsksQuestion true"
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
+  },
+
+  {
+    "id" : "audienceAsksAiden2",
+    "choiceLabel" : "Continue",
+    "content" : "\"Well, it's like you mentioned, dear. Climate change is, um, quite bothersome,\" says the lady. \"Many folks are losing their homes. Going hungry. Buying only one car! - shouldn't we, um, worry about our <i>own</i> kind first? What have these owls done for us?\" She flips her hair. \"Besides, it's just one species.\"",
+    "choices" : [
+      {"gotoId" : "ohShit"},
+      {"gotoId" : "wowPoint"},
+      {"gotoId" : "sheDead"},
+    ]
+  },
+
+  {
+    "id" : "ohShit",
+    "choiceLabel" : "Did she really just say that?",
+    "request" : {"gotoId" : "audienceAsksAiden3"},
+  },
+
+  {
+    "id" : "wowPoint",
+    "choiceLabel" : "I mean. She has a point.",
+    "request" : {"gotoId": "audienceAsksAiden3"},
+  },
+
+  {
+    "id" : "sheDead",
+    "choiceLabel" : "She is now dead to me."
+  },
+
+  {
+    "id" : "audienceAsksAiden3",
+    "content" : "If you look closely, you can tell that Aiden's trembling. \"You,\" they breathe. \"You dare - dare <i>sit</i> there and - and ask how birds are <i>useful</i> with a flipping <i>feather</i> in your hat!\" <br/><br/> The lady's cheeks are growing red fast. ",
+    "choices": [
+      {
+        "gotoId": "emmaHelpAiden"
+      },
+      {
+        "gotoId": "emmaNoHelpAiden"
+      }
+    ],
+    "conditions" : [
+      "studentGivesPresentation eq true"
+    ]
+  },
+
+  {
+    "id": "emmaHelpAiden",
+    "choiceLabel": "I should probably step in.",
+    "content": "\"Alright, everyone, let's stay professional,\" you say quickly. Aiden blinks, then their eyes widen. \"A - apologies,\" they mumble. \"It's - you see, even if the forest owlet may not seem useful to <i>us</i>, they were still essential to their own ecosystem.\" Their gaze darts down. \"Not everything has to be about humankind.\"",
+  },
+
+  {
+    "id": "emmaNoHelpAiden",
+    "choiceLabel": "Where's the popcorn?",
+    "content": "Aiden inhales deeply. \"Look,\" they say. \"We're not the only beings on this planet. I think we can care about more living beings other than ourselves.\" <br/><br/>The lady's sputtering. \"I was just <i>saying</i> -\" <br/><br/>\"I know. Species extinction is just one problem - but it's still an important one. Every species keep the balance of the planet's ecosystems.\"",
+  },
+
+  {
+    "id": "emmaAsksAiden",
+    "content": "Now, time for the panel's questions. Aiden shifts from one foot to the other, looking like they were trying to keep their hand-wringing as small as possible. You look down at your notes, drumming up questions in your head.",
+    "conditions": [
+      "shyStudent eq true"
+    ],
+    "choices": [
+      {
+        "gotoId": "aidenSoftball"
+      },
+      {
+        "gotoId": "aidenMiddle"
+      },
+      {
+        "gotoId": "aidenHardcore"
+      }
+    ],
+    "effects": [
+      "set emmaAsksQuestion true"
+    ]
+  },
+
+  {
+    "id": "aidenSoftball",
+    "choiceLabel": "Could you elaborate on how focusing on local work would benefit endangered species?",
+    "content": "They seem to be focused locally, which has you secretly pleased. Let's see how much they can tell you about it. <br/><br/> Aiden perks up, looking almost excited. \"Well, even though there are laws on a federal level that can help, we can directly aid the recovery of endangered species locally.\"",
+    "choices" : [
+      {"gotoId" : "aSoftcore2"}
+    ]
+  },
+
+  {
+    "id" : "aSoftcore2",
+    "choiceLabel" : "Continue",
+    "content" : "\"We can work to protect habitats from threats like logging, contaminated water, and invasive species, and - and help restore them, too!\" There lies a determined look on their face, their hands in fists before them. <br/><br/> You smile. <i>I like your passion, kid,</i> you can't help but think fondly, even though your previous student is a kid no more.",
+  },
+
+  {
+    "id": "aidenMiddle",
+    "choiceLabel": "Why choose to focus on the forest owlet? Why is the loss of this species significant?",
+    "content": "Aiden tilts their head. \"Um, well, I believe that the loss of any species makes a significant impact on the ecosystem they've left - owls in particular, they occupy a nocturnal niche, so they keep the nocturnal prey population under control. They keep the balance.\" They gesture a little more. \"Forest owlets are, um, endemic to India, so their presence is particularly important.\"",
+  },
+
+  {
+    "id": "aidenHardcore",
+    "choiceLabel": "Would it be too slow to focus on one species at a time?",
+    "content": "\"Focusing on each would mean greater chance of recovery because of the work spent on them; perhaps focusing on groups?\""
+  },
+]

@@ -1,0 +1,614 @@
+[
+{
+    "id": "friendIsInAcademiaEnthusiastici",
+    "content": "<p>\"So {nickname|protagonist}, I got you something.\" {name|academicFriend} pulls out a coffee thermos from under the table. \"It says 'PHD'. I have one too. Whenever we are both on campus we can stop but that little cafe and drink some mocha on the patio. It'll be adorable\"</p><p>\"Will you also snicker about the peasant undergraduates as they go to their fifth class that day?\" Shelly stands in defense of the proletariat.</p>",
+    "choices": [
+      {
+        "gotoId": "lovei"
+      },
+      {
+        "gotoId": "tooMuchi"
+      }
+    ],
+    "conditions": [
+      "EmmaJobFutureBeat eq true",
+      "academicEnthusiasm gt 4",
+      "EmmaClassTypeBeat eq true"
+    ],
+    "effects": [
+      "set friendIsInAcademia true"
+    ]
+  },
+  {
+    "id": "lovei",
+    "content": "<p>{name|academicFriend} claps her hands together and bounces, just a little, all the while ignoring {name|nonAcademicFriend} sticking her tongue out at her.</p>",
+    "effects": [
+      "incr academicEnthusiasm 1"
+    ],
+    "choiceLabel": "I. Love. It."
+  },
+  {
+    "id": "tooMuchi",
+    "content": "<p>\"Nonsense. You have this in the bag\"</p><p>Do not succumb to the bourgeoisie {nickname|protagonist}.\"</p><p>\"{name|nonAcademicFriend}, I'm still paying off students loans you know?\"</p><p>{name|nonAcademicFriend} keeps her eyes locked on {name|academicFriend} as she sips her drink.</p>",
+    "choiceLabel": "\"Thanks {nickname|academicFriend} but isn't this a little preemptive.\""
+  },
+  {
+    "id": "friendIsInAcademiaUnenthusiastici",
+    "content": "<p>\"Hey {nickname|protagonist}. I want to tell you something. When I was about to present my dissertation I felt awful.\" {name|academicFriend} sets her utensils down and places her hands on her lap. \"I couldn't sleep. I thought I was getting the flu. When I showed up at campus I was so nervous that I threw up in the bathroom just five minutes before my presentation. I looked like a zombie. Afterward, my advisor came up to speak with me. Told me it went perfectly. I didn't even put in half the work you did.\" She looks up to you. \"I know it kinda feels like the end of the world, but it is gonna be just fine.</p>",
+    "choices": [
+      {
+        "gotoId": "nothingi"
+      },
+      {
+        "gotoId": "grossi"
+      },
+      {
+        "gotoId": "gotThisi"
+      }
+    ],
+    "conditions": [
+      "establishFriendsEmmaJobFutureBeat eq true",
+      "academicEnthusiasm lte 3",
+      "EmmaClassTypeBeat eq true"
+    ],
+    "effects": [
+      "set friendIsInAcademia true",
+      "set academiaFriend true"
+    ]
+  },
+  {
+    "id": "nothingi",
+    "content": "<p>\"Why don't I go grab dessert.\" {name|academicFriend} gets up and walks into the kitchen. {name|nonAcademicFriend} clasps your shoulder for just a second. {name|academicFriend} returns with a few bowls of ice cream. \"Sorry, it's a little melted.\"</p>",
+    "effects": [
+      "decr confidence 1",
+      "decr academicEnthusiam 1"
+    ],
+    "choiceLabel": "Say nothing."
+  },
+  {
+    "id": "grossi",
+    "content": "<p>Shell laughs. Or at least should would have had she not been mid gulp of water and now spewing it over the table.</p><p>{name|academicFriend} cleans the splash back off her with a napkin.\"And that's the last time I tell you anything,\" {name|academicFriend} notes, smiling.</p>",
+    "effects": [
+      "incr confidence 1"
+    ],
+    "choiceLabel": "\"Jeez, {nickname|academicFriend}, that's pretty gross you threw up.\""
+  },
+  {
+    "id": "gotThisi",
+    "content": "<p>\"Atta girl.\" {name|academicFriend} gives you a light slug in the arm.</p><p>\"You are going to do great at whatever you do. Just remember you don't need to be a professor to make a difference'\" {name|nonAcademicFriend} says.</p>",
+    "effects": [
+      "incr confidence 1",
+      "incr academicEnthusiasm 1"
+    ],
+    "choiceLabel": "\"You're right {nickname|academicFriend}, I got this.\""
+  },
+
+  {
+    "id": "friendNotInAcademici",
+    "content": "<p>{name|nonAcademicFriend} rests her elbows on the table and leans in. \"So, I dunno what you are doing next Friday, but I'm actually setting up a beach cleanup a little bit south of here.\"</p><p>\"Oh damn {name|nonAcademicFriend},\" {name|academicFriend} interjects. \"That's when Emma and I have our faculty meeting.\"</p>",
+    "effects": [
+      "set friendIsNotInAcademia true"
+    ],
+    "choices" : [
+      {"gotoId" : "iCanDoThati"},
+      {"gotoId" : "interestingi"},
+      {"gotoId" : "gottaPassi"}
+    ],
+    "conditions" : [
+      "EmmaClassTypeBeat eq true",
+      "EmmaJobFutureBeat eq true"
+    ]
+  },
+    {
+      "id": "iCanDoThati",
+      "choiceLabel" : "\"I can probabaly be late to the meeting.\"",
+      "content": "<p>{name|academicFriend} sighs and shakes her head. {name|nonAcademicFriend} pumps her fist.</p>",
+      "effects": [
+        "decr academicEnthusiasm 1"
+      ]
+    },
+    {
+      "id": "interestingi",
+      "choiceLabel" : "\"A beach cleanup. That sounds... neat, I guess.\"",
+      "content": "<p>{name|nonAcademicFriend} leans back. \"We'll, I'll jot you down for probably not attending, in that case.\"</p>",
+      "effects": [
+        "incr tension 1"
+      ]
+    },
+    {
+      "id": "gottaPassi",
+      "choiceLabel" : "\"Sorry {nickname|nonAcademicFriend}, I can't miss work.\"",
+      "content": "<p>{name|nonAcademicFriend} waves her hand back and forth. \"Yeah, yeah I getcha. We'll plan something for next time.\"</p>",
+      "effects": [
+        "incr academicEnthusiasm 1"
+      ]
+    },
+
+  {
+    "id": "fightBeginsAndTensionRelievedi",
+    "content": "<p>After a few choice words, {name|nonAcademicFriend} and {name|academicFriend} have begun to bicker. Accusations of laziness and ignorance bounce back and forth like they're ping pong balls.</p><p>\"I'm sorry getting a degree was too hard for you {name|nonAcademicFriend}, but that's your problem.\"</p><p>\"Honestly? If you need other people to validate your success then fine, be my guest.\"</p>",
+    "conditions": [
+      "friendIsInAcademia eq true",
+      "friendIsNotInAcademia eq true"     
+    ],
+    "choices" : [
+      {"gotoId": "sideZanitai"},
+      {"gotoId": "sideShellyi"},
+      {"gotoId": "neutrali"}
+    ],
+    "effects": [
+      "set friendTensionRelieved true"
+    ]
+  },
+    {
+      "id": "sideZanitai",
+      "choiceLabel" : "\"Come on {name|nonAcademicFriend}, you know it's not like that.\"",
+      "content": "<p>\"What {nickname|protagonist}, you too?\" {name|nonAcademicFriend} sighs. \"No, you're right. Just because it isn't what I would do doesn't mean it's wrong. I guess I'm just stubborn. Surprise!\"</p>",
+      "conditions": [
+        "friendIsInAcademia eq true",
+        "friendIsNotInAcademia eq true"   
+      ],
+      "effects": [
+        "incr academicEnthusiasm 1",
+        "decr tension 1"
+      ]
+    },
+    {
+      "id": "sideShellyi",
+      "choiceLabel" : "\"Hey {name|academicFriend}, back off a little bit.\"",
+      "content": "<p>{name|academicFriend} goes a little pale, as if she's stunned by her own behaviour. \"You're right {nickname|protagonist}. Sorry {nickname|nonAcademicFriend}, that wasn't me talking. I'm just a bit overwhelmed with teaching lately.\"</p>",
+      "conditions": [
+        "friendIsInAcademia eq true",
+        "friendIsNotInAcademia eq true"     
+      ],
+      "effects": [
+        "decr academicEnthusiasm 1",
+        "decr tension 1"
+      ]
+    },
+    {
+      "id": "neutrali",
+      "choiceLabel" : "Don't get involved",
+      "content": "<p>\"{name|academicFriend} please, now you are just sounding childish.\"</p><p>\"Oh, jeez prof, this won't bring down my participation points, will it?\" Shelly waves her hand in dismissal. The two go quiet and focus on their food.</p>",
+      "conditions": [
+        "friendIsInAcademia eq true",
+        "friendIsNotInAcademia eq true"   
+      ],
+      "effects": [
+        "incr tension 1"
+      ]
+    },
+
+  {
+    "id": "checkWithDisagreerShellyi",
+    "content": "<p>{name|nonAcademicFriend} has begun fidgiting with utensils on the table. Right now she is setting up a wall of salt and pepper shakers. It looks like she might be feeling defensive. Maybe you should check in on her.</p>",
+    "choices" : [
+      {"gotoId": "maybeIshouldn'tShelli"},
+      {"gotoId": "positiveShelli"},
+      {"gotoId": "negativeShelli"}
+    ],
+    "conditions": [
+      "academicEnthusiasm gte 5",
+      "friendTensionRelieved eq true"
+    ],
+    "effects": [
+      "set checkinWithDisagreer true"
+    ]
+  },
+    {
+      "id": "maybeIshouldn'tShelli",
+      "choiceLabel" : "How about I don't.",
+      "content" : "{name|nonAcademicFriend} finishes her dinner table structure and her eyes seem to glaze over as she scans it. It looks like she might be ready to leave."
+    },
+    {
+      "id": "positiveShelli",
+      "choiceLabel" : "\"You setting up some sort of barrier around your plate there.\"",
+      "content" : "<p>\"I'm defending my dinner from oncoming vegtable hordes.\" She winks at you and turns her attention back to the conversation.</p>",
+      "effects" : ["decr tension 1"]
+    },
+    {
+      "id": "negativeShelli",
+      "choiceLabel" : "<p>\"So {name|nonAcademicFriend}, how has your volunteering been going?\"</p>",
+      "content" : "<p>\"Ehh, fine I guess. You probably don't want to hear about it though.\" She returns her focus to her construction.</p>",
+      "effects" : ["incr tension 1"]
+    },
+  {
+    "id": "checkwithDisagreerZanitai",
+    "content": "<p>{name|academicFriend} keeps glancing into the kitchen as if she's worried something will burn. She readjusting herself in her seat. Maybe you should check in on her.</p>",
+    "choices" : [
+      {"gotoId": "maybeIshouldn'tZani"},
+      {"gotoId": "positiveZani"},
+      {"gotoId": "negativeZani"}
+    ],
+    "conditions": [
+      "academicEnthusiasm lte 4",
+      "friendTensionRelieved eq true"
+    ],
+    "effects": [
+      "set checkinWithDisagreer true"
+    ]
+  },
+  {
+      "id": "maybeIshouldn'tZani",
+      "choiceLabel" : "I think I'll leave her be for now.",
+      "content" : "<p>She goes into the kitchen to check on something, but when she comes back she still looks just as frazzled.</p>"
+    },
+    {
+      "id": "positiveZani",
+      "choiceLabel" : "\"Hey {nickname|academicFriend}, how are classes going. I've been hearin' a lot of good things about you 'round campus.\"",
+      "content" : "<p>\"Oh, they're pretty good. It's been busy, ya know.\" She brushes a lock of hair behind her ear. \"There have been a lot of students at my office hours though. They're really engaged. It's nice!\" She seems to have relaxed a little bit.</p>",
+      "effects" : [
+        "decr tension 1"
+      ]
+    },
+    {
+      "id": "negativeZani",
+      "choiceLabel" : "\"Relax {name|academicFriend}, isn't all the food out here already.\"",
+      "content" : "<p>\"Oh, umm...\" She looks to you and cocks her head like a dog. \"Yeah, yeah. All the food's out here... I guess...\"</p>",
+      "effects" : [
+        "incr tension 1"
+      ]
+    },
+    {
+        "id": "sceneSetUp0_t",
+        "content": "You looked around the living room -- you wonder if it would still be called a living room if the dining area and the kitchen all flowed into one. Your mind wouldn’t stop running; you wondered where you were for a moment.",
+        "choices": [
+            {"gotoId" : "sceneSetUp1_t"},
+        ],
+    },
+    {
+        "id": "sceneSetUp1_t",
+        "choiceLabel": "Continue",
+        "content": "\"Hey!\" {name|academicFriend} shouted, excitedly. You attention is finally broken. \"You made it, welcome!\"<br>\"Thank you,\" you say.<br>\"About time,\" another voice yells from the kitchen. You look. It was {name|nonAcademicFriend}; she was already holding a glass of wine, leaning against a kitchen chair.<br>\"Be nice, {name|nonAcademicFriend}, it took you 10 mins to find the door the first time.\"<br>\"That was intentional…\"<br>\"I’m sure it was.\" {name|academicFriend} said and turned her attention back to you. \"Let me take your coat. Would you like some wine?\" She asked with a smile.",
+        "choices": [
+            {"gotoId" : "wineQuestion0_t"},
+            {"gotoId" : "wineQuestion1_t"},
+        ],
+    },
+//{name|protagonist}'s choices
+    {
+        "id": "wineQuestion0_t",
+        "choiceLabel": "\"Yes, I need to clear my head.\"",
+        "content": "\"That’s the spirit! Let me get a new bottle.\" {name|nonAcademicFriend} said, to {name|academicFriend}’s displeasure.<br>\"Just don’t go crazy, {nickname|protagonist},\" {name|academicFriend} said, \"you know you have a big day tomorrow.\"",
+        "choices": [
+            {"gotoId" : "sceneSetUp_end_t"},
+        ],
+        "effects": [
+            "incr tension 1"
+        ]
+    },
+    {
+        "id": "wineQuestion1_t",
+        "choiceLabel": "\"No, my stomach…. It’s just…. I’m….\"",
+        "content": "\"Come on, {name|protagonist}, you stick-in-the-mud,\" {name|nonAcademicFriend} says, fiddling with the metal cage on a bottle of champagne.<br>\"That’s for after dinner, {name|nonAcademicFriend},\" {name|academicFriend} says. She continues: \"and she doesn’t need to drink if she doesn’t want to.\" {name|academicFriend} took the bottle from {name|nonAcademicFriend} and put it back in the frig. \"And that’s not how you open one of those anyway….\"<br><br>{name|nonAcademicFriend} put the steak knife down.",
+        "choices": [
+            {"gotoId" : "sceneSetUp_end_t"},
+        ],
+        "effects": [
+            "incr tension 1"
+        ]
+    },
+//completing the first two scenes
+    {
+        "id": "sceneSetUp_end_t",
+        "choiceLabel": "Continue",
+        "content": "\"Come on, {name|protagonist}, take a seat. Dinner’s almost ready and you’re going to like it.\" {name|academicFriend} pulled her hair back and tied it with the black band she keeps around her wrist.<br>You sit as {name|academicFriend} places a clean, white plate and a steak knife before you. {name|nonAcademicFriend} sits opposite you, energetically waiting for {name|academicFriend} to bring out the main attraction.<br>\"Come on, {nickname|academicFriend}! We’re starving.\"<br>{name|academicFriend} comes out with a large silver serving plate.<br>\"Voila,\" {name|academicFriend} says with a grand gesture, \"Beef Wellington a la {name|academicFriend}!\"",
+        "effects": [
+            "set establishSettingDinner true",
+            "set establishFriends true"
+        ]
+    },
+ 
+//friendIsInAcademia & friendIsNotInAcademia & there hasn't been enough tension
+    {
+        "id": "tensionInTheRoom0_t",
+        "content": "The dinner went on as forks clicked against plates and Wellington was consumed amidst joyous conversation.<br>\"It’s so good, {nickname|academicFriend}!\" You say, half chewing and already preparing your next bite.<br>\"Yeah,\" {name|nonAcademicFriend} said, \"it’s surprising you managed to make it taste so good.\"<br>You and {name|academicFriend} watch {name|nonAcademicFriend} take another bite, a bit taken aback.",
+        "choices" : [
+            {"gotoId" : "beefQuestion0_t"},
+            {"gotoId" : "beefQuestion1_t"},
+        ],
+        "conditions": [
+            "tension lt 4",
+            "friendIsInAcademia eq true",
+            "friendIsNotInAcademia eq true"
+        ],
+    },
+//Emma answers question
+    {
+        "id": "beefQuestion0_t",
+        "choiceLabel": "\"Of course it tastes so good, {name|academicFriend} is an amazing cook!\"",
+        "request": {"gotoId": "tensionInTheRoom1_t"}
+    },
+    {
+        "id": "beefQuestion1_t",
+        "choiceLabel": "\"Beef Wellington is not an easy dish to make….\"",
+        "request": {"gotoId": "tensionInTheRoom1_t"}
+    },
+    {
+        "id": "tensionInTheRoom1_t",
+        "choiceLabel": "Continue",
+        "content": "\"Yeah, but….\" {name|nonAcademicFriend} started.<br><br>\"But what, {name|nonAcademicFriend}?\" {name|academicFriend} looked hard across the table.<br><br><em>This happens every time those two get together.</em><br>\"It’s great, really, {nickname|academicFriend}. Right, {name|nonAcademicFriend}? Isn’t it great?\" You say, trying to save the situation.<br>\"Whatever, {name|nonAcademicFriend}. You don’t like the way I cook? You can leave.\" {name|academicFriend} says as a fork clatters to the table. The ringing in your ears makes you wince.<br><br>There’s a long silence at the table.<br><br>\"Don’t be so sensitive, {name|academicFriend}…. It was just a joke.\"",
+        "effects": [
+            "incr tension 4"
+        ]
+    },
+ 
+//This scene will establish that they both agree that pond scum is bad
+    {
+        "id": "inactivityIsPondScum0_t",
+        "content": "Dinner presses on and you sigh inside of yourself with worry; or at least you thought you sighed only to yourself.<br>\"What’s the matter, {name|protagonist}?\" {name|academicFriend} said, a frown now present on her face.<br>\"Huh? Oh, nothing.\"<br>\"You don’t have to pretend everything’s fine. You remember how big a wreck I was before my dissertation defense, don’t you?\"<br><br>You did, she was a wreck.",
+        "choices": [
+            {"gotoId" : "inactivityIsPondScum1_t"},
+        ],
+        "conditions": [
+            "friendIsInAcademia eq true",
+            "friendIsNotInAcademia eq true"
+        ],
+    },
+    {
+        "id": "inactivityIsPondScum1_t",
+        "choiceLabel": "Continue",
+        "content": "{name|academicFriend} began to speak but {name|nonAcademicFriend} interrupted.<br>\"We may have our differences, {name|academicFriend} and I, but we both do what we think is the right thing to do.\" All attention was shifted to You at this moment. Your attention was still on the uneaten food on your plate. \"You have to do what you think is right but you can’t just do nothing.\"<br>\"I agree with {name|nonAcademicFriend} on this one, {nickname|protagonist}.\" {name|academicFriend} said. \"Nothing good will ever come from standing still and doing nothing.\"<br><br>\"Maybe you’re right.\" You say.<br>\"That’s right, we’re right!\" {name|nonAcademicFriend} says. \"You’re gonna do great things, kid, but nothing will happen if you’re not there to do them!\"<br><br>The dinner continued, you felt a littl better.",
+        "effects": [
+            "set inactivityIsBad true"
+        ]
+    },
+//ENDING SCENE
+    {
+        "id": "thatsAllFolks0_t",
+        "content": "You press your fork against the plate collecting crumbs -- remnants of a great dinner, great conversation, and great friends.<br>{name|academicFriend} began stacking plates on top of one another but {name|nonAcademicFriend} interjected.<br>\"Absolutely not!\" {name|nonAcademicFriend} grabbed the plate from {name|academicFriend} and began collecting the plates from around the table herself. \"You cooked, I clean.\" {name|nonAcademicFriend} wasn’t looking at {name|academicFriend} as she continued speaking. \"It’s the least I could do after such a lovely meal.\"",
+        "conditions": [
+            "establishFriends eq true",
+            "establishSettingDinner eq true",
+            "establishDefenseTomorrow eq true",
+            "EmmaJobFutureBeat eq true",
+            "EmmaClassTypeBeat eq true",
+            "friendIsInAcademia eq true",
+            "friendIsNotInAcademia eq true",
+            "friendTensionRelieved eq true",
+            "checkinWithDisagreer eq true",
+            "inactivityIsBad eq true"
+        ],
+        "choices": [
+            {"gotoId" : "thatsAllFolks1_t"},
+        ],
+    },
+    {
+        "id": "thatsAllFolks1_t",
+        "choiceLabel": "Continue",
+        "content": "{name|academicFriend} gives you a big hug and an even bigger kiss on the cheek.<br>\"You’re gonna do great tomorrow. I’ll be there early with my big ‘GO {name|protagonist}!’ sign!\" {name|academicFriend} says still holding onto your shoulders.<br>\"Knock ‘em dead, kid.\" {name|nonAcademicFriend} shoots you a finger gun and blows away the smoke.<br>Tomorrow will be upon you in less than 8 hours and your dissertation is less than 12. You can hardly wait. The anticipation is almost making you sick.",
+        "effects": [
+            "set outro true"
+        ]
+    },
+    {
+        "id": "establishDefenseTomorrowBeat",
+        "content": "\"So Em, Ready for that defense tomorrow?\"",
+        "choices" : [
+            {"gotoId": "yes"},
+            {"gotoId": "maybeNotSure"},
+        ],
+        "effects" : [
+            "set establishDefenseTomorrow true"
+        ],
+        "conditions" : [
+            "establishSettingDinner eq true"
+        ]
+    },
+    {
+        "id": "yes",
+        "choiceLabel": "\"Yea, I'll be fine tomorrow.\"",
+        "content": "\"It'll be great. I'll finish it and then I'll get my PhD.\" Both of your friends smile at you. <p> \"I'm sure it'll go off without a hitch. We've heard it plenty of time. Now are you sure you're not worried?\" </p>",
+        "choices" : [
+            {"gotoId": "imSure"},
+            {"gotoId": "maybeNotSure"},
+        ],
+        "effects" : [
+            "incr confidence 1","set EmmaDefenseFeeling true"
+        ],
+    },
+    {
+        "id": "imSure",
+        "choiceLabel": "\"I'm sure.\"",
+        "content": "You smile a bit as Zanita pokes your side. \"You <i> sure </i> about that? You can't lie to us Em.\" You laugh softly at that. <p>\"I mean, of course I'm nervous. But it's nothing more then what'd you expect to have. I'll be fine.\" </p>  <p>\"Well if you need to, you can always talk to us. We're you're best friends Em.\" </p>",
+        "choices" : [
+            {"gotoId": "smileAtFriends"},
+            {"gotoId": "hugThem"},
+        ],
+        "effects" : [
+            "incr academicEnthusiasm 1"
+        ],
+    },
+    {
+        "id": "maybeNotSure",
+        "choiceLabel": "\"Well...um....maybe?\"",
+        "content": "\"Em, it'll be okay. It's normal to feel nervous. Hell, I was nervous when I gave my defense. But we've heard your defense hundreds of times. It's perfect. There's no way they wouldn't give it to you.\" <p>\"I have to agree with Zanita, it's a great defense. You'll have to tell us all about how it went afterwards.\" </p> You relax a bit hearing this.",
+        "choices" : [
+            {"gotoId": "smileAtFriends"},
+            {"gotoId": "hugThem"},
+        ],
+        "effects" : [
+            "decr confidence 1","set EmmaDefenseFeeling true"
+        ],
+    },
+    {
+        "id": "smileAtFriends",
+        "choiceLabel": "You smile at your two friends",
+        "content": "Even if they like to butt heads all the time, you feel so incredibly lucky to have them. \"Thanks guys, now I guess we should eat?\" <p> \"Yes. Let's eat!\" </p> You laugh a bit before starting to eat.",
+        "choices" : [
+            {"gotoId": "EmmaJobFutureBeat"},
+        ],
+        "effects" : [
+            "incr confidence 1"
+        ],
+    },
+    {
+        "id": "hugThem",
+        "choiceLabel": "You try to hug them",
+        "content": "You go in for a hug but get pushed off. You laugh a bit at this. \"Aww nobody wants a hug?\" <p>\"We can hug later. The food is gonna be cold at this rate.\" </p> You laugh louder and shake your head.",
+        "choices" : [
+            {"gotoId": "EmmaJobFutureBeat"},
+        ],
+        "effects" : [
+            "incr confidence 1"
+        ],
+    },
+
+    {
+        "id": "EmmaJobFutureBeat",
+        "choiceLabel": "\"You guys want to hear about my new job?\"",
+        "content": "\"You got a job afterwards? What's it about?\"  <p> \"I get to teach my own class.\" </p> <p> \"That sounds-\" </p> You hear boring and exciting at the same time. You pray they don't start arguing, but it seems by some miracle they don't. <p>\"Sure you don't want to come do some local work with me?\"</p>",
+        "choices" : [
+            {"gotoId": "sure"},
+            {"gotoId": "maybeAnotherTime"},
+        ],
+        "effects" : [
+            "set EmmaJobFutureBeat true"
+        ],
+        "conditions" : [
+            "establishDefenseTomorrow eq true"
+        ]
+    },
+    {
+        "id": "sure",
+        "choiceLabel": "\"Sure. After the defense?\"",
+        "content": "\"I have some time in between my defense and my job. I could help out a bit then.\" You notice Zanita rolling her eyes but you look over and Shelly looks so happy. You don't regret saying yes. <p>\"Thanks Em! Knew you wouldn't forget about us locals in the mix of academics.\" </p>",
+        "choices" : [
+            {"gotoId": "EmmaClassTypeBeat"},
+        ],
+        "conditions" : [
+            "establishDefenseTomorrow eq true"
+        ]
+    },
+    {
+        "id": "maybeAnotherTime",
+        "choiceLabel": "\"Maybe another time\"",
+        "content": "\"I kind of wanted to relax a bit afterwards....\" You notice Shelly deflates a bit. <p> \"Oh um...Okay then...\" </p>You feel your stomach knot a bit, you didn't mean to make her sad. <p>\"You know what? Why don't I just give you a rain check on it instead? Just give me a heads up when next one is happening.\" </p>",
+        "choices" : [
+            {"gotoId": "EmmaClassTypeBeat"},
+        ],
+        "effects" : [
+            "incr academicEnthusiasm 1", "decr confidence 1"
+        ],
+        "conditions" : [
+            "establishDefenseTomorrow eq true"
+        ]
+    },
+        {
+        "id": "EmmaClassTypeBeat",
+        "choiceLabel": "\"Should we talk about my class now?\"",
+        "content": "\"So Em! How are you setting your class up?\" <p>\"Sure you don't want to turn down the job and do local work full time?\" </p> <p>\"Yes Shelly. As much as I like local work, I want to do academics.\"</p> You laugh at the contrasting expressions on your friends. One looks annoyed and the other looks so happy.",
+        "choices" : [
+            {"gotoId": "classSize"},
+            {"gotoId": "classStyle"},
+        ],
+        "effects" : [
+            "set EmmaClassTypeBeat true"
+        ],
+        "conditions" : [
+            "EmmaJobFutureBeat eq true"
+        ]
+    },
+            {
+        "id": "classSize",
+        "choiceLabel": "\"So, the size of the class....\"",
+        "content": "\"Yea Em, what were you thinking?\" You look down at your dinner as you think about it, you've been so worried about your defense you completely forgot about most of your class plans. <p> \"Well....\" </p>",
+        "choices" : [
+            {"gotoId": "smol"},
+            {"gotoId": "large"}
+        ],
+    },
+    {
+        "id": "smol",
+        "choiceLabel": "\"Small sounds better\"",
+        "content": "\"It's okay Em. You can have a few, more dedicated students\" <p>\"How do you know they'll be dedicated?\" </p> Emma sighs and speaks up before they can start <i> another </i> fight. They're infamous for their fights. <p> \"I'm sure they'll be dedicated. Or at least some will. You only need a few to make a difference.\" </p>",
+        "choices" : [
+            {"gotoId": "classStyle"},
+            {"gotoId": "nothingLeftToSay"} //happens when you go through style and size
+        ],
+        "effects" : [
+            "set classSize true","incr tension 1", "incr academicEnthusiasm 1","incr confidence 1","set smol true"
+        ],
+    },
+            
+    {
+        "id": "large",
+        "choiceLabel": "\"Give me the large class, I can handle it!\"",
+        "content": "Zantia laughs as she says \"That a girl! I know you can handle it.\" You smile and look at your friends, <p>\"Plus I can help shape the minds of lots of students.\"</p> <p>\"Or they'll just ignore you and forget everything after the class\" </p>",
+        "choices" : [
+            {"gotoId": "argue1"},
+            {"gotoId": "argue2"}
+        ],
+        "effects" : [
+            "set classSize true","incr academicEnthusiasm 1","set large true","incr confidence 2"
+        ],
+    },
+    {
+        "id": "argue1", 
+        "choiceLabel": "sigh before saying \"Shelly....\"",
+        "request": {"gotoId": "largeContinued"},
+    },
+    {
+        "id": "argue2", 
+        "choiceLabel": "rub temple in frustration.",
+        "request": {"gotoId": "largeContinued"},
+    },
+    {
+        "id": "largeContinued",
+        "content": "\"Must you <i> always </i> be a downer Shelly?! Can you not for once out of respect?\" You sigh and look down at your dinner. It suddenly seems a lot less appetizing then before. Although you'll probably get your appetite back. As soon as they stop fighting.... ",
+        "choices" : [
+            {"gotoId": "classStyle"},
+            {"gotoId": "nothingLeftToSay"}
+        ],
+        "effects" : [
+            "set classSize true","incr tension 1","decr confidence 1"
+        ],
+        "conditions" : [
+            "large eq true"
+        ]
+    },
+            {
+        "id": "classStyle",
+        "choiceLabel": "\"So, what about the style do you wanna hear?\"",
+        "content": "\"Anything you can tell us!\" You laugh at Zanita's excitement. Or maybe her excitement is just because you'll be working together. Either way, least one of your friends likes your job. <p> \"I hadn't thought about it much, but it could be...\" </p>",
+        "choices" : [
+            {"gotoId": "lecture"},
+            {"gotoId": "seminar"},
+        ],
+    },
+                {
+        "id": "lecture",
+        "choiceLabel": "\"lecture style sounds nice\"",
+        "content": "\"A lecture styled class could be fun. I could get all my information out first and then have them ask questions.\" <p>\"Or you could get dead silence after the lecture and it would be awkward.\"</p> <p> \"<i>Shelly.</i>\" </p> You sigh and shake your head before saying <p>\"Anyways, I'm sure it'll be fine. If not... I can adapt.\"</p>",
+        "choices" : [
+            {"gotoId": "classSize"},
+            {"gotoId": "nothingLeftToSay"}
+        ],
+        "effects" : [
+            "set classStyle true","incr academicEnthusiasm 1","set lecture true","incr confidence 1","incr tension 1"
+        ],
+    },
+                {
+        "id": "seminar",
+        "choiceLabel": "\"seminar styled class could be interesting \"",
+        "content": "\"A seminar could be great. I could share my knowledge and then they can talk amongst themselves about it.\" Zanita glares at Shelly which makes you sigh. Why did you think this dinner would go any differently. <p>\"Well that's great. but you could do it on a local level as well.\"</p> Well that's sadly probably one of the nicest thing she's said about your job.",
+        "choices" : [
+            {"gotoId": "classSize"},
+            {"gotoId": "nothingLeftToSay"}
+        ],
+        "effects" : [
+            "set classStyle true","incr academicEnthusiasm 1","set seminar true","incr tension 1"
+        ],
+    },
+    {
+        "id": "nothingLeftToSay",
+        "choiceLabel": "\"Why don't we move onto a new topic?\"",
+        "content": "\"That's all I have planned for now.\" <p> \"Awww Em. I'm sure you have more planned!\" </p> In your mind, you do have a bit more planned, but you might as well save Shelly from any more academic talking. You offer again to switch topics. Zantia sighs but agrees. Shelly attempts to hide a small smile but you notice it. Least you did <i> something </i> to keep them from starting a new fight",
+        "conditions" : [
+            "classStyle eq true", "classSize eq true",
+        ],
+        "effects" : [
+        "incr confidence 1", "decr tension 1"
+        ],
+    }
+]

@@ -245,17 +245,17 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		var stats = State.get("storyUIvars");
 
 		stats.forEach(function(stat, pos) {
-				/*
-				"varName" : "confidence",
-				"label" : "Confidence",
-				"characters" : ["protagonist"],
-				"affectedBy" : "both",
-				"range" : [0,10]
-				*/
-				for (var x=0; x < stat.characters.length; x++) { //for each character...
-					setBarWidth(stat.characters[x] + "_" + stat.varName);
-				}
-			});
+			/*
+			"varName" : "confidence",
+			"label" : "Confidence",
+			"characters" : ["protagonist"],
+			"affectedBy" : "both",
+			"range" : [0,10]
+			*/
+			for (var x=0; x < stat.characters.length; x++) { //for each character...
+				setBarWidth(stat.characters[x] + "_" + stat.varName);
+			}
+		});
 
 	}
 
