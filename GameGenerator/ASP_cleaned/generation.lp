@@ -21,7 +21,7 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
     number_to_place(Entity,NumberToPlace).
 
 
-speed_values(2;3;4).
+speed_values(3;5;7).
 
 1 {speed(E,O,S) : speed_values(S)} 1 :-
     entity(E),
@@ -174,7 +174,8 @@ indirectControls(click_and_drag;
 	repeled_from_cursor;
         click_to_spin;
 	click_to_move;
-	click_to_chase).
+	%click_to_chase
+	).
 
 
 {controlScheme(ENTITY,SCHEME) : indirectControls(SCHEME)} 1 :- entity(ENTITY).
@@ -232,7 +233,7 @@ angle_speeds(1;5;10).
   } 1 :-
     precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY))).
 
-angle_speeds_discrete(10;20;30;45;60;90).
+angle_speeds_discrete(30;45;60;90).
 1 {result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
    angle_direction(DIR),
    angle_speeds_discrete(AMOUNT)

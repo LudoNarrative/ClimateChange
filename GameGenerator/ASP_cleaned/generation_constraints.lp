@@ -231,17 +231,48 @@ movement(move(E,D)) :- action(move(E,D)).
 
   
 :- precondition(overlaps(E1,E2,_),O),
-	result(O,look_at(_,_)).		
+	result(O,look_at(_,_,_)).		
    
 :- precondition(overlaps(E1,E2,_),O),
 	result(O,move(_,_)).		
 
 :- precondition(overlaps(E1,E2,_),O),
-	result(O,rotates(_,_)).		
+	result(O,rotates(_,_,_)).		
       
 :- precondition(overlaps(E1,E2,_),O),
 	result(O,rotate_to(_,_)).	
    
+opposite(forward,backward).
+opposite(left,right).
+opposite(north,south).
+opposite(up,down).
+opposite(cw,ccw).
+
+:- result(O,move(E,direction(D1))),
+	result(O,move(E,direction(D2))),
+	opposite(D1,D2).
+	
+	
+:- precondition(overlaps(_,_,false),O),
+	result(O,modify(_,property(_,_))).
+	
+
+
+:- precondition(overlaps(E1,E2,_),Outcome),
+	player_controls(E1),
+	speed(E1,_,S1),
+	speed(E2,_,S2),
+	S1 <= S2.
+	
+:- precondition(overlaps(E2,E1,_),Outcome),
+	player_controls(E1),
+	speed(E1,_,S1),
+	speed(E2,_,S2),
+	S1 <= S2.
+	
+	
+:- action(modify(decrease,property(E,health))),
+   not action(add(E,_,_)).
    
 {label(entity(E),E)} :- entity(entity(E)).
 {label(resource(E),E)} :- resource(resource(E)).
@@ -261,6 +292,7 @@ movement(move(E,D)) :- action(move(E,D)).
 :- trivial(O),
    player_model(O,player_will_avoid).
 
+   
 
 satisfies(ge,increase).
 satisfies(le,decrease).
