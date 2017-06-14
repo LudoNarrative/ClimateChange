@@ -2,6 +2,8 @@ reading(survive,Entity) :-
     entity(Entity),
     1 {reading(defend_against,Entity);
        reading(dodge,Entity) }.
+	   
+	   
 {reading(defend_against,Entity)} :-
     reading(hurt,relation(Entity,player)),
     result(Outcome,delete(Entity)),
@@ -21,11 +23,13 @@ required(hurt) :- required(dodge).
 {reading(hurt,relation(Entity1,player)) } :-
     precondition(overlaps(Entity1),Outcome),
     reading(bad,Outcome),
+    not reading(good ,Outcome),
     computer_controls(Entity1).
 
 reading(help,relation(Entity,player))  :-
     precondition(overlaps(Entity),Outcome),
     reading(good,Outcome),
+    not reading(bad,Outcome),
     computer_controls(Entity).
 required(good) :- required(help).
 required(bad) :- required(hurt).

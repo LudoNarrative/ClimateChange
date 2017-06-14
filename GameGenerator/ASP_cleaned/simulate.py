@@ -489,6 +489,17 @@ if __name__ == '__main__':
         #print best
         #print '=========='
         
+        good_vars  = set([])
+        bad_vars = set([])
+        for o in ['reading']:
+            for oo in out[o]:
+                for ooo in oo:
+                    if ooo['terms'][0]['predicate'] == 'good':
+                        good_vars.add(prettify(ooo['terms'][1]))
+                    if ooo['terms'][0]['predicate'] == 'bad':
+                        bad_vars.add(prettify(ooo['terms'][1]))
+                        
+                        
         for free_var,set_var in zip(free_variables,best_ind):
             free_var[1][0] = set_var
 
@@ -607,6 +618,17 @@ if __name__ == '__main__':
                     if prettify(precond) in replacements:
                         repl = replacements[prettify(precond)]
                         #('precondition',outcome,direction,resource,free_var)
+                        
+                        print  repl[3], action, repl[4][0], repl[3] in good_vars, repl[3] in bad_vars
+                        if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
+                            if repl[4][0] < 1:
+                                repl[4][0] = 1
+                            repl[4][0] *= 4
+                        if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
+                            repl[4][0] /= 4
+                            if (repl[4][0] < 1):
+                                repl[4][0] = 1
+                            print  'AFTER', repl[3], action, repl[4][0]
                         out_string.append( 'precondition({}({},scalar({})),{}).'.format(repl[2],repl[3],int(floor((repl[4][0]))),repl[1]))
                     else:
                         out_string.append( prettify(precond)+'.')
@@ -618,6 +640,18 @@ if __name__ == '__main__':
                             if repl[1] in every_frames:
                                 
                                 action += '_over_time'
+                                
+                            print  repl[3], action, repl[4][0], repl[3] in good_vars, repl[3] in bad_vars
+                            if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
+                                if repl[4][0] < 1:
+                                    repl[4][0] = 1
+                                repl[4][0] *= 4
+                            if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
+                                repl[4][0] /= 4
+                                if (repl[4][0] < 1):
+                                    repl[4][0] = 1
+                            print  'AFTER', repl[3], action, repl[4][0]
+                                
                             out_string.append( 'result({},{}({},scalar({}))).'.format(repl[1],action,repl[3],int(ceil((repl[4][0])))))
                         else:
                             out_string.append( replace.get(prettify(result),prettify(result))+'.')
@@ -633,11 +667,22 @@ if __name__ == '__main__':
                         if repl[1] in every_frames:
                                 
                             action += '_over_time'
+                            print  repl[3], action, repl[4][0], repl[3] in good_vars, repl[3] in bad_vars
+                            if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
+                                if repl[4][0] < 1:
+                                    repl[4][0] = 1
+                                repl[4][0] *= 4
+                            if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
+                                repl[4][0] /= 4
+                                if (repl[4][0] < 1):
+                                    repl[4][0] = 1
+                            print  'AFTER', repl[3], action, repl[4][0]
+                                    
                         out_string.append( 'result({},{}({},scalar({}))).'.format(repl[1],action,repl[3],int(ceil((repl[4][0])))))
                     else:
                         out_string.append( replace.get(prettify(result),prettify(result))+'.')
             out_string.append( '')
-        
+
 
         for o in ['reading']:
             for oo in out[o]:
@@ -681,6 +726,7 @@ if __name__ == '__main__':
             for oo in out[o]:
                 for ooo in oo:
                     reading = prettify(ooo)
+                    print reading
                     if 'goal' in reading:
                         out_string += "<li>The goal is to " + prettify(ooo['terms'][0]['terms'][0]) + " " + sprites[prettify(ooo['terms'][1])]+'</li>\n'
 
@@ -691,6 +737,7 @@ if __name__ == '__main__':
            
             for oo in out[o]:        
                 for ooo in oo:
+                    print prettify(ooo)
                     outcome =hashable(ooo['terms'][0])
                     cond =prettify(ooo['terms'][1])
                     if cond == 'player_will_attempt':
