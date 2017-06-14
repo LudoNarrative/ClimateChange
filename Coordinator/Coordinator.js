@@ -8,7 +8,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//selectable scenes from main menu
 		var scenes = ["dinner", "dinner_argument", "generalist", "lecture", "travel", "worker", "newExample", "undergradDinner", "undergradLecture", "undergradDean", "undergradTravel", "undergradFamilyDinner", "undergradUN", "undergradBeach", "undergradFaculty", "sereneTest", "ianTest", "kevinTest", "mattTest", "summerTest", "talonTest", "finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
 
-		var finalScenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
+		//var finalScenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
 
 		//scenes played when you hit Begin
 		var playGameScenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
@@ -57,23 +57,23 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	}
 
 	//returns index of next scene
-	//available scenes: ["undergradDinner", "undergradLecture", "undergradTravel", "undergradDean", "undergradFamilyDinner", "undergradBeach", "undergradUN", "undergradFaculty"]
+	//available scenes: ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"]
 	var getNextScene = function(currentScene) {
 		switch(currentScene) {
-			case "undergradDinner":
+			case "finalDinner":
 				return 1;
-			case "undergradLecture": {
+			case "finalLecture": {
 				if (State.get('composure') > 5) {
 					return 2;
 				}
 				else { return 3; }
 			}
-			case "undergradDean": {
+			case "finalDean": {
 				return 4;
 			}
-			case "undergradTravel":
+			case "finalTravel":
 				return 4;
-			case "undergradFamilyDinner": {
+			case "finalFamilyDinner": {
 				if (State.get('academicEnthusiasm' > 8)) {			//UN branch
 					return 6;
 				}
@@ -84,12 +84,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					return 5;
 				}
 			}
-			case "undergradBeach": 		//this should return epilogue eventually
+			case "finalBeach": 		//this should return epilogue eventually
 				return 0;
-			case "undergradUN": 		//this should return epilogue eventually
+			case "finalUN": 		//this should return epilogue eventually
 				return 0;
 
-			case "undergradFaculty": 		//this should return epilogue eventually
+			case "finalFaculty": 		//this should return epilogue eventually
 				return 0;
 		}
 	}
