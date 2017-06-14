@@ -1,7 +1,7 @@
 #const min_entities = 3.
 #const max_entities = 3.
 #const min_resources = 2.
-#const max_resources = 3.
+#const max_resources = 2.
 #const min_outcomes = 2.
 #const max_outcomes = 7.
 #const min_timers = 0.
@@ -33,6 +33,8 @@ read_only(resource(r(2))).
 :- not reading(survive,entity(e(3))).
 :- not reading(help,relation(entity(e(2)),player)).
 
+:- action(mode_change(game_win)).
+:- action(mode_change(game_win)).
 :- not reading(good,resource(r(1))).
 
 %:- action(add(entity(e(2)),_)).

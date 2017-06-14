@@ -27,3 +27,5 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 :- condition(compare(_,property(_,_))).
 
 :- replace(result(O,move(E,D)),result(O,apply_impulse(E,D,scalar(S)))).
+
+:- condition(overlaps(_,_,false)).
