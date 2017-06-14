@@ -1,5 +1,4 @@
 /* Main StoryAssembler Module.
-
 When beginScene is called, we need to pass in a defined ChunkLibrary, State, and Display module. 
 */
 
@@ -374,8 +373,14 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	var handleChoiceSelection = function(choice) {
 		StoryDisplay.clearAll();
 
-		// Continue the scene. If we have a specific chunkId, we'll start our search with that; otherwise if it's undefined, we'll search over the whole library for a new best path.
-		continueScene(choice.chunkId);
+		//if we're ending the scene, just end it here
+		if (choice.chunkId == "sys_endScene") {
+			doOutro();
+		}
+		else {
+			// Continue the scene. If we have a specific chunkId, we'll start our search with that; otherwise if it's undefined, we'll search over the whole library for a new best path.
+			continueScene(choice.chunkId);
+		}
 	}
 
 	var handleEffects = function(chunk) {
@@ -401,6 +406,12 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 	// Show the scene is over.
 	var endScene = function(assemblyFailed) {
+		
+		StoryDisplay.addChoice({chunkId: "sys_endScene", text: "End Scene"});
+	}
+
+		// Show the scene is over.		doof
+	var doOutro = function() {
 		
 		if (typeof Display !== "undefined" && State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
 			Display.setSceneOutro("Chapter complete!");
