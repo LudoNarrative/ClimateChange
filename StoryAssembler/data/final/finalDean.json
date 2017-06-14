@@ -138,7 +138,7 @@
         {
             "id": "stokeTheFirei",
             "choiceLabel" : "\"Well, I don't care. I don't need your approval.\"",
-            "content" : "<p>His hand slams against the table. \"{name|protagonist}, really? Do you understand what you're saying?\" He turns away and breathes deep before facing you again. \"Fine. I'll give you one last chance. Can you tell me what the issue is with your class?\"</p>",
+            "content" : "<p>His hand slams against the table. \"Dammit, {name|protagonist}! Are you <i>trying</i> to make me fire you?\" He turns away and breathes deep before facing you again. \"Fine. I'll give you one last chance. Now: what's the issue with your class?\"</p>",
             "choices" : [
                 {"gotoId":"schoolIsTheProblemi"},
                 {"gotoId":"noProblemi"}
@@ -200,7 +200,7 @@
                 },
                 {
                     "id": "apologizeAndLeavei",
-                    "choiceLabel" : "{ifStateCondition|composure gte 5|I'll be on my way.|I'm...} I'm sorry it ended up this way.",
+                    "choiceLabel" : "{ifStateCondition|composure gte 5|\"I'll be on my way.|\"I'm...} I'm sorry it ended up this way.\"",
                     "content" : "<p>\"Yeah, I am too.\"</p>",
                     "effects" : [
                         "set pathChoiceMade true"
@@ -605,7 +605,7 @@
     },
     {
 		"id": "sceneStart_t",
-		"content": ["You walk slowly, heading up the final flight of stairs, rounding the final corner. You linger before the door, the pit in your stomach halting your upraised hand. Sucking up your last bits of courage, you knock.<br><br>A hollow thud.<br><br>A low but familiar voice immediately speaks. \"Come in, Emma.\"<br><br>He must have been waiting."],
+		"content": ["You slowly walk up the final flight of stairs, rounding the final corner. You linger before the door, the pit in your stomach halting your upraised hand. Sucking up the last bits of your courage, you knock.<br><br>A hollow thud.<br><br>A low but familiar voice immediately speaks. \"Come in, Emma.\"<br><br>He must have been waiting."],
 		"choices": [
 			{"gotoId": "emmaEnter_t"}
 		],
@@ -653,7 +653,7 @@
 	{
 		"id": "emmaRespondsNo_t",
 		"choiceLabel": "\"No, I don’t think so.\"",
-		"content": "\"You don’t?\" {name|authorityFigure} takes his glasses off and massages the red indentations that have formed on the bridge of his nose. He speaks carefully. \"{name|protagonist}, it’s about your performance these past few weeks.\"<br><br>You look at the Dean{ifStateCondition|confidence lt 5| and a sour frown forms across your face|.}.",
+		"content": "\"You don’t?\" {name|authorityFigure} takes his glasses off and massages the red indentations on the bridge of his nose. He speaks carefully. \"{name|protagonist}, it’s about your performance these past few weeks.\"<br><br>You look at the Dean{ifStateCondition|confidence lt 5| and a sour frown forms across your face|.}.",
 		"effects": [
 			"set tension 4"
 		],
@@ -665,8 +665,8 @@
 //upping the tension by 2
 	{
 		"id": "emmaAnnoyed_t",
-		"choiceLabel": "\"And…? What about the performance of my lectures?\"",
-		"content": "You stand, face tight -- hot -- looking at the Dean, anticipating what he might say next. {name|authorityFigure} places his glasses softly on the table and directs his full attention towards you.<br>\"I don’t know what’s gotten into you lately! Your {lectures/seminars} have been in a slow decline since day one.\" The Dean shakes his head and looks at you hard. \"{name|protagonist}, are you alright? Is everything okay at home?\"",
+		"choiceLabel": "\"And…? What about the performance of my {ifStateCondition|global_classStyle eq lecture|lectures|seminars}?\"",
+		"content": "You stand, face tight -- hot -- looking at the Dean, anticipating what he might say next. {name|authorityFigure} places his glasses softly on the table and directs his full attention towards you.<br>\"I don’t know what’s gotten into you lately, Emma! Your {ifStateCondition|global_classStyle eq lecture|lectures|seminars} have been in a slow decline since day one.\" The Dean shakes his head and looks at you hard. \"{name|protagonist}, are you alright? Is everything okay at home?\"",
 		"effects": [
 			"set tension 6",
 			"set troubleWithLecture true"

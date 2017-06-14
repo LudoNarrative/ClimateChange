@@ -209,7 +209,7 @@
 
     {
         "id": "lectureBridge",
-        "choiceLabel": "Take some questions",
+        "choiceLabel": "Take some questions (lecture)",
         "content": "Thirty {ifStateCondition|composure lt 5|long|} minutes of general examples later, you tell the class \"well, now that you know the general idea behind what you can expect from this quarter, {ifStateCondition|composure gte 5|I can answer any questions people have.|I guess I can try to answer your questions.}\"",
         "effects": [
             "set bridgeFinished true"
@@ -225,7 +225,7 @@
 
     {
         "id": "seminarBridge",
-        "choiceLabel": "Take some questions",
+        "choiceLabel": "Take some questions (seminar)",
         "content": "\"{ifStateCondition|composure gte 5|Well that's enough talking for me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|composure gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
         "effects": [
             "set bridgeFinished true"

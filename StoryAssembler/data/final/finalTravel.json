@@ -10,9 +10,9 @@
 
   {
     "id": "onAPlane",
-    "choiceLabel": "You feel a slight rumbling",
+    "choiceLabel": "You feel a slight rumbling.",
     "repeatable": true,
-    "content": "Your eyes jolt open as you feel your surroundings rumbling. For one second, everything seems so foreign and mysterious, but you quickly remember where you are. Looking out of the window, you can see clouds of different shapes as far as the eye can see. And if you try really hard, you can also make out patches of ground thousands of feet below through the thinner layers of clouds. ",
+    "content": "Your eyes jolt open as you feel your surroundings rumbling. For a second, everything seems so foreign and mysterious, but you quickly remember where you are. Looking out the window, you can see clouds of different shapes as far as the eye can see. If you squint, you can just make out patches of ground thousands of feet below through the thinner layers of clouds. ",
     "effects": [
       "set onAPlane true",
       "incr talksGiven 1"
@@ -24,7 +24,7 @@
    {
     "id": "acceptOrDeclineBusinessEmail",
     "repeatable": true,
-    "content": "You scroll through the list of business emails. All of them are fairly generic, but a couple of them catches your eye.",
+    "content": "You scroll through the list of business emails. All of them are fairly generic, but a couple of them catch your eye.",
     "choices": [
       {
         "condition": "acceptOrDeclineSomething eq true"
@@ -43,12 +43,12 @@
       "set readSomething true",
       "set haveOffer true"
     ],
-    "choiceLabel": "Check business emails"
+    "choiceLabel": "Check business emails."
   },
 
    {
     "id": "oldHighSchool",
-    "content": "The name in the email rang an odd bell in your head, so you continue to read. It was a rather short paragraph which said \"Hello Emma, I don't know if you remember me but I am Linda Jordana from your old high school. We heard that you have been doing very well in your efforts to educate people on the effects of climate change and would love if you could give a lecture here at Rapid City High!\"",
+    "content": "The name in the email rings an odd bell in your head, so you continue to read. It's a rather short paragraph:<br><br>\"Hello Emma, I don't know if you remember me but I am Linda Jordana from your old high school. We heard that you have been doing very well in your efforts to educate people on the effects of climate change and would love if you could give a lecture here at Rapid City High!\"",
     "choices": [
       {
         "gotoId": "acceptOldHighSchool"
@@ -67,8 +67,8 @@
   },
   {
     "id": "acceptOldHighSchool",
-    "choiceLabel": "Seems like a great opportunity",
-    "content": "Hmm, this seems like it would be a good opportunity to get some kids to help out the community. You remember how much fun you had in highschool volunteering at local events.",
+    "choiceLabel": "Seems like a great opportunity.",
+    "content": "Hmm, this seems like it might be a good opportunity to get some kids to help out in the community. You remember how much fun you had in high school volunteering at local events.",
     "conditions": [
       "acceptOrDeclineSomething eq true"
     ],
@@ -78,8 +78,8 @@
   },
   {
     "id": "declineOldHighSchool",
-    "choiceLabel": "I have better opportunities waiting for me",
-    "content": "While this does seem like a good opportunity, you would rather talk to a bigger audience of people who are capable of making a bigger impact than a hundred high school students.",
+    "choiceLabel": "I have more important things to do.",
+    "content": "While this does seem like a good opportunity, you'd rather talk to a bigger audience...one that's capable of making a bigger impact than a hundred high school students.",
     "conditions": [
       "acceptOrDeclineSomething eq true"
     ],
@@ -89,7 +89,7 @@
   },
   {
     "id": "oldHighSchoolExposition",
-    "content": "\"Rapid City High School: Home of the Eagles\". Never thought you'd ever be going back there again. North Dakota isn't that far away from LA and wouldn't be that much trouble at all. You start asking yourself, \"Hmm, what should I talk about?\"",
+    "content": "\"Rapid City High School: Home of the Eagles\". Never thought you'd go back there again. I mean, North Dakota isn't exactly on the way, but...you could swing it as a long layover from your upcoming trip between LA and DC? You'd just need to figure out what you'd talk about....",
     "choices": [
       {
         "gotoId": "oldHighSchoolExposition3"
@@ -105,7 +105,7 @@
   },
   {
     "id": "oldHighSchoolExposition2",
-    "choiceLabel": "The importance of helping out the community",
+    "choiceLabel": "The importance of helping out the community.",
     "content": "\"I've got it!\" A few heads turn your way as you realize that you just yelled out loud. But you have decided that you will use your talk to urge the students to volunteer at local events and help out the community.",
     "effects": [
       "set talkExposition true"
@@ -116,7 +116,7 @@
   },
   {
     "id": "oldHighSchoolExposition3",
-    "choiceLabel": "The importance of learning about climate change",
+    "choiceLabel": "The importance of learning about climate change.",
     "content": "\"I've got it!\" A few heads turn your way as you realize that you just yelled out loud. But you have decided that you will use your talk to educate the students about the importance about studying climate change.",
     "effects": [
       "set talkExposition true"
@@ -129,7 +129,7 @@
   {
   "id": "outroForLandingHS",
   "choiceLabel" : "The plane is landing.",
-  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>I've got this,</i> you try to convince yourself.}",
   "choiceLabel": "The plane is landing.",
   "effects": [
     "set outroForLanding true",
@@ -143,7 +143,7 @@
 {
     "id": "reminisceOldHighSchool",
     "choiceLabel": "A few hours later...",
-    "content": "A few hours later, your lecture is over. It was great being able to return home. Honestly, you never thought that you would ever be in that gymnasium again after your graduation. But after so many years, it still felt so familiar and everyone was so welcoming and respectful during your amazing talk which went perfectly. Time to hop back onto the plane.",
+    "content": "A few hours later, your lecture is over. It was great being able to visit home. Honestly, you never thought you'd be in that gymnasium again after graduating. But after so many years, it still felt familiar. Everyone was so welcoming and engaged during your talk (which went perfectly) it's almost enough to give you a small twinge of homesickness. Almost. But the world calls you back soon enough.",
     "conditions": [
       "nextTalk eq oldHighSchool"
     ],
@@ -157,8 +157,8 @@
 
  {
     "id": "televisedTalk",
-    "choiceLabel": "\"We want you to be on tv!",
-    "content": "Immediately after opening the email, you recognize the name of the company. They are the producers of a tv documentary series that is slowly gaining popularity. They want to televise one of your talks!",
+    "choiceLabel": "\"We want you to be on TV!",
+    "content": "Immediately after opening the email, you recognize the name of the company. They're the producers of a TV documentary series that's slowly gaining popularity. They want to televise one of your talks!",
     "choices": [
       {
         "gotoId": "acceptTelevisedTalk"
@@ -177,7 +177,7 @@
   },
   {
     "id": "acceptTelevisedTalk",
-    "choiceLabel": "Sounds like an amazing opportunity",
+    "choiceLabel": "Sounds like an amazing opportunity.",
     "content": "Wow this would be an easy way to spread your message to many people at a time. It would be crazy not to take advantage of this opportunity.",
     "effects": [
       "set nextTalk televisedTalk"
@@ -185,7 +185,7 @@
   },
   {
     "id": "declineTelevisedTalk",
-    "choiceLabel": "Not the audience I am looking for",
+    "choiceLabel": "Not the audience I'm looking for.",
     "content": "The viewship of the show is not high enough to dedicate so much time to. Maybe the time would be better spent if you spoke to a group of influential people instead of random citizens flipping through the channels on their tv on a saturday night.",
     "effects": [
       "set acceptOrDeclineSomething false"
@@ -647,7 +647,7 @@
 
   {
     "id": "goHome",
-    "choiceLabel": "Time to go home",
+    //"choiceLabel": "Time to go home",
     "content": "You have done enough for now and are exhausted. Time to head home.",
     "effects":[
       "set goHome true",
@@ -655,7 +655,7 @@
     ],
     "conditions": [
       "talksGiven gte 2",
-      "dealWithSomeone eq true",
+    //  "dealWithSomeone eq true",
       "readSomething eq true" 
     ]
   },
@@ -663,7 +663,8 @@
     "id" : "freeTime",
     "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. What to do now?",
     "conditions":[
-      "onAPlane eq true"
+      "onAPlane eq true",
+      "talksGiven lt 3"
     ],
     "choices" : [
       {"gotoId" : "talkSomeone"},
