@@ -529,7 +529,12 @@
             {"gotoId": "nothingLeftToSay"} //happens when you go through style and size
         ],
         "effects" : [
-            "set classSize true","incr tension 1", "incr academicEnthusiasm 1","incr confidence 1","set smol true"
+            "set classSize true",
+            "incr tension 1", 
+            "incr academicEnthusiasm 1",
+            "incr confidence 1",
+            "set smol true",
+            "set global_classSize small"
         ],
     },
             
@@ -542,7 +547,11 @@
             {"gotoId": "argue2"}
         ],
         "effects" : [
-            "set classSize true","incr academicEnthusiasm 1","set large true","incr confidence 2"
+            "set classSize true",
+            "incr academicEnthusiasm 1",
+            "set large true",
+            "incr confidence 2",
+            "set global_classSize large"
         ],
     },
     {
@@ -588,7 +597,12 @@
             {"gotoId": "nothingLeftToSay"}
         ],
         "effects" : [
-            "set classStyle true","incr academicEnthusiasm 1","set lecture true","incr confidence 1","incr tension 1"
+            "set classStyle true",
+            "incr academicEnthusiasm 1",
+            "set lecture true",
+            "incr confidence 1",
+            "incr tension 1",
+            "set global_classStyle lecture"
         ],
     },
                 {
@@ -600,7 +614,11 @@
             {"gotoId": "nothingLeftToSay"}
         ],
         "effects" : [
-            "set classStyle true","incr academicEnthusiasm 1","set seminar true","incr tension 1"
+            "set classStyle true",
+            "incr academicEnthusiasm 1",
+            "set seminar true",
+            "incr tension 1",
+            "set global_classStyle seminar"
         ],
     },
     {

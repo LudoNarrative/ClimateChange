@@ -6,7 +6,7 @@
 		"conditions": [
 			"emmaPositiveRejoinder eq true"
 		],
-		"content": "\"{name|protagonist}, You an intelligent woman, you must know that this relocation won't change anything. The water is going to hell.\"",
+		"content": "\"{name|protagonist}, you're an intelligent woman, you must know that this relocation won't change anything. The water is going to hell.\"",
 		"choices": [
 			{
 				"gotoId": "avoidingTruthAboutCrabs"
@@ -19,9 +19,9 @@
 	},
 	{
 		"id": "avoidingTruthAboutCrabs",
-		"choiceLabel": "\"what do you mean?\"",
+		"choiceLabel": "\"What do you mean?\"",
 		"speaker": "protagonist",
-		"content": "\"We are doing something good, do you really think this won't help {name|volunteer}?\"",
+		"content": "\"We're doing something good! Do you honestly think this won't help, {name|volunteer}?\"",
 		"choices": [
 			{
 				"gotoId": "crabAnswer"
@@ -30,9 +30,9 @@
 	},
 	{
 		"id": "crabAnswer",
-		"choiceLabel": "\"You know that's not what I mean\"",
+		"choiceLabel": "\"You know that's not what I mean.\"",
 		"speaker": "volunteer",
-		"content": "\"Crab fishers have been pulling up corpses since 2002, do you really think you an save this species by moving them down the coast?",
+		"content": "\"Crab fishers have been pulling up dead crabs since 2002, do you really think you can save this species just by moving them down the coast?",
 		"choices": [
 			{
 				"gotoId": "hopefulCrabResponse"
@@ -45,7 +45,7 @@
 	{
 		"id": "hopefulCrabResponse",
 		"choiceLabel": "\"We can save them!\"",
-		"content": "You pull a crab from the sand, it snaps and flails silently as its orange-red body lifted into the air. \"look at this crab, what do you see {name|volunteer}?\" ",
+		"content": "You pull a crab from the sand, it snaps and flails silently as its orange-red body lifts into the air.<br><br>\"Look at this crab, what do you see {name|volunteer}?\" ",
 		"choices": [
 			{
 				"gotoId": "rudeCrabResponse"
