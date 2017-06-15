@@ -170,7 +170,7 @@
     {
       "id": "neutrali",
       "choiceLabel" : "Don't get involved",
-      "content": "<p>\"{name|academicFriend} please, now you're just being childish.\"</p><p>\"Oh, jeez prof, this won't bring down my participation points, will it?\" Shelly waves her hand in dismissal. The two go quiet and focus on their food.</p>",
+      "content": "<p>\"{name|nonAcademicFriend} please, now you're just being childish,\" Zanita says.</p><p>\"Oh, jeez prof, this won't bring down my participation points, will it?\" Shelly waves her hand in dismissal. The two go quiet and focus on their food.</p>",
       "conditions": [
         "friendIsInAcademia eq true",
         "friendIsNotInAcademia eq true"   
@@ -210,7 +210,7 @@
     {
       "id": "negativeShelli",
       "choiceLabel" : "\"So {name|nonAcademicFriend}, how has your volunteering been going?\"",
-      "content" : "<p>\"Ehh, fine I guess. You probably don't want to hear about it though.\" She returns her focus to her construction.</p>",
+      "content" : "<p>\"Ehh, fine I guess. You probably don't want to hear about it though.\" She returns to her construction.</p>",
       "effects" : ["incr tension 1"]
     },
   {
@@ -280,8 +280,8 @@
     },
     {
         "id": "wineQuestion1_t",
-        "choiceLabel": "\"No, my stomach…. It’s just…. I’m….\"",
-        "content": "\"Come on, {name|protagonist}, you stick-in-the-mud,\" {name|nonAcademicFriend} says, fiddling with the metal cage on a bottle of champagne.<br>\"That’s for after dinner, {name|nonAcademicFriend},\" {name|academicFriend} says. She crosses her arms. \"And she doesn’t need to drink if she doesn’t want to.\" {name|academicFriend} takes the bottle from {name|nonAcademicFriend} and puts it back in the fridge. \"That’s not how you open one of those anyway.\"<br><br>{name|nonAcademicFriend} puts the steak knife down.",
+        "choiceLabel": "\"No, my stomach's been off. Too nervous.\"",
+        "content": "\"Come on, {name|protagonist}, you stick-in-the-mud,\" {name|nonAcademicFriend} says, fiddling with the metal cage on a bottle of champagne.<br>\"That’s for after dinner, {name|nonAcademicFriend},\" {name|academicFriend} says. She crosses her arms. \"And she doesn’t need to drink if she doesn’t want to.\" {name|academicFriend} takes the bottle from {name|nonAcademicFriend} and puts it back in the fridge.",
         "choices": [
             {"gotoId" : "sceneSetUp_end_t"},
         ],
@@ -337,7 +337,7 @@
 //This scene will establish that they both agree that pond scum is bad
     {
         "id": "inactivityIsPondScum0_t",
-        "content": "Dinner presses on. You sigh worriedly when no one's looking; or at least you thought you had.<br>\"What’s the matter, {name|protagonist}?\" {name|academicFriend} says, now frowning.<br>\"Huh? Oh, nothing.\"<br>\"You don’t have to pretend everything’s fine. You remember how big a wreck I was before my dissertation defense, don’t you?\"<br><br>You did, she was a wreck.",
+        "content": "Dinner presses on. You sigh worriedly.<br>\"What’s the matter, {name|protagonist}?\" {name|academicFriend} says, now frowning.<br>\"Huh? Oh, nothing.\"<br>\"You don’t have to pretend everything’s fine. You remember how big a wreck I was before my dissertation defense, don’t you?\"<br><br>You did, she was a wreck.",
         "choices": [
             {"gotoId" : "inactivityIsPondScum1_t"},
         ],
@@ -377,7 +377,7 @@
     {
         "id": "thatsAllFolks1_t",
         "choiceLabel": "Continue",
-        "content": "{name|academicFriend} gives you a big hug and an even bigger kiss on the cheek.<br>\"You’re gonna do great tomorrow. I’ll be there early with my big ‘GO {name|protagonist}!’ sign!\" {name|academicFriend} says, still holding onto your shoulders.<br>\"Knock ‘em dead, kid.\" {name|nonAcademicFriend} shoots you a finger gun and blows away the smoke.<br>Tomorrow will be upon you in less than eight hours and your dissertation defense in less than 12. You can hardly wait. The anticipation is almost making you sick.",
+        "content": "{name|academicFriend} gives you a big hug and an even bigger kiss on the cheek.<br>\"You’re gonna do great tomorrow. I’ll be there early with my big ‘GO {name|protagonist}!’ sign!\" {name|academicFriend} says, still holding onto your shoulders.<br>\"Knock ‘em dead, kid.\" {name|nonAcademicFriend} shoots you a finger gun and blows away the smoke.<br>Tomorrow will be upon you in less than eight hours and your dissertation defense in less than twelve. You can hardly wait. The anticipation is almost making you sick.",
         "effects": [
             "set outro true"
         ]
@@ -478,7 +478,10 @@
             {"gotoId": "EmmaClassTypeBeat"},
         ],
         "conditions" : [
-            "establishDefenseTomorrow eq true"
+            "establishDefenseTomorrow eq true",
+        ],
+        "effects" : [
+          "academicEnthusiasm decr 1"
         ]
     },
     {
@@ -566,7 +569,7 @@
     },
     {
         "id": "largeContinued",
-        "content": "\"Must you <i>always</i> be a downer Shelly?! Can you not for once, out of respect?\" You sigh and look down at your dinner. It suddenly seems a lot less appetizing then before. Although you'll probably get your appetite back. As soon as they stop fighting...",
+        "content": "\"Must you <i>always</i> be a downer Shelly?! Can you not, for once? Out of respect?\" You sigh and look down at your dinner. It suddenly seems a lot less appetizing then before. Although you'll probably get your appetite back. As soon as they stop fighting...",
         "choices" : [
             {"gotoId": "classStyle"},
             {"gotoId": "nothingLeftToSay"}
@@ -582,7 +585,7 @@
         "id": "classStyle",
         "unavailableChoiceLabel": "Already talked about class style.",
         "choiceLabel": "\"So, what about the style do you wanna hear?\"",
-        "content": "\"Anything you can tell us!\" You laugh at Zanita's excitement. Or maybe her excitement is just because you'll be working together. Either way, at least one of your friends likes your job. <p> \"I hadn't thought about it much, but...\" </p>",
+        "content": "\"Anything you can tell us!\"<br><br>You laugh at Zanita's excitement. Or maybe her excitement is just because you'll be working together. Either way, at least one of your friends likes your job. <p> \"I hadn't thought about it much, but...\" </p>",
         "choices" : [
             {"gotoId": "lecture"},
             {"gotoId": "seminar"},
@@ -607,8 +610,8 @@
     },
                 {
         "id": "seminar",
-        "choiceLabel": "\"...a seminar-styled class could be interesting.\"",
-        "content": "\"A seminar could be great. I could share my knowledge, and then we could have more of a conversation about it.\"<p>\"Well that's great. But you could do that on a local level just as well.\"</p><p>Zanita glares at Shelly which makes you sigh. Why did you think this dinner would go any differently. And sadly, that's probably one of the nicest thing Shelly's said about your job.",
+        "choiceLabel": "\"...a seminar-style class could be interesting.\"",
+        "content": "\"A seminar could be great. I could share my knowledge, and then we could have more of a conversation about it.\"<p>\"Well that's great. But you could have that conversation outside a classroom just as easily,\" Shelly says.</p><p>Zanita glares at Shelly which makes you sigh. Why did you think this dinner would go any differently. And sadly, that's probably one of the nicest thing Shelly's said about your job.",
         "choices" : [
             {"gotoId": "classSize"},
             {"gotoId": "nothingLeftToSay"}
@@ -623,6 +626,7 @@
     },
     {
         "id": "nothingLeftToSay",
+        "unavailableChoiceLabel": "It's too soon to change the subject.",
         "choiceLabel": "\"Why don't we move onto a new topic?\"",
         "content": "\"That's all I have planned for now.\" <p> \"Awww Em. Seriously? I'm sure you have more!\" </p> Honestly, you do have a bit more in mind, but you might as well save Shelly from any more academic talk. You offer again to switch topics. Zanita sighs but agrees. Shelly attempts to hide a small smile, but you notice it. At least you did <i>something</i> to keep them from starting a new fight.",
         "conditions" : [

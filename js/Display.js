@@ -181,6 +181,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				//$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
 				$('#charPic_' + char.id).css("background-image", "url("+url+")"); 
 			}
+
+			if (picClass == "supportingChar") {
+				$('#charPic_' + char.id).html("<div class='nameLabel'>" + char.name + "</div>");
+			}
 			});
 		}	
 	}

@@ -1,6 +1,8 @@
-//TODO: lectureContent3 shouldn't have two choices, it should have one choice that's dynamic
+//TODO: lectureContent3 shouldn't have two choices, it should have one choice that's dynamic, driven by global_classStyle
+//TODO: switch all "set lecture true" and "set seminar true" to use global_classStyle, and 
 
 //TODO: currently lectureEndWell, lectureEndOK, and LectureEndBadly erroneously use "set followUp true" to ensure wishlist item is met if you don't followup with the student, but that is not technically correct. Needs to be re-worked
+
 
 [
 {
