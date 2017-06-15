@@ -92,7 +92,7 @@ Stats CSS
 
 #statsContainer {
     position:absolute;
-    bottom:0px;
+    bottom:-10px;
     left:0px;
 }
 
@@ -112,6 +112,13 @@ Stats CSS
 
 .stat-label {
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+    width:200px;
+}
+
+.nameLabel {
+    text-shadow: 1px 1px 4px black;
+    font-size: 20px;
+    margin-top: 150px;
 }
 
 .barContainer {
@@ -149,6 +156,7 @@ Stats CSS
     height: 190px;
     width: 160px;
     background-position-y:top;
+    text-align: center;
 }
 
 #stats {
