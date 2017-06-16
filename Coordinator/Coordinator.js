@@ -1419,6 +1419,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"nonAcademicFriend": {name: "Shelly", nickname: "Shelly", gender: "female"}
 			},
 			wishlist: [
+				{ condition: "satiation gte 5", order: "first", persistent: true },		//game interrupt
 				{ condition: "establishFriends eq true"},
 				{ condition: "establishSettingDinner eq true"},
 				{ condition: "establishDefenseTomorrow eq true"},
@@ -1452,6 +1453,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set inactivityIsBad false",
 				"set outro false",
 
+				"set satiation 5",			//this is the game interfacing variable
 				"set academicFriendRelationship 5",			//on a scale between 1 to 10 (1 bad, 10 best)
 				"set nonAcademicFriendRelationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
 				"set confidence 5",				//scale of 1 to 10, 10 highest
@@ -1460,6 +1462,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set tension 0"
 			],
 			UIvars: [
+				{
+					"varName" : "satiation",
+					"label" : "Satiation",
+					"characters" : [],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
 				{
 					"varName" : "confidence",
 					"label" : "Confidence",

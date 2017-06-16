@@ -1,5 +1,25 @@
 [
-{
+  {
+    "id" : "gameInterrupt",
+    "content" : "Hey, pass the potatoes, will you? I'm starving!",
+    "choices" : [
+      {"gotoId" : "satisfyGameInterrupt"}
+    ],
+    "conditions" : [
+      "satiation lt 3"
+    ]
+  },
+  {
+    "id" : "satisfyGameInterrupt",
+    "choiceLabel" : "Oh, here. Sorry!",
+    "content" : "Thanks. What were we talking about again?",
+    "conditions" : [
+      "satiation gte 3"
+    ],
+    "effects" : [ "incr satiation 1"]
+
+  },
+  {
     "id": "friendIsInAcademiaEnthusiastici",
     "content": "<p>\"So {nickname|protagonist}, I got you something.\" {name|academicFriend} pulls out a coffee thermos from under the table. \"It says 'Trust me, I'm a doctor'. I have one too. Whenever we're both on campus we can stop by that little cafe and drink some mocha on the patio. It'll be adorable!\"</p><p>Shelly stabs a carrot with her fork. \"That <em>does</em> sound adorable! Will you also be snickering about the peasant undergraduates as they go to their fifth class that day?\"</p>",
     "choices": [
