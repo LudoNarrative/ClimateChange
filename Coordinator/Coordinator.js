@@ -1453,12 +1453,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set inactivityIsBad false",
 				"set outro false",
 
-				"set satiation 5",			//this is the game interfacing variable
+				"set satiation 5",					//this is the game interfacing variable
+
 				"set academicFriendRelationship 5",			//on a scale between 1 to 10 (1 bad, 10 best)
 				"set nonAcademicFriendRelationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
-				"set confidence 5",				//scale of 1 to 10, 10 highest
-				"set academicEnthusiasm 5",		//scale of 1 to 10, 10 highest
-				"set friendTension 0",			//scale of 1 to 10, ten is high tension
+				"set confidence 5",							//scale of 1 to 10, 10 highest
+				"set academicEnthusiasm 5",					//scale of 1 to 10, 10 highest
+				"set friendTension 0",						//scale of 1 to 10, ten is high tension
 				"set tension 0"
 			],
 			UIvars: [
@@ -1498,7 +1499,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					"range" : [0,10]
 				},
 				{
-					"varName" : "friendTension",
+					"varName" : "tension",
 					"label" : "Tension",
 					"characters" : ["protagonist", "academicFriend", "nonAcademicFriend"],
 					"affectedBy" : "both",
