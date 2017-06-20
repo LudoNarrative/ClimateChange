@@ -299,11 +299,6 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var setSceneOutro = function(endText) {
 
-		/*
-		var nextIndex = State.get("scenes").findIndex(function(scene) {		//doof
-			return (scene == State.get("currentScene"));
-		}) + 1;
-		*/
 		var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
 		$( "#blackout" ).delay(1600).fadeIn( "slow", function() {
 	    	$("#sceneIntro").html(endText);

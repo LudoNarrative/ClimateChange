@@ -1,6 +1,8 @@
 [
   {
     "id" : "gameInterrupt",
+    "gameInterrupt" : true,           //this fragment can be used by the game to immediately interrupt the narrative
+    "repeatable" : true,
     "content" : "Hey, pass the potatoes, will you? I'm starving!",
     "choices" : [
       {"gotoId" : "satisfyGameInterrupt"}
@@ -11,12 +13,16 @@
   },
   {
     "id" : "satisfyGameInterrupt",
+    "repeatable" : true,
     "choiceLabel" : "Oh, here. Sorry!",
     "content" : "Thanks. What were we talking about again?",
     "conditions" : [
       "satiation gte 3"
     ],
-    "effects" : [ "incr satiation 1"]
+    "choices" : [
+      { "condition" : "endInterrupt eq true" }
+    ],
+    "effects" : [ "incr satiation 1", "incr tension 1"]
 
   },
   {
@@ -501,7 +507,7 @@
             "establishDefenseTomorrow eq true",
         ],
         "effects" : [
-          "academicEnthusiasm decr 1"
+          "decr academicEnthusiasm 1"
         ]
     },
     {
