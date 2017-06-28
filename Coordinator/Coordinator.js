@@ -3323,7 +3323,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "finalDinner",
-				aspFilepaths: [
+				aspFilepaths: ["asp-phaser-generator-2/test/fixtures/dinner_11-readWritePrivateTest.lp"],
+				aspFilepathsREAL: [
 					"GameGenerator/ASP_cleaned/games/dinner_1.lp",
 					"GameGenerator/ASP_cleaned/games/dinner_2.lp",
 					"GameGenerator/ASP_cleaned/games/dinner_3.lp",
