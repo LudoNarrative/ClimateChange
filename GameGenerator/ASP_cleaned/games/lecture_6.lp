@@ -32,18 +32,18 @@ initialize(set_color(entity(e_3_XX_),green)).
 
 timer_logic(timer(pingpong_entity_e_3_XX__XX__XX_),scalar(2),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(2))).
-initialize(set_value(resource(r_2_XX_),scalar(7))).
+initialize(set_value(resource(r_1_XX_),scalar(0))).
+initialize(set_value(resource(r_2_XX_),scalar(1))).
 
 precondition(control_event(button(mouse,pressed)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),decrease(resource(r_2_XX_),scalar(3))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),false),outcome(o_2_XX_)).
-precondition(le(resource(r_2_XX_),scalar(10)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease_over_time(resource(r_1_XX_),scalar(1))).
+precondition(le(resource(r_2_XX_),scalar(4)),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),decrease_over_time(resource(r_1_XX_),scalar(6))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_3_XX_)).
-precondition(le(resource(r_2_XX_),scalar(9)),outcome(o_3_XX_)).
+precondition(le(resource(r_2_XX_),scalar(3)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),add(entity(e_1_XX_),scalar(1),location(middle,center))).
 result(outcome(o_3_XX_),delete(entity(e_2_XX_))).
 
@@ -56,7 +56,7 @@ result(outcome(o_5_XX_),mode_change(game_loss)).
 
 precondition(timer_elapsed(pingpong_entity_e_3_XX__XX__XX_),outcome(pingpong_entity_e_3_XX__XX__XX_)).
 result(outcome(pingpong_entity_e_3_XX__XX__XX_),rotates(entity(e_3_XX_),cw,scalar(180))).
-result(outcome(pingpong_entity_e_3_XX__XX__XX_),decrease(resource(r_2_XX_),scalar(8))).
+result(outcome(pingpong_entity_e_3_XX__XX__XX_),decrease(resource(r_2_XX_),scalar(1))).
 result(outcome(pingpong_entity_e_3_XX__XX__XX_),increase(resource(r_1_XX_),scalar(1))).
 
 precondition(control_event(button(mouse,held)),outcome(repeled_from_cursor_entity_e_1_XX__XX__XX_)).

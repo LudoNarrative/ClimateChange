@@ -32,23 +32,23 @@ initialize(set_color(entity(e_3_XX_),green)).
 
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(2),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(2))).
-initialize(set_value(resource(r_2_XX_),scalar(10))).
+initialize(set_value(resource(r_1_XX_),scalar(5))).
+initialize(set_value(resource(r_2_XX_),scalar(4))).
 
 precondition(control_event(button(mouse,pressed)),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),decrease(resource(r_2_XX_),scalar(2))).
+result(outcome(o_1_XX_),decrease(resource(r_2_XX_),scalar(4))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),false),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease_over_time(resource(r_1_XX_),scalar(7))).
+result(outcome(o_2_XX_),decrease_over_time(resource(r_1_XX_),scalar(9))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_3_XX_)).
-precondition(le(resource(r_2_XX_),scalar(5)),outcome(o_3_XX_)).
+precondition(le(resource(r_2_XX_),scalar(6)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),add(entity(e_1_XX_),scalar(1),location(middle,center))).
 result(outcome(o_3_XX_),delete(entity(e_2_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_1_XX_),true),outcome(o_4_XX_)).
-precondition(le(resource(r_2_XX_),scalar(7)),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),increase(resource(r_1_XX_),scalar(2))).
+precondition(le(resource(r_2_XX_),scalar(2)),outcome(o_4_XX_)).
+result(outcome(o_4_XX_),increase(resource(r_1_XX_),scalar(1))).
 result(outcome(o_4_XX_),add(entity(e_2_XX_),scalar(1),location(top,left))).
 result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
 

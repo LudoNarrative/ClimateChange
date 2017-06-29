@@ -33,11 +33,11 @@ initialize(set_color(entity(e_3_XX_),green)).
 timer_logic(timer(t_1_XX_),scalar(3),loop).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(2),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(0))).
-initialize(set_value(resource(r_2_XX_),scalar(6))).
+initialize(set_value(resource(r_1_XX_),scalar(5))).
+initialize(set_value(resource(r_2_XX_),scalar(0))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),decrease(resource(r_2_XX_),scalar(7))).
+result(outcome(o_1_XX_),decrease(resource(r_2_XX_),scalar(9))).
 result(outcome(o_1_XX_),delete(entity(e_1_XX_))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_2_XX_)).
@@ -49,12 +49,12 @@ result(outcome(o_3_XX_),add(entity(e_1_XX_),scalar(1),location(middle,center))).
 result(outcome(o_3_XX_),delete(entity(e_2_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_4_XX_)).
-precondition(le(resource(r_2_XX_),scalar(4)),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),decrease(resource(r_1_XX_),scalar(10))).
+precondition(le(resource(r_2_XX_),scalar(7)),outcome(o_4_XX_)).
+result(outcome(o_4_XX_),decrease(resource(r_1_XX_),scalar(8))).
 result(outcome(o_4_XX_),add(entity(e_2_XX_),scalar(1),location(top,left))).
 result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
 
-precondition(ge(resource(r_1_XX_),scalar(6)),outcome(o_5_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(10)),outcome(o_5_XX_)).
 result(outcome(o_5_XX_),mode_change(game_loss)).
 
 precondition(control_event(button(mouse,held)),outcome(o_6_XX_)).
