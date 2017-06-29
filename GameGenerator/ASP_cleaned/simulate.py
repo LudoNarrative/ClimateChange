@@ -376,7 +376,8 @@ if __name__ == '__main__':
         depth = 20
         display = False
 
-        player_model_mappings = {'player_will_attempt':0.7,
+        player_model_mappings = {'player_must_do':0.95,
+                                 'player_will_attempt':0.7,
                                  'undetermined':0.5,
                                  'must_happen':1,
                                  'player_will_avoid':0.2,
