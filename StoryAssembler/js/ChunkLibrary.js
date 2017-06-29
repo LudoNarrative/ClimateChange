@@ -11,7 +11,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 
 	var requiredFields = [];
 	//"id" is optional because, if a chunk doesn't have one, we'll assign one automatically (unnamedChunk5, etc)
-	var optionalFields = ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available"];
+	var optionalFields = ["id", "notes", "choices", "choiceLabel", "unavailableChoiceLabel", "effects", "conditions", "request", "content", "repeatable", "speaker", "available", "gameInterrupt"];
 
 	// Validates and adds a chunk to the library.
 	var addChunk = function(chunk) {
@@ -78,6 +78,10 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 		}
 	}
 
+	var setAvailable = function(fragmentId) {
+		_library[fragmentId].available = true;
+	}
+
 	/* 
 		Returns a chunk for a given id, or false
 		-chunkId: the id of the chunk being requested
@@ -118,6 +122,7 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 	return {
 		add: add,
 		get: get,
+		setAvailable : setAvailable,
 		remove: remove,
 		reset: reset,
 		getKeys: getKeys

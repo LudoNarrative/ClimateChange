@@ -29,6 +29,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	}
 
 	var startScene = function(_coordinator, id, loadIntro) {
+
+		_coordinator.cleanState(id);
 		var bg = _coordinator.loadBackground(id);
 		initSceneScreen(State, bg, id);
 		if (loadIntro) { _coordinator.loadSceneIntro(id); }
@@ -38,7 +40,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		_coordinator.startGame(id);
 	}
 
-	var initTitleScreen = function(_Coordinator, _State, scenes) {
+	var initTitleScreen = function(_Coordinator, _State, scenes, playGameScenes) {
 
 		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
 		
@@ -52,7 +54,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			id: 'begin',
 			click: function() {
 				$( "#blackout" ).fadeIn( "slow", function() {
-	    			startScene(_Coordinator, scenes[0], true);
+	    			startScene(_Coordinator, playGameScenes[0], true);
   				});
 			}
 		}).appendTo('body');
@@ -179,6 +181,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				//$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
 				$('#charPic_' + char.id).css("background-image", "url("+url+")"); 
 			}
+
+			if (picClass == "supportingChar") {
+				$('#charPic_' + char.id).html("<div class='nameLabel'>" + char.name + "</div>");
+			}
 			});
 		}	
 	}
@@ -243,17 +249,17 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		var stats = State.get("storyUIvars");
 
 		stats.forEach(function(stat, pos) {
-				/*
-				"varName" : "confidence",
-				"label" : "Confidence",
-				"characters" : ["protagonist"],
-				"affectedBy" : "both",
-				"range" : [0,10]
-				*/
-				for (var x=0; x < stat.characters.length; x++) { //for each character...
-					setBarWidth(stat.characters[x] + "_" + stat.varName);
-				}
-			});
+			/*
+			"varName" : "confidence",
+			"label" : "Confidence",
+			"characters" : ["protagonist"],
+			"affectedBy" : "both",
+			"range" : [0,10]
+			*/
+			for (var x=0; x < stat.characters.length; x++) { //for each character...
+				setBarWidth(stat.characters[x] + "_" + stat.varName);
+			}
+		});
 
 	}
 
@@ -293,11 +299,6 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var setSceneOutro = function(endText) {
 
-		/*
-		var nextIndex = State.get("scenes").findIndex(function(scene) {		//doof
-			return (scene == State.get("currentScene"));
-		}) + 1;
-		*/
 		var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
 		$( "#blackout" ).delay(1600).fadeIn( "slow", function() {
 	    	$("#sceneIntro").html(endText);

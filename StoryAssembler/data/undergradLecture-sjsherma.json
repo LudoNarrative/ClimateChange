@@ -3,7 +3,7 @@
   {
     "id": "establishStudents",
     "choiceLabel" : "Continue",
-    "content": "{ifStateCondition|questionsLeft lte 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft eq 2|You have time for a couple more questions.|}{ifStateCondition|questionsLeft eq 3|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. You hope you can survive the questions.|Oh well, you'll take what you can get.}",
+    "content": "{ifStateCondition|questionsLeft lte 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft eq 2|You have time for a couple more questions.|}{ifStateCondition|questionsLeft eq 3|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. You hope you can survive the questions.|}",
     "choices" : [
       {"gotoId" : "elikaIntro"},
       {"gotoId" : "franklinIntro"},
@@ -23,7 +23,7 @@
     "id" : "outOfTime",
     "unavailableChoiceLabel" : "You still have time.",
     "choiceLabel" : "Time to wrap up.",
-    "content" : "You lean back, feeling the relief and exhaustion end of time brings.",
+    "content" : "You lean back, feeling the relief and exhaustion that end of time brings.",
     "effects" : [
       "set followup true",
       "set enthusiasticStudent true",
@@ -73,7 +73,7 @@
 {
   "id" : "encouragingResponse",
   "choiceLabel" : "Yeah, absolutely!",
-  "content" : "{ifStateCondition|composure gte 5|Looking around at all the bored and unconvinced faces, you decide to say,|You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out a general} \"That is an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|enthusiasticStudent} beams, though you notice faces that aren't as happy.",
+  "content" : "{ifStateCondition|composure gte 3|Looking around at all the bored and unconvinced faces, you decide to say,|You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out a general} \"That is an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|enthusiasticStudent} beams, though you notice faces that aren't as happy.",
   "effects" : [
     "incr optimism 1",
     "incr hope 1",
@@ -87,7 +87,7 @@
 {
   "id" : "gentleResponse",
   "choiceLabel" : "It's actually a bit more complicated than that.",
-  "content" : "{ifStateCondition|composure gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
+  "content" : "{ifStateCondition|composure gte 3|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
   "effects" : [
     "decr optimism 1",
     "incr hope 1",

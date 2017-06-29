@@ -3,7 +3,11 @@
     "id": "franklinPresentation",
     "choiceLabel": "Franklin begins his presentation",
     "conditions": [
-      "scepticalStudent eq true"
+     "establishAudience eq true",
+      "skepticalStudent eq true"
+    ],
+    "effects": [
+      "set studentGivesPresentation true"
     ],
     "content": "\"Franklin's presentation opens on a slide of a photo of a younger Franklin with a recent model of electric car. Then he begins, \"the green movement has been making a push for a switch to electric cars for decades, and while in theory electric vehicles are better for the environment there are dozens of underlying issues in which need to be studied. First what we must consider is what type of pollution goes into making cars. Being the son of CEOs in both the oil industry and recently the electric car industry,  I have first hand experience as to the dark side that these companies like to keep hidden.\"",
     "choices": [
@@ -54,6 +58,9 @@
       {
         "gotoId": "hardQuestionF"
       }
+    ],
+    "effects": [
+      "set emmaAsksQuestion true"
     ]
   },
   {
@@ -65,12 +72,18 @@
       {
         "gotoId": "easyAnswerF"
       }
-    ]
+    ],
+    "conditions": [
+      "emmaAsksQuestion eq true",
+    ],
   },
   {
     "id": "easyAnswerF",
     "choiceLabel": "Franklin Smiles and responds",
     "content": "\"I was naive years ago to think humans had little impact, it was hard for me to see how things accumulated. I only fully grasped our impact when my parents switched from the oil industry to the electric car industry. I asked to see how these luxury \"nature-friendly\" vehicles were made and it disgusted me. What made me passionate-\" ",
+    "conditions": [
+      "emmaAsksQuestion eq true",
+    ],
     "choices": [
       {
         "gotoId": "audienceAsksFranklin"
@@ -79,6 +92,9 @@
   },
   {
     "id": "midQuestionF",
+    "conditions": [
+      "emmaAsksQuestion eq true",
+    ],
     "speaker": "protagonist",
     "content": "\"How do you propose we get legislation to enforce change to corporations?\"",
     "choices": [
