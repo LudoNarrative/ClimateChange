@@ -39,7 +39,7 @@
   },
 
   {
-    "id": "establishSettingSkeptical ",
+    "id": "establishSettingSkeptical",
     "content": "You have been waiting for this day for a long time. It seems like it was just yesterday that Franklin stood up in your lecture and questioned the existence of climate change, and now you are about to watch his PhD defense about climate change as a member of the committee. ",
     "choices": [
       {
@@ -86,6 +86,7 @@
   {
     "id": "establishAudience",
     "repeatable": true,
+    "choiceLabel": "Placeholder Choice",
     "content": "As {ifStateCondition|skepticalStudent eq true|Franklin|}{ifStateCondition|enthusiasticStudent eq true|Elika|}{ifStateCondition|shyStudent eq true|Aiden|} is preparing their presentation at the front of the room, you look around to the other audience members in the room.",
     "choices": [
       {
@@ -108,15 +109,24 @@
     "content": "Sitting on either side of you are the other two panelists for the defense. To your right is professor Stephen Zhang, a well-known environmentalist who teaches at the university. And to your left is Dr. Mavery Winpun, an animal scientist who has published many articles regarding the importance of saving endangered species of insects. ",
     "effects": [
       "set establishAudience true"
-    ]
+    ],
+    "choices": [
+      {"condition": "studentGivesPresentation eq true"},
+    ],
   },
   {
     "id": "friendsOfPresenter",
+      "choices": [
+      {"condition": "studentGivesPresentation eq true"},
+    ],
     "choiceLabel": "The presenter seems to have friends here ",
     "content": "It would seem that {ifStateCondition|skepticalStudent eq true|Franklin|}{ifStateCondition|enthusiasticStudent eq true|Elika|}{ifStateCondition|shyStudent eq true|Aiden|} has a fair number of supporters in the audience. From a couple of friends to former professors, all here to watch {ifStateCondition|skepticalStudent eq true|Franklin|}{ifStateCondition|enthusiasticStudent eq true|Elika|}{ifStateCondition|shyStudent eq true|Aiden|} present their defense."
   },
   {
     "id": "otherAudience",
+      "choices": [
+      {"condition": "studentGivesPresentation eq true"},
+    ],
     "choiceLabel": "Look around to other attendees",
     "content": "Looking around at the small audience in the room, you notice {ifStateCondition|skepticalStudent eq true|another one of your former students. Oh! It's Elika, a very enthusiastic student from your lecture many years ago.|}{ifStateCondition|enthusiasticStudent eq true|another one of your former students. Oh! It's Franklin, who you remember to be fairly skeptical about climate change.|}{ifStateCondition|shyStudent eq true|a few things that stand out. There were a few people in suits, a woman wearing a large sun hat with feathers in it, and professor Chance Nitton, on of the professors at the university.|}"
   },

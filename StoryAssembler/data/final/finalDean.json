@@ -1,0 +1,698 @@
+[
+{
+        "id": "midTensionStarti",
+        "content" : "<p>\"Okay {name|protagonist}, I think the both of us have had a long day. Lets see if we can't figure what might be causing trouble for you these past few weeks.\" {name|authorityFigure} pulls off his glasses and wipes them. It seems redundant, given how clear they appear.</p>",
+        "choices" : [
+            {"gotoId":"Idunnoi"},
+            {"gotoId":"maybeImNervousi"},
+            {"gotoId":"aConcreteReasoni"}
+        ],
+        "conditions" : [
+            "troubleWithLecture eq true",
+            "tension gte 5",
+            "tension lt 10"
+        ]
+    },
+        {
+            "id": "Idunnoi",
+            "choiceLabel" : "\"{ifStateCondition|composure gte 4|I really don't know.|I... I can't figure it out.}\"",
+            "content" : "<p>\"Yes...I can understand that finding your footing in lecture can be tough, but you've had some time now. You need to get a hold of this. If you don't...well, let's not have that.\" He folds his hands; his gaze pierces you.</>",
+            "choices" : [
+                {"gotoId":"mustNotBeMei"},
+                {"gotoId":"maybeImNervousi"}
+            ]
+        },
+            {
+                "id": "mustNotBeMei",
+                "choiceLabel" : "\"{ifStateCondition|composure gte 3|If there is a problem, it isn't me. It must be the students.|If there's a problem... well there isn't. Maybe the students are causing trouble, but not me.}\"",
+                "content" : "<p>He goes rigid. \"Well now. How is it their fault?\"</p>",
+                "choices" : [
+                    {"gotoId" : "theyDon'tCarei"},
+                    {"gotoId" : "theyAreDisruptivei"}
+                ],
+                "effects" : [
+                    "incr tension 5"
+                ]
+            },
+                {// good place for call back to lecture
+                    "id": "theyDon'tCarei",
+                    "choiceLabel" : "\"{ifStateCondition|hope lt 3|It's like they've stopped caring. One student seems close to dropping out.|They just don't seem to care that much.}\"",
+                    "content" : "<p>{name|authorityFigure} He looks calm, but he's started rhythmically clicking his pen. On. Off. The sound is almost like ice cracking beneath your feet. \"Well Emma, it is your job to make them care. That is your purpose here, as an educator.\"</p>"
+                },
+                {
+                    "id": "theyAreDisruptivei",
+                    "choiceLabel" : "\"{ifStateCondition|optimism lt 3|They're aggressive. There is this one that tries to disprove everything I say.|They're constantly fighting the information I'm telling them.}\"",
+                    "content" : "<p>{name|authorityFigure} He looks calm, but he's started rhythmically clicking his pen. On. Off. The sound is almost like ice cracking beneath your feet. \"They shouldn't have to agree with you right off the bat, should they? Part of what we do here is cultivate life-learners. They'll need that skepticism later.\"</p>"//,
+                    //"effects" : "set reasonForTroubleTrue"
+                },
+        {
+            "id": "maybeImNervousi",
+            "choiceLabel" : "\"{ifStateCondition|composure gte 5|It's just like, I'm so nervous I freeze up.|I'm so like... nervous... you know?}\"",
+            "content" : "<p>For a second it looks like {name|authorityFigure} is going to rest a reassuring had on your arm, but he refolds his hands. \"I understand. Believe me, we've all been there. But Emma. What's really going on? There must be something making you feel this way.\"</p>",
+            "choices" : [
+                {"gotoId" : "amIDoingEnoughi"},
+                {"gotoId" : "yeahIReallyDontknowi"}
+            ]
+        },
+            {
+                "id": "amIDoingEnoughi",
+                "choiceLabel" : "\"I'm having trouble acting like I'm making a difference while I'm cooped up in a classroom far away from the action.\"",
+                "content" : "<p>He turns and looks out the window for just a second. \"These children will have to carry the torch for us. Sooner than we'd like to admit.\"</p>",
+                "choices" : [
+                    {"gotoId":"iShouldLeavei"},
+                    {"gotoId":"isThereSomethingElseForMeHerei"}
+                ],
+                "effects" : [
+                    "set reasonForTrouble true"
+                ]
+            },
+                {
+                    "id": "iShouldLeavei",
+                    "choiceLabel" : "\"{ifStateCondition|composure gte 3|Maybe, but I guess I'm just not the one to hand it off. I need to be out there, seeing my difference.|But what if I burn them...I should avoid the uh...torch thing.}\"",
+                    "content" : "<p>\"{if|StateCondition|composure gte 3|The real world can feel far away sometimes, away from all our polished classrooms and renovated labs.\"|\"Um, yes. Duly noted.\"} He smirks, but his grin is a bit too wide. \"I definitely didn't think this would be the way our conversation would go, but I haven't seen you this confident since you joined.\"</p>",
+                    "effects" : [
+                        "set pathChoiceMade true"
+                    ]
+                },
+                {
+                    "id": "isThereSomethingElseForMeHerei",
+                    "choiceLabel" : "\"It just feels wrong sometimes. Spouting facts when there's still so much I don't know.\"",
+                    "content" : "<p>\"To be fair, someone has to teach. Snazzy elbow patches aside, we're not just for show.\" He scratches his chin and stares up at the ceiling. \"For now, let's have you help out with some of our field studies. I can put you in touch with Harry Leighton. He's running a field lab over near the coastline. Let you get your hands dirty.\"</p>",
+                    "effects" : [
+                        "set pathChoiceMade true"
+                    ]
+                },
+            {
+                "id": "yeahIReallyDontknowi",
+                "choiceLabel" : "\"{ifStateCondition|composure gte 4|I keep thinking and thinking, but still. Nothing. I have no idea what is going on.|\"I'm sorry, but I just can't...\"}\"",
+                "content" : "<p>{name|authorityFigure} taps his pen against his desk. It's almost silent. {ifStateCondition|composure lte 4|Tears well in your eyes.|}</p>",
+                "effects" : [
+                    "incr tension 5"
+                ]
+            },
+        {
+            "id": "aConcreteReasoni",
+            "choiceLabel" : "\"{ifStateCondition|curiosity gte 7|They're so smart! One student, just...I've never seen someone so excited to learn.|Honestly, I think I just didn't expect them to be so on top of their game.} I just need to keep up really. But I'm getting better.\"",
+            "content" : "<p>He smiles. \"It thrills me that everyone is so focused on learning, but just because you're improving doesn't mean you are doing what is right for you. Are you sure you are committed to this? What matters is that your heart is in it. You'll grow with experience, I'm not worried about that.\"</p>.",
+            "choices" : [
+                {"gotoId":"isThereSomethingElseForMeHerei"},
+                {"gotoId":"iNeedMorePracticei"},
+                {"gotoId":"iShouldLeavei"}
+            ],
+            "effects" : [
+                "set reasonForTrouble true"
+            ],
+            "conditions" : [
+                "academicEnthusiasm gte 10"
+            ]
+        },
+            {
+                "id": "iNeedMorePracticei",
+                "choiceLabel" : "\"{ifStateCondition|composure gte 4|Yes. My heart is 100% in it.|Yes, I like, really want this.}\"",
+                "content" : "<p>\"I would say you remind me of a younger version of myself, but I told my partner I was going to try and be less of a cliche.\"</p>",
+                "effects" : [
+                    "set pathChoiceMade true"
+                ]
+            },
+    {
+        "id": "highTensionStarti",
+        "content" : "<p>{name|authorityFigure} places his glasses on the table and rubs his eyes with his fingers. His elbows drop onto the desk before he speaks again. \"{name|protagonist}, I'm going to be honest with you. This isn't going well.\"</p>",
+        "choices" : [
+            {"gotoId":"stokeTheFirei"},
+            {"gotoId":"reconcilei"},
+            {"gotoId":"sayNothingi"}
+        ],
+        "conditions" : [
+            "troubleWithLecture eq true",
+            "tension gte 10"
+        ],
+        "effects" : [
+            "set deanReaction true"
+        ]
+    },
+        {
+            "id": "sayNothingi",
+            "choiceLabel" : "Say nothing.",
+            "request" : {"gotoId" : "noProblemi"}
+        },
+        {
+            "id": "stokeTheFirei",
+            "choiceLabel" : "\"Well, I don't care. I don't need your approval.\"",
+            "content" : "<p>His hand slams against the table. \"Dammit, {name|protagonist}! Are you <i>trying</i> to make me fire you?\" He turns away and breathes deep before facing you again. \"Fine. I'll give you one last chance. Now: what's the issue with your class?\"</p>",
+            "choices" : [
+                {"gotoId":"schoolIsTheProblemi"},
+                {"gotoId":"noProblemi"}
+            ],
+            "conditions" : [
+                "tension gte 10"
+            ],
+            "effects" : [
+                "incr tension 5"
+            ]
+        },
+            {
+                "id": "schoolIsTheProblemi",
+                "choiceLabel" : "\"All we do here is talk about the problems in the world without actually doing anything.\"",
+                "content" : "<p>\"And what? We're supposed to charge out there mindlessly and solve all the world's problems? Fine, if it's that simple to you...\" He swivels his chair to face his bookcase. \"I think you should go.\"</p>",
+                "choices" : [
+                    {"gotoId":"apologizeAndLeavei"},
+                    {"gotoId":"justLeavei"},
+                    {"gotoId":"fightMorei"}
+                ],
+                "effects" : [
+                    "set reasonForTrouble true"
+                ],
+                "conditions" : [
+                    "academicEnthusiasm lte 3"
+                ]
+            },
+            {
+                "id": "noProblemi",
+                "choiceLabel" : "\"{ifStateCondition|composure gte 6|There is no problem. This is a waste of time.|I... I just don't see a problem here. Ok?}\"",
+                "content" : "<p>{ifStateCondition|tension gt 10|He bounds up and his chair slams back against the wall. He stares you down.|He sighs.} \"{ifStateCondition|tension gt 5|You have no control over yourself, or your students!|See, the problem is that you have no control of your class.} They walk all over you and...and frankly it's unacceptable for our university to be represented as such.\" {name|authorityFigure} holds a hand on his chest. Maybe the words cut as they work their way out.</p>",
+                "choices" : [
+                    {"gotoId":"apologizeAndLeavei"},
+                    {"gotoId":"justLeavei"},
+                    {"gotoId":"fightMorei"}
+                ],
+                "effects" : [
+                    "set reasonForTrouble true"
+                ]
+            },
+                {
+                    "id": "fightMorei",
+                    "choiceLabel" : "\"Unacceptable? I'm sorry I'm not a convincing talking textbook! This whole place is pathetic.\"",
+                    "content" : "<p>\"Emma. Please leave.\"</p>",
+                    "effects" : [
+                        "set pathChoiceMade true"
+                    ],
+                    "conditions" : [
+                        "tension gte 5"
+                    ]
+                },
+                {
+                    "id": "justLeavei",
+                    "choiceLabel" : "Just Leave",
+                    "content" : "<p>As you leave, {name|authorityFigure} watches the floor, waiting for the door to close.</p>",
+                    "effects" : [
+                        "set pathChoiceMade true"
+                    ]
+                },
+                {
+                    "id": "apologizeAndLeavei",
+                    "choiceLabel" : "{ifStateCondition|composure gte 5|\"I'll be on my way.|\"I'm...} I'm sorry it ended up this way.\"",
+                    "content" : "<p>\"Yeah, I am too.\"</p>",
+                    "effects" : [
+                        "set pathChoiceMade true"
+                    ]
+                },
+
+        {
+            "id": "reconcilei",
+            "choiceLabel" : "Let's take a step back. This whole situation has put me a little on edge. I apologize.",
+            "content" : "<p>\"I understand. You'll never meet a teacher that says what they do is easy. But we still haven't made any progress. What has been the problem in your class?\"</p>",
+            "choices" : [
+                {"gotoId":"iMightKnowTheProblemi"},
+                {"gotoId":"thisMightNotBeForMei"}
+            ],
+            "conditions" : [
+                "composure gte 7"
+            ]
+        },
+            {
+                "id": "iMightKnowTheProblemi",
+                "choiceLabel" : "I think it's just the learning curve, honestly. I'm doing the best I can...the kids are so driven. I want keep up, even if I have to stumble a bit.",
+                "request" : {"gotoId":"aConcreteReasoni"},
+                "conditions" : [
+                    "academicEnthusiasm gte 7"
+                ]
+            },
+            {
+                "id": "thisMightNotBeForMei",
+                "choiceLabel" : "I can't shake this feeling I'm just sitting in a nice air-conditioned classroom away from the real problems out there.",
+                "content" : "<p>\"Alright, and what can we do to make you feel like you are getting something done?\"</p>",
+                "choices" : [
+                    {"gotoId":"iShouldLeavei"},
+                    {"gotoId":"isThereSomethingElseICanDoHerei"}
+                ]
+            },
+                {
+                    "id": "isThereSomethingElseICanDoHerei",
+                    "choiceLabel" : "I still care about this university. I just want to be more involved with research, not just reciting knowledge",
+                    "request" : {"gotoId" : "isThereSomethingElseForMeHerei"}
+                },
+                
+
+    {
+        "id": "deanTellsStoryi",
+        "content" : "<p>\"I know neither of us wanted to be in this position today, but I think this will work just right for you. Actually reminds me of a story, if you want to hear it.\"</p>",
+        "choices" : [
+            {"gotoId":"tellMeTheStoryi"},
+            {"gotoId":"pleaseDontTellMeTheStoryi"}
+        ],
+        "conditions" : [
+            "pathChoiceMade eq true",
+            "reasonForTrouble eq true",
+            "tension gte 5"
+        ],
+        "effects" : [
+            "set deanReaction true"
+        ]
+    },
+        {
+            "id": "tellMeTheStoryi",
+            "choiceLabel" : "Sure, let's hear it.",
+            "content" : "<p>\"I'd just started teaching. It was my third week. No, maybe it was my second.\" His finger twiddles about as if he's trying to pluck the date out of the air. \"Anyway, doesn't matter. I was supposed to be doing a lecture on community reactions to changing ecosystems. The thing is, I blanked, so you know what I did?\"</p>",
+            "choices" : [
+                {"gotoId":"whati"}
+            ]
+        },
+            {
+                "id": "whati",
+                "choiceLabel" : "What?",
+                "content" : "<p>\"I just talked about fish. My thesis was on salmon migration. Best damn lecture I ever gave. I was so excited to just talk about fish that I got myself even more excited. At the end of the lecture a quiet student comes up to me and tells me it's the best lecture he ever saw. Then he apologizes because he's changing his major from environmental studies to computer science and was going to be dropping the class.\"</p>",
+                "choices" : [
+                    {"gotoId":"soi"}
+                ]
+            },
+                {
+                    "id": "soi",
+                    "choiceLabel" : "Okay... so what's the moral?",
+                    "content" : "<p>\"Moral? I dunno. I guess I just wanted to dissolve the tension is all. I'm sure you have somewhere to be so I'll let you go, but thanks for cooperating with me.\"</p>"
+                },
+        {
+            "id": "pleaseDontTellMeTheStoryi",
+            "choiceLabel" : "Let's leave it for next time.",
+            "content" : "<p>\"If you say so, but I would've preferred a straightforward 'no'.\" He flashes a grin. \"Hey {name|protagonist}, thanks for cooperating with me today.\"</p>"
+        },
+
+    {
+        "id": "interrupti",
+        "content" : "<p>{ifStateCondition|tension gte 7|Your fists clench. He's going to fire you any second. Right when you slip. You can't let him win.|Everything is going alright so far, but it's only a matter of time. He called you here so he could fire you, right?} Maybe if you stop sweating so much... Stop! Oh, did he just ask a question? Guess you'll just have to tune in for the next one. Nope. Maybe just shoot for one in ten questions answered.</p>",
+        "choices" : [
+            {"gotoId":"nothingToDoNowi"}
+        ],
+        "conditions" : [
+            "interupt eq true,"
+        ],
+        "effects" : [
+            "set deanReaction true"
+        ]
+    },
+        {
+            "id": "nothingToDoNowi",
+            "choiceLabel" : "If you don't make eye contact, maybe you can keep from crying.",
+            "request" : {"gotoId":"noProblemi"}
+        },
+        {    
+        "id": "AcademicEnthusiasmsetEmma",
+        "content" : "Will send you either to go through high academic enthusiasm emma or academic enthusiasm emma",
+		"choices" : [ 
+			{"gotoId": "HighAcademic"},
+			{"gotoId": "LowAcademic"}
+		],
+		"conditions" : [
+			"troubleWithLecture eq true",
+			"tension lt 5"
+		]
+    },
+	{	
+        "id": "HighAcademic",
+		"choiceLabel": "High Academic",
+        "content" : "This is high academic enthusiasm Emma",
+		"conditions" : [
+			"troubleWithLecture eq true",
+			"tension lt 5"
+		],
+		 "effects" : ["set academicEnthusiasm 6"]
+    },
+	{
+         
+        "id": "LowAcademic",
+		"choiceLabel": "Low Academic",
+        "content" : "This is low academic enthusiasm Emma",
+		"conditions" : [
+			"troubleWithLecture eq true",
+			"tension lt 5"
+		],
+		"effects" : ["set academicEnthusiasm 4"]
+    },
+   {
+        // this is all possible reasons, will be multiple ids (high enthusiasm). 
+        "id": "reasonsItWentWrong1",
+        "content" : "You smile {ifStateCondition|confidence lt 5|a bit nervously|} at the Dean. <p> \"{ifStateCondition|confidence lt 5|um |}I was just really nervous about that first lecture and I guess I {ifStateCondition|confidence lt 5|um |} couldn't shake the feeling. At least for the first couple lectures and then things just...{ifStateCondition|confidence lt 5|um|} kinda crashed. I didn't want this to happen. I'm sorry.\" </p>",
+		"choices" : [ 
+			{"gotoId": "DeanReassurence"}
+		],
+		"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm gt 5"], 
+        "effects" : [ "set reasonForTrouble true"]
+    },
+	{
+		"id": "DeanReassurence",
+		"choiceLabel": "You listen to the dean.",
+        "content" : "The dean smiles at you. <p>\"Now Emma, It's alright. We all have our bad days and sometimes we have a rough start. But it's the bouncing back that matters. Would you like to hear a story about my days as a professor? \"</p>",
+		"choices" : [
+			{"gotoId": "DeanTellsStory"},
+			{"gotoId": "noD"}
+		]
+    },
+	{
+		"id": "noD",
+		"choiceLabel": "\"Not right now.\"", 
+        "content" : " <p>\"What a pity. It's a great story.\" </p>You look at the Dean's face and notice the slight unhappiness in it. Maybe you <i>should've</i> listened to the story....you think about asking him about it later.<p>\"Anyway, since we've talked about what happened and why, what do you want to do about it, Emma?\" </p>",
+		"choices" : [
+			{"gotoId": "continueTeaching"},
+			{"gotoId": "research"}
+		]
+    },
+	{        
+		"id": "DeanTellsStory",
+		"choiceLabel": "\"Sure, I guess.\"", 
+        "content" : "<p> \"When I first started teaching here, it was a disaster as well. At least half my students didn't show up unless it was an exam day, my first set of lectures went terribly and then, one time while I was flustered, I accidentally called myself by a student's name. They never let that go. I ended up being \"professor Simon\" somehow for the entire year.\" </p>",
+		"choices" : [
+			{"gotoId": "DeanTellsStoryContinued"}
+		]
+    },
+	//make separate fragments for reactions/responses to the story
+	{        
+		"id": "DeanTellsStoryContinued",
+		"choiceLabel": "Laugh and shake your head.",
+        "content" : "It's hard for you to imagine the dean messing up so badly he was called Simon by his students for the entire year. You take comfort in the fact that at least you haven't had that problem yet.",
+		"choices" : [
+			{"gotoId": "askAboutStory"}
+		]
+    },
+	{        
+		"id": "askAboutStory",
+		"choiceLabel": "\"Why'd you tell the story?\"", 
+        "content" : "You laugh for a bit longer before asking, <p>\"Why'd you tell me that?\"</p> <p>\"To show you that everyone makes mistakes, it's natural to do so. It's okay that things haven't exactly gone perfect this semester--my first semester certainly didn't go well. The real question is: what do you want to do about it?\"</p>",
+		"choices" : [
+			{"gotoId": "continueTeaching"},
+			{"gotoId": "research"}
+		],
+       "effects" : ["set tellStory true"]
+    },
+	
+    {
+        // this is all possible reasons, will be multiple ids. (passive  "whatever. it's a job") 
+        "id": "reasonsItWentWrong2",
+        "content" : "\"I'm just doing my job. I lecture, I hold office hours that nobody seems to show up to anyway, I grade their lackluster papers. I do everything I'm supposed to. So what's the problem?\" The Dean looks at you in disbelief.",
+		"choices" : [
+			{"gotoId": "reasonsItWentWrong2continued"}
+		],
+		"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm lt 5"], 
+        "effects" : [ "set reasonForTrouble true"]
+    },
+	 {
+        // this is all possible reasons, will be multiple ids. (passive  "whatever. it's a job"). 
+        "id": "reasonsItWentWrong2continued",
+		"choiceLabel": "Listen to the Dean.",  
+        "content" : "\"Emma. This is much more then <i>just</i> a job. This is educating young minds about the problems we're currently facing. We're giving them the tools they need to take their stand with us to preserve what we can.\"<p>You nod in acknowledgement.</p>",
+		"choices" : [
+			{"gotoId": "linkToSpeech"},
+			{"gotoId": "ContinuePassiveness"}
+		],
+		"conditions" : ["troubleWithLecture eq true","tension lt 5","academicEnthusiasm lt 5"], 
+        "effects" : [ "set reasonForTrouble true","incr tension 1"]
+    },
+	 {
+        "id": "ContinuePassiveness",
+		"choiceLabel": "\"Well it's not my fault if they aren't listening.\"", 
+        "content" : "\"Well, I mean I'm doing that. In my lectures. It's just that nobody seems to care.\"<p>The dean looks over his glasses at you. \"Did you <i>really</i> mean that Emma? Because I have a hard time believing you think like this.\"</p>",
+		"choices" : [
+			{"gotoId": "yes"},
+			{"gotoId": "no"}
+		],
+		
+    },
+	{
+        "id": "yes",
+		"choiceLabel": "\"I do.\"",
+		"request": {"gotoId": "passionateDeanSpeech"},
+		"effects" : ["set stillPassive true","incr tension 1"]
+    },
+	{
+        "id": "no",
+		"choiceLabel": "\"Oh um...Sorry. I didn't mean it.\"",
+		"request": {"gotoId": "passionateDeanSpeech"},
+		"effects" : ["decr tension 1"]
+    },
+	{
+        "id": "linkToSpeech",
+		"choiceLabel": "Listen to the Dean.",
+		"request": {"gotoId": "passionateDeanSpeech"}
+    },
+	
+	 {
+        "id": "passionateDeanSpeech", 
+        "content" : "The dean looks at you {ifStateCondition|stillPassive eq true|rather appalled|, a bit relieved}. \"Emma. This is our future. We have to educate people about these issues. Whether they like it or not, these things will probably change their lives. If we don't do it, who will? {ifStateCondition|stillPassive eq true|Now you say nobody seems to care in your class. It's your <i>job</i> to make these students care.|} \"</p>",
+		"choices" : [
+			{"gotoId": "passionateDeanSpeechContinued"}
+		],
+		"conditions" : [
+			"academicEnthusiasm lt 5",
+			"troubleWithLecture eq true",
+			"tension lt 5"
+		]
+    },
+	 {
+        "id": "passionateDeanSpeechContinued", 
+		"choiceLabel": "Keep listening to the speech.",
+        "content" : " <p> \"Even if you only seem to impact a couple students, those few students could make all the difference. They could go on to teach or get involved with a local action group. But let's get one thing straight, this is <b>not</b> just a job. Do you understand me?\" </p> You nod.",
+		"choices" : [
+			{"gotoId": "reflectOnSpeech"}
+		],
+		"conditions" : [
+			"academicEnthusiasm lt 5",
+			"troubleWithLecture eq true",
+			"tension lt 5"
+		]
+    },
+	 {
+        "id": "reflectOnSpeech",  
+		"choiceLabel": "Reflect on his words.",
+        "content" : "You think about what the dean has said. You realize he's right. You have, possibly, been a bit <i>too</i> passive in your job. The lectures have been messy and disorganized. You haven't exactly been the most inspiring person to come talk to....",
+		"choices" : [
+			{"gotoId": "reflectOnSpeechContinued"},
+		]
+    },
+	{
+        "id": "reflectOnSpeechContinued", 
+		"choiceLabel": "Keep reflecting on the speech.",
+        "content" : "You know you need to change this, and you will. Right after this meeting, you'll get your class back on track. You hadn't realized just far things had slipped, until now.",
+		"choices" : [
+			{"gotoId": "askImprovements"},
+			{"gotoId": "decidePath1"},
+			{"gotoId": "decidePath2"}
+		]
+    },
+	{
+        "id": "askImprovements", 
+		"choiceLabel": "\"Do you have any suggestions for me first?\"",
+        "content" : " <p>\"You're right. I have been way too passive. I...hadn't realized that until now and I apologize. I want to know what I can improve. I realize my nerves have gotten the better of me most lectures, but I want to fix things. I <i>need</i> to fix things in order to inspire these students....\" </p>",
+		"choices" : [
+			{"gotoId": "askImprovementsContinued"}
+		]
+    },
+	{
+        "id": "askImprovementsContinued",  
+		"choiceLabel": "Keep talking.",
+        "content" : " <p> \"You're right, even if it's just a couple students, they can make all the difference in the world.\" </p> You notice the dean is smiling as he launches into a rather <i>long</i> speech on how to improve. He has some surprising insights. You nod your head when he's done, and think about what you want to do.",
+		"choices" : [
+			{"gotoId": "decidePath1"}, 
+			{"gotoId": "decidePath2"}
+		]
+    },
+	{
+        "id": "decidePath1", 
+		"choiceLabel": "\"I'd like to keep teaching.\"",
+        "content" : "After thinking things over, you decide you still want to teach. <p> \"I would still like to keep teaching if you'll allow that. I'm truly sorry it's taken me this long to realize how passive I'd been about my job. But that stops now. So if you'll still have me, I'd like to stay on.\" </p> The dean nods his head in approval.",
+		"choices" : [
+			{"gotoId": "decidePath1Continued"}
+		],
+		"effects" : ["set pathChoiceMade true","set fixPassive true"]
+    },
+	{
+        "id": "decidePath1Continued", 
+		"choiceLabel": "Listen to the Dean's response.",
+        "content" : " <p>\"Of course I'd still like to have you here. I know sometimes the situation can get so bleak that you want to give up, but that's exactly when you fight hardest. As long as I see that spark that I saw when I hired you, I think things will work out fine.\"</p>",
+		"choices" : [
+			{"gotoId": "linkThankDeanPR"}
+		],
+		"effects" : ["set pathChoiceMade true","set fixPassive true"]
+    },
+	{
+        "id": "decidePath2", 
+		"choiceLabel": "\"Is there anything else I can do besides just lecturing?\"",
+        "content" : "<p>\"I'd like to stay in academics, but I'm not completely sure lecturing is the right thing for me.\" </p> <p>The dean nods. \"Maybe we can see about getting you on a more research-focused track, with less lecturing? We can try it out and see if it works, since I can clearly see you're much more motivated to help now then you have been since that first lecture.\"</p> ",
+		"choices" : [
+			{"gotoId": "decidePath2Continued"}
+		],
+		"effects" : ["set pathChoiceMade true","set fixPassive true"]
+    },
+	{
+		"id": "decidePath2Continued", 
+		"choiceLabel": "Thank him for the offer.",
+        "content" : "<p>\"Oh, that sounds wonderful. Thank you!\"</p><p>\"Well, let's try it on for awhile and see how it fits you. These research positions come with their own stresses, as I'm sure you're aware. But if it's what helps you be a productive member of the faculty, you have my support.\"",
+		"choices" : [
+			{"gotoId": "linkThankDeanPR"}
+		],
+		"effects" : ["set pathChoiceMade true","set fixPassive true"]
+    },
+    {
+        // leaned academic (full on professor)
+        "id": "continueTeaching",
+		"choiceLabel": "\"I'd like to keep teaching, if that's okay.\"",
+        "content" : "You smile back up at the dean. <p>\"I want to keep teaching. I'll try to work on my nerves so they stop being a problem during class.  {ifStateCondition|tellStory eq true|Besides, if you can survive being called professor Simon for an entire year by students, I can handle whatever they throw at me.|}\"</p>",
+		"choices" : [
+			{"gotoId": "deanOffersSupport"}
+		],
+        "conditions" : ["reasonForTrouble eq true"],
+        "effects" : [ "set pathChoiceMade true"]
+    },
+    {
+        // middle of road (researcher position)
+        "id": "research",
+		"choiceLabel": "\"Is there anything else I can do besides pure lecturing?\"", 
+        "content" : "You start to explain you're a still a bit hesistant to teach again{ifStateCondition|tellStory eq true| even with the help of hearing his story|}. The dean nods and looks up at Emma. <p> \"Well I may have a few suggestions if you'd like to hear them.\"</p>",
+		"choices" : [
+			{"gotoId": "getOffersOfSupport"}
+		],
+		 "conditions" : ["reasonForTrouble eq true"],
+        "effects" : [ "set pathChoiceMade true"] //job: lecturer to more researchy path.
+    },
+	{
+        "id": "getOffersOfSupport",
+		"choiceLabel": "Listen to the suggestions.", 
+        "content" : " <p> \"I'd love to hear them.\" </p>The dean seems rather pleased you want to hear his suggestions.<p> \"Well, there are a number of things we could sort out together to make things easier for everyone...\" </p>",
+		"choices" : [
+			{"gotoId": "getOffersOfSupportContinued"}
+		]
+    },
+	{
+        "id": "getOffersOfSupportContinued",
+		"choiceLabel": "Continue to listen.",
+        "content" : " <p>\"One of them being that you could potentially move to doing more academic research for the school and occasionally lecturing to students instead of having your own class. There's also....\"</p></p>You continue to listen to him talk. He suggests quite a few alternatives. You suspect it's to help ease the pressure of everything that's happened recently.</p>",
+		"choices" : [
+			{"gotoId": "linkThankDean"}
+		]
+    },
+	
+    {
+        "id": "deanOffersSupport",
+		"choiceLabel": "Listen to the dean's support.",
+        "content" : "The dean smiles back at you. <p> \"I'm glad {ifStateCondition|tellStory eq true|the story helped.|}. I can't wait to see your lectures improve. Good luck.\" </p> You nod and smile before leaving the room.",
+		"conditions" : ["reasonForTrouble eq true","tension lt 5"],
+        "effects" : ["set deanReaction true"] //job: lecturer to UN path
+    },
+	{
+        "id": "linkThankDean",
+		"choiceLabel": "\"Thanks for all your help.\"",
+		"request": {"gotoId": "thankDean"},
+		 "effects" : ["set deanReaction true"]
+    },
+	{
+        "id": "linkThankDeanPR", //link to get there through passive route.
+		"choiceLabel": "\"Thank you for inspiring me again.\"",
+		"request": {"gotoId": "thankDean"},
+		 "effects" : ["set deanReaction true"]
+    },
+	 {
+        "id": "thankDean",
+        "content" : " <p>\"Thank you for all your help. I really appreciate {ifStateCondition|fixPassive eq true|you inspiring me again.|all you're trying to do for me.} \"</p> The dean nods his head. <p>\"Well we want our professors to succeed here. {ifStateCondition|fixPassive eq true|Sometimes all you need is a pep talk to remind you of what's important and reinvigorate you back into action. |}I wish you all the best.\"</p> You smile and nod before leaving the room.", 
+		"conditions" : ["reasonForTrouble eq true","tension lt 5"],
+        "effects" : ["set deanReaction true","decr tension 1"]
+    },
+    {
+		"id": "sceneStart_t",
+		"content": ["You slowly walk up the final flight of stairs, rounding the final corner. You linger before the door, the pit in your stomach halting your upraised hand. Sucking up the last bits of your courage, you knock.<br><br>A hollow thud.<br><br>A low but familiar voice immediately speaks. \"Come in, Emma.\"<br><br>He must have been waiting."],
+		"choices": [
+			{"gotoId": "emmaEnter_t"}
+		],
+		"effects": [
+			"decr confidence 1",		//lowering Emma's confidence by one for the fear of what the meeting might hold
+		],
+	},
+
+//setting the scene
+	{
+		"id": "emmaEnter_t",
+		"choiceLabel": "Go inside.",
+		"content": "You push past the door stiffly.<br/><br>{name|authorityFigure} is sitting behind his desk -- face in a bundle of papers -- not looking up. During the interviews, he seemed almost a friend. But seeing him now, he doesn't feel like a friend, or even a colleague; he feels like a boss.<br><br>You lift your head to speak.<br><br>\"{name|authorityFigure},\" you say, the word catching in your throat.",
+		"choices": [
+			{"gotoId": "speakCont_t"}
+		],
+		"effects": [
+			"set sceneSet true",
+		],
+	},
+	{
+		"id": "speakCont_t",
+		"choiceLabel": "\"You{ifStateCondition|confidence lt 5|, uh..|} wanted to speak with me?\"",
+		"content": "{name|authorityFigure} looks up from the papers and meets your gaze.<br>\"{name|protagonist}...\" he says.<br><br>Perhaps it's in your nature to over-analyze when you're nervous, or perhaps it's the neutral tone in which he said your name, but you can't tell if he's upset. In many ways you feel like you're at the principal's office, only this time you {ifStateCondition|confidence lt 5|know|don’t know} why you're here.<br><br>The dean clears his throat. \"...do you know why I wanted to speak with you?\"",
+		"choices": [
+			{"gotoId": "emmaRespondsYes_t"},
+			{"gotoId": "emmaRespondsNo_t"}
+		],
+		"effects": [
+			"set sceneSet true",
+		],
+	},
+
+//This path might lead to Summer's path: tension 0
+	{
+		"id": "emmaRespondsYes_t",
+		"choiceLabel": "\"I think I do.\"",
+		"content": "{name|authorityFigure} nods at your acknowledgment; it's solemn and kind.<br>\"What’s going on, {name|protagonist}? It feels like night-and-day from where we were just a month ago.\"<br>Your hands find their way to the hem of your blouse. You picked at a loose thread.<br>\"It’s just{ifStateCondition|confidence lt 5|...\" You hesitate. There's a long moment of silence. \"Just...\"|...}",
+		"effects": [
+			"set troubleWithLecture true"
+		],
+	},
+
+//setting tension to 4
+	{
+		"id": "emmaRespondsNo_t",
+		"choiceLabel": "\"No, I don’t think so.\"",
+		"content": "\"You don’t?\" {name|authorityFigure} takes his glasses off and massages the red indentations on the bridge of his nose. He speaks carefully. \"{name|protagonist}, it’s about your performance these past few weeks.\"<br><br>You look at the Dean{ifStateCondition|confidence lt 5| and a sour frown forms across your face|.}.",
+		"effects": [
+			"set tension 4"
+		],
+		"choices":[
+			{"gotoId": "emmaAnnoyed_t"}
+		],
+	},
+
+//upping the tension by 2
+	{
+		"id": "emmaAnnoyed_t",
+		"choiceLabel": "\"And…? What about the performance of my {ifStateCondition|global_classStyle eq lecture|lectures|seminars}?\"",
+		"content": "You stand, face tight -- hot -- looking at the Dean, anticipating what he might say next. {name|authorityFigure} places his glasses softly on the table and directs his full attention towards you.<br>\"I don’t know what’s gotten into you lately, Emma! Your {ifStateCondition|global_classStyle eq lecture|lectures|seminars} have been in a slow decline since day one.\" The Dean shakes his head and looks at you hard. \"{name|protagonist}, are you alright? Is everything okay at home?\"",
+		"effects": [
+			"set tension 6",
+			"set troubleWithLecture true"
+		],
+		"choices": [
+			{"gotoId": "emmaAngerRise_t"},
+			{"gotoId": "emmaAngerSoften_t"}
+		]
+	},
+//tension 10 path to Ian
+	{
+		"id": "emmaAngerRise_t",
+		"choiceLabel": "\"Don’t patronize me, {name|authorityFigure}!\"",
+		"content": "\"You have no right to speak to me that way!\"",
+		"effects": [
+			"set tension 10",
+			"set troubleWithLecture true"
+		]
+	},
+//tension lowers
+	{
+		"id": "emmaAngerSoften_t",
+		"choiceLabel": "\"I... I'm not sure what to say.\"",
+		"content": "\"Things don't feel like they did before. They're just... different. Somehow.\"",
+		"effects": [
+			"set troubleWithLecture true"
+		]
+	}
+]

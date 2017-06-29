@@ -1,0 +1,412 @@
+
+{
+  "id": "outroForLandingHS",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"conditions" : "highSchoolReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingTT",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "televisedTalkReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingCM",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "congressMeetingReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingTeT",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "tedTalkReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingIC",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "industrialCompanyReminisce eq true"}
+  ]
+},
+
+{
+  "id": "outroForLandingUL",
+  "choiceLabel" : "The plane is landing.",
+  "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+  "choiceLabel": "The plane is landing.",
+  "effects": [
+    "set outroForLanding true",
+  ],
+  "repeatable" : "true",
+  "choices" : [
+    {"condition" : "universityLectureReminisce eq true"}
+  ]
+},
+
+
+
+//reminisce
+
+//put list of possible memories up here
+
+{
+  "id": "oldHighSchoolExposition",
+  "content": "\"Rapid City High School: Home of the Eagles\". Never thought you'd ever be going back there again. North Dakota isn't that far away from LA and wouldn't be that much trouble at all. You start asking yourself, \"Hmm, what should I talk about?\"",
+  "conditions": [
+    "nextTalk eq oldHighSchool"
+  ],
+  "effects": [
+    "set talkExposition true"
+  ],
+  "choices": [{
+    "gotoId": "oldHighSchoolExposition2",
+    "gotoId": "oldHighSchoolExposition3"
+  }]
+},
+
+{
+  "id": "oldHighSchoolExposition2",
+  "choiceLabel": "The importance of helping out the community",
+  "content": "\"I've got it!\" A few heads turn your way as you realize that you just yelled out loud. But you have decided that you will use your talk to urge the students to volunteer at local events and help out the community.",
+
+},
+
+{
+  "id": "oldHighSchoolExposition3",
+  "choiceLabel": "The importance of learning about climate change",
+  "content": "\"I've got it!\" A few heads turn your way as you realize that you just yelled out loud. But you have decided that you will use your talk to educate the students about the importance about studying climate change.",
+},
+
+  {
+  "id": "reminisceOldHighSchool",
+  "content": "It was great being able to return home. Honestly, you never thought that you would ever be in that gymnasium again after your graduation. But after so many years, it still felt so familiar and everyone was so welcoming and respectful during your amazing talk which went perfectly.",
+  "conditions":[
+    "lastTalk eq oldHighSchool"
+  ],
+  "effects": [
+    "set reminisce true"
+  ],
+},
+
+{
+  "id" : "goHome",
+  "choiceLabel" : "Time to get on a plane home.",
+  "request" : {"gotoId" : "onAPlane"}
+},
+
+\\on a plane starts
+
+
+{
+  "id": "onAPlane",
+  "content": "Your eyes jolt open as you feel your surroundings rumbling. For one second, everything seems so foreign and mysterious, but you quickly remember where you are. Looking out of the window, you can see clouds of different shapes as far as the eye can see. And if you try really hard, you can also make out patches of ground thousands of feet below through the thinner layers of clouds. {ifStateCondition|talksGiven gte 3|Well, you sure managed to get a lot out of your travels - and you've only been to three talks! Imagine how much farther you can go, how many more people you can reach... and as you look out the plane window, you can't wait for your next landing.}",
+  "effects": [
+    "set onAPlane true",
+    //"set fame 5",
+    "incr talksGiven 1"
+  ],
+
+
+},
+
+
+
+{
+  "id": "acceptOrDeclineBusinessEmail",
+  "choiceLabel": "Check business emails",
+  "content": "You scroll through the list of business emails. All of them are fairly generic, but one of them catches your eye.",
+  "repeatable": "true",
+  "effects": [
+    "set readSomething true",
+    "set haveOffer true"
+  ],
+  "conditions":[
+    "onAPlane eq true"
+  ],
+  "choices": [
+    {"condition": "acceptOrDeclineSomething eq true"},
+    {"condition": "acceptOrDeclineSomething eq true"},
+    {"condition": "acceptOrDeclineSomething eq true"}
+  ]
+},
+
+
+
+
+
+{
+  "id": "oldHighSchool",
+  "choiceLabel": "\"Come speak at our school!\"",
+  "content": "The name in the email rang an odd bell in your head, so you continue to read. It was a rather short paragraph which said \"Hello Emma, I don't know if you remember me but I am Linda Jordana from your old high school. We heard that you have been doing very well in your efforts to educate people on the effects of climate change and would love if you could give a lecture here at Rapid City High!\"",
+  "conditions": [
+    "haveOffer eq true"
+  ],
+  "effects": [
+    "set acceptOrDeclineSomething true",
+  ],
+  "choices": [
+    {"gotoId": "acceptOldHighSchool"},
+    {"gotoId": "declineOldHighSchool"}
+  ]
+},
+
+{
+  "id": "acceptOldHighSchool",
+  "choiceLabel": "Seems like a great opportunity",
+  "content": "Hmm, this seems like it would be a good opportunity to get some kids to help out the community. You remember how much fun you had in highschool volunteering at local events.",
+  "effects": [
+    "set nextTalk oldHighSchool",
+  ],
+  "conditions": [
+    "acceptOrDeclineSomething eq true"
+  ],
+  "choices" : [
+    {"gotoId" : "outroForLandingHS"}
+  ]
+},
+
+{
+  "id": "declineOldHighSchool",
+  "choiceLabel": "I have better opportunities waiting for me",
+  "content": "While this does seem like a good opportunity, you would rather talk to a bigger audience of people who are capable of making a bigger impact than a hundred high school students.",
+  "conditions": [
+    "acceptOrDeclineSomething eq true"
+  ],
+  "choices" : [
+    {"gotoId" : "outroForLandingHS"}
+  ]
+
+},
+
+
+
+{
+  "id": "televisedTalk",
+  "choiceLabel": "\"We want you to be on tv!",
+  "content": "Immediately after opening the email, you recognize the name of the company. They are the producers of a tv documentary series that is slowly gaining popularity. They want to televise one of your talks!",
+  "conditions":[
+    "fame gte 5",
+    "haveOffer eq true"
+  ],
+  "effects": [
+    "set acceptOrDeclineSomething true",
+  ],
+  "choices": [
+    {"gotoId": "acceptTelevisedTalk"},
+    {"gotoId": "declineTelevisedTalk"}
+  ],
+},
+
+{
+  "id": "acceptTelevisedTalk",
+  "choiceLabel": "Sounds like an amazing opportunity",
+  "content": "Wow this would be an easy way to spread your message to many people at a time. It would be crazy not to take advantage of this opportunity.",
+  "effects": [
+    "set nextTalk televisedTalk"
+  ],
+  "choices" : [
+    {"gotoId" : "outroForLandingTT"}
+  ]
+},
+
+{
+  "id": "declineTelevisedTalk",
+  "choiceLabel": "Not the audience I am looking for",
+  "content": "The viewship of the show is not high enough to dedicate so much time to. Maybe the time would be better spent if you spoke to a group of influential people instead of random citizens flipping through the channels on their tv on a saturday night.",
+  "choices" : [
+    {"gotoId" : "outroForLandingTT"}
+  ]
+
+},
+
+{
+  "id": "televisedTalkExposition1",
+  "content": "",
+  "conditions":[
+    "nextTalk eq televisedTalk"
+  ]
+},
+
+{
+  "id": "meetingWithCongressmen",
+  "choiceLabel": "\"I would like to meet with you\"",
+  "content": "Upon opening the email, a huge wall of text is there to greet you. One line in particular catches your attention: \"We would like to invite you to join us in the white house and advise us on a bill we have been working on.\"",
+  "conditions": [
+    "fame gte 5",
+    "haveOffer eq true"
+  ],
+  "effects": [
+    "set acceptOrDeclineSomething true",
+  ],
+  "choices": [
+    {"gotoId": "acceptCongressmen"},
+    {"gotoId": "declineCongressmen"}
+  ],
+
+},
+
+{
+  "id": "acceptCongressmen",
+  "choiceLabel": "This is a huge opportunity! ",
+  "content": "After reading through the email a few more times, it starts to sink it that you have been invited to the white house. This is the huge opportunity that you've been waiting for! A chance to make a huge impact on how the government handles climate change.",
+  "effects":[
+    "incr carbonFootprint 3",
+    "set lastTalk congressmen"
+  ],
+  "choices" : [
+    {"gotoId" : "outroForLandingCM"}
+  ]
+},
+
+{
+  "id": "declineCongressmen",
+  "choiceLabel": "I'd rather promote local action",
+  "content": "This is no doubt a huge opportunity, but promoting local action seems like a better use of your time. There are kids that need motivating and students to be educating, so time can't be wasted in a room with politicians drafting up a bill.",
+  "choices" : [
+    {"gotoId" : "outroForLandingCM"}
+  ]
+},
+
+{
+  "id": "tedTalks",
+  "choiceLabel": "\"tedTalks in Oregon\"",
+  "content": "The email was an invitation to speak at a TED Talks convention. The invitation was rather generic, but the event is well known and the youtube video that will inevitably uploaded is guaranteed to get at least a couple thousand views.",
+  "conditions":[
+    "fame gte 3",
+    "haveOffer eq true"
+  ],
+  "effects": [
+    "set acceptOrDeclineSomething true",
+  ],
+  "choices": [
+    {"gotoId": "acceptTedTalks"},
+    {"gotoId": "declineTedTalks"}
+  ],
+},
+
+{
+  "id": "acceptTedTalks",
+  "choiceLabel": "Definitely worth my time",
+  "content": "Wow! Having watched quite a few Ted Talks presentations in the past, you are definitely familiar with how influential some of the speakers can be. This is definitely an opportunity that you can't miss out on.",
+  "choices" : [
+    {"gotoId" : "outroForLandingTeT"}
+  ]
+},
+
+{
+  "id": "declineTedTalks",
+  "choiceLabel": "Need to prioritize more climate change focused events",
+  "content": "There is no doubt that this would give you a lot of exposure, but there are presentations about all sorts of different topics, and I think that attending events with a greater focus on climate change would be a better use of time.",
+  "choices" : [
+    {"gotoId" : "outroForLandingTeT"}
+  ]
+},
+
+{
+  "id": "industrialCompany",
+  "choiceLabel": "\"My son told me about you\"",
+  "content": "This is what the email said:\"My son Franklin was a student of yours back at UCSC and he has told me about the impact you have made on his views of climate change. I would like to meet with you to discuss cleaner alternative energy sources for the oil company that I work for.\"",
+  "conditions": [
+    "skepticalStudent eq true",
+    "haveOffer eq true"
+  ],
+  "effects": [
+    "set acceptOrDeclineSomething true",
+  ],
+  "choices": [
+    {"gotoId": "acceptIndustrialCompany"},
+    {"gotoId": "declineIndustrialCompany"}
+  ],
+},
+
+{
+  "id": "acceptIndustrialCompany",
+  "choiceLabel": "Of course I will help!",
+  "content": "You remember her son from your lecture a few years ago. He was a little sceptical about climate change but you get a warm feeling knowing that you were able to change his views. The company that his mom works for is a large company and could influence other companies to tackle climate change like they aim to.",
+  "choices" : [
+    {"gotoId" : "outroForLandingIC"}
+  ]
+},
+
+{
+  "id": "declineIndustrialCompany",
+  "choiceLabel": "Working with oil companies isn't my thing",
+  "content": "You remember her son from your lecture a few years ago. He was a little sceptical about climate change but you get a warm feeling, knowing that you were able to change his views. But working with oil companies isn't really your thing. So this one is a pass.",
+  "choices" : [
+    {"gotoId" : "outroForLandingIC"}
+  ]
+},
+
+{
+  "id": "universityLecture",
+  "choiceLabel": "\"Come speak at NYU!\"",
+  "content": "It was another invitation to be a guest lecturer, but this time, it was for NYU. You think for a moment and recall that an old colleague of yours is now a professor at NYU, so maybe it'd be a fun experience.",
+  "conditions": [
+    "haveOffer eq true"
+  ],
+  "effects": [
+    "set acceptOrDeclineSomething true",
+  ],
+  "choices": [
+    {"gotoId": "acceptUniversityLecture"},
+    {"gotoId": "declineUniversityLecture"}
+  ],
+},
+
+{
+  "id": "acceptUniversityLecture",
+  "choiceLabel": "Sounds like a fun opportunity",
+  "content": "placeholder",
+  "choices" : [
+    {"gotoId" : "outroForLandingUL"}
+  ]
+},
+
+{
+  "id": "declineUniversityLecture",
+  "choiceLabel": "I'd love to see her again, but...",
+  "content": "placeholder",
+  "choices" : [
+    {"gotoId" : "outroForLandingUL"}
+  ]
+},

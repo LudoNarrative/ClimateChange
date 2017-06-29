@@ -54,6 +54,9 @@
       {"gotoId" : "straightReply"},
       {"gotoId" : "avoidReply"}
     ],
+    "conditions" : [
+      "talkAboutUNPlan eq true"
+    ]
   },
 
   {
@@ -292,7 +295,7 @@
 
   {
     "id": "sceneOutro",
-    "content": "\"Welp. There's the whistle. Shift's over, I'll see you later, {protagonist|nickname},\" Rodrigo says. <br/><br/> You quietly watch him leave.",
+    "content": "\"Welp. There's the whistle. Shift's over. I guess I'll see you later, {protagonist|nickname},\" Rodrigo says. <br/><br/> You quietly watch him leave.",
     "effects" : [
       "set sceneOutro true"
     ],

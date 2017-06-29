@@ -1,3 +1,13 @@
+allowed(frivolous(Resource)) :- read_only(Resource).
+frivolous(Resource) :- read_only(Resource).
+
+:- read_only(Resource),
+	action(modify(_,Resource)).
+	
+%player_doesnt_control :- not player_controls(_).
+:- not player_controls(_), not condition(control_event(_)).
+
+:- behavior(ENTITY,B), controlScheme(ENTITY,C).
 
 :- outcome(O), not has_precondition(O).
 :- outcome(O), not has_result(O).
@@ -7,7 +17,6 @@
    entity(Other).
 
 
-:- not player_controls(_).
 
 :- action(move(Entity,direction(away,_))),
    not action(apply_restitution(Entity,Entity)).
@@ -31,13 +40,18 @@
 
 
 
+:- 2 {controlScheme(E,_)}, 
+	entity(E).
+
+
+
 :-  result(O,move(E2,direction(away,E1))),
     result(O2,move(E1,direction(away,E2))).
 
 
 :- result(O,add(E,_,_)), every_frame(O).
 
-:- 2{result(O,modify(_,R))}, resource(R), outcome(O).
+:- 2{result(O,modify(_,R))}, action(modify(_,R)), outcome(O).
 
 %:- precondition(control_event(click(Entity)),Outcome),
 %   precondition(overlaps(Entity),Outcome).
@@ -81,14 +95,11 @@
    not precondition(compare(_,_),O).
 
 
-:- result(O,delete(E)),
-    result(O,add(E,_,_)). 
-
     
 :-  result(Outcome,mode_change(game_loss;narrative_gating)),
     player_controls_outcome(Outcome).
 
-:-  result(O,modify(_,property(_,E))),
+:-  result(O,modify(_,property(E,_))),
     result(O,delete(E)).
 
 :- condition(overlaps(entity(e(E1)),entity(e(E2)),POLARITY)),
@@ -100,8 +111,6 @@
 :-  precondition(control_event(click(E)),O),
     result(O,add(E,_,_)).
     
-:- action(modify(_,property(Property,E))),
-   not balanced(property(Property,E)).
 
 :- 5 { initialize(add(E,L,C))},
    entity(E).
@@ -220,6 +229,51 @@ movement(move(E,D)) :- action(move(E,D)).
    action(move(E2,direction(away,E1))),
    {action(move(E2,_))} 1.
 
+  
+:- precondition(overlaps(E1,E2,_),O),
+	result(O,look_at(_,_,_)).		
+   
+:- precondition(overlaps(E1,E2,_),O),
+	result(O,move(_,_)).		
+
+:- precondition(overlaps(E1,E2,_),O),
+	result(O,rotates(_,_,_)).		
+      
+:- precondition(overlaps(E1,E2,_),O),
+	result(O,rotate_to(_,_)).	
+   
+opposite(forward,backward).
+opposite(left,right).
+opposite(north,south).
+opposite(up,down).
+opposite(cw,ccw).
+
+:- result(O,move(E,direction(D1))),
+	result(O,move(E,direction(D2))),
+	opposite(D1,D2).
+	
+	
+:- precondition(overlaps(_,_,false),O),
+	result(O,modify(_,property(_,_))).
+	
+
+
+:- precondition(overlaps(E1,E2,_),Outcome),
+	player_controls(E1),
+	speed(E1,_,S1),
+	speed(E2,_,S2),
+	S1 <= S2.
+	
+:- precondition(overlaps(E2,E1,_),Outcome),
+	player_controls(E1),
+	speed(E1,_,S1),
+	speed(E2,_,S2),
+	S1 <= S2.
+	
+	
+:- action(modify(decrease,property(E,health))),
+   not action(add(E,_,_)).
+   
 {label(entity(E),E)} :- entity(entity(E)).
 {label(resource(E),E)} :- resource(resource(E)).
 :- 2 {label(E,_)}, entity(E).
@@ -238,6 +292,7 @@ movement(move(E,D)) :- action(move(E,D)).
 :- trivial(O),
    player_model(O,player_will_avoid).
 
+   
 
 satisfies(ge,increase).
 satisfies(le,decrease).
@@ -354,6 +409,10 @@ different_precondition(O1,O2) :-
 :- result(tick, modify(decrease,R)),
    not action(modify(increase,R)).
 
+% only allow something to decrease on tick if it can be increased
+:- result(tick, modify(increase,R)),
+   not action(modify(decrease,R)).
+
 
 % Don't check more than 1 collision
 :- 2 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)}, outcome(OUTCOME).
@@ -400,7 +459,6 @@ different_precondition(O1,O2) :-
 :- 2 {controlScheme(ENTITY,SCHEME)},
    entity(ENTITY).
 
-:- behavior(ENTITY,_), controlScheme(ENTITY,_).
 :- chases(ENTITY,ENTITY).
 
 :- flees(ENTITY,ENTITY).
@@ -426,6 +484,8 @@ different_precondition(O1,O2) :-
    not player_controls_outcome(Outcome).
 
 
+:- precondition(overlaps(entity(_)),Outcome),
+	result(Outcome,move(_,_)).
 
 
 
@@ -508,3 +568,37 @@ player_controls_resource(R,Dir) :-
    not player_controls_resource(R,_).
    
 %:- monotonic(R), not allowed(monotonic(R)).
+
+
+:- action(look_at(E,E,C)).
+
+
+
+
+
+%%SIMPLICITY
+
+:- 3 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)},
+    entity(E1),
+    entity(E2),
+    polarity(POLARITY).
+
+
+:- 2 {result(O,add(E,_,_))}, outcome(O).
+
+:- 3 {precondition(_,Outcome)},
+   outcome(Outcome),
+   not has_overlaps(Outcome).
+:- 6 {precondition(_,Outcome)},
+   outcome(Outcome).
+
+:- 4 {result(Outcome,_)},
+   outcome(Outcome),
+   Outcome != tick.
+:- N + 1 {precondition(_,_)},
+   preconditions_allowed(N)  .
+
+
+
+   
+   

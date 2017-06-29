@@ -28,9 +28,16 @@ playerControls :- controlLogic(_).
 
 player_controls(Entity) :-  controlLogic(draggable(Entity)).
 player_controls(Entity) :-  action(move(Entity,direction(_,cursor))).
-player_controls(Entity) :-  action(look_at(Entity,cursor)).
-%player_controls(Entity) :-  result(Outcome,move(Entity,direction(_,_))),
-%			    precondition(control_event(EVENT),Outcome).
+player_controls(Entity) :-  action(look_at(Entity,cursor,_)).
+player_controls(Entity) :-  result(Outcome,move(Entity,direction(_,_))),
+			    precondition(control_event(EVENT),Outcome).
+player_controls(Entity) :-  result(Outcome,rotates(Entity,_,_)),
+			    precondition(control_event(EVENT),Outcome).
+player_controls(Entity) :-  result(Outcome,rotate_to(Entity,_)),
+			    precondition(control_event(EVENT),Outcome).
+player_controls(Entity) :-  result(Outcome,look_at(Entity,_,_)),
+			    precondition(control_event(EVENT),Outcome).
+
 
 computer_controls(Entity) :- not player_controls(Entity),
 			     entity(Entity),
@@ -166,6 +173,9 @@ super_trivial(Outcome) :- precondition(timer_elapsed(_),Outcome),
 super_trivial(tick).
 
 trivial(O) :- super_trivial(O).
+trivial(O) :- 
+	precondition(control_event(_),O),
+	  reading(bad,O).
 
 trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
 		    2 { player_controls(E1);
@@ -189,3 +199,17 @@ difficult(Outcome) :-
     precondition(overlaps(E),Outcome),
     precondition(control_event(click(E)), Outcome),
     computer_controls(E).
+
+	
+different_movement(E1,E2) :- action(move(E1,W)), not action(move(E2,W)), entity(E2).
+different_movement(E1,E2) :- action(look_at(E1,T,W)), not action(look_at(E2,T,W)), entity(E2).
+different_movement(E1,E2) :- action(rotate_to(E1,D)), not action(rotate_to(E2,D)), entity(E2).
+different_movement(E1,E2) :- action(rotates(E1,D,A)), not action(rotates(E2,D,A)), entity(E2).
+different_movement(E1,E2) :- controlLogic(draggable(E1)), not controlLogic(draggable(E2)), entity(E2).
+different_movement(E1,E2) :- different_movement(E2,E1).
+
+same_movement(E1,E2) :- entity(E1), entity(E2), not different_movement(E1,E2).
+
+
+
+	

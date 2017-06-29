@@ -2,12 +2,12 @@
 
   {
     "id" : "freeTime",
-    "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. What to do now?",
+    "content" : "You lean back in your seat and sigh, listening to the constant hum of the plane and the gentle rumble underneath you as you gaze out the window. <br/><br/>There is a soft murmur of conversation rising from the people around you. A newspaper sits in your lap. Your business email awaits you, holding all the possible journeys you can take from here.<br/><br/>What to do now?",
     "conditions":[
       "onAPlane eq true"
     ],
     "choices" : [
-      {"condition" : "talkSomeone eq true"},
+      {"gotoId" : "talkSomeone"},
       {"gotoId" : "readNewspaper"},
       {"gotoId" : "readEmail"}
     ],
@@ -16,11 +16,24 @@
 
   // People to deal with - each changes based on fame?
 
+  {
+    "id" : "talkSomeone",
+    "choiceLabel" : "Talk to a fellow passenger.",
+    "content" : "You look around at the people sitting near you.",
+    "choices" : [
+      {"gotoId" : "nosyPerson"},
+      {"gotoId" : "friendlyPerson"},
+      {"gotoId" : "recognizeEmma"}
+    ],
+    "repeatable" : "true",
+  },
+
 
 //person one
 
 {
   "id" : "nosyPerson",
+  "unavailableChoiceLabel" : "You recognize this kind of person - you'd rather not talk to them again.",
   "choiceLabel" : "You turn to talk to the person who's leaning very, very close to you.",
   "content" : "Your first instinct is to lean away from the long nose inching closer to the newspaper lying in your lap. \"Um,\" you say. Their head jerks up. <br/><br/> \"Oh. Hey.\" They jab at the paper. \"'Global Warming Is At An All Time High'. Funny, huh?\"",
   "effects" : [
@@ -40,7 +53,7 @@
   "choices" : [
     {"gotoId" : "teachLesson"},
     {"gotoId" : "dontBother"}
-  ]
+  ],
 },
 
 {
@@ -56,12 +69,15 @@
   "id" : "dontBother",
   "choiceLabel" : "Don't bother.",
   "content" : "\"If you say so,\" you sigh as you gaze out the window. The logical fallacies in the statement is itching at you, but you've decided to stay silent.",
+  "effects" : [
+    "decr composure 1"
+  ]
 },
 
 {
   "id" : "innocentQuestion",
   "choiceLabel" : "What do you mean?",
-  "content" : "They blink. \"Well, you know,\" they say. \"People always say 'global warming, how horrible!' but after a while you have to wonder if it's all bologne. Like, my mother would always say it's a some government conspiracy, but she was a conspiracy nut. Me, I always wonder whenever the weather gets really cold, you know? That's what science is, isn't it - questioning things?",
+  "content" : "They blink. \"Well, you know,\" they say. \"People always say 'global warming, how horrible!' but after a while you have to wonder if it's all bologne. Like, my mother would always say it's a some government conspiracy, but she was a conspiracy nut. Me, I'm always wondering whenever the weather gets really cold, you know? That's what science is, isn't it - questioning things?",
   "choices" : [
     {"gotoId" : "teachLesson"},
     {"gotoId" : "dontBother"}
@@ -71,14 +87,15 @@
 //person two
   {
     "id" : "recognizeEmma",
+    "unavailableChoiceLabel" : "This person is facing away from you. They probably don't want to be disturbed.",
     "choiceLabel" : "Find out why the person sitting next to you is staring at you.",
-    "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Banks?\"",
+    "content" : "You turn your head and meet the other person's gaze. Said person's face blooms red as they turn and cough into their hand. \"Apologies,\" they said. \"It's just - aren't you Dr. Richards?\"",
     "effects" : [
       "set talkSomeone true",
       "set dealWithSomeone true"
     ],
     "conditions" : [
-      "fame gte 5"
+      "fame gte 3"
     ],
     "choices" : [
       {"gotoId" : "continueTalk"},
@@ -109,16 +126,38 @@
 
   {
     "id" : "friendlyPerson",
-    "choiceLabel" : "Chat with the friendly-looking person sitting next to you.",
-    "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. You almost forget about your worries as you approach your destination.",
+    "choiceLabel" : "Chat with the friendly-looking person sitting across the aisle.",
+    "content" : "Their smile reaches their eyes as they respond to you, and you can't help but feel the tension drain out of your shoulders as the conversation continues pleasantly. At one point they ask the reason behind your travel.",
     "effects" : [
       "set talkSomeone true",
       "set dealWithSomeone true",
-      "incr composure 1"
+      "incr composure 1",
     ],
+    "choices" : [
+      {"gotoId" : "doingImportant"},
+      {"gotoId" : "justDoingIt"},
+      {"gotoId" : "noReason"},
+    ],
+    "repeatable" : "true"
   },
 
-  //read newspaper
+  {
+    "id" : "noReason",
+    "choiceLabel" : "Oh, just thought I'd go.",
+    "content" : "\"Oh, cool! I wish I could travel on a whim like that,\" they say wistfully.",
+  },
+
+  {
+    "id" : "doingImportant",
+    "choiceLabel" : "I'm planning to give an important talk about the effects of climate change.",
+    "content" : "\"Oh wow!\" they say, eyes wide. \"That does sound important! I wish you well!\"",
+  },
+
+  {
+    "id" : "justDoingIt",
+    "choiceLabel" : "I'm heading over to give a talk about climate change. No big deal.",
+    "content" : "\"Climate change? That sounds like quite the big deal,\" they say. \"I mean, climate change can impact all of us. I wish you well.\" ",
+  },
 
   {
     "id": "readNewspaper",
@@ -140,14 +179,14 @@
     "choiceLabel" : "Look for your name.",
     "content" : "You unfold the newspaper and scan the headlines. {ifStateCondition|fame gte 5|You find yourself on the front page, much to your surprise and delight.|You find a little snippet about your talk later in the news.} {ifStateCondition|composure gte 5|The article gushes over your poise and intellect, and you can't help but smile, your face flushed.|The article wasn't very kind, but you're not surprised. You were painfully aware of how well you did there.}",
     "conditions" : [
-      "acceptOrDeclineSomething eq true"
+      "talksGiven gte 1"
     ]
   },
 
   {
     "id" : "newspaperHeadline1",
     "choiceLabel" : "Scan the headlines.",
-    "content" : "Scientists Build Mini Worlds In An Attempt to Simulate Climate Change <br/><br/> A team of researches run tests on a small-scale copy of an underwater ecosystem intended to simulate and observe the impact of climate change. The experiment reveals that the combination of higher temperatures and greater amounts of CO2 have domino effect on the ecosystem's inhabitants, which as worrying implications for fish as a food source.",
+    "content" : "Scientists Build Mini Worlds In An Attempt to Simulate Climate Change <br/><br/> A team of researchers run tests on a small-scale copy of an underwater ecosystem intended to simulate and observe the impact of climate change. The experiment reveals that the combination of higher temperatures and greater amounts of CO2 have a domino effect on the ecosystem's inhabitants, which has worrying implications for fish as a food source.",
     "effects" : [
       "set readNewspaper true"
     ]
@@ -182,7 +221,7 @@
       "set readSomething true"
     ],
     "choices" : [
-      {"gotoId" : "acceptOrDeclineSomething"},
+      {"gotoId" : "acceptOrDeclineBusinessEmail"},
       {"condition" : "readFamily eq true"},
       {"condition" : "readEmail eq true"}
     ],
@@ -231,8 +270,8 @@
 
   {
     "id" : "emailPetition",
-    "choiceLabel" : "Click on an email whose subject line screams \"Stop the mistreatment of baby crabs!.\"",
-    "content" : "Someone has you an email asking you to sign a petition. You can't help the feeling of obligation.",
+    "choiceLabel" : "Click on an email whose subject line screams \"Stop the mistreatment of baby crabs!\"",
+    "content" : "Someone has sent you an email asking you to sign a petition. You can't help the feeling of obligation.",
     "effects" : [
       "set readEmail true"
     ]
@@ -247,30 +286,189 @@
     ]
   },
 
-  //the landings!
+  {
+    "id" : "spamEmail",
+    "choiceLabel" : "Spam, spam, so much spam.",
+    "content" : "Spam, spam, so much spam.",
+    "effects" : [
+      "set readEmail true"
+    ],
+    "repeatable" : "true",
+  },
 
+  //the landings!
+<<<<<<< HEAD
+
+  {
+    "id": "outroForLandingHS",
+    "choiceLabel" : "The plane is landing.",
+    "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+    "choiceLabel": "The plane is landing.",
+    "effects": [
+      "set outroForLanding true",
+    ],
+    "repeatable" : "true",
+    "choices" : [
+      {"conditions" : "highSchoolReminisce eq true"}
+    ]
+  },
+
+  {
+    "id": "outroForLandingTT",
+    "choiceLabel" : "The plane is landing.",
+    "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+    "choiceLabel": "The plane is landing.",
+    "effects": [
+      "set outroForLanding true",
+    ],
+    "repeatable" : "true",
+    "choices" : [
+      {"condition" : "televisedTalkReminisce eq true"}
+    ]
+  },
+
+  {
+    "id": "outroForLandingCM",
+    "choiceLabel" : "The plane is landing.",
+    "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+    "choiceLabel": "The plane is landing.",
+    "effects": [
+      "set outroForLanding true",
+    ],
+    "repeatable" : "true",
+    "choices" : [
+      {"condition" : "congressMeetingReminisce eq true"}
+    ]
+  },
+
+  {
+    "id": "outroForLandingTeT",
+    "choiceLabel" : "The plane is landing.",
+    "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+    "choiceLabel": "The plane is landing.",
+    "effects": [
+      "set outroForLanding true",
+    ],
+    "repeatable" : "true",
+    "choices" : [
+      {"condition" : "tedTalkReminisce eq true"}
+    ]
+  },
+
+  {
+    "id": "outroForLandingIC",
+    "choiceLabel" : "The plane is landing.",
+    "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+    "choiceLabel": "The plane is landing.",
+    "effects": [
+      "set outroForLanding true",
+    ],
+    "repeatable" : "true",
+    "choices" : [
+      {"condition" : "industrialCompanyReminisce eq true"}
+    ]
+  },
+
+  {
+    "id": "outroForLandingUL",
+    "choiceLabel" : "The plane is landing.",
+    "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+    "choiceLabel": "The plane is landing.",
+    "effects": [
+      "set outroForLanding true",
+    ],
+    "repeatable" : "true",
+    "choices" : [
+      {"condition" : "universityLectureReminisce eq true"}
+    ]
+  },
+
+=======
+/*
     {
-      "id": "outroForLanding",
+      "id": "outroForLandingHS",
       "choiceLabel" : "The plane is landing.",
       "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
       "choiceLabel": "The plane is landing.",
       "effects": [
         "set outroForLanding true",
-        "set dealWithSomeone false",
-        "set readNewspaper false",
-        "set readEmail false"
       ],
       "repeatable" : "true",
+      "choices" : [
+        {"conditions" : "highSchoolReminisce eq true"}
+      ]
     },
 
     {
-      "id" : "endingScene",
-      "content" : "Well, you sure managed to get a lot out of your travels - and you've only been to three talks! Imagine how much farther you can go, how many more people you can reach... and as you look out the plane window, you can't wait for your next landing.",
-      "conditions" : [
-        "talksGiven gte 3",
-        "dealWithSomeone eq true",
-        "readNewspaper eq true",
-        "readEmail eq true"
+      "id": "outroForLandingTT",
+      "choiceLabel" : "The plane is landing.",
+      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+      "choiceLabel": "The plane is landing.",
+      "effects": [
+        "set outroForLanding true",
+      ],
+      "repeatable" : "true",
+      "choices" : [
+        {"condition" : "televisedTalkReminisce eq true"}
       ]
     },
+
+    {
+      "id": "outroForLandingCM",
+      "choiceLabel" : "The plane is landing.",
+      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+      "choiceLabel": "The plane is landing.",
+      "effects": [
+        "set outroForLanding true",
+      ],
+      "repeatable" : "true",
+      "choices" : [
+        {"condition" : "congressMeetingReminisce eq true"}
+      ]
+    },
+
+    {
+      "id": "outroForLandingTeT",
+      "choiceLabel" : "The plane is landing.",
+      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+      "choiceLabel": "The plane is landing.",
+      "effects": [
+        "set outroForLanding true",
+      ],
+      "repeatable" : "true",
+      "choices" : [
+        {"condition" : "tedTalkReminisce eq true"}
+      ]
+    },
+
+    {
+      "id": "outroForLandingIC",
+      "choiceLabel" : "The plane is landing.",
+      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+      "choiceLabel": "The plane is landing.",
+      "effects": [
+        "set outroForLanding true",
+      ],
+      "repeatable" : "true",
+      "choices" : [
+        {"condition" : "industrialCompanyReminisce eq true"}
+      ]
+    },
+
+    {
+      "id": "outroForLandingUL",
+      "choiceLabel" : "The plane is landing.",
+      "content": "You grab your carry-ons and follow the line of people off the plane, thanking the pilot on the way out. It feels so good to stretch your legs after hours curled up in a plane seat. <br/><br/> Now you're off. Heading to your talk. You inhale deeply, and exhale. {ifStateCondition|composure gte 5|Although nerves flutter in your stomach, a grin sneaks onto your face. You've got this.|Nerves tighten into a thick ball that makes you wrap your arm around your stomach. <i>You've got this,</i> you try to convince yourself.}",
+      "choiceLabel": "The plane is landing.",
+      "effects": [
+        "set outroForLanding true",
+      ],
+      "repeatable" : "true",
+      "choices" : [
+        {"condition" : "universityLectureReminisce eq true"}
+      ]
+    },
+*/
+>>>>>>> ed9ad5cb4db612eff7a992afd681e5df14240800
+
 ]
