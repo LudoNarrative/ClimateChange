@@ -275,11 +275,11 @@ opposite(cw,ccw).
    not action(add(E,_,_)).
    
 {label(entity(E),E)} :- entity(entity(E)).
-{label(resource(E),E)} :- resource(resource(E)).
+{label(resource(E),E,private)} :- resource(resource(E)).
 :- 2 {label(E,_)}, entity(E).
-:- 2 {label(E,_)}, resource(E).
+:- 2 {label(E,_,_)}, resource(E).
 :- entity(E), not label(E,_).
-:- resource(E), not label(E,_).
+:- resource(E), not label(E,_,_).
 
 :-  controlLogic(draggable(E)),
     action(move(E,_)).
