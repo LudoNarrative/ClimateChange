@@ -3,6 +3,8 @@ label(resource(r_2_XX_),tension).
 label(entity(e_1_XX_),yourself).
 label(entity(e_2_XX_),help).
 label(entity(e_3_XX_),harm).
+label(resource(r_1_XX_),r(1),private).
+label(resource(r_2_XX_),r(2),private).
 
 entity(e_1_XX_).
 entity(e_2_XX_).
@@ -36,30 +38,30 @@ controlLogic(draggable(entity(e_1_XX_))).
 timer_logic(timer(patrol_entity_e_2_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(4))).
-initialize(set_value(resource(r_2_XX_),scalar(7))).
+initialize(set_value(resource(r_1_XX_),scalar(9))).
+initialize(set_value(resource(r_2_XX_),scalar(10))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(5))).
-result(outcome(o_1_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(10))).
-result(outcome(o_1_XX_),increase_over_time(resource(r_1_XX_),scalar(24))).
+result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(1))).
+result(outcome(o_1_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(1))).
+result(outcome(o_1_XX_),increase_over_time(resource(r_1_XX_),scalar(36))).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(o_2_XX_)).
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(2))).
+result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(1))).
 result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(6))).
-result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(4))).
+result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(28))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(8))).
-result(outcome(o_3_XX_),decrease_over_time(resource(r_1_XX_),scalar(1))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(10))).
+result(outcome(o_3_XX_),decrease_over_time(resource(r_1_XX_),scalar(2))).
 
 precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_4_XX_)).
 result(outcome(o_4_XX_),mode_change(narrative_gating)).
 
 precondition(timer_elapsed(patrol_entity_e_2_XX__XX__XX_),outcome(patrol_entity_e_2_XX__XX__XX_)).
 result(outcome(patrol_entity_e_2_XX__XX__XX_),rotates(entity(e_2_XX_),cw,scalar(60))).
-result(outcome(patrol_entity_e_2_XX__XX__XX_),decrease(resource(r_1_XX_),scalar(2))).
+result(outcome(patrol_entity_e_2_XX__XX__XX_),decrease(resource(r_1_XX_),scalar(1))).
 
 precondition(timer_elapsed(patrol_entity_e_3_XX__XX__XX_),outcome(patrol_entity_e_3_XX__XX__XX_)).
 result(outcome(patrol_entity_e_3_XX__XX__XX_),rotates(entity(e_3_XX_),cw,scalar(60))).
@@ -70,7 +72,7 @@ result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,apply_restitution(entity(e_3_XX_),entity(e_3_XX_))).
 result(tick,moves(entity(e_2_XX_),forward,scalar(7))).
 result(tick,moves(entity(e_3_XX_),forward,scalar(3))).
-result(tick,decrease_over_time(resource(r_1_XX_),scalar(2))).
+result(tick,decrease_over_time(resource(r_1_XX_),scalar(1))).
 result(tick,look_at(entity(e_3_XX_),entity(e_1_XX_),furthest)).
 result(tick,look_at(entity(e_2_XX_),entity(e_1_XX_),furthest)).
 
@@ -91,7 +93,7 @@ reading(hand_eye_coordination,game).
 reading(stakes(low),resource(r_2_XX_)).
 ==========
 <ul>
-<li>The goal is to produce composure</li>
+<li>The goal is to produce r(1)</li>
 
 <li>The player will do this by<ul>
 <li>

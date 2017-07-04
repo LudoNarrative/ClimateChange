@@ -456,6 +456,9 @@ project(behavior(C)) :- behavior(C).
 
 project(controlScheme(C)) :- controlScheme(C).
 project(controlScheme(C)) :- controlScheme(C).
+project(R) :- resource(R).
+project(E) :- entity(E).
+project(T) :- timer(T).
 %#show precondition/2.
 #project project/1.
 %#project pruned_action/1.
