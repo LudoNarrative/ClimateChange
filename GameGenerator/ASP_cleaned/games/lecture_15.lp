@@ -35,8 +35,8 @@ timer_logic(timer(t_1_XX_),scalar(3),loop).
 timer_logic(timer(t_2_XX_),scalar(5),loop).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(9))).
-initialize(set_value(resource(r_2_XX_),scalar(9))).
+initialize(set_value(resource(r_1_XX_),scalar(10))).
+initialize(set_value(resource(r_2_XX_),scalar(7))).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),decrease(resource(r_2_XX_),scalar(4))).
@@ -51,15 +51,15 @@ precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_2_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-precondition(le(resource(r_2_XX_),scalar(0)),outcome(o_2_XX_)).
+precondition(le(resource(r_2_XX_),scalar(5)),outcome(o_2_XX_)).
 result(outcome(o_2_XX_),decrease_over_time(property(entity(e_1_XX_),health),scalar(1))).
-result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(4))).
+result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(16))).
 
 precondition(timer_elapsed(t_2_XX_),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase(property(entity(e_2_XX_),health),scalar(5))).
+result(outcome(o_3_XX_),increase(property(entity(e_2_XX_),health),scalar(9))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),increase(property(entity(e_3_XX_),health),scalar(2))).
+result(outcome(o_4_XX_),increase(property(entity(e_3_XX_),health),scalar(1))).
 
 precondition(timer_elapsed(patrol_entity_e_3_XX__XX__XX_),outcome(patrol_entity_e_3_XX__XX__XX_)).
 result(outcome(patrol_entity_e_3_XX__XX__XX_),rotates(entity(e_3_XX_),ccw,scalar(60))).

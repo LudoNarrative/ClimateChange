@@ -38,31 +38,31 @@ timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(pingpong_entity_e_3_XX__XX__XX_),scalar(5),loop).
 
 initialize(set_value(resource(r_1_XX_),scalar(0))).
-initialize(set_value(resource(r_2_XX_),scalar(2))).
+initialize(set_value(resource(r_2_XX_),scalar(1))).
 
 precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),forward,scalar(7))).
 
-precondition(ge(resource(r_1_XX_),scalar(10)),outcome(o_1_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(7)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-precondition(ge(resource(r_2_XX_),scalar(0)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(40))).
+precondition(ge(resource(r_2_XX_),scalar(6)),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(28))).
 result(outcome(o_2_XX_),add(entity(e_1_XX_),scalar(1),location(middle,left))).
 result(outcome(o_2_XX_),delete(entity(e_1_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(4))).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(6))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(40))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(1))).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),decrease(resource(r_2_XX_),scalar(6))).
+result(outcome(o_4_XX_),decrease(resource(r_2_XX_),scalar(5))).
 result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_5_XX_)).
-result(outcome(o_5_XX_),increase(resource(r_2_XX_),scalar(5))).
+result(outcome(o_5_XX_),increase(resource(r_2_XX_),scalar(7))).
 
 precondition(timer_elapsed(t_2_XX_),outcome(o_6_XX_)).
 result(outcome(o_6_XX_),increase(property(entity(e_2_XX_),health),scalar(10))).

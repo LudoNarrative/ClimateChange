@@ -37,8 +37,8 @@ initialize(set_color(entity(e_3_XX_),green)).
 timer_logic(timer(wander_entity_e_2_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(wander_entity_e_3_XX__XX__XX_),scalar(3),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(8))).
-initialize(set_value(resource(r_2_XX_),scalar(8))).
+initialize(set_value(resource(r_1_XX_),scalar(1))).
+initialize(set_value(resource(r_2_XX_),scalar(4))).
 
 precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
@@ -48,12 +48,12 @@ precondition(le(resource(r_1_XX_),scalar(0)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(4))).
+result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(40))).
 result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(4))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase(property(entity(e_1_XX_),health),scalar(36))).
+result(outcome(o_3_XX_),increase(property(entity(e_1_XX_),health),scalar(32))).
 result(outcome(o_3_XX_),add(entity(e_2_XX_),scalar(1),location(top,center))).
 result(outcome(o_3_XX_),delete(entity(e_2_XX_))).
 
@@ -62,7 +62,7 @@ result(outcome(wander_entity_e_2_XX__XX__XX_),rotate_to(entity(e_2_XX_),random_i
 
 precondition(timer_elapsed(wander_entity_e_3_XX__XX__XX_),outcome(wander_entity_e_3_XX__XX__XX_)).
 result(outcome(wander_entity_e_3_XX__XX__XX_),rotate_to(entity(e_3_XX_),random_int(scalar(0),scalar(360)))).
-result(outcome(wander_entity_e_3_XX__XX__XX_),increase(property(entity(e_2_XX_),health),scalar(10))).
+result(outcome(wander_entity_e_3_XX__XX__XX_),increase(property(entity(e_2_XX_),health),scalar(6))).
 result(outcome(wander_entity_e_3_XX__XX__XX_),add(entity(e_3_XX_),scalar(1),location(bottom,right))).
 
 precondition(tick,tick).

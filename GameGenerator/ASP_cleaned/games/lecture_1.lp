@@ -34,8 +34,8 @@ initialize(set_color(entity(e_3_XX_),green)).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(wander_entity_e_3_XX__XX__XX_),scalar(7),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(10))).
-initialize(set_value(resource(r_2_XX_),scalar(6))).
+initialize(set_value(resource(r_1_XX_),scalar(8))).
+initialize(set_value(resource(r_2_XX_),scalar(10))).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),increase(resource(r_2_XX_),scalar(1))).
@@ -46,8 +46,8 @@ precondition(le(resource(r_1_XX_),scalar(4)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_2_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-precondition(ge(resource(r_2_XX_),scalar(3)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(8))).
+precondition(ge(resource(r_2_XX_),scalar(9)),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(12))).
 
 precondition(control_event(button(mouse,held)),outcome(orbit_the_cursor_entity_e_2_XX__XX__XX_)).
 result(outcome(orbit_the_cursor_entity_e_2_XX__XX__XX_),increase_over_time(resource(r_2_XX_),scalar(1))).

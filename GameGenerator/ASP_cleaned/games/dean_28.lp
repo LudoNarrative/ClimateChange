@@ -43,13 +43,13 @@ precondition(control_event(button(mouse,held)),outcome(click_to_spin_entity_e_1_
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),rotate_to(entity(e_1_XX_),random_int(0,360))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(1))).
-result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(9))).
+result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(6))).
+result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(2))).
 result(outcome(o_1_XX_),add(entity(e_3_XX_),scalar(1),location(bottom,right))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(8))).
-result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(10))).
+result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(5))).
+result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(6))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_3_XX_)).
@@ -61,8 +61,8 @@ precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_4_XX_)).
 result(outcome(o_4_XX_),mode_change(narrative_gating)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_5_XX_)).
-precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_5_XX_)).
-result(outcome(o_5_XX_),increase(resource(r_1_XX_),scalar(12))).
+precondition(le(resource(r_1_XX_),scalar(2)),outcome(o_5_XX_)).
+result(outcome(o_5_XX_),increase(resource(r_1_XX_),scalar(4))).
 result(outcome(o_5_XX_),delete(entity(e_2_XX_))).
 
 precondition(tick,tick).

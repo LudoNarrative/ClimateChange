@@ -35,15 +35,15 @@ initialize(set_color(entity(e_3_XX_),green)).
 timer_logic(timer(t_1_XX_),scalar(5),loop).
 
 initialize(set_value(resource(r_1_XX_),scalar(8))).
-initialize(set_value(resource(r_2_XX_),scalar(3))).
+initialize(set_value(resource(r_2_XX_),scalar(4))).
 
 precondition(control_event(button(mouse,pressed)),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(1))).
-result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(7))).
+result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(4))).
+result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(2))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(2))).
-result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(9))).
+result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(7))).
+result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(3))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(3))).
@@ -53,7 +53,7 @@ precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_4_XX_)).
 result(outcome(o_4_XX_),mode_change(narrative_gating)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_5_XX_)).
-result(outcome(o_5_XX_),increase(resource(r_1_XX_),scalar(20))).
+result(outcome(o_5_XX_),increase(resource(r_1_XX_),scalar(12))).
 result(outcome(o_5_XX_),add(entity(e_3_XX_),scalar(1),location(bottom,right))).
 result(outcome(o_5_XX_),delete(entity(e_3_XX_))).
 

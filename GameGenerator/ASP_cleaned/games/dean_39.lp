@@ -37,17 +37,17 @@ initialize(set_color(entity(e_3_XX_),green)).
 timer_logic(timer(wander_entity_e_2_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(wander_entity_e_3_XX__XX__XX_),scalar(3),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(6))).
-initialize(set_value(resource(r_2_XX_),scalar(5))).
+initialize(set_value(resource(r_1_XX_),scalar(4))).
+initialize(set_value(resource(r_2_XX_),scalar(8))).
 
 precondition(control_event(button(mouse,held)),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),rotate_to(entity(e_1_XX_),random_int(0,360))).
 
-precondition(le(resource(r_1_XX_),scalar(2)),outcome(o_1_XX_)).
+precondition(le(resource(r_1_XX_),scalar(3)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(12))).
+result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(20))).
 result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(4))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
@@ -61,7 +61,7 @@ result(outcome(wander_entity_e_2_XX__XX__XX_),rotate_to(entity(e_2_XX_),random_i
 
 precondition(timer_elapsed(wander_entity_e_3_XX__XX__XX_),outcome(wander_entity_e_3_XX__XX__XX_)).
 result(outcome(wander_entity_e_3_XX__XX__XX_),rotate_to(entity(e_3_XX_),random_int(scalar(0),scalar(360)))).
-result(outcome(wander_entity_e_3_XX__XX__XX_),increase(property(entity(e_2_XX_),health),scalar(10))).
+result(outcome(wander_entity_e_3_XX__XX__XX_),increase(property(entity(e_2_XX_),health),scalar(1))).
 result(outcome(wander_entity_e_3_XX__XX__XX_),add(entity(e_3_XX_),scalar(1),location(bottom,right))).
 
 precondition(tick,tick).

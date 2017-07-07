@@ -37,19 +37,19 @@ initialize(set_color(entity(e_3_XX_),green)).
 
 controlLogic(draggable(entity(e_1_XX_))).
 
-initialize(set_value(resource(r_1_XX_),scalar(1))).
-initialize(set_value(resource(r_2_XX_),scalar(8))).
+initialize(set_value(resource(r_1_XX_),scalar(0))).
+initialize(set_value(resource(r_2_XX_),scalar(2))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
-precondition(le(resource(r_1_XX_),scalar(6)),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(8))).
+precondition(le(resource(r_1_XX_),scalar(7)),outcome(o_1_XX_)).
+result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(10))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(8))).
+result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(4))).
 result(outcome(o_2_XX_),add(entity(e_3_XX_),scalar(1),location(top,left))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
-precondition(ge(resource(r_1_XX_),scalar(32)),outcome(o_3_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(36)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),mode_change(narrative_progress)).
 
 precondition(tick,tick).

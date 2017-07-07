@@ -38,20 +38,20 @@ controlLogic(draggable(entity(e_1_XX_))).
 timer_logic(timer(wander_entity_e_2_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(wander_entity_e_3_XX__XX__XX_),scalar(3),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(7))).
-initialize(set_value(resource(r_2_XX_),scalar(7))).
+initialize(set_value(resource(r_1_XX_),scalar(10))).
+initialize(set_value(resource(r_2_XX_),scalar(5))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(4))).
-result(outcome(o_1_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(3))).
-result(outcome(o_1_XX_),increase_over_time(resource(r_1_XX_),scalar(20))).
+result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(3))).
+result(outcome(o_1_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(7))).
+result(outcome(o_1_XX_),increase_over_time(resource(r_1_XX_),scalar(4))).
 
 precondition(control_event(button(mouse,held)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(2))).
-result(outcome(o_2_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(8))).
+result(outcome(o_2_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(5))).
+result(outcome(o_2_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(1))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(8))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(5))).
 result(outcome(o_3_XX_),decrease_over_time(resource(r_1_XX_),scalar(1))).
 
 precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_4_XX_)).

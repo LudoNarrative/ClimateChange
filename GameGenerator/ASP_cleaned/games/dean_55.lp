@@ -42,21 +42,21 @@ timer_logic(timer(patrol_entity_e_2_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(5),loop).
 
 initialize(set_value(resource(r_1_XX_),scalar(0))).
-initialize(set_value(resource(r_2_XX_),scalar(2))).
+initialize(set_value(resource(r_2_XX_),scalar(1))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(5))).
+result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(6))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
 result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(4))).
 result(outcome(o_2_XX_),add(entity(e_3_XX_),scalar(1),location(top,left))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
-precondition(ge(resource(r_1_XX_),scalar(32)),outcome(o_3_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(12)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),mode_change(narrative_progress)).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),increase(property(entity(e_3_XX_),health),scalar(5))).
+result(outcome(o_4_XX_),increase(property(entity(e_3_XX_),health),scalar(10))).
 
 precondition(timer_elapsed(patrol_entity_e_2_XX__XX__XX_),outcome(patrol_entity_e_2_XX__XX__XX_)).
 result(outcome(patrol_entity_e_2_XX__XX__XX_),rotates(entity(e_2_XX_),ccw,scalar(45))).

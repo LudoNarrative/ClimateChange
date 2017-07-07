@@ -34,21 +34,21 @@ initialize(set_color(entity(e_3_XX_),green)).
 
 timer_logic(timer(t_1_XX_),scalar(7),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(10))).
-initialize(set_value(resource(r_2_XX_),scalar(3))).
+initialize(set_value(resource(r_1_XX_),scalar(4))).
+initialize(set_value(resource(r_2_XX_),scalar(8))).
 
 precondition(control_event(button(mouse,pressed)),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(5))).
-result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(4))).
+result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(6))).
+result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(3))).
 result(outcome(o_1_XX_),add(entity(e_3_XX_),scalar(1),location(bottom,right))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(5))).
-result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(5))).
+result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(6))).
+result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(3))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase(property(entity(e_1_XX_),health),scalar(3))).
+result(outcome(o_3_XX_),increase(property(entity(e_1_XX_),health),scalar(7))).
 result(outcome(o_3_XX_),decrease(resource(r_1_XX_),scalar(1))).
 
 precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_4_XX_)).

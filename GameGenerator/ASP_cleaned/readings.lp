@@ -89,6 +89,13 @@ required(bad) :- required(hurt).
 {reading(consumes,relation(Entity1,Entity2)) } :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,delete(Entity2)).
+
+{reading(consumes,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity2,Entity1,true),Outcome),
+    result(Outcome,modify(decrease,property(Entity2,health))).
+{reading(consumes,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity1,Entity2,true),Outcome),
+    result(Outcome,modify(decrease,property(Entity2,health))).
     
 {reading(chases,relation(Entity1,Entity2)) } :-
     action(move(Entity1,direction(towards,Entity2))).
@@ -149,10 +156,9 @@ required(bad) :- required(hurt).
 {reading(sharing,relation(Entity,Entity1)) }  :-    
     reading(consumes,relation(Entity1,Entity)),
     many(Entity1),
-    precondition(overlaps(Entity,Entity1,true),Outcome),
-    result(Outcome,delete(Entity)),
-    result(Outcome,modify(increase,Resource)),
     reading(good,Resource).
+
+
 required(good) :- required(sharing).
 required(consumes) :- required(sharing).
 

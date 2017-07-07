@@ -35,7 +35,7 @@ initialize(set_color(entity(e_3_XX_),green)).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 
 initialize(set_value(resource(r_1_XX_),scalar(1))).
-initialize(set_value(resource(r_2_XX_),scalar(5))).
+initialize(set_value(resource(r_2_XX_),scalar(8))).
 
 precondition(control_event(click(entity(e_2_XX_))),outcome(click_to_spin_entity_e_2_XX__XX__XX_)).
 result(outcome(click_to_spin_entity_e_2_XX__XX__XX_),add(entity(e_3_XX_),scalar(1),location(bottom,left))).
@@ -48,23 +48,23 @@ result(outcome(o_1_XX_),add(entity(e_2_XX_),scalar(1),location(middle,center))).
 result(outcome(o_1_XX_),delete(entity(e_2_XX_))).
 
 precondition(overlaps(entity(e_2_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-precondition(ge(resource(r_2_XX_),scalar(2)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease(property(entity(e_1_XX_),health),scalar(9))).
-result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(16))).
+precondition(ge(resource(r_2_XX_),scalar(0)),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),decrease(property(entity(e_1_XX_),health),scalar(4))).
+result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(32))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
-precondition(ge(resource(r_1_XX_),scalar(28)),outcome(o_3_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(24)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),mode_change(game_loss)).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),decrease(resource(r_2_XX_),scalar(8))).
+result(outcome(o_4_XX_),decrease(resource(r_2_XX_),scalar(3))).
 result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
 
 precondition(control_event(click(entity(e_3_XX_))),outcome(o_5_XX_)).
 result(outcome(o_5_XX_),delete(entity(e_3_XX_))).
 
 precondition(control_event(button(mouse,held)),outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_)).
-result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),decrease_over_time(property(entity(e_2_XX_),health),scalar(10))).
+result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),decrease_over_time(property(entity(e_2_XX_),health),scalar(3))).
 result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
 result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),left,scalar(7))).
 

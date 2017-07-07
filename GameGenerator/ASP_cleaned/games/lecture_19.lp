@@ -33,7 +33,7 @@ timer_logic(timer(t_1_XX_),scalar(3),loop).
 timer_logic(timer(t_2_XX_),scalar(7),loop).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(8))).
+initialize(set_value(resource(r_1_XX_),scalar(7))).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),delete(entity(e_1_XX_))).
@@ -51,7 +51,7 @@ result(outcome(o_2_XX_),decrease_over_time(property(entity(e_1_XX_),health),scal
 result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(4))).
 
 precondition(timer_elapsed(t_2_XX_),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase(property(entity(e_2_XX_),health),scalar(8))).
+result(outcome(o_3_XX_),increase(property(entity(e_2_XX_),health),scalar(5))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_4_XX_)).
 result(outcome(o_4_XX_),increase(property(entity(e_3_XX_),health),scalar(1))).

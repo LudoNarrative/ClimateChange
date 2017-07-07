@@ -32,8 +32,8 @@ initialize(set_sprite(entity(e_3_XX_),circle)).
 initialize(set_color(entity(e_2_XX_),blue)).
 initialize(set_color(entity(e_3_XX_),green)).
 
-initialize(set_value(resource(r_1_XX_),scalar(10))).
-initialize(set_value(resource(r_2_XX_),scalar(0))).
+initialize(set_value(resource(r_1_XX_),scalar(8))).
+initialize(set_value(resource(r_2_XX_),scalar(8))).
 
 precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
@@ -41,14 +41,14 @@ result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),for
 
 precondition(control_event(button(mouse,pressed)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(6))).
-result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(6))).
+result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(1))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(4))).
-result(outcome(o_2_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(3))).
+result(outcome(o_2_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(10))).
+result(outcome(o_2_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(1))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(7))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(6))).
 result(outcome(o_3_XX_),decrease_over_time(resource(r_1_XX_),scalar(1))).
 
 precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_4_XX_)).
@@ -56,7 +56,7 @@ result(outcome(o_4_XX_),mode_change(narrative_gating)).
 
 precondition(control_event(button(mouse,held)),outcome(o_5_XX_)).
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_5_XX_)).
-result(outcome(o_5_XX_),increase(resource(r_1_XX_),scalar(12))).
+result(outcome(o_5_XX_),increase(resource(r_1_XX_),scalar(16))).
 result(outcome(o_5_XX_),add(entity(e_3_XX_),scalar(1),location(bottom,right))).
 result(outcome(o_5_XX_),delete(entity(e_3_XX_))).
 
