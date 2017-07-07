@@ -455,7 +455,6 @@ project(player_controls(C)) :- player_controls(C).
 project(behavior(C)) :- behavior(C).
 
 project(controlScheme(C)) :- controlScheme(C).
-project(controlScheme(C)) :- controlScheme(C).
 project(R) :- resource(R).
 project(E) :- entity(E).
 project(T) :- timer(T).

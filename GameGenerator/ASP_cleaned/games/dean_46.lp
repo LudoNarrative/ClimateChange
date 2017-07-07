@@ -39,29 +39,29 @@ controlLogic(draggable(entity(e_1_XX_))).
 
 timer_logic(timer(t_1_XX_),scalar(3),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(3))).
+initialize(set_value(resource(r_1_XX_),scalar(0))).
 initialize(set_value(resource(r_2_XX_),scalar(2))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
-precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(1))).
+precondition(le(resource(r_1_XX_),scalar(5)),outcome(o_1_XX_)).
+result(outcome(o_1_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(6))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(4))).
+result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(16))).
 result(outcome(o_2_XX_),add(entity(e_3_XX_),scalar(1),location(top,left))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
-precondition(ge(resource(r_1_XX_),scalar(40)),outcome(o_3_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(16)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),mode_change(narrative_progress)).
 
 precondition(control_event(button(mouse,held)),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),increase_over_time(property(entity(e_3_XX_),health),scalar(2))).
+result(outcome(o_4_XX_),increase_over_time(property(entity(e_3_XX_),health),scalar(10))).
 
 precondition(control_event(button(mouse,pressed)),outcome(o_5_XX_)).
-result(outcome(o_5_XX_),increase(property(entity(e_3_XX_),health),scalar(10))).
+result(outcome(o_5_XX_),increase(property(entity(e_3_XX_),health),scalar(9))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_6_XX_)).
-result(outcome(o_6_XX_),increase(property(entity(e_3_XX_),health),scalar(5))).
+result(outcome(o_6_XX_),increase(property(entity(e_3_XX_),health),scalar(9))).
 
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
@@ -69,7 +69,7 @@ result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,apply_restitution(entity(e_3_XX_),entity(e_3_XX_))).
 result(tick,moves(entity(e_2_XX_),backward,scalar(3))).
 result(tick,moves(entity(e_3_XX_),backward,scalar(3))).
-result(tick,decrease_over_time(resource(r_1_XX_),scalar(1))).
+result(tick,decrease_over_time(resource(r_1_XX_),scalar(2))).
 result(tick,moves(entity(e_3_XX_),left,scalar(3))).
 result(tick,moves(entity(e_2_XX_),left,scalar(3))).
 result(tick,look_at(entity(e_3_XX_),entity(e_1_XX_),furthest)).

@@ -35,8 +35,8 @@ initialize(set_color(entity(e_3_XX_),green)).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(pingpong_entity_e_3_XX__XX__XX_),scalar(5),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(2))).
-initialize(set_value(resource(r_2_XX_),scalar(2))).
+initialize(set_value(resource(r_1_XX_),scalar(0))).
+initialize(set_value(resource(r_2_XX_),scalar(7))).
 
 precondition(control_event(button(mouse,held)),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),rotate_to(entity(e_1_XX_),random_int(0,360))).
@@ -45,20 +45,20 @@ precondition(control_event(click(entity(e_2_XX_))),outcome(click_to_spin_entity_
 result(outcome(click_to_spin_entity_e_2_XX__XX__XX_),add(entity(e_3_XX_),scalar(1),location(bottom,left))).
 result(outcome(click_to_spin_entity_e_2_XX__XX__XX_),rotates(entity(e_2_XX_),ccw,scalar(30))).
 
-precondition(ge(resource(r_1_XX_),scalar(9)),outcome(o_1_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(10)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_2_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
-precondition(ge(resource(r_2_XX_),scalar(4)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease(property(entity(e_1_XX_),health),scalar(2))).
-result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(40))).
+precondition(ge(resource(r_2_XX_),scalar(0)),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),decrease(property(entity(e_1_XX_),health),scalar(1))).
+result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(36))).
 result(outcome(o_2_XX_),delete(entity(e_3_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(1))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(3))).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),decrease(resource(r_2_XX_),scalar(7))).
+result(outcome(o_4_XX_),decrease(resource(r_2_XX_),scalar(6))).
 result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
 
 precondition(control_event(click(entity(e_3_XX_))),outcome(o_5_XX_)).

@@ -33,11 +33,11 @@ initialize(set_color(entity(e_3_XX_),green)).
 
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(7))).
-initialize(set_value(resource(r_2_XX_),scalar(10))).
+initialize(set_value(resource(r_1_XX_),scalar(9))).
+initialize(set_value(resource(r_2_XX_),scalar(7))).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
-result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),decrease(resource(r_2_XX_),scalar(6))).
+result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),decrease(resource(r_2_XX_),scalar(7))).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),delete(entity(e_1_XX_))).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),rotates(entity(e_1_XX_),ccw,scalar(45))).
 

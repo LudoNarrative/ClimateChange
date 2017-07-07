@@ -38,19 +38,19 @@ controlLogic(draggable(entity(e_1_XX_))).
 timer_logic(timer(t_1_XX_),scalar(5),loop).
 timer_logic(timer(t_2_XX_),scalar(3),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(9))).
-initialize(set_value(resource(r_2_XX_),scalar(0))).
+initialize(set_value(resource(r_1_XX_),scalar(8))).
+initialize(set_value(resource(r_2_XX_),scalar(1))).
 
 precondition(timer_elapsed(t_2_XX_),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(10))).
-result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(3))).
+result(outcome(o_1_XX_),increase(property(entity(e_1_XX_),health),scalar(8))).
+result(outcome(o_1_XX_),increase(property(entity(e_2_XX_),health),scalar(10))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_2_XX_)).
 result(outcome(o_2_XX_),increase(property(entity(e_1_XX_),health),scalar(8))).
-result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(6))).
+result(outcome(o_2_XX_),increase(property(entity(e_2_XX_),health),scalar(1))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(4))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(1))).
 result(outcome(o_3_XX_),decrease_over_time(resource(r_1_XX_),scalar(1))).
 
 precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_4_XX_)).

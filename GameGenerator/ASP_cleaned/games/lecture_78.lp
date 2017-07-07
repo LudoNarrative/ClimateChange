@@ -35,39 +35,39 @@ initialize(set_color(entity(e_3_XX_),green)).
 timer_logic(timer(patrol_entity_e_3_XX__XX__XX_),scalar(7),loop).
 timer_logic(timer(pingpong_entity_e_3_XX__XX__XX_),scalar(5),loop).
 
-initialize(set_value(resource(r_1_XX_),scalar(3))).
-initialize(set_value(resource(r_2_XX_),scalar(4))).
+initialize(set_value(resource(r_1_XX_),scalar(4))).
+initialize(set_value(resource(r_2_XX_),scalar(6))).
 
 precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),forward,scalar(7))).
 
-precondition(ge(resource(r_1_XX_),scalar(7)),outcome(o_1_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(10)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
 precondition(ge(resource(r_2_XX_),scalar(3)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(12))).
+result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(36))).
 result(outcome(o_2_XX_),add(entity(e_1_XX_),scalar(1),location(middle,left))).
 result(outcome(o_2_XX_),delete(entity(e_1_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(4))).
-result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(1))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(16))).
+result(outcome(o_3_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(10))).
 
 precondition(control_event(click(entity(e_1_XX_))),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),decrease(resource(r_2_XX_),scalar(9))).
+result(outcome(o_4_XX_),decrease(resource(r_2_XX_),scalar(3))).
 result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
 
 precondition(control_event(click(entity(e_3_XX_))),outcome(o_5_XX_)).
 result(outcome(o_5_XX_),delete(entity(e_3_XX_))).
 
 precondition(control_event(click(entity(e_2_XX_))),outcome(o_6_XX_)).
-result(outcome(o_6_XX_),increase(property(entity(e_2_XX_),health),scalar(8))).
+result(outcome(o_6_XX_),increase(property(entity(e_2_XX_),health),scalar(2))).
 
 precondition(timer_elapsed(patrol_entity_e_3_XX__XX__XX_),outcome(patrol_entity_e_3_XX__XX__XX_)).
 result(outcome(patrol_entity_e_3_XX__XX__XX_),rotates(entity(e_3_XX_),ccw,scalar(60))).
-result(outcome(patrol_entity_e_3_XX__XX__XX_),decrease(property(entity(e_1_XX_),health),scalar(1))).
+result(outcome(patrol_entity_e_3_XX__XX__XX_),decrease(property(entity(e_1_XX_),health),scalar(2))).
 result(outcome(patrol_entity_e_3_XX__XX__XX_),increase(resource(r_1_XX_),scalar(1))).
 
 precondition(timer_elapsed(pingpong_entity_e_3_XX__XX__XX_),outcome(pingpong_entity_e_3_XX__XX__XX_)).

@@ -41,12 +41,12 @@ precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_
 result(outcome(drawn_to_cursor_entity_e_2_XX__XX__XX_),look_at(entity(e_2_XX_),cursor,nearest)).
 result(outcome(drawn_to_cursor_entity_e_2_XX__XX__XX_),moves(entity(e_2_XX_),forward,scalar(7))).
 
-precondition(le(resource(r_1_XX_),scalar(3)),outcome(o_1_XX_)).
+precondition(le(resource(r_1_XX_),scalar(0)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_2_XX_),entity(e_3_XX_),true),outcome(o_2_XX_)).
 result(outcome(o_2_XX_),decrease_over_time(property(entity(e_1_XX_),health),scalar(1))).
-result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(4))).
+result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(12))).
 
 precondition(timer_elapsed(patrol_entity_e_3_XX__XX__XX_),outcome(patrol_entity_e_3_XX__XX__XX_)).
 result(outcome(patrol_entity_e_3_XX__XX__XX_),rotates(entity(e_3_XX_),ccw,scalar(60))).
