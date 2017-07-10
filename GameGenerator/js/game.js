@@ -7,7 +7,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 /*
 	Initializes the game
 */
-	var init = function(gameSpec, _State, _Display, _Coordinator) {
+    var init = function(gameSpec, _State, _Display, _Coordinator,increment=true) {
 
 		Display = _Display;
 		State = _State;
@@ -23,8 +23,11 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		console.log("PICKING GAME FILE: " , aspFilepath);
 		console.log("PICKING GAME INDEX: " , gameIndex);
 
-		//increment game index for next roll out.
-		gameIndex += 1;
+	    //increment game index for next roll out.
+	    if (increment){
+	    gameIndex += 1;
+	}
+	
 		if(gameIndex >= gameSpec.aspFilepaths.length){
 			gameIndex = 0;
 		}
@@ -112,24 +115,33 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 			$("#gameInstructions").html(aspGameInstructions); 
 		}
 
-			if (document.getElementById("rerollGame") == null) {
-			$('<div/>', {
-				id: 'rerollGame',
-				text: 'Reroll'
-			}).click(function() { 
-				console.log("click!");
-				Coordinator.startGame(State.get("currentScene"));
-			}).appendTo('#gameContainer');
-		}
-
+	    if (document.getElementById("restartGame") == null) {
+		$('<div/>', {
+		    id: 'restartGame',
+		    text: 'Restart'
+		}).click(function() { 
+		    console.log("click!");
+		    Coordinator.startGame(State.get("currentScene"),false);
+		}).appendTo('#gameContainer');
+	    }
+	    if (document.getElementById("rerollGame") == null) {
+		$('<div/>', {
+		    id: 'rerollGame',
+		    text: 'Reroll'
+		}).click(function() { 
+		    console.log("click!");
+		    Coordinator.startGame(State.get("currentScene"));
+		}).appendTo('#gameContainer');
+	    }
+	    
 		//console.log(getAspGoals());
 	}
-
-return {
+    
+    return {
 	init : init,
 	runGenerator : runGenerator
-}
-
+    }
+    
 });
 
 

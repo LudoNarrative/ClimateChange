@@ -3017,7 +3017,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		This will eventually be replaced with more complex stuff before passing
 		off to game.js
 	*/
-	var startGame = function(id) {
+    var startGame = function(id,increment=true) {
 		var Game = require("Game");
 
 		var gameResources = [
@@ -3572,7 +3572,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		];
 
 		var gameSpec = gameResources.filter(function(v) { return v.id === id; })[0];		//grab all filepaths for our id
-		Game.init(gameSpec, State, Display, this);
+	Game.init(gameSpec, State, Display, this,increment);
 	}
 
 	return {

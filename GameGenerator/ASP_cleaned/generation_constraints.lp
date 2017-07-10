@@ -572,7 +572,11 @@ player_controls_resource(R,Dir) :-
 
 :- action(look_at(E,E,C)).
 
-
+:- result(O,delete(E)),
+   1 { result(O,moves(E,_));
+       result(O,rotates(E,_));
+       result(O,rotate_to(E,_));
+       result(O,look_at(E,_))}.
 
 
 
