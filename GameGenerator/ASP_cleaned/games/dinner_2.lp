@@ -22,20 +22,20 @@ initialize(set_sprite(entity(e_1_XX_),circle)).
 initialize(set_sprite(entity(e_2_XX_),circle)).
 initialize(set_color(entity(e_2_XX_),blue)).
 
-initialize(set_value(resource(r_1_XX_),scalar(8))).
+initialize(set_value(resource(r_1_XX_),scalar(4))).
 initialize(set_value(resource(r_2_XX_),scalar(3))).
 
 precondition(control_event(button(mouse,pressed)),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
-result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),decrease(property(entity(e_1_XX_),health),scalar(10))).
+result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),decrease(property(entity(e_1_XX_),health),scalar(2))).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),increase(resource(r_2_XX_),scalar(1))).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),rotates(entity(e_1_XX_),ccw,scalar(90))).
 
 precondition(le(resource(r_1_XX_),scalar(8)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(narrative_gating)).
 
-precondition(le(resource(r_2_XX_),scalar(0)),outcome(o_2_XX_)).
+precondition(le(resource(r_2_XX_),scalar(9)),outcome(o_2_XX_)).
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(4))).
+result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(8))).
 result(outcome(o_2_XX_),add(entity(e_1_XX_),scalar(1),location(middle,center))).
 result(outcome(o_2_XX_),delete(entity(e_1_XX_))).
 
@@ -43,7 +43,7 @@ precondition(tick,tick).
 result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,moves(entity(e_1_XX_),forward,scalar(5))).
 result(tick,decrease_over_time(resource(r_1_XX_),scalar(1))).
-result(tick,decrease_over_time(resource(r_2_XX_),scalar(2))).
+result(tick,decrease_over_time(resource(r_2_XX_),scalar(3))).
 
 reading(goal(produce),resource(r_1_XX_)).
 reading(good,resource(r_1_XX_)).
@@ -57,6 +57,7 @@ reading(maintenance,resource(r_1_XX_)).
 reading(stakes(low),resource(r_2_XX_)).
 ==========
 <ul>
+<li>games/dinner_2.lp</li>
 <li>The goal is to produce satiation</li>
 
 <li>The player will do this by<ul>

@@ -694,7 +694,6 @@ if __name__ == '__main__':
         for f,r in find_and_replace:
             out_string = out_string.replace(f,r)
         out_string +=  '==========\n'
-
         sprites = {}
         for oo in out['initialize']:
             for ooo in oo:
@@ -721,6 +720,7 @@ if __name__ == '__main__':
             if label not in sprites:
                 sprites[label] = labels[label]
         out_string += '<ul>\n'
+        out_string += '<li>{}_{}.lp</li>\n'.format(output_name,output_ind+1);
         for o in ['reading']:
             for oo in out[o]:
                 for ooo in oo:
