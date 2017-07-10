@@ -188,6 +188,13 @@ trivial(Outcome) :- precondition(overlaps(E1,E1,_),Outcome),
 		    player_controls(E1),
 		    every_frame(Outcome).
 
+trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
+		    reading(chases,relation(E1,E2)).
+            
+
+trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
+		    reading(chases,relation(E2,E1)).
+            
 hand_eye_coordination(Outcome) :- precondition(overlaps(E), Outcome),
 				  computer_controls(E).
 		    

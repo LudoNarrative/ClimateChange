@@ -97,12 +97,20 @@ required(bad) :- required(hurt).
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(decrease,property(Entity2,health))).
     
-{reading(chases,relation(Entity1,Entity2)) } :-
+reading(chases,relation(Entity1,Entity2)) :-
     action(move(Entity1,direction(towards,Entity2))).
-
-{reading(flees,relation(Entity1,Entity2)) } :-
+reading(chases,relation(Entity1,Entity2)) :-
+    action(move(Entity1,direction(forward))),
+    action(look_at(Entity1,Entity2)).
+    
+    
+reading(flees,relation(Entity1,Entity2)) :-
     action(move(Entity1,direction(away,Entity2))).
 
+reading(flees,relation(Entity1,Entity2)) :-
+    action(move(Entity1,direction(backward))),
+    action(look_at(Entity1,Entity2)).
+    
 {reading(consumes,relation(Entity1,Resource1)) } :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(decrease,Resource1)).

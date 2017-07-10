@@ -163,59 +163,59 @@ at(Timeline,T+1,entity(E),RV1) :-
 	
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-player_model(tick,must_happen).
-entity(entity(e(1))).
-entity(entity(e(2))).
-resource(resource(r(1))).
-resource(resource(r(2))).
+% player_model(tick,must_happen).
+% entity(entity(e(1))).
+% entity(entity(e(2))).
+% resource(resource(r(1))).
+% resource(resource(r(2))).
 
 
-precondition(tick,tick).
-result(tick,apply_restitution(entity(e(1)),entity(e(1)))).
-result(tick,apply_restitution(entity(e(2)),entity(e(2)))).
-result(tick,move(entity(e(2)),direction(forward))).
-
-
-
-precondition(timer_elapsed(t(2)),outcome(o(4))).
-result(outcome(o(4)),modify(decrease,resource(r(1)))).
-
-precondition(timer_elapsed(patrol(entity(e(2)))),outcome(o(3))).
-result(outcome(o(3)),modify(decrease,resource(r(2)))).
-
-precondition(timer_elapsed(t(1)),outcome(o(1))).
-result(outcome(o(1)),add(entity(e(1)),scalar(1),location(bottom,right))).
-
-
-precondition(compare(le,resource(r(1))),outcome(o(2))).
-result(outcome(o(2)),mode_change(narrative_gating)).
+% precondition(tick,tick).
+% result(tick,apply_restitution(entity(e(1)),entity(e(1)))).
+% result(tick,apply_restitution(entity(e(2)),entity(e(2)))).
+% result(tick,move(entity(e(2)),direction(forward))).
 
 
 
-precondition(compare(le,resource(r(2))),outcome(patrol(entity(e(2))))).
-precondition(overlaps(entity(e(1)),entity(e(2)),true),outcome(patrol(entity(e(2))))).
-result(outcome(patrol(entity(e(2)))),rotates(entity(e(2)),cw,scalar(90))).
-result(outcome(patrol(entity(e(2)))),modify(increase,resource(r(1)))).
-result(outcome(patrol(entity(e(2)))),delete(entity(e(1)))).
+% precondition(timer_elapsed(t(2)),outcome(o(4))).
+% result(outcome(o(4)),modify(decrease,resource(r(1)))).
+
+% precondition(timer_elapsed(patrol(entity(e(2)))),outcome(o(3))).
+% result(outcome(o(3)),modify(decrease,resource(r(2)))).
+
+% precondition(timer_elapsed(t(1)),outcome(o(1))).
+% result(outcome(o(1)),add(entity(e(1)),scalar(1),location(bottom,right))).
+
+
+% precondition(compare(le,resource(r(1))),outcome(o(2))).
+% result(outcome(o(2)),mode_change(narrative_gating)).
 
 
 
-initialize(add(entity(e(1)),scalar(1),location(bottom,left))).
-initialize(add(entity(e(1)),scalar(1),location(top,center))).
-initialize(add(entity(e(1)),scalar(1),location(bottom,right))).
-initialize(add(entity(e(2)),scalar(1),location(top,left))).
-initialize(add(entity(e(2)),scalar(1),location(bottom,center))).
-initialize(add(entity(e(2)),scalar(1),location(top,right))).
-initialize(set_draggable(entity(e(1)),true)).
-player_model(outcome(patrol(entity(e(2)))),player_will_attempt).
-player_model(outcome(o(1)),must_happen).
-player_model(outcome(o(2)),must_happen).
-player_model(outcome(o(3)),must_happen).
-player_model(outcome(o(4)),must_happen).
-initialize(set_color(entity(e(1)),red)).
-initialize(set_sprite(entity(e(1)),circle)).
-initialize(set_sprite(entity(e(2)),circle)).
-initialize(set_color(entity(e(2)),blue)).
+% precondition(compare(le,resource(r(2))),outcome(patrol(entity(e(2))))).
+% precondition(overlaps(entity(e(1)),entity(e(2)),true),outcome(patrol(entity(e(2))))).
+% result(outcome(patrol(entity(e(2)))),rotates(entity(e(2)),cw,scalar(90))).
+% result(outcome(patrol(entity(e(2)))),modify(increase,resource(r(1)))).
+% result(outcome(patrol(entity(e(2)))),delete(entity(e(1)))).
+
+
+
+% initialize(add(entity(e(1)),scalar(1),location(bottom,left))).
+% initialize(add(entity(e(1)),scalar(1),location(top,center))).
+% initialize(add(entity(e(1)),scalar(1),location(bottom,right))).
+% initialize(add(entity(e(2)),scalar(1),location(top,left))).
+% initialize(add(entity(e(2)),scalar(1),location(bottom,center))).
+% initialize(add(entity(e(2)),scalar(1),location(top,right))).
+% initialize(set_draggable(entity(e(1)),true)).
+% player_model(outcome(patrol(entity(e(2)))),player_will_attempt).
+% player_model(outcome(o(1)),must_happen).
+% player_model(outcome(o(2)),must_happen).
+% player_model(outcome(o(3)),must_happen).
+% player_model(outcome(o(4)),must_happen).
+% initialize(set_color(entity(e(1)),red)).
+% initialize(set_sprite(entity(e(1)),circle)).
+% initialize(set_sprite(entity(e(2)),circle)).
+% initialize(set_color(entity(e(2)),blue)).
 
 
 
