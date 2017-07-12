@@ -310,7 +310,10 @@ place(location(X,Y)) :- location(X,Y).
 
 {result(OUTCOME,delete(ENTITY)) : entity(ENTITY), outcome(OUTCOME)}.
 % or added to a location
-{result(Outcome, add(Entity,scalar(1),location(Y,X))) : row(Y),col(X) } :-
+
+spawn_types(random;ordered).
+
+{result(Outcome, add(Entity,scalar(1),pool(Entity)) } :-
     entity(Entity),
     outcome(Outcome).
 
@@ -462,7 +465,7 @@ project(T) :- timer(T).
 #project project/1.
 %#project pruned_action/1.
 
-pruned_action(add(E)) :- action(add(E,_,_)).
+pruned_action(add(E,L)) :- action(add(E,_,L)).
 pruned_action(delete(E)) :- action(delete(E)).
 pruned_action(modify(Dir,R)) :- action(modify(Dir,R)).
 pruned_action(rotates(E,D,V)) :- action(rotates(E,D,V)).

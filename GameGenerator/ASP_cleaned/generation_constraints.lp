@@ -551,6 +551,9 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE)), trivial(O).
   
 :- frivolous(R), not allowed(frivolous(R)).
 
+
+:- monotonic(R), not allowed(monotonic(R)).
+
 %It shouldn't be the case that the only way that a player controls something is by making it move towards (or away) from itself
 :- player_controls(E),
    action(move(E,direction(_,E))),
@@ -604,5 +607,3 @@ player_controls_resource(R,Dir) :-
 
 
 
-   
-   

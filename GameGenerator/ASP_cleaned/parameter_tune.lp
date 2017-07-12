@@ -1,26 +1,24 @@
 
-1{initialize(set_value(R,V)) : V = 0..10} 1:- resource(R).
+1{initialize(set_value(R,V)) : compares(V)} 1:- resource(R).
 
-1 {actual(O,compare(Dir,R,V))  : V = 0..10} 1:-  precondition(compare(Dir,R),O).
+compares(0).
+1 {actual(O,compare(Dir,R,V))  : compares(V)} 1:-  precondition(compare(Dir,R),O).
 1 {actual(O,modify(Dir,R,V))  : V = 1} 1:-  result(O,modify(Dir,R)).
 
 
 %%%%%%%%%%%%
-:- occurred(_,T,O),
-	T < timesteps,
+at_end :- occurred(_,T,O),
+	T = timesteps,
 	result(O,mode_change(_)).
-	
-z_mode_change(Timeline,M,T,O):- occurred(Timeline,T,O),
-	
-	result(O,mode_change(M)).
+
+
 onlyOne :- occurred(Timeline,T,O),
    1 {occurred(_,T,O)} 1.
-:- not onlyOne.
 %:- not condition_violated(_,_).
 
 %% SIM
 #const timesteps = 10.
-#const timelines = 10.
+#const timelines =2.
 timestep(0..timesteps).
 timelines {timeline(T) : T = 1..timelines}.
 
@@ -60,19 +58,53 @@ condition_violated(Timeline,T,O) :-
 	timestep(T).
 	
 	
-chosen(Timeline,T,O) :-
+chosen(Timeline,T,O,must_happen) :-
     player_model(O,must_happen),
     timeline(Timeline),
     timestep(T).
 
-{chosen(Timeline,T,O)}  :-
-    player_model(O,player_will_attempt),
+%% {chosen(Timeline,T,O,M)}  :-
+%%     outcome(O),
+%%     player_model(O,M),
+%%     timeline(Timeline),
+%%     timestep(T).
+
+mod(T,2) :-
+    timestep(T),
+    T \ 2 = 0.
+mod(T,3) :-
+    timestep(T),
+    T \ 3 = 0.
+mod(T,5) :-
+    timestep(T),
+    T \ 5 = 0.
+mod(T,6) :-
+    timestep(T),
+    T \ 6 = 0.
+
+chosen(Timeline,T,O,player_must_do) :-
+    player_model(O,player_must_do),
+    1 {mod(T,2);mod(T,3)},
     timeline(Timeline),
     timestep(T).
 
-chosen(Timeline,T,O,Model) :-
-    chosen(Timeline,T,O),
-    player_model(O,Model).
+chosen(Timeline,T,O,player_will_do) :-
+    player_model(O,player_will_do),
+    1 {mod(T,2)},
+    timeline(Timeline),
+    timestep(T).
+
+chosen(Timeline,T,O,player_might_attempt) :-
+    player_model(O,player_might_attempt),
+    1 {mod(T,3)},
+    timeline(Timeline),
+    timestep(T).
+
+chosen(Timeline,T,O,player_will_avoid) :-
+    player_model(O,player_will_avoid),
+    1 {mod(T,5)},
+    timeline(Timeline),
+    timestep(T).
 
 not_chosen(Timeline,T,O,Model) :-
 		player_model(O,Model),
@@ -94,10 +126,12 @@ times_not_chosen(Timeline,Model,Times) :-
 unlikelihood(Timeline,NegativeLogLikelihood) :-
     NegativeLogLikelihood = #sum{
 				WillAttempt*1 : times_chosen(Timeline,player_will_attempt,WillAttempt);
+				MustDo*1 : times_chosen(Timeline,player_must_do,MustDo);
 				MightAttempt*4 : times_chosen(Timeline,player_might_attempt,MightAttempt);
 				WillAvoid*8 : times_chosen(Timeline,player_will_avoid,WillAvoid);
 				Undetermined*8 : times_chosen(Timeline,player_will_avoid,Undetermined);
 				NotWillAttempt*24 : times_not_chosen(Timeline,player_will_attempt,NotWillAttempt);
+				NotMustDo*24 : times_not_chosen(Timeline,player_must_do,NotMustDo);
 				NotMightAttempt*12 : times_not_chosen(Timeline,player_might_attempt,NotMightAttempt);
 				NotWillAvoid*8 : times_not_chosen(Timeline,player_will_avoid,NotWillAvoid);
 				NotUndetermined*8 : times_not_chosen(Timeline,player_will_avoid,NotUndetermined)},
@@ -107,10 +141,20 @@ outcome(O) :- precondition(_,O).
 outcomes(N) :- N = {outcome(O)}.	
 	
 	
-:- unlikelihood(Timeline,NegativeLogLikelihood),
-   NegativeLogLikelihood <3*timesteps*Outcomes,
-   outcomes(Outcomes).
-	
+%% :- unlikelihood(Timeline,NegativeLogLikelihood),
+%%     NegativeLogLikelihood < 3*timesteps*Outcomes,
+%%      outcomes(Outcomes).
+
+%% :- unlikelihood(Timeline,NegativeLogLikelihood),
+%%     NegativeLogLikelihood > 15*timesteps*Outcomes,
+%%      outcomes(Outcomes).
+
+
+%% :- occurred(_,T,O),
+%%    T < timesteps,
+%%    result(O,mode_change(_)).
+%% :- not at_end.
+%% :- not onlyOne.	
 
 % unlikelihood(Total) :-
     % Total = #sum{NegativeLogLikelihood,Timeline :unlikelihood(Timeline,NegativeLogLikelihood)}.
@@ -126,7 +170,7 @@ outcomes(N) :- N = {outcome(O)}.
 %in log_1.1 => 1/2 ~= 8, 7/10 ~= 4, 9/10 ~= 1
 
 occurred(Timeline,T,O) :- 
-	chosen(Timeline,T,O),
+	chosen(Timeline,T,O,_),
 	not condition_violated(Timeline,T,O),
 	T <= timesteps,
 	at(Timeline,T,_,_).
@@ -148,7 +192,19 @@ occurred(Timeline,T, O,delete(E)) :-
 at(Timeline,T+1,resource(R),RV1) :- 
 	Increase = #sum{ V,O : occurred(Timeline,T, O,modify(increase,resource(R),V)) },
 	Decrease = #sum{ V,O : occurred(Timeline,T, O,modify(decrease,resource(R),V)) },
-	RV1 = RV + Increase-Decrease,
+	RV1 = RV + Increase-Decrease, RV1 >= 0, RV1 <= 10,
+	at(Timeline,T,resource(R),RV),
+	T < timesteps.
+at(Timeline,T+1,resource(R),RV1) :- 
+	Increase = #sum{ V,O : occurred(Timeline,T, O,modify(increase,resource(R),V)) },
+	Decrease = #sum{ V,O : occurred(Timeline,T, O,modify(decrease,resource(R),V)) },
+	RV1 = 0 , RV + Increase-Decrease < 0,
+	at(Timeline,T,resource(R),RV),
+	T < timesteps.
+at(Timeline,T+1,resource(R),RV1) :- 
+	Increase = #sum{ V,O : occurred(Timeline,T, O,modify(increase,resource(R),V)) },
+	Decrease = #sum{ V,O : occurred(Timeline,T, O,modify(decrease,resource(R),V)) },
+	RV1 = 10 , RV + Increase-Decrease > 10,
 	at(Timeline,T,resource(R),RV),
 	T < timesteps.
 
