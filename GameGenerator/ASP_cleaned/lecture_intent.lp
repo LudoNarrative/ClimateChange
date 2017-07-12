@@ -1,5 +1,5 @@
 #const min_entities = 1.
-#const max_entities = 3.
+#const max_entities = 2.
 #const min_resources = 1.
 #const max_resources = 2.
 #const min_outcomes = 2.

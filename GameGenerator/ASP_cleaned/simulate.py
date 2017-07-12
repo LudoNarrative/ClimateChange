@@ -373,8 +373,9 @@ if __name__ == '__main__':
     for output_ind, out in enumerate(outs):
         settings,free_variables,rules,replacements = parse_game(out)
         print "GAME ", output_ind
-        simulation_count = 50
+        simulation_count = 100
         depth = 20
+        CXPB, MUTPB, NGEN,POP_COUNT = 0.5, 0.2, 25, 200
         display = False
         player_model_mappings = {'player_must_do':0.95,
                                  'player_will_attempt':0.7,
@@ -444,8 +445,7 @@ if __name__ == '__main__':
         toolbox.decorate("individual", checkBounds(0.1, 10))
         toolbox.decorate("mate", checkBounds(0.1, 10))
         toolbox.decorate("mutate", checkBounds(0.1, 10))
-        pop = toolbox.population(n=50)
-        CXPB, MUTPB, NGEN = 0.5, 0.2, 25
+        pop = toolbox.population(n=POP_COUNT)
       
         
         # Evaluate the entire population
@@ -526,7 +526,7 @@ if __name__ == '__main__':
                         find_and_replace.append((find,replace))
         
         out_string = []
-        for o in ['label','entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer_logic']:
+        for o in ['label','entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer_logic','pool']:
             for oo in out[o]:
                 for ooo in oo:
                     prettified = prettify(ooo).split('(')[0]
