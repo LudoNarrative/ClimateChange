@@ -526,7 +526,7 @@ if __name__ == '__main__':
                         find_and_replace.append((find,replace))
         
         out_string = []
-        for o in ['label','entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer_logic','pool']:
+        for o in ['label','entity','resource','singular','many','overlapLogic','initialize', 'goal','controlLogic','timer_logic','pool','boundary']:
             for oo in out[o]:
                 for ooo in oo:
                     prettified = prettify(ooo).split('(')[0]

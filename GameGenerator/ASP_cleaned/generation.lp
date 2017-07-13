@@ -20,6 +20,9 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
     many(Entity),
     number_to_place(Entity,NumberToPlace).
 
+boundary_types(torus;closed).
+
+1 {boundary(Type) : boundary_types(Type) } 1.
 
 speed_values(3;5;7).
 
@@ -313,7 +316,7 @@ place(location(X,Y)) :- location(X,Y).
 
 spawn_types(random;ordered).
 
-{result(Outcome, add(Entity,scalar(1),pool(Entity)) } :-
+{result(Outcome, add(Entity,scalar(1),pool(Entity))) } :-
     entity(Entity),
     outcome(Outcome).
 
