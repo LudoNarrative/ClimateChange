@@ -466,6 +466,7 @@ project(E) :- entity(E).
 project(T) :- timer(T).
 %#show precondition/2.
 #project project/1.
+#project boundary/1.
 %#project pruned_action/1.
 
 pruned_action(add(E,L)) :- action(add(E,_,L)).
