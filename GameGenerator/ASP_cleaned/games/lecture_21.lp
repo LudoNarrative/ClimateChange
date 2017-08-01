@@ -35,19 +35,19 @@ pool(entity(e_2_XX_),location(bottom,right),ordered,ordered).
 boundary(closed).
 
 initialize(set_value(resource(r_1_XX_),scalar(2))).
-initialize(set_value(resource(r_2_XX_),scalar(8))).
+initialize(set_value(resource(r_2_XX_),scalar(4))).
 
-precondition(ge(resource(r_1_XX_),scalar(10)),outcome(o_1_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(5)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-precondition(le(resource(r_2_XX_),scalar(0)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(24))).
-result(outcome(o_2_XX_),increase(resource(r_2_XX_),scalar(1))).
+precondition(le(resource(r_2_XX_),scalar(6)),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(20))).
+result(outcome(o_2_XX_),increase(resource(r_2_XX_),scalar(6))).
 result(outcome(o_2_XX_),delete(entity(e_2_XX_))).
 
 precondition(control_event(button(mouse,held)),outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_)).
-result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),decrease_over_time(property(entity(e_2_XX_),health),scalar(8))).
+result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),decrease_over_time(property(entity(e_2_XX_),health),scalar(9))).
 result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
 result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),left,scalar(7))).
 
@@ -61,7 +61,7 @@ result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
 result(tick,moves(entity(e_2_XX_),forward,scalar(3))).
 result(tick,increase_over_time(property(entity(e_2_XX_),health),scalar(1))).
-result(tick,decrease_over_time(resource(r_2_XX_),scalar(6))).
+result(tick,decrease_over_time(resource(r_2_XX_),scalar(10))).
 
 reading(goal(reduce),resource(r_1_XX_)).
 reading(bad,resource(r_1_XX_)).
