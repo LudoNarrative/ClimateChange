@@ -34,8 +34,8 @@ pool(entity(e_2_XX_),location(bottom,right),ordered,ordered).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(6))).
-initialize(set_value(resource(r_2_XX_),scalar(6))).
+initialize(set_value(resource(r_1_XX_),scalar(5))).
+initialize(set_value(resource(r_2_XX_),scalar(4))).
 
 precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),increase_over_time(resource(r_2_XX_),scalar(3))).
@@ -43,30 +43,30 @@ result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),c
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),forward,scalar(5))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
-precondition(le(resource(r_2_XX_),scalar(10)),outcome(o_1_XX_)).
+precondition(le(resource(r_2_XX_),scalar(2)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),increase(resource(r_1_XX_),scalar(4))).
 result(outcome(o_1_XX_),delete(entity(e_2_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(4))).
+result(outcome(o_2_XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(2))).
 result(outcome(o_2_XX_),decrease_over_time(resource(r_1_XX_),scalar(1))).
-result(outcome(o_2_XX_),decrease_over_time(resource(r_2_XX_),scalar(3))).
+result(outcome(o_2_XX_),decrease_over_time(resource(r_2_XX_),scalar(7))).
 
 precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),mode_change(game_loss)).
 
 precondition(timer_elapsed(wander_entity_e_2_XX__XX__XX_),outcome(wander_entity_e_2_XX__XX__XX_)).
 result(outcome(wander_entity_e_2_XX__XX__XX_),rotate_to(entity(e_2_XX_),random_int(scalar(0),scalar(360)))).
-result(outcome(wander_entity_e_2_XX__XX__XX_),decrease(resource(r_2_XX_),scalar(1))).
+result(outcome(wander_entity_e_2_XX__XX__XX_),decrease(resource(r_2_XX_),scalar(3))).
 result(outcome(wander_entity_e_2_XX__XX__XX_),add(entity(e_2_XX_),scalar(1),pool(entity(e_2_XX_)))).
 
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
 result(tick,moves(entity(e_2_XX_),forward,scalar(3))).
-result(tick,decrease_over_time(property(entity(e_2_XX_),health),scalar(8))).
+result(tick,decrease_over_time(property(entity(e_2_XX_),health),scalar(10))).
 result(tick,decrease_over_time(resource(r_1_XX_),scalar(1))).
-result(tick,decrease_over_time(resource(r_2_XX_),scalar(8))).
+result(tick,decrease_over_time(resource(r_2_XX_),scalar(10))).
 result(tick,moves(entity(e_2_XX_),left,scalar(3))).
 result(tick,look_at(entity(e_2_XX_),entity(e_1_XX_),random)).
 

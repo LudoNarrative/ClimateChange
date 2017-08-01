@@ -35,13 +35,13 @@ pool(entity(e_2_XX_),location(bottom,right),ordered,ordered).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(0))).
+initialize(set_value(resource(r_1_XX_),scalar(1))).
 
-precondition(ge(resource(r_1_XX_),scalar(6)),outcome(o_1_XX_)).
+precondition(ge(resource(r_1_XX_),scalar(10)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(40))).
+result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(28))).
 result(outcome(o_2_XX_),delete(entity(e_2_XX_))).
 
 precondition(timer_elapsed(wander_entity_e_2_XX__XX__XX_),outcome(wander_entity_e_2_XX__XX__XX_)).
