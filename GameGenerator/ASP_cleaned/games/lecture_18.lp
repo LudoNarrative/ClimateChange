@@ -34,21 +34,21 @@ pool(entity(e_2_XX_),location(bottom,right),ordered,ordered).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(0))).
+initialize(set_value(resource(r_1_XX_),scalar(2))).
 initialize(set_value(resource(r_2_XX_),scalar(0))).
 
 precondition(control_event(button(mouse,held)),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
-result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),decrease_over_time(property(entity(e_2_XX_),health),scalar(4))).
-result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),increase_over_time(resource(r_2_XX_),scalar(3))).
+result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),decrease_over_time(property(entity(e_2_XX_),health),scalar(1))).
+result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),increase_over_time(resource(r_2_XX_),scalar(5))).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),rotates(entity(e_1_XX_),ccw,scalar(1))).
 
 precondition(ge(resource(r_1_XX_),scalar(2)),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),mode_change(game_loss)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-precondition(le(resource(r_2_XX_),scalar(3)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(32))).
-result(outcome(o_2_XX_),increase(resource(r_2_XX_),scalar(6))).
+precondition(le(resource(r_2_XX_),scalar(10)),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(28))).
+result(outcome(o_2_XX_),increase(resource(r_2_XX_),scalar(2))).
 result(outcome(o_2_XX_),delete(entity(e_2_XX_))).
 
 precondition(timer_elapsed(wander_entity_e_2_XX__XX__XX_),outcome(wander_entity_e_2_XX__XX__XX_)).
@@ -61,8 +61,8 @@ result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
 result(tick,moves(entity(e_1_XX_),forward,scalar(7))).
 result(tick,moves(entity(e_2_XX_),forward,scalar(3))).
-result(tick,increase_over_time(property(entity(e_2_XX_),health),scalar(4))).
-result(tick,decrease_over_time(resource(r_2_XX_),scalar(9))).
+result(tick,increase_over_time(property(entity(e_2_XX_),health),scalar(9))).
+result(tick,decrease_over_time(resource(r_2_XX_),scalar(10))).
 
 reading(goal(reduce),resource(r_1_XX_)).
 reading(bad,resource(r_1_XX_)).
