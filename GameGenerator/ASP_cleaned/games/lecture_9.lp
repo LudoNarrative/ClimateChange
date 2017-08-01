@@ -32,10 +32,10 @@ pool(entity(e_2_XX_),location(bottom,right),ordered,ordered).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(2))).
+initialize(set_value(resource(r_1_XX_),scalar(3))).
 
 precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
-result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(8))).
+result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),increase_over_time(property(entity(e_2_XX_),health),scalar(9))).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),forward,scalar(5))).
 
@@ -47,7 +47,7 @@ result(outcome(o_2_XX_),decrease(resource(r_1_XX_),scalar(20))).
 result(outcome(o_2_XX_),delete(entity(e_2_XX_))).
 
 precondition(control_event(button(mouse,pressed)),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),decrease(property(entity(e_2_XX_),health),scalar(3))).
+result(outcome(o_3_XX_),decrease(property(entity(e_2_XX_),health),scalar(1))).
 
 precondition(timer_elapsed(wander_entity_e_2_XX__XX__XX_),outcome(wander_entity_e_2_XX__XX__XX_)).
 result(outcome(wander_entity_e_2_XX__XX__XX_),rotate_to(entity(e_2_XX_),random_int(scalar(0),scalar(360)))).
