@@ -554,6 +554,10 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE)), trivial(O).
 
 :- monotonic(R), not allowed(monotonic(R)).
 
+:-  in_corner(E), not allowed(in_corner(E)).
+
+
+
 %It shouldn't be the case that the only way that a player controls something is by making it move towards (or away) from itself
 :- player_controls(E),
    action(move(E,direction(_,E))),
@@ -606,4 +610,6 @@ player_controls_resource(R,Dir) :-
    preconditions_allowed(N)  .
 
 
-
+:- boundary(torus), 
+    action(look_at(E,_)),
+	action(moves(E,direction(left;right))).

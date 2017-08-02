@@ -248,13 +248,27 @@ reading(bad,Outcome) :-
     reading(bad,Entity).
 
 
+	
+opposed(bad,increase,bad,decrease).
+opposed(good,increase,good,decrease).
+opposed(good,increase,bad,increase).
+opposed(good,decrease,bad,decrease).
+opposed(V1,D1,V2,D2) :- opposed(V2,D2,V1,D1).
 
+reading(tradeoff,relation(R1, R2)) :-
+	result(O,modify(Direction1,R1)),
+	result(O,modify(Direction2,R2)),
+	reading(V1,R1),
+	reading(V2,R2),
+	opposed(V1,Direction1,V2,Direction2).
 
 reading(tradeoff,Outcome) :-
     reading(good,Outcome),
     reading(bad,Outcome).
 
 
+required(good) :- required(tradeoff).
+required(bad) :- required(tradeoff).
 
 {reading(maintenance,Resource) } :-
     reading(good,Resource),
@@ -360,12 +374,6 @@ over_time(Outcome) :-
 over_time(Change,Resource) :-
     over_time(Outcome),
     result(Outcome,modify(Change,Resource)).
-
-monotonic(Change,Resource) :-
-    action(modify(Change,Resource)),
-    1 {action(modify(C,Resource))} 1.
-monotonic(Resource) :-
-    monotonic(_,Resource).
 
 nonmonotonic(Resource) :-
     resource(Resource),

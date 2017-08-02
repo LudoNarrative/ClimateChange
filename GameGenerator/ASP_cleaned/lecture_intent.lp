@@ -17,10 +17,10 @@
 required(hand_eye_coordination).
 :- not reading(hand_eye_coordination,game).
 
-label(resource(r(1)),concentration) :- reading(good,resource(r(1))).
-label(resource(r(1)),stress) :- reading(bad,resource(r(1))).
+label(resource(r(1)),concentration,write) :- reading(good,resource(r(1))).
+label(resource(r(1)),stress,write) :- reading(bad,resource(r(1))).
 
-:- 2 {label(resource(r(1)))}.
+:- 2 {label(resource(r(1)),_,_)}.
 
 label(entity(e(1)),e1).
 
