@@ -34,7 +34,11 @@ allowed(monotonic(resource(r(2)))).
 
 allowed(monotonic(resource(r(3)))).
 
+%:- not monotonic(resource(r(1))).
+
 :- action(modify(increase,resource(r(1)))).
+:- action(modify(decrease,resource(r(2)))).
+:- action(modify(decrease,resource(r(3)))).
 
 
 :- action(mode_change(_)).
