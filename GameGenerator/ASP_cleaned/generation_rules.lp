@@ -177,6 +177,22 @@ trivial(O) :-
 	precondition(control_event(_),O),
 	  reading(bad,O).
 
+trivial(Outcome) :-  chases(ENTITY,OTHER),
+				  precondition(overlaps(ENTITY,OTHER,true),Outcome),
+				  reading(good,Outcome).
+	
+trivial(Outcome) :-  chases(ENTITY,OTHER),
+				  precondition(overlaps(OTHER,ENTITY,true),Outcome),
+				  reading(good,Outcome).
+	  
+trivial(Outcome) :-  flees(ENTITY,OTHER),
+				  precondition(overlaps(ENTITY,OTHER,false),Outcome),
+				  reading(good,Outcome).
+	
+trivial(Outcome) :-  flees(ENTITY,OTHER),
+				  precondition(overlaps(OTHER,ENTITY,false),Outcome),
+				  reading(good,Outcome).
+	  
 trivial(Outcome) :- precondition(overlaps(E1,E2,_),Outcome),
 		    2 { player_controls(E1);
 			player_controls(E2);
@@ -218,5 +234,10 @@ different_movement(E1,E2) :- different_movement(E2,E1).
 same_movement(E1,E2) :- entity(E1), entity(E2), not different_movement(E1,E2).
 
 
-
+in_corner(E1) :- 
+						flees(E1,E2), 
+						boundary(closed).
+						
+						
+	
 	
