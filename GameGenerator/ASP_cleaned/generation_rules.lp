@@ -125,7 +125,11 @@ reachableCondition(compare(ge,Resource)) :-
     action(modify(increase,Resource)).
 reachableCondition(compare(le,Resource)) :-
     action(modify(decrease,Resource)).
-
+compare_direction(ge;le).
+reachableCondition(compare(D,Resource)) :-
+    label(Resource,_,read_only),
+    compare_direction(D).
+    
 
 unreachableCondition(Condition) :- condition(Condition),
 				   not reachableCondition(Condition).

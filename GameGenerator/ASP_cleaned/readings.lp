@@ -45,11 +45,11 @@ required(bad) :- required(hurt).
 
 
 {reading(hurt,relation(Entity1,player)) } :-
-    reading(hurt,relation(Entity1,Entity2)),
+    reading(hurt,relation(Entity2,Entity1)),
     player_controls(Entity2).
 
 {reading(hurt,relation(Entity2,player)) } :-
-    reading(hurt,relation(Entity1,Entity2)),
+    reading(hurt,relation(Entity2,Entity1)),
     player_controls(Entity1).
 
 

@@ -31,7 +31,9 @@ speed_values(3;5;7).
     not static(E),
     result(O,move(E,_)).				     
 	      
-
+:- speed(E,O,3),
+   action(look_at(E,_,_)),
+   result(O,move(E,direction(left;right))).
 
 total_count(Entity,N) :- N = PerPlace*Places,
 			 number_to_place(Entity,PerPlace),
