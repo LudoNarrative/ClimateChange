@@ -364,13 +364,15 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
     return score
 if __name__ == '__main__':
     output_name = sys.argv[1]
-    args = sys.argv[2:]
+    number_to_generate = int(sys.argv[2])
+    args = sys.argv[3:]
     if '-s' in args:
         random.seed(int(args[args.index('-s')+1]))
         args = args[:args.index('-s')] + args[args.index('-s')+2:]
         print args
     outs = solve_randomly(args)
-    for output_ind, out in enumerate(outs):
+    random.shuffle(outs)
+    for output_ind, out in enumerate(outs[:number_to_generate]):
         settings,free_variables,rules,replacements = parse_game(out)
         print "GAME ", output_ind
         simulation_count = 100
@@ -644,9 +646,9 @@ if __name__ == '__main__':
                             if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
                                 if repl[4][0] < 1:
                                     repl[4][0] = 1
-                                repl[4][0] *= 4
+                                #repl[4][0] *= 4
                             if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
-                                repl[4][0] /= 4
+                                #repl[4][0] /= 4
                                 if (repl[4][0] < 1):
                                     repl[4][0] = 1
                             print  'AFTER', repl[3], action, repl[4][0]

@@ -16,8 +16,8 @@ required(survive).
 required(help).
 required(maintenance).
 
-label(resource(r(1)),composure).
-label(resource(r(2)),tension).
+label(resource(r(1)),composure,write).
+label(resource(r(2)),tension,read_only).
 label(entity(e(1)),yourself).
 label(entity(e(2)),help).
 label(entity(e(3)),harm).
@@ -28,7 +28,15 @@ read_only(resource(r(2))).
 
 :- not same_movement(entity(e(2)),entity(e(3))).
 :- not computer_controls(entity(e(2))).
+opposite(increase,decrease).
 
+opposite_results_on_overlap :-
+    precondition(overlaps(entity(e(1)),entity(e(2)),POLARITY),O2),
+    precondition(overlaps(entity(e(1)),entity(e(3)),POLARITY),O3),
+    result(O2,modify(D2,R)),
+    result(O3,modify(D3,R)),
+    opposite(D2,D3).
+:- not opposite_results_on_overlap.
 :- not reading(maintenance,resource(r(1))).
 :- not reading(survive,entity(e(3))).
 :- not reading(help,relation(entity(e(2)),player)).

@@ -3,7 +3,8 @@ frivolous(Resource) :- read_only(Resource).
 
 :- read_only(Resource),
 	action(modify(_,Resource)).
-	
+:- read_only(Resource),
+   not condition(compare(_,Resource)).
 %player_doesnt_control :- not player_controls(_).
 :- not player_controls(_), not condition(control_event(_)).
 
@@ -557,6 +558,11 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE)), trivial(O).
 :-  in_corner(E), not allowed(in_corner(E)).
 
 
+:- result(O,add(E,_,_)),
+   result(O2,add(E,_,_)),
+   result(O2,delete(E)),
+   1 {result(_,delete(E))} 1,
+   O != O2.
 
 %It shouldn't be the case that the only way that a player controls something is by making it move towards (or away) from itself
 :- player_controls(E),
