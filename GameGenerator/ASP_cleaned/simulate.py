@@ -197,7 +197,7 @@ def parse_game(result):
             rules[outcome]['results']['other'] = []
             rules[outcome]['results']['add'] = []
             rules[outcome]['results']['delete'] = []
-        if 'compare' == terms[0]['predicate']:
+        if 'compare' == terms[0]['predicate'] :
             direction  = prettify(terms[0]['terms'][0])
             resource   = prettify(terms[0]['terms'][1])
             free_var = [0]
@@ -225,7 +225,7 @@ def parse_game(result):
         result = result[0]
         terms = result['terms']
         outcome = prettify(terms[0])
-        if 'modify' == terms[1]['predicate']:
+        if 'modify' == terms[1]['predicate']  and len(terms[1]['terms']) == 2:
             direction  = prettify(terms[1]['terms'][0])
             resource   = prettify(terms[1]['terms'][1])
             free_var = [1]
@@ -373,6 +373,11 @@ if __name__ == '__main__':
     outs = solve_randomly(args)
     random.shuffle(outs)
     for output_ind, out in enumerate(outs[:number_to_generate]):
+    
+        for o in sorted(out):
+            for t in out[o]:
+                for tt in t:
+                    print prettify(tt)
         settings,free_variables,rules,replacements = parse_game(out)
         print "GAME ", output_ind
         simulation_count = 50
@@ -654,9 +659,9 @@ if __name__ == '__main__':
                             if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
                                 if repl[4][0] < 1:
                                     repl[4][0] = 1
-                                repl[4][0] *= 4
+                                repl[4][0] *= 2
                             if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
-                                repl[4][0] /= 4
+                                repl[4][0] /= 2
                                 if (repl[4][0] < 1):
                                     repl[4][0] = 1
                             print  'AFTERB', repl[3], action, repl[4][0]
