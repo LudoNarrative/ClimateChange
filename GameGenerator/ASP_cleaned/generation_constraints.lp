@@ -13,18 +13,20 @@ frivolous(Resource) :- read_only(Resource).
 :- outcome(O), not has_precondition(O).
 :- outcome(O), not has_result(O).
 
-:- action(move(Entity,direction(towards,Other))),
+
+
+:- action(move(Entity,direction(forward))),
+   action(look_at(Entity,Other,_)),
    not result(tick,apply_restitution(Entity,Other)),
    entity(Other).
 
-
-
-:- action(move(Entity,direction(away,_))),
+:- action(move(Entity,direction(forward))),
+   action(look_at(Entity,Other,_)),
    not action(apply_restitution(Entity,Entity)).
 
 
-
-:- action(move(Entity,direction(towards,_))),
+:- action(move(Entity,direction(backward))),
+   action(look_at(Entity,Other,_)),
    not action(apply_restitution(Entity,Entity)).
 
 
@@ -46,8 +48,10 @@ frivolous(Resource) :- read_only(Resource).
 
 
 
-:-  result(O,move(E2,direction(away,E1))),
-    result(O2,move(E1,direction(away,E2))).
+:-  action(move(E2,backward)),
+    action(look_at(E2,E1,_)),
+    action(move(E1,backward)),
+    action(look_at(E1,E2,_)).
 
 
 :- result(O,add(E,_,_)), every_frame(O).
@@ -150,9 +154,12 @@ buttonPriority(A,C) :-
    buttonPriority(BUTTON1,BUTTON2).
 
 :- precondition(overlaps(E1,E2,false),O),
-   result(O,move(E1,direction(away,E2))).
+   result(O,move(E1,direction(backward))),
+   action(look_at(E1,E2,_)).
+
 :- precondition(overlaps(E2,E1,false),O),
-   result(O,move(E1,direction(away,E2))).
+   result(O,move(E1,direction(backward))),
+   action(look_at(E1,E2,_)).
 
 
 movement(move(E,D)) :- action(move(E,D)).
@@ -176,7 +183,8 @@ movement(move(E,D)) :- action(move(E,D)).
 :- result(O,move(E,_)),
    result(O,delete(E)).
 
-:- result(tick,move(E,direction(towards,E))).
+:- result(tick,look_at(E,E)),
+   result(tick,move(E,direction(forward))).
 
 
 :- result(O,move(E,direction(T_A,E2))),
@@ -187,8 +195,9 @@ movement(move(E,D)) :- action(move(E,D)).
    initialize(add(_,_,L)).
 
 
-:- action(move(E,direction(_,E2))),
-   2 {action(move(E,direction(_,E2)))}.
+:- action(look_at(E,E2)),
+   2 {move(E,direction(_))}.
+
 
 :- player_model(Outcome,player_will_attempt),
    trivial(Outcome).
@@ -222,12 +231,12 @@ movement(move(E,D)) :- action(move(E,D)).
 
 
 :- condition(overlaps(E1,E2,true)),
-   action(move(E1,direction(away,E2))),
+   action(look_at(E1,E2,_)),
    {action(move(E1,_))} 1.
 
 
 :- condition(overlaps(E1,E2,true)),
-   action(move(E2,direction(away,E1))),
+   action(look_at(E1,E2,_)),
    {action(move(E2,_))} 1.
 
   

@@ -344,7 +344,7 @@ amount_to_spawn(Resource) :- resource(Resource).
 
 % resources can increase
 {result(OUTCOME,modify(increase,RESOURCE,RESOURCE2))
-  : outcome(OUTCOME),resource(RESOURCE,RESOURCE2)}.
+  : outcome(OUTCOME),resource(RESOURCE),resource(RESOURCE2)}.
 % or decrease
 {result(OUTCOME,modify(decrease,RESOURCE,RESOURCE2)) 
   : outcome(OUTCOME),resource(RESOURCE),resource(RESOURCE2)}.
@@ -477,7 +477,7 @@ project(controlScheme(C)) :- controlScheme(C).
 project(R) :- resource(R).
 project(E) :- entity(E).
 project(T) :- timer(T).
-
+project(static(E)) :- static(E).
 %grouped(A1,A2) :- result(O,A1), result(O,A2).
 %grouped(A1,A2) :- precondition(A1,O), precondition(A2,O).
 %project(grouped(A1,A2)) :- grouped(A1,A2).
