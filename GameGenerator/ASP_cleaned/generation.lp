@@ -478,6 +478,8 @@ project(R) :- resource(R).
 project(E) :- entity(E).
 project(T) :- timer(T).
 project(static(E)) :- static(E).
+project( initialize(add(Entity,scalar(1),location(Row,Col))) ) :  initialize(add(Entity,scalar(1),location(Row,Col))) .
+
 %grouped(A1,A2) :- result(O,A1), result(O,A2).
 %grouped(A1,A2) :- precondition(A1,O), precondition(A2,O).
 %project(grouped(A1,A2)) :- grouped(A1,A2).
