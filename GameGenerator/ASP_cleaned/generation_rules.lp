@@ -239,8 +239,7 @@ same_movement(E1,E2) :- entity(E1), entity(E2), not different_movement(E1,E2).
 
 
 in_corner(E1) :- 
-						flees(E1,E2), 
-						boundary(closed).
+						flees(E1,E2).
 						
 						
 	

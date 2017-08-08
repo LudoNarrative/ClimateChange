@@ -26,6 +26,6 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 % PROPERTIES DONT WORK
 :- condition(compare(_,property(_,_))).
 
-:- replace(result(O,move(E,D)),result(O,apply_impulse(E,D,scalar(S)))).
+:- replace(result(O,move(E,D)),result(O,apply_impulse(E,D,_))).
 
 :- condition(overlaps(_,_,false)).

@@ -19,6 +19,25 @@ required(hurt) :- required(defend).
 
 required(hurt) :- required(dodge).
 
+
+reading(difficulty,Resource) :-
+    reading(hurt,relation(Entity,player)),
+    speed(Entity,O,Resource).
+
+reading(difficulty,Resource) :-
+    reading(hurt,relation(Entity,player)),
+    action(add(Entity,Resource,_)).
+
+reading(difficulty,Resource) :-
+    reading(good,Resource2),
+    action(modify(decrease,Resource2,Resource)).
+
+reading(difficulty,Resource) :-
+    reading(bad,Resource2),
+    action(modify(increase,Resource2,Resource)).
+
+
+
 %%%%%%%%%%%%
 {reading(hurt,relation(Entity1,player)) } :-
     precondition(overlaps(Entity1),Outcome),
@@ -26,6 +45,11 @@ required(hurt) :- required(dodge).
     not reading(good ,Outcome),
     computer_controls(Entity1).
 
+help :- 
+    precondition(overlaps(Entity),Outcome),
+    reading(good,Outcome),
+    not reading(bad,Outcome),
+    computer_controls(Entity).
 reading(help,relation(Entity,player))  :-
     precondition(overlaps(Entity),Outcome),
     reading(good,Outcome),
@@ -38,11 +62,14 @@ required(bad) :- required(hurt).
 {reading(help,relation(Entity1,player)) } :-
     reading(help,relation(Entity1,Entity2)),
     player_controls(Entity2).
-
+help2 :- reading(help,relation(Entity1,Entity2)),
+	 player_controls(Entity2).
 {reading(help,relation(Entity2,player)) } :-
     reading(help,relation(Entity1,Entity2)),
     player_controls(Entity1).
-
+help3 :-
+    reading(help,relation(Entity1,Entity2)),
+    player_controls(Entity1).
 
 {reading(hurt,relation(Entity1,player)) } :-
     reading(hurt,relation(Entity2,Entity1)),
@@ -54,18 +81,18 @@ required(bad) :- required(hurt).
 
 
 %% HELPING ANOTHER ENTITY
-{reading(help,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity1,Entity2,true),Outcome),
-    result(Outcome,modify(increase,property(Entity2,health))).
+%{reading(help,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity1,Entity2,true),Outcome),
+%    result(Outcome,modify(increase,property(Entity2,health))).
 
-{reading(help,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity2,Entity1,true),Outcome),
-    result(Outcome,modify(increase,property(Entity2,health))).
+%{reading(help,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity2,Entity1,true),Outcome),
+%    result(Outcome,modify(increase,property(Entity2,health))).
 
 
-{reading(hurt,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity1,Entity2,true),Outcome),
-    result(Outcome,modify(decrease,property(Entity2,health))).
+%{reading(hurt,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity1,Entity2,true),Outcome),
+%    result(Outcome,modify(decrease,property(Entity2,health))).
 
 
 
@@ -73,9 +100,9 @@ required(bad) :- required(hurt).
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,delete(Entity2)).
 
-{reading(hurt,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity2,Entity1,true),Outcome),
-    result(Outcome,modify(decrease,property(Entity2,health))).
+%{reading(hurt,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity2,Entity1,true),Outcome),
+%    result(Outcome,modify(decrease,property(Entity2,health))).
 
 
 {reading(hurt,relation(Entity1,Entity2)) } :-
@@ -90,12 +117,12 @@ required(bad) :- required(hurt).
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,delete(Entity2)).
 
-{reading(consumes,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity2,Entity1,true),Outcome),
-    result(Outcome,modify(decrease,property(Entity2,health))).
-{reading(consumes,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity1,Entity2,true),Outcome),
-    result(Outcome,modify(decrease,property(Entity2,health))).
+%{reading(consumes,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity2,Entity1,true),Outcome),
+%    result(Outcome,modify(decrease,property(Entity2,health))).
+%{reading(consumes,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity1,Entity2,true),Outcome),
+%    result(Outcome,modify(decrease,property(Entity2,health))).
     
 reading(chases,relation(Entity1,Entity2)) :-
     action(move(Entity1,direction(towards,Entity2))).
@@ -186,9 +213,9 @@ required(goal(produce)) :- required(good).
 
 {reading(bad,Resource) } :-
     reading(goal(reduce),Resource).
-{reading(good,property(Player,health)) } :-
-    player_controls(Player),
-    action(modify(_,property(Player,health))).
+%{reading(good,property(Player,health)) } :-
+%    player_controls(Player),
+%    action(modify(_,property(Player,health))).
 
 required(goal(reduce)) :- required(bad).
 
@@ -299,9 +326,9 @@ required(bad) :- required(maintenance).
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_win)).
 
-{reading(stakes(high),property(Entity,health)) } :-
-    entity(Entity),
-    action(modify(decrease,property(Entity,health))).
+%{reading(stakes(high),property(Entity,health)) } :-
+%    entity(Entity),
+%    action(modify(decrease,property(Entity,health))).
 
 {reading(stakes(low),Resource) } :-
     resource(Resource),
