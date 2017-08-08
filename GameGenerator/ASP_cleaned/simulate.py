@@ -375,16 +375,24 @@ if __name__ == '__main__':
     for output_ind, out in enumerate(outs[:number_to_generate]):
         settings,free_variables,rules,replacements = parse_game(out)
         print "GAME ", output_ind
-        simulation_count = 100
-        depth = 20
-        CXPB, MUTPB, NGEN,POP_COUNT = 0.5, 0.2, 25, 200
+        simulation_count = 50
+        depth = 10
+        CXPB, MUTPB, NGEN,POP_COUNT = 0.5, 0.2, 25, 100
         display = False
+        '''
         player_model_mappings = {'player_must_do':0.95,
                                  'player_will_attempt':0.7,
                                  'undetermined':0.5,
                                  'must_happen':1,
                                  'player_will_avoid':0.2,
                                  'player_might_attempt':0.5}
+        '''
+        player_model_mappings = {'player_must_do':0.75,
+                                 'player_will_attempt':0.5,
+                                 'undetermined':0.2,
+                                 'must_happen':1,
+                                 'player_will_avoid':0.7,
+                                 'player_might_attempt':0.3}
         player_model = {}
         for o in ['player_model']:
            
@@ -624,12 +632,12 @@ if __name__ == '__main__':
                         if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
                             if repl[4][0] < 1:
                                 repl[4][0] = 1
-                            repl[4][0] *= 4
+                            #repl[4][0] *= 4
                         if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
-                            repl[4][0] /= 4
+                            #repl[4][0] /= 4
                             if (repl[4][0] < 1):
                                 repl[4][0] = 1
-                            print  'AFTER', repl[3], action, repl[4][0]
+                            print  'AFTERA', repl[3], action, repl[4][0]
                         out_string.append( 'precondition({}({},scalar({})),{}).'.format(repl[2],repl[3],int(floor((repl[4][0]))),repl[1]))
                     else:
                         out_string.append( prettify(precond)+'.')
@@ -646,12 +654,12 @@ if __name__ == '__main__':
                             if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
                                 if repl[4][0] < 1:
                                     repl[4][0] = 1
-                                #repl[4][0] *= 4
+                                repl[4][0] *= 4
                             if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
-                                #repl[4][0] /= 4
+                                repl[4][0] /= 4
                                 if (repl[4][0] < 1):
                                     repl[4][0] = 1
-                            print  'AFTER', repl[3], action, repl[4][0]
+                            print  'AFTERB', repl[3], action, repl[4][0]
                                 
                             out_string.append( 'result({},{}({},scalar({}))).'.format(repl[1],action,repl[3],int(ceil((repl[4][0])))))
                         else:

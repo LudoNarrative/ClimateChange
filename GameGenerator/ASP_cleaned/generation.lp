@@ -25,13 +25,13 @@ boundary_types(torus;closed).
 1 {boundary(Type) : boundary_types(Type) } 1.
 
 speed_values(3;5;7).
-
+speed_values(R) :- resource(R).
 1 {speed(E,O,S) : speed_values(S)} 1 :-
     entity(E),
     not static(E),
     result(O,move(E,_)).				     
 	      
-:- speed(E,O,3),
+:- speed(E,O,7),
    action(look_at(E,_,_)),
    result(O,move(E,direction(left;right))).
 
@@ -58,7 +58,8 @@ outcome(O) :- standard_outcome(O).
 
 timer(t(M)) :- M = 1..N, max_timer(N).
 
-1 {timer_logic(timer(T),scalar(N),loop): speed_values(N)} 1 :- timer(T).
+timer_values(3;5;7).
+1 {timer_logic(timer(T),scalar(N),loop): timer_values(N)} 1 :- timer(T).
 
 
 
@@ -318,18 +319,22 @@ place(location(X,Y)) :- location(X,Y).
 
 spawn_types(random;ordered).
 
-{result(Outcome, add(Entity,scalar(1),pool(Entity))) } :-
+amount_to_spawn(scalar(1)).
+amount_to_spawn(Resource) :- resource(Resource).
+
+{result(Outcome, add(Entity,Amount,pool(Entity))) : amount_to_spawn(Amount)} :-
     entity(Entity),
     outcome(Outcome).
 
-{result(Outcome, add(Entity,scalar(1),cursor)) } :-
+{result(Outcome, add(Entity,Amount,cursor))  : amount_to_spawn(Amount)} :-
     entity(Entity),
     outcome(Outcome).
 
-{result(Outcome, add(Entity,scalar(1),Other)) } :-
+{result(Outcome, add(Entity,Amount,Other)) : amount_to_spawn(Amount) } :-
     entity(Entity),
     entity(Other),
     outcome(Outcome).
+
 % resources can increase
 {result(OUTCOME,modify(increase,RESOURCE))
   : outcome(OUTCOME),resource(RESOURCE)}.
@@ -337,6 +342,12 @@ spawn_types(random;ordered).
 {result(OUTCOME,modify(decrease,RESOURCE)) 
   : outcome(OUTCOME),resource(RESOURCE)}.
 
+% resources can increase
+{result(OUTCOME,modify(increase,RESOURCE,RESOURCE2))
+  : outcome(OUTCOME),resource(RESOURCE,RESOURCE2)}.
+% or decrease
+{result(OUTCOME,modify(decrease,RESOURCE,RESOURCE2)) 
+  : outcome(OUTCOME),resource(RESOURCE),resource(RESOURCE2)}.
 properties(health).
 
 % resources can increase
@@ -466,6 +477,11 @@ project(controlScheme(C)) :- controlScheme(C).
 project(R) :- resource(R).
 project(E) :- entity(E).
 project(T) :- timer(T).
+
+%grouped(A1,A2) :- result(O,A1), result(O,A2).
+%grouped(A1,A2) :- precondition(A1,O), precondition(A2,O).
+%project(grouped(A1,A2)) :- grouped(A1,A2).
+
 %#show precondition/2.
 #project project/1.
 #project boundary/1.

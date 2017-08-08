@@ -36,6 +36,8 @@ opposite_results_on_overlap :-
     result(O2,modify(D2,R)),
     result(O3,modify(D3,R)),
     opposite(D2,D3).
+
+
 :- not opposite_results_on_overlap.
 :- not reading(maintenance,resource(r(1))).
 :- not reading(survive,entity(e(3))).
@@ -44,6 +46,8 @@ opposite_results_on_overlap :-
 :- action(mode_change(game_win)).
 :- action(mode_change(game_win)).
 :- not reading(good,resource(r(1))).
+:- not reading(difficulty,resource(r(2))).
+
 
 %:- action(add(entity(e(2)),_)).
 %:- action(delete(entity(e(2)))).
