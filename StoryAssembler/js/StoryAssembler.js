@@ -1,4 +1,5 @@
 /* Main StoryAssembler Module.
+(refactored version)
 When beginScene is called, we need to pass in a defined ChunkLibrary, State, and Display module. 
 */
 
@@ -31,7 +32,6 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	var continueScene = function(optChunkId) {
 		
 		var bestPath;
-		var effectsApplied = false;
 
 		if (typeof State.get("speaker") == "undefined") { State.set("speaker", Character.getBestSpeaker(State, 1, "content")); }
 		
@@ -57,7 +57,6 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 			if (chunk.content) {	//if there was no chunk content, it already grounded out recursively and displayed with displayChunkText(), so we shouldn't redo that here
 				handleEffects(chunk);			//apply this chunk's effects before running bestPath
-				effectsApplied = true;			//flag that we've applied effects
 				bestPath = getBestPath(chunkLibrary, optChunkId);		//look for path from here
 
 				StoryDisplay.diagnose({
@@ -67,7 +66,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				});
 
 				if (bestPath) {		//if we found one, handle it
-					handleFoundPath(optChunkId, bestPath, effectsApplied);
+					handleFoundPath(optChunkId, bestPath);
 				}
 
 				//if it's ending an interrupt, put a Continue link that triggers the return
@@ -79,17 +78,15 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 						cantChoose: false
 					};
 					StoryDisplay.addChoice(choiceObj);
-					State.set("currentChoices", [choiceObj]);
-					//doChunkChoices(interruptedFragment.textId, interruptedFragment.choiceDetails, "endInterrupt");
-					
+					State.set("currentChoices", [choiceObj]);	
 				}
 				
 				else {		// otherwise do a blind search
-
+					//console.log("specific search failed, starting general search");
 					bestPath = getBestPath(chunkLibrary);		//do a blind search
 
 					if (bestPath) {
-						handleFoundPath(optChunkId, bestPath, effectsApplied);
+						handleFoundPath(optChunkId, bestPath);
 					}
 
 					else {
@@ -119,7 +116,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 					var chunk = chunkLibrary.get(bestPath.route[0]);
 
-					handleFoundPath(bestPath.route[0], bestPath, effectsApplied);
+					handleFoundPath(bestPath.route[0], bestPath);
 				}
 				
 			}
@@ -141,7 +138,6 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			else { temp = wishlist.bestPath(chunkLibrary, {startAt: startingPoint}); }
 
 			console.log("bestPath is: " , temp);
-			console.log("===================================================================================");
 			return temp;
 		}
 
@@ -151,7 +147,6 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			else { temp = wishlist.bestPath(chunkLibrary); }
 
 			console.log("bestPath is: ", temp);
-			console.log("===================================================================================");
 			return temp;
 			//return wishlist.bestPath(chunkLibrary);
 		}
@@ -159,7 +154,9 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 	//used to tell the narrative system to refresh
 	var refreshNarrative = function() {
-		interruptBestPath = getBestPath(chunkLibrary);		//check for interrupt story fragments
+		
+		//check for interrupt story fragments, and set flag for interrupt if found
+		interruptBestPath = getBestPath(chunkLibrary);
 		var interrupt = false;
 		if (typeof interruptBestPath !== "undefined") {
 			//if (interruptBestPath.route.length > 0) {
@@ -175,23 +172,28 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			StoryDisplay.clearAll();
 			continueScene();
 		}
-		else { //if we didn't find an interrupt fragment, just refresh text display
+		else { 				//if we didn't find an interrupt fragment, just refresh text display and choices
 			StoryDisplay.clearText();
 			displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
-			newBestPath = getBestPath(chunkLibrary, State.get("currentTextId"));		//look for path from here
-			doChunkChoices(State.get("currentTextId"), newBestPath.choiceDetails, "refresh");
+
+			//var temp = getBestPath(chunkLibrary, State.get("currentTextId"));
+
+			newBestPath = getBestPath(chunkLibrary, State.get("currentTextId"));		//grab the best path from here (again)
+			if (typeof newBestPath !== "undefined") {
+				doChunkChoices(State.get("currentTextId"), newBestPath.choiceDetails, "refresh");
+			}
 		}
 	}
 
 	//used in Diagnostics panel buttons to change a UI var (theVar) by some amount like +1 or -1 (theMod)
 	var clickChangeState = function(theVar, theMod) {
 		if (theMod[0] == "+") {
-			State.set(theVar.varName, State.get(theVar.varName) + 1);
+			State.set(theVar, State.get(theVar) + 1);
 		}
 		if (theMod[0] == "-") {
-			State.set(theVar.varName, State.get(theVar.varName) - 1);
+			State.set(theVar, State.get(theVar) - 1);
 		}
-		Display.setStats();					//refresh UI stat display
+		Display.setStats("storyStats");			//refresh UI stat display
 		refreshNarrative();					//refresh currently displayed chunk in case it's different
 	}
 
@@ -256,10 +258,10 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		}
 	}
 
-	var handleFoundPath = function(chunkId, bestPath, effectsApplied) {
+	var handleFoundPath = function(chunkId, bestPath) {
 	
 		//var chunkWithText = chunkId ? chunkId : bestPath.route[0];
-		doChunkText(chunkId, bestPath, effectsApplied);
+		doChunkText(chunkId, bestPath);
 		doChunkChoices(chunkId, bestPath.choiceDetails);
 
 		// Remove this chunk from consideration, unless it has the 'repeatable' flag.
@@ -269,14 +271,12 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		
 	}
 
-	var doChunkText = function(chunkId, bestPath, effectsApplied) {
+	var doChunkText = function(chunkId, bestPath) {
 		var chunk = chunkLibrary.get(chunkId);
 		State.set("currentTextId", chunkId);			//set current text id so we can reference it later
 
-		// Handle effects if not applied yet
-		if (typeof effectsApplied !== undefined && effectsApplied == false) {
-			handleEffects(chunk);
-		}
+		// Handle effects
+		handleEffects(chunk);
 
 		var chunkForText = chunk;
 		var routePos = 0;
@@ -351,18 +351,8 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			});
 			State.set("currentChoices", choiceObjs);
 
-		
-		} 
-		//if we're ending an interrupt, we have all the info we need, and just need to set it
-		else if (mode == "endInterrupt") {
-			var choiceObjs = [];
-			for (var x=0; x < choiceDetails.length; x++) {
-				StoryDisplay.addChoice(choiceDetails[x]);
-			}
-			State.set("currentChoices", choiceDetails);
-		}
-		// If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
-		else if (wishlist.wantsRemaining() > 0 && mode !== "refresh") {
+		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
+		} else if (wishlist.wantsRemaining() > 0 && mode !== "refresh") {
 			// We have finished a path. After clicking this button, since we didn't send a chunkId parameter below, the system will search for a new bestPath given the remaining wishlist items.
 			StoryDisplay.addChoice({text: "Continue"});
 			var choiceObj = {
@@ -440,11 +430,9 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			}
 			else { State.change(effect); }
 		});
-		console.log("handledEffects for fragment " + chunk.id);
 		wishlist.removeSatisfiedWants();
-		if (typeof Display !== "undefined" && State.get('displayType') !== "editor") {			//if we're not running tests, update the storyStats on the display
-			Display.setStats();
-			Display.setAvatars();
+		if (typeof Display !== "undefined") {			//if we're not running tests, update the storyStats on the display
+			Display.setStats("storyStats");
 		}
 	}
 
@@ -454,12 +442,6 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 	// Show the scene is over.
 	var endScene = function(assemblyFailed) {
-		
-		StoryDisplay.addChoice({chunkId: "sys_endScene", text: "End Scene"});
-	}
-
-		// Show the scene is over.
-	var doOutro = function() {
 		
 		if (typeof Display !== "undefined" && State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
 			Display.setSceneOutro("Chapter complete!");
