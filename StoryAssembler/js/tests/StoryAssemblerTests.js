@@ -131,8 +131,8 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			console.log("clicking choice in Chunk1");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Chain through condition request: after click, should chain through.");
-			assert.deepEqual(contentForChoice(1), "Continue", "Chain through condition request: no options when finished.");
-
+			//assert.deepEqual(contentForChoice(1), "Continue", "Chain through condition request: no options when finished.");
+			assert.deepEqual(countChildren(getChoiceEl()), 0, "No choices because the scene is over.");
 			// Test "persistent" wishlist parameter and "repeatable" chunk parameter.
 			resetTest();
 			wl = Wishlist.create([{condition: "x eq true", persistent: true}], State);
@@ -147,6 +147,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(html(getStoryEl()), "Chunk1 Content", "Persistent chunks work second time (1/2)");
 			assert.deepEqual(contentForChoice(1), "Continue", "Persistent chunks work second time (2/2)");
 
+//--------------------------------------------------------------------
 			resetTest();
 			wl = Wishlist.create([{condition: "x eq true", persistent: true}], State);
 			ChunkLibrary.add([
@@ -158,6 +159,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "[End of scene.]", "Non-repeatable chunks: if a used non-repeatable chunk is the only thing satisfying a wishlist item, fail to find a path");
 
+//--------------------------------------------------------------------
 			resetTest();
 			wl = Wishlist.create([{condition: "x eq true", persistent: true}], State);
 			ChunkLibrary.add([
@@ -171,7 +173,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "[End of scene.]", "Non-repeatable chunks: should run out when we've exhausted supply.");
 
-
+//--------------------------------------------------------------------
 			//test whether it can find the next want from wishlist if current choice-thread ends
 			resetTest();
 			State.set("beat", 1);
@@ -191,14 +193,15 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Chunk3 Content", "Move to different want after thread ends: second node HTML correct");
 
+//--------------------------------------------------------------------
 			//unit test for pulling in chunk with choices into chunk making request that has no content
 			resetTest();
 			State.set("beat", 1);
 			wl = Wishlist.create([{condition: "beat eq 2"}, {condition: "beat eq 3"}, {condition: "beat eq 4"}], State);
 			ChunkLibrary.add([
-				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2"}], effects: ["set beat 2"] },
-				{ id: "Chunk2", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
-				{ id: "Chunk3", conditions: ["beat eq 2"], content: "Chunk3 Content", choices: [{chunkId: "Chunk4"}], effects: ["set beat 3", "set x true"] },
+				{ id: "Chunk1", content: "Chunk1 Content", choices: [{chunkId: "Chunk2Ref"}], effects: ["set beat 2"] },
+				{ id: "Chunk2Ref", choiceLabel: "Chunk2 Label", request: {condition: "x eq true"} },
+				{ id: "Chunk3Ref", conditions: ["beat eq 2"], content: "Chunk3 Content", choices: [{chunkId: "Chunk4"}], effects: ["set beat 3", "set x true"] },
 				{ id: "Chunk4", choiceLabel: "Chunk4 Label", content: "Chunk4 Content", effects: ["set beat 4"] },
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
@@ -214,6 +217,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Choices also chain from requests: no options when finished.");
 			console.log(wl.wantsAsArray());
 
+//--------------------------------------------------------------------
 			//make sure options aren't being displayed that shouldn't be displayed
 			resetTest();
 			State.set("beat", 1);
@@ -247,6 +251,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "No extra options: no initial options");
 			assert.deepEqual(contentForChoice(1), "normalChoice Label", "No extra options: normalChoice displays");
 
+//--------------------------------------------------------------------
 			// Test incremental progress towards wishlist items.
 			resetTest();
 			State.set("stress", 0);
@@ -267,10 +272,9 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			clickChoice(1);
 			assert.deepEqual(countChildren(getChoiceEl()), 0, "Testing incremental progress (4)");
 
+//--------------------------------------------------------------------
 			// Test gotoId as a Twine-like deterministic link
 			resetTest();
-
-			
 			wl = Wishlist.create([{condition: "theChunk eq 1"}, {condition: "theChunk eq 4"}], State);
 			wl.logOn();
 			ChunkLibrary.add([
@@ -290,7 +294,8 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(contentForChoice(1), "linkChoice link", "Testing goto-style links (2)");
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "linkTest2 Content", "Testing goto-style links (3)");
-			
+
+//--------------------------------------------------------------------
 			// Test compound nodes where second content node fulfills wishlist item
 			resetTest();
 			wl = Wishlist.create([{condition: "theScene eq start", order: "first"}, {condition: "awesome eq heckYeah"} ], State);
@@ -320,6 +325,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "chunk3 is me!", "Testing compound nodes (3)");
 
+//--------------------------------------------------------------------
 			// Test compound nodes with gotoIds
 			resetTest();
 			wl = Wishlist.create([{condition: "establishSetting eq true", order: "first"}, {condition: "awesome eq heckYeah"} ], State);
@@ -362,6 +368,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(html(getStoryEl()), "I'm the interface!", "Test compound nodes with gotoIds w/ no Want motivation (3)");
 			assert.deepEqual(contentForChoice(1), "I'm the dummy choice.", "Test compound nodes with gotoIds w/ no Want motivation (4)");
 
+//--------------------------------------------------------------------
 			//chunks that are used in dynamic / compound chunks should also be removed from the content library if applicable
 			resetTest();
 			wl = Wishlist.create([{condition: "establishSetting eq true", order: "first"}, {condition: "awesome eq heckYeah"} ], State);
@@ -402,6 +409,7 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			clickChoice(1);
 			assert.deepEqual(ChunkLibrary.get('interface'), false, "after clicking, interface should not be available");
 
+//--------------------------------------------------------------------
 			//StoryAssembler correctly handles looping requests and doesn't display multiple chunks at once
 			resetTest();
 			State.set("droppedKnowledge", 0 );
@@ -451,13 +459,62 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			assert.deepEqual(getStoryEl(1), undefined, "Displays chunk just once, not multiple times");
 			assert.deepEqual(countChildren(getChoiceEl()), 1, "There should be only one child");
 
-			//-----------------------------------------------------------
+//--------------------------------------------------------------------
+			//Fragments that use requests for content (that contain grammars dependent on state variables) do not set their effects
+			resetTest();
+			State.set("choiceChosen", 0 );
+			wl = Wishlist.create([{ condition: "beat1 eq true", order: "first" }, { condition: "beat2 eq true"}], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{
+					"id": "start",
+					"content": "This is just a start node.",
+					"choices" : [
+						{"gotoId": "choice1EffectsTest"},
+						{"gotoId": "choice2EffectsTest"}
+					],
+					"effects": ["set beat1 true"]
+				},
+				{
+					"id": "choice1EffectsTest",
+					"speaker" : "ally",
+					"choiceLabel" : "Choice1 Label.",
+					"request": {"gotoId": "choiceRequest"},
+					"effects" : ["set choiceChosen 1"]
+				},
+				{
+					"id": "choice2EffectsTest",
+					"speaker" : "ally",
+					"choiceLabel" : "Choice2 Label.",
+					"request": {"gotoId": "choiceRequest"},
+					"effects" : ["set choiceChosen 2"]
+				},
+				{
+					"id": "choiceRequest",
+					"speaker" : "protagonist",
+					"content" : "{ifStateCondition|choiceChosen eq 1|You chose choice 1!|You did not choose choice 1!}",
+					"effects" : ["set beat2 true"]
+				},
+			]);
+			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+			assert.deepEqual(html(getStoryEl()), "This is just a start node.", "Correct chunk is chosen to begin");
+			clickChoice(1);
+			assert.deepEqual(html(getStoryEl()), "You chose choice 1!", "State evaluated correctly!");
 
+//-----------------------------------------------------------
 			//If there are three choices, correctly choose it first
+
+			//allPaths returns two options: setVars (which satisfies our wishlist item) and familyIsFamily, which satisfies goto AtDinnerYouPay
+
 			resetTest();
 			State.set("droppedKnowledge", 0 );
 			State.set("academicEnthusiasm", 2);
-			wl = Wishlist.create([{ condition: "setVars eq true", order: "first" }, { condition: "droppedKnowledge gte 2", persistent: true }, { condition: "establishSetting eq true"}, { condition: "respondToChallenge eq true"} ], State);
+			State.set("setVars", 0);
+			wl = Wishlist.create([
+				{ condition: "setVars eq 1", order: "first" },
+				{ condition: "establishSetting eq true"}, 
+				{ condition: "respondToChallenge eq true"} 
+				], State);
 			wl.logOn();
 			ChunkLibrary.add([
 				{    
@@ -468,7 +525,19 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 						{"gotoId": "LowAcademic"},
 						{"gotoId": "MediumAcademic"}
 					],
-					"effects" : ["set setVars true"]
+					"effects" : ["set setVars 1"]
+			    },
+			    {	
+			        "id": "test1",
+					"choiceLabel": "Medium Academic",
+			        "content" : "medium academic enthusiasm",
+					 "effects" : ["set establishSetting true"],//,"set familyIsFamily true"]
+			    },
+			    {	
+			        "id": "test2",
+					"choiceLabel": "Medium Academic",
+			        "content" : "medium academic enthusiasm",
+					 "effects" : ["set respondToChallenge true"],//,"set familyIsFamily true"]
 			    },
 				{	
 			        "id": "MediumAcademic",
@@ -508,7 +577,8 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 						"academicEnthusiasm gt 4",
 					],
 					"effects": [
-						"set atDinner true","set youArePaying true"
+						"set atDinner true",
+						"set youArePaying true"
 					],
 				},
 				{
@@ -519,7 +589,8 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 						"academicEnthusiasm lt 5",
 					],
 					"effects": [
-						"set atDinner true","set youArePaying false", //potentially raise tension here
+						"set atDinner true",
+						"set youArePaying false", //potentially raise tension here
 					]
 				},
 			]);
