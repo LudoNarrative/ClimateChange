@@ -667,6 +667,8 @@ if __name__ == '__main__':
                             print  'AFTERB', repl[3], action, repl[4][0]
                                 
                             out_string.append( 'result({},{}({},scalar({}))).'.format(repl[1],action,repl[3],int(ceil((repl[4][0])))))
+                        elif result['terms'][1]['predicate'] == 'modify':
+                            out_string.append('result({},{}({},{})).'.format(prettify(result['terms'][0]),prettify(result['terms'][1]['terms'][0] ),prettify(result['terms'][1]['terms'][1] ),prettify(result['terms'][1]['terms'][2] )))
                         else:
                             out_string.append( replace.get(prettify(result),prettify(result))+'.')
                 out_string.append( '')
