@@ -3,8 +3,9 @@ frivolous(Resource) :- read_only(Resource).
 
 :- read_only(Resource),
 	action(modify(_,Resource)).
-:- read_only(Resource),
-   not condition(compare(_,Resource)).
+%:- read_only(Resource),
+%   not condition(compare(_,Resource)).
+
 %player_doesnt_control :- not player_controls(_).
 :- not player_controls(_), not condition(control_event(_)).
 
@@ -13,7 +14,8 @@ frivolous(Resource) :- read_only(Resource).
 :- outcome(O), not has_precondition(O).
 :- outcome(O), not has_result(O).
 
-
+:- controlScheme(click_to_spin,Entity),
+   many(Entity).
 
 :- action(move(Entity,direction(forward))),
    action(look_at(Entity,Other,_)),

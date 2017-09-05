@@ -22,7 +22,7 @@ label(resource(r(1)),satiation,write) :- reading(good,resource(r(1))).
 label(entity(e(1)),food).
 label(entity(e(2)),friend).
 
-
+:- 1 {pool(entity(e(1)),_,_,_)} 1.
 
 
 :- not reading(sharing,relation(entity(e(1)),entity(e(2)))).
@@ -39,6 +39,7 @@ label(entity(e(2)),friend).
 
 :- not constant(entity(e(2))).
 
+:- not action(add(entity(e(1)),resource(_),_)).
 
 %:- action(add(entity(e(2)),_)).
 %:- action(delete(entity(e(2)))).
