@@ -8,6 +8,12 @@ spawnsAtInitial(E) :-
 1 {pool(E,L,LocationType,WithinType) : spawn_types(LocationType), spawn_types(WithinType)} 1:-
     precondition(_,O),
     initialize(add(E,C,L)).
+{pool(E,location(R,C),LocationType,WithinType) : row(R),col(C),spawn_types(LocationType), spawn_types(WithinType), entity(E)}.
+
+%:- 2 {pool(E,location(R,C),LocationType,WithinType)},
+%   entity(E),
+%   location(R,C).
+    
 :- pool(E,L1,LT1,WT1),
    pool(E,L2,LT2,WT2),
    LT1 != LT2.

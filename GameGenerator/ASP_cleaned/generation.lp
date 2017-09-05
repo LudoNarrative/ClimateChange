@@ -483,8 +483,8 @@ project(static(E)) :- static(E).
 %project(grouped(A1,A2)) :- grouped(A1,A2).
 
 %#show precondition/2.
-#project project/1.
-#project boundary/1.
+%#project project/1.
+%#project boundary/1.
 %#project pruned_action/1.
 
 pruned_action(add(E,L)) :- action(add(E,_,L)).
