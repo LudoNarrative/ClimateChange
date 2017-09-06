@@ -17,6 +17,8 @@ frivolous(Resource) :- read_only(Resource).
 :- controlScheme(click_to_spin,Entity),
    many(Entity).
 
+   
+
 :- action(move(Entity,direction(forward))),
    action(look_at(Entity,Other,_)),
    not result(tick,apply_restitution(Entity,Other)),
@@ -43,6 +45,9 @@ frivolous(Resource) :- read_only(Resource).
    precondition(compare(_,_),O),
    result(O,modify(_,_)).
 
+:- only_one_precondition(O),
+   precondition(compare(_,_),O),
+   result(O,modify(_,_,_)).
 
 
 :- 2 {controlScheme(E,_)}, 
@@ -58,7 +63,9 @@ frivolous(Resource) :- read_only(Resource).
 
 :- result(O,add(E,_,_)), every_frame(O).
 
-:- 2{result(O,modify(_,R))}, action(modify(_,R)), outcome(O).
+:- 2{ result(O,modify(_,R)); 
+		result(O,modify(_,R,_))}, 
+		resource(R), outcome(O).
 
 %:- precondition(control_event(click(Entity)),Outcome),
 %   precondition(overlaps(Entity),Outcome).
@@ -134,13 +141,15 @@ frivolous(Resource) :- read_only(Resource).
 :-  precondition(compare(ge,R),O),
     result(O,add(E,_,_)),
     precondition(overlaps(E),O2),
-    result(O2,modify(increase,R)).
+    1 {result(O2,modify(increase,R));
+	result(O2,modify(increase,R,_))}.
 
 
 :-  precondition(compare(le,R),O),
     result(O,add(E,_,_)),
     precondition(overlaps(E),O2),
-    result(O2,modify(decrease,R)).
+    1 {result(O2,modify(decrease,R));
+	result(O2,modify(decrease,R,_))}.
 
 buttonPriority(mouse,space).
 buttonPriority(space,down_arrow).
@@ -189,16 +198,16 @@ movement(move(E,D)) :- action(move(E,D)).
    result(tick,move(E,direction(forward))).
 
 
-:- result(O,move(E,direction(T_A,E2))),
-   2 {result(O2,move(E,direction(T_A,E2)))}.
-   
-   
+:- result(O,move(E,direction(D))),
+    2 { result(O,move(E,direction(_))) }.
+	
+	
 :- 2 {initialize(add(_,_,L))},
    initialize(add(_,_,L)).
 
 
 :- action(look_at(E,E2)),
-   2 {move(E,direction(_))}.
+   2 {action(move(E,direction(_)))}.
 
 
 :- player_model(Outcome,player_will_attempt),
@@ -221,9 +230,9 @@ movement(move(E,D)) :- action(move(E,D)).
 
 
 :- precondition(timer_elapsed(_),O1),
-   result(O1,modify(increase,R)),
+   1 {result(O1,modify(increase,R));result(O1,modify(increase,R,_))}, 
    precondition(timer_elapsed(_),O2),
-   result(O2,modify(decrease,R)).
+   1 {result(O2,modify(decrease,R));result(O2,modify(decrease,R,_))}.
 
 :- reading(good,O),
    trivial(O).
@@ -331,7 +340,9 @@ satisfies(le,decrease).
 :- every_frame(O), precondition(compare(ge,R),O), result(O,modify(decrease,R)).
 :- every_frame(O), precondition(compare(le,R),O), result(O,modify(increase,R)).
 
-:- result(tick,move(E,direction(_,E))).
+:- every_frame(O), precondition(compare(ge,R),O), result(O,modify(decrease,R,_)).
+:- every_frame(O), precondition(compare(le,R),O), result(O,modify(increase,R,_)).
+:- result(tick,move(E,direction(direction(_)))).
 
 
 :- condition(overlaps(entity(e(N)),entity(e(N2)),_)),
@@ -418,12 +429,18 @@ different_precondition(O1,O2) :-
    not action(delete(Entity)).
 
 % only allow something to decrease on tick if it can be increased
-:- result(tick, modify(decrease,R)),
-   not action(modify(increase,R)).
+:- 1 {result(tick, modify(decrease,R));
+		result(tick, modify(decrease,R,_))},
+	resource(R),
+	0 {result(tick, modify(increase,R));
+		result(tick, modify(increase,R,_))}.
 
 % only allow something to decrease on tick if it can be increased
-:- result(tick, modify(increase,R)),
-   not action(modify(decrease,R)).
+:- 1 {result(tick, modify(increase,R));
+		result(tick, modify(increase,R,_))},
+	resource(R),
+	0 {result(tick, modify(decrease,R));
+		result(tick, modify(decrease,R,_))}.
 
 
 % Don't check more than 1 collision
@@ -440,6 +457,13 @@ different_precondition(O1,O2) :-
   precondition(compare(ge,Resource),Outcome).
 % don't decrease a resource on negative check of it
 :- result(Outcome,modify(decrease,Resource)),
+   precondition(compare(le,Resource),Outcome).
+
+% Don't increase a resource on a positive check of it
+:- result(Outcome,modify(increase,Resource,_)),
+  precondition(compare(ge,Resource),Outcome).
+% don't decrease a resource on negative check of it
+:- result(Outcome,modify(decrease,Resource,_)),
    precondition(compare(le,Resource),Outcome).
 
 
@@ -550,6 +574,10 @@ different_precondition(O1,O2) :-
 
 
 trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE)), trivial(O).
+
+trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE,_)), trivial(O).
+
+
 % don't allow for "running out of gas" unless there's a trivial way to get gas
 :- precondition(compare(ge,R),O),
    player_model(O,player_will_attempt),
@@ -586,6 +614,9 @@ player_controls_resource(R,Dir) :-
     result(O,modify(R,Dir)),
     player_controls(O).
 
+player_controls_resource(R,Dir) :-
+    result(O,modify(R,Dir,_)),
+    player_controls(O).
 :- resource(R),
    precondition(compare(R,_),O),
    player_controls(O),
@@ -597,10 +628,10 @@ player_controls_resource(R,Dir) :-
 :- action(look_at(E,E,C)).
 
 :- result(O,delete(E)),
-   1 { result(O,moves(E,_));
+   1 { result(O,move(E,_));
        result(O,rotates(E,_));
        result(O,rotate_to(E,_));
-       result(O,look_at(E,_))}.
+       result(O,look_at(E,_,_))}.
 
 
 

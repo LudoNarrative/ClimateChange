@@ -20,6 +20,13 @@ required(hurt) :- required(defend).
 required(hurt) :- required(dodge).
 
 
+reading(risk_reward,Condition) :-
+    precondition(Condition,Good),
+    reading(good,Good),
+    precondition(Condition,Bad),
+    reading(bad,Bad).
+
+
 reading(difficulty,Resource) :-
     reading(hurt,relation(Entity,player)),
     speed(Entity,O,Resource).
