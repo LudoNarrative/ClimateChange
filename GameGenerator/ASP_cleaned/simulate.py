@@ -14,12 +14,11 @@ comparators = {'ge':lambda x,y: x >= y,
 modifiers = {'increase': lambda x,y:  x+y,
              'decrease': lambda x,y:  x-y}
 
-def solve(*args):
+def solve(args,num_to_gen):
     """Run clingo with the provided argument list and return the parsed JSON result."""
-    print_args =  ['clingo']+list(args) + [' | tr [:space:] \\\\n | sort ']
-    args = ['clingo','--outf=2']+list(args)
 
-    
+    print_args =  ['clingo']+list(args) + [' | tr [:space:] \\\\n | sort ']
+    args = ['clingo','--outf=2'] + args
     print ' '.join(print_args)
     clingo = subprocess.Popen(
         ' '.join(args),
@@ -37,12 +36,11 @@ def solve(*args):
         for atom in sorted(witness):
             outfile.write(atom +'\n')
             
-    return parse_json_result(out)
+    return parse_json_result(out,num_to_gen)
 
-def solve_randomly(*args):
+def solve_randomly(args,num_to_generate):
     """Like solve() but uses a random sign heuristic with a random seed."""
-    args = list(args[0]) # + ["--sign-def=rnd","--seed="+str(random.randint(0,1<<30))]
-    return solve(*args)   
+    return solve(args,num_to_generate)   
 
 def parse_terms(arguments):
     terms = []
@@ -79,16 +77,17 @@ def parse_terms(arguments):
             arguments = ''
     return terms, ''
    
-def parse_json_result(out):
+def parse_json_result(out,num_to_gen):
     """Parse the provided JSON text and extract a dict
     representing the predicates described in the first solver result."""
-
     result = json.loads(out)
-    
     assert len(result['Call']) > 0
     assert len(result['Call'][0]['Witnesses']) > 0
     all_preds = []
-    for id in range(len(result['Call'][0]['Witnesses'])):
+    ids = range(len(result['Call'][0]['Witnesses']))
+    random.shuffle(ids)
+    print 'JSON LOADED',len(ids)
+    for id in ids[:num_to_gen]:
         witness = result['Call'][0]['Witnesses'][id]['Value']
         
         class identitydefaultdict(collections.defaultdict):
@@ -197,7 +196,7 @@ def parse_game(result):
             rules[outcome]['results']['other'] = []
             rules[outcome]['results']['add'] = []
             rules[outcome]['results']['delete'] = []
-        if 'compare' == terms[0]['predicate']:
+        if 'compare' == terms[0]['predicate'] :
             direction  = prettify(terms[0]['terms'][0])
             resource   = prettify(terms[0]['terms'][1])
             free_var = [0]
@@ -225,7 +224,7 @@ def parse_game(result):
         result = result[0]
         terms = result['terms']
         outcome = prettify(terms[0])
-        if 'modify' == terms[1]['predicate']:
+        if 'modify' == terms[1]['predicate']  and len(terms[1]['terms']) == 2:
             direction  = prettify(terms[1]['terms'][0])
             resource   = prettify(terms[1]['terms'][1])
             free_var = [1]
@@ -370,9 +369,13 @@ if __name__ == '__main__':
         random.seed(int(args[args.index('-s')+1]))
         args = args[:args.index('-s')] + args[args.index('-s')+2:]
         print args
-    outs = solve_randomly(args)
-    random.shuffle(outs)
-    for output_ind, out in enumerate(outs[:number_to_generate]):
+    outs = solve_randomly(args,number_to_generate)
+    for output_ind, out in enumerate(outs[:]):
+    
+        for o in sorted(out):
+            for t in out[o]:
+                for tt in t:
+                    print prettify(tt)
         settings,free_variables,rules,replacements = parse_game(out)
         print "GAME ", output_ind
         simulation_count = 50
@@ -654,14 +657,16 @@ if __name__ == '__main__':
                             if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
                                 if repl[4][0] < 1:
                                     repl[4][0] = 1
-                                repl[4][0] *= 4
+                                repl[4][0] *= 2
                             if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
-                                repl[4][0] /= 4
+                                repl[4][0] /= 2
                                 if (repl[4][0] < 1):
                                     repl[4][0] = 1
                             print  'AFTERB', repl[3], action, repl[4][0]
                                 
                             out_string.append( 'result({},{}({},scalar({}))).'.format(repl[1],action,repl[3],int(ceil((repl[4][0])))))
+                        elif result['terms'][1]['predicate'] == 'modify':
+                            out_string.append('result({},{}({},{})).'.format(prettify(result['terms'][0]),prettify(result['terms'][1]['terms'][0] ),prettify(result['terms'][1]['terms'][1] ),prettify(result['terms'][1]['terms'][2] )))
                         else:
                             out_string.append( replace.get(prettify(result),prettify(result))+'.')
                 out_string.append( '')

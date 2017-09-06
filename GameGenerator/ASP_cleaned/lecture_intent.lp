@@ -17,6 +17,10 @@
 required(hand_eye_coordination).
 :- not reading(hand_eye_coordination,game).
 
+required(risk_reward).
+:- not reading(risk_reward,control_event(_)).
+
+
 label(resource(r(1)),concentration,write) :- reading(good,resource(r(1))).
 label(resource(r(1)),stress,write) :- reading(bad,resource(r(1))).
 
@@ -27,9 +31,11 @@ label(entity(e(1)),e1).
 required(maintenance).
 :- not reading(maintenance,resource(r(1))).
 
-
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
+
+
+
 
 :- not computer_controls(_).
 :- 0 {behavior(_,_)} 0.

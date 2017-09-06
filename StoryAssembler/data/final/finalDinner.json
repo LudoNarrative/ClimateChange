@@ -20,7 +20,7 @@
       "satiation gte 3"
     ],
     "choices" : [
-      { "condition" : "endInterrupt eq true" }
+      { "condition" : "endInterrupt eq true" }      //actually a flag used to do special "Continue" (no fragment that sets endInterrupt)
     ],
     "effects" : [ "incr satiation 1", "incr tension 1"]
 

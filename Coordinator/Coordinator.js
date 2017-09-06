@@ -59,6 +59,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		}
 		State.set("mode", story.mode);
 		State.set("storyUIvars", story.UIvars);
+		Display.setAvatars();
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 		StoryDisplay.addVarChangers(story.UIvars, StoryAssembler.clickChangeState);		//add controls to change variable values in story (in diagnostics panel)
 	}
