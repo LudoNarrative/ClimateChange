@@ -455,7 +455,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				},
 				{
 					"varName" : "friendTension",
-					"label" : "Tension",
+					"label" : "tension",
 					"characters" : ["protagonist", "academicFriend", "nonAcademicFriend"],
 					"affectedBy" : "both",
 					"range" : [0,10]
@@ -602,7 +602,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			UIvars: [
 				{
 					"varName" : "tension",
-					"label" : "Tension",
+					"label" : "tension",
 					"characters" : ["protagonist","authorityFigure"],
 					"affectedBy" : "both",
 					"range" : [0,10]
@@ -754,7 +754,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				},
 				{
 					"varName" : "tension",
-					"label" : "Tension",
+					"label" : "tension",
 					"characters" : ["protagonist", "dad", "mom"],
 					"affectedBy" : "both",
 					"range" : [0,10]
@@ -1508,7 +1508,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				},
 				{
 					"varName" : "tension",
-					"label" : "Tension",
+					"label" : "tension",
 					"characters" : ["protagonist", "academicFriend", "nonAcademicFriend"],
 					"affectedBy" : "both",
 					"range" : [0,10]
@@ -1628,7 +1628,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set reasonForTrouble false",
 				"set pathChoiceMade false",
 				"set deanReaction false",
-				"set tension 0",
+				"set tension 1",
 
 				"set confidence 5",
 				"set academicEnthusiasm 0",			//global stat
@@ -1640,7 +1640,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			UIvars: [
 				{
 					"varName" : "tension",
-					"label" : "Tension",
+					"label" : "tension",
 					"characters" : ["protagonist","authorityFigure"],
 					"affectedBy" : "both",
 					"range" : [0,10]
@@ -1772,7 +1772,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				},
 				{
 					"varName" : "tension",
-					"label" : "Tension",
+					"label" : "tension",
 					"characters" : ["protagonist", "dad", "mom"],
 					"affectedBy" : "both",
 					"range" : [0,10]
