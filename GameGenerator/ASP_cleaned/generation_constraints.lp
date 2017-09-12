@@ -3,6 +3,8 @@ frivolous(Resource) :- read_only(Resource).
 
 :- read_only(Resource),
 	action(modify(_,Resource)).
+:- read_only(Resource),
+	action(modify(_,Resource,_)).
 %:- read_only(Resource),
 %   not condition(compare(_,Resource)).
 
