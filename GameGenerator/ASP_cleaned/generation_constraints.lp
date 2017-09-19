@@ -369,6 +369,7 @@ satisfies(le,decrease).
    O1 != O2.
 
 
+
 :- result(O,delete(E1)),
    not precondition(overlaps(_,E1,true),O),
    not precondition(overlaps(E1,_,true),O),
@@ -594,7 +595,7 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE,_)), trivial(O).
 :- frivolous(R), not allowed(frivolous(R)).
 
 
-:- monotonic(R), not allowed(monotonic(R)).
+%:- monotonic(R), not allowed(monotonic(R)).
 
 :-  in_corner(E), not allowed(in_corner(E)).
 
@@ -624,7 +625,7 @@ player_controls_resource(R,Dir) :-
    player_controls(O),
    not player_controls_resource(R,_).
    
-%:- monotonic(R), not allowed(monotonic(R)).
+:- monotonic(R), not allowed(monotonic(R)).
 
 
 :- action(look_at(E,E,C)).
@@ -663,3 +664,32 @@ player_controls_resource(R,Dir) :-
 :- boundary(torus), 
     action(look_at(E,_)),
 	action(moves(E,direction(left;right))).
+
+
+
+%%%COLOR
+
+%DONT DOUBLE FILL
+:- initialize(fill(all,_)),
+   initialize(fill(location(_,_),_)).
+
+
+:- 2{initialize(fill(location(R,C),_))},
+   row(R),
+   col(C).
+
+
+uses_color(Color) :-
+    clear(_),
+    initialize(fill(_,Color)).
+
+uses_color(Color) :-
+    not initialzie(fill(_,Color)),
+    action(draw(_,Color)).
+
+:- condition(compare(_,amount(Color))),
+   not uses_color(Color).
+
+
+
+   

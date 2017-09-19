@@ -21,8 +21,9 @@ angle_direction(cw;ccw).
 colors(red,1).
 colors(blue,2).
 colors(green,3).
-colors(yllow,4).
+colors(yellow,4).
 colors(magenta,5).
+colors(orange,6).
 
 colors(C) :-
     colors(C,N),

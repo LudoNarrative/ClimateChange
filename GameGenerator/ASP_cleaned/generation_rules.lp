@@ -162,6 +162,31 @@ monotonic(Entity,decrease) :-
     not action(add(Entity,_,_)),
     action(delete(Entity)).
 
+monotonic(Resource,increase) :- 
+    action(modify(increase,Resource)),
+    not action(modify(decrease,Resource)).
+monotonic(Resource,decrease) :- 
+    action(modify(decrease,Resource,_)),
+    not action(modify(increase,Resource)).
+
+monotonic(Color,increase) :- 
+    action(draw(_,Color)),
+    not action(clear(_)),
+    not action(draw(_,OtherColor)),
+    not action(fill(_,OtherColor)),
+    Color != OtherColor,
+    colors(OtherColor,_).
+
+monotonic(Color,decrease) :- 
+    1{action(clear(_));
+      action(draw(OtherColor));
+      action(fill(_,Color))},
+    initialize(fill(_,Color)),
+    not action(draw(Color)),
+    colors(OtherColor,_),
+    Color != OtherColor.
+
+
 monotonic(Entity) :- monotonic(Entity,_).
 
 non_monotonic(Entity) :- not monotonic(Entity),
@@ -238,9 +263,29 @@ different_movement(E1,E2) :- different_movement(E2,E1).
 same_movement(E1,E2) :- entity(E1), entity(E2), not different_movement(E1,E2).
 
 
-in_corner(E1) :- 
-						flees(E1,E2).
+in_corner(E1) :- flees(E1,E2).
+
+
+player_creates_effect(draw(E,Color)) :-
+    player_controls(E),
+    action(draw(E,Color)).
+
+
+player_creates_effect(draw(cursor,Color)) :-
+    action(draw(cursor,Color)).
+
+
+player_creates_effect(clear(cursor)) :-
+    action(clear(cursor)).
 						
 						
 	
+player_creates_effect(draw(E,Color)) :-
+    result(O,draw(E,Color)),
+    player_controls_outcome(O).
+
+
+player_creates_effect(clear(E)) :-
+    result(O,clar(E)),
+    player_controls_outcome(O).
 	
