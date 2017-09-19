@@ -3,6 +3,8 @@ frivolous(Resource) :- read_only(Resource).
 
 :- read_only(Resource),
 	action(modify(_,Resource)).
+:- read_only(Resource),
+	action(modify(_,Resource,_)).
 %:- read_only(Resource),
 %   not condition(compare(_,Resource)).
 
@@ -367,6 +369,7 @@ satisfies(le,decrease).
    O1 != O2.
 
 
+
 :- result(O,delete(E1)),
    not precondition(overlaps(_,E1,true),O),
    not precondition(overlaps(E1,_,true),O),
@@ -586,73 +589,3 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE,_)), trivial(O).
 :- precondition(compare(le,R),O),
    player_model(O,player_will_attempt),
    not trivial_resource(decrease,R).
-   
-   
-  
-:- frivolous(R), not allowed(frivolous(R)).
-
-
-:- monotonic(R), not allowed(monotonic(R)).
-
-:-  in_corner(E), not allowed(in_corner(E)).
-
-
-:- result(O,add(E,_,_)),
-   result(O2,add(E,_,_)),
-   result(O2,delete(E)),
-   1 {result(_,delete(E))} 1,
-   O != O2.
-
-%It shouldn't be the case that the only way that a player controls something is by making it move towards (or away) from itself
-:- player_controls(E),
-   action(move(E,direction(_,E))),
-   1 {action(move(E,_))} 1,
-   1 {player_controls(_)} 1.
-
-
-player_controls_resource(R,Dir) :-
-    result(O,modify(R,Dir)),
-    player_controls(O).
-
-player_controls_resource(R,Dir) :-
-    result(O,modify(R,Dir,_)),
-    player_controls(O).
-:- resource(R),
-   precondition(compare(R,_),O),
-   player_controls(O),
-   not player_controls_resource(R,_).
-   
-%:- monotonic(R), not allowed(monotonic(R)).
-
-
-:- action(look_at(E,E,C)).
-
-:- result(O,delete(E)),
-   1 { result(O,move(E,_));
-       result(O,rotates(E,_));
-       result(O,rotate_to(E,_));
-       result(O,look_at(E,_,_))}.
-
-
-
-%%SIMPLICITY
-
-:- 3 {precondition(overlaps(E1,E2,POLARITY),OUTCOME)},
-    entity(E1),
-    entity(E2),
-    polarity(POLARITY).
-
-
-:- 2 {result(O,add(E,_,_))}, outcome(O).
-
-:- 3 {precondition(_,Outcome)},
-   outcome(Outcome),
-   not has_overlaps(Outcome).
-:- 6 {precondition(_,Outcome)},
-   outcome(Outcome).
-
-:- 4 {result(Outcome,_)},
-   outcome(Outcome),
-   Outcome != tick.
-:- N + 1 {precondition(_,_)},
-   preconditions_allowed(N)  .

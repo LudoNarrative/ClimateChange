@@ -20,6 +20,14 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
     many(Entity),
     number_to_place(Entity,NumberToPlace).
 
+
+{initialize(fill(all,Color))} :- palette(Color).
+{initialize(fill(location(Row,Col),Color)) : row(Row), col(Col)} :- palette(Color).
+
+
+
+
+
 boundary_types(torus;closed).
 
 1 {boundary(Type) : boundary_types(Type) } 1.
@@ -298,6 +306,9 @@ place(location(X,Y)) :- location(X,Y).
 {precondition(compare((ge;le),RESOURCE),OUTCOME)
  : resource(RESOURCE), outcome(OUTCOME)}.
 
+{precondition(compare((ge;le),amount(Color)),OUTCOME)
+ : resource(RESOURCE), outcome(OUTCOME)} :- palette(Color).
+
 {precondition(control_event(button(BUTTON,STATE)),OUTCOME) 
   : buttons(BUTTON),buttonStates(STATE), outcome(OUTCOME)}.
 
@@ -349,6 +360,18 @@ amount_to_spawn(Resource) :- resource(Resource).
 {result(OUTCOME,modify(decrease,RESOURCE,RESOURCE2)) 
   : outcome(OUTCOME),resource(RESOURCE),resource(RESOURCE2)}.
 properties(health).
+
+
+{result(OUTCOME,draw(entity(Entity),Color))
+ : outcome(OUTCOME)} :- entity(Entity), palette(Color).
+
+{result(OUTCOME,draw(cursor,Color))
+ : outcome(OUTCOME)} :-  palette(Color).
+
+{result(OUTCOME,clear(entity(Entity)))
+ : outcome(OUTCOME)} :- entity(Entity).
+
+
 
 % resources can increase
 {result(OUTCOME,modify(increase,property(Entity,Property)))
