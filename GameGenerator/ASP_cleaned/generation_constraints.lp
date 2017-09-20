@@ -673,6 +673,10 @@ player_controls_resource(R,Dir) :-
 :- initialize(fill(all,_)),
    initialize(fill(location(_,_),_)).
 
+:- clear(_),   
+   0 {initialize(fill(all,_));
+      initialize(fill(location(_,_),_));
+      action(draw(_,_))} 0.
 
 :- 2{initialize(fill(location(R,C),_))},
    row(R),

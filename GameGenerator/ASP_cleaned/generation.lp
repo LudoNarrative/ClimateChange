@@ -362,15 +362,17 @@ amount_to_spawn(Resource) :- resource(Resource).
 properties(health).
 
 
-{result(OUTCOME,draw(entity(Entity),Color))
+{result(OUTCOME,draw(Entity,Color))
  : outcome(OUTCOME)} :- entity(Entity), palette(Color).
 
 {result(OUTCOME,draw(cursor,Color))
  : outcome(OUTCOME)} :-  palette(Color).
 
-{result(OUTCOME,clear(entity(Entity)))
+{result(OUTCOME,clear(Entity))
  : outcome(OUTCOME)} :- entity(Entity).
 
+{result(OUTCOME,clear(cursor))
+ : outcome(OUTCOME)}.
 
 
 % resources can increase
