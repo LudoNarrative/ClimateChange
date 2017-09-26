@@ -114,6 +114,37 @@ reachableCondition(overlaps(E1,E2,POLARITY)) :-
     action(move(E2,direction(towards,E1))),
     condition(overlaps(E1,E2,POLARITY)).
 
+reachableCondition(compare(le,amount(Color),scalar(S))) :-
+		       action(clear(_)),
+		       condition(compare(le,amount(Color),scalar(S))).
+
+
+reachableCondition(compare(le,amount(Color),scalar(S))) :-
+		       action(draw(_,OtherColor)),
+		       Color != OtherColor,
+		       condition(compare(le,amount(Color),scalar(S))).
+
+reachableCondition(compare(ge,amount(Color),scalar(S))) :-
+		       action(draw(_,Color)),
+		       condition(compare(ge,amount(Color),scalar(S))).
+
+
+reachableCondition(compare(le),amount(Color),resource(R)) :-
+		       action(clear(_)),
+		       condition(compare(le,amount(Color),resource(R))).
+
+
+reachableCondition(compare(le,amount(Color),resource(R))) :-
+		       action(draw(_,OtherColor)),
+		       Color != OtherColor,
+		       condition(compare(le,amount(Color),resource(R))).
+
+reachableCondition(compare(ge,amount(Color),resource(R))) :-
+		       action(draw(_,Color)),
+		       condition(compare(ge,amount(Color),resource(R))).
+
+
+
 reachableCondition(collide(E1,E2)) :- reachableCondition(overlaps(E1,E2,P)).
 
 ignoredCondition(overlaps(Entity)) :- condition(overlaps(Entity)).
@@ -125,6 +156,15 @@ reachableCondition(compare(ge,Resource)) :-
     action(modify(increase,Resource)).
 reachableCondition(compare(le,Resource)) :-
     action(modify(decrease,Resource)).
+
+reachableCondition(compare(ge,S,Resource)) :-
+    action(modify(decrease,Resource)),
+    condition(compare(ge,S,Resource)).
+reachableCondition(compare(le,S,Resource)) :-
+    action(modify(decrease,Resource)),
+    condition(compare(le,S,Resource)).
+
+
 compare_direction(ge;le).
 reachableCondition(compare(D,Resource)) :-
     label(Resource,_,read_only),
@@ -179,10 +219,10 @@ monotonic(Color,increase) :-
 
 monotonic(Color,decrease) :- 
     1{action(clear(_));
-      action(draw(OtherColor));
+      action(draw(_,OtherColor));
       action(fill(_,Color))},
     initialize(fill(_,Color)),
-    not action(draw(Color)),
+    not action(draw(_,Color)),
     colors(OtherColor,_),
     Color != OtherColor.
 
@@ -286,6 +326,26 @@ player_creates_effect(draw(E,Color)) :-
 
 
 player_creates_effect(clear(E)) :-
-    result(O,clar(E)),
+    result(O,clear(E)),
     player_controls_outcome(O).
+
+
+
+player_creates_effect(draw(E,Color)) :-
+    not player_controls(E),
+    action(draw(E,Color)).
+
+		
+player_creates_effect(clear(E,Color)) :-
+    not player_controls(E),
+    action(clear(E,Color)).
 	
+
+
+player_doesnt_create_effect(clear(E)) :-
+    result(O,clear(E)),
+    not player_controls_outcome(O).
+
+player_doesnt_create_effect(draw(E,Color)) :-
+    result(O,draw(E,Color)),
+    not player_controls_outcome(O).

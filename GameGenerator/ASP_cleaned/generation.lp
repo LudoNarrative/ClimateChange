@@ -306,8 +306,14 @@ place(location(X,Y)) :- location(X,Y).
 {precondition(compare((ge;le),RESOURCE),OUTCOME)
  : resource(RESOURCE), outcome(OUTCOME)}.
 
-{precondition(compare((ge;le),amount(Color)),OUTCOME)
- : resource(RESOURCE), outcome(OUTCOME)} :- palette(Color).
+{precondition(compare((ge;le),amount(Color),R),OUTCOME)
+ :  outcome(OUTCOME)} :- palette(Color), resource(R).
+
+
+color_amount(1;4;7).
+{precondition(compare((ge;le),amount(Color),scalar(A)),OUTCOME)
+ :  outcome(OUTCOME), color_amount(A)} :- palette(Color).
+
 
 {precondition(control_event(button(BUTTON,STATE)),OUTCOME) 
   : buttons(BUTTON),buttonStates(STATE), outcome(OUTCOME)}.

@@ -199,10 +199,11 @@ def parse_game(result):
         if 'compare' == terms[0]['predicate'] :
             direction  = prettify(terms[0]['terms'][0])
             resource   = prettify(terms[0]['terms'][1])
-            free_var = [0]
-            replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
-            rules[outcome]['preconditions']['compare'].append( (direction,resource,free_var))
-            free_variables.append(['condition',free_var,resource])
+            if 'amount' not in prettify(terms[0]):
+                free_var = [0]
+                replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
+                rules[outcome]['preconditions']['compare'].append( (direction,resource,free_var))
+                free_variables.append(['condition',free_var,resource])
         elif 'overlaps' == terms[0]['predicate'] or 'collide' == terms[0]['predicate']:
             if len(terms[0]['terms']) > 1:
                 entity1  = prettify(terms[0]['terms'][0])
@@ -472,12 +473,13 @@ if __name__ == '__main__':
             # Clone the selected individuals
             offspring = toolbox.map(toolbox.clone, offspring)
 
-            # Apply crossover and mutation on the offspring
-            for child1, child2 in zip(offspring[::2], offspring[1::2]):
-                if random.random() < CXPB:
-                    toolbox.mate(child1, child2)
-                    del child1.fitness.values
-                    del child2.fitness.values
+            if (len(free_variables) > 2):
+                # Apply crossover and mutation on the offspring
+                for child1, child2 in zip(offspring[::2], offspring[1::2]):
+                    if random.random() < CXPB:
+                        toolbox.mate(child1, child2)
+                        del child1.fitness.values
+                        del child2.fitness.values
 
             for mutant in offspring:
                 if random.random() < MUTPB:
@@ -520,7 +522,8 @@ if __name__ == '__main__':
                 for ooo in oo:
                     print prettify(ooo)
         #Have to do find and replaces in this order since outcome and timer might include entity and resource names
-        find_and_replace = []
+        find_and_replace = [('compare(ge,','ge('),
+                            ('compare(le,','le(')]
         for o in ['timer']:
             for oo in out[o]:
                 for ooo in oo:

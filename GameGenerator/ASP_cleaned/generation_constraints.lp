@@ -684,16 +684,53 @@ player_controls_resource(R,Dir) :-
 
 
 uses_color(Color) :-
-    clear(_),
+    action(clear(_)),
     initialize(fill(_,Color)).
 
 uses_color(Color) :-
-    not initialzie(fill(_,Color)),
+    not initialize(fill(_,Color)),
     action(draw(_,Color)).
 
-:- condition(compare(_,amount(Color))),
+:- condition(compare(_,_,amount(Color))),
    not uses_color(Color).
 
+:- condition(over_color(_,Color)),
+   not uses_color(Color).
+
+uses_color :- uses_color(Color).
+
+:- not uses_color,
+   action(clear(_)).
+
+:- uses_color(Color),
+   not condition(compare(_,amount(Color),_)),
+   not condition(over_color(_,Color)).
+
+:- 2 {precondition(compare(_,amount(Color),_),O)}.
+
+%:- condition(compare(_,amount(Color),_)).
 
 
-   
+:- result(outcome(_),delete(E)),
+   result(outcome(_),rotates(E,_,_)).
+
+:- result(outcome(_),delete(E)),
+   result(outcome(_),rotate_to(E,_)).
+
+:- result(outcome(_),delete(E)),
+   result(outcome(_),look_at(E,_)).
+
+
+:- precondition(compare(_,amount(Color),_),O),
+   result(O,move(E,_)).
+
+
+:- precondition(overlaps(E1,E2,true),O1),
+   2 { precondition(overlaps(E1,E2,true),_)},
+   result(O1,delete(E1)),
+   only_one_precondition(O1).
+
+:- precondition(overlaps(E1,E2,true),O1),
+   2 { precondition(overlaps(E1,E2,true),_)},
+   result(O1,delete(E2)),
+   only_one_precondition(O1).
