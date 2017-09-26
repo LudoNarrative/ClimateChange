@@ -1,5 +1,5 @@
 #const min_entities = 0.
-#const max_entities = 2.
+#const max_entities = 1.
 #const min_resources = 0.
 #const max_resources = 1.
 #const min_outcomes = 2.
@@ -19,5 +19,8 @@ allowed(monotonic(orange)).
 :- not monotonic(orange,decrease).
 :- not initialize(fill(all,orange)).
 
+:- not player_controls(_).
+:- not player_creates_effect(clear(_)).
+:- player_doesnt_create_effect(clear(_)).
 
-:- player_creates_effect(clear(E)).
+%:- not condition(compare(_,_,amount(_))).
