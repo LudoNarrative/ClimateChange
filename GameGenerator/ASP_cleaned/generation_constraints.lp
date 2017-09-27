@@ -595,7 +595,7 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE,_)), trivial(O).
 :- frivolous(R), not allowed(frivolous(R)).
 
 
-%:- monotonic(R), not allowed(monotonic(R)).
+:- monotonic(R), not allowed(monotonic(R)).
 
 :-  in_corner(E), not allowed(in_corner(E)).
 

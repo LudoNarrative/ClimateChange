@@ -51,8 +51,12 @@ pool(entity(e_3_XX_),location(bottom,right),ordered,ordered).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(6))).
-initialize(set_value(resource(r_2_XX_),scalar(6))).
+initialize(set_value(resource(r_1_XX_),scalar(9))).
+initialize(set_value(resource(r_2_XX_),scalar(1))).
+
+precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
+result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
+result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),forward,resource(r_2_XX_))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),increase_over_time(resource(r_1_XX_),scalar(2))).
@@ -68,10 +72,6 @@ result(outcome(o_4_XX_),decrease(resource(r_1_XX_),resource(r_2_XX_))).
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_5_XX_)).
 result(outcome(o_5_XX_),decrease(resource(r_1_XX_),scalar(1))).
-
-precondition(control_event(button(mouse,held)),outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_)).
-result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
-result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),left,resource(r_2_XX_))).
 
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
