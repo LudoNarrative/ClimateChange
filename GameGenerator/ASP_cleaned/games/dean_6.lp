@@ -55,31 +55,30 @@ pool(entity(e_3_XX_),location(bottom,right),ordered,ordered).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(8))).
-initialize(set_value(resource(r_2_XX_),scalar(5))).
+initialize(set_value(resource(r_1_XX_),scalar(0))).
+initialize(set_value(resource(r_2_XX_),scalar(7))).
 
 precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
-result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),decrease(resource(r_1_XX_),resource(r_1_XX_))).
+result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),decrease(resource(r_1_XX_),resource(r_2_XX_))).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),forward,resource(r_2_XX_))).
 
-precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),mode_change(narrative_gating)).
+precondition(ge(resource(r_1_XX_),scalar(7)),outcome(o_1_XX_)).
+result(outcome(o_1_XX_),mode_change(narrative_progress)).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(2))).
+result(outcome(o_2_XX_),increase_over_time(resource(r_1_XX_),scalar(4))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_3_XX_),true),outcome(o_3_XX_)).
 precondition(le(resource(r_2_XX_),scalar(8)),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),decrease_over_time(resource(r_1_XX_),scalar(1))).
+result(outcome(o_3_XX_),decrease_over_time(resource(r_1_XX_),scalar(2))).
 
 precondition(timer_elapsed(patrol_entity_e_2_XX__XX__XX_),outcome(patrol_entity_e_2_XX__XX__XX_)).
 result(outcome(patrol_entity_e_2_XX__XX__XX_),rotates(entity(e_2_XX_),ccw,scalar(45))).
-result(outcome(patrol_entity_e_2_XX__XX__XX_),decrease(resource(r_1_XX_),scalar(1))).
+result(outcome(patrol_entity_e_2_XX__XX__XX_),decrease(resource(r_1_XX_),scalar(3))).
 
 precondition(timer_elapsed(patrol_entity_e_3_XX__XX__XX_),outcome(patrol_entity_e_3_XX__XX__XX_)).
 result(outcome(patrol_entity_e_3_XX__XX__XX_),rotates(entity(e_3_XX_),ccw,scalar(45))).
-result(outcome(patrol_entity_e_3_XX__XX__XX_),decrease(resource(r_1_XX_),resource(r_2_XX_))).
 
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
@@ -100,9 +99,9 @@ reading(dodge,entity(e_3_XX_)).
 reading(survive,entity(e_3_XX_)).
 reading(help,relation(entity(e_2_XX_),player)).
 reading(difficulty,3).
-reading(difficulty,resource(r_1_XX_)).
 reading(difficulty,resource(r_2_XX_)).
 reading(risk_reward,overlaps(entity(e_1_XX_))).
+reading(hand_eye_coordination,game).
 ==========
 <ul>
 <li>games/dean_6.lp</li>
