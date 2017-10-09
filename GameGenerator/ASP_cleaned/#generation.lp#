@@ -16,6 +16,8 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
 1 { number_to_place(Entity,Number) : number(Number)} 1 :-
     many(Entity).
 
+
+
 1 { initialize(add(Entity,scalar(NumberToPlace),location(Row,Col))) : row(Row), col(Col) } :-
     many(Entity),
     number_to_place(Entity,NumberToPlace).

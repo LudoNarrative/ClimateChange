@@ -9,8 +9,9 @@ from deap import base
 from deap import creator
 from deap import tools
 
-comparators = {'ge':lambda x,y: x >= y,
-               'le':lambda x,y: x <= y}
+comparators = {'ge':lambda x,y: x > y,
+               'le':lambda x,y: x < y,
+               'eq':lambda x,y: x == y}
 modifiers = {'increase': lambda x,y:  x+y,
              'decrease': lambda x,y:  x-y}
 
@@ -163,10 +164,11 @@ def parse_game(result):
     for add in adds:
         settings.append(('initialize',add,[adds[add]],'add',''))
     free_variables = []
-    
+    free_variable_count = {}
     for resource in resources:
         if resource not in initializations:
             free_var = [0]
+            free_variable_count['none'] = len(free_variables)
             free_variables.append(['initialize',free_var,resource])
             settings.append(('initialize',resource,free_var,'set'))
             
@@ -174,6 +176,7 @@ def parse_game(result):
         if entity not in initializations:
             free_var = [0]
             
+            free_variable_count['none'] = len(free_variables)
             free_variables.append(['initialize',free_var,entity])
             settings.append(('initialize',entity,free_var,'add'))
             
@@ -203,6 +206,7 @@ def parse_game(result):
                 free_var = [0]
                 replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
                 rules[outcome]['preconditions']['compare'].append( (direction,resource,free_var))
+                free_variable_count[prettify(precondition)] = len(free_variables)
                 free_variables.append(['condition',free_var,resource])
         elif 'overlaps' == terms[0]['predicate'] or 'collide' == terms[0]['predicate']:
             if len(terms[0]['terms']) > 1:
@@ -230,6 +234,7 @@ def parse_game(result):
             resource   = prettify(terms[1]['terms'][1])
             free_var = [1]
             replacements[prettify(result)] = ('result',outcome,direction,resource,free_var)
+            free_variable_count[prettify(result)] = len(free_variables)
             rules[outcome]['results']['modify'].append( (direction,resource,free_var))
             free_variables.append(['action',free_var,resource])
         elif 'add' == terms[1]['predicate']:
@@ -241,7 +246,7 @@ def parse_game(result):
             
         else:
             rules[outcome]['results']['other'].append(prettify(terms[1]))
-    return settings,free_variables,rules,replacements
+    return settings,free_variables,rules,replacements,free_variable_count
 
 def run_once(rules,settings,player_model,depth):
     state = {}
@@ -300,7 +305,7 @@ def run_once(rules,settings,player_model,depth):
             state[s] = v
     return history
 
-def score_individual(free_variables,rules,settings,player_model,depth,simulation_count):
+def score_individual(free_variables,rules,settings,player_model,depth,simulation_count,constraints):
     
     def score(individual): 
         outcome_reached = set()  
@@ -309,7 +314,16 @@ def score_individual(free_variables,rules,settings,player_model,depth,simulation
         latest_reached = {}
         seen = {}
         highest = {}
-        for simulations in range(simulation_count):     
+        constraint_violations = 0
+        violation_cost = 2000
+        for constraint in constraints:
+            #print constraint[0],(individual[constraint[1]],individual[constraint[2]])
+            if not comparators[constraint[0]](individual[constraint[1]],individual[constraint[2]]):
+                constraint_violations -= violation_cost
+        if constraint_violations <= -violation_cost:
+            return (constraint_violations,)
+        for simulations in range(simulation_count):
+            
             for free_var,set_var in zip(free_variables,individual):
                 free_var[1][0] = set_var
             history =  run_once(rules,settings,player_model,depth)
@@ -377,11 +391,11 @@ if __name__ == '__main__':
             for t in out[o]:
                 for tt in t:
                     print prettify(tt)
-        settings,free_variables,rules,replacements = parse_game(out)
+        settings,free_variables,rules,replacements,free_variable_count = parse_game(out)
         print "GAME ", output_ind
         simulation_count = 50
         depth = 10
-        CXPB, MUTPB, NGEN,POP_COUNT = 0.5, 0.2, 25, 100
+        CXPB, MUTPB, NGEN,POP_COUNT = 0.5, 0.2, 50, 200
         display = False
         '''
         player_model_mappings = {'player_must_do':0.95,
@@ -418,6 +432,19 @@ if __name__ == '__main__':
 
         #player_model = {rule:1 for rule in rules}
         
+        constraints = []
+        for free_var in sorted(free_variable_count):
+            print (free_var,)
+        
+        for constraint in out['constraint']:
+            direction  = prettify(constraint[0]['terms'][0])
+            result1  = prettify(constraint[0]['terms'][1])
+            result2  = prettify(constraint[0]['terms'][2])
+            
+            constraints.append((direction,
+                                free_variable_count[result1],
+                                free_variable_count[result2]))
+
         toolbox.register("attr_int", rand_range(0,10))
         toolbox.register("individual", tools.initRepeat, creator.Individual,
                          toolbox.attr_int, n=len(free_variables))
@@ -426,12 +453,12 @@ if __name__ == '__main__':
         toolbox.register("mate", tools.cxTwoPoint)
         toolbox.register("mutate", tools.mutGaussian, mu=2, sigma=4, indpb=0.1)
         toolbox.register("select", tools.selTournament, tournsize=3)
-        toolbox.register("evaluate", score_individual(free_variables,rules,settings,player_model,depth,simulation_count))
+        toolbox.register("evaluate", score_individual(free_variables,rules,settings,player_model,depth,simulation_count,constraints))
         add = set([])
         for action in out['action']:
             if action[0]['terms'][0]['predicate'] == 'add':
                 add.add(prettify(action[0]['terms'][0]['terms'][0]))
-                
+
         many = set([])
         for oo in out['many']:
             for ooo in oo:
@@ -456,9 +483,9 @@ if __name__ == '__main__':
                     return offspring
                 return wrapper
             return decorator
-        toolbox.decorate("individual", checkBounds(0.1, 10))
-        toolbox.decorate("mate", checkBounds(0.1, 10))
-        toolbox.decorate("mutate", checkBounds(0.1, 10))
+        toolbox.decorate("individual", checkBounds(1.0, 10))
+        toolbox.decorate("mate", checkBounds(1.0, 10))
+        toolbox.decorate("mutate", checkBounds(1.0, 10))
         pop = toolbox.population(n=POP_COUNT)
       
         
@@ -500,7 +527,7 @@ if __name__ == '__main__':
             if fit > best:
                 best = fit
                 best_ind = ind
-        #print best
+        print best
         #print '=========='
         
         good_vars  = set([])
