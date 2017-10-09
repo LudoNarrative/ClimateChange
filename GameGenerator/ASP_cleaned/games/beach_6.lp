@@ -27,6 +27,10 @@ pool(entity(e_1_XX_),location(bottom,right),random,random).
 boundary(closed).
 
 
+precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
+result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
+result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),forward,scalar(7))).
+
 precondition(timer_elapsed(t_1_XX_),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
 
@@ -38,13 +42,9 @@ precondition(control_event(button(mouse,held)),outcome(o_3_XX_)).
 precondition(le(amount(orange),scalar(4)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),decrease_over_time(property(entity(e_1_XX_),health),scalar(10))).
 
-precondition(control_event(button(mouse,held)),outcome(repeled_from_cursor_entity_e_1_XX__XX__XX_)).
-result(outcome(repeled_from_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
-result(outcome(repeled_from_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),backward,scalar(5))).
-
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
-result(tick,increase_over_time(property(entity(e_1_XX_),health),scalar(7))).
+result(tick,increase_over_time(property(entity(e_1_XX_),health),scalar(10))).
 
 reading(produces,relation(pool(entity(e_1_XX_)),entity(e_1_XX_))).
 ==========

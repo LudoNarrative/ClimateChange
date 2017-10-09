@@ -12,72 +12,25 @@
 #const max_resource_change_per = 2.
 #const max_conditions_per = 2.
 
-#project reading/2.
-#show reading/2.
-
-
-required(tradeoff).
-
-
-required(good).
-required(bad).
-
-required(maintenance).
-
-
-required(produces).
-required(good).
-required(stakes(high)).
-required(stakes(low)).
-    
-required(grinding).
-
-required(risk).
-required(organization).
-required(outcome_hurts).
-
-required(survive).
-	   
-	   
-required(defend_against).
-required(dodge).
-
-required(hurt).
-
-
-required(difficulty) .
 
 
 
-required(help).
-required(hurt).
+max_scalars(N) :- N = {precondition(compare(_,_),_);
+		     result(_,modify(_,_))}.
 
-    
-    
-required(chases).
-    
-    
-required(flees).
-    
+scalar(M) :- M = 1..N,max_scalars(N).
 
-required(consumes).
+:- not scalar(2).
 
+{apply_scalar(precondition(compare(A,B),C),scalar(S))} :- scalar(S),precondition(compare(A,B),C).
+{apply_scalar(result(A,modify(B,C)),scalar(S))} :- scalar(S),result(A,modify(B,C)).
 
-required(produces).
+:- 2 {apply_scalar(_,scalar(S))},
+   scalar(S).
 
-required(costs).
+applied(scalar(S)) :- apply_scalar(_,scalar(S)).
+not_applied(S) :- not applied(scalar(S)),
+		  scalar(S).
 
-required(hand_eye_coordination).
-    
+:- not_applied(_).
 
-
-required(good).
-required(consumes).
-
-
-required(sharing).
-    
-required(goal(produce)).
-
-
-required(goal(reduce)).

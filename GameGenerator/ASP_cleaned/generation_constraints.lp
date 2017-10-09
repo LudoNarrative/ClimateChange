@@ -1,6 +1,17 @@
 allowed(frivolous(Resource)) :- read_only(Resource).
 frivolous(Resource) :- read_only(Resource).
 
+
+
+relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome3,modify(Direction,Resource3))) :-
+    relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2))),
+    relative(greater,result(Outcome2,modify(Direction,Resource2)),result(Outcome3,modify(Direction,Resource3))).
+
+:- relative(greater,result(Outcome,modify(Direction,Resource)),result(Outcome,modify(Direction,Resource))).
+
+
+
+
 :- read_only(Resource),
 	action(modify(_,Resource)).
 :- read_only(Resource),

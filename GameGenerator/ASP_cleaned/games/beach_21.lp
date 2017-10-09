@@ -6,10 +6,9 @@ many(entity(e_1_XX_)).
 
 initialize(fill(all,orange)).
 initialize(set_draggable(entity(e_1_XX_),true)).
-initialize(add(entity(e_1_XX_),scalar(1),location(middle,left))).
-initialize(add(entity(e_1_XX_),scalar(1),location(top,center))).
+initialize(add(entity(e_1_XX_),scalar(1),location(top,left))).
 initialize(add(entity(e_1_XX_),scalar(1),location(bottom,center))).
-initialize(add(entity(e_1_XX_),scalar(1),location(middle,right))).
+initialize(add(entity(e_1_XX_),scalar(1),location(top,right))).
 initialize(set_sprite(entity(e_1_XX_),circle)).
 initialize(set_color(entity(e_1_XX_),red)).
 
@@ -19,11 +18,8 @@ timer_logic(timer(t_1_XX_),scalar(7),loop).
 timer_logic(timer(t_2_XX_),scalar(7),loop).
 
 pool(entity(e_1_XX_),location(top,left),random,random).
-pool(entity(e_1_XX_),location(top,center),random,random).
 pool(entity(e_1_XX_),location(top,right),random,random).
-pool(entity(e_1_XX_),location(middle,left),random,random).
 pool(entity(e_1_XX_),location(middle,center),random,random).
-pool(entity(e_1_XX_),location(middle,right),random,random).
 pool(entity(e_1_XX_),location(bottom,left),random,random).
 pool(entity(e_1_XX_),location(bottom,center),random,random).
 pool(entity(e_1_XX_),location(bottom,right),random,random).
@@ -32,7 +28,7 @@ boundary(closed).
 
 
 precondition(timer_elapsed(t_1_XX_),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),decrease(property(entity(e_1_XX_),health),scalar(1))).
+result(outcome(o_1_XX_),decrease(property(entity(e_1_XX_),health),scalar(7))).
 result(outcome(o_1_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_1_XX_),true),outcome(o_2_XX_)).
@@ -40,20 +36,20 @@ result(outcome(o_2_XX_),clear(entity(e_1_XX_))).
 result(outcome(o_2_XX_),delete(entity(e_1_XX_))).
 
 precondition(timer_elapsed(t_2_XX_),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),decrease(property(entity(e_1_XX_),health),scalar(5))).
+result(outcome(o_3_XX_),decrease(property(entity(e_1_XX_),health),scalar(10))).
 result(outcome(o_3_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_1_XX_),true),outcome(o_4_XX_)).
 precondition(le(amount(orange),scalar(4)),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),decrease_over_time(property(entity(e_1_XX_),health),scalar(10))).
-result(outcome(o_4_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(5))).
+result(outcome(o_4_XX_),decrease_over_time(property(entity(e_1_XX_),health),scalar(8))).
+result(outcome(o_4_XX_),increase_over_time(property(entity(e_1_XX_),health),scalar(7))).
 result(outcome(o_4_XX_),clear(entity(e_1_XX_))).
 
 precondition(control_event(button(mouse,held)),outcome(o_5_XX_)).
 result(outcome(o_5_XX_),clear(entity(e_1_XX_))).
 
 precondition(control_event(button(mouse,pressed)),outcome(o_6_XX_)).
-result(outcome(o_6_XX_),decrease(property(entity(e_1_XX_),health),scalar(4))).
+result(outcome(o_6_XX_),decrease(property(entity(e_1_XX_),health),scalar(6))).
 result(outcome(o_6_XX_),clear(entity(e_1_XX_))).
 result(outcome(o_6_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
 
