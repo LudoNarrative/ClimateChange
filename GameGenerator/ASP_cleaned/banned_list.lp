@@ -29,3 +29,7 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 :- replace(result(O,move(E,D)),result(O,apply_impulse(E,D,_))).
 
 :- condition(overlaps(_,_,false)).
+
+%:- condition(compare(_,_,amount(Color))).
+%:- condition(compare(_,amount(Color),_)).
+%:- condition(compare(_,amount(Color))).
