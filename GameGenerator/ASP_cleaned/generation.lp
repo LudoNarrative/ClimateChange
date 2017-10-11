@@ -456,12 +456,15 @@ behaviors(Entity,2) :- 2 {behavior(Entity,BEHAVIOR)} 2, entity(Entity).
 :- behavior_condition(Entity,_,Condition1), behavior_condition(Entity,_,Condition2), Condition1 != Condition2.
 
 
-1 {behavior_condition_polarity(Entity,Behavior,compare(ge;le,Resource))} 1 :- behavior_condition(Entity,Behavior,compare(Resource)).
-same_polarity :- behavior_condition_polarity(Entity,Behavior1,compare(Direction,Resource)),
-   behavior_condition_polarity(Entity,Behavior2,compare(Direction,Resource)),
-   Behavior1 != Behavior2.
-:- same_polarity.
+comparisons(ge;le).
+1 {behavior_condition_polarity(Entity,Behavior,compare(Comparison,Resource)) :
+  comparisons(Comparison)} 1 :- behavior_condition(Entity,Behavior,compare(Resource)).
 
+same_polarity :-
+    behavior_condition_polarity(Entity,Behavior1,compare(Direction,Resource)),
+    behavior_condition_polarity(Entity,Behavior2,compare(Direction,Resource)),
+    Behavior1 != Behavior2.
+:- same_polarity.
 
 chases(ENTITY,OTHER) :- behavior(ENTITY,chase(OTHER)).
 
