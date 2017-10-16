@@ -1,6 +1,17 @@
 allowed(frivolous(Resource)) :- read_only(Resource).
 frivolous(Resource) :- read_only(Resource).
 
+
+
+relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome3,modify(Direction,Resource3))) :-
+    relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2))),
+    relative(greater,result(Outcome2,modify(Direction,Resource2)),result(Outcome3,modify(Direction,Resource3))).
+
+:- relative(greater,result(Outcome,modify(Direction,Resource)),result(Outcome,modify(Direction,Resource))).
+
+
+
+
 :- read_only(Resource),
 	action(modify(_,Resource)).
 :- read_only(Resource),
@@ -706,6 +717,12 @@ uses_color :- uses_color(Color).
    not condition(compare(_,amount(Color),_)),
    not condition(over_color(_,Color)).
 
+:- precondition(compare(le,amount(Color),_),O),
+   result(O,clear(_)).
+:- precondition(compare(ge,amount(Color),_),O),
+   result(O,draw(Color)).
+
+
 :- 2 {precondition(compare(_,amount(Color),_),O)}.
 
 %:- condition(compare(_,amount(Color),_)).
@@ -734,3 +751,13 @@ uses_color :- uses_color(Color).
    2 { precondition(overlaps(E1,E2,true),_)},
    result(O1,delete(E2)),
    only_one_precondition(O1).
+
+
+opposed(compare(ge,R),compare(le,R)) :-
+    condition(compare(ge,R)),
+    condition(compare(le,R)).
+
+opposed(compare(ge,R,O),compare(le,R,O)) :-
+    condition(compare(ge,R,O)),
+    condition(compare(le,R,O)).
+

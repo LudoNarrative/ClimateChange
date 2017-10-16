@@ -46,3 +46,6 @@ label(entity(e(2)),friend).
 
 %:- not entity(entity(wall)).
 
+
+%:- not relative(_,_,_).
+
