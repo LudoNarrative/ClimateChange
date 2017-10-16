@@ -15,7 +15,7 @@ buttonStates(pressed;held).
 
 %sprite(square;circle;triangle;pentagon;star).
 sprite(circle).
-
+conditional_direction(ge;le).
 angle_direction(cw;ccw).
 %colors(red;green;blue;yellow;magenta;cyan;white;gray;black).
 colors(red,1).
