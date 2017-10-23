@@ -227,15 +227,52 @@ monotonic(Color,decrease) :-
     Color != OtherColor.
 
 
+uses_color(Color) :-
+    action(clear(_)),
+    initialize(fill(_,Color)).
+
+uses_color(Color) :-
+    not initialize(fill(_,Color)),
+    action(draw(_,Color)).
+
+
+uses_color :- uses_color(Color).
+
+
+
+satisfies(ge,increase).
+satisfies(le,decrease).
+
+opposite(forward,backward).
+opposite(left,right).
+opposite(north,south).
+opposite(up,down).
+opposite(cw,ccw).
+
+movement(move(E,D)) :- action(move(E,D)).
+
+buttonPriority(mouse,space).
+buttonPriority(space,down_arrow).
+buttonPriority(down_arrow,up_arrow).
+buttonPriority(up_arrow,left_arrow).
+buttonPriority(up_arrow,right_arrow).
+buttonPriority(A,C) :-
+    buttonPriority(A,B),
+    buttonPriority(B,C).
+
 monotonic(Entity) :- monotonic(Entity,_).
 
 non_monotonic(Entity) :- not monotonic(Entity),
 			 entity(Entity).
-			     
+
+relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome3,modify(Direction,Resource3))) :-
+    relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2))),
+    relative(greater,result(Outcome2,modify(Direction,Resource2)),result(Outcome3,modify(Direction,Resource3))).			     
 
 
 super_trivial(Outcome) :- precondition(control_event(_),Outcome),
-		    1 {precondition(_,Outcome)} 1.
+			  1 {precondition(_,Outcome)} 1,
+			  not hand_eye_coordination(Outcome).
 
 super_trivial(Outcome) :- precondition(timer_elapsed(_),Outcome),
 		    1 {precondition(_,Outcome)} 1.
@@ -245,6 +282,11 @@ trivial(O) :- super_trivial(O).
 trivial(O) :- 
 	precondition(control_event(_),O),
 	  reading(bad,O).
+
+allowed(frivolous(Resource)) :- read_only(Resource).
+frivolous(Resource) :- read_only(Resource).
+
+
 
 trivial(Outcome) :-  chases(ENTITY,OTHER),
 				  precondition(overlaps(ENTITY,OTHER,true),Outcome),
