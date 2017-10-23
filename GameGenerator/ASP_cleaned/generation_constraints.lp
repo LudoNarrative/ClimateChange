@@ -1,11 +1,54 @@
-allowed(frivolous(Resource)) :- read_only(Resource).
-frivolous(Resource) :- read_only(Resource).
+
+
+%% :- has_precondition(O1),
+%%    has_precondition(O2),
+%%    not different_precondition(O1,O2),
+%%    O1 != O2.
+
+:- precondition(control_event(click(_)),O),
+    not precondition(control_event(button(mouse,pressed)),O).
+
+
+:- N + 1 {precondition(_,_)},
+   preconditions_allowed(N)  .
+
+
+% constraint on reachability
+:- outcome(O), unreachableOutcome(O).
+
+
+:- precondition(overlaps(E1,E2,_),O),
+   precondition(control_event(_),O),
+   1 { precondition(overlaps(E1,E2,_),_) } 1.
+
+% Don't have more than 1 control event per outcome
+:- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME) ,
+   not precondition(control_event(click(_)),OUTCOME),
+   not precondition(control_event(button(mouse,pressed)),OUTCOME). 
+
+:- frivolous(R), not allowed(frivolous(R)).
+
+:- precondition(timer_elapsed(T),Outcome), 2 { precondition(C,Outcome)}.
+
+
+:- spatial_condition(E1,E2), not moves(E1), not moves(E2).
+
+% only allow something to decrease on tick if it can be increased
+:- 1 {result(tick, modify(decrease,R));
+		result(tick, modify(decrease,R,_))},
+	resource(R),
+	0 {result(tick, modify(increase,R));
+		result(tick, modify(increase,R,_))}.
+
+% only allow something to decrease on tick if it can be increased
+:- 1 {result(tick, modify(increase,R));
+		result(tick, modify(increase,R,_))},
+	resource(R),
+	0 {result(tick, modify(decrease,R));
+		result(tick, modify(decrease,R,_))}.
 
 
 
-relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome3,modify(Direction,Resource3))) :-
-    relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2))),
-    relative(greater,result(Outcome2,modify(Direction,Resource2)),result(Outcome3,modify(Direction,Resource3))).
 
 :- relative(greater,result(Outcome,modify(Direction,Resource)),result(Outcome,modify(Direction,Resource))).
 
@@ -164,14 +207,6 @@ relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome3,mo
     1 {result(O2,modify(decrease,R));
 	result(O2,modify(decrease,R,_))}.
 
-buttonPriority(mouse,space).
-buttonPriority(space,down_arrow).
-buttonPriority(down_arrow,up_arrow).
-buttonPriority(up_arrow,left_arrow).
-buttonPriority(up_arrow,right_arrow).
-buttonPriority(A,C) :-
-    buttonPriority(A,B),
-    buttonPriority(B,C).
 
 :- not condition(control_event(button(BUTTON1,_))),
    condition(control_event(button(BUTTON2,_))),
@@ -185,8 +220,6 @@ buttonPriority(A,C) :-
    result(O,move(E1,direction(backward))),
    action(look_at(E1,E2,_)).
 
-
-movement(move(E,D)) :- action(move(E,D)).
 
 :- result(outcome(avatar(M1)),A),
    not result(outcome(avatar(M2)),A),
@@ -276,11 +309,6 @@ movement(move(E,D)) :- action(move(E,D)).
 :- precondition(overlaps(E1,E2,_),O),
 	result(O,rotate_to(_,_)).	
    
-opposite(forward,backward).
-opposite(left,right).
-opposite(north,south).
-opposite(up,down).
-opposite(cw,ccw).
 
 :- result(O,move(E,direction(D1))),
 	result(O,move(E,direction(D2))),
@@ -328,9 +356,6 @@ opposite(cw,ccw).
 
    
 
-satisfies(ge,increase).
-satisfies(le,decrease).
-
 :- not over_time(Change,Resource),
    precondition(compare(Dir,Resource),O),
    player_model(O,player_will_attempt),
@@ -364,14 +389,12 @@ satisfies(le,decrease).
 :- action(move(entity(e(E1)),direction(_,entity(e(E2))))),
    E2 < E1.
 
-:- not condition(control_event(click(entity(e(E1))))),
-   condition(control_event(click(entity(e(E2))))),
-   entity(entity(e(E1))),
-   E1 < E2.
+% THIS WAS A BAD ONE
+%:- not condition(control_event(click(entity(e(E1))))),
+%   condition(control_event(click(entity(e(E2))))),
+%   entity(entity(e(E1))),
+%   E1 < E2.
 
-:- precondition(overlaps(E1,E2,_),O),
-   precondition(control_event(_),O),
-   1 { precondition(overlaps(E1,E2,_),_) } 1.
 
 :- precondition(overlaps(E1,E2,true),O1),
    result(O1,delete(entity(E))),
@@ -385,9 +408,7 @@ satisfies(le,decrease).
    not precondition(overlaps(_,E1,true),O),
    not precondition(overlaps(E1,_,true),O),
    not precondition(control_event(click(E1)),O).
-
-% Don't have more than 1 control event per outcome
-:- 2 {precondition(control_event(EVENT),OUTCOME) }, outcome(OUTCOME).     
+    
 :- not playerControls.
 
 %AJS - GETTING RID OF THIS Only 1 avatar
@@ -421,13 +442,7 @@ different_precondition(O1,O2) :-
     outcome(O1),
     outcome(O2).
 
-:- has_precondition(O1),
-   has_precondition(O2),
-   not different_precondition(O1,O2),
-   O1 != O2.
 
-
-:- spatial_condition(E1,E2), not moves(E1), not moves(E2).
 
   
 % require entities
@@ -442,19 +457,6 @@ different_precondition(O1,O2) :-
 :- action(add(Entity,_,_)),
    not action(delete(Entity)).
 
-% only allow something to decrease on tick if it can be increased
-:- 1 {result(tick, modify(decrease,R));
-		result(tick, modify(decrease,R,_))},
-	resource(R),
-	0 {result(tick, modify(increase,R));
-		result(tick, modify(increase,R,_))}.
-
-% only allow something to decrease on tick if it can be increased
-:- 1 {result(tick, modify(increase,R));
-		result(tick, modify(increase,R,_))},
-	resource(R),
-	0 {result(tick, modify(decrease,R));
-		result(tick, modify(decrease,R,_))}.
 
 
 % Don't check more than 1 collision
@@ -484,21 +486,12 @@ different_precondition(O1,O2) :-
 :- action( add(Entity,_,_)), singular(Entity).
 
 
-% constraint on reachability
-:- outcome( O), unreachableOutcome(O).
-
-
-%% Don't check for "mouse button pressed" and "clicking" an entity in the
-%  same game
-:- condition(control_event(button(mouse,pressed))),
-   condition(control_event(click(_))).
 
 
 % Don't let something move away from the cursor if we need to click on it.
 %:- result(O, move(E, direction(away,cursor))),
 %   condition(control_event(click(E))).
 
-:- precondition(timer_elapsed(T),Outcome), 2 { precondition(C,Outcome)}.
 
 
 :- entity(entity(e(N))),
@@ -603,7 +596,6 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE,_)), trivial(O).
    
    
   
-:- frivolous(R), not allowed(frivolous(R)).
 
 
 :- monotonic(R), not allowed(monotonic(R)).
@@ -668,8 +660,7 @@ player_controls_resource(R,Dir) :-
 :- 4 {result(Outcome,_)},
    outcome(Outcome),
    Outcome != tick.
-:- N + 1 {precondition(_,_)},
-   preconditions_allowed(N)  .
+
 
 
 :- boundary(torus), 
@@ -694,13 +685,6 @@ player_controls_resource(R,Dir) :-
    col(C).
 
 
-uses_color(Color) :-
-    action(clear(_)),
-    initialize(fill(_,Color)).
-
-uses_color(Color) :-
-    not initialize(fill(_,Color)),
-    action(draw(_,Color)).
 
 :- condition(compare(_,_,amount(Color))),
    not uses_color(Color).
@@ -708,7 +692,6 @@ uses_color(Color) :-
 :- condition(over_color(_,Color)),
    not uses_color(Color).
 
-uses_color :- uses_color(Color).
 
 :- not uses_color,
    action(clear(_)).
@@ -716,12 +699,6 @@ uses_color :- uses_color(Color).
 :- uses_color(Color),
    not condition(compare(_,amount(Color),_)),
    not condition(over_color(_,Color)).
-
-:- precondition(compare(le,amount(Color),_),O),
-   result(O,clear(_)).
-:- precondition(compare(ge,amount(Color),_),O),
-   result(O,draw(Color)).
-
 
 :- 2 {precondition(compare(_,amount(Color),_),O)}.
 
@@ -751,13 +728,3 @@ uses_color :- uses_color(Color).
    2 { precondition(overlaps(E1,E2,true),_)},
    result(O1,delete(E2)),
    only_one_precondition(O1).
-
-
-opposed(compare(ge,R),compare(le,R)) :-
-    condition(compare(ge,R)),
-    condition(compare(le,R)).
-
-opposed(compare(ge,R,O),compare(le,R,O)) :-
-    condition(compare(ge,R,O)),
-    condition(compare(le,R,O)).
-

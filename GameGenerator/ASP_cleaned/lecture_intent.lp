@@ -34,9 +34,12 @@ required(maintenance).
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
 
-
+:- not condition(control_event(click(entity(e(2))))).
 
 
 :- not computer_controls(_).
 :- 0 {behavior(_,_)} 0.
+
+
+
 
