@@ -3,64 +3,51 @@
 
 //TODO: currently lectureEndWell, lectureEndOK, and LectureEndBadly erroneously use "set followUp true" to ensure wishlist item is met if you don't followup with the student, but that is not technically correct. Needs to be re-worked
 
+/*
+wishlist for this library:
+{ condition: "establishScene eq true" },
+{ condition: "establishDetails eq true" },
+{ condition: "establishComposure eq true" },
+{ condition: "establishStudents eq true" },
+{ condition: "enthusiasticStudent eq true"},
+{ condition: "skepticalStudent eq true"},
+{ condition: "shyStudent eq true"},
+{ condition: "talkToStudent gte 3" },
+{ condition: "followUp eq true" },
+{ condition: "lectureEnd eq true" },
+*/
 
 [
-
-    //FAILURE DUE TO CONCENTRATION GETTING TOO LOW
-    {
-        "id" : "gameInterrupt",
-        "gameInterrupt" : true,           //this fragment can be used by the game to immediately interrupt the narrative
-        "repeatable" : false,
-        "content" : "It's suddenly too much. You can't do this. You break into a cold sweat, and snap your laptop closed. The screen goes blank.<br><br>\"Th-that's it. I uh...I'm done. Class is over. Goodbye.\" You practically run from the classroom, gritting your teeth, the shocked whispers of your students chasing you out the building to your car.",
-        "choices" : [
-          {"gotoId" : "failEnding"}
-        ],
-        "conditions" : [
-          "concentration lte 1"
-        ]
-    },
-    {
-        "id" : "failEnding",
-        "repeatable" : false,
-        "choiceLabel" : "End scene",
-        "content" : " ",
-        "conditions" : [
-          "concentration lte 1"
-        ],
-        "effects" : [ 
+{
+        "id": "establishScene",
+        "content": "Tap-tap-tap-tap. Your feet follow a steady rhythm as you head through the hallway to your first class. As you get near the room, you begin to feel a bit {ifStateCondition|composure gte 5|excited|uneasy}.",
+        "effects": [
             "set establishScene true",
-            "set establishConcentration true",
-            "set establishStudents true",
-            "set enthusiasticStudent true",
-            "set skepticalStudent true",
-            "set shyStudent true",
-            "set talkToStudent 3",
-            "set followUp true",
-            "set lectureEnd true"
+            "set lecture true",
+            "set composure 5"
         ]
 
     },
 
     {
         "id": "establishLecture",
-        "content": "Walking through the double doors, you try to gather yourself. The sound of shifting backpacks and quiet conversations fills the lecture hall. It's a decent-sized room, not bad for your first class. Looks like about 200 students.",
+        "content": "Walking through the double doors, you are greeted by the shifting of backpacks and the sounds of little conversations throughout the lecture hall. It's a decent-sized room, not bad for your first lecture. ",
         "effects": [
-            "set establishScene true",
-            "set lecture true",
-            "set concentration 5"
+            "set establishDetails true"
         ],
         "conditions": [
             "lecture eq true",
+            "establishScene eq true"
         ],
         "choices": [{
-            "gotoId": "concentrationBridge"
+            "gotoId": "lookAround"
         }]
 
     },
 
     {
         "id": "establishSeminar",
-        "content": "Walking through the door, you are greeted by a group of around 20 students engaged in various conversations. Large enough for some good discussion, yet small enough to really interact with them one-on-one: perfect.",
+        "content": "Walking through the door, you are greeted by a group of young-looking students engaged in various conversations. There are still a few minutes left before class begins so you take a seat and familiarize yourself with your surroundings.",
         "effects": [
             "set establishDetails true"
         ],
@@ -69,78 +56,153 @@
             "establishScene eq true"
         ],
         "choices": [{
-            "gotoId": "concentrationBridge"
+            "gotoId": "lookAround"
         }]
     },
+
     {
-        "id": "concentrationBridge",
+        "id": "lookAround",
+        "choiceLabel": "Look around the room",
+        "content": "As your eyes scan the room, several things catch your attention.",
+        "repeatable": "true",
+
+        "choices": [{
+                "gotoId": "seatNumber"
+            },
+            {
+                "gotoId": "frontDesk"
+            },
+            {
+                "gotoId": "whiteBoard"
+            },
+            {
+                "gotoId": "composureBridge"
+            }
+        ]
+    },
+
+    {
+        "id": "seatNumber",
+        "choiceLabel": "Look at all the seats",
+        "unavailableChoiceLabel": "Already counted the seats",
+        "content": "Your eyes quickly jump across all the seats in the room. {ifStateCondition|lecture eq true|There are easily enough seats for 200 students.|The room itself is not large but it is packed full of students who look eager to learn.} Seeing the faces watching in anticipation {ifStateCondition|composure gte 5|excites you.|adds more pressure than you'd like.}",
+        "effects": [
+            "incr roomObjects 1"
+        ],
+        "choices": [{
+            "gotoId": "lookAround"
+        }]
+    },
+
+
+
+    {
+        "id": "frontDesk",
+        "choiceLabel": "Glance down at your workstation",
+        "unavailableChoiceLabel": "Already examined your workstation",
+        "content": "The table in front of you is organized with an abundance of supplies. {ifStateCondition|composure gte 5| You will put all of them to good use.| It's actually a little overwhelming.}",
+        "effects": [
+            "incr roomObjects 1"
+        ],
+        "choices": [{
+            "gotoId": "lookAround"
+        }]
+    },
+
+    {
+        "id": "whiteBoard",
+        "choiceLabel": "Check out the whiteboard",
+        "unavailableChoiceLabel": "Already checked out the whiteboard",
+        "content": "At the front of the room {ifStateCondition|lecture eq true|are three large whiteboards arranged side-by-side. A lot of room to work with.|is a large whiteboard. Just enough space to work with.}",
+        "effects": [
+            "incr roomObjects 1"
+        ],
+        "choices": [{
+            "gotoId": "lookAround"
+        }]
+    },
+
+    {
+        "id": "composureBridge",
+        "unavailableChoiceLabel": "Familiarize yourself with the space first",
         "choiceLabel": "Start the class",
-        "content": "You glance at the clock. {ifStateCondition|concentration gte 5|Alright,|God,} only five minutes left until class starts. After a few deep breaths, you feel {ifStateCondition|concentration gte 5|calm and ready to go.|still pretty nervous.}",
+        "content": "You glance at the clock. {ifStateCondition|composure gte 5|Alright,|Oh no,} only five minutes left until class starts. After a few deep breaths, you find yourself {ifStateCondition|composure gte 5|calm and ready to go.|still pretty nervous.}",
         "conditions": [
+            "roomObjects gt 2"
         ],
         "choices":[
-            {"gotoId": "lowConfidenceconcentration"},
-            {"gotoId": "mediumConfidenceconcentration"},
-            {"gotoId": "highConfidenceconcentration"}
+            {"gotoId": "lowConfidenceComposure"},
+            {"gotoId": "mediumConfidenceComposure"},
+            {"gotoId": "highConfidenceComposure"}
         ]
     },
 
     {
-        "id": "lowConfidenceconcentration",
+        "id": "lowConfidenceComposure",
 
-        "choiceLabel": "Let's get this over with (low confidence)",
+        "choiceLabel": "Let's get this over with.",
         "unavailableChoiceLabel": " ",
-        "content": "It's time to start class, but you find yourself at a loss for words. After a few seconds of silence, you manage to force out, \"Umm hi, I mean uhh, hello class.\" The students look at you curiously. \"We'll be learning um about climate change. Haha sorry, this is my first lecture.\"",
+        "content": "It's time to start class, but you find yourself at a loss for words. After a few seconds of silence, you manage to force out, \"Umm hi, I mean uhh, hello class.\" At this point, you are seriously considering running out the door. \"We'll be learning about climate change. Haha sorry, this is my first lecture.\" The last sentence is accompanied by a few seconds of forced laughter.",
         "effects": [
-            "set establishConcentration true"
+            "set establishComposure true"
         ],
         "conditions": [
-            "concentration lt 5"
+            "composure lt 5"
 
         ],
         "choices": [
-            {"gotoId": "lectureContent2"}
+            {"gotoId": "lectureContent"}
         ]
     },
 
 
     {
-        "id": "mediumConfidenceconcentration",
-        "choiceLabel": "Time to start my first class... (medium confidence)",
+        "id": "mediumConfidenceComposure",
+        "choiceLabel": "Time to start my first class.",
         "unavailableChoiceLabel": " ",
-        "content": "As class begins, the students settle down. You clear your throat. \"Hello everyone, welcome to my class. This quarter we're going to be learning about climate change.\"",
+        "content": "As class begins, the students settle down and focus their attention to you. You clear your throat. \"Hello everyone, welcome to my class, in which we will be discussing the issue of climate change.\"",
         "effects": [
-            "set establishConcentration true"
+            "set establishComposure true"
         ],
         "conditions": [
-            "concentration gte 5",
-            "concentration lt 10"
+            "composure gte 5",
+            "composure lt 10"
         ],
         "choices": [
-            {"gotoId": "lectureContent2"}
+            {"gotoId": "lectureContent"}
         ]
 
     },
 
     {
-        "id": "highConfidenceconcentration",
-        "choiceLabel": "Great! Time to start my first class! (high confidence)",
+        "id": "highConfidenceComposure",
+        "choiceLabel": "Great! Time to start my first class!",
         "unavailableChoiceLabel": " ",
-        "content": "You cannot wait to get the class started. As soon as the class period begins, you clear your throat and say, \"Good afternoon everyone and welcome to my class! We're going to have a great time this semester learning about the issue of climate change, and what we can do to help combat it.\"",
+        "content": "You cannot wait to get the class started. As soon as the class period begins, you clear your throat and say, \"Good afternoon everyone and welcome to my class! We're going to have a great time this semester learning about the issue of climate change and what we can do to help better the environment.\"",
         "effects": [
-            "set establishConcentration true"
+            "set establishComposure true"
         ],
         "conditions": [
-            "concentration gte 10"
+            "composure gte 10"
         ],
         "choices": [
-            {"gotoId": "lectureContent2"}
+            {"gotoId": "lectureContent"}
         ]
     },
+
+    {
+        "id": "lectureContent",
+        "choiceLabel": "Give introduction",
+        "content": "\"First things first,{ifStateCondition|composure lt 5| uh,|} I am going to give you all a sense of what this quarter will be like.\"<br/>You introduce the basic structure of the class and provide the students with a grading rubric and a little background about yourself.<br/>\"The content of the class is not necessarily super hard. My goal is to educate you on the effects of climate change and what you can do to help.\"",
+        "choices":[{
+            "gotoId": "lectureContent2"
+        }]
+    },
+
     {
         "id": "lectureContent2",
-        "choiceLabel": "Continue lecture",
-        "content": "\"Let me give you an interesting statistic, just to get your feet wet. The water in our oceans is roughly{ifStateCondition|concentration lt 5|,\" the students watch as you pause to consult your notes, \"|} 25% more acidic than it was in the 1800s. This is because human actions are raising the CO2 levels in the {ifStateCondition|concentration lt 5|water, err I mean, in the|} atmosphere.\"",
+        "choiceLabel": "Give an example of what to expect.",
+        "content": "\"Let me give you an interesting statistic, just to get your feet wet. The water in our oceans is roughly{ifStateCondition|composure lt 5|,\" the students watch you quietly as you pause to consult your notes, \"|}25% more acidic than it was in the 1800s. This is because human actions are raising the CO2 levels in the {ifStateCondition|composure lt 5|water, err I mean, in the|} atmosphere.\"",
         "choices":[{
             "gotoId": "lectureContent3"
         }]
@@ -150,7 +212,7 @@
     {
         "id": "lectureContent3",
         "choiceLabel": "Just a few more examples",
-        "content": "You present a few more quick facts before continuing. {ifStateCondition|concentration gte 5|So far, it seems like it's going well. \"Those|Some people are yawning in the front row. \"Th-those} were just a few examples of things we'll be covering. Besides effects of climate change, you'll also learn how each of you can help out, both locally and on the global scale.\"",
+        "content": "You present a few more snippets of information before continuing. \"Those were just a few examples of things we will be studying. Besides effects of climate change, we will also be learning about all the ways each of you can help out, both locally and on the global scale.\"",
         "choices": [
             {"gotoId": "lectureBridge"},
             {"gotoId": "seminarBridge"}
@@ -163,7 +225,7 @@
     {
         "id": "lectureBridge",
         "choiceLabel": "Take some questions (lecture)",
-        "content": "{ifStateCondition|concentration lt 5|Thirty long minutes of examples later, it's time for the part you've been dreading. \"Ok, well, I guess if anyone has questions, I can try to uh answer them?\"|Thirty minutes of examples later, you can tell by the shifting in their seats that it's time to switch things up. \"Ok! Now that you've got a general idea...who has questions?\"}",
+        "content": "Thirty {ifStateCondition|composure lt 5|long|} minutes of general examples later, you tell the class \"well, now that you know the general idea behind what you can expect from this quarter, {ifStateCondition|composure gte 5|I can answer any questions people have.|I guess I can try to answer your questions.}\"",
         "effects": [
             "set bridgeFinished true"
         ],
@@ -179,7 +241,7 @@
     {
         "id": "seminarBridge",
         "choiceLabel": "Take some questions (seminar)",
-        "content": "\"{ifStateCondition|concentration gte 5|Well that's enough talking from me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|concentration gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
+        "content": "\"{ifStateCondition|composure gte 5|Well that's enough talking for me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|composure gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
         "effects": [
             "set bridgeFinished true"
         ],
@@ -207,16 +269,13 @@
         "set skepticalStudent true",
         "incr talkToStudent 1",
         "decr questionsLeft 1"
-      ],
-      "conditions" : [
-        "questionsLeft gt 0"
       ]
     },
 
     {
       "id" : "logicResponse",
       "choiceLabel" : "Turn to the facts.",
-      "content" : "\"Well...while there might be a number of people who believe in the same thing that your mother does, the facts don't lie. We'll go over specifics in future classes, but here are just some rough statistics for you. The global temperature has increased by 1.7 degrees fahrenheit since 1880, and the minimum amount of arctic ice decreases about 13.3 percent each decade.\"",
+      "content" : "\"Good question! While there are a number of people in the world who believe in the same thing that your mom does, the facts don't lie. We will go over the specifics in future classes but here are some statistics for you. The global temperature has increased by 1.7 degrees fahrenheit since 1880, and the minimum amount of arctic ice decreases about 13.3 percent each decade.\"",
       "effects" : [
         "incr optimism 1",
         "incr hope 1",
@@ -227,7 +286,7 @@
     {
       "id" : "sourResponse",
       "choiceLabel" : "\"Really? A conspiracy?\"",
-      "content" : "\"So let me get this straight, there are hundreds of thousands of scientist around the world who dedicate their lives to studying climate change, and your mother claims they're all lying? 95% of those scientist can prove, using real data that they or their peers worked hard to collect, that the Earth's climate is changing.\"",
+      "content" : "\"So let me get this straight, there are hundreds of thousands of scientist around the world who dedicate their lives to studying climate change, and your mom is claiming that they are all liars? 95% of those scientist can prove, using real data that they or their peers worked hard to collect, that the Earth's climate is changing. And you're telling me that global warming isn't real?\"",
       "effects" : [
         "decr skepticCuriosity 2"
       ]
@@ -236,7 +295,7 @@
     {
       "id" : "valueResponse",
       "choiceLabel" : "\"Your mom is biased\"",
-      "content" : "\"Big oil companies like the one your mom works with are one of the leading causes of climate change. If laws and regulations were passed to limit the amount of carbon that buildings are allowed to emit, then it would probably hurt oil companies. So of course your mother would say it's a conspiracy. But the facts don't lie.\"",
+      "content" : "\"Big oil companies like the one your mom works with are one of the leading causes of climate change. If laws and regulations were passed to limit the amount of carbon that buildings are allowed to emit, then it would probably hurt oil companies. So of course your mom thinks it's a conspiracy. But the facts don't lie.\"",
       "effects" : [
         "incr optimism 1",
         "incr curiosity 1"
@@ -266,7 +325,7 @@
     {
         "id": "followUpAnswer1",
         "choiceLabel": "\"The changes are more impactful than you think.\"",
-        "content": "\"Well, {ifStateCondition|concentration lt 5|uhhh,|}the impact of climate change is much larger than you think. {ifStateCondition|concentration lt 5|If I remember correctly... |}The sea level has been steadily rising for the past 200 years. It is projected to rise another 1 to 4 feet in the next century. That is enough to cause many low sea level areas to flood. We have also see an increase in frequency of very strong hurricanes, which I'm sure is something you would rather not happen.\"",
+        "content": "\"Well, {ifStateCondition|composure lt 5|uhhh,|}the impact of climate change is much larger than you think. {ifStateCondition|composure lt 5|If I remember correctly... |}The sea level has been steadily rising for the past 200 years. It is projected to rise another 1 to 4 feet in the next century. That is enough to cause many low sea level areas to flood. We have also see an increase in frequency of very strong hurricanes, which I'm sure is something you would rather not happen.\"",
         "effects": [
             "decr optimism 1",
             "decr hope 1"
@@ -279,7 +338,7 @@
     {
         "id": "followUpAnswer2",
         "choiceLabel": "\"It is still our home.\"",
-        "content": "\"We only have this planet, so it's our duty to take care of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations.\"",
+        "content": "\"We were fortunate enough to be born on this planet so it is our duty to take care of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations.\"",
         "effects": [
             "incr optimism 1",
             "incr hope 1"
@@ -292,7 +351,7 @@
     {
         "id": "followUpAnswer3",
         "choiceLabel": "\"Well, you don't have to care.\"",
-        "content": "\"Whether you care or not is up to you. You're right, we won't be around to see all of the arctic ice melt and swallow up coastal cities, or feel the temperature increase to unbearable levels. But if each of us does our part, we can help prevent our decendants from experiencing the slow death of our planet.\"",
+        "content": "\"Whether you care or not is up to you. You're right, we won't be around to see all of the arctic ice melt and swallow up all of the land, or to feel the temperature increase to unbearable levels. But with just a little effort from each of us, we could prevent our decendants from having to experience the slow death of our wonderful planet.\"",
         "effects": [
             "decr optimism 1",
             "decr curiosity 1"
@@ -305,14 +364,14 @@
     {
         "id": "lectureEndWell",
         "choiceLabel" : "Continue",
-        "content": "As the end of the class period draws near, the eyes of every student are fixed on you, waiting for your permission to leave. \"Well, that concludes the first lecture. Sorry if it didn't go as smoothly as you were expecting, but we're all going to learn throughout this quarter. I'll see you all next time!\" The sound of books closing and backpacks being zipped up erupts all around the room as the students leave. Some even flash you a smile on the way out.",
+        "content": "As the end of the class period draws near, the eyes of every student are fixed on you, waiting for your permission to leave. \"Well, that concludes the first lecture. Sorry if it didn't go as smoothly as you were expecting, but we are all going to learn throughout this quarter. I'll see you all next time!\" The sound of books closing and backpacks being zipped up erupts all around the room as, one-by-one, the students leave. Some even flash you a smile on the way out.",
         "effects": [
-            "incr concentration 3",
+            "incr composure 3",
             "set lectureEnd true",
             "set followUp true"
         ],
         "conditions": [
-            "concentration gte 10",
+            "composure gte 10",
             "bridgeFinished eq true"
         ]
     },
@@ -322,13 +381,13 @@
         "choiceLabel" : "Continue",
         "content": "You hear a faint rustling of bags and papers. You realize that the class period has ended and students are becoming restless. \"Oh I'm sorry guys, I promise to get better at this as the quarter goes on. I'll see you all next time!\"",
         "effects": [
-            "incr concentration 1",
+            "incr composure 1",
             "set lectureEnd true",
             "set followUp true"
         ],
         "conditions": [
-            "concentration gte 5",
-            "concentration lt 10",
+            "composure gte 5",
+            "composure lt 10",
             "bridgeFinished eq true"
         ]
     },
@@ -338,19 +397,19 @@
         "choiceLabel" : "Continue",
         "content": "You spot a few students leaving early and your eyes dart to the clock, afraid that you have gone past the end of the class period, but there's still a lot of time left. You are thrown off by what just happened and lose your train of though. \"Umm haha sorry everyone, I completely forgot what I was going to talk about next. Uhh there wasn't that much left anyways so I guess you're dismissed for today. I'll see you next time.\"",
         "effects": [
-            "incr concentration -2",
+            "incr composure -2",
             "set lectureEnd true",
             "set followUp true"
         ],
         "conditions": [
-            "concentration lt 5",
+            "composure lt 5",
             "bridgeFinished eq true"
         ]
     },
     {
     "id": "establishStudents",
     "choiceLabel" : "Continue",
-    "content": "{ifStateCondition|questionsLeft lte 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft eq 2|You have time for a couple more questions.|}{ifStateCondition|questionsLeft eq 3|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room at the raised hands. {ifStateCondition|concentration lt 3|You feel a twitch of uncertainty. You hope you can survive the questions.|Only a few. Oh well, you'll take what you can get.} Let's see. How about...",
+    "content": "{ifStateCondition|questionsLeft lte 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft eq 2|You have time for a couple more questions.|}{ifStateCondition|questionsLeft eq 3|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room and observe the hands in the air. {ifStateCondition|composure lt 3|You feel uncertainty tug at you as your hands twitch. You hope you can survive the questions.|Only a few. Oh well, you'll take what you can get.} Let's see. How about...",
     "choices" : [
       {"gotoId" : "elikaIntro"},
       {"gotoId" : "franklinIntro"},
@@ -392,16 +451,13 @@
   "id" : "elikaIntro",
   "unavailableChoiceLabel" : "Already called on {name|enthusiasticStudent}.",
   "choiceLabel" : "...the student waving her hand enthusiastically.",
-  "content": "You call on {name|enthusiasticStudent} for perhaps the fifth time, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now...wouldn't taking carbon dioxide out of the atmosphere help with the acidity of the ocean?\"",
+  "content": "You call on {name|enthusiasticStudent} for perhaps the fifth time, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now - isn't that great? Wouldn't taking carbdon dioxide out of the atmosphere help with the acidity of the ocean?\"",
   "choices" : [
     {"gotoId" : "elikaNext"}
   ],
   "effects" : [
     "decr questionsLeft 1"
-  ],
-  "conditions" : [
-        "questionsLeft gt 0"
-      ]
+  ]
 },
 
 {
@@ -423,7 +479,7 @@
 {
   "id" : "encouragingResponse",
   "choiceLabel" : "Yeah, absolutely!",
-  "content" : "{ifStateCondition|concentration gte 5|Looking around at all the bored and unconvinced faces, you decide to say |You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out} \"That is an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|enthusiasticStudent} beams, though you notice faces that aren't as happy.",
+  "content" : "{ifStateCondition|composure gte 5|Looking around at all the bored and unconvinced faces, you decide to say,|You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out a general} \"That is an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|enthusiasticStudent} beams, though you notice faces that aren't as happy.",
   "effects" : [
     "incr optimism 1",
     "incr hope 1",
@@ -437,12 +493,12 @@
 {
   "id" : "gentleResponse",
   "choiceLabel" : "It's actually a bit more complicated than that.",
-  "content" : "{ifStateCondition|concentration gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would also be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
+  "content" : "{ifStateCondition|composure gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would also be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
   "effects" : [
     "decr optimism 1",
     "incr hope 1",
     "incr curiosity 1",
-    "incr concentration 1"
+    "incr composure 1"
   ],
   "choices" : [
     {"gotoId" : "elikaFollowUp"}
@@ -451,13 +507,13 @@
 
 {
   "id" : "bluntResponse",
-  "choiceLabel" : "No, you've got your facts wrong.",
-  "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But don't believe the hype. It's actually done at the power plants, either before or after the coal gets burned - and it would take a lot of energy, reducing the plant's output, so it's not likely to be adopted as the technology currently stands.\"",
+  "choiceLabel" : "No, you've got your facts completely wrong.",
+  "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But no, it's actually done at the power plants, either before or after the coal gets burned - it would take a lot of energy, reducing the plant's output, which is not what our energy-hungry country wants right now.\"",
   "effects" : [
     "decr optimism 2",
     "decr hope 1",
     "decr curiosity 1",
-    "decr concentration 1"
+    "decr composure 1"
   ],
   "choices" : [
     {"gotoId" : "bluntResponse2"}
@@ -486,7 +542,7 @@
 {
   "id": "questionBridge",
   "choiceLabel": "Call on another student.",
-  "content": "You check the clock. {ifStateCondition|concentration lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
+  "content": "You check the time. {ifStateCondition|composure lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
   "repeatable" : "true",
   "choices" : [
     {"gotoId" : "establishStudents"}
@@ -525,12 +581,12 @@
 {
   "id" : "negativeResponse",
   "choiceLabel" : "I doubt it.",
-  "content" : "\"As far as we've come with technology and science, change takes course over a long period of time,\" you say. \"We'll have to undo a lot of effects we've already caused, and sometimes fixing's more difficult to do.\" <br/> {name|enthusiasticStudent} looks down, but nods in what you hope is understanding.",
+  "content" : "\"As far as we've come with technology and science, change takes course over a long period of time,\" you say. \"We'll have to undo a lot of effects we've already caused, and sometimes fixing's more difficult to do.\" <br/> {name|enthusiasticStudent} looks down, but is nodding in what you hope is understanding.",
   "effects" : [
     "decr optimism 1",
     "decr hope 1",
     "incr curiosity 1",
-    "incr concentration 1"
+    "incr composure 1"
   ],
   "choices" : [
     {"gotoId" : "establishStudents"}
@@ -542,8 +598,7 @@
   "choiceLabel" : "Don't be ridiculous.",
   "content" : "\"I mean, if you think about it, we've come so far with technology and science that a lot of damage has already been done,\" you say. \"Not to mention it's hard to convince people to give up the comfort and convenience of things like cars to try and make a difference in the amount of CO2 we already release daily.\" <br/><br/> {name|enthusiasticStudent} avoids your gaze.",
   "effects" : [
-    "decr concentration 1",
-    "decr hope 1"
+    "decr composure 1"
   ],
   "choices" : [
     {"gotoId" : "establishStudents"}
@@ -564,9 +619,6 @@
         "set shyStudent true",
         "incr talkToStudent 1",
       ],
-      "conditions" : [
-        "questionsLeft gt 0"
-      ]
     },
 
     {
@@ -591,7 +643,7 @@
           "incr optimism 1",
           "incr hope 1",
           "incr curiosity 1",
-          "incr concentration 1"
+          "incr composure 1"
         ],
         "choices" : [
           {"gotoId" : "hopefulResponse2"},
@@ -601,7 +653,7 @@
       {
         "id" : "hopefulResponse2",
         "choiceLabel" : "Continue",
-        "content" : "You smile at {name|shyStudent}. \"We're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything, nothing will ever change. Then there's zero chance anything will get better.\"",
+        "content" : "You smile at {name|shyStudent}. \"We're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything because it's hopeless, we'll never change. Then there's zero chance anything will get better.\"",
         "choices" : [
           {"gotoId" : "aidenFollowUp"}
         ]
@@ -610,7 +662,7 @@
       {
         "id" : "pessimisticResponse",
         "choiceLabel" : "Humans can never change.",
-        "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|shyStudent}'s face crumple.",
+        "content" : "\"It's not looking good for us, sadly. {ifStateCondition|composure lt 3|Humans are selfish, greedy creatures who won't make a lick of difference because we're too busy thinking about ourselves without even realizing that this is impacting us too!|Even if we were to suddenly stop emitting greenhouse gases, the earth would still warm about a degree Farenheit, so...}\" <br/><br/>You stop abruptly, noticing {name|shyStudent}'s face crumple.",
         "effects" : [
           "decr optimism 1",
           "decr hope 1",
@@ -629,7 +681,7 @@
           "incr optimism 1",
           "incr hope 1",
           "incr curiosity 1",
-          "decr concentration 1"
+          "decr composure 1"
         ],
         "choices" : [
           {"gotoId" : "harshResponse2"}
@@ -639,7 +691,7 @@
       {
         "id" : "harshResponse2",
         "choiceLabel" : "Continue",
-        "content" : "{ifStateCondition|concentration gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
+        "content" : "{ifStateCondition|composure gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
         "choices" : [
           {"gotoId" : "aidenFollowUp"}
         ]
@@ -674,7 +726,7 @@
       {
         "id" : "academicResponse",
         "choiceLabel" : "Educate.",
-        "content" : "\"Educate yourself about what's going on and how you can help - and teach others. You can get involved in some of our research projects here...there's also the path of becoming a professor,\" you say. {name|shyStudent} nods.",
+        "content" : "\"Teach yourself about what's going on and how you can help - and teach others. There are the little things you hear about, like recycling and the like, and other things like volunteering at beaches. There's also the path of becoming a professor,\" you say. <i>Like me,</i> you think.",
         "effects" : [
           "incr hope 1"
         ],
@@ -697,11 +749,10 @@
 
       {
         "id" : "hopelessResponse",
-        "choiceLabel" : "There's little you can do.",
-        "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|shyStudent} doesn't look particularly inspired. Some students start whispering amongst themselves.",
+        "choiceLabel" : "There's nothing you can do.",
+        "content" : "\"We're all doomed,\" you helpfully inform them. \"No matter what you do.\" <br/><br/> {name|shyStudent} doesn't look particularly inspired. Some students start whispering amongst themselves.",
         "effects" : [
-          "decr hope 2",
-          "decr confidence 1"
+          "decr hope 1"
         ],
         "choices" : [
           {"gotoId" : "establishStudents"}

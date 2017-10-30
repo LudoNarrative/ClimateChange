@@ -75,6 +75,65 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		    //text: ''
 		}).appendTo('body');
 	}
+//---------Functions for the timeline UI-----------------------------
+	var initTimelineScreen = function(_Coordinator, _State, scenes, playGameScenes) {
+		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
+
+		var theDiv = $('<div/>', {			//make container
+		    id: 'timeline'
+		}).appendTo('body');
+
+		
+
+		scenes.forEach(function(scene, pos) {			//make scene / knob containers
+
+
+			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
+
+			var date = $('<div/>', {
+				id: 'date_' + scene,
+				class: 'date',
+				html: '<span>' + _Coordinator.getStorySpec(scene).year + '</span>'
+			}).appendTo("#" + scene + '-panel');
+
+			var theDiv = $('<div/>', {
+			    id: 'scene_' + scene,
+			    class: 'sceneWindows',
+			    html: '<p>' + _Coordinator.loadTimelineDesc(scene) + '</p>'
+			}).appendTo("#" + scene + '-panel');
+
+			$("#scene_" + scene).click(function() {
+				$('.sceneKnobs:visible').slideToggle("slow", function() {});
+				$('#knobs_' + scene).slideToggle("slow", function() {});
+
+				$('.sceneWindows.active').toggleClass('active', 500);
+				$(this).toggleClass('active', 500);
+			});
+
+			var theKnobs = $('<div/>', {
+			    id: 'knobs_' + scene,
+			    class: 'sceneKnobs closed'
+			}).appendTo("#" + scene + '-panel');
+
+			populateKnobs(scene, _Coordinator, _State, scenes);
+		});
+	}
+
+	var populateKnobs = function(sceneId, _Coordinator, _State, scenes) {
+		
+		var sceneSpec = _Coordinator.getStorySpec(sceneId);
+
+		for (var x=0; x < sceneSpec.wishlist.length; x++) {
+			var knobHtml = "";
+			knobHtml += '<div class="switch-container">';
+			knobHtml += '<label class="switch" for="'+ sceneId +'-switch'+ x +'"><input type="checkbox" id="'+ sceneId +'-switch'+x+'" checked="checked"><span class="slider round"></span></label>';
+			knobHtml += '<span class="switch-label">'+ sceneSpec.wishlist[x].condition +'</span>';
+			knobHtml += "</div>"
+			$("#knobs_" + sceneId).append(knobHtml);
+		}
+		$("#knobs_" + sceneId).append("<br class='clearFloat'/>");
+
+	}
 
 	//builds the scene divs
 	var initSceneScreen = function(State, bg, id) {
@@ -486,6 +545,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	return {
 		init : init,
 		initTitleScreen : initTitleScreen,
+		initTimelineScreen : initTimelineScreen,
 		setAvatars : setAvatars,
 		createStats : createStats,
 		setStats : setStats,

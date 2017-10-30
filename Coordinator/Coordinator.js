@@ -20,7 +20,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//scenes played when you hit Begin
 		var playGameScenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
 		State.set("scenes", playGameScenes);
-		Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up UI
+		Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up scene list UI
+		//Display.initTimelineScreen(this, State, scenes, playGameScenes);		//start up Timeline UI
 
 	}
 
@@ -1421,6 +1422,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//---------FINAL SCENES START HERE
 		{
 			id: "finalDinner",
+			year: 2025,
 			characters: {
 				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
 				"academicFriend": {name: "Zanita", nickname: "Z", gender: "female"},
@@ -1524,6 +1526,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//final lecture scene
 		{
 			id: "finalLecture",
+			year: 2026,
 			characters: {
 				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
 				"skepticStudent": {name: "Franklin", nickname: "Franklin", gender: "male"},
@@ -1531,14 +1534,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"enthusiasticStudent": {name: "Élika", nickname: "Élika", gender: "female"},
 			},
 			wishlist: [
-				{ condition: "establishScene eq true" },
-				{ condition: "establishDetails eq true" },
-				{ condition: "establishComposure eq true" },
+				{ condition: "establishScene eq true", order:"first" },
+				{ condition: "establishConcentration eq true" },
 				{ condition: "establishStudents eq true" },
 				{ condition: "enthusiasticStudent eq true"},
 				{ condition: "skepticalStudent eq true"},
 				{ condition: "shyStudent eq true"},
-				{ condition: "talkToStudent gte 3" },
+				{ condition: "talkToStudent gte 2" },
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
 
@@ -1550,7 +1552,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			startState: [
 				"set establishScene false",
 				"set establishDetails false",
-				"set establishComposure false",
+				"set establishConcentration false",
 				"set establishStudents false",
 				"set enthusiasticStudent false",
 				"set skepticalStudent false",
@@ -1559,18 +1561,19 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set followUp false",
 				"set lectureEnd false",
 				"set roomObjects 0",
+				"set lecture true",
 
-				"set composure 10",
+				"set concentration 10",
 				"set curiosity 3",
 				"set hope 5",
 				"set optimism 7",
 
-				"set questionsLeft 4",
+				"set questionsLeft 3",
 			],
 			UIvars: [
 			{
-					"varName" : "composure",
-					"label" : "Composure",
+					"varName" : "concentration",
+					"label" : "Concentration",
 					"characters" : ["protagonist"],
 					"affectedBy" : "both",
 					"range" : [0,10]
@@ -1607,6 +1610,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//final dean scene
 		{
 			id: "finalDean",
+			year: 2030,
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
 				"authorityFigure": {name: "Dean Smith", gender: "male"}
@@ -1656,6 +1660,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//final travel scene
 		{
 			id: "finalTravel",
+			year: 2030,
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
 				"passenger": {name: "Phil", gender: "male"}
@@ -1723,6 +1728,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//final family dinner scene
 		{
 			id: "finalFamilyDinner",
+			year: 2032,
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
 				"dad": {name: "Dad", gender: "male"},
@@ -1788,6 +1794,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//final UN scene
 		{
 			id: "finalUN",
+			year: 2042,
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
 				"UN1": {name: "Mikkel Retna", gender: "male"},
@@ -1866,6 +1873,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//final Beach scene
 		{
 			id: "finalBeach",
+			year: 2042,
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
 				"volunteer": {name: "Rodrigo", gender: "male"}
@@ -1939,6 +1947,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//final Faculty scene
 		{
 			id: "finalFaculty",
+			year: 2042,
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
 				"defendee": {name: "Emma's former student", gender: "male"}
@@ -2090,7 +2099,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalTravel",
-				text : "<p>Your accomplishments in the academic field has set you on a plane to travel all over the world, delivering talks about climate change. Aim for fame, but keep an eye on your global footprint!</p>"
+				text : "<p>Your accomplishments in the academic field have set you on a plane to travel all over the world, delivering talks about climate change. Aim for fame, but keep an eye on your global footprint!</p>"
 			},
 			{
 				id : "finalFamilyDinner",
@@ -2114,6 +2123,47 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
 		Display.setSceneIntro(sceneText);
 	};
+
+	//returns a scene description written for the timeline
+	var loadTimelineDesc = function(id) {
+		var timelineDesc = [
+			{
+				id : "finalDinner",
+				text : "<h3>Dinner With Friends</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>"
+			},
+			{
+				id : "finalLecture",
+				text : "<h3>First Lecture</h3><p>Your first lecture. It was challenging...<span class='mutable'>maybe too challenging</span>. The students were eager, <span class='mutable'>but you lost your nerve and had to end class early</span>. It was <span class='mutable'>almost enough to make you question if teaching was really your life path</span>.</p>"
+			},
+			{
+				id : "finalDean",
+				text : "<h3>A Visit to the Dean</h3><p>Over the following months, the problems you had with teaching didn't get better. If anything, they got worse. Dean Smith called you to come meet with him in private.</p><p><span class='mutable'>Luckily, you kept your cool, and were able to work out a solution with him that helped give you the time to get more familiar with teaching classes</span>.</p><p>(currently active, due to <span class='mutable'>losing your nerve during your first lecture)</span></p>"
+			},
+			{
+				id : "finalTravel",
+				text : "<h3 style='text-decoration: line-through;'>Traveling the World</h3><p>Sometimes you daydream what it would be like, if you'd become so influential you traveled the world, speaking to large groups of people.</p><p>(currently locked, due to <span class='mutable'>losing your nerve during your first lecture)</span></p>"
+			},
+			{
+				id : "finalFamilyDinner",
+				text : "<h3>Dinner With Mom and Dad</h3><p>You went out to dinner with your parents. It had been a while since you'd had a chance to sit down with them and tell them about <span class='mutable'>your steady progress towards becoming a senior faculty member</span>.</p><p>As always, they challenged you on some of the choices you've made in your life. <span class='mutable'>But you were able to keep the tension low and the conversation flowing, while not backing down from your beliefs</span>.</p>"
+			},
+			{
+				id : "finalUN",
+				text : "<h3 style='text-decoration: line-through;'>Giving a Talk at the UN</h3><p>Sometimes you wonder, if you'd gone the route of public figure rather than educator, where you'd be in life. Talking to heads of state? Challenging CEOs of corporations in public debate? It's hard to tell...</p><p>(currently locked, due to <span class='mutable'>focusing on academics instead of public speaking)</span>"
+			},
+			{
+				id : "finalBeach",
+				text : "<h3 style='text-decoration: line-through;'>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>striped scuttler crab</span>.</p><p>(currently locked, due to <span class='mutable'>focusing on academics instead of local action</span>)"
+			},
+			{
+				id : "finalFaculty",
+				text : "<h3>Full Circle</h3><p>After devoting yourself to education, you've risen to become an influential faculty member at Chesterton University, with your own lab and graduate students. <span class='mutable'>A far cry from your first awkward lectures so long ago!</span> Now you're attending the PhD defense of <span class='mutable'>Franklin</span>, who's come so far since <span class='mutable'>his skeptical snapbacks in your first lecture</span>.</p><p>Will he be able to weather his final presentation? If not...will you be able to help him?</p><h3><a href='#' class='beginScene'>Begin Scene</h3>"
+			}
+		]
+
+		for (var x=0; x < timelineDesc.length; x++) { if (timelineDesc[x].id == id) { return timelineDesc[x].text; } }
+		return "";
+	}
 
 	//loads background, for now this is based on scene id
 	var loadBackground = function(id) {
@@ -3504,6 +3554,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		loadStoryMaterials : loadStoryMaterials,
 		loadAvatars : loadAvatars,
 		loadBackground : loadBackground,
+		loadTimelineDesc : loadTimelineDesc,
 		validateArtAssets : validateArtAssets,
 		loadSceneIntro : loadSceneIntro,
 		getNextScene : getNextScene,
