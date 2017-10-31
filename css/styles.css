@@ -31,7 +31,7 @@ body {
 }
 
 #gameInstructions {
-    margin-top: 330px;
+    margin-top: 360px;
 }
 
 .descIcon {
@@ -390,4 +390,131 @@ Story CSS
     text-align: center;
     color: white;
     text-shadow: 1px 1px 1px #114165;
+}
+
+/*------------Timeline Stylings--------------------*/
+
+#timeline {
+    width: 80%;
+    float:right;
+}
+.sceneWindows {
+    display: block;
+    min-height: 400px;
+    width:50%;
+    border: 1px solid #ccc;
+    opacity:0.5;
+    padding:0 2%;
+    background-color:#dadada;
+    color:black !important;
+}
+.sceneKnobs {
+    display: none;
+    position:absolute;
+    top:0px;
+    left:54%;
+    padding:5px;
+    background-color:#f1f1f1;
+    color:black;
+    z-index:99;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 4px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+  width:50px;
+  height:29px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.switch-container {
+    float: left;
+    clear: both;
+}
+
+.switch-label {
+    position:relative;
+    top:-10px;
+    padding:0px 15px;
+}
+
+.scenePanel { position:relative; }
+
+.clearFloat {
+    width:1px;
+    height:1px;
+    clear:both;
+}
+
+.sceneWindows.active { opacity:1; }
+
+.mutable { color: #079bcc; }\
+
+.beginScene {
+    font-size: 25px;
+    position: relative;
+    top: 20px;
+}
+
+.date {
+     transform: rotate(-90deg);
+    float: left;
+    position: absolute;
+    top: 146px;
+    font-size: 81px;
+    left: -141px;
+    opacity: 0.5;
 }
