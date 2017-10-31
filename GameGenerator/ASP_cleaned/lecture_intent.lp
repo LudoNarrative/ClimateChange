@@ -3,7 +3,7 @@
 #const min_resources = 1.
 #const max_resources = 2.
 #const min_outcomes = 2.
-#const max_outcomes = 6.
+#const max_outcomes = 8.
 #const min_timers = 0.
 #const max_timers = 2.
 
@@ -34,11 +34,9 @@ required(maintenance).
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
 
-:- not condition(control_event(click(entity(e(2))))).
 
 
 :- not computer_controls(_).
-:- 0 {behavior(_,_)} 0.
 
 
 

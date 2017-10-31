@@ -70,7 +70,7 @@ if __name__ == '__main__':
             maxVal = ruleCounter
         ruleCounter = (minVal + maxVal)/2
     
-        print rules[minVal]
+        print rules[ruleCounter]
         with open('mod.lp','w') as modfile:
             modfile.write('.'.join(rules[:minVal+1])+'.')
         

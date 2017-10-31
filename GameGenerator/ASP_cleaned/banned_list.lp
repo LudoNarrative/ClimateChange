@@ -18,10 +18,6 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 :- precondition(compare(_,_),O),
     precondition(control_event(_),O).
 	
-:- precondition(compare(_,_),O),
-    result(O,move(_,_)).
-    
-    
     
 % PROPERTIES DONT WORK
 :- condition(compare(_,property(_,_))).

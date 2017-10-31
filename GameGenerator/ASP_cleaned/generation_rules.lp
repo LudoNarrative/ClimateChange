@@ -107,11 +107,11 @@ reachableCondition(overlaps(E1,E2,POLARITY)) :-
     condition(overlaps(E1,E2,POLARITY)).
 
 reachableCondition(overlaps(E1,E2,POLARITY)) :-
-    action(move(E1,direction(towards,E2))),
+    action(move(E1,_)),
     condition(overlaps(E1,E2,POLARITY)).
 
 reachableCondition(overlaps(E1,E2,POLARITY)) :-
-    action(move(E2,direction(towards,E1))),
+    action(move(E2,_)),
     condition(overlaps(E1,E2,POLARITY)).
 
 reachableCondition(compare(le,amount(Color),scalar(S))) :-
