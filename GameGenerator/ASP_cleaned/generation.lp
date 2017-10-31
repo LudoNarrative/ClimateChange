@@ -247,7 +247,7 @@ angle_speeds(1;5;10).
   } 1 :-
     precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY))).
 
-angle_speeds_discrete(30;45;60;90).
+angle_speeds_discrete(30;45;60;90,180).
 1 {result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
    angle_direction(DIR),
    angle_speeds_discrete(AMOUNT)
@@ -303,6 +303,8 @@ place(location(X,Y)) :- location(X,Y).
 {precondition(control_event(click(ENTITY)),OUTCOME)
  : entity(ENTITY), outcome(OUTCOME)}.
 
+
+comparison_direction(ge;le).
 {precondition(compare((ge;le),RESOURCE),OUTCOME)
  : resource(RESOURCE), outcome(OUTCOME)}.
 
@@ -422,64 +424,360 @@ precondition(tick,tick) :- outcome(tick).
  entity(Entity1),entity(Entity2)}.
 
 
-behaviors(chase;
-	  flee;
-	  patrol;
-	  pingpong;
-	  wander;
-      orbit).
-	  
-	  
+%% behaviors(chase;
+%% 	  flee;
+%% 	  patrol;
+%% 	  pingpong;
+%% 	  wander;
+%%       orbit).
 
-{behavior(ENTITY,BEHAVIOR) : behaviors(BEHAVIOR)} 2 :- entity(ENTITY).
+behaviors(chase(E)) :- entity(E).
+behaviors(flee(E)) :- entity(E).
+left_right(left;right).
+%behaviors(orbit(E,D)) :- entity(E), left_right(D).
+%behaviors(patrol;wander;pingpong).
+
+
+
+0 {behavior(ENTITY,BEHAVIOR) : behaviors(BEHAVIOR)} 2 :- entity(ENTITY).
+
+%:- behavior(ENTITY,chase(ENTITY)).
+
+{behavior_condition(ENTITY,compare(Resource)) : resource(Resource)} :- entity(ENTITY),
+							    2 {behavior(ENTITY,_)}.
+
+
+distance_amounts(60;120;240).
+{behavior_condition(ENTITY,compare(distance(ENTITY,OTHER,CRITERION))) : entity(OTHER),look_criterion(CRITERION)} :- entity(ENTITY),
+							    2 {behavior(ENTITY,_)}.
+
+
+
+:-  entity(ENTITY),
+    2 {behavior(ENTITY,_)},
+    not behavior_condition(ENTITY,_).
+
+:-  entity(ENTITY),
+    2 {behavior_condition(ENTITY,_)}.
+
+
+
+
+
+1 {behavior_condition_polarity(ENTITY,
+			       BEHAVIOR,
+			       compare(Polarity,resource(Resource)))
+   : comparison_direction(Polarity)} 1 :-
+    behavior_condition(ENTITY,compare(resource(Resource))),
+    behavior(ENTITY,BEHAVIOR).
+
+
+1 {behavior_condition_polarity(ENTITY,
+			       BEHAVIOR,
+			       compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT)))  :
+   comparison_direction(Polarity),
+   distance_amounts(AMOUNT)} 1 :-
+    behavior_condition(ENTITY,compare(distance(ENTITY,OTHER,CRITERION))),
+    behavior(ENTITY,BEHAVIOR).
+
+
+:- behavior_condition_polarity(ENTITY,
+			       _,
+			       compare(Polarity1,distance(ENTITY,OTHER,CRITERION1),scalar(AMOUNT1))),
+   behavior_condition_polarity(ENTITY,
+			       _,
+			       compare(Polarity2,distance(ENTITY,OTHER,CRITERION2),scalar(AMOUNT2))),
+   AMOUNT1 != AMOUNT2.
+
+
+:- behavior_condition_polarity(ENTITY,
+			       _,
+			       compare(Polarity1,distance(ENTITY,OTHER,CRITERION1),scalar(AMOUNT1))),
+   behavior_condition_polarity(ENTITY,
+			       _,
+			       compare(Polarity2,distance(ENTITY,OTHER,CRITERION2),scalar(AMOUNT2))),
+   CRITERION1 != CRITERION2.
+
+
+1 {chosen_outcome(Outcome,Entity,Behavior,Comparison) : outcome(Outcome)} 1 :-
+    behavior_condition_polarity(Entity,
+				Behavior,
+				Comparison).
+
+
+
+behavior_condition_polarity(ENTITY, BEHAVIOR, tick) :-  behavior(ENTITY,BEHAVIOR), 1 {behavior(ENTITY,_)} 1.
+
+:- chosen_outcome(Outcome,_,_,tick),
+   Outcome != tick.
+
+:- chosen_outcome(tick,_,_,Outcome),
+   Outcome != tick.
+constraint(eq,
+	   precondition(compare(Polarity1,R),Outcome1),
+	   precondition(compare(Polarity2,R),Outcome2)) :-
+    chosen_outcome(Outcome1,Entity,Behavior1,compare(Polarity1,R)),
+    chosen_outcome(Outcome2,Entity,Behavior2,compare(Polarity2,R)),
+    Outcome1 != Outcome2.
+
+
+			   
+precondition(Comparison,Outcome) :- chosen_outcome(Outcome,Entity,Behavior,Comparison), Outcome != tick.
+precondition(Comparison,Outcome) :- chosen_outcome_timer(Outcome,Entity,Behavior,Comparison), Outcome != tick.
+
+
+:- behavior_condition_polarity(ENTITY,
+ 			       BEHAVIOR1,
+ 			       compare(Polarity,Resource)),
+    behavior_condition_polarity(ENTITY,
+ 			       BEHAVIOR2,
+ 			       compare(Polarity,Resource)),
+    BEHAVIOR1 != BEHAVIOR2.
+
+
+%%CHASING -- 
+result(Outcome,
+        move(ENTITY,direction(forward))) :-
+    chosen_outcome(Outcome,ENTITY,chase(OTHER),_).
+    
+1 {result(Outcome,
+        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
+    chosen_outcome(Outcome,ENTITY,chase(OTHER),_).
+
+
+%%FLEEING -- 
+result(Outcome,
+        move(ENTITY,direction(backward))) :-
+    chosen_outcome(Outcome,ENTITY,flee(OTHER),_).
+    
+1 {result(Outcome,
+        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
+    chosen_outcome(Outcome,ENTITY,flee(OTHER),_).
+
+%%ORBIT -- 
+result(Outcome,
+       move(ENTITY,direction(D))) :-
+    chosen_outcome(Outcome,ENTITY,orbit(OTHER,D),_).
+1 {result(Outcome,
+	  look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
+    chosen_outcome(Outcome,ENTITY,orbit(OTHER,D),_).
+
+
+%%WANDER--
+
+uses_timer(wander;patrol).
+
+1 {chosen_outcome_timer(Outcome,Entity,Behavior,Comparison) : outcome(Outcome)} 1 :-
+    behavior_condition_polarity(Entity,
+				Behavior,
+				Comparison),
+    uses_timer(Behavior).
+
+:- chosen_outcome_timer(Outcome,Entity,Behavior,Comparison),
+   chosen_outcome(Outcome,Entity,Behavior,Comparison).
+
+:- chosen_outcome_timer(tick,Entity,Behavior,Comparison).
+
+result(Outcome,
+       move(ENTITY,direction(forward))) :-
+    chosen_outcome(Outcome,ENTITY,wander,_).
+
+
+timer(behavior_condition_polarity(ENTITY,wander,C)) :- behavior_condition_polarity(ENTITY,wander,C).
+
+precondition(timer_elapsed(behavior_condition_polarity(Entity,Behavior,Comparison)),
+	     Outcome) :-
+    chosen_outcome_timer(Outcome,Entity,Behavior,Comparison).
+
+result(Outcome,
+       rotate_to(Entity,random_int(scalar(0),scalar(360)))) :- chosen_outcome_timer(Outcome,Entity,wander,Comparison).
+
+
+
+
+
+%% behavior_condition_polarity(ENTITY, BEHAVIOR, tick) :-  behavior(ENTITY,BEHAVIOR), 1 {behavior(ENTITY,_)} 1.
+
+%% :- behavior_condition_polarity(ENTITY,
+%% 			       BEHAVIOR1,
+%% 			       compare(Polarity,Resource)),
+%%    behavior_condition_polarity(ENTITY,
+%% 			       BEHAVIOR2,
+%% 			       compare(Polarity,Resource)),
+%%    BEHAVIOR1 != BEHAVIOR2.
+
+
+%% %#show behavior_condition/2.
+%% #project behavior_condition_polarity/3.
+
+%% precondition(C,outcome(behavior_condition_polarity(ENTITY,BEHAVIOR,C))) :- behavior_condition_polarity(ENTITY,BEHAVIOR,C), C != tick.
+
+%% %%CHASING TICK -- 
+%% result(tick,
+%%        move(ENTITY,direction(forward))) :-
+%%     behavior_condition_polarity(ENTITY,chase(OTHER),tick).
+    
+%% 1 {result(tick,
+%%        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
+%%     behavior_condition_polarity(ENTITY,chase(OTHER),tick).
+
+
+%% %%CHASING -- 
+%% result(outcome(behavior_condition_polarity(ENTITY,chase(OTHER),C)),
+%%        move(ENTITY,direction(forward))) :-
+%%     behavior_condition_polarity(ENTITY,chase(OTHER),C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,chase(OTHER),C))).
+    
+%% 1 {result(outcome(behavior_condition_polarity(ENTITY,chase(OTHER),C)),
+%%        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
+%%     behavior_condition_polarity(ENTITY,chase(OTHER),C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,chase(OTHER),C))).
+
+
+
+
+%% %%FLEEING TICK-- 
+%% result(tick,
+%%        move(ENTITY,direction(backward))) :-
+%%     behavior_condition_polarity(ENTITY,flee(OTHER),tick).
+    
+%% 1 {result(tick,
+%% 	  look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
+%%     behavior_condition_polarity(ENTITY,flee(OTHER),tick).
+
+
+
+%% %%FLEEING -- 
+%% result(outcome(behavior_condition_polarity(ENTITY,flee(OTHER),C)),
+%%        move(ENTITY,direction(backward))) :-
+%%     behavior_condition_polarity(ENTITY,flee(OTHER),C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,flee(OTHER),C))).
+    
+%% 1 {result(outcome(behavior_condition_polarity(ENTITY,flee(OTHER),C)),
+%%        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
+%%     behavior_condition_polarity(ENTITY,flee(OTHER),C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,flee(OTHER),C))).
+
+
+
+
+%% %%ORBIT TICK-- 
+%% result(tick,
+%%        move(ENTITY,direction(D))) :-
+%%     behavior_condition_polarity(ENTITY,orbit(E,D),tick).
+    
+%% 1 {result(tick,
+%% 	      look_at(ENTITY,E,CRITERION)) : look_criterion(CRITERION)} 1 :-
+%%     behavior_condition_polarity(ENTITY,orbit(E,D),tick).
+
+
+%% %%ORBIT -- 
+%% result(outcome(behavior_condition_polarity(ENTITY,orbit(E,D),C)),
+%%        move(ENTITY,direction(D))) :-
+%%     behavior_condition_polarity(ENTITY,orbit(E,D),C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,orbit(E,D),C))).
+    
+%% 1 {result(outcome(behavior_condition_polarity(ENTITY,orbit(E,D),C)),
+%% 	  look_at(ENTITY,E,CRITERION)) : look_criterion(CRITERION)} 1 :-
+%%     behavior_condition_polarity(ENTITY,orbit(E,D),C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,orbit(E,D),C))).
+
+%% %%WANDER TICK--
+
+
+%% result(tick,
+%%        move(ENTITY,direction(forward))) :-
+%%     behavior_condition_polarity(ENTITY,wander,tick).
+
+
+%% timer(behavior_condition_polarity(ENTITY,wander,C)) :- behavior_condition_polarity(ENTITY,wander,C).
+%% precondition(timer_elapsed(behavior_condition_polarity(ENTITY,wander,C)),
+%% 	     outcome(behavior_condition_polarity_rotate(ENTITY,wander,C))) :- behavior_condition_polarity(ENTITY,wander,C).
+
+%% result(outcome(behavior_condition_polarity_rotate(ENTITY,wander,C)),
+%%        rotate_to(ENTITY,random_int(scalar(0),scalar(360)))) :- behavior_condition_polarity(ENTITY,wander,C).
+
+
+
+%% %%WANDER --
+
+
+%% result(outcome(behavior_condition_polarity(ENTITY,wander,C)),
+%%        move(ENTITY,direction(forward))) :-
+%%     behavior_condition_polarity(ENTITY,wander,C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,wander,C))).
+%% timer(behavior_condition_polarity(ENTITY,wander,C)) :- behavior_condition_polarity(ENTITY,wander,C).
+
+
+%% precondition(timer_elapsed(behavior_condition_polarity(ENTITY,wander,C)),
+%% 	     outcome(behavior_condition_polarity_rotate(ENTITY,wander,C))) :-
+%%     behavior_condition_polarity(ENTITY,wander,C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,wander,C))).
+
+%% precondition(C,
+%% 	     outcome(behavior_condition_polarity_rotate(ENTITY,wander,C))) :-
+%%     behavior_condition_polarity(ENTITY,wander,C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,wander,C))).    
+
+%% result(outcome(behavior_condition_polarity_rotate(ENTITY,wander,C)),
+%%        rotate_to(ENTITY,random_int(scalar(0),scalar(360)))) :- behavior_condition_polarity(ENTITY,wander,C).
+
+
+%% %% 
+
+%% %%PATROL TICK--
+
+
+%% result(tick,
+%%        move(ENTITY,direction(forward))) :-
+%%     behavior_condition_polarity(ENTITY,patrol,tick).
+
+
+%% timer(behavior_condition_polarity(ENTITY,patrol,C)) :- behavior_condition_polarity(ENTITY,patrol,C).
+%% precondition(timer_elapsed(behavior_condition_polarity(ENTITY,patrol,C)),
+%% 	     outcome(behavior_condition_polarity_rotate(ENTITY,patrol,C))) :- behavior_condition_polarity(ENTITY,patrol,C).
+
+%% 1 {result(outcome(behavior_condition_polarity_rotate(ENTITY,patrol,C)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
+%%    angle_direction(DIRECTION),
+%%    angle_speeds_discrete(AMOUNT)} 1 :- behavior_condition_polarity(ENTITY,patrol,C).
+
+
+
+%% %%PATROL --
+
+
+%% result(outcome(behavior_condition_polarity(ENTITY,patrol,C)),
+%%        move(ENTITY,direction(forward))) :-
+%%     behavior_condition_polarity(ENTITY,patrol,C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,patrol,C))).
+%% timer(behavior_condition_polarity(ENTITY,patrol,C)) :- behavior_condition_polarity(ENTITY,patrol,C).
+
+
+%% precondition(timer_elapsed(behavior_condition_polarity(ENTITY,patrol,C)),
+%% 	     outcome(behavior_condition_polarity_rotate(ENTITY,patrol,C))) :-
+%%     behavior_condition_polarity(ENTITY,patrol,C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,patrol,C))).
+
+%% precondition(C,
+%% 	     outcome(behavior_condition_polarity_rotate(ENTITY,patrol,C))) :-
+%%     behavior_condition_polarity(ENTITY,patrol,C),
+%%     precondition(C,outcome(behavior_condition_polarity(ENTITY,patrol,C))).    
+
+%% 1 {result(outcome(behavior_condition_polarity_rotate(ENTITY,patrol,C)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
+%%    angle_direction(DIRECTION),
+%%    angle_speeds_discrete(AMOUNT)} 1 :- behavior_condition_polarity(ENTITY,patrol,C).
+
+
+
+
+
+
 
 %{relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2)))} 1 :-
 %    result(Outcome1,modify(Direction,Resource1)),
 %    result(Outcome2,modify(Direction,Resource2)),
 %    Pair1 = pair(Outcome1,Resource1),
 %    Pair2 = pair(Outcome2,Resource2).
-
-
-
-1 {chases(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,chase).
-
-result(tick,move(ENTITY,direction(forward))) :- chases(ENTITY,OTHER).
-1{ result(tick,look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :- chases(ENTITY,OTHER).
-
-
-1 {flees(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,flee).
-result(tick,move(ENTITY,direction(backward))) :- flees(ENTITY,OTHER).
-1{ result(tick,look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1  :- flees(ENTITY,OTHER).
-
-
-1 {orbits(ENTITY,OTHER) : entity(OTHER)} 1 :- behavior(ENTITY,orbit).
-left_right(left;right).
-1 {result(tick,move(ENTITY,direction(LEFT_RIGHT))) : left_right(LEFT_RIGHT)} 1 :- orbits(ENTITY,OTHER).
-1{ result(tick,look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :- orbits(ENTITY,OTHER).
-
-
-timer(patrol(ENTITY)) :- behavior(ENTITY,patrol).
-precondition(timer_elapsed(patrol(ENTITY)), outcome(patrol(ENTITY))) :- behavior(ENTITY,patrol).
-1 {result(outcome(patrol(ENTITY)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
-   angle_direction(DIRECTION),
-   angle_speeds_discrete(AMOUNT)} 1 :- behavior(ENTITY,patrol).
-result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,patrol).
-
-
-
-timer(pingpong(ENTITY)) :- behavior(ENTITY,pingpong).
-precondition(timer_elapsed(pingpong(ENTITY)),outcome(pingpong(ENTITY))) :- behavior(ENTITY,pingpong).
-result(outcome(pingpong(ENTITY)), rotates(ENTITY, cw,scalar(180))) :- behavior(ENTITY,pingpong).
-result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,pingpong).
-
-
-
-
-timer(wander(ENTITY)) :- behavior(ENTITY,wander).
-precondition(timer_elapsed(wander(ENTITY)),outcome(wander(ENTITY))) :- behavior(ENTITY,wander).
-result(outcome(wander(ENTITY)), rotate_to(ENTITY,random_int(scalar(0),scalar(360)))) :- behavior(ENTITY,wander).
-
-result(tick,move(ENTITY,direction(forward)))  :- behavior(ENTITY,wander).
 
 
 result(tick,apply_restitution(E,E)) :- entity(E) , not static(E).
@@ -504,10 +802,10 @@ control_event(E,modify(R)) :-
 
 %:- resource_checks(N), N > 3.
 controlScheme(SCHEME) :- controlScheme(ENTITY,SCHEME).
-behavior(BEHAVIOR)  :-  behavior(ENTITY,BEHAVIOR) .
+behavior_(BEHAVIOR)  :-  behavior(ENTITY,BEHAVIOR) .
 
 project(player_controls(C)) :- player_controls(C).
-project(behavior(C)) :- behavior(C).
+project(behavior_(C)) :- behavior(C).
 
 project(controlScheme(C)) :- controlScheme(C).
 project(R) :- resource(R).
@@ -522,7 +820,7 @@ project( initialize(add(Entity,scalar(1),location(Row,Col))) ) :  initialize(add
 %project(grouped(A1,A2)) :- grouped(A1,A2).
 
 %#show precondition/2.
-#project project/1.
+%#project project/1.
 %#project boundary/1.
 %#project pruned_action/1.
 

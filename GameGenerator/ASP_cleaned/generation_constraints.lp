@@ -1,9 +1,7 @@
 
 
-%% :- has_precondition(O1),
-%%    has_precondition(O2),
-%%    not different_precondition(O1,O2),
-%%    O1 != O2.
+:- action(look_at(E,E,C)).
+
 
 :- precondition(control_event(click(_)),O),
     not precondition(control_event(button(mouse,pressed)),O).
@@ -27,8 +25,6 @@
    not precondition(control_event(button(mouse,pressed)),OUTCOME). 
 
 :- frivolous(R), not allowed(frivolous(R)).
-
-:- precondition(timer_elapsed(T),Outcome), 2 { precondition(C,Outcome)}.
 
 
 :- spatial_condition(E1,E2), not moves(E1), not moves(E2).
@@ -240,9 +236,6 @@
 :- result(O,move(E,_)),
    result(O,delete(E)).
 
-:- result(tick,look_at(E,E)),
-   result(tick,move(E,direction(forward))).
-
 
 :- result(O,move(E,direction(D))),
     2 { result(O,move(E,direction(_))) }.
@@ -250,10 +243,6 @@
 	
 :- 2 {initialize(add(_,_,L))},
    initialize(add(_,_,L)).
-
-
-:- action(look_at(E,E2)),
-   2 {action(move(E,direction(_)))}.
 
 
 :- player_model(Outcome,player_will_attempt),
@@ -516,10 +505,10 @@ different_precondition(O1,O2) :-
     result(O,add(E,_,location(Y,X))),
     not spawnsAtInitial(E).
 
-:- resource(R),
-   not reading_about(R).
-:- entity(E),
-   not reading_about(E).
+%:- resource(R),
+%   not reading_about(R).
+%:- entity(E),
+%   not reading_about(E).
 
 
 :- reading(grinding,Resource),
@@ -630,8 +619,6 @@ player_controls_resource(R,Dir) :-
    
 :- monotonic(R), not allowed(monotonic(R)).
 
-
-:- action(look_at(E,E,C)).
 
 :- result(O,delete(E)),
    1 { result(O,move(E,_));
