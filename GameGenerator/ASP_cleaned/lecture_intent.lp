@@ -1,7 +1,7 @@
 #const min_entities = 1.
 #const max_entities = 2.
 #const min_resources = 1.
-#const max_resources = 2.
+#const max_resources = 1.
 #const min_outcomes = 2.
 #const max_outcomes = 8.
 #const min_timers = 0.
@@ -23,6 +23,9 @@ required(risk_reward).
 
 label(resource(r(1)),concentration,write) :- reading(good,resource(r(1))).
 label(resource(r(1)),stress,write) :- reading(bad,resource(r(1))).
+:- not reading(good,resource(r(1))).
+
+
 
 :- 2 {label(resource(r(1)),_,_)}.
 

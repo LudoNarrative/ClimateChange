@@ -242,12 +242,12 @@ result(outcome(orbit_the_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)):-
 angle_speeds(1;5;10).
 1 {result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
    angle_direction(DIR),
-   angle_speeds(AMOUNT);
-   result(outcome(click_to_spin(ENTITY)), rotate_to(ENTITY,random_int(0,360)))
+   angle_speeds(AMOUNT)
+   %;result(outcome(click_to_spin(ENTITY)), rotate_to(ENTITY,random_int(0,360)))
   } 1 :-
     precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY))).
 
-angle_speeds_discrete(30;45;60;90,180).
+angle_speeds_discrete(60,90,180).
 1 {result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
    angle_direction(DIR),
    angle_speeds_discrete(AMOUNT)
@@ -259,7 +259,7 @@ angle_speeds_discrete(30;45;60;90,180).
 result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_spin(ENTITY))).
 
 
-look_criterion(nearest;furthest;random).
+look_criterion(nearest;furthest).
 1 {precondition(control_event(button(mouse, held)),outcome(click_to_chase(ENTITY)));
    precondition(control_event(button(mouse, pressed)),outcome(click_to_chase(ENTITY)));
    precondition(control_event(click(ENTITY)),outcome(click_to_chase(ENTITY)))
@@ -805,12 +805,13 @@ controlScheme(SCHEME) :- controlScheme(ENTITY,SCHEME).
 behavior_(BEHAVIOR)  :-  behavior(ENTITY,BEHAVIOR) .
 
 project(player_controls(C)) :- player_controls(C).
-project(behavior_(C)) :- behavior(C).
+project(behavior_(C)) :- behavior_(C).
 
 project(controlScheme(C)) :- controlScheme(C).
 project(R) :- resource(R).
 project(E) :- entity(E).
 project(T) :- timer(T).
+project(behavior(E,B)) :- behavior(E,B).
 %project(relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2)))) :- relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2))).
 project(static(E)) :- static(E).
 project( initialize(add(Entity,scalar(1),location(Row,Col))) ) :  initialize(add(Entity,scalar(1),location(Row,Col))) .
@@ -820,7 +821,9 @@ project( initialize(add(Entity,scalar(1),location(Row,Col))) ) :  initialize(add
 %project(grouped(A1,A2)) :- grouped(A1,A2).
 
 %#show precondition/2.
-%#project project/1.
+#project project/1.
+
+
 %#project boundary/1.
 %#project pruned_action/1.
 
