@@ -2,10 +2,22 @@
 
 :- action(look_at(E,E,C)).
 
+:- action(modify(decrease,R,R)).
 
 :- precondition(control_event(click(_)),O),
-    not precondition(control_event(button(mouse,pressed)),O).
+   not precondition(control_event(button(mouse,pressed)),O).
 
+has_both(O) :-   precondition(control_event(click(_)),O),
+		 precondition(control_event(button(mouse,pressed)),O).
+
+:- 2 {precondition(control_event(_),O)},
+   not has_both(O),
+   outcome(O).
+
+
+
+:- 3 {precondition(control_event(_),O)},
+   outcome(O).
 
 :- N + 1 {precondition(_,_)},
    preconditions_allowed(N)  .
@@ -505,6 +517,7 @@ different_precondition(O1,O2) :-
     result(O,add(E,_,location(Y,X))),
     not spawnsAtInitial(E).
 
+
 %:- resource(R),
 %   not reading_about(R).
 %:- entity(E),
@@ -625,7 +638,8 @@ player_controls_resource(R,Dir) :-
        result(O,rotates(E,_));
        result(O,rotate_to(E,_));
        result(O,look_at(E,_,_))}.
-
+:- condition(overlaps(E1,E2,_)),
+   not chasing_safe(E1,E2).
 
 
 %%SIMPLICITY
@@ -650,11 +664,15 @@ player_controls_resource(R,Dir) :-
 
 
 
+:- boundary(torus),
+   not torus_safe(O),
+   result(O,look_at(E,_,_)),
+   result(O,moves(E,direction(left;right;forward;backward))).
+
+
 :- boundary(torus), 
-    action(look_at(E,_)),
-	action(moves(E,direction(left;right))).
-
-
+   result(tick,look_at(E,_,_)),
+   result(tick,moves(E,direction(left;right))).
 
 %%%COLOR
 

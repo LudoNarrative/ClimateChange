@@ -182,6 +182,33 @@ def parse_game(result):
             
     rules = {}
     replacements = {}
+    outcome_to_preconditions = {}
+    for precondition in result['precondition']:        
+        precondition = precondition[0]
+        terms = precondition['terms']
+        outcome = prettify(terms[1])
+        if outcome not in outcome_to_preconditions:
+            outcome_to_preconditions[outcome] = []
+        outcome_to_preconditions[outcome].append(precondition)
+        
+    ignore_press = []
+    for outcome in  outcome_to_preconditions:
+        has_click = False
+        has_press = False
+        
+        for precondition in outcome_to_preconditions[outcome]:
+            if precondition['terms'][0]['predicate'] == 'control_event':
+                if precondition['terms'][0]['terms'][0]['predicate'] == 'button':
+                    has_press = True
+                if precondition['terms'][0]['terms'][0]['predicate'] == 'click':
+                    has_click = True
+        if has_click and has_press:
+        
+            for precondition in outcome_to_preconditions[outcome]:
+                if precondition['terms'][0]['predicate'] == 'control_event':
+                    if precondition['terms'][0]['terms'][0]['predicate'] == 'button':
+                        ignore_press.append(prettify(precondition))
+
     for precondition in result['precondition']:
         
         precondition = precondition[0]
@@ -246,7 +273,7 @@ def parse_game(result):
             
         else:
             rules[outcome]['results']['other'].append(prettify(terms[1]))
-    return settings,free_variables,rules,replacements,free_variable_count
+    return settings,free_variables,rules,replacements,free_variable_count,ignore_press
 
 def run_once(rules,settings,player_model,depth):
     state = {}
@@ -391,7 +418,7 @@ if __name__ == '__main__':
             for t in out[o]:
                 for tt in t:
                     print prettify(tt)
-        settings,free_variables,rules,replacements,free_variable_count = parse_game(out)
+        settings,free_variables,rules,replacements,free_variable_count,ignore_press = parse_game(out)
         print "GAME ", output_ind
         simulation_count = 50
         depth = 10
@@ -428,7 +455,7 @@ if __name__ == '__main__':
             def gen():
                 return random.randrange(min_,max_)
             return gen
-
+   
 
         #player_model = {rule:1 for rule in rules}
         
@@ -445,13 +472,16 @@ if __name__ == '__main__':
                                 free_variable_count[result1],
                                 free_variable_count[result2]))
 
-        toolbox.register("attr_int", rand_range(0,10))
+
+        max_value = 10
+        toolbox.register("attr_int", rand_range(0,max_value))
         toolbox.register("individual", tools.initRepeat, creator.Individual,
                          toolbox.attr_int, n=len(free_variables))
         toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
         toolbox.register("mate", tools.cxTwoPoint)
-        toolbox.register("mutate", tools.mutGaussian, mu=2, sigma=4, indpb=0.1)
+        toolbox.register("mutate", tools.mutGaussian, mu=5, sigma=7, indpb=0.1)
+        #toolbox.register("mutate", tools.mutGaussian, mu=2, sigma=4, indpb=0.1)
         toolbox.register("select", tools.selTournament, tournsize=3)
         toolbox.register("evaluate", score_individual(free_variables,rules,settings,player_model,depth,simulation_count,constraints))
         add = set([])
@@ -483,9 +513,9 @@ if __name__ == '__main__':
                     return offspring
                 return wrapper
             return decorator
-        toolbox.decorate("individual", checkBounds(1.0, 10))
-        toolbox.decorate("mate", checkBounds(1.0, 10))
-        toolbox.decorate("mutate", checkBounds(1.0, 10))
+        toolbox.decorate("individual", checkBounds(1.0, max_value))
+        toolbox.decorate("mate", checkBounds(1.0, max_value))
+        toolbox.decorate("mutate", checkBounds(1.0, max_value))
         pop = toolbox.population(n=POP_COUNT)
       
         
@@ -591,6 +621,9 @@ if __name__ == '__main__':
         for precond in out['precondition']:
             if precond[0]['terms'][0]['predicate'] == 'overlaps' and  len(precond[0]['terms'][0]['terms']) == 1:
                 continue
+            if prettify(precond[0]) in ignore_press:
+                continue
+            #XXXXXXXXX
             outcome = hashable(precond[0]['terms'][1])
             if outcome not in outcome2precond:
                 outcome2precond[outcome] = []
@@ -687,9 +720,9 @@ if __name__ == '__main__':
                             if (repl[3] in good_vars and 'increase' in action) or (repl[3] in bad_vars and 'decrease' in action):
                                 if repl[4][0] < 1:
                                     repl[4][0] = 1
-                                repl[4][0] *= 2
+                                repl[4][0] *= 4
                             if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
-                                repl[4][0] /= 2
+                                repl[4][0] /= 4
                                 if (repl[4][0] < 1):
                                     repl[4][0] = 1
                             print  'AFTERB', repl[3], action, repl[4][0]

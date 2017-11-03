@@ -10,6 +10,9 @@ action(A) :- result(_,A).
 torus_safe(O) :- precondition(compare(_,distance(ENTITY,_,_)),O).
 chasing_safe(E1,E2) :- player_controls(E1), entity(E2).
 chasing_safe(E1,E2) :- player_controls(E2), entity(E1).
+chasing_safe(E1,E2) :- action(look_at(E1,E2)), action(move(E1,forward)).
+chasing_safe(E1,E2) :- action(look_at(E2,E1)), action(move(E2,forward)).
+chasing_safe(E1,E2) :- action(look_at(E2,E1)), action(move(E2,forward)).
 
 
 has_precondition(O) :- precondition(_,O).
