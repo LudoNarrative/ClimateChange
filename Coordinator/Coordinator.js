@@ -2847,7 +2847,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						graphics: "char3",
 						age: "20s",
 						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "happy"}
+							{ state: ["concentration gte 8"], tag: "happy"},
+							{ state: ["concentration gt 3", "concentration lte 7"], tag: "neutral"},
+							{ state: ["concentration lte 3"], tag: "upset"}
 						]
 					},
 					{

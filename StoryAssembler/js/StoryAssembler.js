@@ -193,6 +193,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		}
 		Display.setStats("storyStats");			//refresh UI stat display
 		refreshNarrative();					//refresh currently displayed chunk in case it's different
+		Display.setAvatars();
 	}
 
 	var displayChunkText = function(chunkId, mode) {
