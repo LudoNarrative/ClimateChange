@@ -42,5 +42,3 @@ required(maintenance).
 :- not computer_controls(_).
 
 
-
-

@@ -1,6 +1,27 @@
 
+% only allow something to decrease on tick if it can be increased
+:- 1 {result(tick, modify(decrease,R));
+		result(tick, modify(decrease,R,_))},
+	resource(R),
+	0 {action(modify(increase,R));
+		action(modify(increase,R,_))} 0.
 
+% only allow something to decrease on tick if it can be increased
+:- 1 {result(tick, modify(increase,R));
+		result(tick, modify(increase,R,_))},
+	resource(R),
+	0 {action(modify(decrease,R));
+		action(modify(decrease,R,_))} 0.
+
+:- precondition(timer_elapsed(T),O),
+	result(O,modify(_,_)).	
+
+:- precondition(timer_elapsed(T),O),
+	result(O,modify(_,_,_)).	
+	
 :- action(look_at(E,E,C)).
+
+
 
 :- action(modify(decrease,R,R)).
 
@@ -15,13 +36,20 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    outcome(O).
 
 
-
+:- action(look_at(E1,E2,_)),
+	action(look_at(E1,E2,_)),
+	action(move(E1,direction(backward))),
+	action(move(E2,direction(backward))).
+	
 :- 3 {precondition(control_event(_),O)},
    outcome(O).
 
 :- N + 1 {precondition(_,_)},
    preconditions_allowed(N)  .
 
+ 
+:- action(look_at(E1,E2,C)),
+	static(E2).
 
 % constraint on reachability
 :- outcome(O), unreachableOutcome(O).
@@ -41,19 +69,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 :- spatial_condition(E1,E2), not moves(E1), not moves(E2).
 
-% only allow something to decrease on tick if it can be increased
-:- 1 {result(tick, modify(decrease,R));
-		result(tick, modify(decrease,R,_))},
-	resource(R),
-	0 {result(tick, modify(increase,R));
-		result(tick, modify(increase,R,_))}.
-
-% only allow something to decrease on tick if it can be increased
-:- 1 {result(tick, modify(increase,R));
-		result(tick, modify(increase,R,_))},
-	resource(R),
-	0 {result(tick, modify(decrease,R));
-		result(tick, modify(decrease,R,_))}.
 
 
 
@@ -81,8 +96,9 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- controlScheme(click_to_spin,Entity),
    many(Entity).
 
-   
-
+:- precondition(control_event(C),O),
+	precondition(timer_elapsed(T),O).
+	
 :- action(move(Entity,direction(forward))),
    action(look_at(Entity,Other,_)),
    not result(tick,apply_restitution(Entity,Other)),
@@ -733,3 +749,5 @@ player_controls_resource(R,Dir) :-
    2 { precondition(overlaps(E1,E2,true),_)},
    result(O1,delete(E2)),
    only_one_precondition(O1).
+
+   

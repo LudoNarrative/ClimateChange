@@ -293,19 +293,23 @@ frivolous(Resource) :- read_only(Resource).
 
 
 
-trivial(Outcome) :-  chases(ENTITY,OTHER),
+trivial(Outcome) :-  action(move(ENTITY,direction(forward))),
+						action(look_at(ENTITY,OTHER,_)),
 				  precondition(overlaps(ENTITY,OTHER,true),Outcome),
 				  reading(good,Outcome).
 	
-trivial(Outcome) :-  chases(ENTITY,OTHER),
+trivial(Outcome) :-   action(move(ENTITY,direction(forward))),
+						action(look_at(ENTITY,OTHER,_)),
 				  precondition(overlaps(OTHER,ENTITY,true),Outcome),
 				  reading(good,Outcome).
 	  
-trivial(Outcome) :-  flees(ENTITY,OTHER),
+trivial(Outcome) :- action(move(ENTITY,direction(backward))),
+						action(look_at(ENTITY,OTHER,_)),
 				  precondition(overlaps(ENTITY,OTHER,false),Outcome),
 				  reading(good,Outcome).
 	
-trivial(Outcome) :-  flees(ENTITY,OTHER),
+trivial(Outcome) :- action(move(ENTITY,direction(backward))),
+						action(look_at(ENTITY,OTHER,_)),
 				  precondition(overlaps(OTHER,ENTITY,false),Outcome),
 				  reading(good,Outcome).
 	  
