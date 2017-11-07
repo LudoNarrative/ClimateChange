@@ -68,7 +68,7 @@ requirejs.config({
 
 
 		"finalDinner" : "../StoryAssembler/data/final/finalDinner.json",
-		"finalLecture" : "../StoryAssembler/data/final/finalLecture.json",
+		"finalLecture" : "../StoryAssembler/data/knobs/lecture.json",
 		"finalDean" : "../StoryAssembler/data/final/finalDean.json",
 		"finalTravel" : "../StoryAssembler/data/final/finalTravel.json",
 		"finalFamilyDinner" : "../StoryAssembler/data/final/finalFamilyDinner.json",
