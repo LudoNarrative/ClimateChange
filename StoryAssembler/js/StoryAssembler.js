@@ -78,7 +78,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 						cantChoose: false
 					};
 					StoryDisplay.addChoice(choiceObj);
-					State.set("currentChoices", [choiceObj]);	
+					State.set("currentChoices", [choiceObj]);
 				}
 				
 				else {		// otherwise do a blind search
@@ -154,29 +154,27 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 	//used to tell the narrative system to refresh
 	var refreshNarrative = function() {
-		
 		//check for interrupt story fragments, and set flag for interrupt if found
 		interruptBestPath = getBestPath(chunkLibrary);
-		var interrupt = false;
+		var interruptPossible = false;
 		if (typeof interruptBestPath !== "undefined") {
-			//if (interruptBestPath.route.length > 0) {
 			testChunk = chunkLibrary.get(interruptBestPath.route[0]);		//if we found one, set flag
-			if (testChunk.gameInterrupt === true) { interrupt = true; }
+			if (testChunk.gameInterrupt === true) { interruptPossible = true; }
 		}
 		
-		if (interrupt) {			
+		if (interruptPossible && !State.get("uninterruptable")) {		
 			//store current display info to retrieve later, set the flag for interrupted, clear display, and show interrupt fragment
 			var resumeChunkInfo = {textId: State.get("currentTextId"), choiceDetails: State.get("currentChoices")}
 			State.set("resumeChunkInfo", resumeChunkInfo);
+			State.set("uninterruptable", true);
 			State.set("interrupted", true);
 			StoryDisplay.clearAll();
 			continueScene();
 		}
 		else { 				//if we didn't find an interrupt fragment, just refresh text display and choices
+
 			StoryDisplay.clearText();
 			displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
-
-			//var temp = getBestPath(chunkLibrary, State.get("currentTextId"));
 
 			newBestPath = getBestPath(chunkLibrary, State.get("currentTextId"));		//grab the best path from here (again)
 			if (typeof newBestPath !== "undefined") {
@@ -188,10 +186,10 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	//used in Diagnostics panel buttons to change a UI var (theVar) by some amount like +1 or -1 (theMod)
 	var clickChangeState = function(theVar, theMod) {
 		if (theMod[0] == "+") {
-			State.set(theVar, State.get(theVar) + 1);
+			State.set(theVar.varName, State.get(theVar.varName) + 1);
 		}
 		if (theMod[0] == "-") {
-			State.set(theVar, State.get(theVar) - 1);
+			State.set(theVar.varName, State.get(theVar.varName) - 1);
 		}
 		Display.setStats("storyStats");			//refresh UI stat display
 		refreshNarrative();					//refresh currently displayed chunk in case it's different
@@ -410,6 +408,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		}
 		else if (choice.chunkId == "sys_endInterrupt") {		//doof
 			State.set("interrupted", false);
+			State.set("uninterruptable", false);
 			var interruptedFragment = State.get("resumeChunkInfo");
 			displayChunkText(interruptedFragment.textId, "refresh");
 			doChunkChoices(interruptedFragment.textId, interruptedFragment.choiceDetails, "endInterrupt");

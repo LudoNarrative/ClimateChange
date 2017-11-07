@@ -11,7 +11,7 @@
         "id" : "gameInterrupt",
         "gameInterrupt" : true,           //this fragment can be used by the game to immediately interrupt the narrative
         "repeatable" : false,
-        "content" : "It's suddenly too much. You can't do this. You break into a cold sweat, and snap your laptop closed. The screen goes blank.<br><br>\"Th-that's it. I uh...I'm done. Class is over. Goodbye.\" You practically run from the classroom, gritting your teeth, the shocked whispers of your students chasing you out the building to your car.",
+        "content" : "It's suddenly too much.<br/>You can't do this.<br/>You break into a cold sweat, and snap your laptop closed. The screen goes blank.<br><br>\"Th-that's it. I uh...I'm done. Class is over. Goodbye.\" You practically run from the classroom, gritting your teeth, the shocked whispers of your students chasing you out the building to your car.",
         "choices" : [
           {"gotoId" : "failEnding"}
         ],
@@ -140,7 +140,7 @@
     {
         "id": "lectureContent2",
         "choiceLabel": "Continue lecture",
-        "content": "\"Let me give you an interesting statistic, just to get your feet wet. The water in our oceans is roughly{ifStateCondition|concentration lt 5|,\" the students watch as you pause to consult your notes, \"|} 25% more acidic than it was in the 1800s. This is because human actions are raising the CO2 levels in the {ifStateCondition|concentration lt 5|water, err I mean, in the|} atmosphere.\"",
+        "content": "\"Let me give you an interesting statistic, just for starters. The water in our oceans is roughly{ifStateCondition|concentration lt 5|,\" the students watch as you pause to consult your notes, \"|} 25% more acidic than it was in the 1800s. This is because human actions are raising the CO2 levels in the {ifStateCondition|concentration lt 5|water, err I mean, in the|} atmosphere.\"",
         "choices":[{
             "gotoId": "lectureContent3"
         }]
@@ -266,7 +266,7 @@
     {
         "id": "followUpAnswer1",
         "choiceLabel": "\"The changes are more impactful than you think.\"",
-        "content": "\"Well, {ifStateCondition|concentration lt 5|uhhh,|}the impact of climate change is much larger than you think. {ifStateCondition|concentration lt 5|If I remember correctly... |}The sea level has been steadily rising for the past 200 years. It is projected to rise another 1 to 4 feet in the next century. That is enough to cause many low sea level areas to flood. We have also see an increase in frequency of very strong hurricanes, which I'm sure is something you would rather not happen.\"",
+        "content": "\"Well, {ifStateCondition|concentration lt 5|uhhh,|}the impact of climate change is much larger than you think. {ifStateCondition|concentration lt 5|If I remember correctly... |}The sea level has been steadily rising for the past 200 years. It is projected to rise another 1 to 4 feet in the next century. That is enough to cause many low sea level areas to flood. We're also seeing stronger, more frequent hurricanes, which I'm sure is something you'd rather avoid.\"",
         "effects": [
             "decr optimism 1",
             "decr hope 1"

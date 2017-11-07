@@ -262,12 +262,16 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			re = /{[^}]*}/g;
 		}
 
+		/*
+		Uncomment this to add speaker tags like "Emma: 'Oh hey there' "
+		
 		// If you wanted to do additional NLG-style processing here like analyzing a sentence and adding hedges, etc., this would be the place to modify 'txt' further before returning it.
 		if (typeof txt !== "undefined" && mode !== "want") {		//if it's undefined (other systems expecting undefined, not a txt string back, so leave it if so)
 			var speakerName = processTemplate("{name|" + currentSpeaker + "}");
-			if (speakerName !== "(speaker)") { txt = speakerName + ": " + txt; }
+			//if (speakerName !== "(speaker)") { txt = speakerName + ": " + txt; }
 			
 		}
+		*/
 
 		return txt;
 	}

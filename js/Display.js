@@ -139,7 +139,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var initSceneScreen = function(State, bg, id) {
 
 		$('body').html('');
-		$('body').css("background-image", "url('/assets/bgs/"+ bg +"')"); 
+		$('body').css("background-image", "url('assets/bgs/"+ bg +"')"); 
 
 		$('<div/>', {
 		    id: 'storyContainer'
@@ -256,7 +256,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		for (var x=0; x < avatarSet.ages.length; x++) { if (avatarSet.ages[x] == age) { ageIndex = x; }}
 		if (!ageIndex) { ageIndex = 0; }		//if no age provided, use first value
 
-		return "/assets/avatars/" + avatarSet.character + "/" + avatarSet.character + "_" + avatarSet.ages[ageIndex] + "_" + tag +".png"; 
+		return "assets/avatars/" + avatarSet.character + "/" + avatarSet.character + "_" + avatarSet.ages[ageIndex] + "_" + tag +".png"; 
 	}
 
 	/*

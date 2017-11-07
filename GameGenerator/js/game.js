@@ -120,7 +120,6 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		    id: 'restartGame',
 		    text: 'Restart'
 		}).click(function() { 
-		    console.log("click!");
 		    Coordinator.startGame(State.get("currentScene"),false);
 		}).appendTo('#gameContainer');
 	    }
@@ -129,8 +128,15 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		    id: 'rerollGame',
 		    text: 'Reroll'
 		}).click(function() { 
-		    console.log("click!");
 		    Coordinator.startGame(State.get("currentScene"));
+		}).appendTo('#gameContainer');
+	    }
+	    if (document.getElementById("disableGame") == null) {
+		$('<div/>', {
+		    id: 'disableGame',
+		    text: 'Disable'
+		}).click(function() { 
+		    game.destroy();
 		}).appendTo('#gameContainer');
 	    }
 	    
