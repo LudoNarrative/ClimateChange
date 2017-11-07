@@ -95,7 +95,7 @@
             "set establishConcentration true"
         ],
         "conditions": [
-            "concentration lt 5"
+            "concentration lte 3"
 
         ],
         "choices": [
@@ -113,8 +113,8 @@
             "set establishConcentration true"
         ],
         "conditions": [
-            "concentration gte 5",
-            "concentration lt 10"
+            "concentration gt 3",
+            "concentration lte 7"
         ],
         "choices": [
             {"gotoId": "lectureContent2"}
@@ -131,7 +131,7 @@
             "set establishConcentration true"
         ],
         "conditions": [
-            "concentration gte 10"
+            "concentration gte 8"
         ],
         "choices": [
             {"gotoId": "lectureContent2"}
@@ -312,7 +312,7 @@
             "set followUp true"
         ],
         "conditions": [
-            "concentration gte 10",
+            "concentration gte 8",
             "bridgeFinished eq true"
         ]
     },
@@ -327,8 +327,8 @@
             "set followUp true"
         ],
         "conditions": [
-            "concentration gte 5",
-            "concentration lt 10",
+            "concentration gte 4",
+            "concentration lt 8",
             "bridgeFinished eq true"
         ]
     },
@@ -343,7 +343,7 @@
             "set followUp true"
         ],
         "conditions": [
-            "concentration lt 5",
+            "concentration lt 4",
             "bridgeFinished eq true"
         ]
     },
