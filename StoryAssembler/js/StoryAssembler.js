@@ -215,7 +215,8 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		var text = Templates.render(chunk.content, chunkSpeaker);
 		//var text = Templates.render(chunk.content, State.get("speaker")); 
 		if (text !== undefined) { 							//if the chunk has text, display it
-			StoryDisplay.addStoryText(text); 
+			StoryDisplay.addStoryText(text);
+			State.set("currentTextId", chunk.id);			//set current text id so we can reference it later
 		}
 		else {												//if it's making a request for text to display...
 			
@@ -307,7 +308,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		mode = mode || "normal";		//mode can be "refresh" driven by state
 		var chunk;
 
-		if (mode == "refresh") {
+		if (mode == "refresh" || mode == "endInterrupt") {
 			chunk = chunkLibrary.get(chunkId, "refresh");	
 		}
 		else {
@@ -348,9 +349,18 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				StoryDisplay.addChoice(choiceObj);
 			});
 			State.set("currentChoices", choiceObjs);
+		} 
 
-		// HERE: If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
-		} else if (wishlist.wantsRemaining() > 0 && mode !== "refresh") {
+		else if (mode == "endInterrupt") {		//if we're ending an interrupt, we have all the info we need
+			var choiceObjs = [];		//used to store current choiceObjs in blackboard (for graph reference)
+			choiceDetails.forEach(function(choice,pos) {
+				choiceObjs.push(choice);
+				StoryDisplay.addChoice(choice);
+			});
+			State.set("currentChoices", choiceObjs);
+		}
+		//If there's a request, we should find a thing that satisfies it. We only want to go back to the wishlist (stuff below here) if this is truly a dead end.
+		else if (wishlist.wantsRemaining() > 0 && mode !== "refresh") {
 			// We have finished a path. After clicking this button, since we didn't send a chunkId parameter below, the system will search for a new bestPath given the remaining wishlist items.
 			StoryDisplay.addChoice({text: "Continue"});
 			var choiceObj = {
@@ -406,7 +416,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		if (choice.chunkId == "sys_endScene") {
 			doOutro();
 		}
-		else if (choice.chunkId == "sys_endInterrupt") {		//doof
+		else if (choice.chunkId == "sys_endInterrupt") {
 			State.set("interrupted", false);
 			State.set("uninterruptable", false);
 			var interruptedFragment = State.get("resumeChunkInfo");
