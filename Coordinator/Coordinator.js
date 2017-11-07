@@ -1543,7 +1543,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "talkToStudent gte 2" },
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
-
 			],
 			dataFiles: [
 				"text!finalLecture"
@@ -2848,7 +2847,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						age: "20s",
 						states: [	//happy, neutral, upset
 							{ state: ["concentration gte 8"], tag: "happy"},
-							{ state: ["concentration gt 3", "concentration lte 7"], tag: "neutral"},
+							{ state: ["concentration gt 3", "concentration lt 8"], tag: "neutral"},
 							{ state: ["concentration lte 3"], tag: "upset"}
 						]
 					},
