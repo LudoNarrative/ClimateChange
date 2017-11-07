@@ -722,7 +722,7 @@ if __name__ == '__main__':
                                     repl[4][0] = 1
                                 repl[4][0] *= 4
                             if (repl[3] in good_vars and 'decrease' in action) or (repl[3] in bad_vars and 'increase' in action):
-                                repl[4][0] /= 4
+                                repl[4][0] /= 8
                                 if (repl[4][0] < 1):
                                     repl[4][0] = 1
                             print  'AFTERB', repl[3], action, repl[4][0]

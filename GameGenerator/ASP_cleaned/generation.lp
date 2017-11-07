@@ -259,7 +259,7 @@ angle_speeds_discrete(60,90,180).
 result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_spin(ENTITY))).
 
 
-look_criterion(nearest;furthest).
+look_criterion(nearest).
 1 {precondition(control_event(button(mouse, held)),outcome(click_to_chase(ENTITY)));
    precondition(control_event(button(mouse, pressed)),outcome(click_to_chase(ENTITY)));
    precondition(control_event(click(ENTITY)),outcome(click_to_chase(ENTITY)))
