@@ -20,8 +20,8 @@ initialize(add(entity(e_2_XX_),scalar(1),location(bottom,center))).
 initialize(add(entity(e_2_XX_),scalar(1),location(top,right))).
 initialize(set_static(entity(e_2_XX_),true)).
 initialize(set_color(entity(e_1_XX_),red)).
-initialize(set_sprite(entity(e_1_XX_),circle)).
-initialize(set_sprite(entity(e_2_XX_),circle)).
+initialize(set_sprite(entity(e_1_XX_),triangle)).
+initialize(set_sprite(entity(e_2_XX_),triangle)).
 initialize(set_color(entity(e_2_XX_),blue)).
 
 timer_logic(timer(t_1_XX_),scalar(7),loop).

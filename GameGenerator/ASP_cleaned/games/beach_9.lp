@@ -9,7 +9,7 @@ initialize(set_draggable(entity(e_1_XX_),true)).
 initialize(add(entity(e_1_XX_),scalar(1),location(top,left))).
 initialize(add(entity(e_1_XX_),scalar(1),location(bottom,center))).
 initialize(add(entity(e_1_XX_),scalar(1),location(top,right))).
-initialize(set_sprite(entity(e_1_XX_),circle)).
+initialize(set_sprite(entity(e_1_XX_),triangle)).
 initialize(set_color(entity(e_1_XX_),red)).
 
 controlLogic(draggable(entity(e_1_XX_))).
@@ -65,10 +65,10 @@ reading(difficulty,scalar(1)).
 <li>games/beach_9.lp</li>
 <li>The player controls the game by<ul>
 <li>
-	clicking-and-dragging [[red|circle]]s
+	clicking-and-dragging [[red|triangle]]s
 </li>
 <li>
-	clicking on a [[red|circle]]
+	clicking on a [[red|triangle]]
 </li>
 <li>
 	pressing the mouse button
