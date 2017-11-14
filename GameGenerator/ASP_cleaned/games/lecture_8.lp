@@ -44,7 +44,7 @@ pool(entity(e_1_XX_),location(bottom,right),ordered,random).
 
 boundary(torus).
 
-initialize(set_value(resource(r_1_XX_),scalar(8))).
+initialize(set_value(resource(r_1_XX_),scalar(9))).
 
 precondition(control_event(button(mouse,held)),outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_)).
 result(outcome(drawn_to_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
@@ -57,7 +57,7 @@ precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_2_XX_)).
 result(outcome(o_2_XX_),mode_change(game_loss)).
 
 precondition(control_event(button(mouse,pressed)),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),decrease(property(entity(e_2_XX_),health),scalar(10))).
+result(outcome(o_3_XX_),decrease(property(entity(e_2_XX_),health),scalar(6))).
 result(outcome(o_3_XX_),decrease(resource(r_1_XX_),scalar(1))).
 result(outcome(o_3_XX_),add(entity(e_2_XX_),scalar(1),pool(entity(e_2_XX_)))).
 
