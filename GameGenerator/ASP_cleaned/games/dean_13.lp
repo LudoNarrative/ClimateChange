@@ -24,9 +24,9 @@ initialize(add(entity(e_3_XX_),scalar(1),location(top,left))).
 initialize(add(entity(e_3_XX_),scalar(1),location(top,right))).
 initialize(add(entity(e_3_XX_),scalar(1),location(bottom,center))).
 initialize(set_color(entity(e_1_XX_),red)).
-initialize(set_sprite(entity(e_1_XX_),circle)).
-initialize(set_sprite(entity(e_2_XX_),circle)).
-initialize(set_sprite(entity(e_3_XX_),circle)).
+initialize(set_sprite(entity(e_1_XX_),triangle)).
+initialize(set_sprite(entity(e_2_XX_),triangle)).
+initialize(set_sprite(entity(e_3_XX_),triangle)).
 initialize(set_color(entity(e_2_XX_),blue)).
 initialize(set_color(entity(e_3_XX_),green)).
 
