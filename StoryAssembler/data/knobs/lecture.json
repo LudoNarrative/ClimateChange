@@ -3,17 +3,20 @@
 
 //TODO: currently lectureEndWell, lectureEndOK, and LectureEndBadly erroneously use "set followUp true" to ensure wishlist item is met if you don't followup with the student, but that is not technically correct. Needs to be re-worked
 /*
-wishlist: [
-                { condition: "establishScene eq true", order:"first" },
-                { condition: "establishConcentration eq true" },
-                { condition: "establishStudents eq true" },
-                { condition: "enthusiasticStudent eq true"},
-                { condition: "skepticalStudent eq true"},
-                { condition: "shyStudent eq true"},
-                { condition: "talkToStudent gte 2" },
-                { condition: "followUp eq true" },
-                { condition: "lectureEnd eq true" },
-            ],
+
+Todo:
+-come up with three different areas lecture can be about
+-come up with three canonical specialties for Emma
+-demonstrate nerves of steel
+    -maybe your cell phone / some loud noise happens and you overreact
+    -drop your books / materials and freak out
+-come up with more optimistic content
+-come up wiht more antagonistic content
+-insert a mention of climateseverity (maybe mention curve..."we're on track for real problems")
+    -1-4: mention of drought (climate destroyed habitats / extinct? / toxic algae blooms (means no crab/lobster season))
+    -5-7: mandated hurricane season closure for campus flooding
+    -8-10: recently re-located students from Florida evacuations
+
 */
 
 [
@@ -126,7 +129,7 @@ wishlist: [
         ],
         "conditions": [
             "concentration gt 3",
-            "concentration lte 7"
+            "concentration lt 8"
         ],
         "choices": [
             {"gotoId": "lectureContent2"}
@@ -164,8 +167,8 @@ wishlist: [
         "choiceLabel": "Just a few more examples",
         "content": "You present a few more quick facts before continuing. {ifStateCondition|concentration gte 5|So far, it seems like it's going well. \"Those|Some people are yawning in the front row. \"Th-those} were just a few examples of things we'll be covering. Besides effects of climate change, you'll also learn how each of you can help out, both locally and on the global scale.\"",
         "choices": [
-            {"gotoId": "lectureBridge"},
-            {"gotoId": "seminarBridge"}
+            {"gotoId": "lectureBridge"}
+           // {"gotoId": "seminarBridge"}
         ],
         "effects": [
             "set lectureFinished true"
@@ -320,9 +323,9 @@ wishlist: [
         "content": "As the end of the class period draws near, the eyes of every student are fixed on you, waiting for your permission to leave. \"Well, that concludes the first lecture. Sorry if it didn't go as smoothly as you were expecting, but we're all going to learn throughout this quarter. I'll see you all next time!\" The sound of books closing and backpacks being zipped up erupts all around the room as the students leave. Some even flash you a smile on the way out.",
         "effects": [
             "incr concentration 3",
-            "set lectureEnd true",
             "set followUp true"
         ],
+        "choices": [{ "gotoId": "endDummy"}],
         "conditions": [
             "concentration gte 8",
             "bridgeFinished eq true"
@@ -335,9 +338,9 @@ wishlist: [
         "content": "You hear a faint rustling of bags and papers. You realize that the class period has ended and students are becoming restless. \"Oh I'm sorry guys, I promise to get better at this as the quarter goes on. I'll see you all next time!\"",
         "effects": [
             "incr concentration 1",
-            "set lectureEnd true",
             "set followUp true"
         ],
+        "choices": [{ "gotoId": "endDummy"}],
         "conditions": [
             "concentration gte 4",
             "concentration lt 8",
@@ -351,18 +354,27 @@ wishlist: [
         "content": "You spot a few students leaving early and your eyes dart to the clock, afraid that you have gone past the end of the class period, but there's still a lot of time left. You are thrown off by what just happened and lose your train of though. \"Umm haha sorry everyone, I completely forgot what I was going to talk about next. Uhh there wasn't that much left anyways so I guess you're dismissed for today. I'll see you next time.\"",
         "effects": [
             "incr concentration -2",
-            "set lectureEnd true",
             "set followUp true"
         ],
+        "choices": [{ "gotoId": "endDummy"}],
         "conditions": [
             "concentration lt 4",
             "bridgeFinished eq true"
         ]
     },
+    {   
+        "id" : "endDummy",
+        "choiceLabel" : "End Scene",
+        "content" : " ",
+        "conditions" : ["followUp eq true"],
+        "effects": [
+            "set lectureEnd true",
+        ]
+    },
     {
     "id": "establishStudents",
     "choiceLabel" : "Continue",
-    "content": "{ifStateCondition|questionsLeft lte 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft eq 2|You have time for a couple more questions.|}{ifStateCondition|questionsLeft eq 3|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>You look around the room at the raised hands. {ifStateCondition|concentration lt 3|You feel a twitch of uncertainty. You hope you can survive the questions.|Only a few. Oh well, you'll take what you can get.} Let's see. How about...",
+    "content": "{ifStateCondition|questionsLeft lte 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft eq 2|You have time for a couple more questions.|}{ifStateCondition|questionsLeft eq 3|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>{ifStateCondition|questionsLeft gt 0|You look around the room at the raised hands. Let's see. How about...|}",
     "choices" : [
       {"gotoId" : "elikaIntro"},
       {"gotoId" : "franklinIntro"},
@@ -394,7 +406,7 @@ wishlist: [
       "questionsLeft lte 0"
     ],
     "choices" : [
-      {"condition" : "lectureEnd eq true"}
+      {"condition" : "followUp eq true"}
     ]
   },
 
@@ -423,7 +435,7 @@ wishlist: [
   "effects" : [
     "set enthusiasticStudent true",
     "incr talkToStudent 1",
-    "decr questionsLeft 1",
+    //"decr questionsLeft 1",
   ],
   "choices" : [
     {"gotoId" : "encouragingResponse"},
@@ -635,8 +647,8 @@ wishlist: [
 
       {
         "id" : "harshResponse",
-        "choiceLabel" : "Don't be such a downer, kid.",
-        "content" : "\"That attitude is the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|shyStudent} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
+        "choiceLabel" : "Geez, don't be such a downer.",
+        "content" : "\"That attitude's the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|shyStudent} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
         "effects" : [
           "incr optimism 1",
           "incr hope 1",
