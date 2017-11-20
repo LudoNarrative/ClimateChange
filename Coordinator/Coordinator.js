@@ -8,7 +8,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//selectable scenes from main menu
 		
 
-
 		var scenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"]
 
 
@@ -20,8 +19,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//scenes played when you hit Begin
 		var playGameScenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
 		State.set("scenes", playGameScenes);
-		Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up scene list UI
-		//Display.initTimelineScreen(this, State, scenes, playGameScenes);		//start up Timeline UI
+		//Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up scene list UI
+		Display.initTimelineScreen(this, State, scenes, playGameScenes);		//start up Timeline UI
 
 	}
 
@@ -48,6 +47,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		ChunkLibrary.reset();
 		for (var x=0; x < levelDataArray.length; x++) { ChunkLibrary.add(levelDataArray[x]); }		//add in fragments from all files
+
+		if (State.get("dynamicWishlist")) {
+			story.wishlist = State.get("processedWishlist");
+		}
 
 		var wishlist = Wishlist.create(story.wishlist, State);
 		wishlist.logOn();
@@ -1534,6 +1537,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"enthusiasticStudent": {name: "Élika", nickname: "Élika", gender: "female"},
 			},
 			wishlist: [
+			/*
 				{ condition: "establishScene eq true", order:"first" },
 				{ condition: "establishConcentration eq true" },
 				{ condition: "establishStudents eq true" },
@@ -1543,7 +1547,47 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "talkToStudent gte 2" },
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
+			*/
+				//knobs
+				{ condition: "establishScene eq true", order:"first" },
+				{ condition: "establishConcentration eq true" },
+				{ condition: "establishStudents eq true" },
+				{ condition: "talkToStudent gte 2" },
+				{ condition: "followUp eq true" },
+				{ condition: "lectureEnd eq true" },
 
+				{ 	condition: "lectureTopic eq [acidity|warming]", 
+					label: "Lecture Topic", 
+					hoverText: "What will your lecture to the students be about?" 
+				},
+				{ 	//can be shrimp, lobsters, etc
+					condition: "areaOfExpertise eq [shrimp|lobsters|coral]", 
+					label: "Expertise", 
+					hoverText: "Which area is your area of specialty, in regards to climate change?" 
+				},
+				{ 
+					condition: "classSize eq [lecture|seminar]", 
+					label: "Class Size", 
+					hoverText: "How big is your class? A large lecture with tons of students, or a smaller, more personal seminar?"
+				},
+				{ 	
+					condition: "[showNervesOfSteel|showNervesOfGlass] eq true", 
+					label: "Self-composure Level", 
+					hoverText: "Are you easily rattled, or can you handle stress easily?"
+				},
+				{ 
+					condition: "optimisticTopicDone eq [0-3]", 
+					label: "# of Optimistic Students", 
+					hoverText: "How many optimistic students are in your class? (0 is low, 3 is high)",
+					changeFunc: "studentBalance"
+				},
+				{ 
+					condition: "antagonisticTopicDone eq [0-3]", 
+					label: "# of Antagonistic Students", 
+					hoverText: "How many antagonistic students are in your class? (0 is low, 3 is high)",
+					changeFunc: "studentBalance"
+				},
+			
 			],
 			dataFiles: [
 				"text!finalLecture"
@@ -2133,7 +2177,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalLecture",
-				text : "<h3>First Lecture</h3><p>Your first lecture. It was challenging...<span class='mutable'>maybe too challenging</span>. The students were eager, <span class='mutable'>but you lost your nerve and had to end class early</span>. It was <span class='mutable'>almost enough to make you question if teaching was really your life path</span>.</p>"
+				text : "<h3>First Lecture</h3><p>Your first lecture. It was challenging...<span class='mutable'>maybe too challenging</span>. The students were eager, <span class='mutable'>but you lost your nerve and had to end class early</span>. It was <span class='mutable'>almost enough to make you question if teaching was really your life path</span>.</p><h3><a href='#' class='beginScene' id='begin-finalLecture'>Begin Scene</a></h3>"
 			},
 			{
 				id : "finalDean",
@@ -2157,7 +2201,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalFaculty",
-				text : "<h3>Full Circle</h3><p>After devoting yourself to education, you've risen to become an influential faculty member at Chesterton University, with your own lab and graduate students. <span class='mutable'>A far cry from your first awkward lectures so long ago!</span> Now you're attending the PhD defense of <span class='mutable'>Franklin</span>, who's come so far since <span class='mutable'>his skeptical snapbacks in your first lecture</span>.</p><p>Will he be able to weather his final presentation? If not...will you be able to help him?</p><h3><a href='#' class='beginScene'>Begin Scene</h3>"
+				text : "<h3>Full Circle</h3><p>After devoting yourself to education, you've risen to become an influential faculty member at Chesterton University, with your own lab and graduate students. <span class='mutable'>A far cry from your first awkward lectures so long ago!</span> Now you're attending the PhD defense of <span class='mutable'>Franklin</span>, who's come so far since <span class='mutable'>his skeptical snapbacks in your first lecture</span>.</p><p>Will he be able to weather his final presentation? If not...will you be able to help him?</p><h3><a href='#' class='beginScene'>Begin Scene</a></h3>"
 			}
 		]
 
@@ -2848,7 +2892,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						age: "20s",
 						states: [	//happy, neutral, upset
 							{ state: ["concentration gte 8"], tag: "happy"},
-							{ state: ["concentration gt 3", "concentration lte 7"], tag: "neutral"},
+							{ state: ["concentration gt 3", "concentration lt 8"], tag: "neutral"},
 							{ state: ["concentration lte 3"], tag: "upset"}
 						]
 					},
@@ -3221,76 +3265,76 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id: "undergradFaculty",
 				aspFilepaths: [
-"GameGenerator/ASP_cleaned/games/dean_1.lp",
-"GameGenerator/ASP_cleaned/games/dean_10.lp",
-"GameGenerator/ASP_cleaned/games/dean_11.lp",
-"GameGenerator/ASP_cleaned/games/dean_12.lp",
-"GameGenerator/ASP_cleaned/games/dean_13.lp",
-"GameGenerator/ASP_cleaned/games/dean_14.lp",
-"GameGenerator/ASP_cleaned/games/dean_15.lp",
-"GameGenerator/ASP_cleaned/games/dean_16.lp",
-"GameGenerator/ASP_cleaned/games/dean_17.lp",
-"GameGenerator/ASP_cleaned/games/dean_18.lp",
-"GameGenerator/ASP_cleaned/games/dean_19.lp",
-"GameGenerator/ASP_cleaned/games/dean_2.lp",
-"GameGenerator/ASP_cleaned/games/dean_20.lp",
-"GameGenerator/ASP_cleaned/games/dean_21.lp",
-"GameGenerator/ASP_cleaned/games/dean_22.lp",
-"GameGenerator/ASP_cleaned/games/dean_23.lp",
-"GameGenerator/ASP_cleaned/games/dean_24.lp",
-"GameGenerator/ASP_cleaned/games/dean_25.lp",
-"GameGenerator/ASP_cleaned/games/dean_26.lp",
-"GameGenerator/ASP_cleaned/games/dean_27.lp",
-"GameGenerator/ASP_cleaned/games/dean_28.lp",
-"GameGenerator/ASP_cleaned/games/dean_29.lp",
-"GameGenerator/ASP_cleaned/games/dean_3.lp",
-"GameGenerator/ASP_cleaned/games/dean_30.lp",
-"GameGenerator/ASP_cleaned/games/dean_31.lp",
-"GameGenerator/ASP_cleaned/games/dean_32.lp",
-"GameGenerator/ASP_cleaned/games/dean_33.lp",
-"GameGenerator/ASP_cleaned/games/dean_34.lp",
-"GameGenerator/ASP_cleaned/games/dean_35.lp",
-"GameGenerator/ASP_cleaned/games/dean_36.lp",
-"GameGenerator/ASP_cleaned/games/dean_37.lp",
-"GameGenerator/ASP_cleaned/games/dean_38.lp",
-"GameGenerator/ASP_cleaned/games/dean_39.lp",
-"GameGenerator/ASP_cleaned/games/dean_4.lp",
-"GameGenerator/ASP_cleaned/games/dean_40.lp",
-"GameGenerator/ASP_cleaned/games/dean_41.lp",
-"GameGenerator/ASP_cleaned/games/dean_42.lp",
-"GameGenerator/ASP_cleaned/games/dean_43.lp",
-"GameGenerator/ASP_cleaned/games/dean_44.lp",
-"GameGenerator/ASP_cleaned/games/dean_45.lp",
-"GameGenerator/ASP_cleaned/games/dean_46.lp",
-"GameGenerator/ASP_cleaned/games/dean_47.lp",
-"GameGenerator/ASP_cleaned/games/dean_48.lp",
-"GameGenerator/ASP_cleaned/games/dean_49.lp",
-"GameGenerator/ASP_cleaned/games/dean_5.lp",
-"GameGenerator/ASP_cleaned/games/dean_50.lp",
-"GameGenerator/ASP_cleaned/games/dean_51.lp",
-"GameGenerator/ASP_cleaned/games/dean_52.lp",
-"GameGenerator/ASP_cleaned/games/dean_53.lp",
-"GameGenerator/ASP_cleaned/games/dean_54.lp",
-"GameGenerator/ASP_cleaned/games/dean_55.lp",
-"GameGenerator/ASP_cleaned/games/dean_56.lp",
-"GameGenerator/ASP_cleaned/games/dean_57.lp",
-"GameGenerator/ASP_cleaned/games/dean_58.lp",
-"GameGenerator/ASP_cleaned/games/dean_59.lp",
-"GameGenerator/ASP_cleaned/games/dean_6.lp",
-"GameGenerator/ASP_cleaned/games/dean_60.lp",
-"GameGenerator/ASP_cleaned/games/dean_61.lp",
-"GameGenerator/ASP_cleaned/games/dean_62.lp",
-"GameGenerator/ASP_cleaned/games/dean_63.lp",
-"GameGenerator/ASP_cleaned/games/dean_64.lp",
-"GameGenerator/ASP_cleaned/games/dean_65.lp",
-"GameGenerator/ASP_cleaned/games/dean_66.lp",
-"GameGenerator/ASP_cleaned/games/dean_67.lp",
-"GameGenerator/ASP_cleaned/games/dean_68.lp",
-"GameGenerator/ASP_cleaned/games/dean_69.lp",
-"GameGenerator/ASP_cleaned/games/dean_7.lp",
-"GameGenerator/ASP_cleaned/games/dean_70.lp",
-"GameGenerator/ASP_cleaned/games/dean_8.lp",
-"GameGenerator/ASP_cleaned/games/dean_9.lp"
+					"GameGenerator/ASP_cleaned/games/dean_1.lp",
+					"GameGenerator/ASP_cleaned/games/dean_10.lp",
+					"GameGenerator/ASP_cleaned/games/dean_11.lp",
+					"GameGenerator/ASP_cleaned/games/dean_12.lp",
+					"GameGenerator/ASP_cleaned/games/dean_13.lp",
+					"GameGenerator/ASP_cleaned/games/dean_14.lp",
+					"GameGenerator/ASP_cleaned/games/dean_15.lp",
+					"GameGenerator/ASP_cleaned/games/dean_16.lp",
+					"GameGenerator/ASP_cleaned/games/dean_17.lp",
+					"GameGenerator/ASP_cleaned/games/dean_18.lp",
+					"GameGenerator/ASP_cleaned/games/dean_19.lp",
+					"GameGenerator/ASP_cleaned/games/dean_2.lp",
+					"GameGenerator/ASP_cleaned/games/dean_20.lp",
+					"GameGenerator/ASP_cleaned/games/dean_21.lp",
+					"GameGenerator/ASP_cleaned/games/dean_22.lp",
+					"GameGenerator/ASP_cleaned/games/dean_23.lp",
+					"GameGenerator/ASP_cleaned/games/dean_24.lp",
+					"GameGenerator/ASP_cleaned/games/dean_25.lp",
+					"GameGenerator/ASP_cleaned/games/dean_26.lp",
+					"GameGenerator/ASP_cleaned/games/dean_27.lp",
+					"GameGenerator/ASP_cleaned/games/dean_28.lp",
+					"GameGenerator/ASP_cleaned/games/dean_29.lp",
+					"GameGenerator/ASP_cleaned/games/dean_3.lp",
+					"GameGenerator/ASP_cleaned/games/dean_30.lp",
+					"GameGenerator/ASP_cleaned/games/dean_31.lp",
+					"GameGenerator/ASP_cleaned/games/dean_32.lp",
+					"GameGenerator/ASP_cleaned/games/dean_33.lp",
+					"GameGenerator/ASP_cleaned/games/dean_34.lp",
+					"GameGenerator/ASP_cleaned/games/dean_35.lp",
+					"GameGenerator/ASP_cleaned/games/dean_36.lp",
+					"GameGenerator/ASP_cleaned/games/dean_37.lp",
+					"GameGenerator/ASP_cleaned/games/dean_38.lp",
+					"GameGenerator/ASP_cleaned/games/dean_39.lp",
+					"GameGenerator/ASP_cleaned/games/dean_4.lp",
+					"GameGenerator/ASP_cleaned/games/dean_40.lp",
+					"GameGenerator/ASP_cleaned/games/dean_41.lp",
+					"GameGenerator/ASP_cleaned/games/dean_42.lp",
+					"GameGenerator/ASP_cleaned/games/dean_43.lp",
+					"GameGenerator/ASP_cleaned/games/dean_44.lp",
+					"GameGenerator/ASP_cleaned/games/dean_45.lp",
+					"GameGenerator/ASP_cleaned/games/dean_46.lp",
+					"GameGenerator/ASP_cleaned/games/dean_47.lp",
+					"GameGenerator/ASP_cleaned/games/dean_48.lp",
+					"GameGenerator/ASP_cleaned/games/dean_49.lp",
+					"GameGenerator/ASP_cleaned/games/dean_5.lp",
+					"GameGenerator/ASP_cleaned/games/dean_50.lp",
+					"GameGenerator/ASP_cleaned/games/dean_51.lp",
+					"GameGenerator/ASP_cleaned/games/dean_52.lp",
+					"GameGenerator/ASP_cleaned/games/dean_53.lp",
+					"GameGenerator/ASP_cleaned/games/dean_54.lp",
+					"GameGenerator/ASP_cleaned/games/dean_55.lp",
+					"GameGenerator/ASP_cleaned/games/dean_56.lp",
+					"GameGenerator/ASP_cleaned/games/dean_57.lp",
+					"GameGenerator/ASP_cleaned/games/dean_58.lp",
+					"GameGenerator/ASP_cleaned/games/dean_59.lp",
+					"GameGenerator/ASP_cleaned/games/dean_6.lp",
+					"GameGenerator/ASP_cleaned/games/dean_60.lp",
+					"GameGenerator/ASP_cleaned/games/dean_61.lp",
+					"GameGenerator/ASP_cleaned/games/dean_62.lp",
+					"GameGenerator/ASP_cleaned/games/dean_63.lp",
+					"GameGenerator/ASP_cleaned/games/dean_64.lp",
+					"GameGenerator/ASP_cleaned/games/dean_65.lp",
+					"GameGenerator/ASP_cleaned/games/dean_66.lp",
+					"GameGenerator/ASP_cleaned/games/dean_67.lp",
+					"GameGenerator/ASP_cleaned/games/dean_68.lp",
+					"GameGenerator/ASP_cleaned/games/dean_69.lp",
+					"GameGenerator/ASP_cleaned/games/dean_7.lp",
+					"GameGenerator/ASP_cleaned/games/dean_70.lp",
+					"GameGenerator/ASP_cleaned/games/dean_8.lp",
+					"GameGenerator/ASP_cleaned/games/dean_9.lp"
 
 				],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
@@ -3384,24 +3428,24 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id: "finalDinner",
 				aspFilepaths: [
-"GameGenerator/ASP_cleaned/games/dinner_1.lp",
-"GameGenerator/ASP_cleaned/games/dinner_10.lp",
-"GameGenerator/ASP_cleaned/games/dinner_11.lp",
-"GameGenerator/ASP_cleaned/games/dinner_12.lp",
-"GameGenerator/ASP_cleaned/games/dinner_13.lp",
-"GameGenerator/ASP_cleaned/games/dinner_14.lp",
-"GameGenerator/ASP_cleaned/games/dinner_15.lp",
-"GameGenerator/ASP_cleaned/games/dinner_16.lp",
-"GameGenerator/ASP_cleaned/games/dinner_17.lp",
-"GameGenerator/ASP_cleaned/games/dinner_18.lp",
-"GameGenerator/ASP_cleaned/games/dinner_19.lp",
-"GameGenerator/ASP_cleaned/games/dinner_2.lp",
-"GameGenerator/ASP_cleaned/games/dinner_20.lp",
-"GameGenerator/ASP_cleaned/games/dinner_21.lp",
-"GameGenerator/ASP_cleaned/games/dinner_22.lp",
-"GameGenerator/ASP_cleaned/games/dinner_23.lp",
-"GameGenerator/ASP_cleaned/games/dinner_24.lp",
-"GameGenerator/ASP_cleaned/games/dinner_25.lp"
+					"GameGenerator/ASP_cleaned/games/dinner_1.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_10.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_11.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_12.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_13.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_14.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_15.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_16.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_17.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_18.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_19.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_2.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_20.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_21.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_22.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_23.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_24.lp",
+					"GameGenerator/ASP_cleaned/games/dinner_25.lp"
 
 				],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"

@@ -101,6 +101,10 @@ Stats CSS
     width:300px;
 }
 
+#sceneIntro .stat {
+    background-color: transparent;
+}
+
 .stat {
     background-color:#00aeef;
     margin-bottom:5px;
@@ -417,6 +421,61 @@ Story CSS
     background-color:#f1f1f1;
     color:black;
     z-index:99;
+    line-height:1.8;
+}
+.selectKnob {
+    margin-left:7px;
+}
+
+.sceneKnobs .ui-slider {
+    margin: 0px 10px 12px;
+}
+
+.sceneKnobs .ui-slider-handle {
+    text-align: center;
+    line-height: 1.2;
+    padding:1px;
+}
+
+/*Timeline tooltips*/
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /* border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 240px;
+    background-color: #444;
+    color: #fff;
+    padding: 5px 11px 5px;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left:50%;
+    margin-left:-60px;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltip .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #444 transparent transparent transparent;
 }
 
 /* The switch - the box around the slider */

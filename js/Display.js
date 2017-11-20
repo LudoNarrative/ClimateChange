@@ -29,9 +29,9 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	}
 
 	var startScene = function(_coordinator, id, loadIntro) {
-
 		_coordinator.cleanState(id);
 		var bg = _coordinator.loadBackground(id);
+		processWishlistSettings(_coordinator, id);
 		initSceneScreen(State, bg, id);
 		if (loadIntro) { _coordinator.loadSceneIntro(id); }
 		_coordinator.loadAvatars(id);
@@ -83,6 +83,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		    id: 'timeline'
 		}).appendTo('body');
 
+		$('<div/>', {
+		    id: 'blackout'
+		    //text: ''
+		}).appendTo('body');
 		
 
 		scenes.forEach(function(scene, pos) {			//make scene / knob containers
@@ -117,24 +121,163 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 			populateKnobs(scene, _Coordinator, _State, scenes);
 		});
+
+		activateBegins(_Coordinator, _State, scenes);
 	}
 
+	//process the wishlist for the passed in story according to its current settings in the UI
+	var processWishlistSettings = function(_Coordinator, id) {
+
+		var knobList = [];
+		var widgetNum = 0;
+		var story = _Coordinator.getStorySpec(id);
+
+		for (var x=0; x < story.wishlist.length; x++) {
+			if (story.wishlist[x].condition.includes("[")) {
+				State.set("dynamicWishlist", true);			//set flag that we have a dynamic wishlist
+				if (story.wishlist[x].condition.includes("-")) {			//it's a slider
+					var value = $("#" + story.id + "-slider-" + widgetNum).slider("option", "value");
+					story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
+					widgetNum++;
+				}
+				else if (story.wishlist[x].condition.includes("|")) {	//it's a dropdown
+					var value = $("#" + story.id + "-select-" + widgetNum).val();
+					story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
+					widgetNum++;
+				}
+				else {									//it's a switch
+					var value = $("#" + story.id + "-switch" + widgetNum).val();
+					if (value == "on") {		//if it's on, remove brackets
+						story.wishlist[x].condition = story.wishlist[x].condition.replace(/^\[(.+)\]$/,'$1');
+					}
+					else {			//otherwise, remove it
+						story.wishlist.splice(x,1);
+					}
+					widgetNum++;
+				}
+				delete story.wishlist[x].label;
+				delete story.wishlist[x].hoverText;
+			}
+
+		}
+
+		State.set("processedWishlist", story.wishlist);
+	}
+
+	//activate begin links in timeline
+	var activateBegins = function(_Coordinator, _State, scenes) {
+		$(".beginScene").click(function(evnt) { 
+			evnt.stopPropagation(); 
+			var sceneId = $(this).attr( "id" ).split("-")[1];
+			$( "#blackout" ).fadeIn( "slow", function() {
+    			startScene(_Coordinator, sceneId, true);
+			});
+		});
+	}
+
+	//activate and add in knobs for coordinator stuff
 	var populateKnobs = function(sceneId, _Coordinator, _State, scenes) {
 		
 		var sceneSpec = _Coordinator.getStorySpec(sceneId);
-
+		var sliderX = [];
 		for (var x=0; x < sceneSpec.wishlist.length; x++) {
-			var knobHtml = "";
-			knobHtml += '<div class="switch-container">';
-			knobHtml += '<label class="switch" for="'+ sceneId +'-switch'+ x +'"><input type="checkbox" id="'+ sceneId +'-switch'+x+'" checked="checked"><span class="slider round"></span></label>';
-			knobHtml += '<span class="switch-label">'+ sceneSpec.wishlist[x].condition +'</span>';
-			knobHtml += "</div>"
-			$("#knobs_" + sceneId).append(knobHtml);
-		}
-		$("#knobs_" + sceneId).append("<br class='clearFloat'/>");
+			
+			if (sceneSpec.wishlist[x].condition.includes("[")) {		//if the wishlist item has [] in it...
+				var knobHtml = "";
+				var regExp = /\[([^)]+)\]/;
+				var knobString = regExp.exec(sceneSpec.wishlist[x].condition)[1];
+				
+				var theLabel;			//set up label stuff if they have it
+				if (sceneSpec.wishlist[x].label != null) { theLabel = sceneSpec.wishlist[x].label; }
+				else { theLabel = sceneSpec.wishlist[x].condition.replace(/ *\[[^)]*\] */g, ""); }
 
+				var hoverTextClass = "";
+				var hoverText;
+				if (sceneSpec.wishlist[x].hoverText != null) { 		//set up hovertext stuff if they have it
+					hoverTextClass = " class='tooltip'"; 
+					hoverText = "<span class='tooltiptext'>"+sceneSpec.wishlist[x].hoverText + "</span>"; 
+				}
+
+				if (knobString.includes("-")) {			//range slider (e.g. "confidence eq [0-4]")
+					var minValStart = knobString.indexOf("[") + 1;
+					var minValEnd = knobString.indexOf("-");
+					var minVal = knobString.substring(minValStart,minValEnd);		//get min value
+					var maxValStart = knobString.indexOf("-") + 1;
+					var maxValEnd = knobString.length;
+					var maxVal = knobString.substring(maxValStart,maxValEnd);		//get max value
+					knobHtml += '<label for="'+ sceneId +'-slider-' + x.toString() +'"'+ hoverTextClass +'>'+hoverText+theLabel+'</label><div id="'+ sceneId +'-slider-' + x.toString() +'"><div id="custom-handle-'+ sceneId + '_' + x.toString() +'" class="ui-slider-handle"></div></div>';
+					$("#knobs_" + sceneId).append(knobHtml);
+					sliderX.push({xVal:x, min: minVal, max: maxVal});
+					$( function() {
+						var data = sliderX.shift();
+				    	var handle = $( "#custom-handle-"+ sceneId + "_" + data.xVal.toString() );
+					    $( "#" + sceneId + "-slider-" + data.xVal.toString() ).slider({
+					    	create: function() { 
+					    		handle.text( $( this ).slider( "value" ) ); 
+					    		$(this).slider('value', (data.max-data.min)/3);
+					    	},
+					      	slide: function( event, ui ) { handle.text( ui.value );	},
+					      	stop: function(event, ui) {
+					      		if (sceneSpec.wishlist[data.xVal].changeFunc !== null){
+					      			runChangeFunc(this, sceneSpec.wishlist[data.xVal].changeFunc);
+					      		}
+					      	},
+					      	min: parseFloat(data.min),
+					      	max: parseFloat(data.max),
+					      	step: 1
+					    });
+					});
+					
+				}
+				else if (knobString.includes("|")) {		//dropdown w/ options (e.g. "career eq [shrimp|lobster]")
+					var theLabel;
+					if (sceneSpec.wishlist[x].label != null) { theLabel = sceneSpec.wishlist[x].label; }
+					else { theLabel = sceneSpec.wishlist[x].condition.replace(/ *\[[^)]*\] */g, ""); }
+
+					knobHtml += "<label for='"+ sceneId +"-select-"+x+"'"+ hoverTextClass +">"+hoverText+theLabel+"</label><select id='"+ sceneId +"-select-"+x+"' class='selectKnob'>";
+					var theOptions = knobString.split("|");
+					for (var y=0; y < theOptions.length; y++) {
+						knobHtml += '<option value="'+ theOptions[y] +'">'+ theOptions[y] +'</option>';
+					}
+					knobHtml += "</select>";
+					$("#knobs_" + sceneId).append(knobHtml);
+					$("#knobs_" + sceneId).append("<br class='clearFloat'/>");
+				}
+				else {			//otherwise must be an on/off switch (e.g. "[introFriends eq true]")
+					var theLabel;
+					if (sceneSpec.wishlist[x].label != null) { theLabel = sceneSpec.wishlist[x].label; }
+					else { theLabel = sceneSpec.wishlist[x].condition; }
+					knobHtml += '<div class="switch-container">';
+					knobHtml += '<label class="switch" for="'+ sceneId +'-switch'+ x +'"'+hoverTextClass+'>'+hoverText+'<input type="checkbox" id="'+ sceneId +'-switch'+x+'" checked="checked"><span class="slider round"></span></label>';
+					knobHtml += '<span class="switch-label">'+ theLabel +'</span>';
+					knobHtml += "</div>"
+					$("#knobs_" + sceneId).append(knobHtml);
+					$("#knobs_" + sceneId).append("<br class='clearFloat'/>");
+				}				
+				
+			}
+		}
 	}
 
+	var runChangeFunc = function(changingElement, functionName) {
+		switch (functionName) {
+			case "studentBalance":
+				studentBalance(changingElement);
+				break;
+		}
+	}
+
+	//-------------KNOB TWIDDLING FUNCTIONS-------------------------------------------
+
+	var studentBalance = function(changer) {
+		var partnerSlider;
+		if (changer.id == "finalLecture-slider-10") { partnerSlider = "#finalLecture-slider-11"}
+		else { partnerSlider = "#finalLecture-slider-10"; }
+		var currentValue = $("#" + changer.id).slider('value');
+		$(partnerSlider).slider('value', (3-currentValue));
+		console.log("setting to " + (3-currentValue+1));
+	}
+//------------------------------------------------------------------------------------
 	//builds the scene divs
 	var initSceneScreen = function(State, bg, id) {
 
@@ -280,13 +423,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			});
 
 			stats.forEach(function(stat, pos) {
-				/*
-				"varName" : "confidence",
-				"label" : "Confidence",
-				"characters" : ["protagonist"],
-				"affectedBy" : "both",
-				"range" : [0,10]
-				*/
+
 				for (var x=0; x < stat.characters.length; x++) { //for each character...
 
 					if (document.getElementById(stat.characters[x] + "_" + stat.varName) == null) {
@@ -308,13 +445,6 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		var stats = State.get("storyUIvars");
 
 		stats.forEach(function(stat, pos) {
-			/*
-			"varName" : "confidence",
-			"label" : "Confidence",
-			"characters" : ["protagonist"],
-			"affectedBy" : "both",
-			"range" : [0,10]
-			*/
 			for (var x=0; x < stat.characters.length; x++) { //for each character...
 				setBarWidth(stat.characters[x] + "_" + stat.varName);
 			}
@@ -375,12 +505,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 					$('<span/>', {
 				    	class: 'statLabel',
-				    	text: stat.label + ": "
+				    	text: "Ending " + stat.label + ": "
 					}).appendTo('#'+stat.varName+'ContainerOutro');
 
 					$('<span/>', {
 				    	class: 'statValue',
-				    	text: State.get(stat.varName)
+				    	text: State.get(stat.varName).toFixed(1)
 					}).appendTo('#'+stat.varName+'ContainerOutro');
 				}
 			});
@@ -552,6 +682,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		setSceneIntro : setSceneIntro,
 		setSceneOutro : setSceneOutro,
 		startScene : startScene,
-		addGameDiagnostics : addGameDiagnostics
+		addGameDiagnostics : addGameDiagnostics,
+		processWishlistSettings : processWishlistSettings
 	} 
 });

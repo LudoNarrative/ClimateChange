@@ -25,9 +25,9 @@ initialize(add(entity(e_3_XX_),scalar(1),location(top,center))).
 initialize(add(entity(e_3_XX_),scalar(1),location(bottom,left))).
 initialize(add(entity(e_3_XX_),scalar(1),location(bottom,right))).
 initialize(set_color(entity(e_1_XX_),red)).
-initialize(set_sprite(entity(e_1_XX_),circle)).
-initialize(set_sprite(entity(e_2_XX_),circle)).
-initialize(set_sprite(entity(e_3_XX_),circle)).
+initialize(set_sprite(entity(e_1_XX_),triangle)).
+initialize(set_sprite(entity(e_2_XX_),triangle)).
+initialize(set_sprite(entity(e_3_XX_),triangle)).
 initialize(set_color(entity(e_2_XX_),blue)).
 initialize(set_color(entity(e_3_XX_),green)).
 
@@ -107,7 +107,7 @@ reading(hand_eye_coordination,game).
 <li>The goal is to produce composure</li>
 <li>The player controls the game by<ul>
 <li>
-	clicking-and-dragging [[red|circle]]s
+	clicking-and-dragging [[red|triangle]]s
 </li>
 <li>
 	pressing the mouse button
