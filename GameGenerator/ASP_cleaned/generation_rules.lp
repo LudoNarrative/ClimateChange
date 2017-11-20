@@ -7,7 +7,7 @@ outcome(O) :- result(O,_).
 action(A) :- result(_,A).
 
 
-torus_safe(O) :- precondition(compare(_,distance(ENTITY,_,_)),O).
+torus_safe(O) :- precondition(compare(_,distance(ENTITY,_,_),_),O).
 chasing_safe(E1,E2) :- player_controls(E1), entity(E2).
 chasing_safe(E1,E2) :- player_controls(E2), entity(E1).
 
@@ -112,13 +112,25 @@ reachableCondition(overlaps(E1,E2,POLARITY)) :-
     condition(overlaps(E1,E2,POLARITY)).
 
 reachableCondition(overlaps(E1,E2,POLARITY)) :-
-    action(move(E1,_)),
+    not static(E1),
     condition(overlaps(E1,E2,POLARITY)).
 
 reachableCondition(overlaps(E1,E2,POLARITY)) :-
-    action(move(E2,_)),
+    not static(E2),
     condition(overlaps(E1,E2,POLARITY)).
 
+reachableCondition(compare(POLARITY,distance(E1,E2,CRIT),A)) :-
+    not static(E1),
+    condition(compare(POLARITY,distance(E1,E2,CRIT),A)).
+
+reachableCondition(compare(POLARITY,distance(E1,E2,CRIT),A)) :-
+    not static(E2),
+    condition(compare(POLARITY,distance(E1,E2,CRIT),A) ).
+
+reachableCondition(overlaps(E1,E2,POLARITY)) :-
+    not static(E2),
+    condition(overlaps(E1,E2,POLARITY)).
+	
 reachableCondition(compare(le,amount(Color),scalar(S))) :-
 		       action(clear(_)),
 		       condition(compare(le,amount(Color),scalar(S))).

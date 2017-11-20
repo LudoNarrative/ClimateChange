@@ -14,7 +14,4 @@
 
 
 
-timer_modifies :- result(O,modify(_,_)),
-    precondition(timer_elapsed(T),O).
-	
-	:- not timer_modifies.
+:- not reachableCondition(compare(_,distance(_,_,_),_)).

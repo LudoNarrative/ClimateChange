@@ -6,6 +6,9 @@
 	0 {action(modify(increase,R));
 		action(modify(increase,R,_))} 0.
 
+:- 5 {result(Outcome,_)},
+   outcome(Outcome),
+   Outcome != tick.
 % only allow something to decrease on tick if it can be increased
 :- 1 {result(tick, modify(increase,R));
 		result(tick, modify(increase,R,_))},
@@ -21,7 +24,8 @@
 	
 :- action(look_at(E,E,C)).
 
-
+:- result(tick,look_at(E,_,_)),
+	result(tick,move(E,direction(backward))).
 
 :- action(modify(decrease,R,R)).
 
@@ -674,21 +678,20 @@ player_controls_resource(R,Dir) :-
 :- 6 {precondition(_,Outcome)},
    outcome(Outcome).
 
-:- 4 {result(Outcome,_)},
-   outcome(Outcome),
-   Outcome != tick.
 
+:- condition(control_event(click(entity(e(1))))),
+    not player_controls(entity(e(1))).
 
 
 :- boundary(torus),
    not torus_safe(O),
    result(O,look_at(E,_,_)),
-   result(O,moves(E,direction(left;right;forward;backward))).
+   result(O,move(E,direction(left;right;forward;backward))).
 
 
 :- boundary(torus), 
    result(tick,look_at(E,_,_)),
-   result(tick,moves(E,direction(left;right))).
+   result(tick,move(E,direction(left;right))).
 
 %%%COLOR
 

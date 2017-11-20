@@ -444,4 +444,3 @@ outcome_enables(O1,O3) :-
     outcome_enables(O1,O2),
     outcome_enables(O2,O3).
 
-

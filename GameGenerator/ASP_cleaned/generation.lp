@@ -434,8 +434,8 @@ precondition(tick,tick) :- outcome(tick).
 behaviors(chase(E)) :- entity(E).
 behaviors(flee(E)) :- entity(E).
 left_right(left;right).
-%behaviors(orbit(E,D)) :- entity(E), left_right(D).
-%behaviors(patrol;wander;pingpong).
+behaviors(orbit(E,D)) :- entity(E), left_right(D).
+behaviors(patrol;wander).
 
 
 
@@ -481,8 +481,7 @@ distance_amounts(60;120;240).
     behavior(ENTITY,BEHAVIOR).
 
 
-:- behavior_condition_polarity(ENTITY,
-			       _,
+:- behavior_condition_polarity(ENTITY,_,
 			       compare(Polarity1,distance(ENTITY,OTHER,CRITERION1),scalar(AMOUNT1))),
    behavior_condition_polarity(ENTITY,
 			       _,
@@ -513,12 +512,13 @@ behavior_condition_polarity(ENTITY, BEHAVIOR, tick) :-  behavior(ENTITY,BEHAVIOR
 
 :- chosen_outcome(tick,_,_,Outcome),
    Outcome != tick.
-constraint(eq,
-	   precondition(compare(Polarity1,R),Outcome1),
-	   precondition(compare(Polarity2,R),Outcome2)) :-
-    chosen_outcome(Outcome1,Entity,Behavior1,compare(Polarity1,R)),
-    chosen_outcome(Outcome2,Entity,Behavior2,compare(Polarity2,R)),
-    Outcome1 != Outcome2.
+   
+% constraint(eq,
+	   % precondition(compare(Polarity1,R),Outcome1),
+	   % precondition(compare(Polarity2,R),Outcome2)) :-
+    % chosen_outcome(Outcome1,Entity,Behavior1,compare(Polarity1,R)),
+    % chosen_outcome(Outcome2,Entity,Behavior2,compare(Polarity2,R)),
+    % Outcome1 != Outcome2.
 
 
 			   
@@ -806,15 +806,21 @@ behavior_(BEHAVIOR)  :-  behavior(ENTITY,BEHAVIOR) .
 
 project(player_controls(C)) :- player_controls(C).
 project(behavior_(C)) :- behavior_(C).
+pair(C,A) :- precondition(C,O), result(O,A).
+
+
 
 project(controlScheme(C)) :- controlScheme(C).
 project(R) :- resource(R).
 project(E) :- entity(E).
 project(T) :- timer(T).
 project(behavior(E,B)) :- behavior(E,B).
+project(behavior_condition_polarity(ENTITY, BEHAVIOR, CONDITION) ) :- behavior_condition_polarity(ENTITY, BEHAVIOR, CONDITION) .
+project(control_event(C)) :- condition(control_event(C)).
 %project(relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2)))) :- relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2))).
 project(static(E)) :- static(E).
-project( initialize(add(Entity,scalar(1),location(Row,Col))) ) :  initialize(add(Entity,scalar(1),location(Row,Col))) .
+%project(pair(C,A)) :- pair(C,A).
+%project( initialize(add(Entity,scalar(1),location(Row,Col))) ) :  initialize(add(Entity,scalar(1),location(Row,Col))) .
 
 %grouped(A1,A2) :- result(O,A1), result(O,A2).
 %grouped(A1,A2) :- precondition(A1,O), precondition(A2,O).

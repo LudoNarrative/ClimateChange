@@ -14,20 +14,17 @@
 
 
 
-required(hand_eye_coordination).
-:- not reading(hand_eye_coordination,game).
+% required(hand_eye_coordination).
+% :- not reading(hand_eye_coordination,game).
 
 required(risk_reward).
 :- not reading(risk_reward,control_event(_)).
 
 
 label(resource(r(1)),concentration,write) :- reading(good,resource(r(1))).
-label(resource(r(1)),stress,write) :- reading(bad,resource(r(1))).
 :- not reading(good,resource(r(1))).
 
 
-
-:- 2 {label(resource(r(1)),_,_)}.
 
 label(entity(e(1)),e1).
 
@@ -39,6 +36,10 @@ required(maintenance).
 
 
 
-:- not computer_controls(_).
 
+% :- behavior_condition_polarity(_,_,tick).
 
+:- not reachableCondition(compare(_,distance(_,_,_),_)).
+:- not boundary(torus).
+
+%:- not torus_safe(_).
