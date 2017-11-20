@@ -137,6 +137,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		    text: 'Disable'
 		}).click(function() { 
 		    game.destroy();
+		    $("#gameContainer").hide();
 		}).appendTo('#gameContainer');
 	    }
 	    

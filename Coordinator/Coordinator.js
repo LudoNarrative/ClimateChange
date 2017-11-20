@@ -480,18 +480,18 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			id: "undergradLecture",
 			characters: {
 				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
-				"skepticStudent": {name: "Franklin", nickname: "Franklin", gender: "male"},
-				"shyStudent": {name: "Aiden", nickname: "Aiden", gender: "non-binary"},
-				"enthusiasticStudent": {name: "Élika", nickname: "Élika", gender: "female"},
+				"student1": {name: "Franklin", nickname: "Franklin", gender: "male"},
+				"student2": {name: "Aiden", nickname: "Aiden", gender: "non-binary"},
+				"student3": {name: "Élika", nickname: "Élika", gender: "female"},
 			},
 			wishlist: [
 				{ condition: "establishScene eq true" },
 				{ condition: "establishDetails eq true" },
 				{ condition: "establishComposure eq true" },
 				{ condition: "establishStudents eq true" },
-				{ condition: "enthusiasticStudent eq true"},
+				{ condition: "student3 eq true"},
 				{ condition: "skepticalStudent eq true"},
-				{ condition: "shyStudent eq true"},
+				{ condition: "student2 eq true"},
 				{ condition: "talkToStudent gte 3" },
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
@@ -510,9 +510,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set establishDetails false",
 				"set establishComposure false",
 				"set establishStudents false",
-				"set enthusiasticStudent false",
+				"set student3 false",
 				"set skepticalStudent false",
-				"set shyStudent false",
+				"set student2 false",
 				"set talkToStudent 0",
 				"set followUp false",
 				"set lectureEnd false",
@@ -536,21 +536,21 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{
 					"varName" : "curiosity",
 					"label" : "Curiosity",
-					"characters" : ["skepticStudent"],
+					"characters" : ["student1"],
 					"affectedBy" : "both",
 					"range" : [0,10]
 				},
 				{
 					"varName" : "hope",
 					"label" : "Hope",
-					"characters" : ["shyStudent"],
+					"characters" : ["student2"],
 					"affectedBy" : "both",
 					"range" : [0,10]
 				},
 				{
 					"varName" : "optimism",
 					"label" : "Optimism",
-					"characters" : ["enthusiasticStudent"],
+					"characters" : ["student3"],
 					"affectedBy" : "both",
 					"range" : [0,10]
 				},
@@ -1532,23 +1532,23 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			year: 2026,
 			characters: {
 				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
-				"skepticStudent": {name: "Franklin", nickname: "Franklin", gender: "male"},
-				"shyStudent": {name: "Aiden", nickname: "Aiden", gender: "non-binary"},
-				"enthusiasticStudent": {name: "Élika", nickname: "Élika", gender: "female"},
+				"student1": {name: "Franklin", nickname: "Franklin", gender: "male"},
+				"student2": {name: "Aiden", nickname: "Aiden", gender: "non-binary"},
+				"student3": {name: "Élika", nickname: "Élika", gender: "female"},
 			},
 			wishlist: [
 			/*
 				{ condition: "establishScene eq true", order:"first" },
 				{ condition: "establishConcentration eq true" },
 				{ condition: "establishStudents eq true" },
-				{ condition: "enthusiasticStudent eq true"},
+				{ condition: "student3 eq true"},
 				{ condition: "skepticalStudent eq true"},
-				{ condition: "shyStudent eq true"},
+				{ condition: "student2 eq true"},
 				{ condition: "talkToStudent gte 2" },
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
 			*/
-				//knobs
+				//knobs version
 				{ condition: "establishScene eq true", order:"first" },
 				{ condition: "establishConcentration eq true" },
 				{ condition: "establishStudents eq true" },
@@ -1556,6 +1556,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
 
+				{
+					condition: "game_mode eq [attract|dodge|scrub|draw]",
+					label: "Game mode",
+					hoverText: "What mode do you want the game to be in?"
+				},
 				{ 	condition: "lectureTopic eq [acidity|warming]", 
 					label: "Lecture Topic", 
 					hoverText: "What will your lecture to the students be about?" 
@@ -1565,28 +1570,29 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					label: "Expertise", 
 					hoverText: "Which area is your area of specialty, in regards to climate change?" 
 				},
-				{ 
-					condition: "classSize eq [lecture|seminar]", 
-					label: "Class Size", 
-					hoverText: "How big is your class? A large lecture with tons of students, or a smaller, more personal seminar?"
-				},
-				{ 	
+				{
 					condition: "[showNervesOfSteel|showNervesOfGlass] eq true", 
 					label: "Self-composure Level", 
 					hoverText: "Are you easily rattled, or can you handle stress easily?"
 				},
 				{ 
-					condition: "optimisticTopicDone eq [0-3]", 
+					condition: "classSize eq [lecture|seminar]", 
+					label: "Class Size", 
+					hoverText: "How big is your class? A large lecture with tons of students, or a smaller, more personal seminar?"
+				},
+				{ 
+					condition: "optimisticStudent eq [0-3]", 
 					label: "# of Optimistic Students", 
 					hoverText: "How many optimistic students are in your class? (0 is low, 3 is high)",
 					changeFunc: "studentBalance"
 				},
-				{ 
-					condition: "antagonisticTopicDone eq [0-3]", 
+				{
+					condition: "antagonisticStudent eq [0-3]", 
 					label: "# of Antagonistic Students", 
 					hoverText: "How many antagonistic students are in your class? (0 is low, 3 is high)",
 					changeFunc: "studentBalance"
 				},
+				
 			
 			],
 			dataFiles: [
@@ -1598,14 +1604,17 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set establishDetails false",
 				"set establishConcentration false",
 				"set establishStudents false",
-				"set enthusiasticStudent false",
+				"set student3 false",
 				"set skepticalStudent false",
-				"set shyStudent false",
+				"set student2 false",
 				"set talkToStudent 0",
 				"set followUp false",
 				"set lectureEnd false",
 				"set roomObjects 0",
 				"set lecture true",
+
+				"set antagonisticStudent 0",
+				"set optimisticStudent 0",
 
 				"set concentration 10",
 				"set curiosity 3",
@@ -1625,21 +1634,21 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{
 					"varName" : "curiosity",
 					"label" : "Curiosity",
-					"characters" : ["skepticStudent"],
+					"characters" : ["student1"],
 					"affectedBy" : "both",
 					"range" : [0,10]
 				},
 				{
 					"varName" : "hope",
 					"label" : "Hope",
-					"characters" : ["shyStudent"],
+					"characters" : ["student2"],
 					"affectedBy" : "both",
 					"range" : [0,10]
 				},
 				{
 					"varName" : "optimism",
 					"label" : "Optimism",
-					"characters" : ["enthusiasticStudent"],
+					"characters" : ["student3"],
 					"affectedBy" : "both",
 					"range" : [0,10]
 				},
@@ -2521,7 +2530,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						]
 					},
 					{
-						id: "skepticStudent",
+						id: "student1",
 						graphics: "char9",
 						age: "20s",
 						states: [	//happy, neutral, upset
@@ -2529,7 +2538,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						]
 					},
 					{
-						id: "shyStudent",
+						id: "student2",
 						graphics: "char8",
 						age: "20s",
 						states: [	//happy, neutral, upset
@@ -2537,7 +2546,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						]
 					},
 					{
-						id: "enthusiasticStudent",
+						id: "student3",
 						graphics: "char2",
 						age: "20s",
 						states: [	//happy, neutral, upset
@@ -2897,7 +2906,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						]
 					},
 					{
-						id: "skepticStudent",
+						id: "student1",
 						graphics: "char9",
 						age: "20s",
 						states: [	//happy, neutral, upset
@@ -2905,7 +2914,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						]
 					},
 					{
-						id: "shyStudent",
+						id: "student2",
 						graphics: "char8",
 						age: "20s",
 						states: [	//happy, neutral, upset
@@ -2913,7 +2922,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						]
 					},
 					{
-						id: "enthusiasticStudent",
+						id: "student3",
 						graphics: "char2",
 						age: "20s",
 						states: [	//happy, neutral, upset

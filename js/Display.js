@@ -136,17 +136,17 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			if (story.wishlist[x].condition.includes("[")) {
 				State.set("dynamicWishlist", true);			//set flag that we have a dynamic wishlist
 				if (story.wishlist[x].condition.includes("-")) {			//it's a slider
-					var value = $("#" + story.id + "-slider-" + widgetNum).slider("option", "value");
+					var value = $("#" + story.id + "-slider-" + x).slider("option", "value");
 					story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
 					widgetNum++;
 				}
 				else if (story.wishlist[x].condition.includes("|")) {	//it's a dropdown
-					var value = $("#" + story.id + "-select-" + widgetNum).val();
+					var value = $("#" + story.id + "-select-" + x).val();
 					story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
 					widgetNum++;
 				}
 				else {									//it's a switch
-					var value = $("#" + story.id + "-switch" + widgetNum).val();
+					var value = $("#" + story.id + "-switch" + x).val();
 					if (value == "on") {		//if it's on, remove brackets
 						story.wishlist[x].condition = story.wishlist[x].condition.replace(/^\[(.+)\]$/,'$1');
 					}
@@ -157,6 +157,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				}
 				delete story.wishlist[x].label;
 				delete story.wishlist[x].hoverText;
+				delete story.wishlist[x].changeFunc;
 			}
 
 		}
@@ -271,11 +272,11 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var studentBalance = function(changer) {
 		var partnerSlider;
-		if (changer.id == "finalLecture-slider-10") { partnerSlider = "#finalLecture-slider-11"}
-		else { partnerSlider = "#finalLecture-slider-10"; }
+		if (changer.id == "finalLecture-slider-11") { partnerSlider = "#finalLecture-slider-12"}
+		else { partnerSlider = "#finalLecture-slider-11"; }
 		var currentValue = $("#" + changer.id).slider('value');
 		$(partnerSlider).slider('value', (3-currentValue));
-		console.log("setting to " + (3-currentValue+1));
+		$(partnerSlider).find(".ui-slider-handle").text((3-currentValue));
 	}
 //------------------------------------------------------------------------------------
 	//builds the scene divs
