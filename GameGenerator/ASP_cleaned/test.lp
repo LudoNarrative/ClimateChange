@@ -1,6 +1,11 @@
 
 
-thing(a;b;c;d).
+thing(0..10).
 
-1 { thing2(A) : thing(A)} 1 :- thing(a).
-1 { thing2(A) : thing(A)} 1 :- thing(a).
+1 {chosen(X) : thing(X)} 1.
+
+
+chosen(X) :- thing(X),
+	     X = 5.
+
+#show chosen/1.
