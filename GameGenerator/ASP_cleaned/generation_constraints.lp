@@ -6,6 +6,27 @@
 	0 {action(modify(increase,R));
 		action(modify(increase,R,_))} 0.
 
+:- 2{ result(O,modify(_,R)); 
+		result(O,modify(_,R,_))}, 
+		resource(R), outcome(O).
+
+:- condition(compare(_,distance(E,E,_),_)).
+
+:- boundary(torus),
+   not torus_safe(O),
+   result(O,look_at(E,_,_)),
+   result(O,move(E,direction(left;right;forward;backward))).
+
+:- boundary(torus),
+   not torus_safe(O),
+   result(O,look_at(E,_,_)),
+   result(O,move(E,direction(left;right;forward;backward),Amount)).
+
+:- boundary(torus), 
+   result(tick,look_at(E,_,_)),
+   result(tick,move(E,direction(left;right))).
+
+
 % only allow something to decrease on tick if it can be increased
 :- 1 {result(tick, modify(increase,R));
 		result(tick, modify(increase,R,_))},
@@ -67,7 +88,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- frivolous(R), not allowed(frivolous(R)).
 
 
-:- spatial_condition(E1,E2), not move(E1), not move(E2).
+:- spatial_condition(E1,E2), not moves(E1), not moves(E2).
 
 
 
@@ -143,9 +164,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 :- result(O,add(E,_,_)), every_frame(O).
 
-:- 2{ result(O,modify(_,R)); 
-		result(O,modify(_,R,_))}, 
-		resource(R), outcome(O).
 
 %:- precondition(control_event(click(Entity)),Outcome),
 %   precondition(overlaps(Entity),Outcome).
@@ -678,21 +696,6 @@ player_controls_resource(R,Dir) :-
    outcome(Outcome),
    Outcome != tick.
 
-
-
-:- boundary(torus),
-   not torus_safe(O),
-   result(O,look_at(E,_,_)),
-   result(O,move(E,direction(left;right;forward;backward))).
-
-:- boundary(torus),
-   not torus_safe(O),
-   result(O,look_at(E,_,_)),
-   result(O,move(E,direction(left;right;forward;backward),Amount)).
-
-:- boundary(torus), 
-   result(tick,look_at(E,_,_)),
-   result(tick,move(E,direction(left;right))).
 
 %%%COLOR
 

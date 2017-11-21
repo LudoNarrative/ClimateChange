@@ -7,29 +7,37 @@ outcome(O) :- result(O,_).
 action(A) :- result(_,A).
 
 
-torus_safe(O) :- precondition(compare(ge,distance(ENTITY,_,_),A),O),
-		 result(O,move(ENTITY,direction(forward))).
-torus_safe(O) :- precondition(compare(ge,distance(ENTITY,_,_),_),O),
-		 result(O,move(ENTITY,direction(forward),_)).
+torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),A),O),
+		 result(O,move(ENTITY,direction(forward))),
+		 result(O,look_at(ENTITY,OTHER,_)).
+torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),_),O),
+		 result(O,move(ENTITY,direction(forward),_)),
+		 result(O,look_at(ENTITY,OTHER,_)).
 
 
-torus_safe(O) :- precondition(compare(le,distance(ENTITY,_,_),A),O),
-		 result(O,move(ENTITY,direction(backward))).
-torus_safe(O) :- precondition(compare(le,distance(ENTITY,_,_),_),O),
-		 result(O,move(ENTITY,direction(backward),_)).
+torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),A),O),
+		 result(O,move(ENTITY,direction(backward))),
+		 result(O,look_at(ENTITY,OTHER,_)).
+torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),_),O),
+		 result(O,move(ENTITY,direction(backward),_)),
+		 result(O,look_at(ENTITY,OTHER,_)).
 
 
 
-torus_safe(O) :- precondition(compare(ge,distance(_,ENTITY,_),A),O),
-		 result(O,move(ENTITY,direction(forward))).
-torus_safe(O) :- precondition(compare(ge,distance(ENTITY,_),_),O),
-		 result(O,move(ENTITY,direction(forward),_)).
+torus_safe(O) :- precondition(compare(ge,distance(OTHER,ENTITY,_),A),O),
+		 result(O,move(ENTITY,direction(forward))),
+		 result(O,look_at(ENTITY,OTHER,_)).
+torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER),_),O),
+		 result(O,move(ENTITY,direction(forward),_)),
+		 result(O,look_at(ENTITY,OTHER,_)).
 
 
-torus_safe(O) :- precondition(compare(le,distance(_,ENTITY,_),A),O),
-		 result(O,move(ENTITY,direction(backward))).
-torus_safe(O) :- precondition(compare(le,distance(ENTITY,_,_),_),O),
-		 result(O,move(ENTITY,direction(backward),_)).
+torus_safe(O) :- precondition(compare(le,distance(OTHER,ENTITY,_),A),O),
+		 result(O,move(ENTITY,direction(backward))),
+		 result(O,look_at(ENTITY,OTHER,_)).
+torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),_),O),
+		 result(O,move(ENTITY,direction(backward),_)),
+		 result(O,look_at(ENTITY,OTHER,_)).
 
 
 
@@ -80,6 +88,8 @@ player_controls_outcome(O) :- precondition(control_event(E),O).
 
 spatial_condition(E1,E2) :- precondition(overlaps(E1,E2,P),O).
 spatial_condition(E2,E1) :- precondition(overlaps(E1,E2,P),O).
+spatial_condition(E1,E2) :- precondition(compare(Polarity,distance(E1,E2,P),A),O).
+spatial_condition(E2,E1) :- precondition(compare(Polarity,distance(E1,E2,P),A),O).
 
 
 
