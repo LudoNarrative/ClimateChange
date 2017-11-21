@@ -596,6 +596,55 @@ define(["../StoryAssembler", "../ChunkLibrary", "State", "Wishlist", "StoryDispl
 			]);
 			StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
 			assert.deepEqual(html(getStoryEl()), "sets initial vars", "Correct chunk is chosen to begin");
+
+
+//-----------------------------------------------------------
+			//If you are using a condition choice to pick the right link based on what fulfills the wishlist item, it should pick the right one
+
+			resetTest();
+			State.set("wishlist1", false);
+			wl = Wishlist.create([
+				{ condition: "wishlist1 eq true"}
+				], State);
+			wl.logOn();
+			ChunkLibrary.add([
+				{    
+			        "id": "setVars",
+			        "content" : "sets initial vars",
+					"choices" : [ 
+						{"condition": "makeChoice eq true"},
+					],
+					//"effects" : [""]
+			    },
+			    {
+					"id": "badChoice",
+					"choiceLabel": "incorrect choice!",
+					"content": "incorrect choice!",
+					//"conditions" : [],
+					"effects": [
+						"set makeChoice true",
+						"set randomBad true"
+					],
+				},
+				{
+					"id": "correctChoice",
+					"choiceLabel": "correct choice!",
+					"content": "correct choice!",
+					//"conditions" : [],
+					"effects": [
+						"set makeChoice true",
+						"set wishlist1 true"
+					],
+				}
+			]);
+
+
+				StoryAssembler.beginScene(wl, ChunkLibrary, State, StoryDisplay, undefined, Character);
+				assert.deepEqual(html(getStoryEl()), "sets initial vars", "Correct chunk is chosen to begin");
+				assert.deepEqual(contentForChoice(1), "correct choice!","Proper choice label brought in");
+				clickChoice(1);
+				assert.deepEqual(html(getStoryEl()), "correct choice!", "Correct choice is brought in to satisfy wishlist item");
+
 			/*
 			clickChoice(1);
 			assert.deepEqual(html(getStoryEl()), "Oh, ok. Right.", "Simple goto works correctly.");
