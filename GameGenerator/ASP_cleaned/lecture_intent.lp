@@ -41,4 +41,4 @@ required(maintenance).
 
 :- not computer_controls(_).
 
-
+:- not boundary(torus).

@@ -14,7 +14,7 @@ buttons(mouse;space;up_arrow;down_arrow;left_arrow;right_arrow).
 buttonStates(pressed;held).
 
 %sprite(square;circle;triangle;pentagon;star).
-sprite(circle).
+sprite(triangle).
 conditional_direction(ge;le).
 angle_direction(cw;ccw).
 %colors(red;green;blue;yellow;magenta;cyan;white;gray;black).
