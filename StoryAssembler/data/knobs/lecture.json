@@ -414,7 +414,7 @@ Todo:
         "decr questionsLeft 1"
     ],
     "choices" : [
-        {"condition" : "student1 eq true"}
+        {"condition" : "student1 eq true"} 
     ]
   },
 
@@ -454,7 +454,7 @@ Todo:
    {
       "id" : "franklinIntroAntagonistic",
       "unavailableChoiceLabel" : "Already called on {name|student1}.",
-      "choiceLabel" : "...the student frowning skeptically.",
+      "choiceLabel" : "\"Yes, {name|student1}?\"",
       "content" : "\"My mom runs the energy division of TysonCorp, and she told me that most of the alarmist climate change stuff in the news is because there's more money in it for scientists if everyone's scared out of their minds. Like, if fear is the product, business is good. What do you think of that?\"",
       "choices" : [
         {"gotoId" : "logicResponse"},
@@ -567,7 +567,7 @@ Todo:
 {
       "id" : "franklinIntroOptimistic",
       "unavailableChoiceLabel" : "Already called on {name|skepticStudent}.",
-      "choiceLabel" : "...the student pensively frowning.",
+      "choiceLabel" : "\"Yes, {name|student1}?\"",
       "content" : "\"My mom runs the energy division of TysonCorp, and she told me that most of the climate change stuff in the news is exaggerated, and that corporations will get it under control, once it's profitable for them to do so. What do you think of that?\"",
       "choices" : [
         {"gotoId" : "optLogicResponse"},
@@ -653,7 +653,7 @@ Todo:
 {
   "id" : "elikaIntro",
   "unavailableChoiceLabel" : "Already called on {name|student3}.",
-  "choiceLabel" : "...the student waving her hand enthusiastically.",
+  "choiceLabel" : "\"Yes, {name|student3}?\"",
   "content": "You call on {name|student3} for perhaps the fifth time, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now...wouldn't taking carbon dioxide out of the atmosphere help with the acidity of the ocean?\"",
   "choices" : [
     {"gotoId" : "elikaNext"}
@@ -819,7 +819,7 @@ Todo:
 {
   "id" : "negElikaIntro",
   "unavailableChoiceLabel" : "Already called on {name|student3}.",
-  "choiceLabel" : "...the student waving her hand insistently, frowning.",
+  "choiceLabel" : "\"Yes, {name|student3}?\"",
   "content": "You call on {name|student3}, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now...aren't technologies like that going to take care of all this? I mean, it seems like we'll solve it pretty soon, right?\"",
   "choices" : [
     {"gotoId" : "negElikaNext"}
@@ -974,7 +974,7 @@ Todo:
     {
       "id" : "aidenIntro",
       "unavailableChoiceLabel" : "Already called on Aiden.",
-      "choiceLabel" : "...the student whose hand hesitantly hovers halfway.",
+      "choiceLabel" : "\"Yes, {name|student2}?\"",
       "content" : "{name|student2} looks ready to crawl under their desk when your attention turns to them. \"U-um, uh, I- I get that the ac- that the rise in acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"What can we do about it?\"",
       "choices" : [
         {"gotoId" : "aidenNext"},
@@ -1132,7 +1132,7 @@ Todo:
          {
       "id" : "antAidenIntro",
       "unavailableChoiceLabel" : "Already called on Aiden.",
-      "choiceLabel" : "...the frowning student whose hand hesitantly hovers halfway.",
+      "choiceLabel" : "\"Yes, {name|student2}?\"",
       "content" : "{name|student2} glances around, as if looking for support. \"U-um, uh, I- I get that the...that the acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"I mean, it's not like we can do anything about it?\"",
       "choices" : [
         {"gotoId" : "antAidenNext"},
