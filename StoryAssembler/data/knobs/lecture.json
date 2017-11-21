@@ -61,11 +61,11 @@ Todo:
         "content": "Walking through the double doors, you try to gather yourself. The sound of shifting backpacks and quiet conversations fills the lecture hall. It's a decent-sized room, not bad for your first class. Looks like about 200 students.",
         "effects": [
             "set establishScene true",
-            "set lecture true",
+            "set classSize lecture",
             "set concentration 5"
         ],
         "conditions": [
-            "lecture eq true",
+            //"lecture eq true",
         ],
         "choices": [{
             "gotoId": "concentrationBridge"
@@ -77,11 +77,13 @@ Todo:
         "id": "establishSeminar",
         "content": "Walking through the door, you are greeted by a group of around 20 students engaged in various conversations. Large enough for some good discussion, yet small enough to really interact with them one-on-one: perfect.",
         "effects": [
-            "set establishDetails true"
+            "set establishScene true",
+            "set classSize seminar",
+            "set concentration 5"
         ],
         "conditions": [
-            "seminar eq true",
-            "establishScene eq true"
+            //"seminar eq true",
+            //"establishScene eq true"
         ],
         "choices": [{
             "gotoId": "concentrationBridge"
@@ -114,7 +116,7 @@ Todo:
 
         ],
         "choices": [
-            {"gotoId": "lectureContent2"}
+            {"condition" : "lectureContent2 eq true"}
         ]
     },
 
@@ -132,7 +134,7 @@ Todo:
             "concentration lt 8"
         ],
         "choices": [
-            {"gotoId": "lectureContent2"}
+            {"condition" : "lectureContent2 eq true"}
         ]
 
     },
@@ -149,18 +151,115 @@ Todo:
             "concentration gte 8"
         ],
         "choices": [
-            {"gotoId": "lectureContent2"}
+            {"condition" : "lectureContent2 eq true"}
         ]
     },
-    {
-        "id": "lectureContent2",
+//----------------DYNAMIC LECTURE CONTENT------------------------------------------------
+
+{
+        "id": "lectureContent2a-acid",
         "choiceLabel": "Continue lecture",
         "content": "\"Let me give you an interesting statistic, just for starters. The water in our oceans is roughly{ifStateCondition|concentration lt 5|,\" the students watch as you pause to consult your notes, \"|} 25% more acidic than it was in the 1800s. This is because human actions are raising the CO2 levels in the {ifStateCondition|concentration lt 5|water, err I mean, in the|} atmosphere.\"",
         "choices":[{
-            "gotoId": "lectureContent3"
-        }]
+            "condition" : "lectureContent2b eq true"
+        }],
+        "effects": [
+            "set lectureTopic acidity",
+            "set lectureContent2 true"
+        ]
 
     },
+    {
+        "id": "lectureContent2b-acidCoral",
+        "choiceLabel": "Continue lecture",
+        "content": "\"This plays havoc with all sorts of aquatic lifeforms, such as we've seen with the coral in the Great Barrier Reef. Ocean acidification means the polyps that make up coral can't absorb calcium carbonate, which is critical for them to be able to build their stony skeletons. I actually got to see this first-hand, during the fieldwork portion of my PhD.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
+        "choices":[{
+            "gotoId": "lectureContent3"
+        }],
+        "effects": [
+            "set areaOfExpertise coral",
+            "set lectureContent2b true"
+        ]
+    },
+    {
+        "id": "lectureContent2b-acidPhyto",
+        "choiceLabel": "Continue lecture",
+        "content": "\"This affects all sorts of organisms, but the one I've focused most on in my work is phytoplankton. Acidification's caused some species to flourish, and others to decline, which throws the whole ocean food chain out of wack.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
+        "choices":[{
+            "gotoId": "lectureContent3"
+        }],
+        "effects": [
+            "set areaOfExpertise phytoplankton",
+            "set lectureContent2b true"
+        ]
+    },
+    {
+        "id": "lectureContent2b-acidLobster",
+        "choiceLabel": "Continue lecture",
+        "content": "\"This affects all sorts of organisms, but the one I've studied directly are lobster populations off the coast of Maine. Acidification makes it harder for them to maintain their shells, and when combined with the warming ocean temperatures, we've seen total population collapses in areas. It's terrible.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
+        "choices":[{
+            "gotoId": "lectureContent3"
+        }],
+        "effects": [
+            "set areaOfExpertise lobster",
+            "set lectureContent2b true"
+        ]
+    },
+
+    {
+        "id": "lectureContent2a-warming",
+        "choiceLabel": "Continue lecture",
+        "content": "\"Let's talk a bit about the rise of ocean temperature, just to warm up.\" {ifStateCondition|concentration lt 5|<i>Oh my god, did I just accidentally make a pun about climate change? Ugh!</i>|Some students groan at your inadvertant pun, but some are smiling.} \"Since 1955, {ifStateCondition|concentration lt 5|uh...\" the students watch as you pull up the info on your slides, \"|}over 90% of excess heat from greenhouse gases has been stored in oceans. This has upset natural balances all over the world.\"",
+        "choices":[{
+            "gotoId": "lectureContent2b-acidCoral"
+        }],
+        "effects": [
+            "set lectureTopic warming",
+            "set lectureContent2 true"
+        ]
+
+    },
+    {
+        "id": "lectureContent2b-warmingCoral",
+        "choiceLabel": "Continue lecture",
+        "content": "\"This plays havoc with all sorts of aquatic lifeforms, such as we've seen with the coral in the Great Barrier Reef. Ocean warming bleaches the coral when their symbiotic zooxanthellae leave, which they depend on for food. I actually got to see this first-hand, during the fieldwork portion of my PhD.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
+        "choices":[{
+            "gotoId": "lectureContent3"
+        }],
+        "effects": [
+            "set areaOfExpertise coral",
+            "set lectureContent2b true"
+        ]
+    },
+
+    {
+        "id": "lectureContent2b-warmingLobster",
+        "choiceLabel": "Continue lecture",
+        "content": "\"This plays havoc with all sorts of aquatic lifeforms, forcing migrations in cases like the lobsters, which have been steadily moving northward. The added stress also means they're more susceptible to disease and parasites, which I saw first-hand during my fieldwork. In some areas the die-off was 99%, close to total.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
+        "choices":[{
+            "gotoId": "lectureContent3"
+        }],
+        "effects": [
+            "set areaOfExpertise lobster",
+            "set lectureContent2b true"
+        ]
+    },
+
+    {
+        "id": "lectureContent2b-warmingPhyto",
+        "choiceLabel": "Continue lecture",
+        "content": "\"This plays havoc with all sorts of aquatic lifeforms, forcing die-offs or blooms in cases of phytoplankton, which form the base of both the ocean's food chain, and supply most of our oxygen. I got to see a dead zone first hand during the fieldwork portion of my research, and it's terrible.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
+        "choices":[{
+            "gotoId": "lectureContent3"
+        }],
+        "effects": [
+            "set areaOfExpertise phytoplankton",
+            "set lectureContent2b true"
+        ]
+    },
+
+
+//--------------END DYNAMIC LECTURE CONTENT
 
     {
         "id": "lectureContent3",
@@ -319,6 +418,36 @@ Todo:
     ]
   },
 
+  {
+    "id" : "student2Intro",
+    "unavailableChoiceLabel" : "Already called on {name|student1}.",
+    "choiceLabel" : "...the student2 frowning skeptically, but shy.",
+    "content" : "Better to take on some students that seem on the fence.",
+    "effects" : [
+        "incr talkToStudent 1",
+        "set doneTalking false",
+        "decr questionsLeft 1"
+    ],
+    "choices" : [
+        {"condition" : "student2 eq true"}
+    ]
+  },
+
+  {
+    "id" : "student3Intro",
+    "unavailableChoiceLabel" : "Already called on {name|student2}.",
+    "choiceLabel" : "...the student3 earnestly waving her hand.",
+    "content" : "ok.",
+    "effects" : [
+        "incr talkToStudent 1",
+        "set doneTalking false",
+        "decr questionsLeft 1"
+    ],
+    "choices" : [
+        {"condition" : "student3 eq true"}
+    ]
+  },
+
 //-------STUDENT INTERACTIONS-----------------------------------------------------
   //Franklin (NEGATIVE)
 
@@ -456,7 +585,7 @@ Todo:
     {
       "id" : "optLogicResponse",
       "choiceLabel" : "Turn to the facts.",
-      "content" : "\"Well, corporations are the largest contributors to climate change, so they have a critical role to play in reducing emissions. However, having regulations in place that can enforce reductions means the mandate don't come from PR or profitability, but public welfare.\"",
+      "content" : "\"Well, corporations are the largest contributors to climate change, so they have a critical role to play in reducing emissions. However, having regulations in place that can enforce reductions means the mandate can't come from PR or profitability, but public welfare.\"",
       "effects" : [
         "incr optimism 1",
         "incr hope 1",
@@ -533,7 +662,7 @@ Todo:
     "decr questionsLeft 1",
     "set student3 true",
     "incr optimisticStudent 1",
-    "incr talkToStudent 1",
+
   ],
   "conditions" : [
     "questionsLeft gt 0"
@@ -546,8 +675,7 @@ Todo:
   "unavailableChoiceLabel" : "Already called on {name|student3}.",
   "content" : "You find yourself hesitating. There is an eagerness in {name|student3}'s eyes, a positivity that you might have lost amidst your doctoral research - something you can't help but want to cling to. Yet there is also a naivety in her words that gives you pause.",
   "effects" : [
-    
-    //"decr questionsLeft 1",
+    "set doneTalking true"
   ],
   "choices" : [
     {"gotoId" : "encouragingResponse"},
@@ -686,7 +814,162 @@ Todo:
   ]
 },
 
-    //aiden
+//-----------ELIKA (NEGATIVE)-------------------------------------------------
+
+{
+  "id" : "negElikaIntro",
+  "unavailableChoiceLabel" : "Already called on {name|student3}.",
+  "choiceLabel" : "...the student waving her hand insistently, frowning.",
+  "content": "You call on {name|student3}, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now...aren't technologies like that going to take care of all this? I mean, it seems like we'll solve it pretty soon, right?\"",
+  "choices" : [
+    {"gotoId" : "negElikaNext"}
+  ],
+  "effects" : [
+    "decr questionsLeft 1",
+    "set student3 true",
+    "incr antagonisticStudent 1"
+  ],
+  "conditions" : [
+    "questionsLeft gt 0"
+  ]
+},
+
+{
+  "id" : "negElikaNext",
+  "choiceLabel" : "Continue",
+  "unavailableChoiceLabel" : "Already called on {name|student3}.",
+  "content" : "You hesitate. There is an eagerness in {name|student3}'s eyes, a positivity that you might have lost amidst your doctoral research. Yet there is also a naivety in her words that rankles.",
+  "effects" : [
+    "set doneTalking true"
+  ],
+  "choices" : [
+    {"gotoId" : "negAgreeResponse"},
+    {"gotoId" : "negGentleResponse"},
+    {"gotoId" : "negBluntResponse"}
+  ]
+},
+
+{
+  "id" : "negAgreeResponse",
+  "choiceLabel" : "In a way, I suppose.",
+  "content" : "{ifStateCondition|concentration gte 5|Looking around at all the bored and unconvinced faces, you decide to just go along with it. |You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out} \"That's...an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|student3} beams, though you notice faces that aren't as happy.",
+  "effects" : [
+    "incr optimism 1",
+    "incr hope 1",
+    "decr curiosity 1",
+  ],
+  "choices" : [
+    {"gotoId" : "negElikaFollowUp"}
+  ]
+},
+
+{
+  "id" : "negGentleResponse",
+  "choiceLabel" : "Actually, there's more to it than that.",
+  "content" : "{ifStateCondition|concentration gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would also be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
+  "effects" : [
+    "decr optimism 1",
+    "incr hope 1",
+    "incr curiosity 1",
+    "incr concentration 1"
+  ],
+  "choices" : [
+    {"gotoId" : "negElikaFollowUp"}
+  ]
+},
+
+{
+  "id" : "negBluntResponse",
+  "choiceLabel" : "No, you've got it all wrong.",
+  "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But don't believe the hype. It's actually done at the power plants, either before or after the coal gets burned - and it would take a lot of energy, reducing the plant's output, so it's not likely to be adopted as the technology currently stands.\"",
+  "effects" : [
+    "decr optimism 2",
+    "decr hope 1",
+    "decr curiosity 1",
+    "decr concentration 1"
+  ],
+  "choices" : [
+    {"gotoId" : "negBluntResponse2"}
+  ]
+},
+
+{
+  "id" : "negBluntResponse2",
+  "choiceLabel" : "Continue",
+  "content" : "\"And frankly,\" you continue, \"it would be way better if we stuck to cleaner energies that already exist then trying to make coal 'clean'.\" <br/><br/>{name|student3}'s smile had faded from her face a long time ago. As well as many others'.",
+  "choices" : [
+    {"gotoId" : "negElikaFollowUp"}
+  ]
+},
+
+{
+  "id" : "negElikaFollowUp",
+  "choiceLabel" : "Continue",
+  "content" : "{name|student3}'s frowning now, and looks like she wants to ask another question. Take it?",
+  "choices" : [
+    {"gotoId" : "negElikaQuestion2"},
+    {"gotoId" : "questionBridge"}
+  ],
+},
+
+{
+  "id" : "negElikaQuestion2",
+  "choiceLabel" : "Take another question from {name|student3}.",
+  "content" : "\"Uh...ok,\" {name|student3} says. \" So do you think we'll ever be able to stop the acidity from rising? Or are you just saying we're doomed?\"",
+  "choices" : [
+    {"gotoId" : "advPositiveResponse"},
+    {"gotoId" : "advNegativeResponse"},
+    {"gotoId" : "advCurtResponse"}
+  ],
+  "effects" : [
+    "decr questionsLeft 1",
+    "set followUp true"
+  ]
+},
+
+{
+  "id" : "advPositiveResponse",
+  "choiceLabel" : "No, I didn't mean that.",
+  "content" : "\"I mean, we've already come so far with technology and science,\" you say. \"I'm sure that--now that we're aware of the problems CO2 is causing--we can fix them.\" <br/></br> {name|student3}'s eyes brighten.'",
+  "effects" : [
+    "incr optimism 1",
+    "incr hope 1",
+    "decr curiosity 1",
+  ],
+  "choices" : [
+    {"gotoId" : "establishStudents"}
+  ]
+},
+
+{
+  "id" : "advNegativeResponse",
+  "choiceLabel" : "Well...that's a bit strong, but not far off.",
+  "content" : "\"Look, as far as we've come with technology and science, change takes course over a long period of time,\" you say. \"And we've already dug ourselves a pretty deep hole. Technology may be able to help, but we can't expect a miracle.\" <br/> {name|student3} looks down, but nods in what you hope is understanding.",
+  "effects" : [
+    "decr optimism 1",
+    "decr hope 1",
+    "incr curiosity 1",
+    "incr concentration 1"
+  ],
+  "choices" : [
+    {"gotoId" : "establishStudents"}
+  ]
+},
+
+{
+  "id" : "advCurtResponse",
+  "choiceLabel" : "Don't be ridiculous.",
+  "content" : "\"I'm not saying that!\" you exclaim, closing your laptop a little too hard. \"But there is no magic bullet! We're already in for a rough ride, so the best we can hope for is to minimize the damage we've already incurred, and work to avoid as much of it as possible! We have to take responsibility.\" <br/><br/> {name|student3} avoids your gaze. You can see students shaking their heads and texting.",
+  "effects" : [
+    "decr concentration 1",
+    "decr hope 1"
+  ],
+  "choices" : [
+    {"gotoId" : "establishStudents"}
+  ]
+},
+
+//-----------AIDEN (optimistic)-------------------------------------------------
 
     {
       "id" : "aidenIntro",
@@ -698,7 +981,6 @@ Todo:
       ],
       "effects" : [
         "set student2 true",
-        "incr talkToStudent 1",
         "incr optimisticStudent 1"
       ],
       "conditions" : [
@@ -834,6 +1116,164 @@ Todo:
 
       {
         "id" : "hopelessResponse",
+        "choiceLabel" : "There's little you can do.",
+        "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|student2} doesn't look particularly inspired. Some students start whispering amongst themselves.",
+        "effects" : [
+          "decr hope 2",
+          "decr confidence 1"
+        ],
+        "choices" : [
+          {"gotoId" : "establishStudents"}
+        ]
+      },
+
+      //----Aiden (antagonistic)---------------------------------------------------------
+
+         {
+      "id" : "antAidenIntro",
+      "unavailableChoiceLabel" : "Already called on Aiden.",
+      "choiceLabel" : "...the frowning student whose hand hesitantly hovers halfway.",
+      "content" : "{name|student2} glances around, as if looking for support. \"U-um, uh, I- I get that the...that the acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"I mean, it's not like we can do anything about it?\"",
+      "choices" : [
+        {"gotoId" : "antAidenNext"},
+      ],
+      "effects" : [
+        "set student2 true",
+        "incr antagonisticStudent 1"
+      ],
+      "conditions" : [
+        "questionsLeft gt 0"
+      ]
+    },
+
+    {
+      "id" : "antAidenNext",
+      "choiceLabel" : "Continue",
+      "content" : "They start talking faster as your eyebrows raise. \"Well, uh...even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'It's already too late. There's no way to stop it now.'\"",
+      "choices" : [
+          {"gotoId" : "antHopefulResponse"},
+          {"gotoId" : "antPessimisticResponse"},
+          {"gotoId" : "antHarshResponse"}
+        ],
+      "effects" : [
+        "decr questionsLeft 1"
+      ],
+      },
+
+      {
+        "id" : "antHopefulResponse",
+        "choiceLabel" : "There's still hope.",
+        "content" : "\"True, the amount of carbon dioxide released into the atmosphere is making a noticeable impact on our planet,\" you say. \"But we're acknowledging these problems, right? <br/><br/>For example, did you know that 16.9% of energy generation in 2016 comes from renewable energy? Which may not seem much until you compare it to the 13% just the year before.\"<br/>{name|student2} is still frowning skeptically.",
+        "effects" : [
+          "incr optimism 1",
+          "incr hope 1",
+          "incr curiosity 1",
+          "incr concentration 1"
+        ],
+        "choices" : [
+          {"gotoId" : "antHopefulResponse2"},
+        ],
+      },
+
+      {
+        "id" : "antHopefulResponse2",
+        "choiceLabel" : "Continue",
+        "content" : "You try a smile. \"Look, we're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything, nothing will ever change. Then there's zero chance anything will get better.\"",
+        "choices" : [
+          {"gotoId" : "antAidenFollowUp"}
+        ]
+      },
+
+      {
+        "id" : "antPessimisticResponse",
+        "choiceLabel" : "You're right. Humans can never change.",
+        "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|student2}'s face crumple.",
+        "effects" : [
+          "decr optimism 1",
+          "decr hope 1",
+          "decr curiosity 1",
+        ],
+        "choices" : [
+          {"gotoId" : "antAidenFollowUp"}
+        ]
+      },
+
+      {
+        "id" : "antHarshResponse",
+        "choiceLabel" : "Geez, don't be such a downer.",
+        "content" : "\"That attitude's the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|student2} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
+        "effects" : [
+          "incr optimism 1",
+          "incr hope 1",
+          "incr curiosity 1",
+          "decr concentration 1"
+        ],
+        "choices" : [
+          {"gotoId" : "antHarshResponse2"}
+        ]
+      },
+
+      {
+        "id" : "antHarshResponse2",
+        "choiceLabel" : "Continue",
+        "content" : "{ifStateCondition|concentration gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
+        "choices" : [
+          {"gotoId" : "antAidenFollowUp"}
+        ]
+      },
+
+      {
+        "id" : "antAidenFollowUp",
+        "choiceLabel" : "Continue",
+        "content" : "{name|student2} looks like they have another question. Take it? Or call on another student?",
+        "choices" : [
+          {"gotoId" : "antAidenQuestion2"},
+          {"gotoId" : "questionBridge"}
+        ],
+        "conditions" : ["student2 eq true"]
+      },
+
+      {
+        "id" : "antAidenQuestion2",
+        "choiceLabel" : "Take another question.",
+        "content" : "\"So, um,\" comes {name|student2}'s soft voice. \"Then - what can <i>I</> do?\"",
+        "choices" : [
+          {"gotoId" : "antAcademicResponse"},
+          {"gotoId" : "antLocalResponse"},
+          {"gotoId" : "antHopelessResponse"}
+        ],
+        "effects" : [
+          "set followUp true",
+          "decr questionsLeft 1"
+        ]
+      },
+
+      {
+        "id" : "antAcademicResponse",
+        "choiceLabel" : "Educate.",
+        "content" : "\"Educate yourself about what's going on and how you can help - and teach others. You can get involved in some of our research projects here...there's also the path of becoming a professor,\" you say. {name|student2} nods.",
+        "effects" : [
+          "incr hope 1"
+        ],
+        "choices" : [
+          {"gotoId" : "establishStudents"}
+        ]
+      },
+
+      {
+        "id" : "antLocalResponse",
+        "choiceLabel" : "Find out what you can do within your community.",
+        "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
+        "effects" : [
+          "incr hope 1"
+        ],
+        "choices" : [
+          {"gotoId" : "establishStudents"}
+        ]
+      },
+
+      {
+        "id" : "antHopelessResponse",
         "choiceLabel" : "There's little you can do.",
         "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|student2} doesn't look particularly inspired. Some students start whispering amongst themselves.",
         "effects" : [
