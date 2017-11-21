@@ -200,22 +200,26 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				}
 
 				if (knobString.includes("-")) {			//range slider (e.g. "confidence eq [0-4]")
+					if (!knobString.includes(":")) { throw knobString + " needs a default value!"}
 					var minValStart = knobString.indexOf("[") + 1;
 					var minValEnd = knobString.indexOf("-");
 					var minVal = knobString.substring(minValStart,minValEnd);		//get min value
 					var maxValStart = knobString.indexOf("-") + 1;
-					var maxValEnd = knobString.length;
+					var maxValEnd = knobString.indexOf(":");
 					var maxVal = knobString.substring(maxValStart,maxValEnd);		//get max value
 					knobHtml += '<label for="'+ sceneId +'-slider-' + x.toString() +'"'+ hoverTextClass +'>'+hoverText+theLabel+'</label><div id="'+ sceneId +'-slider-' + x.toString() +'"><div id="custom-handle-'+ sceneId + '_' + x.toString() +'" class="ui-slider-handle"></div></div>';
 					$("#knobs_" + sceneId).append(knobHtml);
-					sliderX.push({xVal:x, min: minVal, max: maxVal});
+					sliderX.push({xVal:x, min: minVal, max: maxVal, knobString: knobString});
 					$( function() {
 						var data = sliderX.shift();
+						var knobString = data.knobString;
 				    	var handle = $( "#custom-handle-"+ sceneId + "_" + data.xVal.toString() );
 					    $( "#" + sceneId + "-slider-" + data.xVal.toString() ).slider({
 					    	create: function() { 
+					    		var sliderDefaultStart = knobString.indexOf(":")+1;
+								var sliderDefaultEnd = knobString.length;
+					    		$(this).slider('value', knobString.substring(sliderDefaultStart,sliderDefaultEnd));
 					    		handle.text( $( this ).slider( "value" ) ); 
-					    		$(this).slider('value', (data.max-data.min)/3);
 					    	},
 					      	slide: function( event, ui ) { handle.text( ui.value );	},
 					      	stop: function(event, ui) {
@@ -228,6 +232,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 					      	step: 1
 					    });
 					});
+					
+
 					
 				}
 				else if (knobString.includes("|")) {		//dropdown w/ options (e.g. "career eq [shrimp|lobster]")

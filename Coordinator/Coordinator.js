@@ -1566,7 +1566,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					hoverText: "What will your lecture to the students be about?" 
 				},
 				{ 	//can be shrimp, lobsters, etc
-					condition: "areaOfExpertise eq [shrimp|lobsters|coral]", 
+					condition: "areaOfExpertise eq [phytoplankton|lobsters|coral]", 
 					label: "Expertise", 
 					hoverText: "Which area is your area of specialty, in regards to climate change?" 
 				},
@@ -1581,13 +1581,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					hoverText: "How big is your class? A large lecture with tons of students, or a smaller, more personal seminar?"
 				},
 				{ 
-					condition: "optimisticStudent eq [0-3]", 
+					condition: "optimisticStudent eq [0-3:2]", 
 					label: "# of Optimistic Students", 
 					hoverText: "How many optimistic students are in your class? (0 is low, 3 is high)",
 					changeFunc: "studentBalance"
 				},
 				{
-					condition: "antagonisticStudent eq [0-3]", 
+					condition: "antagonisticStudent eq [0-3:1]", 
 					label: "# of Antagonistic Students", 
 					hoverText: "How many antagonistic students are in your class? (0 is low, 3 is high)",
 					changeFunc: "studentBalance"
