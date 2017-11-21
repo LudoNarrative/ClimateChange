@@ -226,16 +226,24 @@ def parse_game(result):
             rules[outcome]['results']['other'] = []
             rules[outcome]['results']['add'] = []
             rules[outcome]['results']['delete'] = []
+        prettified = prettify(terms[0])
+        
         if 'compare' == terms[0]['predicate'] :
             direction  = prettify(terms[0]['terms'][0])
             resource   = prettify(terms[0]['terms'][1])
-            if 'amount' not in prettify(terms[0]):
+            if 'amount' not in prettified and 'distance' not in prettified:
                 free_var = [0]
                 replacements[prettify(precondition)] = ('precondition',outcome,direction,resource,free_var)
                 rules[outcome]['preconditions']['compare'].append( (direction,resource,free_var))
                 free_variable_count[prettify(precondition)] = len(free_variables)
                 free_variables.append(['condition',free_var,resource])
-        elif 'overlaps' == terms[0]['predicate'] or 'collide' == terms[0]['predicate']:
+            elif 'distance' in prettified:
+                entity1  = prettify(terms[0]['terms'][1]['terms'][0])
+                entity2   = prettify(terms[0]['terms'][1]['terms'][1])
+                valence = False
+                rules[outcome]['preconditions']['overlaps'].append( (entity1,entity2,True))
+                
+        elif 'overlaps' == terms[0]['predicate'] or 'collide' == terms[0]['predicate'] :
             if len(terms[0]['terms']) > 1:
                 entity1  = prettify(terms[0]['terms'][0])
                 entity2   = prettify(terms[0]['terms'][1])
@@ -412,6 +420,8 @@ if __name__ == '__main__':
         args = args[:args.index('-s')] + args[args.index('-s')+2:]
         print args
     outs = solve_randomly(args,number_to_generate)
+    if len(outs) < number_to_generate:
+        outs = outs*(number_to_generate/len(outs))
     for output_ind, out in enumerate(outs[:]):
     
         for o in sorted(out):

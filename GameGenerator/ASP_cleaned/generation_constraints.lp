@@ -67,7 +67,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- frivolous(R), not allowed(frivolous(R)).
 
 
-:- spatial_condition(E1,E2), not moves(E1), not moves(E2).
+:- spatial_condition(E1,E2), not move(E1), not move(E2).
 
 
 
@@ -683,12 +683,16 @@ player_controls_resource(R,Dir) :-
 :- boundary(torus),
    not torus_safe(O),
    result(O,look_at(E,_,_)),
-   result(O,moves(E,direction(left;right;forward;backward))).
+   result(O,move(E,direction(left;right;forward;backward))).
 
+:- boundary(torus),
+   not torus_safe(O),
+   result(O,look_at(E,_,_)),
+   result(O,move(E,direction(left;right;forward;backward),Amount)).
 
 :- boundary(torus), 
    result(tick,look_at(E,_,_)),
-   result(tick,moves(E,direction(left;right))).
+   result(tick,move(E,direction(left;right))).
 
 %%%COLOR
 
