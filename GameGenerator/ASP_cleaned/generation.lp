@@ -498,6 +498,16 @@ distance_amounts(60;120;240).
    CRITERION1 != CRITERION2.
 
 
+:- behavior_condition_polarity(ENTITY,
+			       Behavior1,
+			       compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT))),
+   behavior_condition_polarity(ENTITY,
+			       Behavior2,
+			       compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT))),
+   Behavior1 != Behavior2.
+
+
+
 1 {chosen_outcome(Outcome,Entity,Behavior,Comparison) : outcome(Outcome)} 1 :-
     behavior_condition_polarity(Entity,
 				Behavior,

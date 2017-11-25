@@ -23,6 +23,8 @@ body {
     background-color: rgba(38, 38, 38, 0.8);
     padding: 20px 20px 25px 20px;
     border-radius: 20px;
+    position: relative;
+    z-index: 99;
 }
 
 #gameContainer canvas {
@@ -456,7 +458,7 @@ Story CSS
  
     /* Position the tooltip text - see examples below! */
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     bottom: 125%;
     left:50%;
     margin-left:-60px;

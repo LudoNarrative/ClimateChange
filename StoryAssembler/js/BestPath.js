@@ -455,6 +455,7 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 		log(rLevel, "found " + foundPaths.length + " paths");
 		log(rLevel, "We only want paths that satisfy " + req.val + " AND satisfy at least one of these Wants: " + getWantVals(wants));
 		validPaths = pathsThatSatisfyReq(foundPaths, req);
+		validPaths.sort(function(a, b) { return b.satisfies.length - a.satisfies.length; });	//sort so best one is first
 
 		// If we have any paths at this point, pick one and save the id of the first step in its route, so if this is a choice we'll know what chunk matched.
 		var choiceMatch;

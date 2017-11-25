@@ -7,7 +7,39 @@ outcome(O) :- result(O,_).
 action(A) :- result(_,A).
 
 
-torus_safe(O) :- precondition(compare(_,distance(ENTITY,_,_),_),O).
+torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),A),O),
+		 result(O,move(ENTITY,direction(forward))),
+		 result(O,look_at(ENTITY,OTHER,_)).
+torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),_),O),
+		 result(O,move(ENTITY,direction(forward),_)),
+		 result(O,look_at(ENTITY,OTHER,_)).
+
+
+torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),A),O),
+		 result(O,move(ENTITY,direction(backward))),
+		 result(O,look_at(ENTITY,OTHER,_)).
+torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),_),O),
+		 result(O,move(ENTITY,direction(backward),_)),
+		 result(O,look_at(ENTITY,OTHER,_)).
+
+
+
+torus_safe(O) :- precondition(compare(ge,distance(OTHER,ENTITY,_),A),O),
+		 result(O,move(ENTITY,direction(forward))),
+		 result(O,look_at(ENTITY,OTHER,_)).
+torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER),_),O),
+		 result(O,move(ENTITY,direction(forward),_)),
+		 result(O,look_at(ENTITY,OTHER,_)).
+
+
+torus_safe(O) :- precondition(compare(le,distance(OTHER,ENTITY,_),A),O),
+		 result(O,move(ENTITY,direction(backward))),
+		 result(O,look_at(ENTITY,OTHER,_)).
+torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),_),O),
+		 result(O,move(ENTITY,direction(backward),_)),
+		 result(O,look_at(ENTITY,OTHER,_)).
+
+
 chasing_safe(E1,E2) :- player_controls(E1), entity(E2).
 chasing_safe(E1,E2) :- player_controls(E2), entity(E1).
 
@@ -55,6 +87,8 @@ player_controls_outcome(O) :- precondition(control_event(E),O).
 
 spatial_condition(E1,E2) :- precondition(overlaps(E1,E2,P),O).
 spatial_condition(E2,E1) :- precondition(overlaps(E1,E2,P),O).
+spatial_condition(E1,E2) :- precondition(compare(Polarity,distance(E1,E2,P),A),O).
+spatial_condition(E2,E1) :- precondition(compare(Polarity,distance(E1,E2,P),A),O).
 
 
 
@@ -119,18 +153,15 @@ reachableCondition(overlaps(E1,E2,POLARITY)) :-
     not static(E2),
     condition(overlaps(E1,E2,POLARITY)).
 
-reachableCondition(compare(POLARITY,distance(E1,E2,CRIT),A)) :-
+reachableCondition(compare(POLARITY,distance(E1,E2,Type),Amount)) :-
     not static(E1),
-    condition(compare(POLARITY,distance(E1,E2,CRIT),A)).
+    condition(compare(POLARITY,distance(E1,E2,Type),Amount)).
 
-reachableCondition(compare(POLARITY,distance(E1,E2,CRIT),A)) :-
+reachableCondition(compare(POLARITY,distance(E1,E2,Type),Amount)) :-
     not static(E2),
-    condition(compare(POLARITY,distance(E1,E2,CRIT),A) ).
+    condition(compare(POLARITY,distance(E1,E2,Type),Amount)).
 
-reachableCondition(overlaps(E1,E2,POLARITY)) :-
-    not static(E2),
-    condition(overlaps(E1,E2,POLARITY)).
-	
+
 reachableCondition(compare(le,amount(Color),scalar(S))) :-
 		       action(clear(_)),
 		       condition(compare(le,amount(Color),scalar(S))).
@@ -299,6 +330,24 @@ trivial(O) :- super_trivial(O).
 trivial(O) :- 
 	precondition(control_event(_),O),
 	  reading(bad,O).
+
+trivial(O) :- 
+    precondition(compare(le,distance(E1,E2,_),_),O),
+    result(O,move(E1,direction(forward))).
+
+trivial(O) :- 
+    precondition(compare(ge,distance(E1,E2,_),_),O),
+    result(O,move(E1,direction(backward))).
+
+
+trivial(O) :- 
+    precondition(compare(le,distance(E1,E2,_),_),O),
+    result(O,move(E2,direction(forward))).
+
+trivial(O) :- 
+    precondition(compare(ge,distance(E1,E2,_),_),O),
+    result(O,move(E2,direction(backward))).
+
 
 allowed(frivolous(Resource)) :- read_only(Resource).
 frivolous(Resource) :- read_only(Resource).

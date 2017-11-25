@@ -5,6 +5,7 @@ label(entity(e_2_XX_),e(2)).
 entity(e_1_XX_).
 entity(e_2_XX_).
 
+<<<<<<< HEAD
 resource(r_1_XX_).
 
 many(entity(e_1_XX_)).
@@ -70,3 +71,14 @@ result(tick,decrease_over_time(resource(r_1_XX_),scalar(1))).
 result(tick,moves(entity(e_1_XX_),forward,resource(r_1_XX_))).
 result(tick,moves(entity(e_2_XX_),backward,scalar(5))).
 result(tick,look_at(entity(e_2_XX_),entity(e_1_XX_),nearest)).
+=======
+thing(0..10).
+
+1 {chosen(X) : thing(X)} 1.
+
+
+chosen(X) :- thing(X),
+	     X = 5.
+
+#show chosen/1.
+>>>>>>> 358cb85a7df139284c84fc7e7a7a8bd97310283f

@@ -37,9 +37,4 @@ required(maintenance).
 
 
 
-% :- behavior_condition_polarity(_,_,tick).
-
-:- not reachableCondition(compare(_,distance(_,_,_),_)).
 :- not boundary(torus).
-
-%:- not torus_safe(_).
