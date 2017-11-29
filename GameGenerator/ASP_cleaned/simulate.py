@@ -420,8 +420,6 @@ if __name__ == '__main__':
         args = args[:args.index('-s')] + args[args.index('-s')+2:]
         print args
     outs = solve_randomly(args,number_to_generate)
-    if len(outs) < number_to_generate:
-        outs = outs*(number_to_generate/len(outs))
     for output_ind, out in enumerate(outs[:]):
     
         for o in sorted(out):
@@ -934,8 +932,14 @@ if __name__ == '__main__':
                         button = precond['terms'][0]['terms'][0]['predicate']
                         out_string += '\t{} the {}'.format(press_mapping[verb],key_mapping[button])+ '\n'
                     out_string += '</li>'+ '\n'
-
+        
         out_string += '</ul></ul>'+ '\n'
         with open('{}_{}.lp'.format(output_name,output_ind+1),'wb') as outfile:
             outfile.write(out_string)
     
+        if len(outs) < number_to_generate:
+            for ii in range(0,number_to_generate/len(outs)):
+                print 'duplicating ',output_ind , ' to ', output_ind+1+(ii+1)*len(outs)
+                with open('{}_{}.lp'.format(output_name,output_ind+1+(ii+1)*len(outs)),'wb') as outfile:
+               
+                    outfile.write(out_string)

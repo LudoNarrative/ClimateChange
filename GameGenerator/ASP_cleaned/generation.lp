@@ -311,6 +311,7 @@ comparison_direction(ge;le).
 {precondition(compare((ge;le),amount(Color),R),OUTCOME)
  :  outcome(OUTCOME)} :- palette(Color), resource(R).
 
+%{precondition(is_overlapping(}
 
 color_amount(1;4;7).
 {precondition(compare((ge;le),amount(Color),scalar(A)),OUTCOME)
@@ -447,7 +448,7 @@ behaviors(patrol;wander).
 							    2 {behavior(ENTITY,_)}.
 
 
-distance_amounts(60;120;240).
+distance_amounts(90;120;150).
 {behavior_condition(ENTITY,compare(distance(ENTITY,OTHER,CRITERION))) : entity(OTHER),look_criterion(CRITERION)} :- entity(ENTITY),
 							    2 {behavior(ENTITY,_)}.
 
@@ -532,8 +533,8 @@ behavior_condition_polarity(ENTITY, BEHAVIOR, tick) :-  behavior(ENTITY,BEHAVIOR
 
 
 			   
-precondition(Comparison,Outcome) :- chosen_outcome(Outcome,Entity,Behavior,Comparison), Outcome != tick.
-precondition(Comparison,Outcome) :- chosen_outcome_timer(Outcome,Entity,Behavior,Comparison), Outcome != tick.
+precondition(Comparison,Outcome) :- chosen_outcome(Outcome,Entity,Behavior,Comparison), Outcome != tick, Comparison != tick.
+precondition(Comparison,Outcome) :- chosen_outcome_timer(Outcome,Entity,Behavior,Comparison), Outcome != tick, Comparison != tick.
 
 
 :- behavior_condition_polarity(ENTITY,

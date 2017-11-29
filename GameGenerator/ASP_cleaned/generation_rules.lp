@@ -313,11 +313,18 @@ monotonic(Entity) :- monotonic(Entity,_).
 non_monotonic(Entity) :- not monotonic(Entity),
 			 entity(Entity).
 
+			 
+superfluous(Entity) :- 
+	entity(Entity),
+	not condition(overlaps(Entity,_)),
+	not condition(control_event(click(Entity))).
+
 relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome3,modify(Direction,Resource3))) :-
     relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2))),
     relative(greater,result(Outcome2,modify(Direction,Resource2)),result(Outcome3,modify(Direction,Resource3))).			     
 
-
+super_trivial(Outcome) :- precondition(control_event(click(Entity)),Outcome),
+	player_controls(Entity).
 super_trivial(Outcome) :- precondition(control_event(_),Outcome),
 			  1 {precondition(_,Outcome)} 1,
 			  not hand_eye_coordination(Outcome).
@@ -333,19 +340,23 @@ trivial(O) :-
 
 trivial(O) :- 
     precondition(compare(le,distance(E1,E2,_),_),O),
+	result(O,look_at(E1,E2)),
     result(O,move(E1,direction(forward))).
 
 trivial(O) :- 
     precondition(compare(ge,distance(E1,E2,_),_),O),
+	result(O,look_at(E1,E2)),
     result(O,move(E1,direction(backward))).
 
 
 trivial(O) :- 
     precondition(compare(le,distance(E1,E2,_),_),O),
+	result(O,look_at(E2,E1)),
     result(O,move(E2,direction(forward))).
 
 trivial(O) :- 
     precondition(compare(ge,distance(E1,E2,_),_),O),
+	result(O,look_at(E2,E1)),
     result(O,move(E2,direction(backward))).
 
 

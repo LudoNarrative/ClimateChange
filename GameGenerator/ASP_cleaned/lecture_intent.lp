@@ -14,8 +14,8 @@
 
 
 
-% required(hand_eye_coordination).
-% :- not reading(hand_eye_coordination,game).
+required(hand_eye_coordination).
+:- not reading(hand_eye_coordination,game).
 
 required(risk_reward).
 :- not reading(risk_reward,control_event(_)).
@@ -34,7 +34,3 @@ required(maintenance).
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
 
-
-
-
-:- not boundary(torus).

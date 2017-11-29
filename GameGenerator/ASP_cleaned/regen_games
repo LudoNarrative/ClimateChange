@@ -5,6 +5,10 @@ python simulate.py games/beach $@ $(./common.sh ) scrubbing_intent.lp  --project
 
 python simulate.py games/dinner $@ $(./common.sh ) dinner_intent.lp  --project 0 -t 6
 
+python simulate.py games/lecture $@ $(./common.sh ) lecture_intent_attract.lp  --project 0 -t 6
+python simulate.py games/lecture $@ $(./common.sh ) lecture_intent_avoid.lp  --project 0 -t 6
+
+python simulate.py games/lecture $@ $(./common.sh ) lecture_intent.lp  --project 0 -t 6
 python simulate.py games/lecture $@ $(./common.sh ) lecture_intent.lp  --project 0 -t 6
 
 python simulate.py games/travel $@ $(./common.sh ) travel_intent.lp  --project 0 -t 6
