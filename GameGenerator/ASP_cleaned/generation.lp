@@ -313,7 +313,7 @@ comparison_direction(ge;le).
 
 %{precondition(is_overlapping(}
 
-color_amount(1;4;7).
+color_amount(1;5;9).
 {precondition(compare((ge;le),amount(Color),scalar(A)),OUTCOME)
  :  outcome(OUTCOME), color_amount(A)} :- palette(Color).
 

@@ -15,7 +15,7 @@
 palette(blue).
 
 :- not player_controls(entity(e(1))).
-:- not action(draw(entity(e(1)),_)).
+:- not action(clear(entity(e(1)))).
 
 
 required(hand_eye_coordination).
@@ -31,9 +31,5 @@ label(entity(e(1)),e1).
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
 
-:- not action(clear(entity(e(2)))).
+:- not action(draw(entity(e(2)),_)).
 :- not computer_controls(entity(e(2))).
-
-lose_if_too_low :- precondition(compare(le,_,scalar(1)),O),
-		   result(O,mode_change(game_loss)).
-:- not lose_if_too_low.
