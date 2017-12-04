@@ -714,7 +714,7 @@ player_controls_resource(R,Dir) :-
 :- initialize(fill(all,_)),
    initialize(fill(location(_,_),_)).
 
-:- clear(_),   
+:- action(clear(_)),   
    0 {initialize(fill(all,_));
       initialize(fill(location(_,_),_));
       action(draw(_,_))} 0.
@@ -723,8 +723,10 @@ player_controls_resource(R,Dir) :-
    row(R),
    col(C).
 
-
-
+:- precondition(compare(le,amount(C),_),O),
+   result(O,mode_change(_)),
+   not initialize(fill(all,C)).
+   
 :- condition(compare(_,_,amount(Color))),
    not uses_color(Color).
 
