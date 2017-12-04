@@ -134,7 +134,8 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	    if (document.getElementById("disableGame") == null) {
 		$('<div/>', {
 		    id: 'disableGame',
-		    text: 'Disable'
+		    text: 'Disable',
+		    style: 'float:right'
 		}).click(function() { 
 		    game.destroy();
 		    $("#gameContainer").hide();

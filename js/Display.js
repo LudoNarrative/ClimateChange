@@ -3,6 +3,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var State;
 	var Coordinator;
 
+	var gameModeChosen = "";				//holder for if game is chosen through UI knobs for scene
+
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
 		State = _State;
@@ -37,7 +39,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		_coordinator.loadAvatars(id);
 		_coordinator.validateArtAssets(id);
 		_coordinator.loadStoryMaterials(id);
-		_coordinator.startGame(id);
+		if (gameModeChosen.length > 0) {			//if we chose a game style via a knob, use that one
+			_coordinator.startGame(id,true, gameModeChosen);
+		}
+		else { _coordinator.startGame(id); }
 	}
 
 	var initTitleScreen = function(_Coordinator, _State, scenes, playGameScenes) {
@@ -133,7 +138,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		var story = _Coordinator.getStorySpec(id);
 
 		for (var x=0; x < story.wishlist.length; x++) {
-			if (story.wishlist[x].condition.includes("[")) {
+			if (story.wishlist[x].condition.includes("[") && !story.wishlist[x].condition.includes("game_mode")) {
 				State.set("dynamicWishlist", true);			//set flag that we have a dynamic wishlist
 				if (story.wishlist[x].condition.includes("-")) {			//it's a slider
 					var value = $("#" + story.id + "-slider-" + x).slider("option", "value");
@@ -159,7 +164,11 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				delete story.wishlist[x].hoverText;
 				delete story.wishlist[x].changeFunc;
 			}
-
+			else if (story.wishlist[x].condition.includes("game_mode")) {
+				var value = $("#" + story.id + "-select-" + x).val();
+				if (value !== "random") { gameModeChosen = value; }			//if they chose a non-random value, set it
+				delete story.wishlist[x];					//remove it from the list, as it's not actually a wishlist item
+			}
 		}
 
 		State.set("processedWishlist", story.wishlist);

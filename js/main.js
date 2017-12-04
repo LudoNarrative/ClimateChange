@@ -73,7 +73,7 @@ requirejs.config({
 		"finalTravel" : "../StoryAssembler/data/final/finalTravel.json",
 		"finalFamilyDinner" : "../StoryAssembler/data/final/finalFamilyDinner.json",
 		"finalUN" : "../StoryAssembler/data/final/finalUN.json",
-		"finalBeach" : "../StoryAssembler/data/final/finalBeach.json",
+		"finalBeach" : "../StoryAssembler/data/knobs/beach.json",
 		"finalFaculty" : "../StoryAssembler/data/final/finalFaculty.json",
 
 

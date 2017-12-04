@@ -1,0 +1,173 @@
+[
+  {
+    "id": "onABeach",
+    "content": "onABeach eq true",
+    "effects" : [
+      "set onABeach true"
+    ],
+    "conditions" : [
+    ]
+  },
+
+  {
+    "id": "talkAboutSpecies",
+    "content": "talkAboutSpecies eq true",
+    "effects" : [
+      "set talkAboutSpecies true"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "talkAboutUNPlan",
+    "content": "talkAboutUNPlan eq true",
+    "effects" : [
+      "set talkAboutUNPlan true"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "volunteerInitialReaction",
+    "content": "volunteerInitialReaction eq true",
+    "effects" : [
+      "set volunteerInitialReaction true"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "protagonistRejoinder",
+    "content": "protagonistRejoinder eq true",
+    "effects" : [
+      "set protagonistRejoinder true"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "dropSadKnowledge",
+    "content": "dropSadKnowledge eq true",
+    "effects" : [
+      "set dropSadKnowledge true"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "coworkerRelation_familiar",
+    "content": "coworkerRelation eq familiar",
+    "effects" : [
+      "set coworkerRelation familiar"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "coworkerRelation_unfamiliar",
+    "content": "coworkerRelation eq unfamiliar",
+    "effects" : [
+      "set coworkerRelation unfamiliar"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "coworkerIdentity_activist",
+    "content": "coworkerIdentity eq activist",
+    "effects" : [
+      "set coworkerIdentity activist"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "coworkerIdentity_academic",
+    "content": "coworkerIdentity eq academic",
+    "effects" : [
+      "set coworkerIdentity academic"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "coworkerOptimism_low",
+    "content": "coworkerOptimism eq low",
+    "effects" : [
+      "set coworkerOptimism low"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "coworkerOptimism_high",
+    "content": "coworkerOptimism eq high",
+    "effects" : [
+      "set coworkerOptimism high"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "protagonistOptimism_high",
+    "content": "protagonistOptimism eq high",
+    "effects" : [
+      "set protagonistOptimism high"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "protagonistOptimism_low",
+    "content": "protagonistOptimism eq low",
+    "effects" : [
+      "set protagonistOptimism low"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "protagonistIdentity_academic",
+    "content": "protagonistIdentity eq academic",
+    "effects" : [
+      "set protagonistIdentity academic"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "protagonistIdentity_activist",
+    "content": "protagonistIdentity eq activist",
+    "effects" : [
+      "set protagonistIdentity activist"
+    ],
+    "conditions" : [
+    ]
+  },
+  {
+    "id": "sceneOutro",
+    "content": "sceneOutro",
+    "effects" : [
+      "set sceneOutro true"
+    ],
+    "conditions" : [
+    ]
+  }
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
