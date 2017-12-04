@@ -1537,17 +1537,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"student3": {name: "Élika", nickname: "Élika", gender: "female"},
 			},
 			wishlist: [
-			/*
-				{ condition: "establishScene eq true", order:"first" },
-				{ condition: "establishConcentration eq true" },
-				{ condition: "establishStudents eq true" },
-				{ condition: "student3 eq true"},
-				{ condition: "skepticalStudent eq true"},
-				{ condition: "student2 eq true"},
-				{ condition: "talkToStudent gte 2" },
-				{ condition: "followUp eq true" },
-				{ condition: "lectureEnd eq true" },
-			*/
+			
 				//knobs version
 				{ condition: "establishScene eq true", order:"first" },
 				{ condition: "establishConcentration eq true" },
@@ -1557,7 +1547,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "lectureEnd eq true" },
 
 				{
-					condition: "game_mode eq [attract|dodge|scrub|draw]",
+					condition: "game_mode eq [random|attract|avoid|drawMode|scrubMode]",
 					label: "Game mode",
 					hoverText: "What mode do you want the game to be in?"
 				},
@@ -1932,6 +1922,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"volunteer": {name: "Rodrigo", gender: "male"}
 			},
 			wishlist: [
+			/*
 				{ condition: "onABeach eq true"},
 				{ condition: "talkAboutSpecies eq true"},
 				{ condition: "talkAboutUNPlan eq true"},
@@ -1943,6 +1934,40 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "emmaNegativeSpin eq true"},
 				{ condition: "rodrigoSaysJob eq true"},
 				{ condition: "sceneOutro eq true"}
+			*/
+				{ condition: "onABeach eq true"},
+				{ condition: "talkAboutSpecies eq true"},
+				{ condition: "talkAboutUNPlan eq true"},
+				{ condition: "volunteerInitialReaction eq true"},
+				{ condition: "protagonistRejoinder eq true"},
+				{ condition: "dropSadKnowledge eq true"},
+				{ condition: "sceneOutro eq true"},
+
+				{
+					condition: "coworkerRelation eq [unfamiliar|familiar]", 
+					label: "Co-worker Familiarity", 
+					hoverText: "Is your co-worker someone you know, or someone you don't?"
+				},
+				{
+					condition: "coworkerIdentity eq [activist|academic]", 
+					label: "Co-worker Identity", 
+					hoverText: "Is your co-worker an academic, or a local activist?"
+				},
+				{
+					condition: "coworkerOptimism eq [low|high]", 
+					label: "Co-worker Optimism", 
+					hoverText: "How optimistic is your co-worker?"
+				},
+				{
+					condition: "protagonistOptimism eq [high|low]", 
+					label: "Emma's Optimism", 
+					hoverText: "How optimistic is Emma?"
+				},
+				{
+					condition: "protagonistIdentity eq [academic|activist]", 
+					label: "Emma's Identity", 
+					hoverText: "What is Emma's identity at this stage of her life?"
+				}
 			],
 			dataFiles: [
 				"text!finalBeach"
@@ -1951,13 +1976,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set onABeach false",
 				"set talkAboutSpecies false",
 				"set talkAboutUNPlan false",
-				"set rodrigoSaysPointless false",
-				"set emmaPositiveRejoinder false",
-				"set emmaNegativeRejoinder false",
-				"set rodrigoSadKnowledge false",
-				"set emmaPositiveSpin false",
-				"set emmaNegativeSpin false",
-				"set rodrigoSaysJob false",
+				"set volunteerInitialReaction false",
+				"set protagonistRejoinder false",
+				"set dropSadKnowledge false",
 				"set sceneOutro false",
 
 				"set academicEnthusiasm 0",			//global stat
@@ -2206,7 +2227,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalBeach",
-				text : "<h3 style='text-decoration: line-through;'>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>striped scuttler crab</span>.</p><p>(currently locked, due to <span class='mutable'>focusing on academics instead of local action</span>)"
+				text : "<h3 style='text-decoration: line-through;'>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>striped scuttler crab</span>.</p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Begin Scene</a></h3>"
 			},
 			{
 				id : "finalFaculty",
@@ -3123,7 +3144,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		This will eventually be replaced with more complex stuff before passing
 		off to game.js
 	*/
-    var startGame = function(id,increment=true) {
+    var startGame = function(id,increment=true, gameModeChosen="") {
 		var Game = require("Game");
 
 		var gameResources = [
@@ -3462,31 +3483,129 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id: "finalLecture",
 				aspFilepaths: [
-					"GameGenerator/ASP_cleaned/games/lecture_1.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_2.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_3.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_4.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_5.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_6.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_7.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_8.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_9.lp",
-				    "GameGenerator/ASP_cleaned/games/lecture_10.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_11.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_12.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_13.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_14.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_15.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_16.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_17.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_18.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_19.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_20.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_21.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_22.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_23.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_24.lp",
-					"GameGenerator/ASP_cleaned/games/lecture_25.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_1.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_2.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_3.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_4.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_5.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_6.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_7.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_8.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_9.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_10.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_11.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_12.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_13.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_14.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_15.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_16.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_17.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_18.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_19.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_20.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_21.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_22.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_23.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_24.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_25.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_26.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_27.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_28.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_29.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_30.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_31.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_32.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_attract_33.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_1.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_2.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_3.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_4.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_5.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_6.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_7.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_8.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_9.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_10.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_11.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_12.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_13.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_14.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_15.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_16.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_17.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_18.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_19.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_20.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_21.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_22.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_23.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_24.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_25.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_26.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_27.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_28.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_29.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_avoid_30.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_1.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_2.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_3.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_4.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_5.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_6.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_7.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_8.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_9.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_10.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_11.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_12.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_13.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_14.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_15.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_16.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_17.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_18.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_19.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_20.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_21.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_22.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_23.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_24.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_25.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_26.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_27.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_28.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_29.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_drawMode_30.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_1.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_2.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_3.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_4.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_5.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_6.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_7.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_8.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_9.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_10.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_11.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_12.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_13.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_14.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_15.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_16.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_17.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_18.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_19.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_20.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_21.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_22.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_23.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_24.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_25.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_26.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_27.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_28.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_29.lp",
+					"GameGenerator/ASP_cleaned/games/lecture_scrubMode_30.lp",
 				],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
@@ -3601,7 +3720,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		];
 
 		var gameSpec = gameResources.filter(function(v) { return v.id === id; })[0];		//grab all filepaths for our id
-	Game.init(gameSpec, State, Display, this,increment);
+		if (gameModeChosen.length > 0) {
+			gameSpec.aspFilepaths = gameSpec.aspFilepaths.filter(
+				function(v) { return v.includes(gameModeChosen);}
+			);
+		}
+		Game.init(gameSpec, State, Display, this,increment);
 	}
 
 	return {
