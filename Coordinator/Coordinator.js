@@ -1935,7 +1935,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "rodrigoSaysJob eq true"},
 				{ condition: "sceneOutro eq true"}
 			*/
-				{ condition: "onABeach eq true"},
+				{ condition: "onABeach eq true", order: "first"},
 				{ condition: "talkAboutSpecies eq true"},
 				{ condition: "talkAboutUNPlan eq true"},
 				{ condition: "volunteerInitialReaction eq true"},
@@ -2185,7 +2185,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalBeach",
-				text : "<p>TODO: Scene description</p>"
+				text : "<p>As years have passed, you've fought the good fight as best you can, locally. You've managed to keep the Stromthund Marshes designated as a wildlife refuge, and pushed for tighter regulations of the local paper mill. Sometimes it feels hopeless, given global events, but you've kept working. One day you have a memorable conversation with your co-worker about this very thing.</p>"
 			},
 			{
 				id : "finalFaculty",
@@ -3144,7 +3144,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		This will eventually be replaced with more complex stuff before passing
 		off to game.js
 	*/
-    var startGame = function(id,increment=true, gameModeChosen="") {
+    var startGame = function(id,increment=true) {
 		var Game = require("Game");
 
 		var gameResources = [
@@ -3720,9 +3720,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		];
 
 		var gameSpec = gameResources.filter(function(v) { return v.id === id; })[0];		//grab all filepaths for our id
-		if (gameModeChosen.length > 0) {
+		if (State.get("gameModeChosen").length > 0) {
 			gameSpec.aspFilepaths = gameSpec.aspFilepaths.filter(
-				function(v) { return v.includes(gameModeChosen);}
+				function(v) { return v.includes(State.get("gameModeChosen"));}
 			);
 		}
 		Game.init(gameSpec, State, Display, this,increment);

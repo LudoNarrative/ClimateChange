@@ -1,9 +1,9 @@
 [
   {
     "id": "onABeach",
-    "content": "onABeach eq true",
+    "content": "\"Gotcha!\" You carefully transfer the blue crab to your bucket. The spray of breaking waves is welcome against the heat of the noon sun, at least for the moment.<br/><br/>You scrape your foot in the sand until it uncovers pavement, and frown. This artificial beach was supposed to last years...but this tidal surge is just the latest in a recent string of events that's undoing all your best efforts. \"Hey {name|volunteer}! Mind coming over here and giving me a hand?\"",
     "effects" : [
-      "set onABeach true"
+      "set onABeach true",
     ],
     "conditions" : [
     ]
@@ -11,7 +11,7 @@
 
   {
     "id": "talkAboutSpecies",
-    "content": "talkAboutSpecies eq true",
+    "content": "\"I guess in a way, these blue crabs are a bellwether for the whole project. Raised in a lab--I mean I can't even remember the last time I could afford shellfish--and released onto an artificial beach built on top of a flooded parking lot. Doesn't get much more 2042 than that. I thought it could really work. I mean, it <i>was</i> working, for awhile.\" ",
     "effects" : [
       "set talkAboutSpecies true"
     ],
@@ -20,7 +20,7 @@
   },
   {
     "id": "talkAboutUNPlan",
-    "content": "talkAboutUNPlan eq true",
+    "content": "\"It's not all bad news,\" {name|volunteer} said. \"I mean, you've read the reports from other sites, right? Project Landstrider, down in Louisiana? Or the ptarmigan flock resettled down in Antarctica?\"<br/><br/>It was true. There had been successes. Coordinating local groups under a global mandate had worked some wonders. But so much had changed, so many species had already been wiped out...it was hard to see progress, some days.",
     "effects" : [
       "set talkAboutUNPlan true"
     ],
@@ -29,7 +29,7 @@
   },
   {
     "id": "volunteerInitialReaction",
-    "content": "volunteerInitialReaction eq true",
+    "content": "\"Ugh, why are we even bothering with this?\" {name|volunteer} dumped out his bucket. \"We've been looking for hours and all we've found are a couple sick crabs and some anemic shrimp. This whole thing is hopeless.\"",
     "effects" : [
       "set volunteerInitialReaction true"
     ],
@@ -38,16 +38,20 @@
   },
   {
     "id": "protagonistRejoinder",
-    "content": "protagonistRejoinder eq true",
+    "content": "\"Hey c'mon, {name|volunteer}, let's keep at it. Shift isn't over until 2.\"<br/>\"I'm serious, {name|protagonist}.\" {name|volunteer}'s got his gloves off, rubbing a hand through his hair. \"Like...what are we even doing?\"<br/>",
+    "choices": [
+    	 {"condition" : "answerQuestion eq true"}
+    ],
     "effects" : [
       "set protagonistRejoinder true"
     ],
     "conditions" : [
+    	"volunteerInitialReaction eq true"
     ]
   },
   {
     "id": "dropSadKnowledge",
-    "content": "dropSadKnowledge eq true",
+    "content": "\"What about the Barrier Reef? I mean there wasn't anything we could do to save any of those species once it collapsed, and that was a billion dollar international collaboration. How many went extinct? How many were they able to re-settle?\"<br/>\"Look, you and I both knew when we got into this work that it was going to be an uphill battle.\" You set the bucket down. \"But that doesn't make it less important.\"",
     "effects" : [
       "set dropSadKnowledge true"
     ],
@@ -56,7 +60,7 @@
   },
   {
     "id": "coworkerRelation_familiar",
-    "content": "coworkerRelation eq familiar",
+    "content": "\"Whatcha got there, {name|protagonist}?\" {name|volunteer} carefully works his way over to you through the water.<br/>\"Looks like a blue crab from the transplant population. Grab a bucket and help me out here, will you? My partner wandered off somewhere.\"<br/>\"Hey, they're not old hands at this like you and me,\" {name|volunteer} winked. \"It takes years to develop an eye for finding sea-life in old parking lots.\"",
     "effects" : [
       "set coworkerRelation familiar"
     ],
@@ -65,25 +69,27 @@
   },
   {
     "id": "coworkerRelation_unfamiliar",
-    "content": "coworkerRelation eq unfamiliar",
+    "content": "\"Sure, what's up, {name|protagonist}?\"<br/>{name|volunteer} had been helping with the crab resettlement for the past month, and although you hadn't gotten to know him that well just yet, he seemed friendly enough.",
     "effects" : [
       "set coworkerRelation unfamiliar"
     ],
     "conditions" : [
     ]
   },
+  //TODO: add in variant for if Emma used to be an academic ({ifStateCondition|career lte 3|text if true|text if false})
   {
     "id": "coworkerIdentity_activist",
-    "content": "coworkerIdentity eq activist",
+    "content": "\"Hey, you don't need to tell <i>me</i>, I've been working here for...god...five years? Has it really been that long?\"<br/>\"It seems like longer,\" you say, looking out over the water. \"I think I was there when you first signed on, wasn't I?\"<br/>\"Oh yeah!\" {name|volunteer} laughed. \"Wait...weren't you the one that gave me the orientation pep talk?\"<br/>God, it had been a long time.",
     "effects" : [
       "set coworkerIdentity activist"
     ],
     "conditions" : [
     ]
   },
+  //TODO: add in variant for if Emma used to be an academic ({ifStateCondition|career lte 3|text if true|text if false})
   {
     "id": "coworkerIdentity_academic",
-    "content": "coworkerIdentity eq academic",
+    "content": "\"Look, I know you think I'm just a part-timer, because I used to teach over at the Universi-\"<br/>\"That's not it,\" you say hastily. God, you can still remember that dinner conversation before your defense. \"I mean, I almost started teaching myself, way back when.\"<br/>\"No way!\" {name|volunteer} laughed. \"Wow, hard to see that! No offense\" he added, when you glared over at him.",
     "effects" : [
       "set coworkerIdentity academic"
     ],
@@ -110,25 +116,29 @@
   },
   {
     "id": "protagonistOptimism_high",
-    "content": "protagonistOptimism eq high",
+    "choiceLabel": "We're saving a species' life.",
+    "content": "\"We're doing our best.\" You carefully lift one of the crabs from your bucket. \"It may not be a lot, and it may not even be enough, but it's what we can do, the best way we know how. These crabs are symbolic, {name|volunteer}.\" You set the crab back down. \"They're a symbol for how we can change, or try to change, to set things right and prepare them for what's to come. We can't stop the storm that's coming, but we have to try our best to batten the hatches.\"<br/>{name|volunteer} sniffs, and says nothing.",
     "effects" : [
-      "set protagonistOptimism high"
+      "set protagonistOptimism high",
+      "set answerQuestion true"
     ],
     "conditions" : [
     ]
   },
   {
     "id": "protagonistOptimism_low",
-    "content": "protagonistOptimism eq low",
+    "choiceLabel": "Yeah, this does seem pretty hopeless.",
+    "content": "You look at the crabs in your bucket, swimming in useless circles. Mortality rates on the transplants were already pretty high, and it was estimated only 10% of the population would survive another relocation...all of a sudden the hopelessness of the situation washes over you. \"Honestly I...I don't know. God, what are we doing? How is this making any difference at all?\"",
     "effects" : [
-      "set protagonistOptimism low"
+      "set protagonistOptimism low",
+      "set answerQuestion true"
     ],
     "conditions" : [
     ]
   },
   {
     "id": "protagonistIdentity_academic",
-    "content": "protagonistIdentity eq academic",
+    "content": "\"You know I used to be an academic, right?\"<br/>\"No kidding? Where at?\"<br/>\"I taught a bit over at Chesterton, after I got my PhD.\"<br/>\"Huh.\" {name|volunteer} poked in the water, searching idly. \"How'd you end up here?\"<br/>You flash back to Dean Smith's office. The confrontation. \"I'm doing more good here, getting my hands dirty.\" You pull another crab from the water. \"At least here, I know exactly how I'm helping.\"",
     "effects" : [
       "set protagonistIdentity academic"
     ],
@@ -137,7 +147,7 @@
   },
   {
     "id": "protagonistIdentity_activist",
-    "content": "protagonistIdentity eq activist",
+    "content": "\"Yeah you've been doing this what, five years?\"<br/>\"Try fifteen,\" you laugh.<br/>\"Woah! Wait really?\"<br/>\"Yeah. You ever hear of Shelly Milton? She kind of started this whole operation.\"<br/>\"Yeah...I think so.\"<br/>\"Well, she and I go way back.\" You think back to that fateful dinner, before your PhD defense. \"She actually opened my eyes to a lot of things.\"",
     "effects" : [
       "set protagonistIdentity activist"
     ],
@@ -146,7 +156,7 @@
   },
   {
     "id": "sceneOutro",
-    "content": "sceneOutro",
+    "content": "You check the time. 2:30. \"Whoops! Shift's over...lost track of time. How many you got, {name|volunteer}?\"<br/>\"Eh...fifteen, no wait sixteen.\"<br/>\"Ok so with mine we have...34. Hmm.\" That was less than half what you'd hoped. You wearily pick up the crab cage. \"You guys are the lucky few. We're gonna find you a better home.\" You head back with {name|volunteer}, casting one last look over the sand and water. \"Somewhere safe, this time.\"",
     "effects" : [
       "set sceneOutro true"
     ],

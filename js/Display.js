@@ -39,8 +39,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		_coordinator.loadAvatars(id);
 		_coordinator.validateArtAssets(id);
 		_coordinator.loadStoryMaterials(id);
-		if (gameModeChosen.length > 0) {			//if we chose a game style via a knob, use that one
-			_coordinator.startGame(id,true, gameModeChosen);
+		if (State.get("gameModeChosen").length > 0) {			//if we chose a game style via a knob, use that one
+			_coordinator.startGame(id,true, State.get("gameModeChosen"));
 		}
 		else { _coordinator.startGame(id); }
 	}
@@ -166,7 +166,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			}
 			else if (story.wishlist[x].condition.includes("game_mode")) {
 				var value = $("#" + story.id + "-select-" + x).val();
-				if (value !== "random") { gameModeChosen = value; }			//if they chose a non-random value, set it
+				if (value !== "random") { State.set("gameModeChosen",value); }			//if they chose a non-random value, set it
 				delete story.wishlist[x];					//remove it from the list, as it's not actually a wishlist item
 			}
 		}

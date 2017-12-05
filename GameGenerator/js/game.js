@@ -128,7 +128,8 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		    id: 'rerollGame',
 		    text: 'Reroll'
 		}).click(function() { 
-		    Coordinator.startGame(State.get("currentScene"));
+			Coordinator.startGame(State.get("currentScene"));
+		    
 		}).appendTo('#gameContainer');
 	    }
 	    if (document.getElementById("disableGame") == null) {
