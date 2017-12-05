@@ -1,4 +1,20 @@
 
+    
+:-  result(Outcome,mode_change(game_loss;narrative_gating)),
+    player_controls_outcome(Outcome).
+
+:- condition(overlaps(E1,E2,_)),
+   not chasing_safe(E1,E2).
+
+:- result(O,mode_change(_)),
+   precondition(compare(_,_),O),
+      precondition(compare(_,_,_),O).
+
+:- result(O,mode_change(_)),
+   not precondition(overlaps(_),O),
+   not precondition(compare(_,_),O),
+   not precondition(compare(_,_,_),O).
+
 :- action(look_at(E1,E2,C)),
 	static(E2).
 
@@ -150,9 +166,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- 2{precondition(compare(_,_),O)},
    outcome(O).
 
-:- result(O,mode_change(_)),
-   not precondition(overlaps(_),O),
-   not precondition(compare(_,_),O).
 
 :- only_one_precondition(O),
    precondition(compare(_,_),O),
@@ -214,14 +227,8 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- result(O,mode_change(_)),
    2 {result(O,_)}.
 
-:- result(O,mode_change(_)),
-   not precondition(overlaps(_),O),
-   not precondition(compare(_,_),O).
 
 
-    
-:-  result(Outcome,mode_change(game_loss;narrative_gating)),
-    player_controls_outcome(Outcome).
 
 :-  result(O,modify(_,property(E,_))),
     result(O,delete(E)).
@@ -684,8 +691,6 @@ player_controls_resource(R,Dir) :-
        result(O,rotates(E,_));
        result(O,rotate_to(E,_));
        result(O,look_at(E,_,_))}.
-:- condition(overlaps(E1,E2,_)),
-   not chasing_safe(E1,E2).
 
 
 %%SIMPLICITY

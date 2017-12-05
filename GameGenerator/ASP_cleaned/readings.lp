@@ -178,6 +178,15 @@ reading(flees,relation(Entity1,Entity2)) :-
     goal(Action,Thing).
 
 {reading(goal(produce),Resource) } :-
+    precondition(compare(le,Resource,Amount),Outcome),
+    result(Outcome,mode_change(game_loss;narrative_gating)).
+
+{reading(goal(produce),Resource) } :-
+    precondition(compare(ge,Resource,Amount),Outcome),
+    result(Outcome,mode_change(game_win;narrative_progress)).
+
+
+{reading(goal(produce),Resource) } :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
@@ -186,6 +195,15 @@ reading(flees,relation(Entity1,Entity2)) :-
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
+{reading(goal(produce),Color) } :-
+    precondition(compare(le,amount(Color),Amount),Outcome),
+    result(Outcome,mode_change(game_loss;narrative_gating)).
+
+{reading(goal(produce),Color) } :-
+    precondition(compare(ge,amount(Color),Amount),Outcome),
+    result(Outcome,mode_change(game_win;narrative_progress)).
+
+
     
 {reading(goal(reduce),Resource) } :-
     precondition(compare(ge,Resource),Outcome),
@@ -194,6 +212,19 @@ reading(flees,relation(Entity1,Entity2)) :-
 {reading(goal(reduce),Resource) } :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
+
+
+    
+{reading(goal(reduce),Color) } :-
+    precondition(compare(ge,amount(Color),Amount),Outcome),
+    result(Outcome,mode_change(game_loss;narrative_gating)).
+    
+{reading(goal(reduce),Color) } :-
+    precondition(compare(le,amount(Color),Amount),Outcome),
+    result(Outcome,mode_change(game_win;narrative_progress)).
+
+
+
 
 {reading(sharing,relation(Entity,Entity1)) }  :-    
     reading(consumes,relation(Entity1,Entity)),
@@ -215,6 +246,8 @@ required(consumes) :- required(sharing).
     
 {reading(good,Resource) } :-
     reading(goal(produce),Resource).
+
+
 
 required(goal(produce)) :- required(good).
 
@@ -261,6 +294,29 @@ reading(bad,Outcome) :-
 reading(good,Outcome) :-
     result(Outcome,modify(decrease,Resource)),
     reading(bad,Resource).
+
+%COLOR
+
+reading(good,Outcome) :-
+    result(Outcome,draw(_,Color)),
+    reading(good,Color).
+
+reading(bad,Outcome) :-
+    result(Outcome,clear(_)),
+    reading(good,Color),
+    palette(Color).
+
+
+reading(bad,Outcome) :-
+    result(Outcome,draw(_,Color)),
+    reading(bad,Color).
+
+reading(good,Outcome) :-
+    result(Outcome,clear(_)),
+    reading(bad,Color),
+    palette(Color).
+
+
 
 
 
