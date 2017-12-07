@@ -157,12 +157,23 @@
   {
     "id": "sceneOutro",
     "content": "You check the time. 2:30. \"Whoops! Shift's over...lost track of time. How many you got, {name|volunteer}?\"<br/>\"Eh...fifteen, no wait sixteen.\"<br/>\"Ok so with mine we have...34. Hmm.\" That was less than half what you'd hoped. You wearily pick up the crab cage. \"You guys are the lucky few. We're gonna find you a better home.\" You head back with {name|volunteer}, casting one last look over the sand and water. \"Somewhere safe, this time.\"",
+    "choices": [
+    	{"gotoId" : "endDummy"}
+    ],
     "effects" : [
-      "set sceneOutro true"
     ],
     "conditions" : [
     ]
-  }
+  },
+      {   
+        "id" : "endDummy",
+        "choiceLabel" : "End Scene",
+        "content" : " ",
+        "conditions" : [],
+        "effects": [
+            "set sceneOutro true"
+        ]
+    },
 ]
 
 

@@ -4,6 +4,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var Coordinator;
 
 	var gameModeChosen = "";				//holder for if game is chosen through UI knobs for scene
+	var interfaceMode = "timeline";			//how scenes progress...a timeline that's returned to ("timeline"), or progress scene-to-scene ("normal")
 
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
@@ -39,7 +40,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		_coordinator.loadAvatars(id);
 		_coordinator.validateArtAssets(id);
 		_coordinator.loadStoryMaterials(id);
-		if (State.get("gameModeChosen").length > 0) {			//if we chose a game style via a knob, use that one
+		if (State.get("gameModeChosen") != null) {			//if we chose a game style via a knob, use that one
 			_coordinator.startGame(id,true, State.get("gameModeChosen"));
 		}
 		else { _coordinator.startGame(id); }
@@ -81,7 +82,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		}).appendTo('body');
 	}
 //---------Functions for the timeline UI-----------------------------
-	var initTimelineScreen = function(_Coordinator, _State, scenes, playGameScenes) {
+	var initTimelineScreen = function(_Coordinator, _State, scenes) {
 		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
 
 		var theDiv = $('<div/>', {			//make container
@@ -92,7 +93,6 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		    id: 'blackout'
 		    //text: ''
 		}).appendTo('body');
-		
 
 		scenes.forEach(function(scene, pos) {			//make scene / knob containers
 
@@ -126,6 +126,59 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 			populateKnobs(scene, _Coordinator, _State, scenes);
 		});
+
+		initMetaKnobs(_Coordinator, _State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
+
+		activateBegins(_Coordinator, _State, scenes);
+	}
+
+	var returnToTimelineScreen = function(scenes) {
+
+		$('body').empty();			//reset all html
+
+		var theDiv = $('<div/>', {			//make container
+		    id: 'timeline'
+		}).appendTo('body');
+
+		$('<div/>', {
+		    id: 'blackout'
+		    //text: ''
+		}).appendTo('body');
+
+		scenes.forEach(function(scene, pos) {			//make scene / knob containers
+
+
+			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
+
+			var date = $('<div/>', {
+				id: 'date_' + scene,
+				class: 'date',
+				html: '<span>' + _Coordinator.getStorySpec(scene).year + '</span>'
+			}).appendTo("#" + scene + '-panel');
+
+			var theDiv = $('<div/>', {
+			    id: 'scene_' + scene,
+			    class: 'sceneWindows',
+			    html: '<p>' + _Coordinator.loadTimelineDesc(scene) + '</p>'
+			}).appendTo("#" + scene + '-panel');
+
+			$("#scene_" + scene).click(function() {
+				$('.sceneKnobs:visible').slideToggle("slow", function() {});
+				$('#knobs_' + scene).slideToggle("slow", function() {});
+
+				$('.sceneWindows.active').toggleClass('active', 500);
+				$(this).toggleClass('active', 500);
+			});
+
+			var theKnobs = $('<div/>', {
+			    id: 'knobs_' + scene,
+			    class: 'sceneKnobs closed'
+			}).appendTo("#" + scene + '-panel');
+
+			populateKnobs(scene, _Coordinator, _State, scenes);
+		});
+
+		initMetaKnobs(_Coordinator, _State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
 
 		activateBegins(_Coordinator, _State, scenes);
 	}
@@ -183,6 +236,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
     			startScene(_Coordinator, sceneId, true);
 			});
 		});
+	}
+
+	var initMetaKnobs = function(_Coordinator, _State) {
+		//TODO doof
 	}
 
 	//activate and add in knobs for coordinator stuff
@@ -535,7 +592,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	    	var begin = $('<h2/>', {
 			text: 'Next',
 			click: function() {
-				startScene(Coordinator, State.get("scenes")[nextIndex], true);
+				if (interfaceMode == "timeline") {		//if timeline, return there
+					returnToTimelineScreen(State.get("scenes"));
+				}
+				else {			//otherwise, start next scene
+					startScene(Coordinator, State.get("scenes")[nextIndex], true);
+				}
 			}
 			}).appendTo("#sceneIntro");
 
@@ -699,6 +761,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		setSceneOutro : setSceneOutro,
 		startScene : startScene,
 		addGameDiagnostics : addGameDiagnostics,
-		processWishlistSettings : processWishlistSettings
+		processWishlistSettings : processWishlistSettings,
+		interfaceMode : interfaceMode
 	} 
 });

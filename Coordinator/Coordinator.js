@@ -1,4 +1,4 @@
-define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!undergradUN_kply", "text!undergradUN_talon", "text!undergradUN_irapopor", "text!undergradBeach_madreed", "text!undergradBeach_sjsherma", "text!undergradBeach_sgadsby", "text!undergradFaculty_kply", "text!undergradFaculty_madreed", "text!undergradFaculty_sjsherma", "text!sjsherma_testfile","text!madreed_testfile", "text!talon_testfile","text!sgadsby_testfile","text!kply_testfile","text!irapopor_testfile", "text!finalDinner", "text!finalLecture", "text!finalDean", "text!finalTravel", "text!finalFamilyDinner", "text!finalUN", "text!finalBeach", "text!finalFaculty", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, undergradUN_kply, undergradUN_talon, undergradUN_irapopor, undergradBeach_madreed, undergradBeach_sjsherma, undergradBeach_sgadsby, undergradFaculty_kply, undergradFaculty_madreed, undergradFaculty_sjsherma, sjsherma_testfile, madreed_testfile, talon_testfile, sgadsby_testfile, kply_testfile, irapopor_testfile, finalDinner, finalLecture, finalDean, finalTravel, finalFamilyDinner, finalUN, finalBeach, finalFaculty, globalData) {
+define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!undergradUN_kply", "text!undergradUN_talon", "text!undergradUN_irapopor", "text!undergradBeach_madreed", "text!undergradBeach_sjsherma", "text!undergradBeach_sgadsby", "text!undergradFaculty_kply", "text!undergradFaculty_madreed", "text!undergradFaculty_sjsherma", "text!sjsherma_testfile","text!madreed_testfile", "text!talon_testfile","text!sgadsby_testfile","text!kply_testfile","text!irapopor_testfile", "text!finalDinner", "text!finalLecture", "text!finalDean", "text!finalTravel", "text!finalFamilyDinner", "text!finalUN", "text!finalBeach", "text!finalFaculty", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, undergradUN_kply, undergradUN_talon, undergradUN_irapopor, undergradBeach_madreed, undergradBeach_sjsherma, undergradBeach_sgadsby, undergradFaculty_kply, undergradFaculty_madreed, undergradFaculty_sjsherma, sjsherma_testfile, madreed_testfile, talon_testfile, sgadsby_testfile, kply_testfile, irapopor_testfile, finalDinner, finalLecture, finalDean, finalTravel, finalFamilyDinner, finalUN, finalBeach, finalFaculty, globalData) {
 
 	/*
 		Initializing function
@@ -8,7 +8,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//selectable scenes from main menu
 		
 
-		var scenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"]
+		var scenes = ["finalDinner", "finalLecture", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"]
 
 
 		//for reference, easy access to old temporary scenes.
@@ -19,8 +19,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//scenes played when you hit Begin
 		var playGameScenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
 		State.set("scenes", playGameScenes);
-		//Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up scene list UI
-		Display.initTimelineScreen(this, State, scenes, playGameScenes);		//start up Timeline UI
+
+		if (Display.interfaceMode == "timeline") {
+			Display.initTimelineScreen(this, State, scenes, playGameScenes);		//start up Timeline UI
+		}
+		else {
+			Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up scene list UI
+		}
+		
 
 	}
 
@@ -2211,7 +2217,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalDean",
-				text : "<h3>A Visit to the Dean</h3><p>Over the following months, the problems you had with teaching didn't get better. If anything, they got worse. Dean Smith called you to come meet with him in private.</p><p><span class='mutable'>Luckily, you kept your cool, and were able to work out a solution with him that helped give you the time to get more familiar with teaching classes</span>.</p><p>(currently active, due to <span class='mutable'>losing your nerve during your first lecture)</span></p>"
+				text : "{ifState|firstLectureFinished|true|({ifState|firstLectureSuccess|true|<h3 style='text-decoration: line-through;'>Traveling the World</h3><p>Your success as a lecturer became success as a public speaker. You began traveling the world giving invited lectures on climate change, first at universities and conferences, then private seminars for thinktanks and policy working groups</p>|<h3>A Visit to the Dean</h3><p>Over the following months, the problems you had with teaching didn't get better. If anything, they got worse. Dean Smith called you to come meet with him in private.</p><p>It was decided that your talents would be better served working with a local group restoring the wetlands, as part of a collective effort between the university and local activist groups.</p>})|<h3>Beginning Your Career</h3><p>You wonder what's in store for you once you've gotten your career off the ground. Do you become an amazing professor? Travel the world talking about your research? Is that even what you want to do? It's so hard to figure out, because so much depends on your first lecture.</p><p>&#40;Play through the First Lecture scene above to unlock this scene&#41;</p>}"
+				
+				
 			},
 			{
 				id : "finalTravel",
@@ -2227,7 +2235,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalBeach",
-				text : "<h3 style='text-decoration: line-through;'>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>striped scuttler crab</span>.</p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Begin Scene</a></h3>"
+				text : "<h3 style='text-decoration: line-through;'>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>blue crab</span>.</p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Begin Scene</a></h3>"
 			},
 			{
 				id : "finalFaculty",
@@ -2235,7 +2243,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			}
 		]
 
-		for (var x=0; x < timelineDesc.length; x++) { if (timelineDesc[x].id == id) { return timelineDesc[x].text; } }
+		for (var x=0; x < timelineDesc.length; x++) { if (timelineDesc[x].id == id) { return Templates.render(timelineDesc[x].text); } }
 		return "";
 	}
 
@@ -3720,7 +3728,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		];
 
 		var gameSpec = gameResources.filter(function(v) { return v.id === id; })[0];		//grab all filepaths for our id
-		if (State.get("gameModeChosen").length > 0) {
+		if (State.get("gameModeChosen") != null) {
 			gameSpec.aspFilepaths = gameSpec.aspFilepaths.filter(
 				function(v) { return v.includes(State.get("gameModeChosen"));}
 			);

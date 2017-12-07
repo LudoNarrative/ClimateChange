@@ -213,8 +213,12 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		var strippedText = text.slice(1, text.length - 1);
 
 		if (strippedText.search(/[\{\}]/g) >= 0) {
-			console.error("Nested params are not allowed in template '" + strippedText + "'");
-			return "()";
+			var start = strippedText.indexOf("(");
+			var end = strippedText.indexOf(")");
+			var processedNested = processTemplate(strippedText.substring(start+1, end));
+			strippedText = strippedText.replace(strippedText.substring(start,end+1), processedNested);	//replace what was in ( and ) with processedNested
+			//console.error("Nested params are not allowed in template '" + strippedText + "'");
+			//return "()";
 		}
 
 		var texts = strippedText.split("|");
@@ -250,6 +254,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		if (typeof rawText == "object") { txt = rawText[0]; }		//if rawText is coming from chunk content, it's an array, otherwise string
 		else { txt = rawText; }
 
+		/*
 		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
 		var match;
 		while ((match = re.exec(txt)) !== null) {
@@ -257,10 +262,34 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			if (match.index > 0 && txt[match.index - 1] === "\\") continue;
 
 			// Replace match with rendered version.
-			var matchText = match[0];
+			//var matchText = match[0];
+			var matchText = match.input;
 			txt = txt.replace(matchText, processTemplate(matchText));
 			re = /{[^}]*}/g;
 		}
+		*/
+		while (txt.indexOf("{") > -1) {
+			var templateString = "";
+			var openingBraces = 0;
+			var closingBraces = 0;
+			var firstBraceIndex = -1;
+			var lastBraceIndex = -1;
+			for (var x=0; x < txt.length; x++) {
+				templateString+=txt[x];			//add character
+				if (txt[x] == "{") { 
+					if (firstBraceIndex == -1) { firstBraceIndex = x; }
+					openingBraces++; 
+				}
+				if (txt[x] == "}") { closingBraces++; lastBraceIndex = x; }
+				if (openingBraces == closingBraces && openingBraces !== 0) {		//if we've found our next template to process...
+					templateString = txt.substring(firstBraceIndex, lastBraceIndex+1);
+					break;
+				}
+			}
+			txt = txt.replace(templateString, processTemplate(templateString));
+		}
+
+
 
 		/*
 		Uncomment this to add speaker tags like "Emma: 'Oh hey there' "
