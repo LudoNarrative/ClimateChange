@@ -141,7 +141,7 @@ def parse_game(result):
     for timer in result['timer_logic']:
         name = prettify(timer[0]['terms'][0]['terms'][0])
         time = int(prettify(timer[0]['terms'][1]['terms'][0]))
-        print name
+        print 'timer', name
         timers[name] = time
 
 
@@ -592,9 +592,11 @@ if __name__ == '__main__':
         for o in ['timer']:
             for oo in out[o]:
                 for ooo in oo:
+                    print 'FIND', ooo['terms'][0]
                     if 'terms' in ooo['terms'][0]:
                         find = prettify(ooo['terms'][0])
                         replace =  find.replace('(','_').replace(',','_X_').replace(')','_XX_')
+                        
                         find_and_replace.append((find,replace))
         for o in ['outcome','entity','resource']:
             for oo in out[o]:
@@ -805,6 +807,10 @@ if __name__ == '__main__':
         for label in labels:
             if label not in sprites:
                 sprites[label] = labels[label]
+
+        colors = ['red','blue','green','orange','white','black']
+        for c in colors:
+            sprites['{}'.format(c)] = 'the amount of {}'.format(c)
         out_string += '<ul>\n'
         out_string += '<li>{}_{}.lp</li>\n'.format(output_name,output_ind+1);
         for o in ['reading']:
@@ -812,7 +818,7 @@ if __name__ == '__main__':
                 for ooo in oo:
                     reading = prettify(ooo)
                     print reading
-                    if 'goal' in reading:
+                    if 'goal' in reading and 'amount' not in reading and 'distance' not in reading:
                         out_string += "<li>The goal is to " + prettify(ooo['terms'][0]['terms'][0]) + " " + sprites[prettify(ooo['terms'][1])]+'</li>\n'
 
 

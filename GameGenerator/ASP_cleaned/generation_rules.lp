@@ -99,6 +99,9 @@ moves(E) :- controlLogic(draggable(E)).
 precondition(overlaps(Entity),Outcome) :-  precondition(overlaps(Entity,_,_),Outcome).
 precondition(overlaps(Entity),Outcome) :-  precondition(overlaps(_,Entity,_),Outcome).
 
+requires(overlaps(Entity),Entity) :- condition(overlaps(Entity)).
+requires(control_event(click(Entity)),Entity) :- condition(control_event(click(Entity))).
+
 
 required(Entity) :- condition(control_event(click(Entity))).
 required(Entity) :- condition(overlaps(Entity)).
@@ -319,6 +322,12 @@ superfluous(Entity) :-
 	not condition(overlaps(Entity,_)),
 	not condition(control_event(click(Entity))).
 
+entity_related(O) :- result(O, move(_,_,_)).
+entity_related(O) :- result(O, draw(_,_)).
+entity_related(O) :- result(O, clear(_)).
+
+
+
 relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome3,modify(Direction,Resource3))) :-
     relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2))),
     relative(greater,result(Outcome2,modify(Direction,Resource2)),result(Outcome3,modify(Direction,Resource3))).			     
@@ -415,7 +424,29 @@ difficult(Outcome) :-
     precondition(control_event(click(E)), Outcome),
     computer_controls(E).
 
-	
+
+different_precondition(P,O1,O2) :-
+    not precondition(P,O1),
+    precondition(P,O2),
+    condition(P),
+    outcome(O1),
+    outcome(O2).
+
+different_precondition(O1,O2) :-
+    not precondition(P,O1),
+    precondition(P,O2),
+    condition(P),
+    outcome(O1),
+    outcome(O2).
+
+different_precondition(O2,O1) :-
+    not precondition(P,O1),
+    precondition(P,O2),
+    condition(P),
+    outcome(O1),
+    outcome(O2).
+
+
 different_movement(E1,E2) :- action(move(E1,W)), not action(move(E2,W)), entity(E2).
 different_movement(E1,E2) :- action(look_at(E1,T,W)), not action(look_at(E2,T,W)), entity(E2).
 different_movement(E1,E2) :- action(rotate_to(E1,D)), not action(rotate_to(E2,D)), entity(E2).

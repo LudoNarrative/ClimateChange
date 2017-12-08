@@ -25,3 +25,20 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 :- replace(result(O,move(E,D)),result(O,apply_impulse(E,D,_))).
 
 :- condition(overlaps(_,_,false)).
+
+%% clicking is fucked right now
+:-  precondition(control_event(click(E1)),O),
+    result(O,draw(E2,_)),
+    E1 != E2.
+
+:-  precondition(control_event(click(E1)),O),
+    result(O,modify(D,E2,_)),
+    E1 != E2.
+
+:-  precondition(control_event(click(E1)),O),
+    result(O,modify(D,property(E2,_),_)),
+    E1 != E2.
+
+:-  precondition(control_event(click(E1)),O),
+    result(O,modify(D,property(E2,_))),
+    E1 != E2.

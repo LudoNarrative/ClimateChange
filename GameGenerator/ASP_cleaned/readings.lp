@@ -174,52 +174,52 @@ reading(flees,relation(Entity1,Entity2)) :-
     hand_eye_coordination(Outcome).
     
 
-{reading(goal(Action),Thing) } :-
+reading(goal(Action),Thing)  :-
     goal(Action,Thing).
 
-{reading(goal(produce),Resource) } :-
+reading(goal(produce),Resource)  :-
     precondition(compare(le,Resource,Amount),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
-{reading(goal(produce),Resource) } :-
+reading(goal(produce),Resource)  :-
     precondition(compare(ge,Resource,Amount),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
-{reading(goal(produce),Resource) } :-
+reading(goal(produce),Resource)  :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
-{reading(goal(produce),Resource) } :-
+reading(goal(produce),Resource)  :-
     precondition(compare(ge,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
-{reading(goal(produce),Color) } :-
+reading(goal(produce),Color)  :-
     precondition(compare(le,amount(Color),Amount),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
-{reading(goal(produce),Color) } :-
+reading(goal(produce),Color)  :-
     precondition(compare(ge,amount(Color),Amount),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
     
-{reading(goal(reduce),Resource) } :-
+reading(goal(reduce),Resource)  :-
     precondition(compare(ge,Resource),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
     
-{reading(goal(reduce),Resource) } :-
+reading(goal(reduce),Resource) :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
     
-{reading(goal(reduce),Color) } :-
+reading(goal(reduce),Color)  :-
     precondition(compare(ge,amount(Color),Amount),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
     
-{reading(goal(reduce),Color) } :-
+reading(goal(reduce),Color)  :-
     precondition(compare(le,amount(Color),Amount),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
@@ -244,7 +244,7 @@ required(consumes) :- required(sharing).
     result(Outcome,modify(increase,Resource)),
     reading(good,Resource).
     
-{reading(good,Resource) } :-
+reading(good,Resource) :-
     reading(goal(produce),Resource).
 
 
@@ -356,6 +356,8 @@ reading(tradeoff,Outcome) :-
     reading(good,Outcome),
     reading(bad,Outcome).
 
+
+required(good;bad).
 
 required(good) :- required(tradeoff).
 required(bad) :- required(tradeoff).

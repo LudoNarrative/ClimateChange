@@ -448,7 +448,7 @@ behaviors(patrol;wander).
 							    2 {behavior(ENTITY,_)}.
 
 
-distance_amounts(90;120;150).
+distance_amounts(120).
 {behavior_condition(ENTITY,compare(distance(ENTITY,OTHER,CRITERION))) : entity(OTHER),look_criterion(CRITERION)} :- entity(ENTITY),
 							    2 {behavior(ENTITY,_)}.
 
@@ -594,8 +594,8 @@ result(Outcome,
     chosen_outcome(Outcome,ENTITY,wander,_).
 
 
-timer(behavior_condition_polarity(ENTITY,wander,C)) :- behavior_condition_polarity(ENTITY,wander,C).
-
+%timer(behavior_condition_polarity(ENTITY,wander,C)) :- behavior_condition_polarity(ENTITY,wander,C).
+timer(behavior_condition_polarity(Entity,Behavior,Comparison)) :- chosen_outcome_timer(Outcome,Entity,Behavior,Comparison).
 precondition(timer_elapsed(behavior_condition_polarity(Entity,Behavior,Comparison)),
 	     Outcome) :-
     chosen_outcome_timer(Outcome,Entity,Behavior,Comparison).

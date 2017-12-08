@@ -1,19 +1,92 @@
+%%%%%%% SHOULDN"T HAVE TO CHANGE
+:- outcome(O), not has_precondition(O).
+:- outcome(O), not has_result(O).
 
+:- result(O,mode_change(_)),
+   2 {result(O,_)}.
+
+
+has_both(O) :-   precondition(control_event(click(_)),O),
+		 precondition(control_event(button(mouse,pressed)),O).
+
+:- 2 {precondition(control_event(_),O)},
+   not has_both(O),
+   outcome(O).
+
+
+:- precondition(timer_elapsed(_),O),
+   2{ precondition(_,O)}.
+
+
+:- precondition(compare(_,distance(_,_,_),_),O),
+   result(O,draw(_,_)).
+
+:- precondition(compare(_,distance(_,_,_),_),O),
+   result(O,clear(_)).
+
+
+:- precondition(overlaps(_,_,_),O),
+   result(O,draw(_,_)).
+
+:- precondition(overlaps(_,_,_),O),
+   result(O,clear(_)).
+
+:- 2 {precondition(compare(_,amount(Color),_),O)}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+:- reading(good,O),
+   trivial(O),
+   not entity_related(O).
     
+:- outcome(O1), outcome(O2), not different_precondition(O1,O2), O1 != O2.
+
+
 :-  result(Outcome,mode_change(game_loss;narrative_gating)),
     player_controls_outcome(Outcome).
 
 :- condition(overlaps(E1,E2,_)),
    not chasing_safe(E1,E2).
 
+:- precondition(C1,O1),
+   requires(C1,E1),
+   result(O1,add(E2,_,_)),
+   precondition(C2,O2),
+   requires(C2,E2),
+   result(O2,add(E1,_,_)).
+
+:- precondition(control_event(click(E)),O),
+   result(O,delete(E)).
+
+:- precondition(control_event(C),O),
+   precondition(compare(_,distance(_,_,_),_),O).
+
+
+
+
+:- precondition(control_event(click(E)),O),
+   controlLogic(draggable(E)).
+
+:- precondition(control_event(click(E)),O),
+   initialize(set_draggable(E),true).
+
+
+
+:- 2 {action(draw(E,C));
+      action(clear(E))},
+   entity(E).
+
 :- result(O,mode_change(_)),
    precondition(compare(_,_),O),
-      precondition(compare(_,_,_),O).
+   precondition(compare(_,_,_),O).
 
 :- result(O,mode_change(_)),
    not precondition(overlaps(_),O),
    not precondition(compare(_,_),O),
    not precondition(compare(_,_,_),O).
+
+
+:- 2 {precondition(compare(_,distance(_,_,_),_),O)},
+   outcome(O).
 
 :- action(look_at(E1,E2,C)),
 	static(E2).
@@ -118,13 +191,6 @@
 :- precondition(control_event(click(_)),O),
    not precondition(control_event(button(mouse,pressed)),O).
 
-has_both(O) :-   precondition(control_event(click(_)),O),
-		 precondition(control_event(button(mouse,pressed)),O).
-
-:- 2 {precondition(control_event(_),O)},
-   not has_both(O),
-   outcome(O).
-
 
 :- action(look_at(E1,E2,_)),
 	action(look_at(E1,E2,_)),
@@ -139,8 +205,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 :- behavior(ENTITY,B), controlScheme(ENTITY,C).
 
-:- outcome(O), not has_precondition(O).
-:- outcome(O), not has_result(O).
 
 :- controlScheme(click_to_spin,Entity),
    many(Entity).
@@ -223,9 +287,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 
 :- condition(overlaps(E,E,_)), singular(E).
-
-:- result(O,mode_change(_)),
-   2 {result(O,_)}.
 
 
 
@@ -311,10 +372,13 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 
 :- player_model(Outcome,player_will_attempt),
-   trivial(Outcome).
+   trivial(Outcome),
+   not entity_related(Outcome).
 
 :- player_model(Outcome,player_will_avoid),
-   trivial(Outcome).
+   trivial(Outcome),
+   not entity_related(Outcome).
+
 
 :- initialize(set_color(E1,C)),
    initialize(set_color(E2,C)),
@@ -334,8 +398,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    precondition(timer_elapsed(_),O2),
    1 {result(O2,modify(decrease,R));result(O2,modify(decrease,R,_))}.
 
-:- reading(good,O),
-   trivial(O).
 
 :- action(apply_restitution(E,E)),
    static(E).
@@ -490,11 +552,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 %%     precondition(P,O2),
 %%     outcome(O1).
 
-different_precondition(O1,O2) :-
-    1 {precondition(P,O1);precondition(P,O2)} 1,
-    condition(P),
-    outcome(O1),
-    outcome(O2).
+
 
 
 
@@ -746,7 +804,6 @@ player_controls_resource(R,Dir) :-
    not condition(compare(_,amount(Color),_)),
    not condition(over_color(_,Color)).
 
-:- 2 {precondition(compare(_,amount(Color),_),O)}.
 
 %:- condition(compare(_,amount(Color),_)).
 
