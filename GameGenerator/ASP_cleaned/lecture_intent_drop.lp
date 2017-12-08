@@ -1,6 +1,6 @@
 #const min_entities = 1.
 #const max_entities = 2.
-#const min_resources = 1.
+#const min_resources = 0.
 #const max_resources = 1.
 #const min_outcomes = 2.
 #const max_outcomes = 8.
@@ -18,14 +18,6 @@ palette(blue).
 :- not action(draw(entity(e(1)),_)).
 
 
-required(hand_eye_coordination).
-:- not reading(hand_eye_coordination,game).
-
-required(risk_reward).
-:- not reading(risk_reward,control_event(_)).
-
-
-
 label(entity(e(1)),e1).
 
 :- not action(mode_change(game_loss)).
@@ -34,6 +26,6 @@ label(entity(e(1)),e1).
 :- not action(clear(entity(e(2)))).
 :- not computer_controls(entity(e(2))).
 
-lose_if_too_low :- precondition(compare(le,_,scalar(1)),O),
+lose_if_too_low :- precondition(compare(le,amount(_),scalar(1)),O),
 		   result(O,mode_change(game_loss)).
 :- not lose_if_too_low.

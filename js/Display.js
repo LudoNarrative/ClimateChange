@@ -135,6 +135,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var returnToTimelineScreen = function(scenes) {
 
 		$('body').empty();			//reset all html
+		$('body').css("background-image", "none");
 
 		var theDiv = $('<div/>', {			//make container
 		    id: 'timeline'
@@ -153,13 +154,13 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			var date = $('<div/>', {
 				id: 'date_' + scene,
 				class: 'date',
-				html: '<span>' + _Coordinator.getStorySpec(scene).year + '</span>'
+				html: '<span>' + Coordinator.getStorySpec(scene).year + '</span>'
 			}).appendTo("#" + scene + '-panel');
 
 			var theDiv = $('<div/>', {
 			    id: 'scene_' + scene,
 			    class: 'sceneWindows',
-			    html: '<p>' + _Coordinator.loadTimelineDesc(scene) + '</p>'
+			    html: '<p>' + Coordinator.loadTimelineDesc(scene) + '</p>'
 			}).appendTo("#" + scene + '-panel');
 
 			$("#scene_" + scene).click(function() {
@@ -175,12 +176,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			    class: 'sceneKnobs closed'
 			}).appendTo("#" + scene + '-panel');
 
-			populateKnobs(scene, _Coordinator, _State, scenes);
+			populateKnobs(scene, Coordinator, State, scenes);
 		});
 
-		initMetaKnobs(_Coordinator, _State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
+		initMetaKnobs(Coordinator, State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
 
-		activateBegins(_Coordinator, _State, scenes);
+		activateBegins(Coordinator, State, scenes);
 	}
 
 	//process the wishlist for the passed in story according to its current settings in the UI

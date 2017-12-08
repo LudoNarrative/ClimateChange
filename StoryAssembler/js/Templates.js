@@ -52,6 +52,8 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			var textIfFalse = params[3];
 
 			var currVal = State.get(varToCheck);
+			if (currVal === true && expectedVal === "true") { return textIfTrue; }
+			if (currVal === false && expectedVal === "false") { return textIfTrue; }
 			if (currVal == expectedVal) { // Note: double equals "truthy" comparison
 				return textIfTrue;
 			} else {

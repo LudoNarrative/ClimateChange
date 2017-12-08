@@ -8,7 +8,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//selectable scenes from main menu
 		
 
-		var scenes = ["finalDinner", "finalLecture", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"]
+		var scenes = ["finalDinner", "finalLecture", "finalDean", "finalFamilyDinner", "finalBeach"]
 
 
 		//for reference, easy access to old temporary scenes.
@@ -1947,7 +1947,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "volunteerInitialReaction eq true"},
 				{ condition: "protagonistRejoinder eq true"},
 				{ condition: "dropSadKnowledge eq true"},
-				{ condition: "sceneOutro eq true"},
+				{ condition: "beachOutro eq true"},
 
 				{
 					condition: "coworkerRelation eq [unfamiliar|familiar]", 
@@ -2218,8 +2218,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id : "finalDean",
 				text : "{ifState|firstLectureFinished|true|({ifState|firstLectureSuccess|true|<h3 style='text-decoration: line-through;'>Traveling the World</h3><p>Your success as a lecturer became success as a public speaker. You began traveling the world giving invited lectures on climate change, first at universities and conferences, then private seminars for thinktanks and policy working groups</p>|<h3>A Visit to the Dean</h3><p>Over the following months, the problems you had with teaching didn't get better. If anything, they got worse. Dean Smith called you to come meet with him in private.</p><p>It was decided that your talents would be better served working with a local group restoring the wetlands, as part of a collective effort between the university and local activist groups.</p>})|<h3>Beginning Your Career</h3><p>You wonder what's in store for you once you've gotten your career off the ground. Do you become an amazing professor? Travel the world talking about your research? Is that even what you want to do? It's so hard to figure out, because so much depends on your first lecture.</p><p>&#40;Play through the First Lecture scene above to unlock this scene&#41;</p>}"
-				
-				
 			},
 			{
 				id : "finalTravel",
@@ -2231,11 +2229,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalUN",
-				text : "<h3 style='text-decoration: line-through;'>Giving a Talk at the UN</h3><p>Sometimes you wonder, if you'd gone the route of public figure rather than educator, where you'd be in life. Talking to heads of state? Challenging CEOs of corporations in public debate? It's hard to tell...</p><p>(currently locked, due to <span class='mutable'>focusing on academics instead of public speaking)</span>"
+				text : "<h3>Giving a Talk at the UN</h3><p>Sometimes you wonder, if you'd gone the route of public figure rather than educator, where you'd be in life. Talking to heads of state? Challenging CEOs of corporations in public debate? It's hard to tell...</p><p>(currently locked, due to <span class='mutable'>focusing on academics instead of public speaking)</span>"
 			},
 			{
 				id : "finalBeach",
-				text : "<h3 style='text-decoration: line-through;'>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>blue crab</span>.</p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Begin Scene</a></h3>"
+				text : "{ifState|beachOutro|true|<h3>A Day at the Beach</h3><p>You remember your conversation with Rodrigo. Like so much of your life recently, it seemed a mix of both hope and despair. <span class='mutable'>You're glad you were able to help him feel more hopeful about the future. In a way, he helped you too.</span></p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Replay Scene</a></h3>|<h3>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>blue crab</span>.</p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Begin Scene</a></h3>}"
+
+
 			},
 			{
 				id : "finalFaculty",
@@ -2243,7 +2243,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			}
 		]
 
-		for (var x=0; x < timelineDesc.length; x++) { if (timelineDesc[x].id == id) { return Templates.render(timelineDesc[x].text); } }
+		for (var x=0; x < timelineDesc.length; x++) { if (timelineDesc[x].id == id) { 
+			return Templates.render(timelineDesc[x].text); } }
 		return "";
 	}
 
