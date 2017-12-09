@@ -338,6 +338,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			case "studentBalance":
 				studentBalance(changingElement);
 				break;
+			case "friendBackgroundBalance":
+				friendBackgroundBalance(changingElement);
+				break;
+			case "friendSupportivenessBalance":
+				friendSupportivenessBalance(changingElement);
+				break;
 		}
 	}
 
@@ -350,6 +356,24 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		var currentValue = $("#" + changer.id).slider('value');
 		$(partnerSlider).slider('value', (3-currentValue));
 		$(partnerSlider).find(".ui-slider-handle").text((3-currentValue));
+	}
+
+	var friendBackgroundBalance = function(changer) {
+		var partnerSlider;
+		if (changer.id == "finalDinner-slider-15") { partnerSlider = "#finalDinner-slider-16"}
+		else { partnerSlider = "#finalDinner-slider-15"; }
+		var currentValue = $("#" + changer.id).slider('value');
+		$(partnerSlider).slider('value', (2-currentValue));
+		$(partnerSlider).find(".ui-slider-handle").text((2-currentValue));
+	}
+
+	var friendSupportivenessBalance = function(changer) {
+		var partnerSlider;
+		if (changer.id == "finalDinner-slider-17") { partnerSlider = "#finalDinner-slider-18"}
+		else { partnerSlider = "#finalDinner-slider-17"; }
+		var currentValue = $("#" + changer.id).slider('value');
+		$(partnerSlider).slider('value', (2-currentValue));
+		$(partnerSlider).find(".ui-slider-handle").text((2-currentValue));
 	}
 //------------------------------------------------------------------------------------
 	//builds the scene divs
