@@ -515,10 +515,17 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 				if (satisfaction.type == "goto") { gotoFlag = true; }
 			});
 
+			var pathsSatisfyingWants = restrictWantsTo(path.satisfies, wants);
+			if (pathsSatisfyingWants.length > 0 || gotoFlag) {		//if it satisfies a want or a goto, add it
+				validPaths.push(path);
+			}
+
+			/*
 			path.satisfies = restrictWantsTo(path.satisfies, wants);
 			if (path.satisfies.length > 0 || gotoFlag) {		//if it satisfies a want or a goto, add it
 				validPaths.push(path);
 			} 
+			*/
 		});
 		return validPaths;
 	}
