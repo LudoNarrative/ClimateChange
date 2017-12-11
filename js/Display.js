@@ -380,18 +380,20 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	}
 
 	var friendBackgroundBalance = function(changer) {
-		var partnerSlider;
-		if (changer.id == "finalDinner-slider-17") { partnerSlider = "#finalDinner-slider-18"}
-		else { partnerSlider = "#finalDinner-slider-17"; }
+		var sliders = $('#knobs_finalDinner .ui-slider').toArray();
+		var changerIndex = sliders.indexOf(changer);
+		var partnerIndex = (changerIndex % 2 === 0) ? changerIndex + 1 : changerIndex - 1;
+		var partnerSlider = sliders[partnerIndex];
 		var currentValue = $("#" + changer.id).slider('value');
 		$(partnerSlider).slider('value', (2-currentValue));
 		$(partnerSlider).find(".ui-slider-handle").text((2-currentValue));
 	}
 
 	var friendSupportivenessBalance = function(changer) {
-		var partnerSlider;
-		if (changer.id == "finalDinner-slider-19") { partnerSlider = "#finalDinner-slider-20"}
-		else { partnerSlider = "#finalDinner-slider-19"; }
+		var sliders = $('#knobs_finalDinner .ui-slider').toArray();
+		var changerIndex = sliders.indexOf(changer);
+		var partnerIndex = (changerIndex % 2 === 0) ? changerIndex + 1 : changerIndex - 1;
+		var partnerSlider = sliders[partnerIndex];
 		var currentValue = $("#" + changer.id).slider('value');
 		$(partnerSlider).slider('value', (2-currentValue));
 		$(partnerSlider).find(".ui-slider-handle").text((2-currentValue));
