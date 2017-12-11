@@ -1452,6 +1452,37 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "checkinWithDisagreer eq true"},
 				{ condition: "inactivityIsBad eq true"},
 				{ condition: "outro eq true", order: "last"},
+
+				{ //can be shrimp, lobsters, etc
+					condition: "areaOfExpertise eq [phytoplankton|lobsters|coral]",
+					label: "Expertise",
+					hoverText: "Which area is your area of specialty, in regards to climate change?"
+				},
+				{
+					condition: "academicFriend eq [0-2:1]",
+					label: "# of Academic Friends",
+					hoverText: "How many of your friends are academics? (0 is low, 2 is high)",
+					changeFunc: "friendBackgroundBalance"
+				},
+				{
+					condition: "activistFriend eq [0-2:1]",
+					label: "# of Activist Friends",
+					hoverText: "How many of your friends are activists? (0 is low, 2 is high)",
+					changeFunc: "friendBackgroundBalance"
+				},
+				{
+					condition: "supportiveFriend eq [0-2:1]",
+					label: "# of Supportive Friends",
+					hoverText: "How many of your friends support your decision to go into academia? (0 is low, 2 is high)",
+					changeFunc: "friendSupportivenessBalance"
+				},
+				{
+					condition: "challengingFriend eq [0-2:1]",
+					label: "# of Challenging Friends",
+					hoverText: "How many of your friends challenge your decision to go into academia? (0 is low, 2 is high)",
+					changeFunc: "friendSupportivenessBalance"
+				}
+
 			],
 			dataFiles: [
 				"text!finalDinner"
@@ -2197,7 +2228,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var timelineDesc = [
 			{
 				id : "finalDinner",
-				text : "<h3>Dinner With Friends</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>"
+				text : "<h3>Dinner With Friends</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p><h3><a href='#' class='beginScene' id='begin-finalDinner'>Begin Scene</a></h3>"
 			},
 			{
 				id : "finalLecture",

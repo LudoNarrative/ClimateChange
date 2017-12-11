@@ -24,7 +24,9 @@ define(["Request", "Validate", "Templates", "util", ], function(Request, Validat
 	var create = function(want) {
 
 		for (var key in want) {	
-			want[key] = Templates.render(want[key], undefined, "want"); 
+			if (typeof want[key] == "string") {
+				want[key] = Templates.render(want[key], undefined, "want"); 
+			}
 		}
 		Validate.check(want, requiredFields, optionalFields);
 
