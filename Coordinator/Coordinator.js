@@ -1434,8 +1434,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			year: 2025,
 			characters: {
 				"protagonist": {name: "Emma", nickname: "Em", gender: "female"},
-				"academicFriend": {name: "Zanita", nickname: "Z", gender: "female"},
-				"nonAcademicFriend": {name: "Shelly", nickname: "Shelly", gender: "female"}
+				"friend1": {name: "Zanita", nickname: "Z", gender: "female"},
+				"friend2": {name: "Shelly", nickname: "Shelly", gender: "female"}
 			},
 			wishlist: [
 				{ condition: "satiation gte 5", order: "first", persistent: true },		//game interrupt
@@ -1445,15 +1445,25 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "EmmaDefenseFeeling eq true" },
 				{ condition: "EmmaJobFutureBeat eq true" },
 				{ condition: "EmmaClassTypeBeat eq true" },
+				// old wishlist items begin here
+				
 				{ condition: "friendIsInAcademia eq true" },
 				{ condition: "friendIsNotInAcademia eq true"},
+				
+				// old wishlist items end here
+				// new wishlist items begin here
+				{ condition: "establishFriend1Background eq true" },
+				{ condition: "establishFriend2Background eq true" },
+				{ condition: "establishFriend1Supportiveness eq true" },
+				{ condition: "establishFriend2Supportiveness eq true" },
+				// new wishlist items end here
 				{ condition: "tension gte 4"},
 				{ condition: "friendTensionRelieved eq true"},
 				{ condition: "checkinWithDisagreer eq true"},
 				{ condition: "inactivityIsBad eq true"},
 				{ condition: "outro eq true", order: "last"},
 
-				{ //can be shrimp, lobsters, etc
+				{
 					condition: "areaOfExpertise eq [phytoplankton|lobsters|coral]",
 					label: "Expertise",
 					hoverText: "Which area is your area of specialty, in regards to climate change?"
@@ -1495,18 +1505,43 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set EmmaDefenseFeeling false",
 				"set EmmaJobFutureBeat false",
 				"set EmmaClassTypeBeat false",
+				/*
 				"set friendIsInAcademia false",
 				"set friendIsNotInAcademia false",
+				*/
+				// new items
+				"set establishFriend1Background false",
+				"set establishFriend2Background false",
+				"set establishFriend1Supportiveness false",
+				"set establishFriend2Supportiveness false",
+				// end new items
 				"set friendTension 0",
 				"set friendTensionRelieved false",
 				"set checkinWithDisagreer false",
 				"set inactivityIsBad false",
 				"set outro false",
 
+				// new items
+				"set academicFriend 1",
+				"set activistFriend 1",
+				"set supportiveFriend 1",
+				"set challengingFriend 1",
+
+				"set academicFriend1 true",
+				"set activistFriend1 false",
+				"set academicFriend2 false",
+				"set activistFriend2 true",
+
+				"set supportiveFriend1 true",
+				"set challengingFriend1 false",
+				"set supportiveFriend2 false",
+				"set challengingFriend2 true",
+				// end new items
+
 				"set satiation 5",					//this is the game interfacing variable
 
-				"set academicFriendRelationship 5",			//on a scale between 1 to 10 (1 bad, 10 best)
-				"set nonAcademicFriendRelationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
+				"set friend1Relationship 5",			//on a scale between 1 to 10 (1 bad, 10 best)
+				"set friend2Relationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
 				"set confidence 5",							//scale of 1 to 10, 10 highest
 				"set academicEnthusiasm 5",					//scale of 1 to 10, 10 highest
 				"set friendTension 0",						//scale of 1 to 10, ten is high tension
@@ -1535,23 +1570,23 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					"range" : [0,10]
 				},
 				{
-					"varName" : "academicFriendRelationship",
+					"varName" : "friend1Relationship",
 					"label" : "Friendliness",
-					"characters" : ["academicFriend"],
+					"characters" : ["friend1"],
 					"affectedBy" : "narrative",
 					"range" : [0,10]
 				},
 				{
-					"varName" : "nonAcademicFriendRelationship",
+					"varName" : "friend2Relationship",
 					"label" : "Friendliness",
-					"characters" : ["nonAcademicFriend"],
+					"characters" : ["friend2"],
 					"affectedBy" : "narrative",
 					"range" : [0,10]
 				},
 				{
 					"varName" : "tension",
 					"label" : "tension",
-					"characters" : ["protagonist", "academicFriend", "nonAcademicFriend"],
+					"characters" : ["protagonist", "friend1", "friend2"],
 					"affectedBy" : "both",
 					"range" : [0,10]
 				}
@@ -2923,7 +2958,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						]
 					},
 					{
-						id: "academicFriend",
+						id: "friend1",
 						graphics: "char12",
 						age: "20s",
 						states: [	//happy, neutral, upset, confused
@@ -2931,7 +2966,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						]
 					},
 					{
-						id: "nonAcademicFriend",
+						id: "friend2",
 						graphics: "char7",
 						age: "20s",
 						states: [	//happy, neutral, confused
