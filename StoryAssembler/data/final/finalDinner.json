@@ -156,7 +156,7 @@
   {
     "id": "lovei",
     "choiceLabel": "I. Love. It.",
-    "content": "<p>{name|friend1} claps her hands together and bounces a little{ifState|activistFriend2|true|, ignoring {name|friend2} sticking out her tongue|}.</p>",
+    "content": "<p>{name|friend1} claps her hands together and bounces a little{ifState|activistFriend2|true|(, ignoring {name|friend2} sticking out her tongue)|}.</p>",
     "effects": [
       "incr academicEnthusiasm 1"
     ]
@@ -164,7 +164,7 @@
   {
     "id": "tooMuchi",
     "choiceLabel": "\"Thanks {nickname|friend1}, but isn't it a little early to be celebrating?\"",
-    "content": "<p>\"Nonsense. You have this in the bag.\"</p>{ifState|challengingFriend2|true|<p>{name|friend2} keeps her eyes locked on {name|friend1} as she sips her drink.</p>|}",
+    "content": "<p>\"Nonsense. You have this in the bag.\"</p>{ifState|challengingFriend2|true|(<p>{name|friend2} keeps her eyes locked on {name|friend1} as she sips her drink.</p>)|}",
     
   },
   { // TODO has to be gated on academicFriend1?
@@ -338,7 +338,7 @@
     {
       "id": "positiveShelli",
       "choiceLabel" : "\"You setting up some sort of barrier around your plate there?\"",
-      "content" : "<p>\"I'm defending my dinner from oncoming vegtable hordes.\" She winks at you and turns her attention back to the conversation.</p>",
+      "content" : "<p>\"I'm defending my dinner from oncoming vegetable hordes.\" She winks at you and turns her attention back to the conversation.</p>",
       "effects" : ["decr tension 1"]
     },
     {
