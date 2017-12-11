@@ -213,9 +213,10 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			chunkSpeaker = State.get("speaker")
 		}
 
-		var text = Templates.render(chunk.content, chunkSpeaker);
-		//var text = Templates.render(chunk.content, State.get("speaker")); 
+		var text = chunk.content;
+		
 		if (text !== undefined) { 							//if the chunk has text, display it
+			text = Templates.render(text, chunkSpeaker);
 			StoryDisplay.addStoryText(text);
 			State.set("currentTextId", chunk.id);			//set current text id so we can reference it later
 		}

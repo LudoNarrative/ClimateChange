@@ -193,15 +193,33 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 		for (var x=0; x < story.wishlist.length; x++) {
 			if (story.wishlist[x].condition.includes("[") && !story.wishlist[x].condition.includes("game_mode")) {
-				State.set("dynamicWishlist", true);			//set flag that we have a dynamic wishlist
+				
+				State.set("dynamicWishlist", true);			//set flag that we have a dynamic wishlist (so we know to look it up later)
+				
+				var stateSetter = false;			//whether it's a state setter, not a wishlist setter
+				story.wishlist[x].condition.replace("State:", "state:");		//correct capitalization if necessary
+				if (story.wishlist[x].condition.includes("state:")) { stateSetter = true; }
+
 				if (story.wishlist[x].condition.includes("-")) {			//it's a slider
 					var value = $("#" + story.id + "-slider-" + x).slider("option", "value");
-					story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
+					if (stateSetter) {
+						var key = story.wishlist[x].condition.replace("state:","").trim().split(" ")[1];
+						State.set(key, value);
+					}
+					else {
+						story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
+					}
 					widgetNum++;
 				}
 				else if (story.wishlist[x].condition.includes("|")) {	//it's a dropdown
 					var value = $("#" + story.id + "-select-" + x).val();
-					story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
+					if (stateSetter) {
+						var key = story.wishlist[x].condition.replace("state:","").trim().split(" ")[1];
+						State.set(key, value);
+					}
+					else {
+						story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
+					}
 					widgetNum++;
 				}
 				else {									//it's a switch
@@ -217,6 +235,9 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				delete story.wishlist[x].label;
 				delete story.wishlist[x].hoverText;
 				delete story.wishlist[x].changeFunc;
+
+				if (stateSetter) { delete story.wishlist[x]; }		//if it's a state setter, just remove whole thing
+				
 			}
 			else if (story.wishlist[x].condition.includes("game_mode")) {
 				var value = $("#" + story.id + "-select-" + x).val();
