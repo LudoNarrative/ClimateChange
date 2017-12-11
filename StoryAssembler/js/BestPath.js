@@ -509,14 +509,15 @@ define(["Request", "util", "Character", "underscore"], function(Request, util, C
 		var validPaths = [];
 		pathList.forEach(function(path) {
 
-			//determine if one of the wants is a goto (we accept paths from these by default)
+			//determine if one of the wants is a goto (we accept paths from these by default 
+			//changed to only accept if none other exist due to incorrectly returning gotos as if they satisfy "first" tagged wishlist items...is this the right way to handle that case???
 			var gotoFlag = false;
 			path.satisfies.forEach(function(satisfaction) {
 				if (satisfaction.type == "goto") { gotoFlag = true; }
 			});
 
 			var pathsSatisfyingWants = restrictWantsTo(path.satisfies, wants);
-			if (pathsSatisfyingWants.length > 0 || gotoFlag) {		//if it satisfies a want or a goto, add it
+			if (pathsSatisfyingWants.length > 0 || (gotoFlag && validPaths.length == 0)) {		//if it satisfies a want or a goto, add it
 				validPaths.push(path);
 			}
 
