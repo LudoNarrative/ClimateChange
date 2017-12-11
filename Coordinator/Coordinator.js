@@ -1968,6 +1968,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "protagonistRejoinder eq true"},
 				{ condition: "dropSadKnowledge eq true"},
 				{ condition: "beachOutro eq true"},
+				{ condition: "demonstrateCoworkerOptimism eq true"},
 
 				{
 					condition: "coworkerRelation eq [unfamiliar|familiar]", 
@@ -1980,7 +1981,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					hoverText: "Is your co-worker an academic, or a local activist?"
 				},
 				{
-					condition: "coworkerOptimism eq [low|high]", 
+					condition: "state: set coworkerOptimism [low|high]", 
 					label: "Co-worker Optimism", 
 					hoverText: "How optimistic is your co-worker?"
 				},
