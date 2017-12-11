@@ -38,7 +38,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			var rNum = util.randomNumber(params.length) - 1;
 			return params[rNum];
 		},
-		// Template to conditionally print text.
+		//Conditionally print text based on if state variable has specific value
 		"ifState": function(params, text) {
 			// {ifState|career|3|text if true|text if false}
 			if (params.length !== 4) {
@@ -60,6 +60,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 				return textIfFalse;
 			}
 		},
+		//Conditionally print text based on state condition (like career lte 3)
 		"ifStateCondition": function(params, text) {
 			// {ifStateCondition|career lte 3|text if true|text if false}
 			if (params.length !== 3) {
@@ -217,7 +218,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		if (strippedText.search(/[\{\}]/g) >= 0) {
 			var start = strippedText.indexOf("(");
 			var end = strippedText.indexOf(")");
-			var processedNested = processTemplate(strippedText.substring(start+1, end));
+			var processedNested = render(strippedText.substring(start+1, end), undefined, undefined);
 			strippedText = strippedText.replace(strippedText.substring(start,end+1), processedNested);	//replace what was in ( and ) with processedNested
 			//console.error("Nested params are not allowed in template '" + strippedText + "'");
 			//return "()";
