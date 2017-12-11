@@ -843,6 +843,19 @@ if __name__ == '__main__':
                        'down_arrow':'down key',
                        'left_arrow':'left key',
                        'right_arrow':'right key'}
+
+        def control_event_text(condition):
+            out_string = ''
+            if 'click' ==  condition['predicate']:
+                out_string += 'clicking on a ' + sprites[prettify(condition['terms'][0])] + '\n'
+            elif 'button' == condition['predicate']:
+                verb = condition['terms'][1]['predicate']
+                button = condition['terms'][0]['predicate']
+                out_string += '{} the {}'.format(press_mapping[verb],key_mapping[button]) + '\n'
+            else:
+                print condition
+            return out_string
+        
         if will_dos:
             out_string += '\n<li>The player will do this by<ul>\n'
 
@@ -856,12 +869,13 @@ if __name__ == '__main__':
                         else:
                             out_string += '\tattempting to keep a ' + sprites[prettify(precond['terms'][1])] + ' and ' + sprites[prettify(precond['terms'][0])] + ' from touching\n'
                     elif 'control_event' == precond['predicate']:
-                        if 'click' ==  precond['terms'][0]['predicate']:
-                            out_string += '\tclicking on a ' + sprites[prettify(precond['terms'][0]['terms'][0])] + '\n'
-                        elif 'button' == precond['terms'][0]['predicate']:
-                            verb = precond['terms'][0]['terms'][1]['predicate']
-                            button = precond['terms'][0]['terms'][0]['predicate']
-                            out_string += '\t {} the {}'.format(press_mapping[verb],key_mapping[button]) + '\n'
+                        out_string += '\t'+ control_event_text(precond['terms'][0])
+                    elif 'compare' == precond['predicate']:
+                        if 'le' ==  precond['terms'][0]['predicate']:
+                            out_string += 'having {} be low'.format(sprites[prettify(precond['terms'][1])]) + '\n'
+                        elif 'ge' ==  precond['terms'][0]['predicate']:
+                            out_string += 'having {} be high'.format(sprites[prettify(precond['terms'][1])]) + '\n'
+                            
                     else:
                         out_string += prettify(precond) + '\n'
                     if len(outcome2precond[outcome]) > 1:
@@ -904,40 +918,55 @@ if __name__ == '__main__':
 
 
         out_string += '<li>The player controls the game by<ul>' + '\n'
-        for oo in out['controlLogic']:
+                    
+        action_mapping = {'chases':'chase',
+                             'flees':'flee',
+                          'orbits':'orbit',
+                          'click_and_drag':'clicking-and-dragging',
+                          'rotating':'rotate'}
+        player_controls = {}
 
+        for oo in out['player_controls_by']:
             for ooo in oo:
-                out_string += '<li>'+ '\n'
-                ooo = ooo['terms'][0]
-                if 'draggable' == ooo['predicate']:
-                    entity = ooo['terms'][0]
-                    out_string += '\tclicking-and-dragging {}s'.format(sprites[prettify(entity)])+ '\n'
+                player_controls[sprites[prettify(ooo['terms'][0])]] =ooo['terms'][1]['terms'][0]
+                
+        for oo in out['entity_movement']: 
+            for ooo in oo:
+                entity = sprites[prettify(ooo['terms'][0])]
+                movement_type = ooo['terms'][1]['predicate']
+                action = ''
+                if 'terms' in ooo['terms'][1]:
+                    relative_to = prettify(ooo['terms'][1]['terms'][0])
+                    if relative_to != 'cursor':
+                        relative_to = sprites[relative_to]
+                        
+                    action = '{} the {}'.format(action_mapping[movement_type],relative_to)
                 else:
-                    out_string += prettify(ooo)+ '\n'
-                out_string += '</li>'+ '\n'
-
-        direction_mapping = {'towards':'towards',
-                             'away':'away from'}
-        for oo in out['action']:
-            for ooo in oo:
-                pretty = prettify(ooo)
-                ooo = ooo['terms'][0]
-                if 'move' in pretty and 'cursor' in pretty:
-                    out_string += '<li>\tthe {} moves {} the cursor'.format(sprites[prettify(ooo['terms'][0])],direction_mapping[prettify(ooo['terms'][1]['terms'][0])]) + '</li>'+ '\n'
-         
-        for oo in out['condition']:
-            for ooo in oo:
-                pretty = prettify(ooo)
-                precond = ooo['terms'][0]
-                if 'control_event' in pretty:
-                    out_string += '<li>'+ '\n'
-                    if 'click' ==  precond['terms'][0]['predicate']:
-                        out_string += '\tclicking on a ' + sprites[prettify(precond['terms'][0]['terms'][0])]+ '\n'
-                    elif 'button' == precond['terms'][0]['predicate']:
-                        verb = precond['terms'][0]['terms'][1]['predicate']
-                        button = precond['terms'][0]['terms'][0]['predicate']
-                        out_string += '\t{} the {}'.format(press_mapping[verb],key_mapping[button])+ '\n'
-                    out_string += '</li>'+ '\n'
+                    action = action_mapping[movement_type]
+                    
+                if entity in player_controls:
+                    print 'PLAYER CONTROLS',entity, player_controls[entity],control_event_text(player_controls[entity])
+                    out_string += '<li>\tcontrolling {} by making it {} \nby {}</li>\n'.format(entity,action,control_event_text(player_controls[entity]))
+        #for oo in out['entity_movement']:
+        #    for ooo in oo:
+        #        pretty = prettify(ooo)
+        #        ooo = ooo['terms'][0]
+        #        if 'move' in pretty and 'cursor' in pretty:
+        #            out_string += '<li>\tthe {} moves {} the cursor'.format(sprites[prettify(ooo['terms'][0])],direction_mapping[prettify(ooo['terms'][1]['terms'][0])]) + '</li>'+ '\n'
+        if False:
+            for oo in out['condition']:
+                for ooo in oo:
+                    pretty = prettify(ooo)
+                    precond = ooo['terms'][0]
+                    if 'control_event' in pretty:
+                        out_string += '<li>'+ '\n'
+                        if 'click' ==  precond['terms'][0]['predicate']:
+                            out_string += '\tclicking on a ' + sprites[prettify(precond['terms'][0]['terms'][0])]+ '\n'
+                        elif 'button' == precond['terms'][0]['predicate']:
+                            verb = precond['terms'][0]['terms'][1]['predicate']
+                            button = precond['terms'][0]['terms'][0]['predicate']
+                            out_string += '\t{} the {}'.format(press_mapping[verb],key_mapping[button])+ '\n'
+                        out_string += '</li>'+ '\n'
         
         out_string += '</ul></ul>'+ '\n'
         with open('{}_{}.lp'.format(output_name,output_ind+1),'wb') as outfile:

@@ -15,6 +15,7 @@
 required(sharing).
 required(maintenance).
 
+
 label(resource(r(1)),satiation,write) :- reading(good,resource(r(1))).
 :- not  reading(good,resource(r(1))).
 
@@ -26,6 +27,15 @@ label(entity(e(2)),friend).
 
 
 :- not reading(sharing,relation(entity(e(1)),entity(e(2)))).
+
+is_consumed(O) :- precondition(overlaps(entity(e(1))),O),
+	       result(O,delete(entity(e(1)))),
+	       result(O,modify(increase,resource(r(1)))).
+:- not is_consumed(_).
+
+:- result(O,modify(increase,resource(r(1)))),
+   not is_consumed(O).
+
 :- not reading(maintenance,resource(r(1))).
 :- not action(mode_change(narrative_gating)).
 :- 2 {action(mode_change(N))}.

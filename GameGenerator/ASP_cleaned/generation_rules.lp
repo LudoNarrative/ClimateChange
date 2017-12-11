@@ -6,6 +6,28 @@ static(Entity) :- entity(Entity), not moving(Entity).
 outcome(O) :- result(O,_).
 action(A) :- result(_,A).
 
+player_controls_by(E,control_event(C)) :- precondition(control_event(C),O),
+					  1 {result(O,look_at(E,E2,_));
+					     result(O,move(E,_));
+					     result(O,rotates(E,_,_))},
+					  entity(E).
+
+entity_movement(E,chases(E2)) :- result(O,look_at(E,E2,_)),
+				result(O,move(E,direction(forward))).
+
+entity_movement(E,flees(E2)) :- result(O,look_at(E,E2,_)),
+			       result(O,move(E,direction(backward))).
+
+entity_movement(E,orbits(E2)) :- result(O,look_at(E,E2,_)),
+			       result(O,move(E,direction(left))).
+entity_movement(E,orbits(E2)) :- result(O,look_at(E,E2,_)),
+				result(O,move(E,direction(right))).
+
+entity_movement(E,click_and_drag) :- controlLogic(draggable(E)).
+entity_movement(E,pivots) :- result(O,rotates(E,_,_)).
+
+
+
 
 torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),A),O),
 		 result(O,move(ENTITY,direction(forward))),
@@ -102,6 +124,8 @@ precondition(overlaps(Entity),Outcome) :-  precondition(overlaps(_,Entity,_),Out
 requires(overlaps(Entity),Entity) :- condition(overlaps(Entity)).
 requires(control_event(click(Entity)),Entity) :- condition(control_event(click(Entity))).
 
+outcome_requires(O,E) :- precondition(C,O),
+			 requires(C,E).
 
 required(Entity) :- condition(control_event(click(Entity))).
 required(Entity) :- condition(overlaps(Entity)).

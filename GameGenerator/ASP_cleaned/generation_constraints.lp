@@ -1,7 +1,37 @@
 %%%%%%% SHOULDN"T HAVE TO CHANGE
+
+
+:- action(modify(decrease,property(E,health))),
+   outcome_doesnt_require(O,E),
+   result(O,add(E,_,_)).
+
+:- 2 {precondition(C,tick)}.
+
+   
+% simple feedback loop exclusion
+% Don't increase a resource on a positive check of it
+:- result(Outcome,modify(increase,Resource)),
+  precondition(compare(ge,Resource),Outcome).
+% don't decrease a resource on negative check of it
+:- result(Outcome,modify(decrease,Resource)),
+   precondition(compare(le,Resource),Outcome).
+
+% Don't increase a resource on a positive check of it
+:- result(Outcome,modify(increase,Resource,_)),
+  precondition(compare(ge,Resource),Outcome).
+% don't decrease a resource on negative check of it
+:- result(Outcome,modify(decrease,Resource,_)),
+   precondition(compare(le,Resource),Outcome).
+
+:- result(O,delete(E1)),
+   not precondition(overlaps(_,E1,true),O),
+   not precondition(overlaps(E1,_,true),O),
+   not precondition(control_event(click(E1)),O).
+
 :- outcome(O), not has_precondition(O).
 :- outcome(O), not has_result(O).
 
+:- monotonic(R), not allowed(monotonic(R)).
 :- result(O,mode_change(_)),
    2 {result(O,_)}.
 
@@ -449,8 +479,8 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 	S1 <= S2.
 	
 	
-:- action(modify(decrease,property(E,health))),
-   not action(add(E,_,_)).
+
+
    
 {label(entity(E),E)} :- entity(entity(E)).
 {label(resource(E),E,private)} :- resource(resource(E)).
@@ -488,9 +518,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- timer(t(N)), N >= 2, not timer(t(N-1)).
 
 
-:- 2 {precondition(C,tick)}.
-
-   
 :- every_frame(O), precondition(compare(ge,R),O), result(O,modify(decrease,R)).
 :- every_frame(O), precondition(compare(le,R),O), result(O,modify(increase,R)).
 
@@ -520,10 +547,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 
 
-:- result(O,delete(E1)),
-   not precondition(overlaps(_,E1,true),O),
-   not precondition(overlaps(E1,_,true),O),
-   not precondition(control_event(click(E1)),O).
     
 :- not playerControls.
 
@@ -578,21 +601,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 %:- resource(Resource), not freeResource(_,Resource).
 
-
-% simple feedback loop exclusion
-% Don't increase a resource on a positive check of it
-:- result(Outcome,modify(increase,Resource)),
-  precondition(compare(ge,Resource),Outcome).
-% don't decrease a resource on negative check of it
-:- result(Outcome,modify(decrease,Resource)),
-   precondition(compare(le,Resource),Outcome).
-
-% Don't increase a resource on a positive check of it
-:- result(Outcome,modify(increase,Resource,_)),
-  precondition(compare(ge,Resource),Outcome).
-% don't decrease a resource on negative check of it
-:- result(Outcome,modify(decrease,Resource,_)),
-   precondition(compare(le,Resource),Outcome).
 
 
 :- action( add(Entity,_,_)), singular(Entity).
@@ -711,7 +719,6 @@ trivial_resource(DIR,RESOURCE) :- result(O,modify(DIR,RESOURCE,_)), trivial(O).
   
 
 :- superfluous(E), not allowed(superfluous(E)).
-:- monotonic(R), not allowed(monotonic(R)).
 
 :-  in_corner(E), not allowed(in_corner(E)).
 
@@ -741,8 +748,6 @@ player_controls_resource(R,Dir) :-
    player_controls(O),
    not player_controls_resource(R,_).
    
-:- monotonic(R), not allowed(monotonic(R)).
-
 
 :- result(O,delete(E)),
    1 { result(O,move(E,_));

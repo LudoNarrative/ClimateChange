@@ -1,62 +1,53 @@
+label(resource(r_1_XX_),effort,write).
 label(entity(e_1_XX_),e(1)).
 
 entity(e_1_XX_).
 
-many(entity(e_1_XX_)).
+resource(r_1_XX_).
+
+singular(entity(e_1_XX_)).
 
 initialize(fill(all,orange)).
-initialize(add(entity(e_1_XX_),scalar(1),location(top,left))).
-initialize(add(entity(e_1_XX_),scalar(1),location(bottom,center))).
-initialize(add(entity(e_1_XX_),scalar(1),location(top,right))).
+initialize(add(entity(e_1_XX_),scalar(1),location(middle,center))).
 initialize(set_sprite(entity(e_1_XX_),triangle)).
 initialize(set_color(entity(e_1_XX_),red)).
 
-timer_logic(timer(t_1_XX_),scalar(7),loop).
-timer_logic(timer(t_2_XX_),scalar(7),loop).
-
-pool(entity(e_1_XX_),location(top,left),random,random).
-pool(entity(e_1_XX_),location(top,center),random,random).
-pool(entity(e_1_XX_),location(top,right),random,random).
-pool(entity(e_1_XX_),location(middle,left),random,random).
-pool(entity(e_1_XX_),location(middle,center),random,random).
-pool(entity(e_1_XX_),location(middle,right),random,random).
-pool(entity(e_1_XX_),location(bottom,left),random,random).
-pool(entity(e_1_XX_),location(bottom,center),random,random).
-pool(entity(e_1_XX_),location(bottom,right),random,random).
+pool(entity(e_1_XX_),location(middle,center),random,ordered).
 
 boundary(closed).
 
+initialize(set_value(resource(r_1_XX_),scalar(1))).
 
-precondition(timer_elapsed(t_2_XX_),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
+precondition(control_event(click(entity(e_1_XX_))),outcome(o_1_XX_)).
+result(outcome(o_1_XX_),clear(cursor)).
+result(outcome(o_1_XX_),clear(entity(e_1_XX_))).
+result(outcome(o_1_XX_),increase(resource(r_1_XX_),scalar(1))).
 
-precondition(le(amount(orange),scalar(1)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease_over_time(property(entity(e_1_XX_),health),scalar(1))).
-
-precondition(timer_elapsed(t_1_XX_),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),increase(property(entity(e_1_XX_),health),scalar(1))).
-
-precondition(control_event(click(entity(e_1_XX_))),outcome(o_4_XX_)).
-result(outcome(o_4_XX_),clear(entity(e_1_XX_))).
-result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
+precondition(ge(resource(r_1_XX_),scalar(2)),outcome(o_2_XX_)).
+precondition(le(amount(orange),scalar(5)),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),decrease_over_time(property(entity(e_1_XX_),health),scalar(5))).
 
 precondition(control_event(button(mouse,held)),outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_)).
+result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),increase_over_time(resource(r_1_XX_),scalar(1))).
 result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),look_at(entity(e_1_XX_),cursor,nearest)).
-result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),left,scalar(5))).
+result(outcome(orbit_the_cursor_entity_e_1_XX__XX__XX_),moves(entity(e_1_XX_),left,resource(r_1_XX_))).
 
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
-result(tick,increase_over_time(property(entity(e_1_XX_),health),scalar(1))).
 
-reading(produces,relation(pool(entity(e_1_XX_)),entity(e_1_XX_))).
+reading(bad,orange).
+reading(good,outcome(o_1_XX_)).
 ==========
 <ul>
-<li>games/beach_17.lp</li>
-<li>The player controls the game by<ul>
+<li>games/beach_1.lp</li>
+
+<li>The player will do this by<ul>
 <li>
 	clicking on a [[red|triangle]]
 </li>
-<li>
-	holding the mouse button
+</ul></li>
+<li>The player controls the game by<ul>
+<li>	controlling [[red|triangle]] by making it orbit the cursor 
+by holding the mouse button
 </li>
 </ul></ul>

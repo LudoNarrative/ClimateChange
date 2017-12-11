@@ -9,7 +9,7 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 
 :- action(add(E,_,cursor)).
 
-
+:- action(modify(_,_,_)).
 :- precondition(compare(_,_),O),
     precondition(control_event(click(_)),O).
 

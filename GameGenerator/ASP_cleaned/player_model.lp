@@ -12,8 +12,8 @@ player_model(Outcome,must_happen) :- not precondition(overlaps(_,_,_),Outcome),
 priority(must_happen,player_must_do).
 priority(player_must_do,player_will_attempt).
 priority(player_will_attempt,player_will_avoid).
-priority(player_will_avoid,player_might_attempt).
-priority(player_might_attempt,undetermined).
+priority(player_might_attempt,player_will_avoid).
+priority(player_will_avoid,undetermined).
 priority(A,C) :- priority(A,B), priority(B,C).
 
 
@@ -23,9 +23,6 @@ player_model(Outcome ,player_will_attempt) :- player_controls_outcome(Outcome),
 					      reading(good,Outcome),
 					      not reading(tradeoff,Outcome),
 					      not invalidated(Outcome,player_will_attempt).
-
-player_model(Outcome,player_must_do) :- player_controls_outcome(Outcome),
-					not invalidated(Outcome,player_must_do).
 
 invalidated(Outcome,P) :-  player_model(Outcome,Other),
 			   priority(Other,P).
