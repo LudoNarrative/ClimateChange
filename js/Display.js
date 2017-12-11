@@ -360,8 +360,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var friendBackgroundBalance = function(changer) {
 		var partnerSlider;
-		if (changer.id == "finalDinner-slider-15") { partnerSlider = "#finalDinner-slider-16"}
-		else { partnerSlider = "#finalDinner-slider-15"; }
+		if (changer.id == "finalDinner-slider-17") { partnerSlider = "#finalDinner-slider-18"}
+		else { partnerSlider = "#finalDinner-slider-17"; }
 		var currentValue = $("#" + changer.id).slider('value');
 		$(partnerSlider).slider('value', (2-currentValue));
 		$(partnerSlider).find(".ui-slider-handle").text((2-currentValue));
@@ -369,8 +369,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var friendSupportivenessBalance = function(changer) {
 		var partnerSlider;
-		if (changer.id == "finalDinner-slider-17") { partnerSlider = "#finalDinner-slider-18"}
-		else { partnerSlider = "#finalDinner-slider-17"; }
+		if (changer.id == "finalDinner-slider-19") { partnerSlider = "#finalDinner-slider-20"}
+		else { partnerSlider = "#finalDinner-slider-19"; }
 		var currentValue = $("#" + changer.id).slider('value');
 		$(partnerSlider).slider('value', (2-currentValue));
 		$(partnerSlider).find(".ui-slider-handle").text((2-currentValue));
