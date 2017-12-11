@@ -1548,7 +1548,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "establishScene eq true", order:"first" },
 				{ condition: "establishConcentration eq true" },
 				{ condition: "establishStudents eq true" },
-				{ condition: "talkToStudent gte 2" },
+				{ condition: "talkToStudent gte 3" },
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
 
@@ -1566,11 +1566,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					label: "Expertise", 
 					hoverText: "Which area is your area of specialty, in regards to climate change?" 
 				},
+				/*
 				{
 					condition: "[showNervesOfSteel|showNervesOfGlass] eq true", 
 					label: "Self-composure Level", 
 					hoverText: "Are you easily rattled, or can you handle stress easily?"
 				},
+				*/
 				{ 
 					condition: "classSize eq [lecture|seminar]", 
 					label: "Class Size", 
@@ -1928,19 +1930,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"volunteer": {name: "Rodrigo", gender: "male"}
 			},
 			wishlist: [
-			/*
-				{ condition: "onABeach eq true"},
-				{ condition: "talkAboutSpecies eq true"},
-				{ condition: "talkAboutUNPlan eq true"},
-				{ condition: "rodrigoSaysPointless eq true"},
-				{ condition: "emmaPositiveRejoinder eq true"},
-				{ condition: "emmaNegativeRejoinder eq true"},
-				{ condition: "rodrigoSadKnowledge eq true"},
-				{ condition: "emmaPositiveSpin eq true"},
-				{ condition: "emmaNegativeSpin eq true"},
-				{ condition: "rodrigoSaysJob eq true"},
-				{ condition: "sceneOutro eq true"}
-			*/
 				{ condition: "onABeach eq true", order: "first"},
 				{ condition: "talkAboutSpecies eq true"},
 				{ condition: "talkAboutUNPlan eq true"},
@@ -1986,15 +1975,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set protagonistRejoinder false",
 				"set dropSadKnowledge false",
 				"set sceneOutro false",
+				"set progression 0",
 
 				"set academicEnthusiasm 0",			//global stat
-				"set curiosity 5",	//global stat
-				"set hope 5",	//global stat
-				"set optimism 5",	//global stat
+
 
 				"set patience 5",
 				"set optimism 0",
-				"set progression 0"
+				"set effort 0"
 			],
 			UIvars: [
 				{
@@ -2213,11 +2201,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalLecture",
-				text : "<h3>First Lecture</h3><p>Your first lecture. It was challenging...<span class='mutable'>maybe too challenging</span>. The students were eager, <span class='mutable'>but you lost your nerve and had to end class early</span>. It was <span class='mutable'>almost enough to make you question if teaching was really your life path</span>.</p><h3><a href='#' class='beginScene' id='begin-finalLecture'>Begin Scene</a></h3>"
+				text : "{ifState|finalDinnerFinished|true|({ifState|firstLectureSuccess|true|<h3>First Lecture</h3><p>Your first lecture. It was challenging...<span class='mutable'>but went off without a hitch</span>. The students were eager, <span class='mutable'>and you were able to really reach them</span>. It was <span class='mutable'>enough to make you realize you really had a gift for reaching people about issues you were passionate about</span>.</p><h3><a href='#' class='beginScene' id='begin-finalLecture'>Replay Scene</a></h3>|<h3>First Lecture</h3><p>Your first lecture. It was challenging...<span class='mutable'>maybe too challenging</span>. The students were eager, <span class='mutable'>but you lost your nerve and had to end class early</span>. It was <span class='mutable'>almost enough to make you question if teaching was really your life path</span>.</p><h3><a href='#' class='beginScene' id='begin-finalLecture'>Replay Scene</a></h3>})|<h3>First Lecture</h3><p>You wonder how your first lecture will go. Will you be in front of hundreds of students? Or maybe a smaller class? What will you talk about? It's hard to say, since you're still wrapping up work on your dissertation. Hopefully once you have your PhD, things will solidify.</p><p>&#40;Play through the Dinner With Friends scene above to unlock this scene&#41;</p><a href='#' class='beginScene' id='begin-finalLecture'>test</a><p>}"
 			},
 			{
 				id : "finalDean",
-				text : "{ifState|firstLectureFinished|true|({ifState|firstLectureSuccess|true|<h3 style='text-decoration: line-through;'>Traveling the World</h3><p>Your success as a lecturer became success as a public speaker. You began traveling the world giving invited lectures on climate change, first at universities and conferences, then private seminars for thinktanks and policy working groups</p>|<h3>A Visit to the Dean</h3><p>Over the following months, the problems you had with teaching didn't get better. If anything, they got worse. Dean Smith called you to come meet with him in private.</p><p>It was decided that your talents would be better served working with a local group restoring the wetlands, as part of a collective effort between the university and local activist groups.</p>})|<h3>Beginning Your Career</h3><p>You wonder what's in store for you once you've gotten your career off the ground. Do you become an amazing professor? Travel the world talking about your research? Is that even what you want to do? It's so hard to figure out, because so much depends on your first lecture.</p><p>&#40;Play through the First Lecture scene above to unlock this scene&#41;</p>}"
+				text : "{ifState|firstLectureFinished|true|({ifState|firstLectureSuccess|true|<h3>Traveling the World</h3><p>Your success as a lecturer became success as a public speaker. You began traveling the world giving invited lectures on climate change, first at universities and conferences, then private seminars for thinktanks and policy working groups</p>|<h3>A Visit to the Dean</h3><p>Over the following months, the problems you had with teaching didn't get better. If anything, they got worse. Dean Smith called you to come meet with him in private.</p><p>It was decided that your talents would be better served working with a local group restoring the wetlands, as part of a collective effort between the university and local activist groups.</p>})|<h3>Beginning Your Career</h3><p>You wonder what's in store for you once you've gotten your career off the ground. Do you become an amazing professor? Travel the world talking about your research? Is that even what you want to do? It's so hard to figure out, because so much depends on your first lecture.</p><p>&#40;Play through the First Lecture scene above to unlock this scene&#41;</p>}"
 			},
 			{
 				id : "finalTravel",
