@@ -215,7 +215,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		// strip opening/closing characters, verify no nesting, and make into an array
 		var strippedText = text.slice(1, text.length - 1);
 
-		if (strippedText.search(/[\{\}]/g) >= 0) {
+		while (strippedText.search(/[\{\}]/g) >= 0) {
 			var start = strippedText.indexOf("(");
 			var end = strippedText.indexOf(")");
 			var processedNested = render(strippedText.substring(start+1, end), undefined, undefined);
