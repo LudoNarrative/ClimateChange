@@ -1464,30 +1464,30 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "outro eq true", order: "last"},
 
 				{
-					condition: "areaOfExpertise eq [phytoplankton|lobsters|coral]",
+					condition: "state: set areaOfExpertise [phytoplankton|lobsters|coral]",
 					label: "Expertise",
 					hoverText: "Which area is your area of specialty, in regards to climate change?"
 				},
 				{
-					condition: "academicFriend eq [0-2:1]",
+					condition: "state: set academicFriend [0-2:1]",
 					label: "# of Academic Friends",
 					hoverText: "How many of your friends are academics? (0 is low, 2 is high)",
 					changeFunc: "friendBackgroundBalance"
 				},
 				{
-					condition: "activistFriend eq [0-2:1]",
+					condition: "state: set activistFriend [0-2:1]",
 					label: "# of Activist Friends",
 					hoverText: "How many of your friends are activists? (0 is low, 2 is high)",
 					changeFunc: "friendBackgroundBalance"
 				},
 				{
-					condition: "supportiveFriend eq [0-2:1]",
+					condition: "state: set supportiveFriend [0-2:1]",
 					label: "# of Supportive Friends",
 					hoverText: "How many of your friends support your decision to go into academia? (0 is low, 2 is high)",
 					changeFunc: "friendSupportivenessBalance"
 				},
 				{
-					condition: "challengingFriend eq [0-2:1]",
+					condition: "state: set challengingFriend [0-2:1]",
 					label: "# of Challenging Friends",
 					hoverText: "How many of your friends challenge your decision to go into academia? (0 is low, 2 is high)",
 					changeFunc: "friendSupportivenessBalance"
@@ -1522,11 +1522,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set outro false",
 
 				// new items
-				"set academicFriend 1",
-				"set activistFriend 1",
-				"set supportiveFriend 1",
-				"set challengingFriend 1",
-
 				"set academicFriend1 true",
 				"set activistFriend1 false",
 				"set academicFriend2 false",
