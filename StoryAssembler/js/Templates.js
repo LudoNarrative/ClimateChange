@@ -176,6 +176,16 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			
 			State.remove(bbParam);			//remove temp blackboard item
 			return params[3];
+		},
+
+		//	{stateVarAdd|effort|2}		(returns the value of effort + 2)
+		"stateVarAdd": function(params, text) {
+			if (params.length !==2) {
+				console.error("Template command 'stateVarAdd' must have 2 params, in text '" + text + "'.");
+				return "(stateVarAdd)";
+			}
+			console.log("doof:" + State.get(params[0]) + parseFloat(params[1]));
+			return State.get(params[0]) + parseFloat(params[1]);
 		}
 		// Template stub demonstrating how you might show a random character trait. Look up the current speaker, and print something based on the first found property we have code for.
 		//para

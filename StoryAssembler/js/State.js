@@ -7,7 +7,13 @@
 define(["Condition"], function(Condition) {
 	"use strict";
 
+	var Templates;
+
 	var _blackboard = {};	// Internal object, the blackboard itself.
+
+	var init = function(init_Templates) {
+		Templates = init_Templates;
+	}
 
 	var get = function(key) {
 		return _blackboard[key];
@@ -34,6 +40,10 @@ define(["Condition"], function(Condition) {
 
 	// Checks a condition against the blackboard.
 	var isTrue = function(condition) {
+
+		if (condition.includes("{")) {		//if it has a template, render it
+			condition = Templates.render(condition);
+		}
 
 		// Parse the condition string; if invalid, will throw an error.
 		var conditionParts = Condition.parts(condition);
@@ -204,6 +214,7 @@ define(["Condition"], function(Condition) {
 	}
 
 	return {
+		init: init,
 		get: get,
 		set: set,
 		remove: remove,
