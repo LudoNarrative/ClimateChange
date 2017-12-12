@@ -5,9 +5,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var init = function() {
 
-		//selectable scenes from main menu
-		
+		State.init(Templates);
 
+		//selectable scenes from main menu
 		var scenes = ["finalDinner", "finalLecture", "finalDean", "finalFamilyDinner", "finalBeach"]
 
 
@@ -2003,7 +2003,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "protagonistRejoinder eq true"},
 				{ condition: "dropSadKnowledge eq true"},
 				{ condition: "beachOutro eq true"},
-				{ condition: "demonstrateCoworkerOptimism eq true"},
 
 				{
 					condition: "coworkerRelation eq [unfamiliar|familiar]", 
@@ -2272,7 +2271,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalDean",
-				text : "{ifState|firstLectureFinished|true|({ifState|firstLectureSuccess|true|<h3>Traveling the World</h3><p>Your success as a lecturer became success as a public speaker. You began traveling the world giving invited lectures on climate change, first at universities and conferences, then private seminars for thinktanks and policy working groups</p>|<h3>A Visit to the Dean</h3><p>Over the following months, the problems you had with teaching didn't get better. If anything, they got worse. Dean Smith called you to come meet with him in private.</p><p>It was decided that your talents would be better served working with a local group restoring the wetlands, as part of a collective effort between the university and local activist groups.</p>})|<h3>Beginning Your Career</h3><p>You wonder what's in store for you once you've gotten your career off the ground. Do you become an amazing professor? Travel the world talking about your research? Is that even what you want to do? It's so hard to figure out, because so much depends on your first lecture.</p><p>&#40;Play through the First Lecture scene above to unlock this scene&#41;</p>}"
+				text : "{ifState|firstLectureFinished|true|({ifState|firstLectureSuccess|true|<h3>Traveling the World</h3><p>Your success as a lecturer became success as a public speaker. You began traveling the world giving invited lectures on climate change, first at universities and conferences, then private seminars for thinktanks and policy working groups</p>|<h3>A Visit to the Dean</h3><p>Over the following months, the problems you had with teaching didn't get better. If anything, they got worse. Dean Smith called you to come meet with him in private.</p><p>It was decided that your talents would be better served working with a local group restoring the wetlands, as part of a collective effort between the university and local activist groups.</p>})|<h3>Beginning Your Career</h3><p>You wonder what's in store for you once you've gotten your career off the ground. Do you become an amazing professor? Travel the world talking about your research? Is that even what you want to do? It's so hard to figure out, because so much depends on your first lecture.</p><p>&#40;Play through the First Lecture scene above to resolve this scene&#41;</p>}"
 			},
 			{
 				id : "finalTravel",
@@ -2280,7 +2279,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalFamilyDinner",
-				text : "<h3>Dinner With Mom and Dad</h3><p>You went out to dinner with your parents. It had been a while since you'd had a chance to sit down with them and tell them about <span class='mutable'>your steady progress towards becoming a senior faculty member</span>.</p><p>As always, they challenged you on some of the choices you've made in your life. <span class='mutable'>But you were able to keep the tension low and the conversation flowing, while not backing down from your beliefs</span>.</p>"
+				text : "{ifState|lectureEnd|true|({ifState|firstLectureSuccess|true|<h3>Dinner With Mom and Dad</h3><p>You went out to dinner with your parents. It had been a while since you'd had a chance to sit down with them and tell them about <span class='mutable'>your steady progress towards becoming a senior faculty member</span>.</p><p>As always, they challenged you on some of the choices you've made in your life. But you were able to keep the tension low and the conversation flowing, while not backing down from your beliefs.</p>|<h3>Dinner With Mom and Dad</h3><p>You went out to dinner with your parents. It had been a while since you'd had a chance to sit down with them and tell them about <span class='mutable'>your steady progress towards running a nonprofit and rehabilitating the local marshes</span>.</p><p>As always, they challenged you on some of the choices you've made in your life. But you were able to keep the tension low and the conversation flowing, while not backing down from your beliefs.</p>})|<h3>Dinner With Mom and Dad</h3><p>You try to imagine where you'll be four years from now, <span class='mutable'>now that you have your PhD</span>. Maybe, if your first teaching classes go well, you'll be <span class='mutable'>on your way to becoming an influential lecturer at the University</span>. Or maybe you'll end up <span class='mutable'>working with local activists on issues close to home</span>. It's hard to say.</p><p>&#40;Play through the First Lecture scene above to resolve this scene&#41;</p>}"
 			},
 			{
 				id : "finalUN",
@@ -2288,7 +2287,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalBeach",
-				text : "{ifState|beachOutro|true|<h3>A Day at the Beach</h3><p>You remember your conversation with Rodrigo. Like so much of your life recently, it seemed a mix of both hope and despair. <span class='mutable'>You're glad you were able to help him feel more hopeful about the future. In a way, he helped you too.</span></p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Replay Scene</a></h3>|<h3>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>blue crab</span>.</p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Begin Scene</a></h3>}"
+				text : "{ifState|beachOutro|true|<h3>A Day at the Beach</h3><p>You remember your conversation with Rodrigo. Like so much of your life recently, it seemed a mix of both hope and fear for the future. <span class='mutable'>You're glad you were able to help him feel more hopeful about the future. In a way, he helped you too.</span></p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Replay Scene</a></h3>|<h3>A Day at the Beach</h3><p>Sometimes you idly think about where you'd be if you'd gone the route of a local activist, instead of an academic. Maybe you'd be helping local wildlife, like the <span class='mutable'>blue crab</span>.</p><h3><a href='#' class='beginScene' id='begin-finalBeach'>Begin Scene</a></h3>}"
 
 
 			},
