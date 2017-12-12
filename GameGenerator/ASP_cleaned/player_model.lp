@@ -31,6 +31,18 @@ player_model(Outcome,player_must_do) :- result(Outcome, move(Entity,_)),
 					     player_controls(Entity),
 					      not invalidated(Outcome,player_must_do).
 
+player_model(Outcome,player_must_do) :- result(Outcome, rotates(Entity,_,_)),
+					     player_controls(Entity),
+					     not invalidated(Outcome,player_must_do).
+
+player_model(Outcome,player_must_do) :- result(Outcome, look_at(Entity,_,_)),
+					     player_controls(Entity),
+					     not invalidated(Outcome,player_must_do).
+
+player_model(Outcome,player_must_do) :- result(Outcome, rotate_to(Entity,_)),
+					     player_controls(Entity),
+					     not invalidated(Outcome,player_must_do).
+
 player_model(Outcome ,player_might_attempt) :- player_controls_outcome(Outcome),
 					       reading(tradeoff,Outcome),
 					       not invalidated(Outcome,player_might_attempt).

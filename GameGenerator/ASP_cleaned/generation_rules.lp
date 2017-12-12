@@ -127,6 +127,10 @@ requires(control_event(click(Entity)),Entity) :- condition(control_event(click(E
 outcome_requires(O,E) :- precondition(C,O),
 			 requires(C,E).
 
+outcome_doesnt_require(O,E) :- entity(E),
+			       outcome(O),
+			       not outcome_requires(O,E).
+
 required(Entity) :- condition(control_event(click(Entity))).
 required(Entity) :- condition(overlaps(Entity)).
 required(Entity) :- result(_,apply_restitution(Entity,_)).

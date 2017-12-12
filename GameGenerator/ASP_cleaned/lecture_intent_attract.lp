@@ -35,6 +35,7 @@ required(maintenance).
 :- 2 {action(mode_change(N))}.
 
 attract_mode :- precondition(overlaps(E1,E2,true),O),
-						reading(good,O).	
+		reading(good,O),
+		not reading(bad,O).	
 						
 :- not attract_mode.

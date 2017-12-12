@@ -49,7 +49,6 @@ is_consumed(O) :- precondition(overlaps(entity(e(1))),O),
 
 :- not constant(entity(e(2))).
 
-:- not action(add(entity(e(1)),resource(_),_)).
 
 %:- action(add(entity(e(2)),_)).
 %:- action(delete(entity(e(2)))).

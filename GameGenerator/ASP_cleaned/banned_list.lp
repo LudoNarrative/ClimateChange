@@ -8,6 +8,7 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
    entity(E2).
 
 :- action(add(E,_,cursor)).
+:- action(add(E,resource(R),_)).
 
 :- action(modify(_,_,_)).
 :- precondition(compare(_,_),O),

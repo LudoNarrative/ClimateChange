@@ -1,5 +1,7 @@
 %%%%%%% SHOULDN"T HAVE TO CHANGE
 
+:- N + 1 {precondition(_,_)},
+   preconditions_allowed(N)  .
 
 :- action(modify(decrease,property(E,health))),
    outcome_doesnt_require(O,E),
@@ -7,6 +9,8 @@
 
 :- 2 {precondition(C,tick)}.
 
+:- trivial(O),
+   player_model(O,player_will_avoid).
    
 % simple feedback loop exclusion
 % Don't increase a resource on a positive check of it
@@ -64,6 +68,42 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- 2 {precondition(compare(_,amount(Color),_),O)}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:- precondition(control_event(click(_)),O),
+   not precondition(control_event(button(mouse,pressed)),O).
+
+%DONT DOUBLE FILL
+:- initialize(fill(all,_)),
+   initialize(fill(location(_,_),_)).
+
+:- action(clear(_)),   
+   0 {initialize(fill(all,_));
+      initialize(fill(location(_,_),_));
+      action(draw(_,_))} 0.
+
+:- 2{initialize(fill(location(R,C),_))},
+   row(R),
+   col(C).
+
+:- precondition(compare(le,amount(C),_),O),
+   result(O,mode_change(_)),
+   not initialize(fill(all,C)).
+   
+:- condition(compare(_,_,amount(Color))),
+   not uses_color(Color).
+
+:- condition(over_color(_,Color)),
+   not uses_color(Color).
+
+
+:- not uses_color,
+   action(clear(_)).
+
+:- uses_color(Color),
+   not condition(compare(_,amount(Color),_)),
+   not condition(over_color(_,Color)).
+
+
 :- reading(good,O),
    trivial(O),
    not entity_related(O).
@@ -218,8 +258,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 :- action(modify(decrease,R,R)).
 
-:- precondition(control_event(click(_)),O),
-   not precondition(control_event(button(mouse,pressed)),O).
 
 
 :- action(look_at(E1,E2,_)),
@@ -230,8 +268,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- 3 {precondition(control_event(_),O)},
    outcome(O).
 
-:- N + 1 {precondition(_,_)},
-   preconditions_allowed(N)  .
 
 :- behavior(ENTITY,B), controlScheme(ENTITY,C).
 
@@ -405,9 +441,9 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    trivial(Outcome),
    not entity_related(Outcome).
 
-:- player_model(Outcome,player_will_avoid),
-   trivial(Outcome),
-   not entity_related(Outcome).
+%:- player_model(Outcome,player_will_avoid),
+%   trivial(Outcome),
+%   not entity_related(Outcome).
 
 
 :- initialize(set_color(E1,C)),
@@ -497,8 +533,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    computer_controls(E).
 
 
-:- trivial(O),
-   player_model(O,player_will_avoid).
 
    
 
@@ -778,36 +812,6 @@ player_controls_resource(R,Dir) :-
 
 %%%COLOR
 
-%DONT DOUBLE FILL
-:- initialize(fill(all,_)),
-   initialize(fill(location(_,_),_)).
-
-:- action(clear(_)),   
-   0 {initialize(fill(all,_));
-      initialize(fill(location(_,_),_));
-      action(draw(_,_))} 0.
-
-:- 2{initialize(fill(location(R,C),_))},
-   row(R),
-   col(C).
-
-:- precondition(compare(le,amount(C),_),O),
-   result(O,mode_change(_)),
-   not initialize(fill(all,C)).
-   
-:- condition(compare(_,_,amount(Color))),
-   not uses_color(Color).
-
-:- condition(over_color(_,Color)),
-   not uses_color(Color).
-
-
-:- not uses_color,
-   action(clear(_)).
-
-:- uses_color(Color),
-   not condition(compare(_,amount(Color),_)),
-   not condition(over_color(_,Color)).
 
 
 %:- condition(compare(_,amount(Color),_)).
