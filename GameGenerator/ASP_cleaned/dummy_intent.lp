@@ -13,5 +13,4 @@
 #const max_conditions_per = 2.
 
 
-
-:- not reachableCondition(compare(_,distance(_,_,_),_)).
+:- not cooldown(_,_).

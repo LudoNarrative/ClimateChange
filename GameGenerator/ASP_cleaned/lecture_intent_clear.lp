@@ -37,3 +37,7 @@ label(entity(e(1)),e1).
 lose_if_too_high :- precondition(compare(ge,amount(_),scalar(9)),O),
 		   result(O,mode_change(game_loss)).
 :- not lose_if_too_high.
+
+:- not synced(resource(r(1)),amount(blue)).
+
+allowed(frivolous(resource(r(1)))).

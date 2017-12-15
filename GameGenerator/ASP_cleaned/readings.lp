@@ -145,27 +145,27 @@ reading(flees,relation(Entity1,Entity2)) :-
     action(move(Entity1,direction(backward))),
     action(look_at(Entity1,Entity2)).
     
-{reading(consumes,relation(Entity1,Resource1)) } :-
+reading(consumes,relation(Entity1,Resource1))  :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(decrease,Resource1)).
 
-{reading(consumes,relation(Entity1,Resource1)) } :-
+reading(consumes,relation(Entity1,Resource1))  :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,modify(decrease,Resource1)).
 
-{reading(produces,relation(Entity1,Resource1)) } :-
+reading(produces,relation(Entity1,Resource1))  :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(increase,Resource1)).
 
-{reading(produces,relation(Entity1,Resource1)) } :-
+reading(produces,relation(Entity1,Resource1))  :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,modify(increase,Resource1)).
 
-{reading(consts,relation(Entity1,Resource1)) } :-
+reading(consts,relation(Entity1,Resource1))  :-
     result(Outcome,add(Entity1,_,_)),
     result(Outcome,modify(decrease,Resource1)).
 
-{reading(costs,relation(Entity1,Resource1)) } :-
+reading(costs,relation(Entity1,Resource1))  :-
     result(Outcome,add(Entity1,_,_)),
     result(Outcome,modify(decrease,Resource1)).
 
@@ -259,19 +259,19 @@ required(goal(produce)) :- required(good).
 
 required(goal(reduce)) :- required(bad).
 
-{reading(good,Entity)} :-
+reading(good,Entity) :-
     reading(good,Resource),
     reading(produces,relation(Entity,Resource)).
 
-{reading(good,Entity)} :-
+reading(good,Entity) :-
     reading(bad,Resource),
     reading(consumes,relation(Entity,Resource)).
 
-{reading(bad,Entity)} :-
+reading(bad,Entity) :-
     reading(good,Resource),
     reading(consumes,relation(Entity,Resource)).
 
-{reading(bad,Entity)} :-
+reading(bad,Entity) :-
     reading(bad,Resource),
     reading(produces,relation(Entity,Resource)).
 
@@ -294,6 +294,17 @@ reading(bad,Outcome) :-
 reading(good,Outcome) :-
     result(Outcome,modify(decrease,Resource)),
     reading(bad,Resource).
+
+%% Entities
+
+reading(good,Outcome) :-
+    result(Outcome,add(Entity,_,_)),
+    reading(good,Entity).
+
+
+reading(bad,Outcome) :-
+    result(Outcome,add(Entity,_,_)),
+    reading(bad,Entity).
 
 %COLOR
 
@@ -329,9 +340,6 @@ reading(good,Outcome) :-
     result(Outcome,add(Entity,_,_)),
     reading(good,Entity).
 
-reading(bad,Outcome) :-
-    result(Outcome,delete(Entity)),
-    reading(good,Entity).
 
 reading(bad,Outcome) :-
     result(Outcome,add(Entity,_,_)),

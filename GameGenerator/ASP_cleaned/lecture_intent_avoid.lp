@@ -38,3 +38,4 @@ attract_mode :- precondition(overlaps(E1,E2,true),O),
 						reading(bad,O).	
 						
 :- not attract_mode.
+

@@ -19,6 +19,22 @@ required(maintenance).
 label(resource(r(1)),satiation,write) :- reading(good,resource(r(1))).
 :- not  reading(good,resource(r(1))).
 
+label(resource(r(2)),appetite,private) :- cooldown(ge,O,resource(r(2))),
+					  1 {player_model(O,player_will_attempt);
+					     player_model(O,player_must_do)}.
+label(resource(r(2)),fullness,private) :- cooldown(le,_,resource(r(2))),
+					  1 {player_model(O,player_will_attempt);
+					     player_model(O,player_must_do)}.
+
+
+acceptable_labels(appetite;fullness).
+
+:- label(resource(r(2)),Label,private),
+   not acceptable_labels(Label).
+
+:- resource(r(2)),
+   not label(resource(r(2)),_,private).
+
 
 label(entity(e(1)),food).
 label(entity(e(2)),friend).

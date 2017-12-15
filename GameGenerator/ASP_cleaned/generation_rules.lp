@@ -1,3 +1,28 @@
+
+
+cooldown(Comparison,Outcome,Resource) :-
+    precondition(compare(Comparison,Resource),Outcome),
+    result(Outcome,modify(ResultModification,Resource)),
+    not satisfies(Comparison,ResultModification),
+    satisfies(Comparison,Modification),
+    result(tick,modify(Modification,Resource)).
+
+cooldown(Comparison,Outcome,Resource) :-
+    precondition(compare(Comparison,Resource),Outcome),
+    result(Outcome,modify(ResultModification,Resource)),
+    not satisfies(Comparison,ResultModification),
+    satisfies(Comparison,Modification),
+    result(TimerOutcome,modify(Modification,Resource)),
+    precondition(timer_elapsed(T),TimerOutcome).
+
+creates_freely(O,E) :-
+   outcome_doesnt_require(O,E),
+   result(O,add(E,_,_)).
+    
+
+
+satisfies(ge,increase).
+
 moving(Entity) :- result(_,move(Entity,_)).
 moving(Entity) :- controlLogic(draggable(Entity)).
 
@@ -5,6 +30,12 @@ static(Entity) :- entity(Entity), not moving(Entity).
 
 outcome(O) :- result(O,_).
 action(A) :- result(_,A).
+
+synced(R,V) :- result(tick,set_value(R,V)),
+	       1 {action(set_value(R,_))} 1,
+	       0 {action(modify(_,R))} 0,
+	       0 {action(modify(_,R,_))} 0.
+	       
 
 player_controls_by(E,control_event(C)) :- precondition(control_event(C),O),
 					  1 {result(O,look_at(E,E2,_));
@@ -346,9 +377,10 @@ non_monotonic(Entity) :- not monotonic(Entity),
 
 			 
 superfluous(Entity) :- 
-	entity(Entity),
-	not condition(overlaps(Entity,_)),
-	not condition(control_event(click(Entity))).
+    entity(Entity),
+    not  controlLogic(draggable(Entity)),
+    not condition(overlaps(Entity)),
+    not condition(control_event(click(Entity))).
 
 entity_related(O) :- result(O, move(_,_,_)).
 entity_related(O) :- result(O, draw(_,_)).

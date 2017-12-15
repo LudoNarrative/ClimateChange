@@ -1,6 +1,6 @@
 #const min_entities = 1.
 #const max_entities = 2.
-#const min_resources = 0.
+#const min_resources = 1.
 #const max_resources = 1.
 #const min_outcomes = 2.
 #const max_outcomes = 8.
@@ -19,6 +19,7 @@ palette(blue).
 
 
 label(entity(e(1)),e1).
+label(resource(r(1)),concentration,write).
 
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
@@ -29,3 +30,8 @@ label(entity(e(1)),e1).
 lose_if_too_low :- precondition(compare(le,amount(_),scalar(1)),O),
 		   result(O,mode_change(game_loss)).
 :- not lose_if_too_low.
+
+
+:- not synced(resource(r(1)),amount(blue)).
+
+allowed(frivolous(resource(r(1)))).

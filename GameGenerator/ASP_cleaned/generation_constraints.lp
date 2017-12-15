@@ -1,11 +1,13 @@
 %%%%%%% SHOULDN"T HAVE TO CHANGE
 
+% constraint on reachability
+:- outcome(O), unreachableOutcome(O).
+
 :- N + 1 {precondition(_,_)},
    preconditions_allowed(N)  .
 
 :- action(modify(decrease,property(E,health))),
-   outcome_doesnt_require(O,E),
-   result(O,add(E,_,_)).
+   not creates_freely(_,E).
 
 :- 2 {precondition(C,tick)}.
 
@@ -182,8 +184,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 	action(modify(_,Resource)).
 :- read_only(Resource),
 	action(modify(_,Resource,_)).
-% constraint on reachability
-:- outcome(O), unreachableOutcome(O).
 
 
 :- precondition(overlaps(E1,E2,_),O),
@@ -204,7 +204,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- condition(compare(_,distance(E,E,_),_)).
 
 :- player_controls(Entity),
-	not condition(overlaps(Entity,_)),
+	not condition(overlaps(Entity)),
 	not condition(compare(distance(Entity,_,_),_)),
 	not condition(compare(distance(_,Entity,_),_)),
 	not condition(control_event(click(Entity))).

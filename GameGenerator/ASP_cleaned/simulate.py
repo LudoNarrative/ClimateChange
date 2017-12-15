@@ -923,7 +923,7 @@ if __name__ == '__main__':
                              'flees':'flee',
                           'orbits':'orbit',
                           'click_and_drag':'clicking-and-dragging',
-                          'rotating':'rotate'}
+                          'pivots':'rotate'}
         player_controls = {}
 
         for oo in out['player_controls_by']:

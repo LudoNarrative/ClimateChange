@@ -58,7 +58,7 @@ resource(resource(r(M))) :- M = 1..min_resources..N, max_resource(N).
 {max_outcome(M)} :- M =min_outcomes..max_outcomes.
 
 standard_outcome(outcome(o(M))) :- M = 1..N, max_outcome(N).
-1 {outcome(tick)}.
+{outcome(tick)}.
 
 outcome(O) :- standard_outcome(O).
 
@@ -68,6 +68,7 @@ timer(t(M)) :- M = 1..N, max_timer(N).
 
 timer_values(3;5;7).
 1 {timer_logic(timer(T),scalar(N),loop): timer_values(N)} 1 :- timer(T).
+
 
 
 
@@ -376,6 +377,12 @@ properties(health).
 
 {result(OUTCOME,draw(cursor,Color))
  : outcome(OUTCOME)} :-  palette(Color).
+
+{result(OUTCOME,set_value(Resource,amount(Color)))
+ : outcome(OUTCOME),resource(Resource)} :-  palette(Color).
+
+
+
 
 {result(OUTCOME,clear(Entity))
  : outcome(OUTCOME)} :- entity(Entity).
