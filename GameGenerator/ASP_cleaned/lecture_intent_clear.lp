@@ -17,6 +17,7 @@ palette(blue).
 :- not player_controls(entity(e(1))).
 :- not action(clear(entity(e(1)))).
 
+initialize(set_value(resource(r(1)),scalar(0))).
 
 required(hand_eye_coordination).
 :- not reading(hand_eye_coordination,game).

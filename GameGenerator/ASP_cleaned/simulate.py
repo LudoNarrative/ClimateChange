@@ -810,17 +810,20 @@ if __name__ == '__main__':
 
         colors = ['red','blue','green','orange','white','black']
         for c in colors:
-            sprites['{}'.format(c)] = 'the amount of {}'.format(c)
+            sprites['{}'.format(c)] = '{}'.format(c)
         out_string += '<ul>\n'
         out_string += '<li>{}_{}.lp</li>\n'.format(output_name,output_ind+1);
+        
+        out_string += '<li>GOAL:<ul>\n'.format(output_name,output_ind+1);
         for o in ['reading']:
             for oo in out[o]:
                 for ooo in oo:
                     reading = prettify(ooo)
                     print reading
                     if 'goal' in reading and 'amount' not in reading and 'distance' not in reading:
-                        out_string += "<li>The goal is to " + prettify(ooo['terms'][0]['terms'][0]) + " " + sprites[prettify(ooo['terms'][1])]+'</li>\n'
+                        out_string += "<li>" + prettify(ooo['terms'][0]['terms'][0]).title() + " " + sprites[prettify(ooo['terms'][1])]+'</li>\n'
 
+        out_string += '</ul></li>\n'
 
         will_dos = []
         avoids = []
@@ -857,7 +860,7 @@ if __name__ == '__main__':
             return out_string
         
         if will_dos:
-            out_string += '\n<li>The player will do this by<ul>\n'
+            out_string += '\n<li>SUBGOALS:<ul>\n'
 
             for outcome_ind,outcome in enumerate(will_dos):
                 out_string += '<li>\n'
@@ -888,7 +891,7 @@ if __name__ == '__main__':
       
                     
         if avoids:
-            out_string += '<li>The player will avoid<ul>\n'
+            out_string += '<li>AVOID:<ul>\n'
 
             for outcome_ind,outcome in enumerate(avoids):
                 out_string += '<li>\n'
@@ -917,7 +920,7 @@ if __name__ == '__main__':
             out_string +='</ul>\n'
 
 
-        out_string += '<li>The player controls the game by<ul>' + '\n'
+        out_string += '<li>CONTROLS:<ul>' + '\n'
                     
         action_mapping = {'chases':'chase',
                              'flees':'flee',

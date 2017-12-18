@@ -17,6 +17,7 @@ palette(blue).
 :- not player_controls(entity(e(1))).
 :- not action(draw(entity(e(1)),_)).
 
+initialize(set_value(resource(r(1)),scalar(10))).
 
 label(entity(e(1)),e1).
 label(resource(r(1)),concentration,write).
