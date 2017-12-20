@@ -2,6 +2,11 @@ number(N) :- N = 1.
 %entity(e(N)) :- N = 1..min_entities.
 {max_entity(M)} :- M =min_entities..max_entities.
 
+
+palette(clear).
+
+
+
 entity(entity(e(M))) :- M = 1..N, max_entity(N).
 
 1 {initialize(set_sprite(Entity,Sprite)) : sprite(Sprite)} 1 :-

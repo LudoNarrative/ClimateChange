@@ -22,10 +22,13 @@ initialize(set_value(resource(r(1)),scalar(0))).
 required(hand_eye_coordination).
 :- not reading(hand_eye_coordination,game).
 
-required(risk_reward).
-:- not reading(risk_reward,control_event(_)).
+%required(risk_reward).
+%:- not reading(risk_reward,control_event(_)).
 
+out_of_players_control(R) :- reading(R,outcome(O)),
+			     not player_controls_outcome(outcome(O)).
 
+:- not out_of_players_control(bad).
 
 label(entity(e(1)),e1).
 
@@ -39,6 +42,6 @@ lose_if_too_high :- precondition(compare(ge,amount(_),scalar(9)),O),
 		   result(O,mode_change(game_loss)).
 :- not lose_if_too_high.
 
-:- not synced(resource(r(1)),amount(blue)).
+:- not synced(resource(r(1)),amount(clear)).
 
 allowed(frivolous(resource(r(1)))).

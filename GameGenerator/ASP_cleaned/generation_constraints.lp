@@ -1,7 +1,28 @@
 %%%%%%% SHOULDN"T HAVE TO CHANGE
 
+:- 2 {precondition(compare(_,amount(Color),_),O)}.
+
+:- 2 {action(draw(E,C));
+      action(clear(E))},
+   entity(E).
+
+:- 2{result(O,draw(_,_));
+     result(O,clear(_))},
+   outcome(O).
+
+:- 3 {precondition(control_event(_),O)},
+   outcome(O).
 % constraint on reachability
 :- outcome(O), unreachableOutcome(O).
+
+:- precondition(overlaps(_,_,_),O),
+   result(O,draw(_,_)).
+
+:- action(draw(_,clear)).
+
+
+
+:- outcome(O1), outcome(O2), not different_precondition(O1,O2), O1 != O2.
 
 :- N + 1 {precondition(_,_)},
    preconditions_allowed(N)  .
@@ -13,7 +34,7 @@
 
 :- trivial(O),
    player_model(O,player_will_avoid).
-   
+  
 % simple feedback loop exclusion
 % Don't increase a resource on a positive check of it
 :- result(Outcome,modify(increase,Resource)),
@@ -61,13 +82,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    result(O,clear(_)).
 
 
-:- precondition(overlaps(_,_,_),O),
-   result(O,draw(_,_)).
 
-:- precondition(overlaps(_,_,_),O),
-   result(O,clear(_)).
-
-:- 2 {precondition(compare(_,amount(Color),_),O)}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -98,6 +113,14 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    not uses_color(Color).
 
 
+:- precondition(overlaps(E,E,true),O),
+   result(O,delete(E)),
+   1 {result(O,_)} 1.
+
+:- precondition(timer_elapsed(_),O),
+   result(O,clear(_)).
+
+
 :- not uses_color,
    action(clear(_)).
 
@@ -110,7 +133,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    trivial(O),
    not entity_related(O).
     
-:- outcome(O1), outcome(O2), not different_precondition(O1,O2), O1 != O2.
 
 
 :-  result(Outcome,mode_change(game_loss;narrative_gating)),
@@ -143,9 +165,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 
 
-:- 2 {action(draw(E,C));
-      action(clear(E))},
-   entity(E).
 
 :- result(O,mode_change(_)),
    precondition(compare(_,_),O),
@@ -265,8 +284,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 	action(move(E1,direction(backward))),
 	action(move(E2,direction(backward))).
 	
-:- 3 {precondition(control_event(_),O)},
-   outcome(O).
 
 
 :- behavior(ENTITY,B), controlScheme(ENTITY,C).
@@ -812,10 +829,25 @@ player_controls_resource(R,Dir) :-
 
 %%%COLOR
 
+:- precondition(compare(ge,amount(Color),A),O),
+   result(O,mode_change(_)),
+   initialize(fill(all,Color)).
 
+:- precondition(compare(le,amount(Color),A),O),
+   result(O,mode_change(_)),
+   not initialize(fill(all,Color)).
+
+:- 2 {action(clear(_))}.
 
 %:- condition(compare(_,amount(Color),_)).
 
+
+
+:- entity_movement(E,chases(E2)),
+   not 1 {precondition(overlaps(E,E2),O);
+      precondition(overlaps(E2,E),O)},
+   not reading(bad,O),
+   outcome(O).
 
 :- result(outcome(_),delete(E)),
    result(outcome(_),rotates(E,_,_)).

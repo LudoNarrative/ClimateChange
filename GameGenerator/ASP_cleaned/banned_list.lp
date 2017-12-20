@@ -7,6 +7,7 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 :- action(add(E,_,E2)),
    entity(E2).
 
+
 :- action(add(E,_,cursor)).
 :- action(add(E,resource(R),_)).
 
@@ -43,3 +44,7 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 :-  precondition(control_event(click(E1)),O),
     result(O,modify(D,property(E2,_))),
     E1 != E2.
+
+:- precondition(control_event(click(E)),O),
+   result(O,clear(E2)),
+   E2 != E.
