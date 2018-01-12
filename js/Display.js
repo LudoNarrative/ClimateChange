@@ -352,6 +352,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				
 			}
 		}
+
 	}
 
 	var runChangeFunc = function(changingElement, functionName) {
@@ -596,7 +597,9 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	//sets the intro screen for each scene
 	var setSceneIntro = function(sceneText) {
 		$("#blackout").show();
-		$("#sceneIntro").html(sceneText);
+		$("#sceneIntro").html("<div id='introText'>" + sceneText + "</div><div id='introGame'></div>");
+
+
 		var begin = $('<h2/>', {
 			text: 'Begin',
 			click: function() {

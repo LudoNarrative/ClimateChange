@@ -317,11 +317,15 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			chunk = chunkLibrary.get(chunkId);
 		}
 
-		if (mode == "refresh") {
+		//if we're refreshing, and we want to replace / update the choices already in there...
+		//(note, if no chunk.choices or choiceDetails, should just be a Continue link already, and we should leave it?)
+		if (mode == "refresh" && (chunk.choices !== undefined && choiceDetails !== undefined)) {
 			StoryDisplay.clearChoices();
 		}
 
-		// Handle choices
+		// Handle choices for all the different cases--------------------------------------------------
+
+		//if we have choices and we're not ending the interrupt, show them
 		if (chunk.choices && mode !== "endInterrupt") {
 			var choiceObjs = [];		//used to store current choiceObjs in blackboard (for graph reference)
 			chunk.choices.forEach(function(choice, pos) {
@@ -353,7 +357,8 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			State.set("currentChoices", choiceObjs);
 		} 
 
-		else if (mode == "endInterrupt") {		//if we're ending an interrupt, we have all the info we need
+		//if we're ending an interrupt, we have all the info we need
+		else if (mode == "endInterrupt") {		
 			var choiceObjs = [];		//used to store current choiceObjs in blackboard (for graph reference)
 			choiceDetails.forEach(function(choice,pos) {
 				choiceObjs.push(choice);
@@ -372,11 +377,15 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			};
 			State.set("currentChoices", [choiceObj]);
 
-		} else if (mode !== "refresh") {
+		} 
+		else if (mode !== "refresh") {
 			doStoryBreak();
 			State.set("currentChoices", []);
 			endScene();
 		}
+
+		//---------------------------------------------------------------------------------------------------------
+
 		StoryDisplay.diagnose({
 			wishlist: wishlist,
 			state: State.getBlackboard()
