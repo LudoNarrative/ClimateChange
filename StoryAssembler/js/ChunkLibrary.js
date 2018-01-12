@@ -60,7 +60,11 @@ define(["Validate", "Request", "util"], function(Validate, Request, util) {
 			}
 		}
 
-		_library[chunk.id] = chunk;
+		if (typeof _library[chunk.id] == "undefined") {
+			_library[chunk.id] = chunk;
+		}
+
+		else { throw "Duplicate fragments detected with ID '" + chunk.id + "'!"; }
 
 		return chunk.id;
 	}

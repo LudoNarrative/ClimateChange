@@ -84,10 +84,10 @@ define(["../Templates", "../State", "../StoryAssembler", "../ChunkLibrary", "Wis
 			assert.deepEqual(render("at end is {testNoParams}"), "at end is resultOne", "templates at end of string");
 			assert.deepEqual(render("some \\{testNoParams\\} text"), "some \\{testNoParams\\} text", "escaping braces");
 			assert.deepEqual(render("\\{testNoParams\\} at start"), "\\{testNoParams\\} at start", "escaping braces at start of string doesn't work");
-			assert.deepEqual(render("this is {messed {up"), "this is {messed {up", "malformed should be skipped");
+			assert.deepEqual(render("this is {messed {up"), "()", "malformed should be skipped");
 			assert.deepEqual(render("lots of {testTwoParams|fun|asdf} {testTwoParams|exciting|xcvb} {testNoParams} stuff"), "lots of fun exciting resultOne stuff", "test with multiple params");
 			assert.deepEqual(render("{testTwoParams|paral|x}{testTwoParams|lel|y}"), "parallel", "adjacent templates");
-			assert.deepEqual(render("{testTwoParams|{testNoParams}|nope}"), "()|nope}", "nested params should be rejected");
+			assert.deepEqual(render("{testTwoParams|{testNoParams}|nope}"), "()", "nested params without parentheses should be rejected");
 
 			//test ifCharTraitIs grammar for conditionals based on char traits
 			var wl;

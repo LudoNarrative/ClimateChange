@@ -222,12 +222,23 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		console.assert(text[0] === "{", "template '" + text + "' does not begin with curly brace.");
 		console.assert(text[text.length - 1] === "}", "template '" + text + "' does not end with curly brace.");
 
+		//if there are a non-matching number of curly braces, return error
+		if ((text.match(/{/g)||[]).length !== (text.match(/}/g)||[]).length) {
+			console.log("'" + text + "' has non-matching numbers of curly braces!");
+			return "()";
+		}
+
 		// strip opening/closing characters, verify no nesting, and make into an array
 		var strippedText = text.slice(1, text.length - 1);
 
-		while (strippedText.search(/[\{\}]/g) >= 0) {
+		while (strippedText.search(/[\{\}]/g) >= 0) {		//if there's nesting...
 			var start = strippedText.indexOf("(");
 			var end = strippedText.indexOf(")");
+
+			if (start == -1 || end == -1) {
+				console.log("'" + strippedText + "' portion of '" + text + "' has non-matching opening and closing parentheses!");
+				return "()";
+			}
 			var processedNested = render(strippedText.substring(start+1, end), undefined, undefined);
 			strippedText = strippedText.replace(strippedText.substring(start,end+1), processedNested);	//replace what was in ( and ) with processedNested
 			//console.error("Nested params are not allowed in template '" + strippedText + "'");
@@ -289,11 +300,11 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			var lastBraceIndex = -1;
 			for (var x=0; x < txt.length; x++) {
 				templateString+=txt[x];			//add character
-				if (txt[x] == "{") { 
+				if (txt[x] == "{" && (x==0 || txt[x-1] !== "\\")) { 		//if we have an unescaped opening parenthesis...
 					if (firstBraceIndex == -1) { firstBraceIndex = x; }
 					openingBraces++; 
 				}
-				if (txt[x] == "}") { closingBraces++; lastBraceIndex = x; }
+				if (txt[x] == "}" && txt[x-1] !== "\\") { closingBraces++; lastBraceIndex = x; }
 				if (openingBraces == closingBraces && openingBraces !== 0) {		//if we've found our next template to process...
 					templateString = txt.substring(firstBraceIndex, lastBraceIndex+1);
 					break;
