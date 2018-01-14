@@ -55,24 +55,6 @@ Todo:
         ]
 
     },
-
-    {
-        "id": "establishLecture",
-        "content": "Walking through the double doors, you try to gather yourself. The sound of shifting backpacks and quiet conversations fills the lecture hall. It's a decent-sized room, not bad for your first class. Looks like about 200 students.",
-        "effects": [
-            "set establishScene true",
-            "set classSize lecture",
-            "set concentration 5"
-        ],
-        "conditions": [
-            //"lecture eq true",
-        ],
-        "choices": [{
-            "gotoId": "concentrationBridge"
-        }]
-
-    },
-
     {
         "id": "establishSeminar",
         "content": "Walking through the door, you are greeted by a group of around 20 students engaged in various conversations. Large enough for some good discussion, yet small enough to really interact with them one-on-one: perfect.",
@@ -82,12 +64,28 @@ Todo:
             "set concentration 5"
         ],
         "conditions": [
-            //"seminar eq true",
+            "classSize neq lecture",
             //"establishScene eq true"
         ],
         "choices": [{
             "gotoId": "concentrationBridge"
         }]
+    },
+    {
+        "id": "establishLecture",
+        "content": "Walking through the double doors, you try to gather yourself. The sound of shifting backpacks and quiet conversations fills the lecture hall. It's a decent-sized room, not bad for your first class. Looks like about 200 students.",
+        "effects": [
+            "set establishScene true",
+            "set classSize lecture",
+            "set concentration 5"
+        ],
+        "conditions": [
+            "classSize neq seminar",
+        ],
+        "choices": [{
+            "gotoId": "concentrationBridge"
+        }]
+
     },
     {
         "id": "concentrationBridge",
@@ -276,7 +274,7 @@ Todo:
 
     {
         "id": "lectureBridge",
-        "choiceLabel": "Take some questions (lecture)",
+        "choiceLabel": "Take some questions",
         "content": "{ifStateCondition|concentration lt 5|Thirty long minutes of examples later, it's time for the part you've been dreading. \"Ok, well, I guess if anyone has questions, I can try to uh answer them?\"|Thirty minutes of examples later, you can tell by the shifting in their seats that it's time to switch things up. \"Ok! Now that you've got a general idea...who has questions?\"}",
         "effects": [
             "set bridgeFinished true",
@@ -284,7 +282,7 @@ Todo:
         ],
         "conditions": [
             "lectureFinished eq true",
-            "lecture eq true"
+            "classSize eq lecture"
         ],
         "choices":[{
             "gotoId":"establishStudents"
@@ -293,14 +291,14 @@ Todo:
 
     {
         "id": "seminarBridge",
-        "choiceLabel": "Take some questions (seminar)",
+        "choiceLabel": "Take some questions",
         "content": "\"{ifStateCondition|concentration gte 5|Well that's enough talking from me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|concentration gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
         "effects": [
             "set bridgeFinished true"
         ],
         "conditions": [
             "lectureFinished eq true",
-            "seminar eq true"
+            "classSize eq seminar"
         ],
         "choices":[{
             "gotoId":"establishStudents"
@@ -410,7 +408,7 @@ Todo:
 {
     "id" : "student1Intro",
     "unavailableChoiceLabel" : "Already called on {name|student1}.",
-    "choiceLabel" : "...the student1 frowning skeptically.",
+    "choiceLabel" : "...the student frowning skeptically.",
     "content" : "Better to take on some students that seem on the fence.",
     "effects" : [
         "incr talkToStudent 1",
@@ -425,7 +423,7 @@ Todo:
   {
     "id" : "student2Intro",
     "unavailableChoiceLabel" : "Already called on {name|student1}.",
-    "choiceLabel" : "...the student2 frowning skeptically, but shy.",
+    "choiceLabel" : "...the student frowning skeptically, but shy.",
     "content" : "Better to take on some students that seem on the fence.",
     "effects" : [
         "incr talkToStudent 1",
@@ -440,8 +438,8 @@ Todo:
   {
     "id" : "student3Intro",
     "unavailableChoiceLabel" : "Already called on {name|student2}.",
-    "choiceLabel" : "...the student3 earnestly waving her hand.",
-    "content" : "ok.",
+    "choiceLabel" : "...the student earnestly waving her hand.",
+    "content" : "You know you can count on {name|student2}, at least, for some enthusiastic conversation. Hopefully others will pick up on the energy.",
     "effects" : [
         "incr talkToStudent 1",
         "set doneTalking false",
@@ -498,7 +496,7 @@ Todo:
     {
       "id" : "valueResponse",
       "choiceLabel" : "\"Your mom is biased\"",
-      "content" : "\"Big oil companies like the one your mom works with are one of the leading causes of climate change. If laws and regulations were passed to limit the amount of carbon that buildings are allowed to emit, then it would probably hurt oil companies. So of course your mother would say it's a conspiracy. But the facts don't lie.\"",
+      "content" : "\"Big oil companies like Tysoncorp are one of the leading causes of climate change. If laws and regulations passed to limit their carbon emissions, then it would probably hurt their profits. So of course your mother would say it's a conspiracy. But the facts don't lie.\"",
       "effects" : [
         "incr optimism 1",
         "incr curiosity 1",
@@ -524,6 +522,9 @@ Todo:
             {"gotoId": "followUpAnswer1"},
             {"gotoId": "followUpAnswer2"},
             {"gotoId": "followUpAnswer3"}
+        ],
+        "effects": [
+            "decr questionsLeft 1"
         ]
     },
 
@@ -623,6 +624,9 @@ Todo:
         "choices": [
             {"gotoId": "optFollowUpAnswer1"},
             {"gotoId": "optFollowUpAnswer2"}
+        ],
+        "effects" : [
+        "decr questionsLeft 1"
         ]
     },
 
@@ -658,12 +662,11 @@ Todo:
   "id" : "elikaIntro",
   "unavailableChoiceLabel" : "Already called on {name|student3}.",
   "choiceLabel" : "\"Yes, {name|student3}?\"",
-  "content": "You call on {name|student3} for perhaps the fifth time, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now...wouldn't taking carbon dioxide out of the atmosphere help with the acidity of the ocean?\"",
+  "content": "You call on {name|student3}, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now...wouldn't taking carbon dioxide out of the atmosphere help with the acidity of the ocean?\"",
   "choices" : [
     {"gotoId" : "elikaNext"}
   ],
   "effects" : [
-    "decr questionsLeft 1",
     "set student3 true",
     "incr optimisticStudent 1",
 
@@ -829,7 +832,6 @@ Todo:
     {"gotoId" : "negElikaNext"}
   ],
   "effects" : [
-    "decr questionsLeft 1",
     "set student3 true",
     "incr antagonisticStudent 1"
   ],
@@ -1002,7 +1004,7 @@ Todo:
           {"gotoId" : "harshResponse"}
         ],
       "effects" : [
-        "decr questionsLeft 1"
+        
       ],
       },
 
@@ -1076,7 +1078,10 @@ Todo:
           {"gotoId" : "aidenQuestion2"},
           {"gotoId" : "questionBridge"}
         ],
-        "conditions" : ["student2 eq true"]
+        "conditions" : ["student2 eq true"],
+        "effects" : [
+            "set doneTalking true"
+        ]
       },
 
       {

@@ -956,6 +956,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "showCoworkerRelation eq true"},
 				{ condition: "showCoworkerIdentity eq true"},
 				{ condition: "showCoworkerOptimism eq true"},
+				{ condition: "showProtagonistOptimism eq true"},
 				
 
 				{
@@ -974,7 +975,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					hoverText: "How optimistic is your co-worker?"
 				},
 				{
-					condition: "protagonistOptimism eq [high|low]", 
+					condition: "state: set protagonistOptimism eq [high|low]", 
 					label: "Emma's Optimism", 
 					hoverText: "How optimistic is Emma?"
 				},
@@ -1005,9 +1006,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set effort 0"
 			],
 			UIvars: [
+			/*
 				{
-					"varName" : "patience",
-					"label" : "Patience",
+					"varName" : "protagonistOptimism",
+					"label" : "Optimism",
 					"characters" : ["protagonist", "volunteer"],
 					"affectedBy" : "both",
 					"range" : [0,10]
@@ -1026,7 +1028,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					"affectedBy" : "game",
 					"range" : [0,10]
 				}
-
+			*/
 			],
 			mode: {
 				type: "narration"
@@ -2084,21 +2086,23 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					{
 						id: "protagonist",
 						graphics: "char3",
-						age: "40s",
+						age: "30s",
 						states: [	//happy, neutral, upset
 							{ state: ["default"], tag: "neutral"},
-							{ state: ["patience lt 3"], tag: "upset"},
-							{ state: ["patience gte 5"], tag: "happy"},
+							{ state: ["protagonistOptimism eq low"], tag: "disappointed"},
+							{ state: ["protagonistOptimism eq high"], tag: "happy"},
 
 						],
 					},
 					{
 						id: "volunteer",
 						graphics: "char6",
-						age: "20s",
+						age: "30s",
 						states: [	//happy, neutral, upset, confused
-							{ state: ["patience lt 3"], tag: "upset"},
 							{ state: ["default"], tag: "neutral" },
+							{ state: ["coworkerOptimism eq low"], tag: "disappointed"},
+							{ state: ["coworkerOptimism eq high"], tag: "happy"},
+							
 						],
 					},
 				],
