@@ -398,17 +398,17 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "EmmaJobFutureBeat eq true" },
 				{ condition: "EmmaClassTypeBeat eq true" },
 				// old wishlist items begin here
-				
 				{ condition: "friendIsInAcademia eq true" },
 				{ condition: "friendIsNotInAcademia eq true"},
-				
 				// old wishlist items end here
+				/*
 				// new wishlist items begin here
 				{ condition: "establishFriend1Background eq true" },
 				{ condition: "establishFriend2Background eq true" },
 				{ condition: "establishFriend1Supportiveness eq true" },
 				{ condition: "establishFriend2Supportiveness eq true" },
 				// new wishlist items end here
+				*/
 				{ condition: "tension gte 4"},
 				{ condition: "friendTensionRelieved eq true"},
 				{ condition: "checkinWithDisagreer eq true"},
