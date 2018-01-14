@@ -220,7 +220,7 @@
 
   { // TODO parametrize on academicFriend1 & activistFriend2?
     "id": "friendNotInAcademici",
-    "content": "<p>{name|friend2} rests her elbows on the table and leans in. \"So, I dunno what you're doing next Friday, but I'm actually setting up a beach cleanup a little bit south of here.\"</p><p>\"Oh damn {name|friend2},\" {name|friend1} interjects. \"That's when {name|protagonist} and I have our faculty orientation meeting.\"</p>",
+    "content": "<p>{name|friend2} rests her elbows on the table and leans in. \"So, I dunno what you're doing next Friday, but I'm actually setting up a beach cleanup a little bit south of here.\"</p><p>\"Oh damn {name|friend2},\" {name|friend1} interjects. {ifStateCondition|academicFriend gt 0|\"That's when {name|protagonist} and I have our faculty orientation meeting.\"|\"Isn't that when {name|protagonist} has her faculty orientation meeting?\"}</p>",
     "effects": [
       "set friendIsNotInAcademia true"
     ],
@@ -291,7 +291,7 @@
     {
       "id": "sideShellyi",
       "choiceLabel" : "\"Hey {name|friend1}, back off a little bit.\"",
-      "content": "<p>{name|friend1} goes a little pale, as if she's stunned by her own behaviour. \"You're right {nickname|protagonist}. Sorry {nickname|friend2}, that wasn't me talking. I'm just a bit overwhelmed {ifState|academicFriend1|true|with teaching|} lately.\"</p>",
+      "content": "<p>{name|friend1} goes a little pale, as if she's stunned by her own behavior. \"You're right {nickname|protagonist}. Sorry {nickname|friend2}, that wasn't me talking. I'm just a bit overwhelmed with {ifState|academicFriend1|true|teaching|work} lately.\"</p>",
       "conditions": [
         "friendIsInAcademia eq true",
         "friendIsNotInAcademia eq true"
@@ -304,7 +304,7 @@
     {
       "id": "neutrali",
       "choiceLabel" : "Don't get involved",
-      "content": "<p>\"{name|friend2} please, now you're just being childish,\" {name|friend2} says.</p><p>\"Oh, jeez prof, this won't bring down my participation points, will it?\" {name|friend1} waves her hand in dismissal. The two go quiet and focus on their food.</p>",
+      "content": "<p>\"Please, {name|friend2}, now you're just being childish,\" {name|friend2} says.</p><p>\"Oh jeez prof, this won't bring down my participation points, will it?\" {name|friend1} waves her hand in dismissal. The two go quiet and focus on their food.</p>",
       "conditions": [
         "friendIsInAcademia eq true",
         "friendIsNotInAcademia eq true"
