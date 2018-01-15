@@ -48,17 +48,18 @@ Since asp-phaser-generator-2 is a repository embedded inside another repository,
 1. First commit the submodule's changes
 (You can make changes to the compiler directly in ClimateChange/asp-phaser-generator-2/. No need to make a separate clone.)
 Navigate to ClimateChange/asp-phaser-generator-2/
-`git commit`
 
-2. Then tell the main project, ClimateChange, to track the updated version and commit 
+		git commit
+
+2. Then tell the main project, ClimateChange, to track the updated version and commit. 
 Navigate to ClimateChange/
 
-	git add asp-phaser-generator-2
-	git commit
+		git add asp-phaser-generator-2
+		git commit
 
-3. Then push both commits to their respective remote repositories
+3. Then push both commits to their respective remote repositories. 
 
-	git push --recurse-submodules=on-demand
+		git push --recurse-submodules=on-demand
 
 ### To update your local version of the submodule from remote
 from ClimateChange: 
