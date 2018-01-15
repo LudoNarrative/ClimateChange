@@ -234,6 +234,15 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		while (strippedText.search(/[\{\}]/g) >= 0) {		//if there's nesting...
 			var start = strippedText.indexOf("(");
 			var end = strippedText.indexOf(")");
+			var numOpen = 1;
+			var numClosed = 0;
+			var x = start;
+			while (numOpen !== numClosed) {				//get correct nested string for both cases of () asdf () and (asdf ())
+				x++;
+				if (strippedText[x] == "(") { numOpen++;}
+				else if (strippedText[x] == ")") { numClosed++; }
+			}
+			end = x;
 
 			if (start == -1 || end == -1) {
 				console.log("'" + strippedText + "' portion of '" + text + "' has non-matching opening and closing parentheses!");

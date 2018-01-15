@@ -220,7 +220,8 @@
     "id": "protagonistRejoinder",
     "content": "\"Hey c'mon, {name|volunteer}, let's keep at it. Shift isn't over until two.\"<br/>\"I'm serious, {name|protagonist}.\" {name|volunteer}'s got his gloves off, rubbing a hand through his hair. \"Like...what are we even doing?\"<br/>",
     "choices": [
-    	 {"condition" : "answerQuestion eq true"}
+    	 {"condition" : "answerQuestion eq true"},
+    	 {"gotoId" : "justAJob"}
     ],
     "effects" : [
       "set protagonistRejoinder true"
@@ -229,6 +230,14 @@
     	"volunteerInitialReaction eq true"
     ]
   },
+  		{
+  			"id" : "justAJob",
+  			"choiceLabel" : "{ifState|protagonistOptimism|low|Our jobs, I guess.|What are you saying?}",
+  			"content" : "{ifState|protagonistOptimism|low|({ifState|protagonistIdentity|academic|(\"...and at least we have ones,\" you say. You meant it to be reassuring, but {name|volunteer} looks angry now. \"Oh, so now it's just a job, huh? Great. You just switch careers when it suits you, I suppose? This was just the convenient option?\"<br/><br/>He stops, shakes his head. \"Sorry. I just...let's just finish up, ok?\" He gets back to work.)|(\"What? You've been doing this longer than me, and that's what you say? God it must really be hopeless.\"<br/><br/>\"I was just trying to-\" he waves it aside. \"Let's just get back to work.\")})|({ifState|protagonistIdentity|academic|(\"It just seems like too much.\" {name|volunteer} gestures around. \"I mean, it's ridiculous when you think about it.\"<br/><br/>\"I didn't start working here because I thought it'd be easy. It's hard work, {name|volunteer}. But it's important work. Maybe the most important work. The front lines.\"<br/><br/>{name|volunteer} nods, slowly putting his gloves back on. \"Sorry. Yeah, yeah I suppose.\")|(\"That maybe this is a waste of time.\" {name|volunteer} crosses his arms.<br/><br/>\"Look, I've been doing this a lot longer than you. You're just going to have to trust me. This work...we're on the front lines. This is where we make a difference. Even if it's small, but all of us together are what make the impact, {name|volunteer}.\"<br/><br/>He nods reluctantly, and pulls his gloves back on.)})}",
+  			"effects" : [
+  				"set showProtagonistOptimism true"
+  			]
+  		},
   {
     "id": "dropSadKnowledge",
     "content": "\"What about the Barrier Reef?\" {name|volunteer} says. \"I mean there wasn't anything we could do to save any of those species once it collapsed, and that was a billion dollar international collaboration. How many went extinct?\"<br/><br/>\"Look, you and I both knew when we got into this work that it was going to be an uphill battle.\" You set the bucket down. \"But that doesn't make it less important.\"",
@@ -339,7 +348,7 @@
 		],
 		"conditions" : [
 			"effort gt 0",
-			"effort lte 1"
+			//"effort lte 1"
 		],
 		"effects": [
 		]
