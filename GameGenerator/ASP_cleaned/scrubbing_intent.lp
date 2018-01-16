@@ -26,6 +26,9 @@ allowed(superfluous(resource(r(1)))).
 :- not monotonic(orange,decrease).
 :- not initialize(fill(all,orange)).
 
+
+
+
 :- action(mode_change(_)).
 
 :- not player_controls(_).
@@ -35,8 +38,10 @@ allowed(superfluous(resource(r(1)))).
 :- player_model(O,player_must_do),
    not result(O,modify(increase,resource(r(1)))).
 
+
+
 :- not monotonic(resource(r(1)),increase).
 
-
+initialize(set_value(resource(r(1)),scalar(0))).
 
 %:- not condition(compare(_,_,amount(_))).

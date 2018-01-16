@@ -155,7 +155,7 @@ def parse_game(result):
     for initialization in result['initialize']:
         initialization = initialization[0]
         terms = initialization['terms'][0]
-        if 'set' == terms['predicate']:
+        if 'set_value' == terms['predicate']:
             settings.append(('initialize',prettify(terms['terms'][0]),[int(terms['terms'][1]['terms'][0]['predicate'])],'set'))
         if 'add' in terms['predicate']:
             if prettify(terms['terms'][0]) not in adds:

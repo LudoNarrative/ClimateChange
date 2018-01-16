@@ -314,10 +314,12 @@ monotonic(Entity,decrease) :-
 
 monotonic(Resource,increase) :- 
     action(modify(increase,Resource)),
-    not action(modify(decrease,Resource)).
+    not action(modify(decrease,Resource)),
+    not action(set_value(Resource,_)).
 monotonic(Resource,decrease) :- 
     action(modify(decrease,Resource,_)),
-    not action(modify(increase,Resource)).
+    not action(modify(increase,Resource)),
+    not action(set_value(Resource,_)).
 
 monotonic(Color,increase) :- 
     action(draw(_,Color)),
