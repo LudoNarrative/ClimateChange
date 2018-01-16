@@ -40,10 +40,6 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		_coordinator.loadAvatars(id);
 		_coordinator.validateArtAssets(id);
 		_coordinator.loadStoryMaterials(id);
-		if (State.get("gameModeChosen") != null) {			//if we chose a game style via a knob, use that one
-			_coordinator.startGame(id,true, State.get("gameModeChosen"));
-		}
-		else { _coordinator.startGame(id); }
 	}
 
 	var initTitleScreen = function(_Coordinator, _State, scenes, playGameScenes) {
@@ -595,16 +591,20 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	}
 
 	//sets the intro screen for each scene
-	var setSceneIntro = function(sceneText) {
+	var setSceneIntro = function(sceneText, id) {
 		$("#blackout").show();
 		$("#sceneIntro").html("<div id='introText'>" + sceneText + "</div><div id='introGame'></div>");
+
+		Coordinator.startGame(id, true, true);		//start intro game
 
 
 		var begin = $('<h2/>', {
 			text: 'Begin',
 			click: function() {
+				Coordinator.startGame(id);				//start real game
 				$("#sceneIntro").fadeOut( "slow" );
 				$("#blackout").fadeOut( "slow" );
+				State.set("refreshEnabled", true);		//enable refreshNarrative for game hook up
 			}
 		}).appendTo("#sceneIntro");
 		$("#sceneIntro").fadeIn( "slow" );

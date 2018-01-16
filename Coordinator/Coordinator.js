@@ -1211,7 +1211,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		]
 		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
-		Display.setSceneIntro(sceneText);
+		Display.setSceneIntro(sceneText, id);
 	};
 
 	//returns a scene description written for the timeline
@@ -2165,7 +2165,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		This will eventually be replaced with more complex stuff before passing
 		off to game.js
 	*/
-    var startGame = function(id,increment=true) {
+    var startGame = function(id,increment=true, introGame=false) {
 		var Game = require("Game");
 
 		var gameResources = [
@@ -2723,7 +2723,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				function(v) { return v.includes(State.get("gameModeChosen"));}
 			);
 		}
-		Game.init(gameSpec, State, Display, this,increment);
+		Game.init(gameSpec, State, Display, this, increment, introGame);
 	}
 
 	return {

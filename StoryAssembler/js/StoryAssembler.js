@@ -154,31 +154,33 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 	//used to tell the narrative system to refresh
 	var refreshNarrative = function() {
-		//check for interrupt story fragments, and set flag for interrupt if found
-		interruptBestPath = getBestPath(chunkLibrary);
-		var interruptPossible = false;
-		if (typeof interruptBestPath !== "undefined") {
-			testChunk = chunkLibrary.get(interruptBestPath.route[0]);		//if we found one, set flag
-			if (testChunk.gameInterrupt === true) { interruptPossible = true; }
-		}
-		
-		if (interruptPossible && !State.get("uninterruptable")) {		
-			//store current display info to retrieve later, set the flag for interrupted, clear display, and show interrupt fragment
-			var resumeChunkInfo = {textId: State.get("currentTextId"), choiceDetails: State.get("currentChoices")}
-			State.set("resumeChunkInfo", resumeChunkInfo);
-			State.set("uninterruptable", true);
-			State.set("interrupted", true);
-			StoryDisplay.clearAll();
-			continueScene();
-		}
-		else { 				//if we didn't find an interrupt fragment, just refresh text display and choices
+		if (State.get("refreshEnabled")) {
+			//check for interrupt story fragments, and set flag for interrupt if found
+			interruptBestPath = getBestPath(chunkLibrary);
+			var interruptPossible = false;
+			if (typeof interruptBestPath !== "undefined") {
+				testChunk = chunkLibrary.get(interruptBestPath.route[0]);		//if we found one, set flag
+				if (testChunk.gameInterrupt === true) { interruptPossible = true; }
+			}
+			
+			if (interruptPossible && !State.get("uninterruptable")) {		
+				//store current display info to retrieve later, set the flag for interrupted, clear display, and show interrupt fragment
+				var resumeChunkInfo = {textId: State.get("currentTextId"), choiceDetails: State.get("currentChoices")}
+				State.set("resumeChunkInfo", resumeChunkInfo);
+				State.set("uninterruptable", true);
+				State.set("interrupted", true);
+				StoryDisplay.clearAll();
+				continueScene();
+			}
+			else { 				//if we didn't find an interrupt fragment, just refresh text display and choices
 
-			StoryDisplay.clearText();
-			displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
+				StoryDisplay.clearText();
+				displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
 
-			newBestPath = getBestPath(chunkLibrary, State.get("currentTextId"));		//grab the best path from here (again)
-			if (typeof newBestPath !== "undefined") {
-				doChunkChoices(State.get("currentTextId"), newBestPath.choiceDetails, "refresh");
+				newBestPath = getBestPath(chunkLibrary, State.get("currentTextId"));		//grab the best path from here (again)
+				if (typeof newBestPath !== "undefined") {
+					doChunkChoices(State.get("currentTextId"), newBestPath.choiceDetails, "refresh");
+				}
 			}
 		}
 	}

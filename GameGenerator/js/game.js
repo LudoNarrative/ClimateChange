@@ -6,8 +6,9 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	var gameIndex = -999
 /*
 	Initializes the game
+		-introGame: whether this is being called to show the game in the introduction screen
 */
-    var init = function(gameSpec, _State, _Display, _Coordinator,increment=true) {
+    var init = function(gameSpec, _State, _Display, _Coordinator,increment=true, introGame=false) {
 
 		Display = _Display;
 		State = _State;
@@ -48,7 +49,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 	    	jQuery.get('asp-phaser-generator-2/test/fixtures/initial-phaser-file.json', function(data2) {
 	    		initialPhaserFile = data2;
-	    		runGenerator(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring);
+	    		runGenerator(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring, introGame);
 	    		if (document.getElementById("gameDiagnostics") == null) {
 	    			Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, initialPhaserFile);		//create game diagnostics
 	    		}
@@ -78,7 +79,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		return newString;
 	}
 
-	var runGenerator = function(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring){
+	var runGenerator = function(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring, introGame){
 		var generator = AspPhaserGenerator.AspPhaserGenerator(aspGame, initialPhaserFile);
 		var phaserProgram = AspPhaserGenerator.generate(generator.aspGame, generator.initialPhaser, true);
 
@@ -93,7 +94,10 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 
 		//var gameInitString = "game = new Phaser.Game(400, 300, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update }, false);";
-		var gameInitString = "game = new Phaser.Game(600, 400, Phaser.AUTO, 'gameContainer', { preload: preload, create: create, update: update }, true);";
+		var gameContainer;
+		if (introGame) { gameContainer = "introGame"; }
+		else { gameContainer = "gameContainer"; }
+		var gameInitString = "game = new Phaser.Game(600, 400, Phaser.AUTO, '"+ gameContainer +"', { preload: preload, create: create, update: update }, true);";
 
 		//var generatedGame = gameInitString + gameLogicStrings.filter(function(v) { return v.id === id; })[0].gameString;
 
@@ -106,44 +110,103 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		eval(generatedGame);
 
 		if (document.getElementById("gameInstructions") == null) {
+
+			var theId;
+			if (introGame) { theId = "introGameInstructions"; } else { theId = "gameInstructions"; }
+			var appendDest;
+			if (introGame) { appendDest = "#introGame"} else { appendDest = "#gameContainer"; }
+			
 			$('<div/>', {
-			    id: 'gameInstructions',
+			    id: theId,
 			    html: aspGameInstructions
-			}).appendTo('#gameContainer');
+			}).appendTo(appendDest);
+
+			if (introGame) { parseInstructions(); }
 		}
 		else { 
 			$("#gameInstructions").html(aspGameInstructions); 
 		}
 
+		//create restart, reroll, and disable buttons
 	    if (document.getElementById("restartGame") == null) {
-		$('<div/>', {
-		    id: 'restartGame',
-		    text: 'Restart'
-		}).click(function() { 
-		    Coordinator.startGame(State.get("currentScene"),false);
-		}).appendTo('#gameContainer');
+			$('<div/>', {
+			    id: 'restartGame',
+			    text: 'Restart'
+			}).click(function() { Coordinator.startGame(State.get("currentScene"),false); }).appendTo('#gameContainer');
 	    }
 	    if (document.getElementById("rerollGame") == null) {
-		$('<div/>', {
-		    id: 'rerollGame',
-		    text: 'Reroll'
-		}).click(function() { 
-			Coordinator.startGame(State.get("currentScene"));
-		    
-		}).appendTo('#gameContainer');
+			$('<div/>', {
+			    id: 'rerollGame',
+			    text: 'Reroll'
+			}).click(function() { Coordinator.startGame(State.get("currentScene")); }).appendTo('#gameContainer');
 	    }
 	    if (document.getElementById("disableGame") == null) {
-		$('<div/>', {
-		    id: 'disableGame',
-		    text: 'Disable',
-		    style: 'float:right'
-		}).click(function() { 
-		    game.destroy();
-		    $("#gameContainer").hide();
-		}).appendTo('#gameContainer');
+			$('<div/>', {
+			    id: 'disableGame',
+			    text: 'Disable',
+			    style: 'float:right'
+			}).click(function() { game.destroy(); $("#gameContainer").hide(); }).appendTo('#gameContainer');
 	    }
 	    
 		//console.log(getAspGoals());
+	}
+
+	//changes the instruction format exported from ASP into something more readable
+	var parseInstructions = function() {
+		var bullets = $("#introGameInstructions ul li").toArray().slice(1);		//get bullet
+		var mode = "";
+		var goals = [];
+		var subGoals = [];
+		var controls = [];
+		for (var x=0; x < bullets.length; x++) {
+			var category = bullets[x].innerText;
+			if (category == "GOAL:") { mode = category; }
+			else if (category.substring(0,9) == "SUBGOALS:") { mode = "SUBGOALS:"; }
+			else if (category.substring(0,9) == "CONTROLS:") { mode = "CONTROLS:"; }
+
+			else {
+				var entry = bullets[x].innerHTML;
+				switch (mode) {
+					case "GOAL:":
+						goals.push(entry);
+						break;
+					case "SUBGOALS:":
+						subGoals.push(entry);
+						break;
+					case "CONTROLS:":
+						controls.push(entry);
+						break;
+				}
+			}
+		}
+
+		var instructions = "";
+
+		if (goals.length > 0) {
+			var goalLabel = "Goal: ";
+			if (goals.length > 1) { goalLabel = "Goals:"; }
+			var goalString = "";
+			for (var x=0; x < goals.length; x++) { goalString+= goals[x] + ", "; }
+			goalString = goalString.slice(0,-2);
+			instructions += "<h2><strong>"+ goalLabel +"</strong><span style='font-weight:normal; color:white'> " + goalString + "</span></h2>";
+		}
+		
+		if (subGoals.length > 0) {
+			var subgoalString = "<h2>Sub-Goals: </h2><ul>";
+			for (var x=0; x < subGoals.length; x++) { subgoalString+= "<li>" + subGoals[x] + "</li>"; }
+			subgoalString += "</ul>";
+			instructions += subgoalString;
+		}
+		
+		if (controls.length > 0) {
+			var controlString = "<h2>Controls: </h2><ul>";
+			for (var x=0; x < controls.length; x++) { controlString+= "<li>" + controls[x] + "</li>";}
+			controlString += "</ul>";
+			instructions += controlString;
+		}
+
+		$("#introGameInstructions").html(instructions);
+
 	}
     
     return {
