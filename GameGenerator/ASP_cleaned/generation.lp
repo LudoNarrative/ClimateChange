@@ -1,11 +1,10 @@
+
+
 number(N) :- N = 1.
 %entity(e(N)) :- N = 1..min_entities.
 {max_entity(M)} :- M =min_entities..max_entities.
 
-
 palette(clear).
-
-
 
 entity(entity(e(M))) :- M = 1..N, max_entity(N).
 
@@ -25,12 +24,8 @@ entity(entity(e(M))) :- M = 1..N, max_entity(N).
     many(Entity),
     number_to_place(Entity,NumberToPlace).
 
-
 {initialize(fill(all,Color))} :- palette(Color).
 {initialize(fill(location(Row,Col),Color)) : row(Row), col(Col)} :- palette(Color).
-
-
-
 
 
 boundary_types(torus;closed).
@@ -54,7 +49,6 @@ total_count(Entity,N) :- N = PerPlace*Places,
 			 entity(Entity).
 
 
-
 {max_resource(M)} :- M =min_resources..max_resources.
 
 resource(resource(r(M))) :- M = 1..min_resources..N, max_resource(N).
@@ -75,6 +69,7 @@ timer_values(3;5;7).
 1 {timer_logic(timer(T),scalar(N),loop): timer_values(N)} 1 :- timer(T).
 
 
+%%% USER INPUT SCHEMES %%%
 
 
 { avatar(entity(e(1))) }.
@@ -84,9 +79,9 @@ directControls(asteroids;
 		vertical;
 		horizontal;
 		cardinal).
+% Why isnt 'platformer' here?
 
 1 { controlScheme(ENTITY,SCHEME) : directControls(SCHEME)} 1 :- avatar(ENTITY).
-
 
 outcome(outcome(avatar(move_up))) :- 
     1 {controlScheme(ENTITY,cardinal); 
@@ -94,7 +89,8 @@ outcome(outcome(avatar(move_up))) :-
 outcome(outcome(avatar(move_down))) :- 
     1 {controlScheme(ENTITY,cardinal); 
     controlScheme(ENTITY,vertical)}.
-%need to move  west  if horizontal axis
+
+% Need to move west if horizontal axis
 outcome(outcome(avatar(move_left))) :- 
     1 {controlScheme(ENTITY,cardinal); 
     controlScheme(ENTITY,horizontal); 
@@ -104,15 +100,15 @@ outcome(outcome(avatar(move_right))) :-
     controlScheme(ENTITY,horizontal); 
     controlScheme(ENTITY,platformer)}.		
 
-%asteroids/combat tank moving forward
+% Asteroids/combat tank moving forward
 outcome(outcome(avatar(move_forward))) :- 
     1 {controlScheme(ENTITY,tank); 
     controlScheme(ENTITY,asteroids)}.
 
-% tanks can go backwards, spaceships can't
+% Tanks can go backwards, spaceships cannot
 outcome(outcome(avatar_move_backward)) :- controlScheme(ENTITY,tank).
     
-%tanks and spaceships can rotate
+% Tanks and spaceships can rotate
 outcome(outcome(avatar(rotate_right))) :- 
     1{controlScheme(ENTITY,tank); 
     controlScheme(ENTITY,asteroids)}.
@@ -121,85 +117,93 @@ outcome(outcome(avatar(rotate_left))) :-
       controlScheme(ENTITY,asteroids)}.
 
 
-%moving  north 
+% Create precondition-result rules for each avatar movement:
+% move_up/down/right/left/forward/backward rotate_right/left 
+
+
+% Moving north 
 precondition(control_event(button(up_arrow, held)),outcome(avatar(move_up))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_up))).
-result(outcome(avatar(move_up)),move(ENTITY,  direction(north)))  :- 
+result(outcome(avatar(move_up)),move(ENTITY, direction(north))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_up))).
-%moving  south 
+
+% Moving south 
 precondition(control_event(button(down_arrow, held)),outcome(avatar(move_down))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_down))).
-result(outcome(avatar(move_down)),move(ENTITY,   direction(south)))  :- 
+result(outcome(avatar(move_down)),move(ENTITY, direction(south))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_down))).
-%moving  east 
+
+% Moving east 
 precondition(control_event(button(right_arrow, held)),outcome(avatar(move_right))) :- 
     avatar(ENTITY), 
    outcome( outcome(avatar(move_right))).
-result(outcome(avatar(move_right)),move(ENTITY,  direction(east) ))  :- 
+result(outcome(avatar(move_right)),move(ENTITY, direction(east) )) :- 
     avatar(ENTITY), 
    outcome( outcome(avatar(move_right))).
-%moving  west 
+
+% Moving west 
 precondition(control_event(button(left_arrow, held)),outcome(avatar(move_left))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_left))).
-result(outcome(avatar(move_left)),move(ENTITY,  direction(west) ))  :- 
+result(outcome(avatar(move_left)),move(ENTITY, direction(west) )) :- 
     avatar(ENTITY),
     outcome(outcome(avatar(move_left))).
 
-
-%moving forward
+% Moving forward
 precondition(control_event(button(up_arrow, held)),outcome(avatar(move_forward))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_forward))).
 % precondition(empty(ENTITY,forward,low),outcome(avatar(move_forward)) :- 
     % avatar(ENTITY), 
     % outcome(outcome(avatar(move_forward)).
-result(outcome(avatar(move_forward)),move(ENTITY, direction(forward)))  :- 
+result(outcome(avatar(move_forward)),move(ENTITY, direction(forward))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_forward))).
-%moving backwards
+
+% Moving backwards
 precondition(control_event(button(down_arrow, held)),outcome(avatar(move_backward))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_backward))).
 % precondition(empty(ENTITY,behind,low),outcome(avatar(move_backward)) :- 
     % avatar(ENTITY), 
     % outcome(outcome(avatar(move_backward)).
-result(outcome(avatar(move_backward)),move(ENTITY, direction(behind)))  :- 
+result(outcome(avatar(move_backward)),move(ENTITY, direction(behind))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(move_backward))).
-%rotate counter clockwise
+
+% Rotate counter clockwise
 precondition(control_event(button(left_arrow, held)),outcome(avatar(rotate_left))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(rotate_left))).
-result(outcome(avatar(rotate_left)),rotates(ENTITY, ccw))  :- 
+result(outcome(avatar(rotate_left)),rotates(ENTITY, ccw)) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(rotate_left))).
-%rotate clockwise
+
+% Rotate clockwise
 precondition(control_event(button(right_arrow, held)),outcome(avatar(rotate_right))) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(rotate_right))).
-result(outcome(avatar(rotate_right)),rotates(ENTITY, cw))  :- 
+result(outcome(avatar(rotate_right)),rotates(ENTITY, cw)) :- 
     avatar(ENTITY), 
     outcome(outcome(avatar(rotate_right))).
 
 
 indirectControls(click_and_drag;
-		 %click_and_click;click_and_aim;
-         orbit_the_cursor;
-	drawn_to_cursor;%;
+	%click_and_click;
+  %click_and_aim;
+  orbit_the_cursor;
+	drawn_to_cursor;
 	repeled_from_cursor;
-        click_to_spin;
+  click_to_spin;
 	click_to_move;
-	%click_to_chase
+	%click_to_chase;
 	).
 
-
 {controlScheme(ENTITY,SCHEME) : indirectControls(SCHEME)} 1 :- entity(ENTITY).
-
 
 
 controlLogic(draggable(ENTITY)) :- controlScheme(ENTITY,click_and_drag).
@@ -208,139 +212,147 @@ outcome(outcome(repeled_from_cursor(ENTITY))) :- controlScheme(ENTITY,repeled_fr
 outcome(outcome(click_to_spin(ENTITY))) :- controlScheme(ENTITY,click_to_spin).       
 outcome(outcome(click_to_move(ENTITY))) :- controlScheme(ENTITY,click_to_move).  
 outcome(outcome(click_to_chase(ENTITY))) :- controlScheme(ENTITY,click_to_chase).  
-
 outcome(outcome(orbit_the_cursor(ENTITY))) :- controlScheme(ENTITY,orbit_the_cursor).  
+
   
-  
-  
-%cursor is electromagnet
+% Drawn_to_cursor: Entity looks at and moves to cursor when mouse held
 precondition(control_event(button(mouse, held)),outcome(drawn_to_cursor(ENTITY))) :- 
     outcome(outcome(drawn_to_cursor(ENTITY))). 
-result(outcome(drawn_to_cursor(ENTITY)), move(ENTITY,direction(forward))):-
+result(outcome(drawn_to_cursor(ENTITY)), move(ENTITY,direction(forward))) :-
+    outcome(outcome(drawn_to_cursor(ENTITY))).
+result(outcome(drawn_to_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)) :-
     outcome(outcome(drawn_to_cursor(ENTITY))).
 
-result(outcome(drawn_to_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)):-
-    outcome(outcome(drawn_to_cursor(ENTITY))).
-
-%cursor is opposite polarity (well, same polarity) electromagnet
+% Repelled_from_cursor: Entity looks at cursor and backs away
 precondition(control_event(button(mouse, held)),outcome(repeled_from_cursor(ENTITY))) :- 
     outcome(outcome(repeled_from_cursor(ENTITY))). 
-result(outcome(repeled_from_cursor(ENTITY)), move(ENTITY,direction(backward))):-
+result(outcome(repeled_from_cursor(ENTITY)), move(ENTITY,direction(backward))) :-
     outcome(outcome(repeled_from_cursor(ENTITY))).
-result(outcome(repeled_from_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)):-
+result(outcome(repeled_from_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)) :-
     outcome(outcome(repeled_from_cursor(ENTITY))).
 
-%cursor is the sun, entity is the earth
-
+% Orbit_the_cursor: Cursor is sun, entity is earth (Entity looks at cursor and orbits left or right around it)
 precondition(control_event(button(mouse, held)),outcome(orbit_the_cursor(ENTITY))) :- 
     outcome(outcome(orbit_the_cursor(ENTITY))). 
 1 {result(outcome(orbit_the_cursor(ENTITY)), move(ENTITY,direction(LEFT_RIGHT))): left_right(LEFT_RIGHT)} 1:-
     outcome(outcome(orbit_the_cursor(ENTITY))).
-result(outcome(orbit_the_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)):-
+result(outcome(orbit_the_cursor(ENTITY)), look_at(ENTITY,cursor,nearest)) :-
     outcome(outcome(orbit_the_cursor(ENTITY))).
     
-1 {precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY)));
-   precondition(control_event(button(mouse, pressed)),outcome(click_to_spin(ENTITY)));
-   precondition(control_event(click(ENTITY)),outcome(click_to_spin(ENTITY)))
-   } 1:- 
-       outcome(outcome(click_to_spin(ENTITY))).
+% Click_to_spin: Entity spins when clicked, or when mouse is held or pressed.
+1 { precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY)));
+    precondition(control_event(button(mouse, pressed)),outcome(click_to_spin(ENTITY)));
+    precondition(control_event(click(ENTITY)),outcome(click_to_spin(ENTITY)))
+  } 1 :- 
+    outcome(outcome(click_to_spin(ENTITY))).
 
 angle_speeds(1;5;10).
-1 {result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
-   angle_direction(DIR),
-   angle_speeds(AMOUNT)
+angle_speeds_discrete(60,90,180). % Shouldnt these be separated by semicolons, not commas?
+
+% Click_to_spin: Entity rotates in some angular direction and speed when mouse is held
+1 { result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
+      angle_direction(DIR),
+      angle_speeds(AMOUNT)
    %;result(outcome(click_to_spin(ENTITY)), rotate_to(ENTITY,random_int(0,360)))
   } 1 :-
     precondition(control_event(button(mouse, held)),outcome(click_to_spin(ENTITY))).
 
-angle_speeds_discrete(60,90,180).
-1 {result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
-   angle_direction(DIR),
-   angle_speeds_discrete(AMOUNT)
+% Click_to_spin: Entity rotates in some angular direction and speed when it is clicked or mouse is pressed
+% Might be able to combine with the above rule?
+1 { result(outcome(click_to_spin(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
+      angle_direction(DIR),
+      angle_speeds_discrete(AMOUNT)
   } 1 :-
     outcome(outcome(click_to_spin(ENTITY))),
-    1 {precondition(control_event(button(mouse, pressed)),outcome(click_to_spin(ENTITY)));
-       precondition(control_event(click(ENTITY)),outcome(click_to_spin(ENTITY)))}.
+    1 { precondition(control_event(button(mouse, pressed)),outcome(click_to_spin(ENTITY)));
+        precondition(control_event(click(ENTITY)),outcome(click_to_spin(ENTITY))) }.
 
+% Click_to_spin: Entity always moves forward when spinning? (Why?)
 result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_spin(ENTITY))).
+result(tick,move(ENTITY,direction(forward))) :- outcome(click_to_spin(ENTITY)).
 
+% Click_to_chase: Entity1 looks at and moves to nearest entity2 if entity1 is clicked or mouse is pressed or held
 
 look_criterion(nearest).
-1 {precondition(control_event(button(mouse, held)),outcome(click_to_chase(ENTITY)));
-   precondition(control_event(button(mouse, pressed)),outcome(click_to_chase(ENTITY)));
-   precondition(control_event(click(ENTITY)),outcome(click_to_chase(ENTITY)))
-   } 1:- 
-       outcome(outcome(click_to_chase(ENTITY))).
-1 {result(outcome(click_to_chase(ENTITY)), look_at(ENTITY,ENTITY2,CRITERION)) :
-   entity(ENTITY2), look_criterion(CRITERION)
+
+1 { precondition(control_event(button(mouse, held)),outcome(click_to_chase(ENTITY)));
+    precondition(control_event(button(mouse, pressed)),outcome(click_to_chase(ENTITY)));
+    precondition(control_event(click(ENTITY)),outcome(click_to_chase(ENTITY)))
+  } 1 :- 
+    outcome(outcome(click_to_chase(ENTITY))).
+
+1 { result(outcome(click_to_chase(ENTITY)), look_at(ENTITY,ENTITY2,CRITERION)) :
+      entity(ENTITY2), look_criterion(CRITERION)
   } 1 :-
     outcome(outcome(click_to_chase(ENTITY))).
 
 result(tick,move(ENTITY,direction(forward))) :- outcome(outcome(click_to_chase(ENTITY))).
 
-%CLICK TO MOVE
+% Click_to_move: Entity rotates and moves forward when mouse pressed. Create associated click_to_move timer.
 
 precondition(control_event(button(mouse, pressed)),outcome(click_to_move(ENTITY))) :-
-    outcome(outcome(click_to_move(ENTITY))).
-
+  outcome(outcome(click_to_move(ENTITY))).
 result(outcome(click_to_move(ENTITY)),move(ENTITY,direction(forward))) :-
+  outcome(outcome(click_to_move(ENTITY))).
+
+1 { timer(click_to_move(ENTITY));
+    result(tick,rotates(ENTITY,DIR,scalar(AMOUNT))) :
+      angle_direction(DIR), angle_speeds(AMOUNT) } 1 :- 
     outcome(outcome(click_to_move(ENTITY))).
 
-1 {timer(click_to_move(ENTITY));
-   result(tick,rotates(ENTITY,DIR,scalar(AMOUNT))) :
-   angle_direction(DIR), angle_speeds(AMOUNT)} 1 :- 
-    outcome(outcome(click_to_move(ENTITY))).
-
-1 {result(timer_elapsed(click_to_move(ENTITY)),  rotates(ENTITY,DIR,scalar(AMOUNT))) :
-   angle_direction(DIR),
-   angle_speeds_discrete(AMOUNT);
-   result(timer_elapsed(click_to_move(ENTITY)),  rotate_to(ENTITY,random_int(0,360)))} 1 :-
+1 { result(timer_elapsed(click_to_move(ENTITY)), rotates(ENTITY,DIR,scalar(AMOUNT))) :
+      angle_direction(DIR),
+      angle_speeds_discrete(AMOUNT);
+    result(timer_elapsed(click_to_move(ENTITY)), rotate_to(ENTITY,random_int(0,360))) } 1 :-
     timer(click_to_move(ENTITY)).
 
 
-result(tick, move(ENTITY,direction(forward))) :-
-    outcome(click_to_spin(ENTITY)).
-
-
+% Locations
 place(E) :- entity(E).
 location(-1..1,-1..1).
 place(location(X,Y)) :- location(X,Y).
 
-{precondition(control_event(click(ENTITY)),OUTCOME)
- : entity(ENTITY), outcome(OUTCOME)}.
 
+{ precondition(control_event(click(ENTITY)),OUTCOME) 
+  : entity(ENTITY), outcome(OUTCOME) }.
+
+
+% Create preconditions for comparisons
+% compare() with 2 terms means 'is positive'/'is negative'
 
 comparison_direction(ge;le).
-{precondition(compare((ge;le),RESOURCE),OUTCOME)
- : resource(RESOURCE), outcome(OUTCOME)}.
 
-{precondition(compare((ge;le),amount(Color),R),OUTCOME)
- :  outcome(OUTCOME)} :- palette(Color), resource(R).
+{ precondition(compare((ge;le),RESOURCE),OUTCOME)
+  : resource(RESOURCE), outcome(OUTCOME) }.
+
+{ precondition(compare((ge;le),amount(Color),R),OUTCOME) : outcome(OUTCOME) } 
+  :- palette(Color), resource(R).
 
 %{precondition(is_overlapping(}
 
 color_amount(1;5;9).
-{precondition(compare((ge;le),amount(Color),scalar(A)),OUTCOME)
- :  outcome(OUTCOME), color_amount(A)} :- palette(Color).
+{ precondition(compare((ge;le),amount(Color),scalar(A)),OUTCOME) : outcome(OUTCOME), color_amount(A) } 
+  :- palette(Color).
 
 
-{precondition(control_event(button(BUTTON,STATE)),OUTCOME) 
+{ precondition(control_event(button(BUTTON,STATE)),OUTCOME) 
   : buttons(BUTTON),buttonStates(STATE), outcome(OUTCOME)}.
 
-{precondition(overlaps(ENTITY1,ENTITY2,P),OUTCOME) :
- outcome(OUTCOME),
- entity(ENTITY1),
- entity(ENTITY2),
- polarity(P)}.
+{ precondition(overlaps(ENTITY1,ENTITY2,P),OUTCOME) :
+    outcome(OUTCOME),
+    entity(ENTITY1),
+    entity(ENTITY2),
+    polarity(P) }.
 
-1{precondition(timer_elapsed(Timer), Outcome)
-  : outcome(Outcome)} 1 :- timer(Timer).
-
+1 { precondition(timer_elapsed(Timer), Outcome): outcome(Outcome) } 1 
+  :- timer(Timer).
 
 
 %%%%%%%%%%%
 
-{result(OUTCOME,delete(ENTITY)) : entity(ENTITY), outcome(OUTCOME)}.
+% Spawning and deleting entities
+
+{ result(OUTCOME,delete(ENTITY)) : entity(ENTITY), outcome(OUTCOME) }.
 % or added to a location
 
 spawn_types(random;ordered).
@@ -348,191 +360,174 @@ spawn_types(random;ordered).
 amount_to_spawn(scalar(1)).
 amount_to_spawn(Resource) :- resource(Resource).
 
-{result(Outcome, add(Entity,Amount,pool(Entity))) : amount_to_spawn(Amount)} :-
+% Spawn entity at entity pool (area of game window), cursor, or another entity's location
+{ result(Outcome, add(Entity,Amount,pool(Entity))) : amount_to_spawn(Amount) } :-
     entity(Entity),
     outcome(Outcome).
 
-{result(Outcome, add(Entity,Amount,cursor))  : amount_to_spawn(Amount)} :-
+{ result(Outcome, add(Entity,Amount,cursor)) : amount_to_spawn(Amount) } :-
     entity(Entity),
     outcome(Outcome).
 
-{result(Outcome, add(Entity,Amount,Other)) : amount_to_spawn(Amount) } :-
+{ result(Outcome, add(Entity,Amount,Other)) : amount_to_spawn(Amount) } :-
     entity(Entity),
     entity(Other),
     outcome(Outcome).
 
-% resources can increase
-{result(OUTCOME,modify(increase,RESOURCE))
-  : outcome(OUTCOME),resource(RESOURCE)}.
-% or decrease
-{result(OUTCOME,modify(decrease,RESOURCE)) 
-  : outcome(OUTCOME),resource(RESOURCE)}.
+% Can delete an entity or cursor
+{ result(OUTCOME,clear(Entity)) : outcome(OUTCOME) } :- entity(Entity).
+{ result(OUTCOME,clear(cursor)) : outcome(OUTCOME) }.
 
-% resources can increase
-{result(OUTCOME,modify(increase,RESOURCE,RESOURCE2))
-  : outcome(OUTCOME),resource(RESOURCE),resource(RESOURCE2)}.
-% or decrease
-{result(OUTCOME,modify(decrease,RESOURCE,RESOURCE2)) 
-  : outcome(OUTCOME),resource(RESOURCE),resource(RESOURCE2)}.
+
+% Resources can increase
+{ result(OUTCOME,modify(increase,RESOURCE))
+  : outcome(OUTCOME),resource(RESOURCE) }.
+% Or decrease
+{ result(OUTCOME,modify(decrease,RESOURCE)) 
+  : outcome(OUTCOME),resource(RESOURCE) }.
+
+% Resources can increase (by another resource's value?)
+{ result(OUTCOME,modify(increase,RESOURCE,RESOURCE2))
+  : outcome(OUTCOME),resource(RESOURCE),resource(RESOURCE2) }.
+% Or decrease
+{ result(OUTCOME,modify(decrease,RESOURCE,RESOURCE2)) 
+  : outcome(OUTCOME),resource(RESOURCE),resource(RESOURCE2) }.
+
+% Entity property values can increase
+{ result(OUTCOME,modify(increase,property(Entity,Property)))
+  : outcome(OUTCOME),entity(Entity),properties(Property) }.
+% Or decrease
+{ result(OUTCOME,modify(decrease,property(Entity,Property))) 
+  : outcome(OUTCOME),entity(Entity),properties(Property) }.
+
+
+% Health is a property
 properties(health).
 
 
-{result(OUTCOME,draw(Entity,Color))
- : outcome(OUTCOME)} :- entity(Entity), palette(Color).
+% Can set the color of entities, resources, and cursor
 
-{result(OUTCOME,draw(cursor,Color))
- : outcome(OUTCOME)} :-  palette(Color).
+{ result(OUTCOME,draw(Entity,Color)) : outcome(OUTCOME) } :- 
+    entity(Entity), palette(Color).
 
-{result(OUTCOME,set_value(Resource,amount(Color)))
- : outcome(OUTCOME),resource(Resource)} :-  palette(Color).
+{ result(OUTCOME,draw(cursor,Color)) : outcome(OUTCOME) } :-  
+    palette(Color).
 
-
-
-
-{result(OUTCOME,clear(Entity))
- : outcome(OUTCOME)} :- entity(Entity).
-
-{result(OUTCOME,clear(cursor))
- : outcome(OUTCOME)}.
+{ result(OUTCOME,set_value(Resource,amount(Color))) : outcome(OUTCOME),resource(Resource) } :-  
+    palette(Color).
 
 
-% resources can increase
-{result(OUTCOME,modify(increase,property(Entity,Property)))
-  : outcome(OUTCOME),entity(Entity),properties(Property)}.
-% or decrease
-{result(OUTCOME,modify(decrease,property(Entity,Property))) 
-  : outcome(OUTCOME),entity(Entity),properties(Property)}.
+% Entities can move towards or away from another entity, or the cursor
+
+% { result(OUTCOME, move(ENTITY1,direction(towards,ENTITY2)))
+%   : outcome(OUTCOME),
+%     entity(ENTITY1),
+%     entity(ENTITY2) }.
+  
+% { result(OUTCOME, move(ENTITY1,direction(away,ENTITY2)))
+%   : outcome(OUTCOME),
+%     entity(ENTITY1),
+%     entity(ENTITY2) }.
+  
+% { result(OUTCOME, move(ENTITY1,direction(away,cursor)))
+%   : outcome(OUTCOME),
+%     entity(ENTITY1) }.
+  
+% { result(OUTCOME, move(ENTITY1,direction(towards,cursor)))
+%   : outcome(OUTCOME),
+%     entity(ENTITY1) }.
 
 
-% {result(OUTCOME,  move(ENTITY1,direction(towards,ENTITY2)))
- % : outcome(OUTCOME),
- % entity(ENTITY1),
- % entity(ENTITY2)}.
-
-% {result(OUTCOME,  move(ENTITY1,direction(away,cursor)))
- % : outcome(OUTCOME),
- % entity(ENTITY1)}.
-
-% {result(OUTCOME,  move(ENTITY1,direction(towards,cursor)))
- % : outcome(OUTCOME),
- % entity(ENTITY1)}.
-
-% {result(OUTCOME,  move(ENTITY1,direction(away,ENTITY2)))
- % : outcome(OUTCOME),
- % entity(ENTITY1),
- % entity(ENTITY2)}.
-
+% Game modes (e.g., game_win, game_lose, narrative_pause,..)
 min_end_outcomes 
-{result(OUTCOME,mode_change(MODE)) : modes(MODE), outcome(OUTCOME)}
+{ result(OUTCOME,mode_change(MODE)) : modes(MODE), outcome(OUTCOME) }
 max_end_outcomes.
 
-
+% Generate the null precondition to match the outcome, tick (triggered every tick)
 precondition(tick,tick) :- outcome(tick).
 
+% An entity can be singular or many, not both
+1 { many(Entity); singular(Entity) } 1 :- entity(Entity).
 
-1{many(Entity);singular(Entity)}1 :- entity(Entity).
+% Two entities can have restitution applied to them 
+% Should there be a check that they aren't the same entity, or okay?
+{ result(tick, apply_restitution(Entity1,Entity2)) :
+  entity(Entity1), entity(Entity2) }.
 
 
-{result(tick,apply_restitution(Entity1,Entity2)) :
- entity(Entity1),entity(Entity2)}.
-
+%%% ENTITY BEHAVIORS %%%
 
 %% behaviors(chase;
 %% 	  flee;
 %% 	  patrol;
 %% 	  pingpong;
 %% 	  wander;
-%%       orbit).
+%%    orbit).
 
 behaviors(chase(E)) :- entity(E).
 behaviors(flee(E)) :- entity(E).
-left_right(left;right).
 behaviors(orbit(E,D)) :- entity(E), left_right(D).
 behaviors(patrol;wander).
 
+left_right(left;right).
+distance_amounts(120).
 
-
-0 {behavior(ENTITY,BEHAVIOR) : behaviors(BEHAVIOR)} 2 :- entity(ENTITY).
+% An entity can have 0-2 behaviors
+0 { behavior(ENTITY,BEHAVIOR) : behaviors(BEHAVIOR) } 2 :- entity(ENTITY).
 
 %:- behavior(ENTITY,chase(ENTITY)).
 
-{behavior_condition(ENTITY,compare(Resource)) : resource(Resource)} :- entity(ENTITY),
-							    2 {behavior(ENTITY,_)}.
+% Behavior conditions
+{ behavior_condition(ENTITY,compare(Resource)) : resource(Resource)} :- 
+    entity(ENTITY), 2 { behavior(ENTITY,_) }.
+
+{ behavior_condition(ENTITY,compare(distance(ENTITY,OTHER,CRITERION))) : entity(OTHER),look_criterion(CRITERION)} :- 
+    entity(ENTITY), 2 { behavior(ENTITY,_) }.
 
 
-distance_amounts(120).
-{behavior_condition(ENTITY,compare(distance(ENTITY,OTHER,CRITERION))) : entity(OTHER),look_criterion(CRITERION)} :- entity(ENTITY),
-							    2 {behavior(ENTITY,_)}.
-
-
-
+% Prevent entities from having 2+ behaviors and no behavior_conditions?
 :-  entity(ENTITY),
-    2 {behavior(ENTITY,_)},
+    2 { behavior(ENTITY,_) },
     not behavior_condition(ENTITY,_).
 
+% Prevent entities with 2+ behavior_conditions?
 :-  entity(ENTITY),
-    2 {behavior_condition(ENTITY,_)}.
+    2 { behavior_condition(ENTITY,_) }.
 
+% Behavior condition polarities (Polarity = ge or le)
 
+1 { behavior_condition_polarity(ENTITY, BEHAVIOR, compare(Polarity,resource(Resource))) 
+    : comparison_direction(Polarity) } 1 :-
+        behavior_condition(ENTITY,compare(resource(Resource))),
+        behavior(ENTITY,BEHAVIOR).
 
+1 { behavior_condition_polarity(ENTITY, BEHAVIOR, compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT)))  
+    : comparison_direction(Polarity), distance_amounts(AMOUNT) } 1 :-
+        behavior_condition(ENTITY,compare(distance(ENTITY,OTHER,CRITERION))),
+        behavior(ENTITY,BEHAVIOR).
 
-
-1 {behavior_condition_polarity(ENTITY,
-			       BEHAVIOR,
-			       compare(Polarity,resource(Resource)))
-   : comparison_direction(Polarity)} 1 :-
-    behavior_condition(ENTITY,compare(resource(Resource))),
-    behavior(ENTITY,BEHAVIOR).
-
-
-1 {behavior_condition_polarity(ENTITY,
-			       BEHAVIOR,
-			       compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT)))  :
-   comparison_direction(Polarity),
-   distance_amounts(AMOUNT)} 1 :-
-    behavior_condition(ENTITY,compare(distance(ENTITY,OTHER,CRITERION))),
-    behavior(ENTITY,BEHAVIOR).
-
-
-:- behavior_condition_polarity(ENTITY,_,
-			       compare(Polarity1,distance(ENTITY,OTHER,CRITERION1),scalar(AMOUNT1))),
-   behavior_condition_polarity(ENTITY,
-			       _,
-			       compare(Polarity2,distance(ENTITY,OTHER,CRITERION2),scalar(AMOUNT2))),
+:- behavior_condition_polarity(ENTITY, _, compare(Polarity1,distance(ENTITY,OTHER,CRITERION1),scalar(AMOUNT1))),
+   behavior_condition_polarity(ENTITY, _, compare(Polarity2,distance(ENTITY,OTHER,CRITERION2),scalar(AMOUNT2))),
    AMOUNT1 != AMOUNT2.
 
-
-:- behavior_condition_polarity(ENTITY,
-			       _,
-			       compare(Polarity1,distance(ENTITY,OTHER,CRITERION1),scalar(AMOUNT1))),
-   behavior_condition_polarity(ENTITY,
-			       _,
-			       compare(Polarity2,distance(ENTITY,OTHER,CRITERION2),scalar(AMOUNT2))),
+:- behavior_condition_polarity(ENTITY, _, compare(Polarity1,distance(ENTITY,OTHER,CRITERION1),scalar(AMOUNT1))),
+   behavior_condition_polarity(ENTITY, _, compare(Polarity2,distance(ENTITY,OTHER,CRITERION2),scalar(AMOUNT2))),
    CRITERION1 != CRITERION2.
 
-
-:- behavior_condition_polarity(ENTITY,
-			       Behavior1,
-			       compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT))),
-   behavior_condition_polarity(ENTITY,
-			       Behavior2,
-			       compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT))),
+:- behavior_condition_polarity(ENTITY, Behavior1, compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT))),
+   behavior_condition_polarity(ENTITY, Behavior2, compare(Polarity,distance(ENTITY,OTHER,CRITERION),scalar(AMOUNT))),
    Behavior1 != Behavior2.
 
+% Choose an outcome for the behavior condition
+1 { chosen_outcome(Outcome,Entity,Behavior,Comparison) : outcome(Outcome) } 1 :-
+      behavior_condition_polarity(Entity, Behavior, Comparison).
 
-
-1 {chosen_outcome(Outcome,Entity,Behavior,Comparison) : outcome(Outcome)} 1 :-
-    behavior_condition_polarity(Entity,
-				Behavior,
-				Comparison).
-
-
-
-behavior_condition_polarity(ENTITY, BEHAVIOR, tick) :-  behavior(ENTITY,BEHAVIOR), 1 {behavior(ENTITY,_)} 1.
+behavior_condition_polarity(ENTITY, BEHAVIOR, tick) :-  
+  behavior(ENTITY,BEHAVIOR), 
+  1 { behavior(ENTITY,_) } 1.
 
 :- chosen_outcome(Outcome,_,_,tick),
    Outcome != tick.
-
 :- chosen_outcome(tick,_,_,Outcome),
    Outcome != tick.
    
@@ -543,48 +538,44 @@ behavior_condition_polarity(ENTITY, BEHAVIOR, tick) :-  behavior(ENTITY,BEHAVIOR
     % chosen_outcome(Outcome2,Entity,Behavior2,compare(Polarity2,R)),
     % Outcome1 != Outcome2.
 
-
 			   
-precondition(Comparison,Outcome) :- chosen_outcome(Outcome,Entity,Behavior,Comparison), Outcome != tick, Comparison != tick.
-precondition(Comparison,Outcome) :- chosen_outcome_timer(Outcome,Entity,Behavior,Comparison), Outcome != tick, Comparison != tick.
+precondition(Comparison,Outcome) :- 
+  chosen_outcome(Outcome,Entity,Behavior,Comparison), Outcome != tick, Comparison != tick.
+
+precondition(Comparison,Outcome) :- 
+  chosen_outcome_timer(Outcome,Entity,Behavior,Comparison), Outcome != tick, Comparison != tick.
 
 
-:- behavior_condition_polarity(ENTITY,
- 			       BEHAVIOR1,
- 			       compare(Polarity,Resource)),
-    behavior_condition_polarity(ENTITY,
- 			       BEHAVIOR2,
- 			       compare(Polarity,Resource)),
+:-  behavior_condition_polarity(ENTITY, BEHAVIOR1, compare(Polarity,Resource)),
+    behavior_condition_polarity(ENTITY, BEHAVIOR2, compare(Polarity,Resource)),
     BEHAVIOR1 != BEHAVIOR2.
 
 
-%%CHASING -- 
+%%CHASE -- 
 result(Outcome,
         move(ENTITY,direction(forward))) :-
     chosen_outcome(Outcome,ENTITY,chase(OTHER),_).
     
-1 {result(Outcome,
-        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
-    chosen_outcome(Outcome,ENTITY,chase(OTHER),_).
+1 { result(Outcome,
+        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION) } 1 :-
+      chosen_outcome(Outcome,ENTITY,chase(OTHER),_).
 
-
-%%FLEEING -- 
+%%FLEE -- 
 result(Outcome,
         move(ENTITY,direction(backward))) :-
     chosen_outcome(Outcome,ENTITY,flee(OTHER),_).
     
-1 {result(Outcome,
-        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
-    chosen_outcome(Outcome,ENTITY,flee(OTHER),_).
+1 { result(Outcome,
+        look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION) } 1 :-
+      chosen_outcome(Outcome,ENTITY,flee(OTHER),_).
 
 %%ORBIT -- 
 result(Outcome,
        move(ENTITY,direction(D))) :-
     chosen_outcome(Outcome,ENTITY,orbit(OTHER,D),_).
-1 {result(Outcome,
-	  look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION)} 1 :-
-    chosen_outcome(Outcome,ENTITY,orbit(OTHER,D),_).
-
+1 { result(Outcome,
+	    look_at(ENTITY,OTHER,CRITERION)) : look_criterion(CRITERION) } 1 :-
+      chosen_outcome(Outcome,ENTITY,orbit(OTHER,D),_).
 
 %%WANDER--
 
@@ -789,11 +780,6 @@ result(Outcome,
 %% 1 {result(outcome(behavior_condition_polarity_rotate(ENTITY,patrol,C)), rotates(ENTITY, DIRECTION,scalar(AMOUNT)))  :
 %%    angle_direction(DIRECTION),
 %%    angle_speeds_discrete(AMOUNT)} 1 :- behavior_condition_polarity(ENTITY,patrol,C).
-
-
-
-
-
 
 
 %{relative(greater,result(Outcome1,modify(Direction,Resource1)),result(Outcome2,modify(Direction,Resource2)))} 1 :-
