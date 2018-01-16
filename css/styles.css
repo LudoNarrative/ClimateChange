@@ -398,6 +398,12 @@ Story CSS
     min-height:500px;
 }
 
+#gameControls { 
+    position:relative;
+    top:366px;
+    z-index:999;
+}
+
 #JSONEditor {
     min-width: 500px;
 }

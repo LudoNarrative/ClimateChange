@@ -131,21 +131,23 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	    if (document.getElementById("restartGame") == null) {
 			$('<div/>', {
 			    id: 'restartGame',
-			    text: 'Restart'
-			}).click(function() { Coordinator.startGame(State.get("currentScene"),false); }).appendTo('#gameContainer');
+			    text: 'Restart',
+			    style: 'float:right; margin-left:10px'
+			}).click(function() { Coordinator.startGame(State.get("currentScene"),false); }).appendTo('#gameControls');
 	    }
 	    if (document.getElementById("rerollGame") == null) {
 			$('<div/>', {
 			    id: 'rerollGame',
-			    text: 'Reroll'
-			}).click(function() { Coordinator.startGame(State.get("currentScene")); }).appendTo('#gameContainer');
+			    text: 'Reroll',
+			    style: 'float:right; margin-left:10px'
+			}).click(function() { Coordinator.startGame(State.get("currentScene")); }).appendTo('#gameControls');
 	    }
 	    if (document.getElementById("disableGame") == null) {
 			$('<div/>', {
 			    id: 'disableGame',
 			    text: 'Disable',
-			    style: 'float:right'
-			}).click(function() { game.destroy(); $("#gameContainer").hide(); }).appendTo('#gameContainer');
+			    style: 'float:right; margin-left:10px'
+			}).click(function() { game.destroy(); $("#gameContainer").hide(); }).appendTo('#gameControls');
 	    }
 	    
 		//console.log(getAspGoals());

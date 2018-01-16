@@ -413,6 +413,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		}).appendTo('body');
 
 		$('<div/>', {
+			id: 'gameControls'
+		}).appendTo('#gameContainer');
+
+		$('<div/>', {
 		    id: 'statsContainer',
 		    //text: ''
 		}).appendTo('body');
