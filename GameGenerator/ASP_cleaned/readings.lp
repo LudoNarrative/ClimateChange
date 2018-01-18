@@ -1,3 +1,6 @@
+% Proceduralist Reading Rules 
+% Author: Adam Summerville
+
 reading(survive,Entity) :-
     entity(Entity),
     1 {reading(defend_against,Entity);
@@ -145,119 +148,128 @@ reading(flees,relation(Entity1,Entity2)) :-
     action(move(Entity1,direction(backward))),
     action(look_at(Entity1,Entity2)).
     
-reading(consumes,relation(Entity1,Resource1))  :-
+reading(consumes,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(decrease,Resource1)).
 
-reading(consumes,relation(Entity1,Resource1))  :-
+reading(consumes,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,modify(decrease,Resource1)).
 
-reading(produces,relation(Entity1,Resource1))  :-
+reading(produces,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(increase,Resource1)).
 
-reading(produces,relation(Entity1,Resource1))  :-
+reading(produces,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,modify(increase,Resource1)).
 
-reading(consts,relation(Entity1,Resource1))  :-
+reading(consts,relation(Entity1,Resource1)) :-
     result(Outcome,add(Entity1,_,_)),
     result(Outcome,modify(decrease,Resource1)).
 
-reading(costs,relation(Entity1,Resource1))  :-
+reading(costs,relation(Entity1,Resource1)) :-
     result(Outcome,add(Entity1,_,_)),
     result(Outcome,modify(decrease,Resource1)).
 
-{reading(hand_eye_coordination,game )} :-
+{ reading(hand_eye_coordination,game) } :-
     reading(good,Outcome),
     hand_eye_coordination(Outcome).
-    
 
-reading(goal(Action),Thing)  :-
+    
+%% A goal can be to produce or reduce a resource or color
+
+% If game win or narrative progress happens when it reaches a threshold
+% Or game loss or narrative gating happens when it is below a threshold
+
+reading(goal(Action),Thing) :-
     goal(Action,Thing).
 
-reading(goal(produce),Resource)  :-
+
+reading(goal(produce),Resource) :-
     precondition(compare(le,Resource,Amount),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
-reading(goal(produce),Resource)  :-
+reading(goal(produce),Resource) :-
     precondition(compare(ge,Resource,Amount),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
-reading(goal(produce),Resource)  :-
+reading(goal(produce),Resource) :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
-reading(goal(produce),Resource)  :-
+reading(goal(produce),Resource) :-
     precondition(compare(ge,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
-reading(goal(produce),Color)  :-
+reading(goal(produce),Color) :-
     precondition(compare(le,amount(Color),Amount),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
-reading(goal(produce),Color)  :-
+reading(goal(produce),Color) :-
     precondition(compare(ge,amount(Color),Amount),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
-
-    
-reading(goal(reduce),Resource)  :-
-    precondition(compare(ge,Resource),Outcome),
-    result(Outcome,mode_change(game_loss;narrative_gating)).
     
 reading(goal(reduce),Resource) :-
+    precondition(compare(ge,Resource),Outcome),
+    result(Outcome,mode_change(game_loss;narrative_gating)).
+    
+reading(goal(reduce),Resource :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
-
     
-reading(goal(reduce),Color)  :-
+reading(goal(reduce),Color) :-
     precondition(compare(ge,amount(Color),Amount),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
     
-reading(goal(reduce),Color)  :-
+reading(goal(reduce),Color) :-
     precondition(compare(le,amount(Color),Amount),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
 
-
-{reading(sharing,relation(Entity,Entity1)) }  :-    
+{ reading(sharing,relation(Entity,Entity1)) } :-    
     reading(consumes,relation(Entity1,Entity)),
     many(Entity1),
     reading(good,Resource).
 
-
-required(good) :- required(sharing).
-required(consumes) :- required(sharing).
-
-
-{reading(sharing,relation(Entity,Entity1)) } :-     
+{ reading(sharing,relation(Entity,Entity1)) } :-     
     reading(consumes,relation(Entity1,Entity)),
     many(Entity1),
     precondition(overlaps(Entity1,Entity,true),Outcome),
     result(Outcome,delete(Entity)),
     result(Outcome,modify(increase,Resource)),
     reading(good,Resource).
+
+required(good) :- required(sharing).
+required(consumes) :- required(sharing).
+
+
+%% Resources can be good or bad
+% A resource production goal implies the resource is good
+% A resource reduction goal implies the resource is bad
     
 reading(good,Resource) :-
     reading(goal(produce),Resource).
 
-
+% Why is this a choice rule and the above rule is not?
+{ reading(bad,Resource) } :-
+    reading(goal(reduce),Resource).
 
 required(goal(produce)) :- required(good).
+required(goal(reduce)) :- required(bad).
 
-{reading(bad,Resource) } :-
-    reading(goal(reduce),Resource).
+
 %{reading(good,property(Player,health)) } :-
 %    player_controls(Player),
 %    action(modify(_,property(Player,health))).
 
-required(goal(reduce)) :- required(bad).
+
+% Entities can be good or bad - given by their relationship to resources
 
 reading(good,Entity) :-
     reading(good,Resource),
@@ -276,7 +288,8 @@ reading(bad,Entity) :-
     reading(produces,relation(Entity,Resource)).
 
 
-%%Good / Bad Outcome
+%% Outcomes can be good or bad
+% Good/bad outcomes derived from their relationship to Resources
 
 reading(good,Outcome) :-
     result(Outcome,modify(increase,Resource)),
@@ -286,7 +299,6 @@ reading(bad,Outcome) :-
     result(Outcome,modify(decrease,Resource)),
     reading(good,Resource).
 
-
 reading(bad,Outcome) :-
     result(Outcome,modify(increase,Resource)),
     reading(bad,Resource).
@@ -295,18 +307,27 @@ reading(good,Outcome) :-
     result(Outcome,modify(decrease,Resource)),
     reading(bad,Resource).
 
-%% Entities
+
+% Good/bad outcomes derived from their relationship to Entities
 
 reading(good,Outcome) :-
     result(Outcome,add(Entity,_,_)),
     reading(good,Entity).
 
-
 reading(bad,Outcome) :-
     result(Outcome,add(Entity,_,_)),
     reading(bad,Entity).
 
-%COLOR
+reading(good,Outcome) :-
+    result(Outcome,delete(Entity)),
+    reading(bad,Entity).
+
+reading(bad,Outcome) :-
+    result(Outcome,delete(Entity)),
+    reading(good,Entity).
+
+
+% Good/bad outcomes derived from their relationship to Color
 
 reading(good,Outcome) :-
     result(Outcome,draw(_,Color)),
@@ -317,7 +338,6 @@ reading(bad,Outcome) :-
     reading(good,Color),
     palette(Color).
 
-
 reading(bad,Outcome) :-
     result(Outcome,draw(_,Color)),
     reading(bad,Color).
@@ -326,24 +346,6 @@ reading(good,Outcome) :-
     result(Outcome,clear(_)),
     reading(bad,Color),
     palette(Color).
-
-
-
-
-
-
-reading(good,Outcome) :-
-    result(Outcome,delete(Entity)),
-    reading(bad,Entity).
-
-reading(good,Outcome) :-
-    result(Outcome,add(Entity,_,_)),
-    reading(good,Entity).
-
-
-reading(bad,Outcome) :-
-    result(Outcome,add(Entity,_,_)),
-    reading(bad,Entity).
 
 
 	
