@@ -95,6 +95,9 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
 
+			var yearStr;
+			if (_Coordinator.getStorySpec(scene))
+
 			var date = $('<div/>', {
 				id: 'date_' + scene,
 				class: 'date',

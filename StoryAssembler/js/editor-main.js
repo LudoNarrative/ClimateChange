@@ -1,98 +1,121 @@
 requirejs.config({
+	baseUrl: "../",
 	paths: {
-		"domReady": "../lib/domReady",
-		"text": "../lib/text",
-		"underscore": "../lib/underscore-1.8.3.min",
+		"domReady": "../StoryAssembler/lib/domReady",
+		"text": "../StoryAssembler/lib/text",
+		"underscore": "../StoryAssembler/lib/underscore-1.8.3.min",
 
-		"util": "util",
-		"StoryAssembler": "StoryAssembler",
-		"StoryDisplay": "Display",
-		"State": "State",
-		"Wishlist" : "Wishlist",
-		"Condition": "Condition",
-		"Request": "Request",
-		"Want": "Want",
-		"Validate": "Validate",
-		"ChunkLibrary": "ChunkLibrary",
-		"BestPath": "BestPath",
-		"Templates": "Templates",
-		"Character": "Character",
-		"Hanson": "Hanson",
-		"HealthBar" : "../../lib/healthbarstandalone",
+		"util": "../StoryAssembler/js/util",
+		"StoryAssembler": "../StoryAssembler/js/StoryAssembler",
+		"StoryDisplay": "../StoryAssembler/js/Display",
+		"State": "../StoryAssembler/js/State",
+		"Wishlist" : "../StoryAssembler/js/Wishlist",
+		"Condition": "../StoryAssembler/js/Condition",
+		"Request": "../StoryAssembler/js/Request",
+		"Want": "../StoryAssembler/js/Want",
+		"Validate": "../StoryAssembler/js/Validate",
+		"ChunkLibrary": "../StoryAssembler/js/ChunkLibrary",
+		"BestPath": "../StoryAssembler/js/BestPath",
+		"Templates": "../StoryAssembler/js/Templates",
+		"Character": "../StoryAssembler/js/Character",
+		"Hanson": "../StoryAssembler/js/Hanson",
+		"HealthBar" : "../lib/healthbarstandalone",
 
-		"globalData" : "../data/global.json",
-		"travelData" : "../data/travel.json", 
-		"workerData" : "../data/worker.json", 
-		"lectureData" : "../data/lecture.json", 
-		"dinnerData" : "../data/dinner.json",
-		"testData" : "../data/testData.json",
-		"generalistData" : "../data/generalist.json",
-		"benTestData" : "../data/benTestData.json",
-		"newExampleData" : "../data/newExampleData.json",
+		"globalData" : "../StoryAssembler/data/global.json",
+		"travelData" : "../StoryAssembler/data/travel.json", 
+		"workerData" : "../StoryAssembler/data/worker.json", 
+		"lectureData" : "../StoryAssembler/data/lecture.json", 
+		"dinnerData" : "../StoryAssembler/data/dinner.json",
+		"generalistData" : "../StoryAssembler/data/generalist.json",
 
-		"undergradDinnerData_kevin" : "../data/undergradDinnerData-kevin.json",
-		"undergradDinnerData_talon" : "../data/undergradDinnerData-talon.json",
-		"undergradDinnerData_irapopor" : "../data/undergradDinnerData-irapopor.json",
-		"undergradDinnerData_sgadsby" : "../data/undergradDinnerData-sgadsby.json",
-		"undergradDinnerData_madreed" : "../data/undergradDinnerData-madreed.json",
-		"undergradDinnerData_sjsherma" : "../data/undergradDinnerData-sjsherma.json",
 
-		"undergradDean_sgadsby" : "../data/undergradDean-sgadsby.json",
-		"undergradDean_talon" : "../data/undergradDean-talon.json",
-		"undergradDean_irapopor" : "../data/undergradDean-irapopor.json",
+		"undergradDinnerData_talon" : "../StoryAssembler/data/undergradDinnerData-talon.json",
+		"undergradDinnerData_irapopor" : "../StoryAssembler/data/undergradDinnerData-irapopor.json",
+		"undergradDinnerData_sgadsby" : "../StoryAssembler/data/undergradDinnerData-sgadsby.json",
 
-		"undergradLecture_kply" : "../data/undergradLecture-kply.json",
-		"undergradLecture_sjsherma" : "../data/undergradLecture-sjsherma.json",
+		"undergradDean_sgadsby" : "../StoryAssembler/data/undergradDean-sgadsby.json",
+		"undergradDean_talon" : "../StoryAssembler/data/undergradDean-talon.json",
+		"undergradDean_irapopor" : "../StoryAssembler/data/undergradDean-irapopor.json",
 
-		"undergradTravel_sjsherma" :  "../data/undergradTravel-sjsherma.json",
-		"undergradTravel_kply" : "../data/undergradTravel-kply.json",
+		"undergradLecture_kply" : "../StoryAssembler/data/undergradLecture-kply.json",
+		"undergradLecture_sjsherma" : "../StoryAssembler/data/undergradLecture-sjsherma.json",
 
-		"undergradFamilyDinner_sgadsby" : "../data/undergrad_familyDinner_sgadsby.json",
-		"undergradFamilyDinner_talon" : "../data/undergrad_familyDinner_talon.json",
-		"undergradFamilyDinner_irapopor" : "../data/undergrad_familyDinner_irapopor.json",
+		"undergradTravel_sjsherma" :  "../StoryAssembler/data/undergradTravel-sjsherma.json",
+		"undergradTravel_kply" : "../StoryAssembler/data/undergradTravel-kply.json",
 
-		"undergradUN_irapopor" : "../data/undergradUN-irapopor.json",
-		"undergradUN_kply" : "../data/undergradUN-kply.json",
-		"undergradUN_talon" : "../data/undergradUN-talon.json",
+		"undergradFamilyDinner_sgadsby" : "../StoryAssembler/data/undergrad_familyDinner_sgadsby.json",
+		"undergradFamilyDinner_talon" : "../StoryAssembler/data/undergrad_familyDinner_talon.json",
+		"undergradFamilyDinner_irapopor" : "../StoryAssembler/data/undergrad_familyDinner_irapopor.json",
 
-		"undergradBeach_sjsherma" : "../data/undergradBeach-sjsherma.json",
-		"undergradBeach_madreed" : "../data/undergradBeach-madreed.json",
-		"undergradBeach_sgadsby" : "../data/undergradBeach-sgadsby.json",
+		"undergradUN_irapopor" : "../StoryAssembler/data/undergradUN-irapopor.json",
+		"undergradUN_kply" : "../StoryAssembler/data/undergradUN-kply.json",
+		"undergradUN_talon" : "../StoryAssembler/data/undergradUN-talon.json",
 
-		"undergradFaculty_sjsherma" : "../data/undergradFaculty-sjsherma.json",
-		"undergradFaculty_madreed" : "../data/undergradFaculty-madreed.json",
-		"undergradFaculty_kply" : "../data/undergradFaculty-kply.json",
+		"undergradBeach_sjsherma" : "../StoryAssembler/data/undergradBeach-sjsherma.json",
+		"undergradBeach_madreed" : "../StoryAssembler/data/undergradBeach-madreed.json",
+		"undergradBeach_sgadsby" : "../StoryAssembler/data/undergradBeach-sgadsby.json",
 
-		"sjsherma_testfile" : "../data/sjsherma-testfile.json",
-		"kply_testfile" : "../data/kply-testfile.json",
-		"irapopor_testfile" : "../data/irapopor-testfile.json",
-		"talon_testfile" : "../data/talon-testfile.json",
-		"sgadsby_testfile" : "../data/sgadsby-testfile.json",
-		"madreed_testfile" : "../data/madreed-testfile.json",
+		"undergradFaculty_sjsherma" : "../StoryAssembler/data/undergradFaculty-sjsherma.json",
+		"undergradFaculty_madreed" : "../StoryAssembler/data/undergradFaculty-madreed.json",
+		"undergradFaculty_kply" : "../StoryAssembler/data/undergradFaculty-kply.json",
 
-		"Coordinator" : "../../Coordinator/Coordinator",
-		"Display" : "../../js/Display",
-		"avatars" : "../../assets/avatars/avatars.json",
 
-		"Phaser" : "../../lib/phaser",
-		"jQuery": "../../lib/jquery-3.0.0.min",
-		"jQueryUI": "../../lib/jquery-ui.min",
-		"jsonEditor": "../../lib/jsonEditor/jsoneditor",
-		"cytoscape": "../lib/cytoscape",
-		"cytoscape-cxtmenu" : "../lib/cytoscape-cxtmenu",
-		"cytoscape-cose-bilkent" : "../lib/cytoscape-cose-bilkent",
-		"cytoscape-edgehandles" : "../lib/cytoscape-edgehandles",
-		"dagre" : "../lib/dagre.min",
-		"cytoscape-dagre" : "../lib/cytoscape-dagre",
-		"cola" : "../lib/cola",
-		"cytoscape-cola" : "../lib/cytoscape-cola",
+		"sjsherma_testfile" : "../StoryAssembler/data/sjsherma-testfile.json",
+		"kply_testfile" : "../StoryAssembler/data/kply-testfile.json",
+		"irapopor_testfile" : "../StoryAssembler/data/irapopor-testfile.json",
+		"talon_testfile" : "../StoryAssembler/data/talon-testfile.json",
+		"sgadsby_testfile" : "../StoryAssembler/data/sgadsby-testfile.json",
+		"madreed_testfile" : "../StoryAssembler/data/madreed-testfile.json",
 
-		"Game" : "../../GameGenerator/js/game",
-		"AspPhaserGenerator" : "../../asp-phaser-generator/index",
-		"translateAsp" : '../../asp-phaser-generator/src/asp-to-cygnus',
-		"rensa" : '../../asp-phaser-generator/src/brain',
-		"ctp" : '../../asp-phaser-generator/src/cygnus-to-phaser-brain',
-		"translatePhaserBrain" : '../../asp-phaser-generator/src/phaser-brain-to-code'
+
+		"finalDinner" : "../StoryAssembler/data/final/finalDinner.json",
+		"finalLecture" : "../StoryAssembler/data/knobs/lecture.json",
+		"finalDean" : "../StoryAssembler/data/final/finalDean.json",
+		"finalTravel" : "../StoryAssembler/data/final/finalTravel.json",
+		"finalFamilyDinner" : "../StoryAssembler/data/final/finalFamilyDinner.json",
+		"finalUN" : "../StoryAssembler/data/final/finalUN.json",
+		"finalBeach" : "../StoryAssembler/data/knobs/beach.json",
+		"finalFaculty" : "../StoryAssembler/data/final/finalFaculty.json",
+
+
+		"newExampleData" : "../StoryAssembler/data/newExampleData.json",
+
+		"Coordinator" : "../Coordinator/Coordinator",
+		"Display" : "js/Display",
+		"avatars" : "../assets/avatars/avatars.json",
+
+		"Phaser" : "../lib/phaser",
+		"jQuery": "../lib/jquery-3.0.0.min",
+		"jQueryUI": "../lib/jquery-ui.min",
+		"jsonEditor": "../lib/jsonEditor/jsoneditor",
+
+		"Game" : "../GameGenerator/js/game",
+		"AspPhaserGenerator" : "../asp-phaser-generator-2/index",
+		"translateAsp" : '../asp-phaser-generator-2/src/asp-to-cygnus-2',
+		"rensa" : '../asp-phaser-generator-2/src/brain',
+		"ctp" : '../asp-phaser-generator-2/src/cygnus-to-phaser-brain-2',
+		"translatePhaserBrain" : '../asp-phaser-generator-2/src/phaser-brain-to-code-2',
+
+		"testData" : "../StoryAssembler/data/testData.json",
+
+		"cytoscape": "../StoryAssembler/lib/cytoscape",
+		"cytoscape-cxtmenu" : "../StoryAssembler/lib/cytoscape-cxtmenu",
+		"cytoscape-cose-bilkent" : "../StoryAssembler/lib/cytoscape-cose-bilkent",
+		"cytoscape-edgehandles" : "../StoryAssembler/lib/cytoscape-edgehandles",
+		"dagre" : "../StoryAssembler/lib/dagre.min",
+		"cytoscape-dagre" : "../StoryAssembler/lib/cytoscape-dagre",
+		"cola" : "../StoryAssembler/lib/cola",
+		"cytoscape-cola" : "../StoryAssembler/lib/cytoscape-cola",
+
+		
+		//"Phaser" : "../../lib/phaser",
+		//"Game" : "../../GameGenerator/js/game",
+		//"AspPhaserGenerator" : "../../asp-phaser-generator-2/index",
+		/*"translateAsp" : '../../asp-phaser-generator-2/src/asp-to-cygnus',
+		"rensa" : '../../asp-phaser-generator-2/src/brain',
+		"ctp" : '../../asp-phaser-generator-2/src/cygnus-to-phaser-brain',
+		"translatePhaserBrain" : '../../asp-phaser-generator-2/src/phaser-brain-to-code'
+		*/
 	},
 
 	shim: {
@@ -118,14 +141,15 @@ requirejs(
 	var globalData;
 	var story;
 	var graphData = [];
-	var leftToVisit = [];
+	leftToVisit = [];
 	playThroughs = [];
-	var currentScene = "undergradDinner";		//starting scene (you can change this in the UI from the dropdown)
+	var currentScene = "finalBeach";		//starting scene (you can change this in the UI from the dropdown)
 
 	var stories = Coordinator.getStorySpec("all");
 	var testStories = HanSON.parse(testData);
 	normalScenes = stories.map(function(obj){return obj.id});
 	testScenes = testStories.map(function(obj){return obj.id});
+	scenes = ["finalBeach"];
 
 	//which state variables to check to determine if we create a new node or merge it into one node
 	var stateCompares = ["articlesRead","droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice", "validChunks", "invalidChunks"];
@@ -214,10 +238,12 @@ requirejs(
 		
 		ChunkLibrary.reset();
 		State.reset();
-		Display.init(Coordinator, State);
+
+    	Display.initTimelineScreen(Coordinator, State, scenes);
+		Coordinator.loadAvatars(currentScene);
 		//Templates.init(Character);
 
-		//State.set("scenes", scenes);			//do we even need to do this?
+		//this is essentially copying loadStoryMaterials from Coordinator------------------------------------------
 		State.set("displayType", "editor");
 		State.set("currentScene", currentScene);
 
@@ -227,6 +253,8 @@ requirejs(
 			story = util.clone(testStories.filter(function(v) { return v.id === currentScene; })[0]);
 			testStory = true;
 		}
+
+   		Display.processWishlistSettings(Coordinator, story.id);			//extra bit to load dynamic wishlists
 
 		story.startState.forEach(function(command) {
 			State.change(command);
@@ -248,6 +276,9 @@ requirejs(
 
 		ChunkLibrary.add(HanSON.parse(require("text!globalData")));
 		
+		if (State.get("dynamicWishlist")) {
+			story.wishlist = State.get("processedWishlist");
+		}
 
 		var wishlist = Wishlist.create(story.wishlist, State);
 		//wishlist.logOn();
@@ -259,10 +290,14 @@ requirejs(
 			}
 		}
 		State.set("mode", story.mode);
+		State.set("storyUIvars", story.UIvars);
+		Display.setAvatars();
 		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
 
 		$("#storyDiagnostics").hide();
 		$("#storyDiagnosticsButton").hide();
+		$("#timeline").hide();
+		
 	}
 
 	//returns a color for a node if a want was satisfied
@@ -281,7 +316,7 @@ requirejs(
 
 	/*
 		This function adds a node and edge to the graph
-		clickPath: (used when called recursively) the path it took to get us to this chunk
+		clickPath: (used when called recursively) the path it took to get us to this fragment
 	*/
 	var addToGraph = function(clickPath) {
 
@@ -323,10 +358,10 @@ requirejs(
 
 			var groupCheck = graphData.filter(function(item){ return item.data.textId == groupingStateString; });
 
-			if (groupCheck.length > 0) {		//if the id already exists
+			if (groupCheck.length > 0) {		//if the id already exists, make a parent box for it in the graph to group it
 				if (typeof groupCheck[0].data.parent == "undefined") {	//if that item doesn't have a parent, (parent doesn't exist)
 					var parentId = "parent_" + groupCheck[0].data.textId;
-					var newParent = {							//create node for current chunk to add to graph
+					var newParent = {							//create node for parent box to add to graph
 						group: 'nodes',
 						data: {
 							id: parentId,
@@ -350,7 +385,7 @@ requirejs(
 
 			if (clickPath.length == 0) { graphRootId = uniqueNodeId; }		//if this was called as the first one, set graph root to that node
 
-			newNode = {							//create node for current chunk to add to graph
+			newNode = {							//create node for current fragment to add to graph
 				group: 'nodes',
 				classes: 'lexia',
 				data: {
@@ -507,68 +542,68 @@ requirejs(
 				}
 			});
 		}
-			debugLeftToVisitLengths.push(leftToVisit.length);
-			var nextChoice = leftToVisit.pop();									//pop last item off array, which should be last choice currently available?
-			var temp = nextChoice.clickPath[nextChoice.clickPath.length-1];
-			clickPath.push({source: temp.source, dest: temp.dest, clickNum: temp.clickNum, choiceText: temp.choiceText});			//add it to clickPath
+		debugLeftToVisitLengths.push(leftToVisit.length);
+		var nextChoice = leftToVisit.pop();						//pop last item off array, which should be last choice currently available?
+		var temp = nextChoice.clickPath[nextChoice.clickPath.length-1];
+		clickPath.push({source: temp.source, dest: temp.dest, clickNum: temp.clickNum, choiceText: temp.choiceText});			//add it to clickPath
 
-			if (typeof child(temp.clickNum, getChoiceEl()) !== "undefined") {		//if there is in fact a choice to click, click it
-				clickChoice(temp.clickNum);					//click the choice
-				
-				if ($("#storyArea").html().indexOf("[End of scene.]") > -1) {
-					addToGraph(clickPath);
-					if (leftToVisit.length > 0 && (iterStep < iterNum)) {
-						iterStep++;
-						console.log("reached the end of this playthrough, backing up and restarting...");
-						playThroughs.push(clickPath);
-						var nextNode = leftToVisit.shift();
-						gotoChoice(nextNode.clickPath, story, levelData, globalData);
-					}
-				}
-				else {
-					addToGraph(clickPath);
-					stepStory(clickPath);			//repeat process
-				}
-			}
-
-			else if ($("#storyArea").html().indexOf("[End of scene.]") > -1) {				//if we're done, restart
-				addToGraph(clickPath);
-				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
-					iterStep++;
-					console.log("reached the end of this playthrough, backing up and restarting...");
-					var nextNode = leftToVisit.shift();
-					gotoChoice(nextNode.clickPath, story, levelData, globalData);
-				}
-			}
-
-			else if ($("#storyArea").html().indexOf("[Scene assembly failed.]") > -1) {			//if we errored out, restart
-				addToGraph(clickPath);
-				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
-					iterStep++;
-					console.log("reached an error in this playthrough, backing up and restarting...");
-					var nextNode = leftToVisit.shift();
-					gotoChoice(nextNode.clickPath, story, levelData, globalData);
-				}
-			}
+		if (typeof child(temp.clickNum, getChoiceEl()) !== "undefined") {		//if there is in fact a choice to click, click it
+			clickChoice(temp.clickNum);					//click the choice
 			
-			else if ($("#storyArea").html().indexOf("[No path found!]") > -1) {					//if we couldn't find a path, restart
-				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
-					iterStep++;
-					console.log("reached the end of this playthrough, backing up and restarting...");
-					var nextNode = leftToVisit.shift();
-					gotoChoice(nextNode.clickPath, story, levelData, globalData);
-				}
-			}
-
-			else { 
+			if ($("#storyArea").html().indexOf("[End of scene.]") > -1) {
 				addToGraph(clickPath);
 				if (leftToVisit.length > 0 && (iterStep < iterNum)) {
 					iterStep++;
-					console.log("A choice wasn't available? Starting over...");
+					console.log("reached the end of this playthrough, backing up and restarting...");
+					playThroughs.push(clickPath);
 					var nextNode = leftToVisit.shift();
 					gotoChoice(nextNode.clickPath, story, levelData, globalData);
 				}
 			}
+			else {
+				addToGraph(clickPath);
+				stepStory(clickPath);			//repeat process
+			}
+		}
+
+		else if ($("#storyArea").html().indexOf("[End of scene.]") > -1) {				//if we're done, restart
+			addToGraph(clickPath);
+			if (leftToVisit.length > 0 && (iterStep < iterNum)) {
+				iterStep++;
+				console.log("reached the end of this playthrough, backing up and restarting...");
+				var nextNode = leftToVisit.shift();
+				gotoChoice(nextNode.clickPath, story, levelData, globalData);
+			}
+		}
+
+		else if ($("#storyArea").html().indexOf("[Scene assembly failed.]") > -1) {			//if we errored out, restart
+			addToGraph(clickPath);
+			if (leftToVisit.length > 0 && (iterStep < iterNum)) {
+				iterStep++;
+				console.log("reached an error in this playthrough, backing up and restarting...");
+				var nextNode = leftToVisit.shift();
+				gotoChoice(nextNode.clickPath, story, levelData, globalData);
+			}
+		}
+		
+		else if ($("#storyArea").html().indexOf("[No path found!]") > -1) {					//if we couldn't find a path, restart
+			if (leftToVisit.length > 0 && (iterStep < iterNum)) {
+				iterStep++;
+				console.log("reached the end of this playthrough, backing up and restarting...");
+				var nextNode = leftToVisit.shift();
+				gotoChoice(nextNode.clickPath, story, levelData, globalData);
+			}
+		}
+
+		else { 
+			addToGraph(clickPath);
+			if (leftToVisit.length > 0 && (iterStep < iterNum)) {
+				iterStep++;
+				console.log("A choice wasn't available? Starting over...");
+				var nextNode = leftToVisit.shift();
+				gotoChoice(nextNode.clickPath, story, levelData, globalData);
+			}
+		}
 
 		
 
@@ -667,6 +702,14 @@ requirejs(
 		return newChoices
 	}
 
+	/*
+	creates a popup menu for the right-click node action on the graph
+	type:
+		-pathsToHere: displays clickpaths that lead to this node, and highlights them on the graph
+		-validInvalid: list of valid and invalid fragments at this state point
+		-data: list of all data fields for that node
+	*/
+	
 	var createPopup = function(type, data) {
 
 		$("#popup").html("");
@@ -773,6 +816,7 @@ requirejs(
 			$("#popup").hide();
 		});
 
+		//highlight the paths to this node on the graph 
 		if (type == "pathsToHere") {
 			$("#popup .goto").click(function() {
 				gotoChoice(ele.data().clickPath, story, levelData, globalData, "stepTo");
@@ -782,10 +826,20 @@ requirejs(
 
 	}
 
+	//TODO: reduces the graphElements to get rid of duplicates
+	var optimizeGraphElements = function(graphElements) {
+
+	}
+
+	//creates the graph of paths in the narrative scene
 	var createGraph = function() {
 
 		graphElements = simulateRunthroughs();
 		console.log("GraphElements", graphElements);
+		console.log("leftToVisit", leftToVisit);
+		console.log("debugLeftToVisitLengths", debugLeftToVisitLengths);
+		console.log("ending length:", debugLeftToVisitLengths[debugLeftToVisitLengths.length-1]);
+		optimizeGraphElements(graphElements);
 
 		cytoGraph = cytoscape({
 			container : $("#cyto"),
@@ -891,7 +945,7 @@ requirejs(
 				gravityRange: 6.8
 			}
 			*/
-			/*
+			
 			layout : {						//this is the best so far
 				name: 'breadthfirst',
 				directed: true,
@@ -899,7 +953,7 @@ requirejs(
 				roots: '#' + graphRootId,
 				avoidOverlap: true,
 			}
-			*/
+			
 			/*
 			layout : {					//settings here: https://github.com/cytoscape/cytoscape.js-cola
 				name: 'cola',
@@ -912,7 +966,7 @@ requirejs(
 				edgeSymDiffLength: 6
 			}
 			*/
-			
+	/*		
 			layout : {				//settings here: https://github.com/cytoscape/cytoscape.js-dagre
 				name: 'dagre',
 				rankDir: 'TB',
@@ -975,8 +1029,6 @@ requirejs(
 		});
 
 		collapseEdges(cytoGraph);
-
-		createDropdown();
 
 	}
 
@@ -1107,7 +1159,7 @@ requirejs(
 
     $('body').append(instructionHtml + "<div id='cyto'></div><!--<button id='submit'>Save JSON file</button><button id='restore'>Reset Changes</button><span id='valid_indicator'></span><div id='editor_holder'></div>--><div id='storyContainer' class='editor'></div><div id='popup'></div>");
     
-
+	createDropdown();
 	createGraph();
 	//createEditor();
 	

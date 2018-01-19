@@ -8,7 +8,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		State.init(Templates);
 
 		//selectable scenes from main menu
-		var scenes = ["finalDinner", "finalLecture", "finalDean", "finalFamilyDinner", "finalBeach"]
+		var scenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach"]
 
 
 		//for reference, easy access to old temporary scenes.

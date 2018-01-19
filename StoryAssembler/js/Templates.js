@@ -301,7 +301,8 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			re = /{[^}]*}/g;
 		}
 		*/
-		while (txt.indexOf("{") > -1) {
+		var maxLoops = 200;
+		while (txt.indexOf("{") > -1 && maxLoops > 0) {
 			var templateString = "";
 			var openingBraces = 0;
 			var closingBraces = 0;
@@ -320,7 +321,10 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 				}
 			}
 			txt = txt.replace(templateString, processTemplate(templateString));
+			maxLoops--;
 		}
+
+		if (maxLoops == 0) { console.log("problem with template in '" + txt + "'!"); }
 
 
 

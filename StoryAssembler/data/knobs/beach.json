@@ -358,7 +358,7 @@
 		"unavailableChoiceLabel" : "I should do more work before talking to {name|volunteer}",
 		"choiceLabel" : "Break the silence",
 		"content" : "After about half an hour of quietly working, you feel the need to hear another human voice. You clear your throat. {name|volunteer} looks up.",
-		"conditions" : [ "effort gte 2" ],
+		"conditions" : [ "effort gte 3" ],
 		"effects": [
 			"set expendEffort true"
 		]

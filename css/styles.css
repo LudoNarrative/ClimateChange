@@ -353,7 +353,7 @@ Story CSS
     font-size: 17px; 
 }
 
-#introGameInstructions h2 {
+#introGameInstructions h2, #gameInstructions h2 {
     text-align: left;
     font-size:20px;
     padding-bottom:0px;
@@ -361,9 +361,9 @@ Story CSS
     color: #ffe26f;
 }
 
-#introGameInstructions h2:hover { color: #ffe26f; }
+#introGameInstructions h2:hover, #gameInstructions h2:hover { color: #ffe26f; }
 
-#introGameInstructions ul {
+#introGameInstructions ul, #gameInstructions ul {
     padding-top: 0px;
     margin-top: 0px;
 }
@@ -454,6 +454,7 @@ Story CSS
     padding:0 2%;
     background-color:#dadada;
     color:black !important;
+        line-height: 29px;
 }
 .sceneKnobs {
     display: none;
@@ -603,7 +604,10 @@ input:checked + .slider:before {
 
 .sceneWindows.active { opacity:1; }
 
-.mutable { color: #079bcc; }\
+.mutable { 
+    border: 1px dashed black;
+    padding: 3px;
+}
 
 .beginScene {
     font-size: 25px;

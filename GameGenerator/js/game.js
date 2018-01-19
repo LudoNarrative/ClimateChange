@@ -118,10 +118,10 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 			
 			$('<div/>', {
 			    id: theId,
-			    html: aspGameInstructions
+			    html: parseInstructions(aspGameInstructions)
 			}).appendTo(appendDest);
 
-			if (introGame) { parseInstructions(); }
+			if (introGame) { $("#introGameInstructions").html(parseInstructions(aspGameInstructions)); }
 		}
 		else { 
 			$("#gameInstructions").html(aspGameInstructions); 
@@ -154,8 +154,16 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	}
 
 	//changes the instruction format exported from ASP into something more readable
-	var parseInstructions = function() {
-		var bullets = $("#introGameInstructions ul li").toArray().slice(1);		//get bullet
+	var parseInstructions = function(aspGameInstructions) {
+		$('<div/>', {
+			    id: "temp",
+			    html: aspGameInstructions
+			}).appendTo("body");
+
+		var bullets = $("#temp ul li").toArray().slice(1);		//get bullets
+		$("#temp").remove();
+
+
 		var mode = "";
 		var goals = [];
 		var subGoals = [];
@@ -207,7 +215,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 			instructions += controlString;
 		}
 
-		$("#introGameInstructions").html(instructions);
+		return instructions;		
 
 	}
     
