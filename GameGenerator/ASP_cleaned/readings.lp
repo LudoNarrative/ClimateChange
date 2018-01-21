@@ -1,27 +1,17 @@
-% Proceduralist Reading Rules 
-% Author: Adam Summerville
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Proceduralist Reading Rules                     
+% Primary Author: Adam Summerville                
+% 
+% Can either be combined with a Cygnus game spec to produce readings of it,
+% or used during game generation (combined with a design intent), to 
+% produce game(s) with a desired meaning.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-reading(survive,Entity) :-
-    entity(Entity),
-    1 {reading(defend_against,Entity);
-       reading(dodge,Entity) }.
-	   
-	   
-{reading(defend_against,Entity)} :-
-    reading(hurt,relation(Entity,player)),
-    result(Outcome,delete(Entity)),
-    player_controls_outcome(Outcome).
+%%%%%%
 
-required(hurt) :- required(defend).
-{reading(dodge,Entity)} :-
-    reading(hurt,relation(Entity,player)),
-    precondition(overlaps(Entity),Outcome),
-    precondition(overlaps(Entity2),Outcome),
-    reading(bad,Outcome),
-    player_controls(Entity2).
-
-required(hurt) :- required(dodge).
-
+% A condition is risky with potential for reward 
+% if it produces both a good and bad outcome
 
 reading(risk_reward,Condition) :-
     precondition(Condition,Good),
@@ -29,6 +19,20 @@ reading(risk_reward,Condition) :-
     precondition(Condition,Bad),
     reading(bad,Bad).
 
+%%%%%%
+
+% A game requires hand-eye coordination if it has a 
+% hand-eye coord. outcome which is also good for the player
+
+% hand_eye_coordination(Outcome) defined in generation_rules.lp
+% as an outcome triggered by an overlap or clicking precondition
+
+{ reading(hand_eye_coordination,game) } :-
+    reading(good,Outcome),
+    hand_eye_coordination(Outcome).
+
+
+%%% ??? %%%
 
 reading(difficulty,Resource) :-
     reading(hurt,relation(Entity,player)),
@@ -47,95 +51,183 @@ reading(difficulty,Resource) :-
     action(modify(increase,Resource2,Resource)).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%
-{reading(hurt,relation(Entity1,player)) } :-
-    precondition(overlaps(Entity1),Outcome),
-    reading(bad,Outcome),
-    not reading(good ,Outcome),
-    computer_controls(Entity1).
+%%% RELATIONS %%% 
+
+%%% help, hurt, chases, flees, sharing, produces, consumes
+
+%%%%%%
+
+%% Entity-player relations
+
+% TODO: Make all relation names the same tense 
+% (Currently: help, hurt, chases, flees, sharing, produces, consumes)
+
+% An entity can help the player
+% (The player cannot help an entity the way help is currently defined)
+
+% TODO: Less hacky predicate names for 'help' (help2 and help3 are never used)
+% Maybe rename 'help' to 'help_player' to be more clear?
+
+reading(help,relation(Entity,player))  :-
+    precondition(overlaps(Entity),Outcome),
+    reading(good,Outcome),
+    not reading(bad,Outcome),
+    computer_controls(Entity).
+
+{ reading(help,relation(Entity1,player)) } :-
+    reading(help,relation(Entity1,Entity2)),
+    player_controls(Entity2).
+
+% I dont think this rule makes sense. Delete?
+%{ reading(help,relation(Entity2,player)) } :-
+%    reading(help,relation(Entity1,Entity2)),
+%    player_controls(Entity1).
+
+
+% Enables more concise design intent writing: required(help)
 
 help :- 
     precondition(overlaps(Entity),Outcome),
     reading(good,Outcome),
     not reading(bad,Outcome),
     computer_controls(Entity).
-reading(help,relation(Entity,player))  :-
-    precondition(overlaps(Entity),Outcome),
-    reading(good,Outcome),
-    not reading(bad,Outcome),
-    computer_controls(Entity).
-required(good) :- required(help).
-required(bad) :- required(hurt).
 
+% Can the above rule be replaced with:
+% help :- reading(help,relation(Entity,player)).
 
-{reading(help,relation(Entity1,player)) } :-
+% help2 and help3 never used
+% TODO: replace rule heads with 'help', so any of the three rules imply the 'help' fact? 
+
+help2 :- 
     reading(help,relation(Entity1,Entity2)),
     player_controls(Entity2).
-help2 :- reading(help,relation(Entity1,Entity2)),
-	 player_controls(Entity2).
-{reading(help,relation(Entity2,player)) } :-
-    reading(help,relation(Entity1,Entity2)),
-    player_controls(Entity1).
+
 help3 :-
     reading(help,relation(Entity1,Entity2)),
     player_controls(Entity1).
 
-{reading(hurt,relation(Entity1,player)) } :-
-    reading(hurt,relation(Entity2,Entity1)),
-    player_controls(Entity2).
 
-{reading(hurt,relation(Entity2,player)) } :-
+% Helping the player is good, hurting the player is bad
+% (But there isnt a 'hurt' in the head of a rule like 'help' is)
+% Should have: hurt :- reading(hurt,relation(Entity,player)). ?
+
+required(good) :- required(help).
+required(bad) :- required(hurt).
+
+
+% An entity can hurt the player
+% (The player cannot hurt an entity the way hurt is currently defined)
+
+{ reading(hurt,relation(Entity1,player)) } :-
+    precondition(overlaps(Entity1),Outcome),
+    reading(bad,Outcome),
+    not reading(good,Outcome),
+    computer_controls(Entity1).
+
+{ reading(hurt,relation(Entity2,player)) } :-
     reading(hurt,relation(Entity2,Entity1)),
     player_controls(Entity1).
 
+% I dont think this rule makes sense. Delete?
+%{ reading(hurt,relation(Entity1,player)) } :-
+%    reading(hurt,relation(Entity2,Entity1)),
+%    player_controls(Entity2).
 
-%% HELPING ANOTHER ENTITY
-%{reading(help,relation(Entity1,Entity2)) } :-
+%%%%%%
+
+%% Higher-level player-entity relations
+
+% A player can be read as 'surviving' an entity if they have to 
+% dodge and/or defend against it
+
+reading(survive,Entity) :-
+    entity(Entity),
+    1 {reading(defend_against,Entity);
+       reading(dodge,Entity) }.
+       
+
+% A player can be read as 'defending against' an entity
+% if the entity hurts the player, and the player 
+% controls an outcome which deletes the entity
+       
+{ reading(defend_against,Entity) } :-
+    reading(hurt,relation(Entity,player)),
+    result(Outcome,delete(Entity)),
+    player_controls_outcome(Outcome).
+
+
+% A player can be read as 'dodging' an entity
+% if the entity hurts the player, and a player-controlled entity 
+% overlapping with it produces a bad outcome. 
+
+% TODO: Shouldnt dodging be read if the entity hurts the player OR
+%       the overlapping thing? The hurt reading is already implied by the overlap condition
+% TODO: Should rename dodge to player_dodge to be more explicit? Or 
+%       decouple the player from the rule, 
+%       so it just checks 1 entity (possibly the player) dodging another (an entity-entity/player relation?)
+% (And similarly for defend_against)
+
+{ reading(dodge,Entity) } :-
+    reading(hurt,relation(Entity,player)),
+    precondition(overlaps(Entity),Outcome),
+    precondition(overlaps(Entity2),Outcome),
+    reading(bad,Outcome),
+    player_controls(Entity2).
+
+
+% Asking for a game with player dodging or defending implies 
+% asking for a game in which the player can be hurt by an entity(?)
+
+required(hurt) :- required(dodge).
+required(hurt) :- required(defend).
+
+required(dodge) :- reading(dodge,_).
+required(defend) :- reading(defend_against,_).
+
+
+%%%%%%
+
+%% Entity-Entity Relations
+
+% An entity can help or hurt another entity
+
+% TODO: entities helping other entities is just a stub right now
+
+%{ reading(help,relation(Entity1,Entity2)) } :-
 %    precondition(overlaps(Entity1,Entity2,true),Outcome),
 %    result(Outcome,modify(increase,property(Entity2,health))).
 
-%{reading(help,relation(Entity1,Entity2)) } :-
+%{ reading(help,relation(Entity1,Entity2)) } :-
 %    precondition(overlaps(Entity2,Entity1,true),Outcome),
 %    result(Outcome,modify(increase,property(Entity2,health))).
 
 
-%{reading(hurt,relation(Entity1,Entity2)) } :-
-%    precondition(overlaps(Entity1,Entity2,true),Outcome),
-%    result(Outcome,modify(decrease,property(Entity2,health))).
-
-
-
-{reading(hurt,relation(Entity1,Entity2)) } :-
+{ reading(hurt,relation(Entity1,Entity2)) } :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,delete(Entity2)).
 
-%{reading(hurt,relation(Entity1,Entity2)) } :-
-%    precondition(overlaps(Entity2,Entity1,true),Outcome),
-%    result(Outcome,modify(decrease,property(Entity2,health))).
-
-
-{reading(hurt,relation(Entity1,Entity2)) } :-
+{ reading(hurt,relation(Entity1,Entity2)) } :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,delete(Entity2)).
 
-{reading(produces,relation(Entity1,Entity2)) } :-
-    action(add(Entity2,_,Entity1)).
+% TODO: An entity is also hurting another if it causes its health to decrease
 
-    
-{reading(consumes,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity2,Entity1,true),Outcome),
-    result(Outcome,delete(Entity2)).
-
-%{reading(consumes,relation(Entity1,Entity2)) } :-
-%    precondition(overlaps(Entity2,Entity1,true),Outcome),
-%    result(Outcome,modify(decrease,property(Entity2,health))).
-%{reading(consumes,relation(Entity1,Entity2)) } :-
+%{ reading(hurt,relation(Entity1,Entity2)) } :-
 %    precondition(overlaps(Entity1,Entity2,true),Outcome),
 %    result(Outcome,modify(decrease,property(Entity2,health))).
-    
+
+%{ reading(hurt,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity2,Entity1,true),Outcome),
+%    result(Outcome,modify(decrease,property(Entity2,health))).
+
+
+% An entity can chase or flee from another
+
 reading(chases,relation(Entity1,Entity2)) :-
     action(move(Entity1,direction(towards,Entity2))).
+
 reading(chases,relation(Entity1,Entity2)) :-
     action(move(Entity1,direction(forward))),
     action(look_at(Entity1,Entity2)).
@@ -147,6 +239,52 @@ reading(flees,relation(Entity1,Entity2)) :-
 reading(flees,relation(Entity1,Entity2)) :-
     action(move(Entity1,direction(backward))),
     action(look_at(Entity1,Entity2)).
+
+
+% One entity type can share a second entity with each other(?)
+
+{ reading(sharing,relation(Entity,Entity1)) } :-    
+    reading(consumes,relation(Entity1,Entity)),
+    many(Entity1),
+    reading(good,Resource).
+
+{ reading(sharing,relation(Entity,Entity1)) } :-     
+    reading(consumes,relation(Entity1,Entity)),
+    many(Entity1),
+    precondition(overlaps(Entity1,Entity,true),Outcome),
+    result(Outcome,delete(Entity)),
+    result(Outcome,modify(increase,Resource)),
+    reading(good,Resource).
+
+required(good) :- required(sharing).
+required(consumes) :- required(sharing).
+
+
+% Entities can produce or consume another entity
+
+{ reading(produces,relation(Entity1,Entity2)) } :-
+    action(add(Entity2,_,Entity1)).
+
+{ reading(consumes,relation(Entity1,Entity2)) } :-
+    precondition(overlaps(Entity2,Entity1,true),Outcome),
+    result(Outcome,delete(Entity2)).
+
+
+% TODO: An entity can also be interpreted as consuming another entity
+% if overlapping with it decreases its health
+
+%{ reading(consumes,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity2,Entity1,true),Outcome),
+%    result(Outcome,modify(decrease,property(Entity2,health))).
+%{ reading(consumes,relation(Entity1,Entity2)) } :-
+%    precondition(overlaps(Entity1,Entity2,true),Outcome),
+%    result(Outcome,modify(decrease,property(Entity2,health))).
+
+
+%%%%%%
+
+%% Entity-Resource Relations
+% Relations that can exist from an Entity to a Resource
     
 reading(consumes,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
@@ -156,6 +294,7 @@ reading(consumes,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,modify(decrease,Resource1)).
 
+
 reading(produces,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
     result(Outcome,modify(increase,Resource1)).
@@ -164,20 +303,17 @@ reading(produces,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
     result(Outcome,modify(increase,Resource1)).
 
-reading(consts,relation(Entity1,Resource1)) :-
-    result(Outcome,add(Entity1,_,_)),
-    result(Outcome,modify(decrease,Resource1)).
 
 reading(costs,relation(Entity1,Resource1)) :-
     result(Outcome,add(Entity1,_,_)),
     result(Outcome,modify(decrease,Resource1)).
 
-{ reading(hand_eye_coordination,game) } :-
-    reading(good,Outcome),
-    hand_eye_coordination(Outcome).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-%% A goal can be to produce or reduce a resource or color
+%%% GOALS %%%
+
+%% A goal can be to produce or reduce a resource or color to a threshold
 
 % If game win or narrative progress happens when it reaches a threshold
 % Or game loss or narrative gating happens when it is below a threshold
@@ -231,23 +367,9 @@ reading(goal(reduce),Color) :-
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-{ reading(sharing,relation(Entity,Entity1)) } :-    
-    reading(consumes,relation(Entity1,Entity)),
-    many(Entity1),
-    reading(good,Resource).
-
-{ reading(sharing,relation(Entity,Entity1)) } :-     
-    reading(consumes,relation(Entity1,Entity)),
-    many(Entity1),
-    precondition(overlaps(Entity1,Entity,true),Outcome),
-    result(Outcome,delete(Entity)),
-    result(Outcome,modify(increase,Resource)),
-    reading(good,Resource).
-
-required(good) :- required(sharing).
-required(consumes) :- required(sharing).
-
+%%% GOODNESS / BADNESS %%%
 
 %% Resources can be good or bad
 % A resource production goal implies the resource is good
@@ -348,6 +470,7 @@ reading(good,Outcome) :-
     palette(Color).
 
 
+%%%%%%
 	
 opposed(bad,increase,bad,decrease).
 opposed(good,increase,good,decrease).
