@@ -435,23 +435,39 @@ reading(good,Outcome) :-
 
 %%% Difficulty? %%%
 
-% Not really used anywhere
+% If an entity can hurt the player, 
+% and the entity's speed is equal to the resource,
+% the difficulty is the resource.
+% Uses speed(Entity,Outcome,Speed_Value)
 
 reading(difficulty,Resource) :-
     reading(hurt,relation(Entity,player)),
     speed(Entity,O,Resource).
 
+% If the entity can hurt the player,
+% and a number of those entities equal to the resource are added
+% difficulty is the resource.
+
 reading(difficulty,Resource) :-
     reading(hurt,relation(Entity,player)),
     action(add(Entity,Resource,_)).
+
+% If a resource is good and theres an action which decreases it
+% by an amount equal to another resource, 
+% difficulty is the second resource. 
 
 reading(difficulty,Resource) :-
     reading(good,Resource2),
     action(modify(decrease,Resource2,Resource)).
 
+% If a resource is bad and theres an action which increases it 
+% by an amount equal to another resource,
+% difficulty is the second resource.
+
 reading(difficulty,Resource) :-
     reading(bad,Resource2),
     action(modify(increase,Resource2,Resource)).
+
 
 %%%%%%
 
