@@ -8,49 +8,6 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%
-
-% A condition is risky with potential for reward 
-% if it produces both a good and bad outcome
-
-reading(risk_reward,Condition) :-
-    precondition(Condition,Good),
-    reading(good,Good),
-    precondition(Condition,Bad),
-    reading(bad,Bad).
-
-%%%%%%
-
-% A game requires hand-eye coordination if it has a 
-% hand-eye coord. outcome which is also good for the player
-
-% hand_eye_coordination(Outcome) defined in generation_rules.lp
-% as an outcome triggered by an overlap or clicking precondition
-
-{ reading(hand_eye_coordination,game) } :-
-    reading(good,Outcome),
-    hand_eye_coordination(Outcome).
-
-
-%%% ??? %%%
-
-reading(difficulty,Resource) :-
-    reading(hurt,relation(Entity,player)),
-    speed(Entity,O,Resource).
-
-reading(difficulty,Resource) :-
-    reading(hurt,relation(Entity,player)),
-    action(add(Entity,Resource,_)).
-
-reading(difficulty,Resource) :-
-    reading(good,Resource2),
-    action(modify(decrease,Resource2,Resource)).
-
-reading(difficulty,Resource) :-
-    reading(bad,Resource2),
-    action(modify(increase,Resource2,Resource)).
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% RELATIONS %%% 
@@ -371,6 +328,8 @@ reading(goal(reduce),Color) :-
 
 %%% GOODNESS / BADNESS %%%
 
+required(good;bad).
+
 %% Resources can be good or bad
 % A resource production goal implies the resource is good
 % A resource reduction goal implies the resource is bad
@@ -470,13 +429,68 @@ reading(good,Outcome) :-
     palette(Color).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% MISC %%%
+
+%%% Difficulty? %%%
+
+% Not really used anywhere
+
+reading(difficulty,Resource) :-
+    reading(hurt,relation(Entity,player)),
+    speed(Entity,O,Resource).
+
+reading(difficulty,Resource) :-
+    reading(hurt,relation(Entity,player)),
+    action(add(Entity,Resource,_)).
+
+reading(difficulty,Resource) :-
+    reading(good,Resource2),
+    action(modify(decrease,Resource2,Resource)).
+
+reading(difficulty,Resource) :-
+    reading(bad,Resource2),
+    action(modify(increase,Resource2,Resource)).
+
 %%%%%%
+
+% A condition can trigger both a good and bad outcome simultaneously
+
+reading(risk_reward,Condition) :-
+    precondition(Condition,Good),
+    reading(good,Good),
+    precondition(Condition,Bad),
+    reading(bad,Bad).
+
+%%%%%%
+
+% A game requires hand-eye coordination if it has a 
+% hand-eye coordination outcome which is also good for the player
+
+% hand_eye_coordination(Outcome) defined in generation_rules.lp
+% as an outcome triggered by an overlap or clicking precondition
+
+{ reading(hand_eye_coordination,game) } :-
+    reading(good,Outcome),
+    hand_eye_coordination(Outcome).
+
+%%%%%%
+
+%%% Tradeoff between 2 resources or outcomes %%%
+
+% Defines goodness opposites; used in tradeoff reading
+% e.g., increasing badness is the opposite of decreasing badness,
+%       decreasing good is the opposite of decreasing bad
 	
 opposed(bad,increase,bad,decrease).
 opposed(good,increase,good,decrease).
 opposed(good,increase,bad,increase).
 opposed(good,decrease,bad,decrease).
 opposed(V1,D1,V2,D2) :- opposed(V2,D2,V1,D1).
+
+% Tradeoff if the same rule triggers opposite-polarity resource modifications
+% e.g., rule results in both increase of a bad resource and increase in good resource
 
 reading(tradeoff,relation(R1, R2)) :-
 	result(O,modify(Direction1,R1)),
@@ -489,24 +503,33 @@ reading(tradeoff,Outcome) :-
     reading(good,Outcome),
     reading(bad,Outcome).
 
-
-required(good;bad).
+% Requiring a tradeoff implies requiring both good and bad
+% TODO: required(tradeoff) isnt implied by reading(tradeoff,relation(R1,R2))?
 
 required(good) :- required(tradeoff).
 required(bad) :- required(tradeoff).
 
-{reading(maintenance,Resource) } :-
+%%%%%%
+
+%%% Maintaining a resource %%%
+
+% The player is 'maintaining' a resource if 
+% it is a good resource, that the player can increase,
+% that depletes over time
+
+{ reading(maintenance,Resource) } :-
     reading(good,Resource),
     player_controls_outcome(Outcome),
     result(Outcome,modify(increase,Resource)),
     result(OverTime,modify(decrease,Resource)),
     over_time(OverTime).
 
+% TODO: required(maintenance) isnt implied by reading(maintenance,Resource)?
 
 required(produces) :- required(maintenance).
 required(good) :- required(maintenance).
 
-{reading(maintenance,Resource) } :-
+{ reading(maintenance,Resource) } :-
     reading(bad,Resource),
     player_controls_outcome(Outcome),
     result(Outcome,modify(decrease,Resource)),
@@ -515,55 +538,80 @@ required(good) :- required(maintenance).
 
 required(bad) :- required(maintenance).
 
+%%%%%%
 
-{reading(stakes(high),Resource) } :-
+%%% Stakes of a resource %%%
+
+% Stakes (associated with a resource) are high 
+% if a resource comparison results in a win or loss,
+% And low otherwise
+
+{ reading(stakes(high),Resource) } :-
     precondition(compare(ge,Resource),Outcome),
     result(Outcome,mode_change(game_loss)).
     
-{reading(stakes(high),Resource) } :-
+{ reading(stakes(high),Resource) } :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_win)).
 
-%{reading(stakes(high),property(Entity,health)) } :-
+%{ reading(stakes(high),property(Entity,health)) } :-
 %    entity(Entity),
 %    action(modify(decrease,property(Entity,health))).
 
-{reading(stakes(low),Resource) } :-
+{ reading(stakes(low),Resource) } :-
     resource(Resource),
     not reading(stakes(high),Resource).
 
+% TODO: required(stakes(low)) isnt implied by reading(stakes(low),_)?
 
 required(stakes(high)) :- required(stakes(low)).
 
-%Grinding is a valid reading iff monotonic, player controls the modification
-{reading(grinding,Resource) } :-
+%%%%%%
+
+%%% Grinding %%%
+
+% Grinding is a valid reading iff monotonic, player controls the modification
+
+{ reading(grinding,Resource) } :-
     monotonic(Resource),
     player_controls_outcome(Outcome),
     result(Outcome,modify(_,Resource)),
     not reading(risk,Outcome).
 
+% TODO: required(grinding) isnt connected to reading(grinding,_)?
+
 required(risk) :- required(grinding).
 
-%Organization
+%%%%%%
 
-{reading(organization) } :-
+% Organization
+
+{ reading(organization) } :-
     precondition(overlaps(Entity,Entity2,true),Outcome),
     outcome_enables(Outcome,EndOutcome),
     result(EndOutcome,mode_change(game_win;narrative_progress)).
 
-%an outcome has risk, if a similar outcome is bad
-{reading(risk, Outcome) } :-
+%%%%%%
+
+% An outcome has risk if its precondition also triggers a bad outcome
+
+{ reading(risk,Outcome) } :-
     precondition(Cond,Outcome),
     precondition(Cond,BadOutcome),
     reading(outcome_hurts,relation(BadOutcome,_)).
 
+%%%%%%
+
+% A player-controlled outcome can help or hurt
+
 required(outcome_hurts) :- required(risk).
 
-{reading(outcome_helps,relation(Outcome,Resource)) } :-
+{ reading(outcome_helps,relation(Outcome,Resource)) } :-
     result(Outcome,modify(increase,Resource)),
     player_controls_outcome(Outcome),
     reading(good,Resource).
-{reading(outcome_helps,relation(Outcome,Resource)) } :-
+
+{ reading(outcome_helps,relation(Outcome,Resource)) } :-
     result(Outcome,modify(decrease,Resource)),
     player_controls_outcome(Outcome),
     reading(bad,Resource).
@@ -572,11 +620,13 @@ required(outcome_hurts) :- required(risk).
 required(good) :- required(outcome_helps).
 required(bad) :- required(outcome_helps).
 
-{reading(outcome_hurts,relation(Outcome,Resource)) } :-
+
+{ reading(outcome_hurts,relation(Outcome,Resource)) } :-
     result(Outcome,modify(decrease,Resource)),
     player_controls_outcome(Outcome),
     reading(good,Resource).
-{reading(outcome_hurts,relation(Outcome,Resource)) } :-
+
+{ reading(outcome_hurts,relation(Outcome,Resource)) } :-
     result(Outcome,modify(increase,Resource)),
     player_controls_outcome(Outcome),
     reading(bad,Resource).
@@ -584,21 +634,27 @@ required(bad) :- required(outcome_helps).
 required(good) :- required(outcome_hurts).
 required(bad) :- required(outcome_hurts).
 
-%HELPERS 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% HELPERS %%%
 
 change(game_win,positive).
 change(narrative_progress,positive).
 change(game_loss,negative).
 change(narrative_gating,positive).
 
+
 over_time(Outcome) :-
     precondition(tick,Outcome).
+
 over_time(Outcome) :-
     precondition(timer_elapsed(T),Outcome).
 
 over_time(Change,Resource) :-
     over_time(Outcome),
     result(Outcome,modify(Change,Resource)).
+
 
 nonmonotonic(Resource) :-
     resource(Resource),
@@ -613,6 +669,7 @@ reading_about(Thing) :-
     reading(Action,relation(_,Thing)).
 
 
+% outcome_creates_condition : (not used anywhere)
 
 outcome_creates_condition(Outcome,compare(le,Resource)) :-
     result(Outcome,modify(decrease,Resource)),
@@ -626,10 +683,12 @@ outcome_creates_condition(Outcome,overlaps(Entity)) :-
     result(Outcome,move(Entity,direction(_,_))),
     condition(overlaps(Entity)).
 
+
+% outcome_enables : Build up causal chains of outcomes leading to other outcomes
+
 outcome_enables(Outcome,Other) :-
     outcome_creates_condition(Outcome,Cond),
     precondition(Cond,Other).
-
 
 outcome_enables(O1,O3) :-
     outcome_enables(O1,O2),
