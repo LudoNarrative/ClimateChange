@@ -220,7 +220,7 @@
 
   { // TODO parametrize on academicFriend1 & activistFriend2?
     "id": "friendNotInAcademici",
-    "content": "<p>{name|friend2} rests her elbows on the table and leans in. \"So, I dunno what you're doing next Friday, but I'm actually setting up a beach cleanup a little bit south of here.\"</p><p>\"Oh damn {name|friend2},\" {name|friend1} interjects. {ifStateCondition|academicFriend gt 0|\"That's when {name|protagonist} and I have our faculty orientation meeting.\"|\"Isn't that when {name|protagonist} has her faculty orientation meeting?\"}</p>",
+    "content": "<p>{name|friend2} rests her elbows on the table and leans in. \"So, I dunno what you're doing next Friday, but I'm actually setting up a beach cleanup a little bit south of here.\"</p><p>\"Oh damn {name|friend2},\" {name|friend1} interjects. {ifStateCondition|academicFriend gt 0|(\"That's when {name|protagonist} and I have our faculty orientation meeting.\")|(\"Isn't that when {name|protagonist} has her faculty orientation meeting?\")}</p>",
     "effects": [
       "set friendIsNotInAcademia true"
     ],
