@@ -246,10 +246,10 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 	}
 
-	var handleNoPathFound = function(wishlist) {
-		if (wishlist.length > 0) {				//if we still have Wants...
+	var handleNoPathFound = function(wishlistWants) {
+		if (wishlistWants.length > 0) {				//if we still have Wants...
 			var unsatisfiedWants = false;
-			wishlist.forEach(function(wish) {	//and they aren't persistent Wants...
+			wishlistWants.forEach(function(wish) {	//and they aren't persistent Wants...
 				if (!wish.persistent) { unsatisfiedWants = true; }
 			});
 
@@ -468,15 +468,18 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		if (typeof Display !== "undefined" && State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
 			Display.setSceneOutro("Chapter complete!");
 		}
-		else {
-			if (assemblyFailed) { StoryDisplay.addStoryText("[Scene assembly failed.]");}
-			else { StoryDisplay.addStoryText("[End of scene.]"); }
+		else {				//if we're using the data viz or editor...
+			if (assemblyFailed) { State.set("dataVizState", "assemblyFailed"); }
+			else {
+				State.set("dataVizState", "playthroughFinished");
+			}
 		}
 	}
 
 	return {
 		beginScene: beginScene,
 		refreshNarrative : refreshNarrative,
-		clickChangeState : clickChangeState
+		clickChangeState : clickChangeState,
+		wishlist : wishlist
 	}
 });		

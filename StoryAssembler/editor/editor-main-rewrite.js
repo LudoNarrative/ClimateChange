@@ -149,7 +149,7 @@ requirejs(
 	var scenes = stories.map(function(obj){return obj.id});
 
 	//which state variables to check to determine if we create a new node or merge it into one node
-	var stateCompares = ["articlesRead","droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice", "validChunks", "invalidChunks"];
+	var stateCompares = ["validChunks", "invalidChunks"];
 	//which variables to check to determine if broken out but still in same container if same ID
 	//var groupingCompares = ["droppedKnowledge", "establishFriendBackstory", "establishSpecialtyInfo", "provokeConfidenceChoice"];
 
@@ -162,8 +162,6 @@ requirejs(
 
 	var graphElements = [];				//global holder for graph elements so we can redraw graph if need be (options are changed)
 
-
-
 	//----RUN-THROUGH HELPER FUNCTIONS------------------------------------------------------
 	var getStoryEl = function() {
 		return document.getElementById("storyArea").children[0];
@@ -171,11 +169,11 @@ requirejs(
 	var getChoiceEl = function() {
 		return document.getElementById("choiceArea");
 	}
-	var html = function(el) {
-		return el.innerHTML;
-	}
 	var countChildren = function(el) {
 		return el.children.length;
+	}
+	var html = function(el) {
+		return el.innerHTML;
 	}
 	var child = function(num, el) {
 		return el.children[num-1];
@@ -237,7 +235,6 @@ requirejs(
 	}
 
 	var simulateRunthroughs = function() {
-
 		resetStory();
 
 		addToGraph([]);
@@ -252,11 +249,12 @@ requirejs(
 		State.reset();
 		State.set("displayType", "editor");
 
+		
 		Display.processWishlistSettings(Coordinator, currentScene);			//extra bit to load dynamic wishlists
 
 		Coordinator.loadAvatars(currentScene);
 		Coordinator.loadStoryMaterials(currentScene);
-
+		
 		$("#storyDiagnostics").hide();
 		$("#storyDiagnosticsButton").hide();	
 	}
@@ -270,7 +268,7 @@ requirejs(
 		resetStory();		//reset story and load first node
 
 		for (var x=0; x < clickPath.length; x++) {
-			addToGraph(clickPath);					//add node to graph again (so that we can collapse lines with weight)
+			//addToGraph(clickPath);					//add node to graph again (so that we can collapse lines with weight)
 			clickChoice(clickPath[x].clickNum);		//click the choice
 		}
 		
@@ -294,7 +292,8 @@ requirejs(
 		if (typeof uniqueNodeId == "undefined") { uniqueNodeId = graphData[graphData.length-2].data.id; }		//if it wasn't a node, grab next one up
 		
 		var newChoices = checkForNewChoices(graphData, clickPath);			//check and see if there are any new choices
-			
+		//console.log("Haw haw haw", State.get("processedWishlist"));
+		console.log("Haw", StoryAssembler.wishlist);
 		newChoices.forEach(function(newChoice, pos) {			//copy them to the leftToVisit with the path to them
 			var choiceClickPath = clickPath.slice(0);		//clone array
 			choiceClickPath.push({source: uniqueNodeId, dest: newChoice.chunkId, clickNum: newChoice.choiceNum+1, choiceText: newChoice.text});
@@ -304,11 +303,11 @@ requirejs(
 		});
 
 		
-
+		console.log("Haw", StoryAssembler.wishlist);
 
 		var currentHtml = $("#storyArea").html();
 
-		if (leftToVisit.length > 0) {		//if there is in fact a choice to click, click it
+		if (leftToVisit.length > 0 && document.getElementById("choiceArea").children.length > 0) {		//if there is in fact a choice to click, click it
 			var nextChoice = leftToVisit.pop();						//pop last item off array, which should be last choice currently available?
 			var transition = nextChoice.clickPath[nextChoice.clickPath.length-1];
 			clickPath.push({source: transition.source, dest: transition.dest, clickNum: transition.clickNum, choiceText: transition.choiceText});			//add it to clickPath
@@ -317,16 +316,18 @@ requirejs(
 			stepStory(clickPath);			//repeat process
 		}
 
-		else if (currentHtml.indexOf("[Scene assembly failed.]") > -1) {			//if we errored out, restart
+		else if (State.get("dataVizState") == "assemblyFailed") {			//if we errored out, restart
 			restart("reached an error in this playthrough, backing up and restarting...");
+			State.set("dataVizState", "playthroughRestarting");
 		}
 		
 		else if (currentHtml.indexOf("[No path found!]") > -1) {					//if we couldn't find a path, restart
 			restart("reached the end of this playthrough, backing up and restarting...");
 		}
 
-		else {
-			restart("A choice wasn't available? Possibly because we're at the end of the scene? Starting over...");
+		else if (State.get("dataVizState") == "playthroughFinished") {			//if we finished a playthrough...
+			State.set("dataVizState", "playthroughRestarting");
+			restart("Playthrough finished! Starting over...");
 		}
 		
 	};
@@ -379,6 +380,16 @@ requirejs(
 	var createUI = function() {
 		createDropdown();
 		createKnobs();
+	}
+
+	var resetUI = function() {
+		graphData = [];
+		leftToVisit = [];
+		graphRootId = "";
+		graphElements = [];
+		$("#sceneSelect").remove();
+		iterStep = 0;
+		deadendPaths = 1;
 	}
 
 	var createKnobs = function() {
@@ -513,7 +524,9 @@ requirejs(
 
 			var lastTransition = clickPath[clickPath.length-1];
 
-			if (lastTransition.source == uniqueNodeId) { throw "You can't come from yourself!"; }
+			if (lastTransition.source == uniqueNodeId) { 
+				throw "You can't come from yourself!"; 
+			}
 
 			var text = lastTransition.choiceText;			//make label of choicetext for each edge
 			var type = "choice";
@@ -680,7 +693,7 @@ requirejs(
 				rankDir: 'TB',
 				rankSep: 75
 			}
-			
+		*/	
 			/*
 			layout : {
 				name: 'concentric',
@@ -742,6 +755,130 @@ requirejs(
 
 	}
 
+	/*
+	creates a popup menu for the right-click node action on the graph
+	type:
+		-pathsToHere: displays clickpaths that lead to this node, and highlights them on the graph
+		-validInvalid: list of valid and invalid fragments at this state point
+		-data: list of all data fields for that node
+	*/
+	
+	var createPopup = function(type, data) {
+
+		$("#popup").html("");
+		var theHtml = "<div id='popup_close'>X</div>";
+
+
+		if (type == "pathsToHere") {
+			theHtml+="<p><strong>Paths</strong></p><ul>";
+			cytoGraph.nodes().removeClass('showPath');
+			cytoGraph.edges().removeClass('showPath');
+
+			var pathNum = 1;
+			for (var x=0; x < playThroughs.length; x++) {
+				var thePlaythrough = playThroughs[x];
+				var flagged = false;
+				var ids = [];
+				for (var y=0; y < thePlaythrough.length; y++) {
+					ids.push(thePlaythrough[y].source);					//add node to temp array
+					if (thePlaythrough[y].source == data.id) { flagged = true; break; }		//if we encounter the target node, break early
+				}
+				if (flagged) {
+					theHtml+="<li>"
+					for (var a=0; a < ids.length; a++) {
+						cytoGraph.getElementById(ids[a]).addClass('showPath');
+						if (a > 0) {
+							cytoGraph.getElementById(ids[a-1]).edgesTo(cytoGraph.getElementById(ids[a])).addClass('showPath');
+						}
+						theHtml += cytoGraph.getElementById(ids[a]).data('textId') + "->";
+					}
+					theHtml = theHtml.substring(0, theHtml.length-2);
+					theHtml+="</li>";
+				}
+			}
+			theHtml+="</ul>";
+		}
+
+		if (type == "validInvalid") {
+			theHtml += "<p>Valid</p><ul>";
+			for (var x=0; x< data.valid.length; x++) {
+				theHtml+= "<li>" + data.valid[x].chunkId + "</li>";
+			}
+			theHtml += "</ul><p>Invalid</p><ul>";
+			for (var x=0; x < data.invalid.length; x++) {
+				theHtml+= "<li><strong>" + data.invalid[x].chunkId + "</strong> (" + data.invalid[x].reason + ")</li>";
+			}
+			theHtml += "</ul>";
+		}
+
+		if (type == "data") {
+			console.log(data);
+			for (var subData in data) {
+				switch (subData) {
+					case "id":
+						theHtml += "<p><strong>ID</strong></p><ul><li>" + data[subData] + "</li></ul>";
+					break;
+					case "textId":
+						theHtml += "<p><strong>textId</strong></p><ul>" + data[subData] + "</li></ul>";
+					break;
+					case "clickPath":
+						theHtml += "<p><strong>ClickPath</strong></p><ul>";
+						for (var x=0; x < data[subData].length; x++) {
+							theHtml += "<li>" + data[subData][x].source + "</li>";
+						}
+					break;
+					case "invalidChunks":
+						/*if (data[subData].length == 0) { theHtml += "<li>none</li>"; }
+						for (var x=0; x < data[subData].length; x++) {
+							theHtml += "<li>" + data[subData][x].chunkId + "</li>";
+						}*/
+					break;
+					case "validChunks":
+						/*
+						if (data[subData].length == 0) { theHtml += "<li>none</li>"; }
+						for (var x=0; x < data[subData].length; x++) {
+							theHtml += "<li>" + data[subData][x].chunkId + "</li>";
+						}*/
+					break;
+					case "wantsSatisfied":
+						if (typeof data[subData] !== "undefined") {			//first node is undefined for this var
+							theHtml += "<p><strong>Wants Satisfied</strong></p><ul>"
+							if (data[subData].length == 0) { theHtml += "<li>(none satisfied)</li>"; }
+							else { theHtml += "<li>" + data[subData] + "</li>"; }
+						}
+					break;
+					default:
+						theHtml += "<li><p><strong>" + subData + "</strong></p><ul><li>" + JSON.stringify(data[subData], null, 4) + "</li></ul>";
+						break;
+				}
+				
+				theHtml += "</ul>";
+			}
+			//theHtml += JSON.stringify(data, null, 4);
+		}
+		var left = parseInt($(".cxtmenu div").css("left").substring(0, $(".cxtmenu div").css("left").length - 2)) + 120;
+		left = left + "px";
+		var top = parseInt($(".cxtmenu div").css("top").substring(0, $(".cxtmenu div").css("top").length - 2)) + 80;
+		top = top + "px";
+
+		$("#popup").css({"left":left, "top":top});
+		$("#popup").show();
+		$("#popup").html(theHtml);
+
+		$("#popup_close").click(function() {
+			$("#popup").hide();
+		});
+
+		//highlight the paths to this node on the graph 
+		if (type == "pathsToHere") {
+			$("#popup .goto").click(function() {
+				gotoChoice(ele.data().clickPath, story, levelData, globalData, "stepTo");
+				$("#storyContainer.editor").show();
+			});
+		}
+
+	}
+
 	//takes cytoscape graph object, finds parallel edges, and removes them if they are parallel (preserving playthrough data)
 	var collapseEdges = function(cytoGraph) {
 		var deleteList = [];		//list of edge ids to delete
@@ -797,7 +934,6 @@ requirejs(
     var instructionHtml = "<div id='instructions'><h2>Instructions</h2><ul><li>Use dropdown to switch between scenes or change # of playthroughs</li><li>Right-click on nodes for contextual menus</li><li>Graph can pan and zoom using scrollwheel / click and drag</div>"
 
     $('body').append(instructionHtml + "<div id='cyto'></div><!--<button id='submit'>Save JSON file</button><button id='restore'>Reset Changes</button><span id='valid_indicator'></span><div id='editor_holder'></div>--><div id='storyContainer' class='editor'></div><div id='popup'></div>");
-    
 
     createUI();
 	createGraph();

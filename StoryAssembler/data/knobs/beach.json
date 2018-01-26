@@ -327,7 +327,7 @@
 	},
 	{   
 		"id" : "endDummy",
-		"choiceLabel" : "End Scene",
+		"choiceLabel" : "Start next scene.",
 		"content" : " ",
 		"conditions" : [],
 		"effects": [
@@ -347,7 +347,7 @@
 			{"gotoId": "breakTheSilence1"}
 		],
 		"conditions" : [
-			"effort gt 0",
+			//"effort gt 0",
 			//"effort lte 1"
 		],
 		"effects": [
@@ -358,7 +358,9 @@
 		"unavailableChoiceLabel" : "I should do more work before talking to {name|volunteer}",
 		"choiceLabel" : "Break the silence",
 		"content" : "After about half an hour of quietly working, you feel the need to hear another human voice. You clear your throat. {name|volunteer} looks up.",
-		"conditions" : [ "effort gte 3" ],
+		"conditions" : [ 
+		//	"effort gte 3" 
+		],
 		"effects": [
 			"set expendEffort true"
 		]
