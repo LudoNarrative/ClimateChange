@@ -51,7 +51,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	    		initialPhaserFile = data2;
 	    		runGenerator(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring, introGame);
 	    		if (document.getElementById("gameDiagnostics") == null) {
-	    			Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, initialPhaserFile);		//create game diagnostics
+	    		  Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, aspGameInstructions, initialPhaserFile);		//create game diagnostics
 	    		}
 			});
 		});

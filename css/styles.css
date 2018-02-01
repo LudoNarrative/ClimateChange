@@ -375,6 +375,7 @@ Story CSS
     background-image: url('/assets/UI/gear.png');
     background-size:100%;
     bottom: 10px;
+    z-index: 999;
 }
 
 /* Game Diagnostic Panel Styles */
@@ -390,7 +391,7 @@ Story CSS
     border-radius: 10px;
     padding: 0.5em 1em;
     position: absolute;
-    z-index: 3;
+    z-index: 998;
     width:55%;
 }
 
