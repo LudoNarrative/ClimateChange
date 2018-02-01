@@ -50,9 +50,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	    	jQuery.get('asp-phaser-generator-2/src/initial-phaser-file.json', function(data2) {
 	    		initialPhaserFile = data2;
 	    		runGenerator(gameSpec, aspGame, aspGameInstructions, initialPhaserFile, useGamestring, introGame);
-	    		if (document.getElementById("gameDiagnostics") == null) {
-	    		  Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, aspGameInstructions, initialPhaserFile);		//create game diagnostics
-	    		}
+	    		Display.addGameDiagnostics(gameSpec, aspFilepath, aspGame, aspGameInstructions, initialPhaserFile);		//create game diagnostics
 			});
 		});
 

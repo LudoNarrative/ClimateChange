@@ -664,9 +664,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	}
 
 	var addGameDiagnostics = function(gameSpec, aspFilepath, aspGame, aspGameInstructions, initialPhaserFile) {
+		if (document.getElementById("gameDiagnostics") !== null) {
+		  document.getElementById("gameDiagnostics").remove();
+		}
 		$('<div/>', {
 			id: "gameDiagnostics",
-			html: '<ul><li><a href="#ReportBugDiv">Report Bug</a></li><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditorDiv">JSON Editor</a></li></ul><div id="ReportBugDiv"><p>Select-all, copy, and paste the appropriate field into a <a href="https://github.com/LudoNarrative/ClimateChange/issues/new">new GitHub issue</a>.</p></div><div id="ASPEditor"></div><div id="JSONEditorDiv"></div>'
+			html: '<ul><li><a href="#ReportBugDiv">Report Bug</a></li><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditorDiv">JSON Editor</a></li></ul><div id="ReportBugDiv"><p>Select-all, copy, and paste the appropriate field into a <a target="_blank" href="https://github.com/LudoNarrative/ClimateChange/issues/new">new GitHub issue</a>.</p></div><div id="ASPEditor"></div><div id="JSONEditorDiv"></div>'
 		}).appendTo("body");
 
 		addBugReporter(gameSpec, aspFilepath, aspGame, aspGameInstructions);
@@ -676,38 +679,45 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		$('<div/>', {
 			id: "gameDiagnosticsButton",
 			click: function() {
-				$("#gameDiagnostics").toggle();
+        updateBugReportTexts(aspFilepath, aspGame, aspGameInstructions);
+  			$("#gameDiagnostics").toggle();
 			}
 		}).appendTo("body");
 
 		$( "#gameDiagnostics" ).tabs();
 	};
 
-	var addBugReporter = function(gameSpec, aspFilepath, aspGame, aspGameInstructions) {
-		$('<textarea/>', {			//add editing field
-			id: 'GameBug',
-			rows: "4",
-			cols: "60",
-      style: "margin-right: 20px",
-      text:
-        "Game Bug\nThis game (check all that apply with [X]):\n  [ ] Was hard to understand.\n  [ ] Was too hard to play.\n  [ ] Was too boring to play.\n  [ ] Did not function according to the instructions.\n  [ ] Was not appropriate for this scene.\n\n"+
+  var updateBugReportTexts = function(aspFilepath, aspGame, aspGameInstructions) {
+    $("#GameBug").text(
+      "Game Bug\nThis game (check all that apply with [X]):\n  [ ] Was hard to understand.\n  [ ] Was too hard to play.\n  [ ] Was too boring to play.\n  [ ] Did not function according to the instructions.\n  [ ] Was not appropriate for this scene.\n\n"+
         "Other comments/elaborations:\n\n\n"+
         "Game: "+aspFilepath+"\n" +
         "```\n"+
         aspGame + "\n" + "==========\n" + aspGameInstructions +
         "\n```"
-		}).attr('spellcheck',false)
-		.appendTo("#ReportBugDiv");
+    );
+    // TODO: also show vars and other interesting things, and grab this in a nice way instead of this rude way 
+    $("#StoryBug").text("Story Bug\nIssue:\n\nCurrent story chunks:\n```\n"+$( "#storyContainer" ).text()+"\n```");
+  };
 
-    $('<textarea/>', {			//add editing field
-			id: 'StoryBug',
-			rows: "4",
-			cols: "60",
-      // TODO: also show vars and other interesting things, and grab this in a nice way instead of this rude way 
-			text: "Story Bug\nIssue:\n\nCurrent story chunks:\n```\n"+$( "#storyContainer" ).text()+"\n```"
-		}).attr('spellcheck',false)
-		.appendTo("#ReportBugDiv");
-	};
+	  var addBugReporter = function(gameSpec, aspFilepath, aspGame, aspGameInstructions) {
+		    $('<textarea/>', {			//add editing field
+			      id: 'GameBug',
+			      rows: "4",
+			      cols: "40",
+            style: "margin-right: 20px",
+            text: ""
+		    }).attr('spellcheck',false)
+		        .appendTo("#ReportBugDiv");
+
+        $('<textarea/>', {			//add editing field
+			      id: 'StoryBug',
+			      rows: "4",
+			      cols: "40",
+			      text: ""
+		    }).attr('spellcheck',false)
+		        .appendTo("#ReportBugDiv");
+	  };
 
 	//adds a JSON editor to the game diagnostics panel
 	var addJSONEditor = function(gameSpec, initialPhaserFile) {
