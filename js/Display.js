@@ -669,7 +669,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		}
 		$('<div/>', {
 			id: "gameDiagnostics",
-			html: '<ul><li><a href="#ReportBugDiv">Report Bug</a></li><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditorDiv">JSON Editor</a></li></ul><div id="ReportBugDiv"><p>Select-all, copy, and paste the appropriate field into a <a target="_blank" href="https://github.com/LudoNarrative/ClimateChange/issues/new">new GitHub issue</a>.</p></div><div id="ASPEditor"></div><div id="JSONEditorDiv"></div>'
+			html: '<ul><li><a href="#ReportBugDiv">Report Bug</a></li><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditorDiv">JSON Editor</a></li></ul><div id="ReportBugDiv"></div><div id="ASPEditor"></div><div id="JSONEditorDiv"></div>'
 		}).appendTo("body");
 
 		addBugReporter(gameSpec, aspFilepath, aspGame, aspGameInstructions);
@@ -686,37 +686,69 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 		$( "#gameDiagnostics" ).tabs();
 	};
+  var gameBugBaseURL = "https://github.com/LudoNarrative/ClimateChange/issues/new?labels="+encodeURIComponent("Gemini/Cygnus")+",bug";
+  var storyBugBaseURL = "https://github.com/LudoNarrative/ClimateChange/issues/new?labels=StoryAssembler,bug";
 
+  var updateGameBugHref = function() {
+    $("#GameBugSubmit").attr("href", gameBugBaseURL + "&body="+encodeURIComponent($("#GameBug").text()));
+  };
+  var updateStoryBugHref = function() {
+    $("#StoryBugSubmit").attr("href", storyBugBaseURL + "&body="+encodeURIComponent($("#StoryBug").text()));
+  };
+    
   var updateBugReportTexts = function(aspFilepath, aspGame, aspGameInstructions) {
     $("#GameBug").text(
-      "Game Bug\nThis game (check all that apply with [X]):\n  [ ] Was hard to understand.\n  [ ] Was too hard to play.\n  [ ] Was too boring to play.\n  [ ] Did not function according to the instructions.\n  [ ] Was not appropriate for this scene.\n\n"+
+      "This game (delete any that do not apply):\n- Was confusing.\n- Was difficult to play.\n- Was boring.\n- Did not function according to the instructions.\n- Was not appropriate for this scene.\n\n"+
         "Other comments/elaborations:\n\n\n"+
         "Game: "+aspFilepath+"\n" +
         "```\n"+
         aspGame + "\n" + "==========\n" + aspGameInstructions +
         "\n```"
     );
+    
     // TODO: also show vars and other interesting things, and grab this in a nice way instead of this rude way 
-    $("#StoryBug").text("Story Bug\nIssue:\n\nCurrent story chunks:\n```\n"+$( "#storyContainer" ).text()+"\n```");
+    $("#StoryBug").text("Issue:\n\nCurrent story chunks:\n```\n"+$( "#storyContainer" ).text()+"\n```");
+
+    updateGameBugHref();
+    updateStoryBugHref();
   };
 
 	  var addBugReporter = function(gameSpec, aspFilepath, aspGame, aspGameInstructions) {
-		    $('<textarea/>', {			//add editing field
+
+        var left = $("<div/>", {style:"width: 40%; display:inline-block;"}).appendTo("#ReportBugDiv");
+        var submitLeft = $("<a/>", {
+            id: 'GameBugSubmit',
+            text: 'Submit game bug',
+            href: gameBugBaseURL,
+            target: "_blank",
+            style: "display:block; width:200px;"
+        }).appendTo(left);
+		    $('<textarea/>', {
 			      id: 'GameBug',
 			      rows: "4",
 			      cols: "40",
             style: "margin-right: 20px",
-            text: ""
+            text: "",
+            change: updateGameBugHref
 		    }).attr('spellcheck',false)
-		        .appendTo("#ReportBugDiv");
+		        .appendTo(left);
 
+        var right = $("<div/>", {style:"width:40%; display:inline-block;"}).appendTo("#ReportBugDiv");
+        var submitRight = $("<a/>", {
+            id: 'StoryBugSubmit',
+            text: 'Submit story bug',
+            href: storyBugBaseURL,
+            target: "_blank",
+            style: "display:block; width:200px;"
+        }).appendTo(right);
         $('<textarea/>', {			//add editing field
 			      id: 'StoryBug',
 			      rows: "4",
 			      cols: "40",
-			      text: ""
+			      text: "",
+            change: updateStoryBugHref
 		    }).attr('spellcheck',false)
-		        .appendTo("#ReportBugDiv");
+		        .appendTo(right);
 	  };
 
 	//adds a JSON editor to the game diagnostics panel
