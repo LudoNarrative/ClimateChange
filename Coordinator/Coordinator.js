@@ -1,5 +1,7 @@
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!undergradUN_kply", "text!undergradUN_talon", "text!undergradUN_irapopor", "text!undergradBeach_madreed", "text!undergradBeach_sjsherma", "text!undergradBeach_sgadsby", "text!undergradFaculty_kply", "text!undergradFaculty_madreed", "text!undergradFaculty_sjsherma", "text!sjsherma_testfile","text!madreed_testfile", "text!talon_testfile","text!sgadsby_testfile","text!kply_testfile","text!irapopor_testfile", "text!finalDinner", "text!finalLecture", "text!finalDean", "text!finalTravel", "text!finalFamilyDinner", "text!finalUN", "text!finalBeach", "text!finalFaculty", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, undergradUN_kply, undergradUN_talon, undergradUN_irapopor, undergradBeach_madreed, undergradBeach_sjsherma, undergradBeach_sgadsby, undergradFaculty_kply, undergradFaculty_madreed, undergradFaculty_sjsherma, sjsherma_testfile, madreed_testfile, talon_testfile, sgadsby_testfile, kply_testfile, irapopor_testfile, finalDinner, finalLecture, finalDean, finalTravel, finalFamilyDinner, finalUN, finalBeach, finalFaculty, globalData) {
 
+	var recordPlaythroughs = true;
+
 	/*
 		Initializing function
 	*/
@@ -7,8 +9,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		State.init(Templates);
 
+		
+
 		//selectable scenes from main menu
-		var scenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach"]
+		var scenes = ["newExample", "finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach"];
 
 
 		//for reference, easy access to old temporary scenes.
@@ -120,26 +124,19 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		{
 			id: "newExample",
 			characters: {
-				"protagonist" : {name: "Emma", nickname: "Em", gender: "female" },
-				"char1" : {name: "Simon", nickname: "Simon", gender: "male" },
-				"char2" : {name: "Eliza", nickname: "Liz", gender: "female" },
-				"char3" : {name: "Michael", nickname: "Mike", gender: "male" },
-				"char4" : {name: "Julia", nickname: "Jul", gender: "female" }
+				"test1" : {"name": "Test1", "nickname": "McTesterson", "gender": "female" }
 			},
 			wishlist: [
-				{ condition: "establishScene eq true"},
-				{ condition: "introductions eq 2"}
+				{ "condition": "test1Con eq true"},
+				{ "condition": "test2Con eq true"}
 			],
 			dataFiles: ["text!newExampleData"],
 			startState: [
-				"set establishScene false",
-				"set introductions 0"
+				"set test1Con false"
 			],
-			UIvars: [
-				"introductions"
-			],
+			UIvars: [],
 			mode: {
-				type: "dialogue"
+				type: "narration"
 			}
 		},
 		{
@@ -1392,9 +1389,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				sceneId : "newExample",
 				characters: [
 					{
-						id: "happy",
-						src: "happy.png",
-						state: ["introductions gt 0"]
+						id: "test1",
+						graphics: "char3",
+						age: "20s",
+						states: [	//happy, neutral, upset
+							{ state: ["default"], tag: "happy"}
+						]
 					},
 				]
 			},
@@ -2738,6 +2738,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		cleanState : cleanState,
 
 		startGame : startGame,
-		getStorySpec : getStorySpec
+		getStorySpec : getStorySpec,
+		recordPlaythroughs : recordPlaythroughs
 	}
 });

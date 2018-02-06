@@ -126,6 +126,27 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			
 		}
 
+		setPlaythroughData(State.get("currentTextId"), State.get("currentChoices"));
+		
+
+	}
+
+	var setPlaythroughData = function(textId, choices) {
+		//set current scene
+		localStorage.setItem('playthroughScene', State.get("currentScene")); 
+
+		var pageData = {};
+		pageData.textId = textId;
+		pageData.choices = choices;
+		pageData.time = new Date().getTime();
+
+		//parse out existing data for addition of new data, or make new array if it doesn't exist
+		var temp = JSON.parse(localStorage.getItem('playthroughData'));
+		if (temp == null) { temp = []; }
+
+		temp.push(pageData);		//add new data
+
+		localStorage.setItem('playthroughData', JSON.stringify(temp));			//put back in localStorage
 	}
 
 	var getBestPath = function(chunkLibrary, startingPoint, tempWishlist) {		
@@ -466,6 +487,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	var endScene = function(assemblyFailed) {
 		
 		if (typeof Display !== "undefined" && State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
+			setPlaythroughData("end", []);	//record last node
 			Display.setSceneOutro("Chapter complete!");
 		}
 		else {				//if we're using the data viz or editor...

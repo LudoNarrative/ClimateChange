@@ -129,6 +129,14 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		initMetaKnobs(_Coordinator, _State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
 
 		activateBegins(_Coordinator, _State, scenes);
+
+		//if we haven't sent form data yet, send it
+		if (Coordinator.recordPlaythroughs && localStorage.getItem('playthroughScene') !== null) {
+			postToGoogleForm();	
+			localStorage.removeItem("playthroughScene");
+			localStorage.removeItem("playthroughData");
+		}
+		
 	}
 
 	var returnToTimelineScreen = function(scenes) {
@@ -181,6 +189,13 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		initMetaKnobs(Coordinator, State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
 
 		activateBegins(Coordinator, State, scenes);
+
+		//if we haven't sent form data yet, send it
+		if (Coordinator.recordPlaythroughs && localStorage.getItem('playthroughScene') !== null) {
+			postToGoogleForm();	
+			localStorage.removeItem("playthroughScene");
+			localStorage.removeItem("playthroughData");
+		}
 	}
 
 	//process the wishlist for the passed in story according to its current settings in the UI
@@ -612,6 +627,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				$("#sceneIntro").fadeOut( "slow" );
 				$("#blackout").fadeOut( "slow" );
 				State.set("refreshEnabled", true);		//enable refreshNarrative for game hook up
+				setPlaythroughData(State.get("currentTextId"), State.get("currentChoices"));	//set playthrough data
 			}
 		}).appendTo("#sceneIntro");
 		$("#sceneIntro").fadeIn( "slow" );
@@ -806,6 +822,63 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			}
 		})
 		.appendTo("#ASPEditor");
+	}
+
+	var postToGoogleForm = function() {
+
+		postToForm(getData());
+		postToForm(getData("times"));
+
+		function postToForm(data) {
+			var url = 'https://script.google.com/macros/s/AKfycbxXDhwmHQZMTTYrU6JzqQnC3t57cHLNOAlmTIQsLtde0LHwezo/exec';
+		    var xhr = new XMLHttpRequest();
+		    xhr.open('POST', url);
+		    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+		    // url encode form data for sending as post data
+		    var encoded = Object.keys(data).map(function(k) { return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }).join('&');
+		    xhr.send(encoded);	
+		}
+	}
+
+	// get all data in form and return object
+	//mode: if it's "times", it only puts times for choices
+	var getData = function(mode) {
+
+		var data = {};
+		data.scene = localStorage.getItem("playthroughScene");
+
+		var temp = JSON.parse(localStorage.getItem('playthroughData'));
+
+		//set total time
+		totalTime = (temp[temp.length-1].time - temp[0].time)/1000;
+
+		//set times for each node
+		for (x = 0; x < temp.length-1; x++) {
+			temp[x].time = (temp[x+1].time - temp[x].time)/1000;
+		}
+
+		var labels = '["scene","total time"';
+		for (var x=1; x < 51; x++) { 
+			if (x <= temp.length) {
+				labels += ',"choice_' + x + '"';		//add label field
+				if (mode == "times") { data["choice_" + x] = temp[x-1].time; }		//add time data if mode correct
+				else { data["choice_" + x] = JSON.stringify(temp[x-1]); }		//otherwise add all choice data
+			}
+			else { labels += ',""'; }
+		}
+		labels += "]";
+
+		// add form-specific values into the data
+		//data.formDataNameOrder = '["scene","data"]';
+		data.formDataNameOrder = labels;
+		data.totalTime = totalTime;
+		data.formGoogleSheetName = "responses"; // default sheet name
+		if (mode == "times") { data.formGoogleSheetName = "justTimes"; }
+		data.formGoogleSendEmail = ""; // no email by default
+
+		console.log(data);
+		return data;
 	}
 
 	return {
