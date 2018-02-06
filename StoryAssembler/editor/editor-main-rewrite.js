@@ -284,7 +284,7 @@ requirejs(
 				console.log(logMsg);
 				var nextNode = leftToVisit.shift();
 				gotoChoice(nextNode.clickPath, story, levelData, globalData);
-				stepStory(clickPath);
+				stepStory(nextNode.clickPath);
 			}
 		}
 
@@ -301,9 +301,6 @@ requirejs(
 
 			leftToVisit.push(newChoice);		//add it to leftToVisit
 		});
-
-		
-		console.log("Haw", StoryAssembler.wishlist);
 
 		var currentHtml = $("#storyArea").html();
 
