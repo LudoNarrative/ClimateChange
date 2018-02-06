@@ -679,25 +679,93 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	    });
 	}
 
-	var addGameDiagnostics = function(gameSpec, aspFilepath, aspGame, initialPhaserFile) {
-		
+	var addGameDiagnostics = function(gameSpec, aspFilepath, aspGame, aspGameInstructions, initialPhaserFile) {
+		if (document.getElementById("gameDiagnostics") !== null) {
+		  document.getElementById("gameDiagnostics").remove();
+		}
 		$('<div/>', {
 			id: "gameDiagnostics",
-			html: '<ul><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditorDiv">JSON Editor</a></li></ul><div id="ASPEditor"></div><div id="JSONEditorDiv"></div>'
+			html: '<ul><li><a href="#ReportBugDiv">Report Bug</a></li><li><a href="#ASPEditor">ASP Editor</a></li><li><a href="#JSONEditorDiv">JSON Editor</a></li></ul><div id="ReportBugDiv"></div><div id="ASPEditor"></div><div id="JSONEditorDiv"></div>'
 		}).appendTo("body");
 
+		addBugReporter(gameSpec, aspFilepath, aspGame, aspGameInstructions);
 		addJSONEditor(gameSpec, initialPhaserFile);
 		addASPEditor(gameSpec, aspFilepath, aspGame);
 
 		$('<div/>', {
 			id: "gameDiagnosticsButton",
 			click: function() {
-				$("#gameDiagnostics").toggle();
+        updateBugReportTexts(aspFilepath, aspGame, aspGameInstructions);
+  			$("#gameDiagnostics").toggle();
 			}
 		}).appendTo("body");
 
 		$( "#gameDiagnostics" ).tabs();
-	}
+	};
+  var gameBugBaseURL = "https://github.com/LudoNarrative/ClimateChange/issues/new?labels="+encodeURIComponent("Gemini/Cygnus")+",bug";
+  var storyBugBaseURL = "https://github.com/LudoNarrative/ClimateChange/issues/new?labels=StoryAssembler,bug";
+
+  var updateGameBugHref = function() {
+    $("#GameBugSubmit").attr("href", gameBugBaseURL + "&body="+encodeURIComponent($("#GameBug").text()));
+  };
+  var updateStoryBugHref = function() {
+    $("#StoryBugSubmit").attr("href", storyBugBaseURL + "&body="+encodeURIComponent($("#StoryBug").text()));
+  };
+    
+  var updateBugReportTexts = function(aspFilepath, aspGame, aspGameInstructions) {
+    $("#GameBug").text(
+      "This game (delete any that do not apply):\n- Was confusing.\n- Was difficult to play.\n- Was boring.\n- Did not function according to the instructions.\n- Was not appropriate for this scene.\n\n"+
+        "Other comments/elaborations:\n\n\n"+
+        "Game: "+aspFilepath+"\n" +
+        "```\n"+
+        aspGame + "\n" + "==========\n" + aspGameInstructions +
+        "\n```"
+    );
+    
+    // TODO: also show vars and other interesting things, and grab this in a nice way instead of this rude way 
+    $("#StoryBug").text("Issue:\n\nCurrent story chunks:\n```\n"+$( "#storyContainer" ).text()+"\n```");
+
+    updateGameBugHref();
+    updateStoryBugHref();
+  };
+
+	  var addBugReporter = function(gameSpec, aspFilepath, aspGame, aspGameInstructions) {
+
+        var left = $("<div/>", {style:"width: 40%; display:inline-block;"}).appendTo("#ReportBugDiv");
+        var submitLeft = $("<a/>", {
+            id: 'GameBugSubmit',
+            text: 'Submit game bug',
+            href: gameBugBaseURL,
+            target: "_blank",
+            style: "display:block; width:200px;"
+        }).appendTo(left);
+		    $('<textarea/>', {
+			      id: 'GameBug',
+			      rows: "4",
+			      cols: "40",
+            style: "margin-right: 20px",
+            text: "",
+            change: updateGameBugHref
+		    }).attr('spellcheck',false)
+		        .appendTo(left);
+
+        var right = $("<div/>", {style:"width:40%; display:inline-block;"}).appendTo("#ReportBugDiv");
+        var submitRight = $("<a/>", {
+            id: 'StoryBugSubmit',
+            text: 'Submit story bug',
+            href: storyBugBaseURL,
+            target: "_blank",
+            style: "display:block; width:200px;"
+        }).appendTo(right);
+        $('<textarea/>', {			//add editing field
+			      id: 'StoryBug',
+			      rows: "4",
+			      cols: "40",
+			      text: "",
+            change: updateStoryBugHref
+		    }).attr('spellcheck',false)
+		        .appendTo(right);
+	  };
 
 	//adds a JSON editor to the game diagnostics panel
 	var addJSONEditor = function(gameSpec, initialPhaserFile) {
