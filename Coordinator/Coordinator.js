@@ -12,7 +12,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		
 
 		//selectable scenes from main menu
-		var scenes = ["newExample", "finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach"];
+		var scenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach"];
 
 
 		//for reference, easy access to old temporary scenes.
