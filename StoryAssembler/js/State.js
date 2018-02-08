@@ -213,6 +213,27 @@ define(["Condition"], function(Condition) {
 		return fields;
 	}
 
+	var setPlaythroughData = function(textId, choices) {
+
+		if (get("displayType") !== "editor") {
+			//set current scene
+			localStorage.setItem('playthroughScene', get("currentScene")); 
+
+			var pageData = {};
+			pageData.textId = textId;
+			pageData.choices = choices;
+			pageData.time = new Date().getTime();
+
+			//parse out existing data for addition of new data, or make new array if it doesn't exist
+			var temp = JSON.parse(localStorage.getItem('playthroughData'));
+			if (temp == null) { temp = []; }
+
+			temp.push(pageData);		//add new data
+
+			localStorage.setItem('playthroughData', JSON.stringify(temp));			//put back in localStorage
+		}
+	}
+
 	return {
 		init: init,
 		get: get,
@@ -223,6 +244,7 @@ define(["Condition"], function(Condition) {
 		isTrue: isTrue,
 		wouldMakeMoreTrue: wouldMakeMoreTrue,
 		wouldAnyMakeMoreTrue: wouldAnyMakeMoreTrue,
-		getBlackboard: getBlackboard
+		getBlackboard: getBlackboard,
+		setPlaythroughData : setPlaythroughData
 	}
 });

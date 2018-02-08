@@ -12,7 +12,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		
 
 		//selectable scenes from main menu
-		var scenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach"];
+		var scenes = ["finalDinner", "finalLecture", "intro:deanOrTravel", "intro:tempDinnerWithFam", "finalBeach"];
 
 
 		//for reference, easy access to old temporary scenes.
@@ -1204,8 +1204,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				id : "finalFaculty",
 				text : "<p>TODO: Scene description</p>"
 			},
-
-
+			{
+				id : "deanOrTravel",
+				text : "this is the intro for dean or travel"
+			},
+			{
+				id : "tempDinnerWithFam",
+				text : "this ithe dinner with fam intro"
+			}
 		]
 		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
 		Display.setSceneIntro(sceneText, id);

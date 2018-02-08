@@ -4,7 +4,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var Coordinator;
 
 	var gameModeChosen = "";				//holder for if game is chosen through UI knobs for scene
-	var interfaceMode = "timeline";			//how scenes progress...a timeline that's returned to ("timeline"), or progress scene-to-scene ("normal")
+	var interfaceMode = "normal";			//how scenes progress...a timeline that's returned to ("timeline"), or progress scene-to-scene ("normal")
 
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
@@ -23,7 +23,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		    text: content,
 		    click: function() {
 				$( "#blackout" ).fadeIn( "slow", function() {
-	    			startScene(_coordinator,id);
+	    			startScene(_coordinator,id, true);
   				});
 			}
 		}).appendTo(pTag);
@@ -32,14 +32,20 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	}
 
 	var startScene = function(_coordinator, id, loadIntro) {
-		_coordinator.cleanState(id);
-		var bg = _coordinator.loadBackground(id);
-		processWishlistSettings(_coordinator, id);
-		initSceneScreen(State, bg, id);
-		if (loadIntro) { _coordinator.loadSceneIntro(id); }
-		_coordinator.loadAvatars(id);
-		_coordinator.validateArtAssets(id);
-		_coordinator.loadStoryMaterials(id);
+
+		if (id.substring(0,5) == "intro:") {		//if we're just using the intro as an interstitial scene, not actually running the game...
+			_coordinator.loadSceneIntro(id);
+		}
+		else {
+			_coordinator.cleanState(id);
+			var bg = _coordinator.loadBackground(id);
+			processWishlistSettings(_coordinator, id);
+			initSceneScreen(State, bg, id);
+			if (loadIntro) { _coordinator.loadSceneIntro(id); }
+			_coordinator.loadAvatars(id);
+			_coordinator.validateArtAssets(id);
+			_coordinator.loadStoryMaterials(id);
+		}
 	}
 
 	var initTitleScreen = function(_Coordinator, _State, scenes, playGameScenes) {
@@ -70,6 +76,9 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		scenes.forEach(function(scene, pos) {
 			var el = makeLink(_Coordinator, scene, scene, "#");
 			$('body').append(el);
+			$('body').append("<div id='hiddenKnobs'></div>");
+			createKnobs(scene, "hiddenKnobs");
+			populateKnobs(scene, _Coordinator, _State, scenes);
 		});
 
 		$('<div/>', {
@@ -118,11 +127,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				$(this).toggleClass('active', 500);
 			});
 
-			var theKnobs = $('<div/>', {
-			    id: 'knobs_' + scene,
-			    class: 'sceneKnobs closed'
-			}).appendTo("#" + scene + '-panel');
-
+			var targetDiv = scene + '-panel';
+			createKnobs(scene, targetDiv);
 			populateKnobs(scene, _Coordinator, _State, scenes);
 		});
 
@@ -132,9 +138,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 		//if we haven't sent form data yet, send it
 		if (Coordinator.recordPlaythroughs && localStorage.getItem('playthroughScene') !== null) {
-			postToGoogleForm();	
+			postToGoogleForm();
 			localStorage.removeItem("playthroughScene");
 			localStorage.removeItem("playthroughData");
+			if (localStorage.getItem("playerIdentifier") == null) {
+				setPlayerIdentifier();
+			}
 		}
 		
 	}
@@ -278,10 +287,22 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		//TODO doof
 	}
 
+	var createKnobs = function(sceneId, targetDivId) {
+		var theKnobs = $('<div/>', {
+		    id: 'knobs_' + sceneId,
+		    class: 'sceneKnobs closed'
+		}).appendTo("#" + targetDivId);
+	}
+
 	//activate and add in knobs for coordinator stuff
 	var populateKnobs = function(sceneId, _Coordinator, _State, scenes) {
-		
 		var sceneSpec = _Coordinator.getStorySpec(sceneId);
+
+		if (sceneSpec == null) { 
+			console.log("no sceneSpec for scene to use to populate knobs!");
+			return;
+		}
+
 		var sliderX = [];
 		for (var x=0; x < sceneSpec.wishlist.length; x++) {
 			
@@ -623,11 +644,16 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		var begin = $('<h2/>', {
 			text: 'Begin',
 			click: function() {
-				Coordinator.startGame(id);				//start real game
-				$("#sceneIntro").fadeOut( "slow" );
-				$("#blackout").fadeOut( "slow" );
-				State.set("refreshEnabled", true);		//enable refreshNarrative for game hook up
-				setPlaythroughData(State.get("currentTextId"), State.get("currentChoices"));	//set playthrough data
+				if (id.substring(0,5) == "intro:") {
+
+				}
+				else {
+					Coordinator.startGame(id);				//start real game
+					$("#sceneIntro").fadeOut( "slow" );
+					$("#blackout").fadeOut( "slow" );
+					State.set("refreshEnabled", true);		//enable refreshNarrative for game hook up
+					State.setPlaythroughData(State.get("currentTextId"), State.get("currentChoices"));	//set playthrough data
+				}
 			}
 		}).appendTo("#sceneIntro");
 		$("#sceneIntro").fadeIn( "slow" );
@@ -894,8 +920,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var postToGoogleForm = function() {
 
-		postToForm(getData());
-		postToForm(getData("times"));
+		if (State.get("displayType") !== "editor") {
+			postToForm(getData());
+			postToForm(getData("times"));
+		}
 
 		function postToForm(data) {
 			var url = 'https://script.google.com/macros/s/AKfycbxXDhwmHQZMTTYrU6JzqQnC3t57cHLNOAlmTIQsLtde0LHwezo/exec';
@@ -909,12 +937,26 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		}
 	}
 
+	var setPlayerIdentifier = function() {
+
+		var emotions = ['understanding','great','playful','calm','confident','courageous','peaceful','reliable','joyous','energetic','lucky','liberated','comfortable','amazed','fortunate','optimistic','pleased','free','delighted','provocative','encouraged','sympathetic','overjoyed','impulsive'];
+		var colors = ['amber','amethyst','apricot','aqua','aquamarine','auburn','azure','beige','black','blue','bronze','brown','cardinal','carmine','celadon','cerise','cerulean','charcoal','chartreuse','chocolate','cinnamon','color','copper','coral','cream','crimson','cyan','denim','ebony','ecru','eggplant','emerald','fuchsia','gold','goldenrod','gray','green','indigo','ivory','jade','jet','khaki','lavender','lemon','light','lilac','lime','magenta','mahogany','maroon','mauve','mustard','ocher','olive','orange','orchid','pale','pastel','peach','periwinkle'];
+		var animals = ['alligator','ant','bear','bee','bird','bull','camel','cat','cheetah','chicken','chimpanzee','cow','crocodile','deer','dog','dolphin','duck','eagle','elephant','fish','fly','fox','frog','giraffe','goat','goldfish','gorilla','hamster','hippopotamus','horse','kangaroo','kitten','lion','lobster','monkey','octopus','owl','panda','pig','puppy','rabbit','rat','scorpion','seal','shark','sheep','snail','snake','spider','squirrel','swan','tiger','turtle','wolf','wren','zebra','pale','pastel','peach','periwinkle'];
+		var letters = ['A','B','C','D','E','F','G','H','I','J','H'];
+		var identifier = "";
+		var d = new Date();
+		identifier = emotions[d.getHours()] + " " + colors[d.getMinutes()] + " " + animals[d.getSeconds()] + " " + letters[Math.trunc(d.getMilliseconds()/100)] + (d.getMilliseconds()%100).toString();
+
+		localStorage.setItem("playerIdentifier", identifier);
+	}
+
 	// get all data in form and return object
 	//mode: if it's "times", it only puts times for choices
 	var getData = function(mode) {
 
 		var data = {};
 		data.scene = localStorage.getItem("playthroughScene");
+		data.identifier = localStorage.getItem("playerIdentifier");
 
 		var temp = JSON.parse(localStorage.getItem('playthroughData'));
 
@@ -926,12 +968,16 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			temp[x].time = (temp[x+1].time - temp[x].time)/1000;
 		}
 
-		var labels = '["scene","total time"';
+		var labels = '["identifier","scene","total time"';
 		for (var x=1; x < 51; x++) { 
 			if (x <= temp.length) {
 				labels += ',"choice_' + x + '"';		//add label field
-				if (mode == "times") { data["choice_" + x] = temp[x-1].time; }		//add time data if mode correct
-				else { data["choice_" + x] = JSON.stringify(temp[x-1]); }		//otherwise add all choice data
+				if (mode == "times" && data["choice_" + x] !== null) { 		//add time data if mode correct
+					data["choice_" + x] = temp[x-1].time; 
+				}		
+				else if (data["choice_" + x] !== null) { 			//otherwise add all choice data
+					data["choice_" + x] = JSON.stringify(temp[x-1]); 
+				}
 			}
 			else { labels += ',""'; }
 		}
@@ -945,7 +991,6 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		if (mode == "times") { data.formGoogleSheetName = "justTimes"; }
 		data.formGoogleSendEmail = ""; // no email by default
 
-		console.log(data);
 		return data;
 	}
 
@@ -953,6 +998,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		init : init,
 		initTitleScreen : initTitleScreen,
 		initTimelineScreen : initTimelineScreen,
+		initSceneScreen : initSceneScreen,
 		setAvatars : setAvatars,
 		createStats : createStats,
 		setStats : setStats,
