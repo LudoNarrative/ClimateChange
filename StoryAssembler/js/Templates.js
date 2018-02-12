@@ -178,6 +178,18 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			return params[3];
 		},
 
+		//	{stateVar|effort|lots}			//returns value of effort, or lots if no value found
+		"stateVar": function(params, text) {
+			if (params.length !==2) {
+				console.error("Template command 'stateVarAdd' must have 2 params, in text '" + text + "'.");
+				return "(stateVar)";
+			}
+			var value = State.get(params[0]);
+			if (typeof value == "undefined") {
+				return params[1];
+			}
+			else { return value; }
+		},
 		//	{stateVarAdd|effort|2}		(returns the value of effort + 2)
 		"stateVarAdd": function(params, text) {
 			if (params.length !==2) {
