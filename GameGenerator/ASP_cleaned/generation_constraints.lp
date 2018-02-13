@@ -14,6 +14,7 @@
    outcome(O).
 % constraint on reachability
 :- outcome(O), unreachableOutcome(O).
+:- precondition(C,O), not reachableCondition(C).
 
 :- precondition(overlaps(_,_,_),O),
    result(O,draw(_,_)).
@@ -238,9 +239,9 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 :- precondition(compare(POLARITY1,distance(E1,E2,Comparison),Amount), O1),
 	result(O1,move(E,direction(forward))),
-	result(O1,look_at(E,Other)),
+	result(O1,look_at(E,Other,_)),
 	precondition(compare(POLARITY2,distance(E1,E2,Comparison),Amount), O2),
-	result(O2,look_at(E,Other)),
+	result(O2,look_at(E,Other,_)),
 	result(O2,move(E,direction(backward))).
 
 :- boundary(torus),
@@ -273,7 +274,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- action(look_at(E,E,C)).
 
 :- result(tick,look_at(E,_,_)),
-	result(tick,move(E,direction(backward))).
+	result(tick,move(E,direction(backward),_)).
 
 :- action(modify(decrease,R,R)).
 
@@ -380,7 +381,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- condition(overlaps(entity(e(E1)),entity(e(E2)),POLARITY)),
     E2 < E1.
     
-:- action(apply_restituion(entity(e(E1)),entity(e(E2)))),
+:- action(apply_restitution(entity(e(E1)),entity(e(E2)))),
     E2 < E1.
     
 :-  precondition(control_event(click(E)),O),
@@ -612,7 +613,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 
 
-% simply Don't have more than 2 preconditions
+% simply Don't have more than K preconditions
 :- 5 {precondition(CONDITION,Outcome)}, outcome(Outcome).
 
 
@@ -839,8 +840,15 @@ player_controls_resource(R,Dir) :-
 
 :- 2 {action(clear(_))}.
 
-%:- condition(compare(_,amount(Color),_)).
+% Don't do stuff with amount(Color) if that amount is constant
 
+:- result(Outcome,set_value(Resource,amount(Color))),
+  not color_can_change(Color).
+
+:- precondition(compare(_,amount(Color),_),_),
+  not color_can_change(Color).
+
+%:- condition(compare(_,amount(Color),_)).
 
 
 :- entity_movement(E,chases(E2)),
@@ -856,12 +864,11 @@ player_controls_resource(R,Dir) :-
    result(outcome(_),rotate_to(E,_)).
 
 :- result(outcome(_),delete(E)),
-   result(outcome(_),look_at(E,_)).
+   result(outcome(_),look_at(E,_,_)).
 
 
 :- precondition(compare(_,amount(Color),_),O),
    result(O,move(E,_)).
-
 
 :- precondition(overlaps(E1,E2,true),O1),
    2 { precondition(overlaps(E1,E2,true),_)},

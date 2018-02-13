@@ -1,5 +1,32 @@
+color_can_change(Color) :-
+  initialize(fill(_,Color)),
+  result(_,fill(_,Color2);draw(_,Color2)),
+  Color2 != Color.
 
+color_can_change(Color) :-
+  initialize(fill(_,Color)),
+  result(_,clear(_)), Color != clear.
 
+color_can_change(Color) :-
+  result(_,fill(_,Color);draw(_,Color)),
+  result(_,fill(_,Color2);draw(_,Color2)),
+  Color != Color2.
+
+color_can_change(Color) :-
+  result(_,fill(_,Color);draw(_,Color)),
+  result(_,clear(_)),
+  Color != clear.
+
+color_can_change(clear) :-
+  initialize(_,fill(_,Color)),
+  Color != clear,
+  result(_,clear(_)).
+
+color_can_change(clear) :-
+  result(_,fill(_,Color);draw(_,Color)),
+  Color != clear,
+  result(_,clear(_)).
+  
 cooldown(Comparison,Outcome,Resource) :-
     precondition(compare(Comparison,Resource),Outcome),
     result(Outcome,modify(ResultModification,Resource)),
@@ -48,6 +75,9 @@ entity_movement(E,chases(E2)) :- result(O,look_at(E,E2,_)),
 
 entity_movement(E,flees(E2)) :- result(O,look_at(E,E2,_)),
 			       result(O,move(E,direction(backward))).
+
+chases(E,E2) :- entity_movement(E,chases(E2)).
+flees(E,E2) :- entity_movement(E,flees(E2)).
 
 entity_movement(E,orbits(E2)) :- result(O,look_at(E,E2,_)),
 			       result(O,move(E,direction(left))).
@@ -109,7 +139,9 @@ not_every_frame(O) :- precondition(control_event(click(E)),O).
 not_every_frame(O) :- precondition(control_event(button(B,pressed)),O).
 not_every_frame(O) :- precondition(control_event(button(B,released)),O).
 not_every_frame(O) :- precondition(timer_elapsed(T),O) .
-not_every_frame(O) :- precondition(overlaps(E),O),
+not_every_frame(O) :- precondition(overlaps(E,_,_),O),
+		      result(O,delete(E)).
+not_every_frame(O) :- precondition(overlaps(_,E,_),O),
 		      result(O,delete(E)).
 
 %players must have controls or it's just a weird movie
@@ -133,7 +165,9 @@ computer_controls(Entity) :- not player_controls(Entity),
 			     entity(Entity),
 			     not static(Entity).
 
-player_controls_outcome(O) :- precondition(overlaps(E),O),
+player_controls_outcome(O) :- precondition(overlaps(E,_,_),O),
+			      player_controls(E).
+player_controls_outcome(O) :- precondition(overlaps(_,E,_),O),
 			      player_controls(E).
 player_controls_outcome(O) :- precondition(control_event(E),O).
 
@@ -151,6 +185,8 @@ moves(E) :- controlLogic(draggable(E)).
 
 precondition(overlaps(Entity),Outcome) :-  precondition(overlaps(Entity,_,_),Outcome).
 precondition(overlaps(Entity),Outcome) :-  precondition(overlaps(_,Entity,_),Outcome).
+condition(overlaps(E)) :- condition(overlaps(E,_,_)).
+condition(overlaps(E)) :- condition(overlaps(_,E,_)).
 
 requires(overlaps(Entity),Entity) :- condition(overlaps(Entity)).
 requires(control_event(click(Entity)),Entity) :- condition(control_event(click(Entity))).
@@ -411,23 +447,23 @@ trivial(O) :-
 
 trivial(O) :- 
     precondition(compare(le,distance(E1,E2,_),_),O),
-	result(O,look_at(E1,E2)),
+	result(O,look_at(E1,E2,_)),
     result(O,move(E1,direction(forward))).
 
 trivial(O) :- 
     precondition(compare(ge,distance(E1,E2,_),_),O),
-	result(O,look_at(E1,E2)),
+	result(O,look_at(E1,E2,_)),
     result(O,move(E1,direction(backward))).
 
 
 trivial(O) :- 
     precondition(compare(le,distance(E1,E2,_),_),O),
-	result(O,look_at(E2,E1)),
+	result(O,look_at(E2,E1,_)),
     result(O,move(E2,direction(forward))).
 
 trivial(O) :- 
     precondition(compare(ge,distance(E1,E2,_),_),O),
-	result(O,look_at(E2,E1)),
+	result(O,look_at(E2,E1,_)),
     result(O,move(E2,direction(backward))).
 
 

@@ -160,24 +160,21 @@ required(defend) :- reading(defend_against,_).
 %    precondition(overlaps(Entity2,Entity1,true),Outcome),
 %    result(Outcome,modify(increase,property(Entity2,health))).
 
+% Entities hurting other entities
+
+painful_outcome_for(Outcome, Entity) :-
+   result(Outcome,modify(decrease,property(Entity,health))).
+
+painful_outcome_for(Outcome, Entity) :-
+   result(Outcome,delete(Entity)).
 
 { reading(hurt,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity1,Entity2,true),Outcome),
-    result(Outcome,delete(Entity2)).
+   precondition(overlaps(Entity1,Entity2,true),Outcome),
+   painful_outcome_for(Outcome,Entity2).
 
 { reading(hurt,relation(Entity1,Entity2)) } :-
-    precondition(overlaps(Entity2,Entity1,true),Outcome),
-    result(Outcome,delete(Entity2)).
-
-% TODO: An entity is also hurting another if it causes its health to decrease
-
-%{ reading(hurt,relation(Entity1,Entity2)) } :-
-%    precondition(overlaps(Entity1,Entity2,true),Outcome),
-%    result(Outcome,modify(decrease,property(Entity2,health))).
-
-%{ reading(hurt,relation(Entity1,Entity2)) } :-
-%    precondition(overlaps(Entity2,Entity1,true),Outcome),
-%    result(Outcome,modify(decrease,property(Entity2,health))).
+   precondition(overlaps(Entity2,Entity1,true),Outcome),
+   painful_outcome_for(Outcome,Entity2).
 
 
 % An entity can chase or flee from another
@@ -310,7 +307,7 @@ reading(goal(reduce),Resource) :-
     precondition(compare(ge,Resource),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
     
-reading(goal(reduce),Resource :-
+reading(goal(reduce),Resource) :-
     precondition(compare(le,Resource),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 

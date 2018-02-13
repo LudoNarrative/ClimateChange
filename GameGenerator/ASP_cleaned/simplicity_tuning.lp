@@ -5,9 +5,9 @@
 %					B = {precondition(collide(E1,E2),Outcome)} ,
 %					outcome(Outcome).
 
-has_overlaps(Outcome) :- precondition(overlaps(E),Outcome).
+has_overlaps(Outcome) :- precondition(overlaps(_,_,_),Outcome).
 
-overlaps(N) :- N =  {condition(overlaps(E))}.
+overlaps(N) :- N =  {condition(overlaps(_,_,_))}.
 avatar_controls(4) :- controlScheme(_,tank;_,asteroids;_,cardinal).
 avatar_controls(2) :- controlScheme(_,horizontal;_,vertical).
 avatar_controls(0) :- not controlScheme(_,tank;_,asteroids;_,cardinal;_,horizontal;_,vertical).
