@@ -253,11 +253,35 @@
   {
     "id": "coworkerOptimism_low",
     "content": "\"I don't know, {name|protagonist},\" {name|volunteer} said. \"I mean, we've been pushing this project for what, five years? At what point do we admit we're just not making a difference?\"",
+    "choices" : [
+      {"gotoId" : "cheerUp"},
+      {"gotoId" : "differenceSmallOrBig"}
+    ],
     "effects" : [
       "set showCoworkerOptimism true"
     ],
     "conditions" : [
     	"coworkerOptimism eq low"
+    ]
+  },
+
+  {
+    "id" : "cheerUp",
+    "choiceLabel" : "{ifState|protagonistOptimism|low|Well...uh...|Hey, cheer up!}",
+    "content" : "{ifState|protagonistOptimism|low|(\"I hear you. I mean, I'll admit I'm not feeling terribly optimistic about the future either. Sometimes it even keeps me up at night. But it doesn't help to be down about it. I mean we're doing something, so that counts for something? I guess?\"<br/><br/>{name|volunteer} looks extremely unconvinced.)|(\"Come on, {name|volunteer}! Stop being so doom and gloom! I mean, it's a job, right? So at the least we can be happy we're doing something for a 9 to 5. Could be worse?\"<br/><br/>{name|volunteer} looks extremely unconvinced.)}",
+    "conditions" : [
+      "coworkerOptimism eq low"
+    ]
+  },
+  {
+    "id" : "differenceSmallOrBig",
+    "choiceLabel" : "But we are making a difference.",
+    "content" : "{ifState|protagonistOptimism|low|(\"I mean, it may not be a <i>big</i> difference,\" you say. \"Heck, even after the stuff I've done, it's hard sometimes to see if it matters. But the most important thing is that we're out here trying. Doing the best we can. Some days that's enough. So let's get back to work and see what we can do, huh?\"<br/><br/>{name|volunteer} nods. \"Yeah, I guess you're right. Thanks, {name|protagonist}.\")|(\"These things are all inter-connected. That's what makes climate change so challenging to study. We sometimes have trouble seeing the importance or scale of all the different aspects. You and I are doing good work out here. Trust me.\"<br/><br/>{name|volunteer} nods. \"Well, ok I suppose. I mean, that's why I signed up, right? Got tired of just sitting around doing nothing about it. Thanks, Emma.\")}",
+    "conditions" : [
+      "coworkerOptimism eq low"
+    ],
+    "effects" : [
+      "set coworkerOptimism high"
     ]
   },
 
@@ -359,7 +383,7 @@
 		"choiceLabel" : "Break the silence",
 		"content" : "After about half an hour of quietly working, you feel the need to hear another human voice. You clear your throat. {name|volunteer} looks up.",
 		"conditions" : [ 
-		//	"effort gte 3" 
+			//"effort gte 3" 
 		],
 		"effects": [
 			"set expendEffort true"

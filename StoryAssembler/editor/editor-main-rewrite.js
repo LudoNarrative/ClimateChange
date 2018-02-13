@@ -136,13 +136,16 @@ requirejs(
 	cycola( cytoscape, cola ); // register extension
 	regCose( cytoscape );
 
+	var wait = true;
+
 	var levelData;
 	var globalData;
 	var story;
+
 	var graphData = [];
 	var leftToVisit = [];
 	var playThroughs = [];
-	var currentScene = "finalBeach";		//starting scene (you can change this in the UI from the dropdown)
+	var currentScene = "finalLecture";		//starting scene (you can change this in the UI from the dropdown)
 
 	var stories = Coordinator.getStorySpec("all");
 	var testStories = HanSON.parse(testData);
@@ -234,45 +237,65 @@ requirejs(
 		}
 	}
 
-	var simulateRunthroughs = function() {
-		resetStory();
-
-		addToGraph([]);
-		stepStory([]);
-		console.log("iterStep = " + iterStep);
-		return graphData;
-	}
-
 	//resets the story and goes to first node, usually called before clicking to re-traverse the choices
-	var resetStory = function() {
+	var resetStory = function(_callback) {
 		
+		var processedWishlist = State.get("processedWishlist");
+		var knobsWishlistStateSettingsCache = State.get("knobsWishlistStateSettingsCache");
+
 		State.reset();
 		State.set("displayType", "editor");
 
-		
-		Display.processWishlistSettings(Coordinator, currentScene);			//extra bit to load dynamic wishlists
+		if (typeof processedWishlist == "undefined") {					//if we haven't processed the wishlist before...process it
+			$('body').append("<div id='hiddenKnobs'></div>");
+	    	Display.createKnobs(currentScene, "hiddenKnobs");
+			Display.populateKnobs(currentScene, Coordinator, State, State.get("scenes"));
+			setTimeout(function (){
+				Display.processWishlistSettings(Coordinator, currentScene);			//extra bit to load dynamic wishlists
+				Display.initSceneScreen();
+				Coordinator.loadAvatars(currentScene);
+				Coordinator.loadStoryMaterials(currentScene);
+				
+				$("#storyDiagnostics").hide();
+				$("#storyDiagnosticsButton").hide();	
+				console.log("we're cool");
+				_callback();
+			}, 500);
+		}
 
-		Coordinator.loadAvatars(currentScene);
-		Coordinator.loadStoryMaterials(currentScene);
+		else {						//otherwise, restore the cached settings
+			State.set("processedWishlist", processedWishlist);					//preserve for future
+			State.set("knobsWishlistStateSettingsCache", knobsWishlistStateSettingsCache);			//preserve for future
+			State.set("dynamicWishlist", true);
+			for (var x=0; x < knobsWishlistStateSettingsCache.length; x++) {
+				var setting = knobsWishlistStateSettingsCache[x];
+				State.set(setting.key, setting.value);
+			}
+			Display.initSceneScreen();
+			Coordinator.loadAvatars(currentScene);
+			Coordinator.loadStoryMaterials(currentScene);
+			
+			$("#storyDiagnostics").hide();
+			$("#storyDiagnosticsButton").hide();	
+			console.log("we're cool");
+			_callback();
+		}
+
 		
-		$("#storyDiagnostics").hide();
-		$("#storyDiagnosticsButton").hide();	
 	}
 
 	/*
 	resets game and clicks through until it makes the choice you've passed in
 	(bound as right-click action for nodes in the graph so you can click to go to them)
 	*/
-	var gotoChoice = function(clickPath, story, levelData, globalData) {
+	var gotoChoice = function(clickPath, story, levelData, globalData, _callback) {
 		
-		resetStory();		//reset story and load first node
-
-		for (var x=0; x < clickPath.length; x++) {
-			//addToGraph(clickPath);					//add node to graph again (so that we can collapse lines with weight)
-			clickChoice(clickPath[x].clickNum);		//click the choice
-		}
+		resetStory(function(){
+			for (var x=0; x < clickPath.length; x++) { clickChoice(clickPath[x].clickNum); }		//return to where you were before
+			addToGraph(clickPath);			//add the node you're on
+			if (typeof _callback !== "undefined") { _callback(); }
+		});		//reset story and load first node
 		
-		addToGraph(clickPath);
 	}
 
 	//steps the story
@@ -283,8 +306,10 @@ requirejs(
 				iterStep++;
 				console.log(logMsg);
 				var nextNode = leftToVisit.shift();
-				gotoChoice(nextNode.clickPath, story, levelData, globalData);
-				stepStory(nextNode.clickPath);
+				gotoChoice(nextNode.clickPath, story, levelData, globalData, function() {
+					stepStory(nextNode.clickPath);
+				});
+				
 			}
 		}
 
@@ -292,8 +317,7 @@ requirejs(
 		if (typeof uniqueNodeId == "undefined") { uniqueNodeId = graphData[graphData.length-2].data.id; }		//if it wasn't a node, grab next one up
 		
 		var newChoices = checkForNewChoices(graphData, clickPath);			//check and see if there are any new choices
-		//console.log("Haw haw haw", State.get("processedWishlist"));
-		console.log("Haw", StoryAssembler.wishlist);
+
 		newChoices.forEach(function(newChoice, pos) {			//copy them to the leftToVisit with the path to them
 			var choiceClickPath = clickPath.slice(0);		//clone array
 			choiceClickPath.push({source: uniqueNodeId, dest: newChoice.chunkId, clickNum: newChoice.choiceNum+1, choiceText: newChoice.text});
@@ -555,9 +579,18 @@ requirejs(
 	//creates the graph of paths in the narrative scene
 	var createGraph = function() {
 
-		graphElements = simulateRunthroughs();
+		//graphElements = simulateRunthroughs();
+
+		resetStory(function(){	//reset story and go to first node
+			addToGraph([]);		//add that node to graph
+			stepStory([]);		//step the story and continue adding to graph until iterations is exhausted			
+		
+		graphElements = graphData;
+
 		console.log("GraphElements", graphElements);
 		console.log("leftToVisit", leftToVisit);
+
+		$('body').append("<div id='cyto'></div><div id='popup'></div>");
 
 		cytoGraph = cytoscape({
 			container : $("#cyto"),
@@ -713,7 +746,7 @@ requirejs(
 				{
 					content: 'Goto Here',
 					select: function(ele){
-						gotoChoice(ele.data().clickPath, story, levelData, globalData, "stepTo");
+						gotoChoice(ele.data().clickPath, story, levelData, globalData, function() {stepStory(ele.data().clickPath);});
 						$("#storyContainer.editor").show();
 					}
 				},
@@ -749,7 +782,7 @@ requirejs(
 		collapseEdges(cytoGraph);			//convert multiple identical edges to one edge with a thicker stroke
 
 		createDropdown();					//create scene selector dropdown menu
-
+		});	
 	}
 
 	/*
@@ -869,7 +902,7 @@ requirejs(
 		//highlight the paths to this node on the graph 
 		if (type == "pathsToHere") {
 			$("#popup .goto").click(function() {
-				gotoChoice(ele.data().clickPath, story, levelData, globalData, "stepTo");
+				gotoChoice(ele.data().clickPath, story, levelData, globalData, function() {stepStory(ele.data().clickPath);});
 				$("#storyContainer.editor").show();
 			});
 		}
@@ -933,7 +966,7 @@ requirejs(
     $('body').append(instructionHtml + "<div id='cyto'></div><!--<button id='submit'>Save JSON file</button><button id='restore'>Reset Changes</button><span id='valid_indicator'></span><div id='editor_holder'></div>--><div id='storyContainer' class='editor'></div><div id='popup'></div>");
 
     createUI();
-	createGraph();
+  	createGraph();
 
 
 });

@@ -12,7 +12,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		
 
 		//selectable scenes from main menu
-		var scenes = ["finalDinner", "finalLecture", "intro:deanOrTravel", "intro:tempDinnerWithFam", "finalBeach"];
+		var scenes = ["finalDinner", "finalLecture", "intro:deanOrTravel", "intro:tempDinnerWithFam", "finalBeach", "intro:theEnd"];
 
 
 		//for reference, easy access to old temporary scenes.
@@ -21,7 +21,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//var finalScenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
 
 		//scenes played when you hit Begin
-		var playGameScenes = ["finalDinner", "finalLecture", "finalDean", "finalFamilyDinner", "finalBeach"];
+		var playGameScenes = ["finalDinner", "finalLecture", "intro:deanOrTravel", "intro:tempDinnerWithFam", "finalBeach", "intro:theEnd"];
 		State.set("scenes", playGameScenes);
 
 		if (Display.interfaceMode == "timeline") {
@@ -81,6 +81,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	//returns index of next scene
 	//available scenes: ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"]
 	var getNextScene = function(currentScene) {
+		/* This is the old conditional code for moving between scenes based on states, needs to be refactored away from here to evaluate custom State compares put in each scene to see if it's valid, but that means we have to write them, so leaving for now
 		switch(currentScene) {
 			case "finalDinner":
 				return 1;
@@ -114,6 +115,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			case "finalFaculty": 		//this should return epilogue eventually
 				return 0;
 		}
+		*/
+		
+		return State.get("scenes").indexOf(currentScene)+1;
+
 	}
 
 
@@ -1126,7 +1131,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "undergradDean",
-				text : "<p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprardy!</p>"
+				text : "<p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeopardy!</p>"
 			},
 			{
 				id : "undergradTravel",
@@ -1174,7 +1179,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalDinner",
-				text : "<p>You are Emma Richards, a PhD student finishing up your degree on the effects of climate change.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
+				text : "<p>It's the year 2025. You are Emma Richards, a PhD student finishing up your degree on the effects of climate change.</p><p>Tomorrow, you'll be defending your thesis. Your friends have decided to throw a dinner party for you.</p><p>Choose what Emma says, but keep an eye on the task you're performing, too!</p>"
 			},
 			{
 				id : "finalLecture",
@@ -1198,7 +1203,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalBeach",
-				text : "<p>As years have passed, you've fought the good fight as best you can, locally. You've managed to keep the Oxbow Marshes designated as a wildlife refuge, and pushed for tighter regulations of the local paper mill. Sometimes it feels hopeless, given global events, but you've kept working. One day you have a memorable conversation with your co-worker about this very thing.</p>"
+				text : "<p>{ifState|failedLecture|true|As years have passed, you've fought the good fight as best you can, locally.|You took Mom's words to heart, and later on got involved with a local group helping with habitat remediation for crabs.}<p> You managed to keep the Oxbow Marshes designated as a wildlife refuge, and pushed for tighter regulations of the local paper mill. Sometimes it feels hopeless, given global events, but you've kept working. One day you have a memorable conversation with your co-worker about this very thing.</p>"
 			},
 			{
 				id : "finalFaculty",
@@ -1206,14 +1211,25 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "deanOrTravel",
-				text : "this is the intro for dean or travel"
+				text : "{ifState|failedLecture|true|(<p>Well, that could have gone better.</p><p>Trouble is, things didn't get easier as you continued lecturing. Bad class feedback meant you had to meet with the Dean to discuss your 'pedagogical style'. He seemed sympathetic, and gave you a second chance.</p><p>As the years went on, however, you found yourself drifting more towards working with local groups to help remediate the growing environmental effects of the rising sea level. You were able to translate your expertise with {stateVar|areaOfExpertise|shrimp} to help with research on changing crab biomes.</p>)|<p>That lecture was the first of many in your budding career as an academic. It turns out you had a natural gift for education, and students flocked to your courses as the years progressed. You began giving talks and leading panels outside of academia, which were in high demand as various organizations and governments around the world struggled to cope with the effects of the changing climate on their people.</p>}"
 			},
 			{
 				id : "tempDinnerWithFam",
-				text : "this ithe dinner with fam intro"
+				text : "<p>It's six years later: 2032. Your parents decided to come visit you, and you took them out to a local restaurant: {ifState|failedLecture|true|their treat|your treat}. They hadn't changed much, although you noticed Mom had more gray hair than you remembered, and Dad had finally gotten glasses.</p><p>The conversation went well, though as usual they pushed you a bit on some of your life choices. {ifState|failedLecture|true|Sometimes you thought they didn't see the value of your activist work locally.|Mom gave you a bit of grief over your decision to teach people, rather than directly getting involved with local groups. She'd been volunteering a lot since retiring.}</p><p>All in all it was an enjoyable night!</p>"
+			},
+			{
+				id : "theEnd",
+				text : "<p>As the years progressed, you watched the world around you changing. Knowing that you'd had a hand, even in some small way, in how things turned out.</p><p>(Thanks for playing! You can hit 'refresh' on the browser window now)</p>"
 			}
 		]
-		var sceneText = sceneScreens.filter(function(v) { return v.id === id; })[0].text;
+		
+		var lookup;
+		if (id.substring(0,6) == "intro:") {	//if we're just using the intro as an interstitial scene, not actually running the scene...
+			lookup = id.substring(6,id.length);
+		}
+		else { lookup = id; }
+		var sceneText = sceneScreens.filter(function(v) { return v.id === lookup; })[0].text;
+		sceneText = Templates.render(sceneText);
 		Display.setSceneIntro(sceneText, id);
 	};
 

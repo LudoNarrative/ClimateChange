@@ -4,7 +4,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var Coordinator;
 
 	var gameModeChosen = "";				//holder for if game is chosen through UI knobs for scene
-	var interfaceMode = "normal";			//how scenes progress...a timeline that's returned to ("timeline"), or progress scene-to-scene ("normal")
+	var interfaceMode = "timeline";			//how scenes progress...a timeline that's returned to ("timeline"), or progress scene-to-scene ("normal")
 
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
@@ -18,8 +18,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		    class: 'titleLink',
 		});
 
+		var linkId = id;
+		if (id.indexOf(":") > -1) { linkId = id.split(":")[1]; }
+
 		$('<a/>', {
 		    href: target,
+		    id: "startScene_" + linkId,
 		    text: content,
 		    click: function() {
 				$( "#blackout" ).fadeIn( "slow", function() {
@@ -33,8 +37,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var startScene = function(_coordinator, id, loadIntro) {
 
-		if (id.substring(0,5) == "intro:") {		//if we're just using the intro as an interstitial scene, not actually running the game...
+		if (id.substring(0,6) == "intro:") {		//if we're just using the intro as an interstitial scene, not actually running the game...
+			initSceneScreen(State, bg, id);
 			_coordinator.loadSceneIntro(id);
+			State.set("currentScene", id);
 		}
 		else {
 			_coordinator.cleanState(id);
@@ -53,7 +59,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
 		
 		$('<h1/>', {
-		    text: 'Climate Change Prototype',
+		    text: "Emma's Journey",
 		    id: 'title'
 		}).appendTo('body');
 
@@ -64,6 +70,17 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				$( "#blackout" ).fadeIn( "slow", function() {
 	    			startScene(_Coordinator, playGameScenes[0], true);
   				});
+			}
+		}).appendTo('body');
+
+		if (localStorage.getItem("playerIdentifier") == null) { setPlayerIdentifier(); }
+		var identifier = $('<h2/>', {
+			html: 'Identifier: <span style="color: yellow">' + localStorage.getItem("playerIdentifier") + "</span><br><br><span style='color:#43d9ff'>(click to regenerate)<span>",
+			id: 'trackingId',
+			style: 'margin-bottom: 300px',
+			click: function() {
+				setPlayerIdentifier();
+				$("#trackingId").html('Identifier: <span style="color: yellow">' + localStorage.getItem("playerIdentifier") + "</span><br><br><span style='color:#43d9ff'>(click to regenerate)<span>");
 			}
 		}).appendTo('body');
 
@@ -137,15 +154,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		activateBegins(_Coordinator, _State, scenes);
 
 		//if we haven't sent form data yet, send it
-		if (Coordinator.recordPlaythroughs && localStorage.getItem('playthroughScene') !== null) {
-			postToGoogleForm();
-			localStorage.removeItem("playthroughScene");
-			localStorage.removeItem("playthroughData");
-			if (localStorage.getItem("playerIdentifier") == null) {
-				setPlayerIdentifier();
-			}
-		}
+		postTrackingStats();
 		
+		//if we don't have a unique tracking identifier for the player, set it	
+		if (localStorage.getItem("playerIdentifier") == null) { setPlayerIdentifier(); }
 	}
 
 	var returnToTimelineScreen = function(scenes) {
@@ -200,11 +212,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		activateBegins(Coordinator, State, scenes);
 
 		//if we haven't sent form data yet, send it
-		if (Coordinator.recordPlaythroughs && localStorage.getItem('playthroughScene') !== null) {
-			postToGoogleForm();	
-			localStorage.removeItem("playthroughScene");
-			localStorage.removeItem("playthroughData");
-		}
+		postTrackingStats();
 	}
 
 	//process the wishlist for the passed in story according to its current settings in the UI
@@ -213,6 +221,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		var knobList = [];
 		var widgetNum = 0;
 		var story = _Coordinator.getStorySpec(id);
+		var knobsWishlistStateSettingsCache = [];				//a cache we store in case we need to use it later (just used for viz right now)
 
 		for (var x=0; x < story.wishlist.length; x++) {
 			if (story.wishlist[x].condition.includes("[") && !story.wishlist[x].condition.includes("game_mode")) {
@@ -228,6 +237,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 					if (stateSetter) {
 						var key = story.wishlist[x].condition.replace("state:","").trim().split(" ")[1];
 						State.set(key, value);
+						knobsWishlistStateSettingsCache.push({"type" : "stateSetter", "key" : key, "value" : value});
 					}
 					else {
 						story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
@@ -239,6 +249,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 					if (stateSetter) {
 						var key = story.wishlist[x].condition.replace("state:","").trim().split(" ")[1];
 						State.set(key, value);
+						knobsWishlistStateSettingsCache.push({"type" : "stateSetter", "key" : key, "value" : value});
 					}
 					else {
 						story.wishlist[x].condition = story.wishlist[x].condition.replace(/\[.*?\]/g, value);
@@ -270,6 +281,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		}
 
 		State.set("processedWishlist", story.wishlist);
+		State.set("knobsWishlistStateSettingsCache", knobsWishlistStateSettingsCache);
 	}
 
 	//activate begin links in timeline
@@ -284,7 +296,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	}
 
 	var initMetaKnobs = function(_Coordinator, _State) {
-		//TODO doof
+		//TODO
 	}
 
 	var createKnobs = function(sceneId, targetDivId) {
@@ -636,18 +648,33 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	//sets the intro screen for each scene
 	var setSceneIntro = function(sceneText, id) {
 		$("#blackout").show();
+
 		$("#sceneIntro").html("<div id='introText'>" + sceneText + "</div><div id='introGame'></div>");
+		if (id.substring(0,6) == "intro:") { 
+			$("#sceneIntro").html("<div id='introText' style='width:100%'>" + sceneText + "</div>");
+		}
 
-		Coordinator.startGame(id, true, true);		//start intro game
-
+		var linkText = "";
+		if (id.substring(0,6) !== "intro:") {	//if we're not using the intro as an interstitial scene, start game...
+			Coordinator.startGame(id, true, true);		//start intro game
+			linkText = "Begin";
+		}
+		else { linkText = "Continue"; }
 
 		var begin = $('<h2/>', {
-			text: 'Begin',
+			text: linkText,
 			click: function() {
-				if (id.substring(0,5) == "intro:") {
-
+				if (id.substring(0,6) == "intro:") {	//if this is interstitial, clicking the link starts the next scene
+					initTitleScreen(Coordinator, State, State.get("scenes"), State.get("scenes"));		//reinitialize title screen (terrible)
+					var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
+					var nextScene = State.get("scenes")[nextIndex];
+					if (nextScene.indexOf(":") > 0) { nextScene = nextScene.split(":")[1]; }
+					setTimeout(function (){
+					  $("#startScene_" + nextScene).click();
+					}, 500);
+					
 				}
-				else {
+				else {			//otherwise, it closes the intro window and starts the scene
 					Coordinator.startGame(id);				//start real game
 					$("#sceneIntro").fadeOut( "slow" );
 					$("#blackout").fadeOut( "slow" );
@@ -662,6 +689,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var setSceneOutro = function(endText) {
 
 		var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
+		var nextScene = State.get("scenes")[nextIndex];
 		$( "#blackout" ).delay(1600).fadeIn( "slow", function() {
 	    	$("#sceneIntro").html(endText);
 
@@ -692,11 +720,20 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	    	var begin = $('<h2/>', {
 			text: 'Next',
 			click: function() {
+
+				postTrackingStats();		//post tracking stats
+
 				if (interfaceMode == "timeline") {		//if timeline, return there
 					returnToTimelineScreen(State.get("scenes"));
 				}
 				else {			//otherwise, start next scene
-					startScene(Coordinator, State.get("scenes")[nextIndex], true);
+					$('body').append("<div id='hiddenKnobs'></div>");
+					createKnobs(nextScene, "hiddenKnobs");
+					populateKnobs(nextScene, Coordinator, State, State.get("scenes"));
+					setTimeout(function (){		//gotta put in some lag for the knobs to populate
+					  startScene(Coordinator, nextScene, true);
+					}, 500);
+					
 				}
 			}
 			}).appendTo("#sceneIntro");
@@ -918,6 +955,15 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		.appendTo("#ASPEditor");
 	}
 
+	//posts tracking stats if we have any unsent ones
+	var postTrackingStats = function() {
+		if (Coordinator.recordPlaythroughs && localStorage.getItem('playthroughScene') !== null) {
+			postToGoogleForm();
+			localStorage.removeItem("playthroughScene");
+			localStorage.removeItem("playthroughData");
+		}
+	}
+
 	var postToGoogleForm = function() {
 
 		if (State.get("displayType") !== "editor") {
@@ -940,7 +986,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var setPlayerIdentifier = function() {
 
 		var emotions = ['understanding','great','playful','calm','confident','courageous','peaceful','reliable','joyous','energetic','lucky','liberated','comfortable','amazed','fortunate','optimistic','pleased','free','delighted','provocative','encouraged','sympathetic','overjoyed','impulsive'];
-		var colors = ['amber','amethyst','apricot','aqua','aquamarine','auburn','azure','beige','black','blue','bronze','brown','cardinal','carmine','celadon','cerise','cerulean','charcoal','chartreuse','chocolate','cinnamon','color','copper','coral','cream','crimson','cyan','denim','ebony','ecru','eggplant','emerald','fuchsia','gold','goldenrod','gray','green','indigo','ivory','jade','jet','khaki','lavender','lemon','light','lilac','lime','magenta','mahogany','maroon','mauve','mustard','ocher','olive','orange','orchid','pale','pastel','peach','periwinkle'];
+		var colors = ['amber','amethyst','apricot','aqua','aquamarine','auburn','azure','beige','black','blue','bronze','brown','cardinal','carmine','celadon','cerise','cerulean','charcoal','chartreuse','chocolate','cinnamon','scarlet','copper','coral','cream','crimson','cyan','denim','ebony','ecru','eggplant','emerald','fuchsia','gold','goldenrod','gray','green','indigo','ivory','jade','jet','khaki','lavender','lemon','light','lilac','lime','magenta','mahogany','maroon','mauve','mustard','ocher','olive','orange','orchid','pale','pastel','peach','periwinkle'];
 		var animals = ['alligator','ant','bear','bee','bird','bull','camel','cat','cheetah','chicken','chimpanzee','cow','crocodile','deer','dog','dolphin','duck','eagle','elephant','fish','fly','fox','frog','giraffe','goat','goldfish','gorilla','hamster','hippopotamus','horse','kangaroo','kitten','lion','lobster','monkey','octopus','owl','panda','pig','puppy','rabbit','rat','scorpion','seal','shark','sheep','snail','snake','spider','squirrel','swan','tiger','turtle','wolf','wren','zebra','pale','pastel','peach','periwinkle'];
 		var letters = ['A','B','C','D','E','F','G','H','I','J','H'];
 		var identifier = "";
@@ -1001,6 +1047,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		initSceneScreen : initSceneScreen,
 		setAvatars : setAvatars,
 		createStats : createStats,
+		createKnobs : createKnobs,
+		populateKnobs : populateKnobs,
 		setStats : setStats,
 		setSceneIntro : setSceneIntro,
 		setSceneOutro : setSceneOutro,

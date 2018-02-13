@@ -51,7 +51,8 @@ Todo:
             "set student2 true",
             "set talkToStudent 3",
             "set followUp true",
-            "set lectureEnd true"
+            "set lectureEnd true",
+            "set failedLecture true"            //flag so we know we failed
         ]
 
     },
@@ -264,8 +265,8 @@ Todo:
         "choiceLabel": "Just a few more examples",
         "content": "You present a few more quick facts before continuing. {ifStateCondition|concentration gte 5|So far, it seems like it's going well. \"Those|Some people are yawning in the front row. \"Th-those} were just a few examples of things we'll be covering. Besides effects of climate change, you'll also learn how each of you can help out, both locally and on the global scale.\"",
         "choices": [
-            {"gotoId": "lectureBridge"}
-           // {"gotoId": "seminarBridge"}
+            {"gotoId": "lectureBridge"},
+            {"gotoId": "seminarBridge"}
         ],
         "effects": [
             "set lectureFinished true"
@@ -294,7 +295,8 @@ Todo:
         "choiceLabel": "Take some questions",
         "content": "\"{ifStateCondition|concentration gte 5|Well that's enough talking from me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|concentration gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
         "effects": [
-            "set bridgeFinished true"
+            "set bridgeFinished true",
+            "set doneTalking true"
         ],
         "conditions": [
             "lectureFinished eq true",
@@ -422,7 +424,7 @@ Todo:
 
   {
     "id" : "student2Intro",
-    "unavailableChoiceLabel" : "Already called on {name|student1}.",
+    "unavailableChoiceLabel" : "Already called on {name|student2}.",
     "choiceLabel" : "...the student frowning skeptically, but shy.",
     "content" : "Better to take on some students that seem on the fence.",
     "effects" : [
@@ -437,9 +439,9 @@ Todo:
 
   {
     "id" : "student3Intro",
-    "unavailableChoiceLabel" : "Already called on {name|student2}.",
+    "unavailableChoiceLabel" : "Already called on {name|student3}.",
     "choiceLabel" : "...the student earnestly waving her hand.",
-    "content" : "You know you can count on {name|student2}, at least, for some enthusiastic conversation. Hopefully others will pick up on the energy.",
+    "content" : "You know you can count on {name|student3}, at least, for some enthusiastic conversation. Hopefully others will pick up on the energy.",
     "effects" : [
         "incr talkToStudent 1",
         "set doneTalking false",
@@ -471,38 +473,38 @@ Todo:
         "questionsLeft gt 0"
       ]
     },
-    {
-      "id" : "logicResponse",
-      "choiceLabel" : "Turn to the facts.",
-      "content" : "\"Well...while there might be a number of people who believe in the same thing that your mother does, the facts don't lie. We'll go over specifics in future classes, but here are just some rough statistics for you. The global temperature has increased by 1.7 degrees fahrenheit since 1880, and the minimum amount of arctic ice decreases about 13.3 percent each decade.\"",
-      "effects" : [
-        "incr optimism 1",
-        "incr hope 1",
-        "incr curiosity 1",
-        "set doneTalking true"
-      ]
-    },
+            {
+              "id" : "logicResponse",
+              "choiceLabel" : "Turn to the facts.",
+              "content" : "\"Well...while there might be a number of people who believe in the same thing that your mother does, the facts don't lie. We'll go over specifics in future classes, but here are just some rough statistics for you. The global temperature has increased by 1.7 degrees fahrenheit since 1880, and the minimum amount of arctic ice decreases about 13.3 percent each decade.\"",
+              "effects" : [
+                "incr optimism 1",
+                "incr hope 1",
+                "incr curiosity 1",
+                "set doneTalking true"
+              ]
+            },
 
-    {
-      "id" : "sourResponse",
-      "choiceLabel" : "\"Really? A conspiracy?\"",
-      "content" : "\"So let me get this straight, there are hundreds of thousands of scientist around the world who dedicate their lives to studying climate change, and your mother claims they're all lying? 95% of those scientist can prove, using real data that they or their peers worked hard to collect, that the Earth's climate is changing.\"",
-      "effects" : [
-        "decr skepticCuriosity 2",
-        "set doneTalking true"
-      ]
-    },
+            {
+              "id" : "sourResponse",
+              "choiceLabel" : "\"Really? A conspiracy?\"",
+              "content" : "\"So let me get this straight, there are hundreds of thousands of scientist around the world who dedicate their lives to studying climate change, and your mother claims they're all lying? 95% of those scientist can prove, using real data that they or their peers worked hard to collect, that the Earth's climate is changing.\"",
+              "effects" : [
+                "decr skepticCuriosity 2",
+                "set doneTalking true"
+              ]
+            },
 
-    {
-      "id" : "valueResponse",
-      "choiceLabel" : "\"Your mom is biased\"",
-      "content" : "\"Big oil companies like Tysoncorp are one of the leading causes of climate change. If laws and regulations passed to limit their carbon emissions, then it would probably hurt their profits. So of course your mother would say it's a conspiracy. But the facts don't lie.\"",
-      "effects" : [
-        "incr optimism 1",
-        "incr curiosity 1",
-        "set doneTalking true"
-      ]
-    },
+            {
+              "id" : "valueResponse",
+              "choiceLabel" : "\"Your mom is biased\"",
+              "content" : "\"Big oil companies like Tysoncorp are one of the leading causes of climate change. If laws and regulations passed to limit their carbon emissions, then it would probably hurt their profits. So of course your mother would say it's a conspiracy. But the facts don't lie.\"",
+              "effects" : [
+                "incr optimism 1",
+                "incr curiosity 1",
+                "set doneTalking true"
+              ]
+            },
 
     {
       "id" : "franklinFollowUp",
@@ -528,50 +530,50 @@ Todo:
         ]
     },
 
-    {
-        "id": "followUpAnswer1",
-        "choiceLabel": "\"The changes are more impactful than you think.\"",
-        "content": "\"Well, {ifStateCondition|concentration lt 5|uhhh,|}the impact of climate change is much larger than you think. {ifStateCondition|concentration lt 5|If I remember correctly... |}The sea level has been steadily rising for the past 200 years. It is projected to rise another 1 to 4 feet in the next century. That is enough to cause many low sea level areas to flood. We're also seeing stronger, more frequent hurricanes, which I'm sure is something you'd rather avoid.\"",
-        "effects": [
-            "decr optimism 1",
-            "decr hope 1"
-        ],
-        "choices": [{
-            "gotoId": "establishStudents"
-        }]
-    },
+            {
+                "id": "followUpAnswer1",
+                "choiceLabel": "\"The changes are more impactful than you think.\"",
+                "content": "\"Well, {ifStateCondition|concentration lt 5|uhhh,|}the impact of climate change is much larger than you think. {ifStateCondition|concentration lt 5|If I remember correctly... |}The sea level has been steadily rising for the past 200 years. It is projected to rise another 1 to 4 feet in the next century. That is enough to cause many low sea level areas to flood. We're also seeing stronger, more frequent hurricanes, which I'm sure is something you'd rather avoid.\"",
+                "effects": [
+                    "decr optimism 1",
+                    "decr hope 1"
+                ],
+                "choices": [{
+                    "gotoId": "establishStudents"
+                }]
+            },
 
-    {
-        "id": "followUpAnswer2",
-        "choiceLabel": "\"It is still our home.\"",
-        "content": "\"We only have this planet, so it's our duty to take care of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations.\"",
-        "effects": [
-            "incr optimism 1",
-            "incr hope 1"
-        ],
-        "choices": [{
-            "gotoId": "establishStudents"
-        }]
-    },
+            {
+                "id": "followUpAnswer2",
+                "choiceLabel": "\"It is still our home.\"",
+                "content": "\"We only have this planet, so it's our duty to take care of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations.\"",
+                "effects": [
+                    "incr optimism 1",
+                    "incr hope 1"
+                ],
+                "choices": [{
+                    "gotoId": "establishStudents"
+                }]
+            },
 
-    {
-        "id": "followUpAnswer3",
-        "choiceLabel": "\"Well, you don't have to care.\"",
-        "content": "\"Whether you care or not is up to you. You're right, we won't be around to see all of the arctic ice melt and swallow up coastal cities, or feel the temperature increase to unbearable levels. But if each of us does our part, we can help prevent our decendants from experiencing the slow death of our planet.\"",
-        "effects": [
-            "decr optimism 1",
-            "decr curiosity 1"
-        ],
-        "choices": [{
-            "gotoId": "establishStudents"
-        }]
-    },
+            {
+                "id": "followUpAnswer3",
+                "choiceLabel": "\"Well, you don't have to care.\"",
+                "content": "\"Whether you care or not is up to you. You're right, we won't be around to see all of the arctic ice melt and swallow up coastal cities, or feel the temperature increase to unbearable levels. But if each of us does our part, we can help prevent our decendants from experiencing the slow death of our planet.\"",
+                "effects": [
+                    "decr optimism 1",
+                    "decr curiosity 1"
+                ],
+                "choices": [{
+                    "gotoId": "establishStudents"
+                }]
+            },
 
 //--------Franklin (POSITIVE)------------------------------------------
 
 {
       "id" : "franklinIntroOptimistic",
-      "unavailableChoiceLabel" : "Already called on {name|skepticStudent}.",
+      "unavailableChoiceLabel" : "Already called on {name|student1}.",
       "choiceLabel" : "\"Yes, {name|student1}?\"",
       "content" : "\"My mom runs the energy division of TysonCorp, and she told me that most of the climate change stuff in the news is exaggerated, and that corporations will get it under control, once it's profitable for them to do so. What do you think of that?\"",
       "choices" : [
@@ -587,25 +589,25 @@ Todo:
       ]
     },
 
-    {
-      "id" : "optLogicResponse",
-      "choiceLabel" : "Turn to the facts.",
-      "content" : "\"Well, corporations are the largest contributors to climate change, so they have a critical role to play in reducing emissions. However, having regulations in place that can enforce reductions means the mandate can't come from PR or profitability, but public welfare.\"",
-      "effects" : [
-        "incr optimism 1",
-        "incr hope 1",
-        "incr curiosity 1"
-      ]
-    },
+            {
+              "id" : "optLogicResponse",
+              "choiceLabel" : "Turn to the facts.",
+              "content" : "\"Well, corporations are the largest contributors to climate change, so they have a critical role to play in reducing emissions. However, having regulations in place that can enforce reductions means the mandate can't come from PR or profitability, but public welfare.\"",
+              "effects" : [
+                "incr optimism 1",
+                "incr hope 1",
+                "incr curiosity 1"
+              ]
+            },
 
-    {
-      "id" : "optSourResponse",
-      "choiceLabel" : "\"Really? We should trust corporations?\"",
-      "content" : "You can't believe {name|skepticStudent}'s actually this naive. \"So let me get this straight: we should rely on the profitability of avoiding mass extinction events to drive public action? Call me skeptical, but given those same corporations are largely responsible for this predicament, I don't think we can rely on them to get us out of it.\"",
-      "effects" : [
-        "decr skepticCuriosity 2"
-      ]
-    },
+            {
+              "id" : "optSourResponse",
+              "choiceLabel" : "\"Really? We should trust corporations?\"",
+              "content" : "You can't believe {name|student1}'s actually this naive. \"So let me get this straight: we should rely on the profitability of avoiding mass extinction events to drive public action? Call me skeptical, but given those same corporations are largely responsible for this predicament, I don't think we can rely on them to get us out of it.\"",
+              "effects" : [
+                "decr skepticCuriosity 2"
+              ]
+            },
 
     {
       "id" : "optFranklinFollowUp",
@@ -630,31 +632,31 @@ Todo:
         ]
     },
 
-    {
-        "id": "optFollowUpAnswer1",
-        "choiceLabel": "\"Small changes snowball.\"",
-        "content": "\"It may seem like it's not a lot, but if all of us are recycling, and especially if we're supporting businesses that are working to combat climate change, those effects snowball. And, I suppose, it sends a signal to people like your mother, to hopefully help them set their company's mandate.\"",
-        "effects": [
-            "incr optimism 1",
-            "incr hope 1"
-        ],
-        "choices": [{
-            "gotoId": "establishStudents"
-        }]
-    },
+            {
+                "id": "optFollowUpAnswer1",
+                "choiceLabel": "\"Small changes snowball.\"",
+                "content": "\"It may seem like it's not a lot, but if all of us are recycling, and especially if we're supporting businesses that are working to combat climate change, those effects snowball. And, I suppose, it sends a signal to people like your mother, to hopefully help them set their company's mandate.\"",
+                "effects": [
+                    "incr optimism 1",
+                    "incr hope 1"
+                ],
+                "choices": [{
+                    "gotoId": "establishStudents"
+                }]
+            },
 
-    {
-        "id": "optFollowUpAnswer2",
-        "choiceLabel": "\"It's still our home.\"",
-        "content": "\"We only have this planet, so it's our duty to take care of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations. We each have to do our part.\"",
-        "effects": [
-            "incr optimism 1",
-            "incr hope 1"
-        ],
-        "choices": [{
-            "gotoId": "establishStudents"
-        }]
-    },
+            {
+                "id": "optFollowUpAnswer2",
+                "choiceLabel": "\"It's still our home.\"",
+                "content": "\"We only have this planet, so it's our duty to take care of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations. We each have to do our part.\"",
+                "effects": [
+                    "incr optimism 1",
+                    "incr hope 1"
+                ],
+                "choices": [{
+                    "gotoId": "establishStudents"
+                }]
+            },
 
 //---------ELIKA (POSITIVE)----------------------------
 
@@ -691,58 +693,58 @@ Todo:
   ]
 },
 
-{
-  "id" : "encouragingResponse",
-  "choiceLabel" : "Yeah, absolutely!",
-  "content" : "{ifStateCondition|concentration gte 5|Looking around at all the bored and unconvinced faces, you decide to say |You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out} \"That is an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|student3} beams, though you notice faces that aren't as happy.",
-  "effects" : [
-    "incr optimism 1",
-    "incr hope 1",
-    "decr curiosity 1",
-  ],
-  "choices" : [
-    {"gotoId" : "elikaFollowUp"}
-  ]
-},
+        {
+          "id" : "encouragingResponse",
+          "choiceLabel" : "Yeah, absolutely!",
+          "content" : "{ifStateCondition|concentration gte 5|Looking around at all the bored and unconvinced faces, you decide to say |You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out} \"That is an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|student3} beams, though you notice faces that aren't as happy.",
+          "effects" : [
+            "incr optimism 1",
+            "incr hope 1",
+            "decr curiosity 1",
+          ],
+          "choices" : [
+            {"gotoId" : "elikaFollowUp"}
+          ]
+        },
 
-{
-  "id" : "gentleResponse",
-  "choiceLabel" : "It's actually a bit more complicated than that.",
-  "content" : "{ifStateCondition|concentration gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would also be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
-  "effects" : [
-    "decr optimism 1",
-    "incr hope 1",
-    "incr curiosity 1",
-    "incr concentration 1"
-  ],
-  "choices" : [
-    {"gotoId" : "elikaFollowUp"}
-  ]
-},
+        {
+          "id" : "gentleResponse",
+          "choiceLabel" : "It's actually a bit more complicated than that.",
+          "content" : "{ifStateCondition|concentration gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would also be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
+          "effects" : [
+            "decr optimism 1",
+            "incr hope 1",
+            "incr curiosity 1",
+            "incr concentration 1"
+          ],
+          "choices" : [
+            {"gotoId" : "elikaFollowUp"}
+          ]
+        },
 
-{
-  "id" : "bluntResponse",
-  "choiceLabel" : "No, you've got your facts wrong.",
-  "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But don't believe the hype. It's actually done at the power plants, either before or after the coal gets burned - and it would take a lot of energy, reducing the plant's output, so it's not likely to be adopted as the technology currently stands.\"",
-  "effects" : [
-    "decr optimism 2",
-    "decr hope 1",
-    "decr curiosity 1",
-    "decr concentration 1"
-  ],
-  "choices" : [
-    {"gotoId" : "bluntResponse2"}
-  ]
-},
+        {
+          "id" : "bluntResponse",
+          "choiceLabel" : "No, you've got your facts wrong.",
+          "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But don't believe the hype. It's actually done at the power plants, either before or after the coal gets burned - and it would take a lot of energy, reducing the plant's output, so it's not likely to be adopted as the technology currently stands.\"",
+          "effects" : [
+            "decr optimism 2",
+            "decr hope 1",
+            "decr curiosity 1",
+            "decr concentration 1"
+          ],
+          "choices" : [
+            {"gotoId" : "bluntResponse2"}
+          ]
+        },
 
-{
-  "id" : "bluntResponse2",
-  "choiceLabel" : "Continue",
-  "content" : "\"And frankly,\" you continue, \"it would be way better if we stuck to cleaner energies that already exist then trying to make coal 'clean'.\" <br/><br/>{name|student3}'s smile had faded from her face a long time ago. As well as many others'.",
-  "choices" : [
-    {"gotoId" : "elikaFollowUp"}
-  ]
-},
+        {
+          "id" : "bluntResponse2",
+          "choiceLabel" : "Continue",
+          "content" : "\"And frankly,\" you continue, \"it would be way better if we stuck to cleaner energies that already exist then trying to make coal 'clean'.\" <br/><br/>{name|student3}'s smile had faded from her face a long time ago. As well as many others'.",
+          "choices" : [
+            {"gotoId" : "elikaFollowUp"}
+          ]
+        },
 
 {
   "id" : "elikaFollowUp",
@@ -754,15 +756,15 @@ Todo:
   ],
 },
 
-{
-  "id": "questionBridge",
-  "choiceLabel": "Call on another student.",
-  "content": "You check the clock. {ifStateCondition|concentration lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
-  "repeatable" : "true",
-  "choices" : [
-    {"gotoId" : "establishStudents"}
-  ]
-},
+        {
+          "id": "questionBridge",
+          "choiceLabel": "Call on another student.",
+          "content": "You check the clock. {ifStateCondition|concentration lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
+          "repeatable" : "true",
+          "choices" : [
+            {"gotoId" : "establishStudents"}
+          ]
+        },
 
 {
   "id" : "elikaQuestion2",
@@ -779,47 +781,47 @@ Todo:
   ]
 },
 
-{
-  "id" : "positiveResponse",
-  "choiceLabel" : "I think so.",
-  "content" : "\"I mean, we've already come so far with technology and science,\" you say. \"I'm sure that--now that we're aware of the problems CO2 is causing--we can fix them.\" <br/></br> {name|student3}'s eyes brighten.'",
-  "effects" : [
-    "incr optimism 1",
-    "incr hope 1",
-    "decr curiosity 1",
-  ],
-  "choices" : [
-    {"gotoId" : "establishStudents"}
-  ]
-},
+        {
+          "id" : "positiveResponse",
+          "choiceLabel" : "I think so.",
+          "content" : "\"I mean, we've already come so far with technology and science,\" you say. \"I'm sure that--now that we're aware of the problems CO2 is causing--we can fix them.\" <br/></br> {name|student3}'s eyes brighten.'",
+          "effects" : [
+            "incr optimism 1",
+            "incr hope 1",
+            "decr curiosity 1",
+          ],
+          "choices" : [
+            {"gotoId" : "establishStudents"}
+          ]
+        },
 
-{
-  "id" : "negativeResponse",
-  "choiceLabel" : "I doubt it.",
-  "content" : "\"As far as we've come with technology and science, change takes course over a long period of time,\" you say. \"We'll have to undo a lot of effects we've already caused, and sometimes fixing's more difficult to do.\" <br/> {name|student3} looks down, but nods in what you hope is understanding.",
-  "effects" : [
-    "decr optimism 1",
-    "decr hope 1",
-    "incr curiosity 1",
-    "incr concentration 1"
-  ],
-  "choices" : [
-    {"gotoId" : "establishStudents"}
-  ]
-},
+        {
+          "id" : "negativeResponse",
+          "choiceLabel" : "I doubt it.",
+          "content" : "\"As far as we've come with technology and science, change takes course over a long period of time,\" you say. \"We'll have to undo a lot of effects we've already caused, and sometimes fixing's more difficult to do.\" <br/> {name|student3} looks down, but nods in what you hope is understanding.",
+          "effects" : [
+            "decr optimism 1",
+            "decr hope 1",
+            "incr curiosity 1",
+            "incr concentration 1"
+          ],
+          "choices" : [
+            {"gotoId" : "establishStudents"}
+          ]
+        },
 
-{
-  "id" : "curtResponse",
-  "choiceLabel" : "Don't be ridiculous.",
-  "content" : "\"I mean, if you think about it, we've come so far with technology and science that a lot of damage has already been done,\" you say. \"Not to mention it's hard to convince people to give up the comfort and convenience of things like cars to try and make a difference in the amount of CO2 we already release daily.\" <br/><br/> {name|student3} avoids your gaze.",
-  "effects" : [
-    "decr concentration 1",
-    "decr hope 1"
-  ],
-  "choices" : [
-    {"gotoId" : "establishStudents"}
-  ]
-},
+        {
+          "id" : "curtResponse",
+          "choiceLabel" : "Don't be ridiculous.",
+          "content" : "\"I mean, if you think about it, we've come so far with technology and science that a lot of damage has already been done,\" you say. \"Not to mention it's hard to convince people to give up the comfort and convenience of things like cars to try and make a difference in the amount of CO2 we already release daily.\" <br/><br/> {name|student3} avoids your gaze.",
+          "effects" : [
+            "decr concentration 1",
+            "decr hope 1"
+          ],
+          "choices" : [
+            {"gotoId" : "establishStudents"}
+          ]
+        },
 
 //-----------ELIKA (NEGATIVE)-------------------------------------------------
 
@@ -977,320 +979,320 @@ Todo:
 
 //-----------AIDEN (optimistic)-------------------------------------------------
 
-    {
-      "id" : "aidenIntro",
-      "unavailableChoiceLabel" : "Already called on Aiden.",
-      "choiceLabel" : "\"Yes, {name|student2}?\"",
-      "content" : "{name|student2} looks ready to crawl under their desk when your attention turns to them. \"U-um, uh, I- I get that the ac- that the rise in acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"What can we do about it?\"",
-      "choices" : [
-        {"gotoId" : "aidenNext"},
-      ],
-      "effects" : [
-        "set student2 true",
-        "incr optimisticStudent 1"
-      ],
-      "conditions" : [
-        "questionsLeft gt 0"
-      ]
-    },
+{
+  "id" : "aidenIntro",
+  "unavailableChoiceLabel" : "Already called on Aiden.",
+  "choiceLabel" : "\"Yes, {name|student2}?\"",
+  "content" : "{name|student2} looks ready to crawl under their desk when your attention turns to them. \"U-um, uh, I- I get that the ac- that the rise in acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"What can we do about it?\"",
+  "choices" : [
+    {"gotoId" : "aidenNext"},
+  ],
+  "effects" : [
+    "set student2 true",
+    "incr optimisticStudent 1"
+  ],
+  "conditions" : [
+    "questionsLeft gt 0"
+  ]
+},
 
-    {
-      "id" : "aidenNext",
-      "choiceLabel" : "Continue",
-      "content" : "Their eyes fall upon their desk. \"Even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'Geez, we've gone too far to turn back now. No one wants to give up their car.'\"",
-      "choices" : [
-          {"gotoId" : "hopefulResponse"},
-          {"gotoId" : "pessimisticResponse"},
-          {"gotoId" : "harshResponse"}
-        ],
-      "effects" : [
-        
-      ],
-      },
+{
+  "id" : "aidenNext",
+  "choiceLabel" : "Continue",
+  "content" : "Their eyes fall upon their desk. \"Even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'Geez, we've gone too far to turn back now. No one wants to give up their car.'\"",
+  "choices" : [
+      {"gotoId" : "hopefulResponse"},
+      {"gotoId" : "pessimisticResponse"},
+      {"gotoId" : "harshResponse"}
+    ],
+  "effects" : [
+    
+  ],
+  },
 
-      {
-        "id" : "hopefulResponse",
-        "choiceLabel" : "There's still hope.",
-        "content" : "\"True, the amount of carbon dioxide released into the atmosphere is making a noticeable impact on our planet,\" you say. \"But we're acknowledging these problems, right? <br/><br/>For example, did you know that 16.9% of energy generation in 2016 comes from renewable energy? Which may not seem much until you compare it to the 13% just the year before.",
-        "effects" : [
-          "incr optimism 1",
-          "incr hope 1",
-          "incr curiosity 1",
-          "incr concentration 1"
-        ],
-        "choices" : [
-          {"gotoId" : "hopefulResponse2"},
-        ],
-      },
+  {
+    "id" : "hopefulResponse",
+    "choiceLabel" : "There's still hope.",
+    "content" : "\"True, the amount of carbon dioxide released into the atmosphere is making a noticeable impact on our planet,\" you say. \"But we're acknowledging these problems, right? <br/><br/>For example, did you know that 16.9% of energy generation in 2016 comes from renewable energy? Which may not seem much until you compare it to the 13% just the year before.",
+    "effects" : [
+      "incr optimism 1",
+      "incr hope 1",
+      "incr curiosity 1",
+      "incr concentration 1"
+    ],
+    "choices" : [
+      {"gotoId" : "hopefulResponse2"},
+    ],
+  },
 
-      {
-        "id" : "hopefulResponse2",
-        "choiceLabel" : "Continue",
-        "content" : "You smile at {name|student2}. \"We're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything, nothing will ever change. Then there's zero chance anything will get better.\"",
-        "choices" : [
-          {"gotoId" : "aidenFollowUp"}
-        ]
-      },
+  {
+    "id" : "hopefulResponse2",
+    "choiceLabel" : "Continue",
+    "content" : "You smile at {name|student2}. \"We're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything, nothing will ever change. Then there's zero chance anything will get better.\"",
+    "choices" : [
+      {"gotoId" : "aidenFollowUp"}
+    ]
+  },
 
-      {
-        "id" : "pessimisticResponse",
-        "choiceLabel" : "Humans can never change.",
-        "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|student2}'s face crumple.",
-        "effects" : [
-          "decr optimism 1",
-          "decr hope 1",
-          "decr curiosity 1",
-        ],
-        "choices" : [
-          {"gotoId" : "aidenFollowUp"}
-        ]
-      },
+  {
+    "id" : "pessimisticResponse",
+    "choiceLabel" : "Humans can never change.",
+    "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|student2}'s face crumple.",
+    "effects" : [
+      "decr optimism 1",
+      "decr hope 1",
+      "decr curiosity 1",
+    ],
+    "choices" : [
+      {"gotoId" : "aidenFollowUp"}
+    ]
+  },
 
-      {
-        "id" : "harshResponse",
-        "choiceLabel" : "Geez, don't be such a downer.",
-        "content" : "\"That attitude's the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|student2} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
-        "effects" : [
-          "incr optimism 1",
-          "incr hope 1",
-          "incr curiosity 1",
-          "decr concentration 1"
-        ],
-        "choices" : [
-          {"gotoId" : "harshResponse2"}
-        ]
-      },
+  {
+    "id" : "harshResponse",
+    "choiceLabel" : "Geez, don't be such a downer.",
+    "content" : "\"That attitude's the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|student2} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
+    "effects" : [
+      "incr optimism 1",
+      "incr hope 1",
+      "incr curiosity 1",
+      "decr concentration 1"
+    ],
+    "choices" : [
+      {"gotoId" : "harshResponse2"}
+    ]
+  },
 
-      {
-        "id" : "harshResponse2",
-        "choiceLabel" : "Continue",
-        "content" : "{ifStateCondition|concentration gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
-        "choices" : [
-          {"gotoId" : "aidenFollowUp"}
-        ]
-      },
+  {
+    "id" : "harshResponse2",
+    "choiceLabel" : "Continue",
+    "content" : "{ifStateCondition|concentration gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
+    "choices" : [
+      {"gotoId" : "aidenFollowUp"}
+    ]
+  },
 
-      {
-        "id" : "aidenFollowUp",
-        "choiceLabel" : "Continue",
-        "content" : "{name|student2} looks like they have another question. Take it? Or call on another student?",
-        "choices" : [
-          {"gotoId" : "aidenQuestion2"},
-          {"gotoId" : "questionBridge"}
-        ],
-        "conditions" : ["student2 eq true"],
-        "effects" : [
-            "set doneTalking true"
-        ]
-      },
+  {
+    "id" : "aidenFollowUp",
+    "choiceLabel" : "Continue",
+    "content" : "{name|student2} looks like they have another question. Take it? Or call on another student?",
+    "choices" : [
+      {"gotoId" : "aidenQuestion2"},
+      {"gotoId" : "questionBridge"}
+    ],
+    "conditions" : ["student2 eq true"],
+    "effects" : [
+        "set doneTalking true"
+    ]
+  },
 
-      {
-        "id" : "aidenQuestion2",
-        "choiceLabel" : "Take another question.",
-        "content" : "\"So, um,\" comes {name|student2}'s soft voice. \"Then - what can <i>I</> do?\"",
-        "choices" : [
-          {"gotoId" : "academicResponse"},
-          {"gotoId" : "localResponse"},
-          {"gotoId" : "hopelessResponse"}
-        ],
-        "effects" : [
-          "set followUp true",
-          "decr questionsLeft 1"
-        ]
-      },
+  {
+    "id" : "aidenQuestion2",
+    "choiceLabel" : "Take another question.",
+    "content" : "\"So, um,\" comes {name|student2}'s soft voice. \"Then - what can <i>I</> do?\"",
+    "choices" : [
+      {"gotoId" : "academicResponse"},
+      {"gotoId" : "localResponse"},
+      {"gotoId" : "hopelessResponse"}
+    ],
+    "effects" : [
+      "set followUp true",
+      "decr questionsLeft 1"
+    ]
+  },
 
-      {
-        "id" : "academicResponse",
-        "choiceLabel" : "Educate.",
-        "content" : "\"Educate yourself about what's going on and how you can help - and teach others. You can get involved in some of our research projects here...there's also the path of becoming a professor,\" you say. {name|student2} nods.",
-        "effects" : [
-          "incr hope 1"
-        ],
-        "choices" : [
-          {"gotoId" : "establishStudents"}
-        ]
-      },
+  {
+    "id" : "academicResponse",
+    "choiceLabel" : "Educate.",
+    "content" : "\"Educate yourself about what's going on and how you can help - and teach others. You can get involved in some of our research projects here...there's also the path of becoming a professor,\" you say. {name|student2} nods.",
+    "effects" : [
+      "incr hope 1"
+    ],
+    "choices" : [
+      {"gotoId" : "establishStudents"}
+    ]
+  },
 
-      {
-        "id" : "localResponse",
-        "choiceLabel" : "Find out what you can do within your community.",
-        "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
-        "effects" : [
-          "incr hope 1"
-        ],
-        "choices" : [
-          {"gotoId" : "establishStudents"}
-        ]
-      },
+  {
+    "id" : "localResponse",
+    "choiceLabel" : "Find out what you can do within your community.",
+    "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
+    "effects" : [
+      "incr hope 1"
+    ],
+    "choices" : [
+      {"gotoId" : "establishStudents"}
+    ]
+  },
 
-      {
-        "id" : "hopelessResponse",
-        "choiceLabel" : "There's little you can do.",
-        "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|student2} doesn't look particularly inspired. Some students start whispering amongst themselves.",
-        "effects" : [
-          "decr hope 2",
-          "decr confidence 1"
-        ],
-        "choices" : [
-          {"gotoId" : "establishStudents"}
-        ]
-      },
+  {
+    "id" : "hopelessResponse",
+    "choiceLabel" : "There's little you can do.",
+    "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|student2} doesn't look particularly inspired. Some students start whispering amongst themselves.",
+    "effects" : [
+      "decr hope 2",
+      "decr confidence 1"
+    ],
+    "choices" : [
+      {"gotoId" : "establishStudents"}
+    ]
+  },
 
-      //----Aiden (antagonistic)---------------------------------------------------------
+  //----Aiden (antagonistic)---------------------------------------------------------
 
-         {
-      "id" : "antAidenIntro",
-      "unavailableChoiceLabel" : "Already called on Aiden.",
-      "choiceLabel" : "\"Yes, {name|student2}?\"",
-      "content" : "{name|student2} glances around, as if looking for support. \"U-um, uh, I- I get that the...that the acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"I mean, it's not like we can do anything about it?\"",
-      "choices" : [
-        {"gotoId" : "antAidenNext"},
-      ],
-      "effects" : [
-        "set student2 true",
-        "incr antagonisticStudent 1"
-      ],
-      "conditions" : [
-        "questionsLeft gt 0"
-      ]
-    },
+{
+  "id" : "antAidenIntro",
+  "unavailableChoiceLabel" : "Already called on Aiden.",
+  "choiceLabel" : "\"Yes, {name|student2}?\"",
+  "content" : "{name|student2} glances around, as if looking for support. \"U-um, uh, I- I get that the...that the acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"I mean, it's not like we can do anything about it?\"",
+  "choices" : [
+    {"gotoId" : "antAidenNext"},
+  ],
+  "effects" : [
+    "set student2 true",
+    "incr antagonisticStudent 1"
+  ],
+  "conditions" : [
+    "questionsLeft gt 0"
+  ]
+},
 
-    {
-      "id" : "antAidenNext",
-      "choiceLabel" : "Continue",
-      "content" : "They start talking faster as your eyebrows raise. \"Well, uh...even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'It's already too late. There's no way to stop it now.'\"",
-      "choices" : [
-          {"gotoId" : "antHopefulResponse"},
-          {"gotoId" : "antPessimisticResponse"},
-          {"gotoId" : "antHarshResponse"}
-        ],
-      "effects" : [
-        "decr questionsLeft 1"
-      ],
-      },
+{
+  "id" : "antAidenNext",
+  "choiceLabel" : "Continue",
+  "content" : "They start talking faster as your eyebrows raise. \"Well, uh...even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'It's already too late. There's no way to stop it now.'\"",
+  "choices" : [
+      {"gotoId" : "antHopefulResponse"},
+      {"gotoId" : "antPessimisticResponse"},
+      {"gotoId" : "antHarshResponse"}
+    ],
+  "effects" : [
+    "decr questionsLeft 1"
+  ],
+  },
 
-      {
-        "id" : "antHopefulResponse",
-        "choiceLabel" : "There's still hope.",
-        "content" : "\"True, the amount of carbon dioxide released into the atmosphere is making a noticeable impact on our planet,\" you say. \"But we're acknowledging these problems, right? <br/><br/>For example, did you know that 16.9% of energy generation in 2016 comes from renewable energy? Which may not seem much until you compare it to the 13% just the year before.\"<br/>{name|student2} is still frowning skeptically.",
-        "effects" : [
-          "incr optimism 1",
-          "incr hope 1",
-          "incr curiosity 1",
-          "incr concentration 1"
-        ],
-        "choices" : [
-          {"gotoId" : "antHopefulResponse2"},
-        ],
-      },
+{
+    "id" : "antHopefulResponse",
+    "choiceLabel" : "There's still hope.",
+    "content" : "\"True, the amount of carbon dioxide released into the atmosphere is making a noticeable impact on our planet,\" you say. \"But we're acknowledging these problems, right? <br/><br/>For example, did you know that 16.9% of energy generation in 2016 comes from renewable energy? Which may not seem much until you compare it to the 13% just the year before.\"<br/>{name|student2} is still frowning skeptically.",
+    "effects" : [
+      "incr optimism 1",
+      "incr hope 1",
+      "incr curiosity 1",
+      "incr concentration 1"
+    ],
+    "choices" : [
+      {"gotoId" : "antHopefulResponse2"},
+    ],
+},
 
-      {
-        "id" : "antHopefulResponse2",
-        "choiceLabel" : "Continue",
-        "content" : "You try a smile. \"Look, we're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything, nothing will ever change. Then there's zero chance anything will get better.\"",
-        "choices" : [
-          {"gotoId" : "antAidenFollowUp"}
-        ]
-      },
+  {
+    "id" : "antHopefulResponse2",
+    "choiceLabel" : "Continue",
+    "content" : "You try a smile. \"Look, we're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything, nothing will ever change. Then there's zero chance anything will get better.\"",
+    "choices" : [
+      {"gotoId" : "antAidenFollowUp"}
+    ]
+  },
 
-      {
-        "id" : "antPessimisticResponse",
-        "choiceLabel" : "You're right. Humans can never change.",
-        "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|student2}'s face crumple.",
-        "effects" : [
-          "decr optimism 1",
-          "decr hope 1",
-          "decr curiosity 1",
-        ],
-        "choices" : [
-          {"gotoId" : "antAidenFollowUp"}
-        ]
-      },
+  {
+    "id" : "antPessimisticResponse",
+    "choiceLabel" : "You're right. Humans can never change.",
+    "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|student2}'s face crumple.",
+    "effects" : [
+      "decr optimism 1",
+      "decr hope 1",
+      "decr curiosity 1",
+    ],
+    "choices" : [
+      {"gotoId" : "antAidenFollowUp"}
+    ]
+  },
 
-      {
-        "id" : "antHarshResponse",
-        "choiceLabel" : "Geez, don't be such a downer.",
-        "content" : "\"That attitude's the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|student2} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
-        "effects" : [
-          "incr optimism 1",
-          "incr hope 1",
-          "incr curiosity 1",
-          "decr concentration 1"
-        ],
-        "choices" : [
-          {"gotoId" : "antHarshResponse2"}
-        ]
-      },
+  {
+    "id" : "antHarshResponse",
+    "choiceLabel" : "Geez, don't be such a downer.",
+    "content" : "\"That attitude's the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|student2} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
+    "effects" : [
+      "incr optimism 1",
+      "incr hope 1",
+      "incr curiosity 1",
+      "decr concentration 1"
+    ],
+    "choices" : [
+      {"gotoId" : "antHarshResponse2"}
+    ]
+  },
 
-      {
-        "id" : "antHarshResponse2",
-        "choiceLabel" : "Continue",
-        "content" : "{ifStateCondition|concentration gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
-        "choices" : [
-          {"gotoId" : "antAidenFollowUp"}
-        ]
-      },
+  {
+    "id" : "antHarshResponse2",
+    "choiceLabel" : "Continue",
+    "content" : "{ifStateCondition|concentration gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
+    "choices" : [
+      {"gotoId" : "antAidenFollowUp"}
+    ]
+  },
 
-      {
-        "id" : "antAidenFollowUp",
-        "choiceLabel" : "Continue",
-        "content" : "{name|student2} looks like they have another question. Take it? Or call on another student?",
-        "choices" : [
-          {"gotoId" : "antAidenQuestion2"},
-          {"gotoId" : "questionBridge"}
-        ],
-        "conditions" : ["student2 eq true"]
-      },
+  {
+    "id" : "antAidenFollowUp",
+    "choiceLabel" : "Continue",
+    "content" : "{name|student2} looks like they have another question. Take it? Or call on another student?",
+    "choices" : [
+      {"gotoId" : "antAidenQuestion2"},
+      {"gotoId" : "questionBridge"}
+    ],
+    "conditions" : ["student2 eq true"]
+  },
 
-      {
-        "id" : "antAidenQuestion2",
-        "choiceLabel" : "Take another question.",
-        "content" : "\"So, um,\" comes {name|student2}'s soft voice. \"Then - what can <i>I</> do?\"",
-        "choices" : [
-          {"gotoId" : "antAcademicResponse"},
-          {"gotoId" : "antLocalResponse"},
-          {"gotoId" : "antHopelessResponse"}
-        ],
-        "effects" : [
-          "set followUp true",
-          "decr questionsLeft 1"
-        ]
-      },
+  {
+    "id" : "antAidenQuestion2",
+    "choiceLabel" : "Take another question.",
+    "content" : "\"So, um,\" comes {name|student2}'s soft voice. \"Then - what can <i>I</> do?\"",
+    "choices" : [
+      {"gotoId" : "antAcademicResponse"},
+      {"gotoId" : "antLocalResponse"},
+      {"gotoId" : "antHopelessResponse"}
+    ],
+    "effects" : [
+      "set followUp true",
+      "decr questionsLeft 1"
+    ]
+  },
 
-      {
-        "id" : "antAcademicResponse",
-        "choiceLabel" : "Educate.",
-        "content" : "\"Educate yourself about what's going on and how you can help - and teach others. You can get involved in some of our research projects here...there's also the path of becoming a professor,\" you say. {name|student2} nods.",
-        "effects" : [
-          "incr hope 1"
-        ],
-        "choices" : [
-          {"gotoId" : "establishStudents"}
-        ]
-      },
+  {
+    "id" : "antAcademicResponse",
+    "choiceLabel" : "Educate.",
+    "content" : "\"Educate yourself about what's going on and how you can help - and teach others. You can get involved in some of our research projects here...there's also the path of becoming a professor,\" you say. {name|student2} nods.",
+    "effects" : [
+      "incr hope 1"
+    ],
+    "choices" : [
+      {"gotoId" : "establishStudents"}
+    ]
+  },
 
-      {
-        "id" : "antLocalResponse",
-        "choiceLabel" : "Find out what you can do within your community.",
-        "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
-        "effects" : [
-          "incr hope 1"
-        ],
-        "choices" : [
-          {"gotoId" : "establishStudents"}
-        ]
-      },
+  {
+    "id" : "antLocalResponse",
+    "choiceLabel" : "Find out what you can do within your community.",
+    "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
+    "effects" : [
+      "incr hope 1"
+    ],
+    "choices" : [
+      {"gotoId" : "establishStudents"}
+    ]
+  },
 
-      {
-        "id" : "antHopelessResponse",
-        "choiceLabel" : "There's little you can do.",
-        "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|student2} doesn't look particularly inspired. Some students start whispering amongst themselves.",
-        "effects" : [
-          "decr hope 2",
-          "decr confidence 1"
-        ],
-        "choices" : [
-          {"gotoId" : "establishStudents"}
-        ]
-      }
+  {
+    "id" : "antHopelessResponse",
+    "choiceLabel" : "There's little you can do.",
+    "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|student2} doesn't look particularly inspired. Some students start whispering amongst themselves.",
+    "effects" : [
+      "decr hope 2",
+      "decr confidence 1"
+    ],
+    "choices" : [
+      {"gotoId" : "establishStudents"}
+    ]
+  }
 ]
