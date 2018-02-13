@@ -7,17 +7,20 @@ entity(e_2_XX_).
 
 resource(r_1_XX_).
 
-singular(entity(e_1_XX_)).
-
+many(entity(e_1_XX_)).
 many(entity(e_2_XX_)).
 
 initialize(set_value(resource(r_1_XX_),scalar(10))).
 initialize(set_draggable(entity(e_1_XX_),true)).
 initialize(fill(all,blue)).
-initialize(add(entity(e_1_XX_),scalar(1),location(middle,center))).
+initialize(add(entity(e_1_XX_),scalar(1),location(middle,left))).
+initialize(add(entity(e_1_XX_),scalar(1),location(top,center))).
+initialize(add(entity(e_1_XX_),scalar(1),location(bottom,center))).
+initialize(add(entity(e_1_XX_),scalar(1),location(middle,right))).
 initialize(add(entity(e_2_XX_),scalar(1),location(top,left))).
-initialize(add(entity(e_2_XX_),scalar(1),location(bottom,center))).
+initialize(add(entity(e_2_XX_),scalar(1),location(bottom,left))).
 initialize(add(entity(e_2_XX_),scalar(1),location(top,right))).
+initialize(add(entity(e_2_XX_),scalar(1),location(bottom,right))).
 initialize(set_color(entity(e_1_XX_),red)).
 initialize(set_sprite(entity(e_1_XX_),triangle)).
 initialize(set_sprite(entity(e_2_XX_),triangle)).
@@ -47,7 +50,7 @@ pool(entity(e_2_XX_),location(bottom,right),ordered,random).
 boundary(closed).
 
 initialize(set_value(resource(r_1_XX_),scalar(10))).
-initialize(set_value(resource(r_1_XX_),scalar(10))).
+initialize(set_value(resource(r_1_XX_),scalar(7))).
 
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),clear(entity(e_2_XX_))).
@@ -78,7 +81,7 @@ reading(stakes(low),resource(r_1_XX_)).
 </ul></li>
 <li>AVOID:<ul>
 <li>
-	attempting to make a [[blue|triangle]] and [[red|triangle]] touch
+make [[blue|triangle]] touch [[red|triangle]]
 </li>
 </ul>
 <li>CONTROLS:<ul>
