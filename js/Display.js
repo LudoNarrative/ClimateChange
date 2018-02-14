@@ -4,7 +4,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var Coordinator;
 
 	var gameModeChosen = "";				//holder for if game is chosen through UI knobs for scene
-	var interfaceMode = "timeline";			//how scenes progress...a timeline that's returned to ("timeline"), or progress scene-to-scene ("normal")
+	var interfaceMode = "normal";			//how scenes progress...a timeline that's returned to ("timeline"), or progress scene-to-scene ("normal")
 
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
