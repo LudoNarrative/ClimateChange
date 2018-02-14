@@ -135,7 +135,7 @@
 
   {
     "id": "friendIsInAcademiaEnthusiastici",
-    "content": "<p>\"So {nickname|protagonist}, I got you something.\" {name|friend1} pulls out a coffee thermos from under the table. \"It says 'Trust me, I'm a doctor'. I have one too. Whenever we're both on campus we can stop by that little cafe and drink some mocha on the patio. It'll be adorable!\"</p><p>{name|friend1} stabs a carrot with her fork. \"That <em>does</em> sound adorable! Will you also be snickering about the peasant undergraduates as they go to their fifth class that day?\"</p>",
+    "content": "<p>\"So {nickname|protagonist}, I got you something.\" {name|friend1} pulls out a coffee thermos from under the table. \"It says 'Trust me, I'm a doctor'. I have one too. Whenever we're both on campus we can stop by that little cafe and drink some mocha on the patio. It'll be adorable!\"</p><p>{name|friend2} stabs a carrot with her fork. \"That <em>does</em> sound adorable! Will you also be snickering about the peasant undergrads as they go to their fifth class that day?\"</p>",
     "choices": [
       {
         "gotoId": "lovei"
@@ -236,7 +236,7 @@
   },
     {
       "id": "iCanDoThati",
-      "choiceLabel" : "\"I can probabaly be late to the meeting.\"",
+      "choiceLabel" : "\"I can probably be late to the meeting.\"",
       "content": "<p>{name|friend1} sighs and shakes her head. {name|friend2} pumps her fist.</p>",
       "effects": [
         "decr academicEnthusiasm 1"
