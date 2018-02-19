@@ -574,12 +574,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				},
 				{ 	condition: "lectureTopic eq [acidity|warming]", 
 					label: "Lecture Topic", 
-					hoverText: "What will your lecture to the students be about?" 
+					hoverText: "What will your lecture to the students be about?",
+					persistent: true 		//we have to make this persistent so that we can fail (since it's dynamic, that's the only way to account for it)
 				},
 				{ 	//can be shrimp, lobsters, etc
 					condition: "areaOfExpertise eq [phytoplankton|lobsters|coral]", 
 					label: "Expertise", 
-					hoverText: "Which area is your area of specialty, in regards to climate change?" 
+					hoverText: "Which area is your area of specialty, in regards to climate change?",
+					persistent: true 		//we have to make this persistent so that we can fail (since it's dynamic, that's the only way to account for it)
 				},
 				/*
 				{

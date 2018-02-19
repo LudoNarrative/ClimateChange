@@ -88,8 +88,10 @@ p.titleLink a:hover {
     color:yellow;
 }
 
+#sceneSelectTitle { margin-top:300px; }
+
 /*
-Stats CSS
+--------------Stats CSS---------------------
 */
 
 #statsContainer {

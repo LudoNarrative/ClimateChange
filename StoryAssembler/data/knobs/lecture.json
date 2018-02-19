@@ -40,7 +40,7 @@ Todo:
         "choiceLabel" : "End scene",
         "content" : " ",
         "conditions" : [
-          "concentration lte 1"
+         // "concentration lte 1"
         ],
         "effects" : [ 
             "set establishScene true",
@@ -265,8 +265,7 @@ Todo:
         "choiceLabel": "Just a few more examples",
         "content": "You present a few more quick facts before continuing. {ifStateCondition|concentration gte 5|So far, it seems like it's going well. \"Those|Some people are yawning in the front row. \"Th-those} were just a few examples of things we'll be covering. Besides effects of climate change, you'll also learn how each of you can help out, both locally and on the global scale.\"",
         "choices": [
-            {"gotoId": "lectureBridge"},
-            {"gotoId": "seminarBridge"}
+            {"condition" : "doneTalking eq true"}
         ],
         "effects": [
             "set lectureFinished true"
@@ -292,7 +291,7 @@ Todo:
 
     {
         "id": "seminarBridge",
-        "choiceLabel": "Take some questions",
+        "choiceLabel": "Open it up to discussion",
         "content": "\"{ifStateCondition|concentration gte 5|Well that's enough talking from me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|concentration gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
         "effects": [
             "set bridgeFinished true",

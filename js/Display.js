@@ -74,13 +74,16 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		}).appendTo('body');
 
 		if (localStorage.getItem("playerIdentifier") == null) { setPlayerIdentifier(); }
-		var identifier = $('<h2/>', {
-			html: 'Identifier: <span style="color: yellow">' + localStorage.getItem("playerIdentifier") + "</span><br><br><span style='color:#43d9ff'>(click to regenerate)<span>",
-			id: 'trackingId',
-			style: 'margin-bottom: 300px',
+		
+		$('body').append('<h2 id="trackingId">Identifier: <span style="color:yellow">' + localStorage.getItem("playerIdentifier") + "</span>");
+
+		var regenerateLink = $('<h2/>', {
+			html: '(click to regenerate)',
+			id: 'regenerateLink',
+			style: 'color:#43d9ff',
 			click: function() {
 				setPlayerIdentifier();
-				$("#trackingId").html('Identifier: <span style="color: yellow">' + localStorage.getItem("playerIdentifier") + "</span><br><br><span style='color:#43d9ff'>(click to regenerate)<span>");
+				$("#trackingId").html('Identifier: <span style="color: yellow">' + localStorage.getItem("playerIdentifier") + "</span>");
 			}
 		}).appendTo('body');
 
@@ -88,6 +91,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		    text: 'Scene Selection',
 		    id: 'sceneSelectTitle'
 		}).appendTo('body');
+		
 
 		// For each scene, make a link to start it.
 		scenes.forEach(function(scene, pos) {

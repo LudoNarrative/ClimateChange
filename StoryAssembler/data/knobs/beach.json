@@ -3,32 +3,34 @@
     "id": "onABeach",
     "content": "\"Gotcha!\" You carefully transfer the blue crab to your bucket. The spray of breaking waves is welcome against the heat of the noon sun, at least for the moment.<br/><br/>You scrape your foot in the sand until it uncovers pavement, and frown. This artificial beach was supposed to last years...but this tidal surge is just the latest in a recent string of events that's undoing all your best efforts.",
     "choices": [
-    	{"condition": "showCoworkerIdentity eq true"},
-    	{"condition": "showCoworkerRelation eq true"}
+    	{"condition": "showCoworkerRelation eq true"},
+      {"condition": "showCoworkerIdentity eq true"}
+    	
     	
     ],
     "effects" : [
-      "set onABeach true",
+      "set onABeach true"
     ],
-    "conditions" : [
-    ]
+    "conditions" : []
   },
 
   {
   	"id" : "coworkerRelation_choiceLabel",
   	"choiceLabel" : "\"Hey {name|volunteer}! Mind coming over here and giving me a hand?\"",
-  	"request" : {"condition": "showCoworkerRelation eq true"}
+  	"request" : {"condition": "showCoworkerRelationContent eq true"},
+    "effects" : [
+      "set showCoworkerRelation true"
+    ]
   },
 
   {
     "id": "coworkerRelation_familiar",
-    //"choiceLabel": "\"Hey {name|volunteer}! Mind coming over here and giving me a hand?\"",
     "content": "\"Whatcha got there, {name|protagonist}?\" {name|volunteer} carefully works his way over to you through the water.<br/>\"Looks like a blue crab from the transplant population. Grab a bucket and help me out here, will you? My partner wandered off somewhere.\"<br/>\"Hey, they're not old hands at this like you and me,\" {name|volunteer} winked. \"It takes years to develop an eye for finding sea-life in old parking lots.\"",
     "choices": [
-    	{"gotoId": "doWork1"}
+    	{"condition": "passCheckpoint1 eq true"}
     ],
     "effects" : [
-      "set showCoworkerRelation true",
+      "set showCoworkerRelationContent true",
     ],
     "conditions" : [
     	"coworkerRelation eq familiar"
@@ -36,14 +38,13 @@
   },
   {
     "id": "coworkerRelation_unfamiliar",
-    //"choiceLabel": "\"Hey {name|volunteer}! Mind coming over here and giving me a hand?\"",
     "content": "\"Sure, what's up, {name|protagonist}?\"<br/>{name|volunteer}'s been helping with the crab resettlement for the past month, and although you haven't gotten to know him that well yet, he seems friendly enough.<br/>\"Let's double-team this area, and see if we can find more crabs that way.\"",
    
     "choices": [
-    	{"gotoId": "doWork1"}
+    	{"condition": "passCheckpoint1 eq true"}
     ],
     "effects" : [
-      "set showCoworkerRelation true",
+      "set showCoworkerRelationContent true",
     ],
     "conditions" : [
     	"coworkerRelation eq unfamiliar"
@@ -363,6 +364,20 @@
 
 
 //PROGRESS GATING FRAGMENTS----------------------------------------------------------------
+  {   
+    "id" : "doWork1AlreadyDone",
+    "choiceLabel" : "[Check your bucket]",
+    "content": "You go back to finding crabs. The repetition of the movements--scan, swish, grab, transfer--is soothing, if a bit mind-numbing.",
+    "choices": [
+      {"gotoId": "breakTheSilence1"}
+    ],
+    "conditions" : [
+      "effort gte 3"
+    ],
+    "effects": [
+      "set passCheckpoint1 true"
+    ]
+  },
 	{   
 		"id" : "doWork1",
 		"choiceLabel" : "[Return to finding crabs]",
@@ -371,10 +386,11 @@
 			{"gotoId": "breakTheSilence1"}
 		],
 		"conditions" : [
-			//"effort gt 0",
-			//"effort lte 1"
+			"effort gt 0",
+			"effort lt 3"
 		],
 		"effects": [
+			"set passCheckpoint1 true"
 		]
 	},
 	{   
@@ -383,7 +399,7 @@
 		"choiceLabel" : "Break the silence",
 		"content" : "After about half an hour of quietly working, you feel the need to hear another human voice. You clear your throat. {name|volunteer} looks up.",
 		"conditions" : [ 
-			//"effort gte 3" 
+			"effort gte 3" 
 		],
 		"effects": [
 			"set expendEffort true"
