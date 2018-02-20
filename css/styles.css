@@ -3,11 +3,12 @@ html { height:100%; }
 body {
     background: black;
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     background-position: bottom center;
     font-family: 'Droid Sans', 'Arial', sans-serif;
     color: white;
     height:100%;
+    overflow:hidden;
 }
 
 #storyContainer, #gameContainer {

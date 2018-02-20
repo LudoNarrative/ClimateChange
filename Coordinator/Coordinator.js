@@ -1,5 +1,6 @@
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!undergradUN_kply", "text!undergradUN_talon", "text!undergradUN_irapopor", "text!undergradBeach_madreed", "text!undergradBeach_sjsherma", "text!undergradBeach_sgadsby", "text!undergradFaculty_kply", "text!undergradFaculty_madreed", "text!undergradFaculty_sjsherma", "text!sjsherma_testfile","text!madreed_testfile", "text!talon_testfile","text!sgadsby_testfile","text!kply_testfile","text!irapopor_testfile", "text!finalDinner", "text!finalLecture", "text!finalDean", "text!finalTravel", "text!finalFamilyDinner", "text!finalUN", "text!finalBeach", "text!finalFaculty", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, undergradUN_kply, undergradUN_talon, undergradUN_irapopor, undergradBeach_madreed, undergradBeach_sjsherma, undergradBeach_sgadsby, undergradFaculty_kply, undergradFaculty_madreed, undergradFaculty_sjsherma, sjsherma_testfile, madreed_testfile, talon_testfile, sgadsby_testfile, kply_testfile, irapopor_testfile, finalDinner, finalLecture, finalDean, finalTravel, finalFamilyDinner, finalUN, finalBeach, finalFaculty, globalData) {
 
+	var gameVersion = "release";		//if release, will disable testing buttons and gears etc
 	var recordPlaythroughs = true;
 
 	/*
@@ -2763,6 +2764,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		startGame : startGame,
 		getStorySpec : getStorySpec,
-		recordPlaythroughs : recordPlaythroughs
+		recordPlaythroughs : recordPlaythroughs,
+		gameVersion : gameVersion
 	}
 });

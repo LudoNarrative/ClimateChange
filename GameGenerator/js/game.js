@@ -125,27 +125,29 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		}
 
 		//create restart, reroll, and disable buttons
-	    if (document.getElementById("restartGame") == null) {
-			$('<div/>', {
-			    id: 'restartGame',
-			    text: 'Restart',
-			    style: 'float:right; margin-left:10px'
-			}).click(function() { Coordinator.startGame(State.get("currentScene"),false); }).appendTo('#gameControls');
-	    }
-	    if (document.getElementById("rerollGame") == null) {
-			$('<div/>', {
-			    id: 'rerollGame',
-			    text: 'Reroll',
-			    style: 'float:right; margin-left:10px'
-			}).click(function() { Coordinator.startGame(State.get("currentScene")); }).appendTo('#gameControls');
-	    }
-	    if (document.getElementById("disableGame") == null) {
-			$('<div/>', {
-			    id: 'disableGame',
-			    text: 'Disable',
-			    style: 'float:right; margin-left:10px'
-			}).click(function() { game.destroy(); $("#gameContainer").hide(); }).appendTo('#gameControls');
-	    }
+		if (Coordinator.gameVersion !== "release") {
+		    if (document.getElementById("restartGame") == null) {
+				$('<div/>', {
+				    id: 'restartGame',
+				    text: 'Restart',
+				    style: 'float:right; margin-left:10px'
+				}).click(function() { Coordinator.startGame(State.get("currentScene"),false); }).appendTo('#gameControls');
+		    }
+		    if (document.getElementById("rerollGame") == null) {
+				$('<div/>', {
+				    id: 'rerollGame',
+				    text: 'Reroll',
+				    style: 'float:right; margin-left:10px'
+				}).click(function() { Coordinator.startGame(State.get("currentScene")); }).appendTo('#gameControls');
+		    }
+		    if (document.getElementById("disableGame") == null) {
+				$('<div/>', {
+				    id: 'disableGame',
+				    text: 'Disable',
+				    style: 'float:right; margin-left:10px'
+				}).click(function() { game.destroy(); $("#gameContainer").hide(); }).appendTo('#gameControls');
+		    }
+		}
 	    
 		//console.log(getAspGoals());
 	}
