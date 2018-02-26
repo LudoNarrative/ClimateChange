@@ -1,6 +1,6 @@
-label(entity(e_1_XX_),e1).
+label(entity(e_1_XX_),idea).
 label(resource(r_1_XX_),concentration,write).
-label(entity(e_2_XX_),e(2)).
+label(entity(e_2_XX_),audience).
 
 entity(e_1_XX_).
 entity(e_2_XX_).
