@@ -24,6 +24,7 @@ Todo:
     //FAILURE DUE TO CONCENTRATION GETTING TOO LOW
     {
         "id" : "gameInterrupt",
+        "avatar" : "protagonist",
         "gameInterrupt" : true,           //this fragment can be used by the game to immediately interrupt the narrative
         "repeatable" : false,
         "content" : "It's suddenly too much.<br/>You can't do this.<br/>You break into a cold sweat, and snap your laptop closed. The screen goes blank.<br><br>\"Th-that's it. I uh...I'm done. Class is over. Goodbye.\" You practically run from the classroom, gritting your teeth, the shocked whispers of your students chasing you out the building to your car.",
@@ -36,6 +37,7 @@ Todo:
     },
     {
         "id" : "failEnding",
+        "avatar" : "protagonist",
         "repeatable" : false,
         "choiceLabel" : "End scene",
         "content" : " ",
@@ -43,21 +45,13 @@ Todo:
          // "concentration lte 1"
         ],
         "effects" : [ 
-            "set establishScene true",
-            "set establishConcentration true",
-            "set establishStudents true",
-            "set student3 true",
-            "set skepticalStudent true",
-            "set student2 true",
-            "set talkToStudent 3",
-            "set followUp true",
-            "set lectureEnd true",
-            "set failedLecture true"            //flag so we know we failed
+            "endScene"
         ]
 
     },
     {
         "id": "establishSeminar",
+        "avatar" : "protagonist",
         "content": "Walking through the door, you are greeted by a group of around 20 students engaged in various conversations. Large enough for some good discussion, yet small enough to really interact with them one-on-one: perfect.",
         "effects": [
             "set establishScene true",
@@ -74,6 +68,7 @@ Todo:
     },
     {
         "id": "establishLecture",
+        "avatar" : "protagonist",
         "content": "Walking through the double doors, you try to gather yourself. The sound of shifting backpacks and quiet conversations fills the lecture hall. It's a decent-sized room, not bad for your first class. Looks like about 200 students.",
         "effects": [
             "set establishScene true",
@@ -90,6 +85,7 @@ Todo:
     },
     {
         "id": "concentrationBridge",
+        "avatar" : "protagonist",
         "choiceLabel": "Start the class",
         "content": "You glance at the clock. {ifStateCondition|concentration gte 5|Alright,|God,} only five minutes left until class starts. After a few deep breaths, you feel {ifStateCondition|concentration gte 5|calm and ready to go.|still pretty nervous.}",
         "conditions": [
@@ -103,7 +99,7 @@ Todo:
 
     {
         "id": "lowConfidenceconcentration",
-
+        "avatar" : "protagonist",
         "choiceLabel": "Let's get this over with (low confidence)",
         "unavailableChoiceLabel": " ",
         "content": "It's time to start class, but you find yourself at a loss for words. After a few seconds of silence, you manage to force out, \"Umm hi, I mean uhh, hello class.\" The students look at you curiously. \"We'll be learning um about climate change. Haha sorry, this is my first lecture.\"",
@@ -122,6 +118,7 @@ Todo:
 
     {
         "id": "mediumConfidenceconcentration",
+        "avatar" : "protagonist",
         "choiceLabel": "Time to start my first class... (medium confidence)",
         "unavailableChoiceLabel": " ",
         "content": "As class begins, the students settle down. You clear your throat. \"Hello everyone, welcome to my class. This quarter we're going to be learning about climate change.\"",
@@ -140,6 +137,7 @@ Todo:
 
     {
         "id": "highConfidenceconcentration",
+        "avatar" : "protagonist",
         "choiceLabel": "Great! Time to start my first class! (high confidence)",
         "unavailableChoiceLabel": " ",
         "content": "You cannot wait to get the class started. As soon as the class period begins, you clear your throat and say, \"Good afternoon everyone and welcome to my class! We're going to have a great time this semester learning about the issue of climate change, and what we can do to help combat it.\"",
@@ -157,6 +155,7 @@ Todo:
 
 {
         "id": "lectureContent2a-acid",
+        "avatar" : "protagonist",
         "choiceLabel": "Continue lecture",
         "content": "\"Let me give you an interesting statistic, just for starters. The water in our oceans is roughly{ifStateCondition|concentration lt 5|,\" the students watch as you pause to consult your notes, \"|} 25% more acidic than it was in the 1800s. This is because human actions are raising the CO2 levels in the {ifStateCondition|concentration lt 5|water, err I mean, in the|} atmosphere.\"",
         "choices":[{
@@ -170,6 +169,7 @@ Todo:
     },
     {
         "id": "lectureContent2b-acidCoral",
+        "avatar" : "protagonist",
         "choiceLabel": "Continue lecture",
         "content": "\"This plays havoc with all sorts of aquatic lifeforms, such as we've seen with the coral in the Great Barrier Reef. Ocean acidification means the polyps that make up coral can't absorb calcium carbonate, which is critical for them to be able to build their stony skeletons. I actually got to see this first-hand, during the fieldwork portion of my PhD.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
         "choices":[{
@@ -182,6 +182,7 @@ Todo:
     },
     {
         "id": "lectureContent2b-acidPhyto",
+        "avatar" : "protagonist",
         "choiceLabel": "Continue lecture",
         "content": "\"This affects all sorts of organisms, but the one I've focused most on in my work is phytoplankton. Acidification's caused some species to flourish, and others to decline, which throws the whole ocean food chain out of wack.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
         "choices":[{
@@ -194,6 +195,7 @@ Todo:
     },
     {
         "id": "lectureContent2b-acidLobster",
+        "avatar" : "protagonist",
         "choiceLabel": "Continue lecture",
         "content": "\"This affects all sorts of organisms, but the one I've studied directly are lobster populations off the coast of Maine. Acidification makes it harder for them to maintain their shells, and when combined with the warming ocean temperatures, we've seen total population collapses in areas. It's terrible.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
         "choices":[{
@@ -207,6 +209,7 @@ Todo:
 
     {
         "id": "lectureContent2a-warming",
+        "avatar" : "protagonist",
         "choiceLabel": "Continue lecture",
         "content": "\"Let's talk a bit about the rise of ocean temperature, just to warm up.\" {ifStateCondition|concentration lt 5|<i>Oh my god, did I just accidentally make a pun about climate change? Ugh!</i>|Some students groan at your inadvertant pun, but some are smiling.} \"Since 1955, {ifStateCondition|concentration lt 5|uh...\" the students watch as you pull up the info on your slides, \"|}over 90% of excess heat from greenhouse gases has been stored in oceans. This has upset natural balances all over the world.\"",
         "choices":[{
@@ -220,6 +223,7 @@ Todo:
     },
     {
         "id": "lectureContent2b-warmingCoral",
+        "avatar" : "protagonist",
         "choiceLabel": "Continue lecture",
         "content": "\"This plays havoc with all sorts of aquatic lifeforms, such as we've seen with the coral in the Great Barrier Reef. Ocean warming bleaches the coral when their symbiotic zooxanthellae leave, which they depend on for food. I actually got to see this first-hand, during the fieldwork portion of my PhD.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
         "choices":[{
@@ -233,6 +237,7 @@ Todo:
 
     {
         "id": "lectureContent2b-warmingLobster",
+        "avatar" : "protagonist",
         "choiceLabel": "Continue lecture",
         "content": "\"This plays havoc with all sorts of aquatic lifeforms, forcing migrations in cases like the lobsters, which have been steadily moving northward. The added stress also means they're more susceptible to disease and parasites, which I saw first-hand during my fieldwork. In some areas the die-off was 99%, close to total.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
         "choices":[{
@@ -246,6 +251,7 @@ Todo:
 
     {
         "id": "lectureContent2b-warmingPhyto",
+        "avatar" : "protagonist",
         "choiceLabel": "Continue lecture",
         "content": "\"This plays havoc with all sorts of aquatic lifeforms, forcing die-offs or blooms in cases of phytoplankton, which form the base of both the ocean's food chain, and supply most of our oxygen. I got to see a dead zone first hand during the fieldwork portion of my research, and it's terrible.\"<br/><br/>It's so hard to gauge whether they're interested, or just staring at you. Ugh.",
         "choices":[{
@@ -262,6 +268,7 @@ Todo:
 
     {
         "id": "lectureContent3",
+        "avatar" : "protagonist",
         "choiceLabel": "Just a few more examples",
         "content": "You present a few more quick facts before continuing. {ifStateCondition|concentration gte 5|So far, it seems like it's going well. \"Those|Some people are yawning in the front row. \"Th-those} were just a few examples of things we'll be covering. Besides effects of climate change, you'll also learn how each of you can help out, both locally and on the global scale.\"",
         "choices": [
@@ -274,6 +281,7 @@ Todo:
 
     {
         "id": "lectureBridge",
+        "avatar" : "protagonist",
         "choiceLabel": "Take some questions",
         "content": "{ifStateCondition|concentration lt 5|Thirty long minutes of examples later, it's time for the part you've been dreading. \"Ok, well, I guess if anyone has questions, I can try to uh answer them?\"|Thirty minutes of examples later, you can tell by the shifting in their seats that it's time to switch things up. \"Ok! Now that you've got a general idea...who has questions?\"}",
         "effects": [
@@ -291,6 +299,7 @@ Todo:
 
     {
         "id": "seminarBridge",
+        "avatar" : "protagonist",
         "choiceLabel": "Open it up to discussion",
         "content": "\"{ifStateCondition|concentration gte 5|Well that's enough talking from me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|concentration gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
         "effects": [
@@ -309,6 +318,7 @@ Todo:
 
     {
         "id": "lectureEndWell",
+        "avatar" : "protagonist",
         "choiceLabel" : "Continue",
         "content": "As the end of the class period draws near, the eyes of every student are fixed on you, waiting for your permission to leave. \"Well, that concludes the first lecture. Sorry if it didn't go as smoothly as you were expecting, but we're all going to learn throughout this quarter. I'll see you all next time!\" The sound of books closing and backpacks being zipped up erupts all around the room as the students leave. Some even flash you a smile on the way out.",
         "effects": [
@@ -325,6 +335,7 @@ Todo:
 
     {
         "id": "lectureEndOk",
+        "avatar" : "protagonist",
         "choiceLabel" : "Continue",
         "content": "You hear a faint rustling of bags and papers. You realize that the class period has ended and students are becoming restless. \"Oh I'm sorry guys, I promise to get better at this as the quarter goes on. I'll see you all next time!\"",
         "effects": [
@@ -342,6 +353,7 @@ Todo:
 
     {
         "id": "lectureEndBadly",
+        "avatar" : "protagonist",
         "choiceLabel" : "Continue",
         "content": "You spot a few students leaving early and your eyes dart to the clock, afraid that you have gone past the end of the class period, but there's still a lot of time left. You are thrown off by what just happened and lose your train of though. \"Umm haha sorry everyone, I completely forgot what I was going to talk about next. Uhh there wasn't that much left anyways so I guess you're dismissed for today. I'll see you next time.\"",
         "effects": [
@@ -357,6 +369,7 @@ Todo:
     },
     {   
         "id" : "endDummy",
+        "avatar" : "protagonist",
         "choiceLabel" : "End Scene",
         "content" : " ",
         "conditions" : ["followUp eq true"],
@@ -367,6 +380,7 @@ Todo:
     },
     {
     "id": "establishStudents",
+    "avatar" : "protagonist",
     "choiceLabel" : "Continue",
     "content": "{ifStateCondition|questionsLeft lte 0|You're out of time for questions.|}{ifStateCondition|questionsLeft eq 1|You have time for one more question.|}{ifStateCondition|questionsLeft eq 2|You have time for a couple more questions.|}{ifStateCondition|questionsLeft eq 3|You have time for a few more questions.|}{ifStateCondition|questionsLeft eq 4|You have time for a few questions.|}<br/><br/>{ifStateCondition|questionsLeft gt 0|You look around the room at the raised hands. Let's see. How about...|}",
     "choices" : [
@@ -387,6 +401,7 @@ Todo:
 
   {
     "id" : "outOfTime",
+    "avatar" : "protagonist",
     "unavailableChoiceLabel" : "You still have time.",
     "choiceLabel" : "Time to wrap up.",
     "content" : "You lean back, feeling relief and exhaustion wash over you.",
@@ -408,6 +423,7 @@ Todo:
 
 {
     "id" : "student1Intro",
+    "avatar" : "protagonist",
     "unavailableChoiceLabel" : "Already called on {name|student1}.",
     "choiceLabel" : "...the student frowning skeptically.",
     "content" : "Better to take on some students that seem on the fence.",
@@ -423,6 +439,7 @@ Todo:
 
   {
     "id" : "student2Intro",
+    "avatar" : "protagonist",
     "unavailableChoiceLabel" : "Already called on {name|student2}.",
     "choiceLabel" : "...the student frowning skeptically, but shy.",
     "content" : "Better to take on some students that seem on the fence.",
@@ -438,6 +455,7 @@ Todo:
 
   {
     "id" : "student3Intro",
+    "avatar" : "protagonist",
     "unavailableChoiceLabel" : "Already called on {name|student3}.",
     "choiceLabel" : "...the student earnestly waving her hand.",
     "content" : "You know you can count on {name|student3}, at least, for some enthusiastic conversation. Hopefully others will pick up on the energy.",
@@ -456,6 +474,7 @@ Todo:
 
    {
       "id" : "franklinIntroAntagonistic",
+      "avatar" : "student1",
       "unavailableChoiceLabel" : "Already called on {name|student1}.",
       "choiceLabel" : "\"Yes, {name|student1}?\"",
       "content" : "\"My mom runs the energy division of TysonCorp, and she told me that most of the alarmist climate change stuff in the news is because there's more money in it for scientists if everyone's scared out of their minds. Like, if fear is the product, business is good. What do you think of that?\"",
@@ -474,6 +493,7 @@ Todo:
     },
             {
               "id" : "logicResponse",
+              "avatar" : "protagonist",
               "choiceLabel" : "Turn to the facts.",
               "content" : "\"Well...while there might be a number of people who believe in the same thing that your mother does, the facts don't lie. We'll go over specifics in future classes, but here are just some rough statistics for you. The global temperature has increased by 1.7 degrees fahrenheit since 1880, and the minimum amount of arctic ice decreases about 13.3 percent each decade.\"",
               "effects" : [
@@ -486,6 +506,7 @@ Todo:
 
             {
               "id" : "sourResponse",
+              "avatar" : "protagonist",
               "choiceLabel" : "\"Really? A conspiracy?\"",
               "content" : "\"So let me get this straight, there are hundreds of thousands of scientist around the world who dedicate their lives to studying climate change, and your mother claims they're all lying? 95% of those scientist can prove, using real data that they or their peers worked hard to collect, that the Earth's climate is changing.\"",
               "effects" : [
@@ -496,6 +517,7 @@ Todo:
 
             {
               "id" : "valueResponse",
+              "avatar" : "protagonist",
               "choiceLabel" : "\"Your mom is biased\"",
               "content" : "\"Big oil companies like Tysoncorp are one of the leading causes of climate change. If laws and regulations passed to limit their carbon emissions, then it would probably hurt their profits. So of course your mother would say it's a conspiracy. But the facts don't lie.\"",
               "effects" : [
@@ -507,6 +529,7 @@ Todo:
 
     {
       "id" : "franklinFollowUp",
+      "avatar" : "protagonist",
       "content" : "Franklin's hand is once again in the air.",
       "choices" : [
         {"gotoId" : "franklinQuestion2"},
@@ -517,6 +540,7 @@ Todo:
 
     {
         "id": "franklinQuestion2",
+        "avatar" : "student1",
         "choiceLabel": "\"Yes Franklin?\"",
         "content": "\"Well ok but, why should <i>we</i> care?\" Whispers from other students filter up to your podium. \"I mean, this stuff is so big, by the time it could affect any of us, we'll be long gone. Humans are just a blip. There's no way we can change something as big as the whole Earth's climate!\"",
         "choices": [
@@ -531,6 +555,7 @@ Todo:
 
             {
                 "id": "followUpAnswer1",
+                "avatar" : "protagonist",
                 "choiceLabel": "\"The changes are more impactful than you think.\"",
                 "content": "\"Well, {ifStateCondition|concentration lt 5|uhhh,|}the impact of climate change is much larger than you think. {ifStateCondition|concentration lt 5|If I remember correctly... |}The sea level has been steadily rising for the past 200 years. It is projected to rise another 1 to 4 feet in the next century. That is enough to cause many low sea level areas to flood. We're also seeing stronger, more frequent hurricanes, which I'm sure is something you'd rather avoid.\"",
                 "effects": [
@@ -544,6 +569,7 @@ Todo:
 
             {
                 "id": "followUpAnswer2",
+                "avatar" : "protagonist",
                 "choiceLabel": "\"It is still our home.\"",
                 "content": "\"We only have this planet, so it's our duty to take care of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations.\"",
                 "effects": [
@@ -557,6 +583,7 @@ Todo:
 
             {
                 "id": "followUpAnswer3",
+                "avatar" : "protagonist",
                 "choiceLabel": "\"Well, you don't have to care.\"",
                 "content": "\"Whether you care or not is up to you. You're right, we won't be around to see all of the arctic ice melt and swallow up coastal cities, or feel the temperature increase to unbearable levels. But if each of us does our part, we can help prevent our decendants from experiencing the slow death of our planet.\"",
                 "effects": [
@@ -572,6 +599,7 @@ Todo:
 
 {
       "id" : "franklinIntroOptimistic",
+      "avatar" : "student1",
       "unavailableChoiceLabel" : "Already called on {name|student1}.",
       "choiceLabel" : "\"Yes, {name|student1}?\"",
       "content" : "\"My mom runs the energy division of TysonCorp, and she told me that most of the climate change stuff in the news is exaggerated, and that corporations will get it under control, once it's profitable for them to do so. What do you think of that?\"",
@@ -590,6 +618,7 @@ Todo:
 
             {
               "id" : "optLogicResponse",
+              "avatar" : "protagonist",
               "choiceLabel" : "Turn to the facts.",
               "content" : "\"Well, corporations are the largest contributors to climate change, so they have a critical role to play in reducing emissions. However, having regulations in place that can enforce reductions means the mandate can't come from PR or profitability, but public welfare.\"",
               "effects" : [
@@ -601,6 +630,7 @@ Todo:
 
             {
               "id" : "optSourResponse",
+              "avatar" : "protagonist",
               "choiceLabel" : "\"Really? We should trust corporations?\"",
               "content" : "You can't believe {name|student1}'s actually this naive. \"So let me get this straight: we should rely on the profitability of avoiding mass extinction events to drive public action? Call me skeptical, but given those same corporations are largely responsible for this predicament, I don't think we can rely on them to get us out of it.\"",
               "effects" : [
@@ -610,17 +640,19 @@ Todo:
 
     {
       "id" : "optFranklinFollowUp",
-      "content" : "Franklin's hand is once again in the air.",
+      "avatar" : "protagonist",
+      "content" : "{name|student1}'s hand is once again in the air.",
       "choices" : [
         {"gotoId" : "optFranklinQuestion2"},
-        {"gotoId" : "optQuestionBridge"}
+        {"gotoId" : "questionBridge"}
       ],
       "conditions" : ["student1 eq true"]
     },
 
     {
         "id": "optFranklinQuestion2",
-        "choiceLabel": "\"Yes Franklin?\"",
+        "avatar" : "student1",
+        "choiceLabel": "\"Yes {name|student1}?\"",
         "content": "\"Well ok but, why should <i>we</i> care?\" Whispers from other students filter up to your podium. \"I mean, if you're saying large corporations are to blame, then why should I care about recycling or whether I drive my car?\"",
         "choices": [
             {"gotoId": "optFollowUpAnswer1"},
@@ -633,6 +665,7 @@ Todo:
 
             {
                 "id": "optFollowUpAnswer1",
+                "avatar" : "protagonist",
                 "choiceLabel": "\"Small changes snowball.\"",
                 "content": "\"It may seem like it's not a lot, but if all of us are recycling, and especially if we're supporting businesses that are working to combat climate change, those effects snowball. And, I suppose, it sends a signal to people like your mother, to hopefully help them set their company's mandate.\"",
                 "effects": [
@@ -646,6 +679,7 @@ Todo:
 
             {
                 "id": "optFollowUpAnswer2",
+                "avatar" : "protagonist",
                 "choiceLabel": "\"It's still our home.\"",
                 "content": "\"We only have this planet, so it's our duty to take care of it. You don't burn down your house when you're moving out because you want it to be clean for the next family. We won't be the last generation living here and it is our job to make sure the planet survives for many more generations. We each have to do our part.\"",
                 "effects": [
@@ -661,6 +695,7 @@ Todo:
 
 {
   "id" : "elikaIntro",
+  "avatar" : "student3",
   "unavailableChoiceLabel" : "Already called on {name|student3}.",
   "choiceLabel" : "\"Yes, {name|student3}?\"",
   "content": "You call on {name|student3}, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now...wouldn't taking carbon dioxide out of the atmosphere help with the acidity of the ocean?\"",
@@ -679,6 +714,7 @@ Todo:
 
 {
   "id" : "elikaNext",
+  "avatar" : "protagonist",
   "choiceLabel" : "Continue",
   "unavailableChoiceLabel" : "Already called on {name|student3}.",
   "content" : "You find yourself hesitating. There is an eagerness in {name|student3}'s eyes, a positivity that you might have lost amidst your doctoral research - something you can't help but want to cling to. Yet there is also a naivety in her words that gives you pause.",
@@ -694,6 +730,7 @@ Todo:
 
         {
           "id" : "encouragingResponse",
+          "avatar" : "protagonist",
           "choiceLabel" : "Yeah, absolutely!",
           "content" : "{ifStateCondition|concentration gte 5|Looking around at all the bored and unconvinced faces, you decide to say |You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out} \"That is an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|student3} beams, though you notice faces that aren't as happy.",
           "effects" : [
@@ -708,6 +745,7 @@ Todo:
 
         {
           "id" : "gentleResponse",
+          "avatar" : "protagonist",
           "choiceLabel" : "It's actually a bit more complicated than that.",
           "content" : "{ifStateCondition|concentration gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would also be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
           "effects" : [
@@ -723,6 +761,7 @@ Todo:
 
         {
           "id" : "bluntResponse",
+          "avatar" : "protagonist",
           "choiceLabel" : "No, you've got your facts wrong.",
           "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But don't believe the hype. It's actually done at the power plants, either before or after the coal gets burned - and it would take a lot of energy, reducing the plant's output, so it's not likely to be adopted as the technology currently stands.\"",
           "effects" : [
@@ -738,6 +777,7 @@ Todo:
 
         {
           "id" : "bluntResponse2",
+          "avatar" : "protagonist",
           "choiceLabel" : "Continue",
           "content" : "\"And frankly,\" you continue, \"it would be way better if we stuck to cleaner energies that already exist then trying to make coal 'clean'.\" <br/><br/>{name|student3}'s smile had faded from her face a long time ago. As well as many others'.",
           "choices" : [
@@ -747,6 +787,7 @@ Todo:
 
 {
   "id" : "elikaFollowUp",
+  "avatar" : "protagonist",
   "choiceLabel" : "Continue",
   "content" : "{name|student3} looks like she wants to ask another question. Take it?",
   "choices" : [
@@ -757,6 +798,7 @@ Todo:
 
         {
           "id": "questionBridge",
+          "avatar" : "protagonist",
           "choiceLabel": "Call on another student.",
           "content": "You check the clock. {ifStateCondition|concentration lt 3|Your heart jumps in your chest. You're running out of time.|A good place to move on, you decide.} You look around the room for more questions.",
           "repeatable" : "true",
@@ -767,6 +809,7 @@ Todo:
 
 {
   "id" : "elikaQuestion2",
+  "avatar" : "student3",
   "choiceLabel" : "Take another question.",
   "content" : "\"So,\" {name|student3} says, \"do you think we'll be able to stop the acidity from rising?\"",
   "choices" : [
@@ -782,6 +825,7 @@ Todo:
 
         {
           "id" : "positiveResponse",
+          "avatar" : "protagonist",
           "choiceLabel" : "I think so.",
           "content" : "\"I mean, we've already come so far with technology and science,\" you say. \"I'm sure that--now that we're aware of the problems CO2 is causing--we can fix them.\" <br/></br> {name|student3}'s eyes brighten.'",
           "effects" : [
@@ -796,6 +840,7 @@ Todo:
 
         {
           "id" : "negativeResponse",
+          "avatar" : "protagonist",
           "choiceLabel" : "I doubt it.",
           "content" : "\"As far as we've come with technology and science, change takes course over a long period of time,\" you say. \"We'll have to undo a lot of effects we've already caused, and sometimes fixing's more difficult to do.\" <br/> {name|student3} looks down, but nods in what you hope is understanding.",
           "effects" : [
@@ -811,6 +856,7 @@ Todo:
 
         {
           "id" : "curtResponse",
+          "avatar" : "protagonist",
           "choiceLabel" : "Don't be ridiculous.",
           "content" : "\"I mean, if you think about it, we've come so far with technology and science that a lot of damage has already been done,\" you say. \"Not to mention it's hard to convince people to give up the comfort and convenience of things like cars to try and make a difference in the amount of CO2 we already release daily.\" <br/><br/> {name|student3} avoids your gaze.",
           "effects" : [
@@ -826,6 +872,7 @@ Todo:
 
 {
   "id" : "negElikaIntro",
+  "avatar" : "student3",
   "unavailableChoiceLabel" : "Already called on {name|student3}.",
   "choiceLabel" : "\"Yes, {name|student3}?\"",
   "content": "You call on {name|student3}, and brace yourself for her explosive enthusiasm. She leans forward, hands gesturing furiously. \"So, I read that artificial carbon sequestion is a thing now...aren't technologies like that going to take care of all this? I mean, it seems like we'll solve it pretty soon, right?\"",
@@ -843,6 +890,7 @@ Todo:
 
 {
   "id" : "negElikaNext",
+  "avatar" : "protagonist",
   "choiceLabel" : "Continue",
   "unavailableChoiceLabel" : "Already called on {name|student3}.",
   "content" : "You hesitate. There is an eagerness in {name|student3}'s eyes, a positivity that you might have lost amidst your doctoral research. Yet there is also a naivety in her words that rankles.",
@@ -858,6 +906,7 @@ Todo:
 
 {
   "id" : "negAgreeResponse",
+  "avatar" : "protagonist",
   "choiceLabel" : "In a way, I suppose.",
   "content" : "{ifStateCondition|concentration gte 5|Looking around at all the bored and unconvinced faces, you decide to just go along with it. |You have absolutely no idea how to tell Élika that she's got some of her facts wrong, so you stammer out} \"That's...an excellent point, Élika. Carbon capture and storage is likely to reduce fossil fuel emissions by quite a lot, which would help with the acidity rise in the oceans.\"<br/><br/>{name|student3} beams, though you notice faces that aren't as happy.",
   "effects" : [
@@ -872,6 +921,7 @@ Todo:
 
 {
   "id" : "negGentleResponse",
+  "avatar" : "protagonist",
   "choiceLabel" : "Actually, there's more to it than that.",
   "content" : "{ifStateCondition|concentration gte 5|\"It's not exactly taking carbon dioxide out of the air itself - it's capturing the CO2 at the energy plants before it's released into the atmosphere,\" you explain. \"Carbon capture actually takes a significant amount of energy - which would mean some of a plant's regular output would also be lost.\" <br/><br/>Élika's face turns thoughtful. |\"See, carbon capture - like, the actual capturing of... carbon... that is, taking it from um, the gas, or the coal itself, you know, at the factories - the power plants, sorry - takes a lot of energy - oh, and CCS is actually done inside power plants.\" You halt awkwardly. \"Yeah.\" <br/><br/> Élika blinks at you. Then blinks again. \"...huh?\"}",
   "effects" : [
@@ -887,6 +937,7 @@ Todo:
 
 {
   "id" : "negBluntResponse",
+  "avatar" : "protagonist",
   "choiceLabel" : "No, you've got it all wrong.",
   "content" : "\"If we could physically take the CO2 out of our atmosphere like a tree does, that would be spectacular,\" you say. \"But don't believe the hype. It's actually done at the power plants, either before or after the coal gets burned - and it would take a lot of energy, reducing the plant's output, so it's not likely to be adopted as the technology currently stands.\"",
   "effects" : [
@@ -902,6 +953,7 @@ Todo:
 
 {
   "id" : "negBluntResponse2",
+  "avatar" : "protagonist",
   "choiceLabel" : "Continue",
   "content" : "\"And frankly,\" you continue, \"it would be way better if we stuck to cleaner energies that already exist then trying to make coal 'clean'.\" <br/><br/>{name|student3}'s smile had faded from her face a long time ago. As well as many others'.",
   "choices" : [
@@ -911,6 +963,7 @@ Todo:
 
 {
   "id" : "negElikaFollowUp",
+  "avatar" : "protagonist",
   "choiceLabel" : "Continue",
   "content" : "{name|student3}'s frowning now, and looks like she wants to ask another question. Take it?",
   "choices" : [
@@ -921,6 +974,7 @@ Todo:
 
 {
   "id" : "negElikaQuestion2",
+  "avatar" : "student3",
   "choiceLabel" : "Take another question from {name|student3}.",
   "content" : "\"Uh...ok,\" {name|student3} says. \" So do you think we'll ever be able to stop the acidity from rising? Or are you just saying we're doomed?\"",
   "choices" : [
@@ -936,6 +990,7 @@ Todo:
 
 {
   "id" : "advPositiveResponse",
+  "avatar" : "protagonist",
   "choiceLabel" : "No, I didn't mean that.",
   "content" : "\"I mean, we've already come so far with technology and science,\" you say. \"I'm sure that--now that we're aware of the problems CO2 is causing--we can fix them.\" <br/></br> {name|student3}'s eyes brighten.'",
   "effects" : [
@@ -950,6 +1005,7 @@ Todo:
 
 {
   "id" : "advNegativeResponse",
+  "avatar" : "protagonist",
   "choiceLabel" : "Well...that's a bit strong, but not far off.",
   "content" : "\"Look, as far as we've come with technology and science, change takes course over a long period of time,\" you say. \"And we've already dug ourselves a pretty deep hole. Technology may be able to help, but we can't expect a miracle.\" <br/> {name|student3} looks down, but nods in what you hope is understanding.",
   "effects" : [
@@ -965,6 +1021,7 @@ Todo:
 
 {
   "id" : "advCurtResponse",
+  "avatar" : "protagonist",
   "choiceLabel" : "Don't be ridiculous.",
   "content" : "\"I'm not saying that!\" you exclaim, closing your laptop a little too hard. \"But there is no magic bullet! We're already in for a rough ride, so the best we can hope for is to minimize the damage we've already incurred, and work to avoid as much of it as possible! We have to take responsibility.\" <br/><br/> {name|student3} avoids your gaze. You can see students shaking their heads and texting.",
   "effects" : [
@@ -980,7 +1037,8 @@ Todo:
 
 {
   "id" : "aidenIntro",
-  "unavailableChoiceLabel" : "Already called on Aiden.",
+  "avatar" : "student2",
+  "unavailableChoiceLabel" : "Already called on {name|student2}.",
   "choiceLabel" : "\"Yes, {name|student2}?\"",
   "content" : "{name|student2} looks ready to crawl under their desk when your attention turns to them. \"U-um, uh, I- I get that the ac- that the rise in acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"What can we do about it?\"",
   "choices" : [
@@ -997,6 +1055,7 @@ Todo:
 
 {
   "id" : "aidenNext",
+  "avatar" : "student2",
   "choiceLabel" : "Continue",
   "content" : "Their eyes fall upon their desk. \"Even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'Geez, we've gone too far to turn back now. No one wants to give up their car.'\"",
   "choices" : [
@@ -1011,6 +1070,7 @@ Todo:
 
   {
     "id" : "hopefulResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "There's still hope.",
     "content" : "\"True, the amount of carbon dioxide released into the atmosphere is making a noticeable impact on our planet,\" you say. \"But we're acknowledging these problems, right? <br/><br/>For example, did you know that 16.9% of energy generation in 2016 comes from renewable energy? Which may not seem much until you compare it to the 13% just the year before.",
     "effects" : [
@@ -1026,6 +1086,7 @@ Todo:
 
   {
     "id" : "hopefulResponse2",
+    "avatar" : "protagonist",
     "choiceLabel" : "Continue",
     "content" : "You smile at {name|student2}. \"We're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything, nothing will ever change. Then there's zero chance anything will get better.\"",
     "choices" : [
@@ -1035,6 +1096,7 @@ Todo:
 
   {
     "id" : "pessimisticResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "Humans can never change.",
     "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|student2}'s face crumple.",
     "effects" : [
@@ -1049,6 +1111,7 @@ Todo:
 
   {
     "id" : "harshResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "Geez, don't be such a downer.",
     "content" : "\"That attitude's the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|student2} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
     "effects" : [
@@ -1064,6 +1127,7 @@ Todo:
 
   {
     "id" : "harshResponse2",
+    "avatar" : "protagonist",
     "choiceLabel" : "Continue",
     "content" : "{ifStateCondition|concentration gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
     "choices" : [
@@ -1073,6 +1137,7 @@ Todo:
 
   {
     "id" : "aidenFollowUp",
+    "avatar" : "protagonist",
     "choiceLabel" : "Continue",
     "content" : "{name|student2} looks like they have another question. Take it? Or call on another student?",
     "choices" : [
@@ -1087,6 +1152,7 @@ Todo:
 
   {
     "id" : "aidenQuestion2",
+    "avatar" : "student2",
     "choiceLabel" : "Take another question.",
     "content" : "\"So, um,\" comes {name|student2}'s soft voice. \"Then - what can <i>I</> do?\"",
     "choices" : [
@@ -1102,6 +1168,7 @@ Todo:
 
   {
     "id" : "academicResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "Educate.",
     "content" : "\"Educate yourself about what's going on and how you can help - and teach others. You can get involved in some of our research projects here...there's also the path of becoming a professor,\" you say. {name|student2} nods.",
     "effects" : [
@@ -1114,6 +1181,7 @@ Todo:
 
   {
     "id" : "localResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "Find out what you can do within your community.",
     "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
     "effects" : [
@@ -1126,6 +1194,7 @@ Todo:
 
   {
     "id" : "hopelessResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "There's little you can do.",
     "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|student2} doesn't look particularly inspired. Some students start whispering amongst themselves.",
     "effects" : [
@@ -1141,7 +1210,8 @@ Todo:
 
 {
   "id" : "antAidenIntro",
-  "unavailableChoiceLabel" : "Already called on Aiden.",
+  "avatar" : "student2",
+  "unavailableChoiceLabel" : "Already called on {name|student2}.",
   "choiceLabel" : "\"Yes, {name|student2}?\"",
   "content" : "{name|student2} glances around, as if looking for support. \"U-um, uh, I- I get that the...that the acidity is a problem, but...\" they gesture, as if trying to pluck the right word from the air. \"I mean, it's not like we can do anything about it?\"",
   "choices" : [
@@ -1158,6 +1228,7 @@ Todo:
 
 {
   "id" : "antAidenNext",
+  "avatar" : "student2",
   "choiceLabel" : "Continue",
   "content" : "They start talking faster as your eyebrows raise. \"Well, uh...even if more people ride bikes or whatever, there are still so many cars pumping all that carbon dioxide into the air - sometimes I look out the window and just see the millions of cars in traffic and think, 'It's already too late. There's no way to stop it now.'\"",
   "choices" : [
@@ -1172,6 +1243,7 @@ Todo:
 
 {
     "id" : "antHopefulResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "There's still hope.",
     "content" : "\"True, the amount of carbon dioxide released into the atmosphere is making a noticeable impact on our planet,\" you say. \"But we're acknowledging these problems, right? <br/><br/>For example, did you know that 16.9% of energy generation in 2016 comes from renewable energy? Which may not seem much until you compare it to the 13% just the year before.\"<br/>{name|student2} is still frowning skeptically.",
     "effects" : [
@@ -1187,6 +1259,7 @@ Todo:
 
   {
     "id" : "antHopefulResponse2",
+    "avatar" : "protagonist",
     "choiceLabel" : "Continue",
     "content" : "You try a smile. \"Look, we're making progress, and that's the most important thing to hold on to. After all, if we just stop doing anything, nothing will ever change. Then there's zero chance anything will get better.\"",
     "choices" : [
@@ -1196,6 +1269,7 @@ Todo:
 
   {
     "id" : "antPessimisticResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "You're right. Humans can never change.",
     "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|student2}'s face crumple.",
     "effects" : [
@@ -1210,6 +1284,7 @@ Todo:
 
   {
     "id" : "antHarshResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "Geez, don't be such a downer.",
     "content" : "\"That attitude's the reason change is so slow - it's because we sit around complaining about how we've ruined things instead of actually cleaning up the mess.\" <br/><br/> You notice {name|student2} shrinking back. You may have been a little too harsh. And unprofessional. Whoops.",
     "effects" : [
@@ -1225,6 +1300,7 @@ Todo:
 
   {
     "id" : "antHarshResponse2",
+    "avatar" : "protagonist",
     "choiceLabel" : "Continue",
     "content" : "{ifStateCondition|concentration gte 5|\"The point is,\" you continue, a bit more gently, \"Change is still possible. Keep your chin up.\"|\"The point is,\" you say, fumbling a bit, \"We can still do something about it. We just need to - well, actually do something.\"}",
     "choices" : [
@@ -1234,6 +1310,7 @@ Todo:
 
   {
     "id" : "antAidenFollowUp",
+    "avatar" : "protagonist",
     "choiceLabel" : "Continue",
     "content" : "{name|student2} looks like they have another question. Take it? Or call on another student?",
     "choices" : [
@@ -1245,6 +1322,7 @@ Todo:
 
   {
     "id" : "antAidenQuestion2",
+    "avatar" : "student2",
     "choiceLabel" : "Take another question.",
     "content" : "\"So, um,\" comes {name|student2}'s soft voice. \"Then - what can <i>I</> do?\"",
     "choices" : [
@@ -1260,6 +1338,7 @@ Todo:
 
   {
     "id" : "antAcademicResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "Educate.",
     "content" : "\"Educate yourself about what's going on and how you can help - and teach others. You can get involved in some of our research projects here...there's also the path of becoming a professor,\" you say. {name|student2} nods.",
     "effects" : [
@@ -1272,6 +1351,7 @@ Todo:
 
   {
     "id" : "antLocalResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "Find out what you can do within your community.",
     "content" : "\"Volunteer, donate, see what your local issues are, participate in local politics - sometimes it's best to start small in a place you know best.\" You can't help but remember Shelly lecturing you about this.",
     "effects" : [
@@ -1284,6 +1364,7 @@ Todo:
 
   {
     "id" : "antHopelessResponse",
+    "avatar" : "protagonist",
     "choiceLabel" : "There's little you can do.",
     "content" : "You're suddenly tired of this whole conversation. \"There's not much you can do,\" you say, rubbing your eyes. \"No matter what you do. The big companies dump so much CO2 that the most we can do is educate ourselves on how to live on a slowly dying planet.\" <br/><br/> {name|student2} doesn't look particularly inspired. Some students start whispering amongst themselves.",
     "effects" : [

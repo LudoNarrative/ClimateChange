@@ -19,6 +19,11 @@ body {
     float:left;
 }
 
+#storyContainer.oneMain {
+    position:relative;
+    left:212px;
+}
+
 #gameContainer, #introGame {
     float:right;
     background-color: rgba(38, 38, 38, 0.8);
@@ -58,6 +63,8 @@ body {
     background-color:blue;
 }
 
+.hidden { display:none; }
+
 h1#title {
     text-align: center;
     margin-top: 114px;
@@ -89,8 +96,6 @@ p.titleLink a:hover {
     color:yellow;
 }
 
-#sceneSelectTitle { margin-top:300px; }
-
 /*
 --------------Stats CSS---------------------
 */
@@ -100,6 +105,14 @@ p.titleLink a:hover {
     bottom:-10px;
     left:0px;
 }
+
+#statsContainer.oneMain {
+    top: 0px;
+    bottom: unset;
+    width:20px;
+}
+
+#mainAvatarDiv { width: unset; }
 
 .statContainer {
     display: inline-block;
@@ -130,6 +143,11 @@ p.titleLink a:hover {
     margin-top: 150px;
 }
 
+#mainAvatar .nameLabel {
+    text-align:center;
+    margin-top: 215px;
+}
+
 .barContainer {
     float: left;
     width: 130px;
@@ -138,7 +156,7 @@ p.titleLink a:hover {
 }
 
 .statContainer:first-child {
-    width:440px !important;
+    /* width:440px !important; */
 }
 
 .mainChar, .supportingChar {
@@ -159,6 +177,12 @@ p.titleLink a:hover {
     height: 300px;
     width: 275px;
     background-position-y:top;
+}
+
+.mainChar.oneMain {
+    height:259px;
+    width:214px;
+    border-radius: 28px;
 }
 
 .supportingChar {

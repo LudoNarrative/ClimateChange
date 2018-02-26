@@ -1,6 +1,7 @@
 [
   {
     "id": "onABeach",
+    "avatar" : "protagonist",
     "content": "\"Gotcha!\" You carefully transfer the blue crab to your bucket. The spray of breaking waves is welcome against the heat of the noon sun, at least for the moment.<br/><br/>You scrape your foot in the sand until it uncovers pavement, and frown. This artificial beach was supposed to last years...but this tidal surge is just the latest in a recent string of events that's undoing all your best efforts.",
     "choices": [
     	{"condition": "showCoworkerRelation eq true"},
@@ -16,6 +17,7 @@
 
   {
   	"id" : "coworkerRelation_choiceLabel",
+    "avatar" : "protagonist",
   	"choiceLabel" : "\"Hey {name|volunteer}! Mind coming over here and giving me a hand?\"",
   	"request" : {"condition": "showCoworkerRelationContent eq true"},
     "effects" : [
@@ -25,6 +27,7 @@
 
   {
     "id": "coworkerRelation_familiar",
+    "avatar" : "volunteer",
     "content": "\"Whatcha got there, {name|protagonist}?\" {name|volunteer} carefully works his way over to you through the water.<br/>\"Looks like a blue crab from the transplant population. Grab a bucket and help me out here, will you? My partner wandered off somewhere.\"<br/>\"Hey, they're not old hands at this like you and me,\" {name|volunteer} winked. \"It takes years to develop an eye for finding sea-life in old parking lots.\"",
     "choices": [
     	{"condition": "passCheckpoint1 eq true"}
@@ -38,6 +41,7 @@
   },
   {
     "id": "coworkerRelation_unfamiliar",
+    "avatar" : "volunteer",
     "content": "\"Sure, what's up, {name|protagonist}?\"<br/>{name|volunteer}'s been helping with the crab resettlement for the past month, and although you haven't gotten to know him that well yet, he seems friendly enough.<br/>\"Let's double-team this area, and see if we can find more crabs that way.\"",
    
     "choices": [
@@ -53,6 +57,7 @@
 
   {
   	"id" : "coworkerIdentity_choiceLabel",
+    "avatar" : "protagonist",
   	"choiceLabel" : "\"{name|volunteer}! {ifState|coworkerIdentity|activist|Got one of those rough patches...a little help?\"|Time to get your hands dirty! Help me out!}",
   	"request" : {"condition": "showCoworkerIdentity eq true"}
 
@@ -61,6 +66,7 @@
   //TODO: add in variant for if Emma used to be an academic ({ifStateCondition|career lte 3|text if true|text if false})
   {
     "id": "coworkerIdentity_activist",
+    "avatar" : "volunteer",
     "content": "\"Hey, you don't need to tell <i>me</i> twice, I've been working here for...god...five years? Has it really been that long?\"<br/>\"It seems like longer,\" you say, looking out over the water. \"I think I was there when you first signed on, wasn't I?\"<br/>\"Oh yeah!\" {name|volunteer} laughed. \"Wait...weren't you the one that gave me the orientation pep talk?\"<br/>God, it had been a long time.",
     "effects" : [
       "set showCoworkerIdentity true"
@@ -72,6 +78,7 @@
   //TODO: add in variant for if Emma used to be an academic ({ifStateCondition|career lte 3|text if true|text if false})
   {
     "id": "coworkerIdentity_academic",
+    "avatar" : "volunteer",
     "content": "\"Look, I know you think I'm just a part-timer, because I used to teach over at the Universi-\"<br/>\"That's not it,\" you say hastily. God, you can still remember that dinner conversation before your defense. \"I mean, I almost started teaching myself, way back when.\"<br/>\"No way!\" {name|volunteer} laughs. \"Wow, hard to see that! No offense\" he adds, when you glare over at him.",
     "effects" : [
       "set showCoworkerIdentity true"
@@ -85,6 +92,7 @@
 
   {
     "id": "talkAboutSpecies",
+    "avatar" : "protagonist",
     "content": "\"Hmm...I guess in a way, these blue crabs are a bellwether for the whole project. Raised in a lab and released onto an artificial beach built on top of a flooded parking lot. Doesn't get much more 2042 than that.\"<br/><br/>{name|volunteer} laughs. \"Yeah...when you put it like that...\"",
     "choices": [
     	{"gotoId" : "positiveYetRegret"},
@@ -100,12 +108,14 @@
 
   {
   	"id": "positiveYetRegret",
+    "avatar" : "protagonist",
   	"choiceLabel" : "\"I thought it could really work.\"",
   	"content": "\"I thought it could really work, y'know?\" You keep scanning the water for movement, out of habit. \"And maybe it will, once we re-locate again.\"<br/>\"Yeah...\" Rodrigo says. It's hard to tell whether he's agreeing with you, or just doesn't feel like getting into an argument.",
   },
 
   {
   	"id": "disillusioned",
+    "avatar" : "protagonist",
   	"choiceLabel" : "\"I don't know what we were thinking.\"",
   	"content": "\"I don't know what we were thinking.\" You kick, sending a cloud of sand billowing up underwater. Nothing else moves. \"It feels like such a small fight, and we can't even win that.\""
   },
@@ -113,6 +123,7 @@
 
   {
     "id": "talkAboutUNPlanPos",
+    "avatar" : "volunteer",
     "content": "\"It's not all bad news,\" {name|volunteer} said. \"I mean, you've read the reports from other sites, right? Project Landstrider, down in Louisiana? Or the ptarmigan flock resettled down in Antarctica?\"<br/><br/>It was true. There had been successes. Coordinating local groups under a global mandate had worked some wonders. But so much had changed, so many species had already been wiped out...it was hard to see progress, some days.",
     "effects" : [
       "set talkAboutUNPlan true"
@@ -124,6 +135,7 @@
   },
   {
     "id": "talkAboutUNPlanNeg",
+    "avatar" : "volunteer",
     "content": "\"Ugh,\" {name|volunteer} said. \"And even if we're doing ok here, though, let's not lose track of the bigger picture. And it isn't pretty. I mean, millions of people are abandoning coastal cities. And it's not like these crabs. We can't just artificially create a place for them. Everything's stretched too thin.\"",
     "choices": [
     	{"gotoId" : "reassureCoworker"},
@@ -139,6 +151,7 @@
   },
   		{
   			"id" : "reassureCoworker",
+        "avatar" : "protagonist",
   			"choiceLabel" : "Reassure {name|volunteer}",
   			"content" : "\"Well, that might all be true, but that doesn't change our responsibility. And as bad as things get, it never changes the fact that we can make the world a better place. So we just have to keep trying, you know?\"<br/><br/>{name|volunteer} laughs. \"You never give up, do you? That's what I like about working with you.\"",
   			"effects" : [
@@ -148,6 +161,7 @@
   		},
   		{
   			"id" : "sadAgreeWithCoworker",
+        "avatar" : "protagonist",
   			"choiceLabel" : "Agree with {name|volunteer}",
   			"content" : "\"Yeah, tell me about it. Sometimes it can feel so overwhelming. Like...how can any of this matter, when you think about the larger failures happening all around the world? And we can't even get these crabs resettled!\" You clench your fists. \"It just seems so hopeless sometimes.\"",
   			"effects" : [
@@ -156,6 +170,7 @@
   		},
   {
     "id": "volunteerInitialReactionPos",
+    "avatar" : "volunteer",
     "content": "\"I mean, we're making progress though.\" {name|volunteer}'s hand flashes into the water, and he drops a crab into his bucket. \"Like, weren't there less than fifty California condors left, back in the 90s? And they were just taken off the endangered list a couple years ago!\"",
     "choices": [
     	{"gotoId" : "agreeWithPosCoworker"},
@@ -171,6 +186,7 @@
   },
   		{
   			"id" : "agreeWithPosCoworker",
+        "avatar" : "protagonist",
   			"choiceLabel" : "{ifState|protagonistOptimism|high|\"Yeah! That's what I'm saying!\"|\"Huh...well maybe you're right.\"}",
   			"content" : "\"Totally!\" You pick up a crab and put it in the bucket. \"And I mean, we've had our share of troubles with these crabs, but who knows. In ten years maybe they'll have made just as big a comeback.\"",
   			"effects" : [
@@ -179,6 +195,7 @@
   		},
   		{
   			"id" : "disagreeWithPosCoworker",
+        "avatar" : "protagonist",
   			"choiceLabel" : "{ifState|protagonistOptimism|high|\"Well maybe, but let's not get ahead of ourselves...\"|\"One success doesn't mean much, given everything else that's happening.\"}",
   			"content" : "\"It's true, there are successes if you look at the small details, but it's the bigger picture that worries me. The fact that, even if we can help species adapt to these new conditions, we're not doing enough to stop those conditions from continuing to change. It's not enough.\"",
   			"effects" : [
@@ -187,6 +204,7 @@
   		},
   {
     "id": "volunteerInitialReactionNeg",
+    "avatar" : "volunteer",
     "content": "\"God, why are we even bothering with this?\" {name|volunteer} dumped out his bucket. \"We've been looking for hours and all we've found are a couple sick crabs and some anemic shrimp. This whole thing is hopeless.\"",
     "choices": [
     	{"gotoId" : "agreeWithNegCoworker"},
@@ -202,6 +220,7 @@
   },
   		{
   			"id" : "agreeWithNegCoworker",
+        "avatar" : "protagonist",
   			"choiceLabel" : "\"Yeah, I have to admit. It's pretty bad.\"",
   			"content" : "You walk over, and pick up one of the crabs. \"And it seems like such a small thing. But what we're doing has echoes. Even if we fail.\"<br/>Rodrigo looks at the crab. \"This whole thing was a dream. We can't stop the freight train barrelling towards us.\"<br/>\"Maybe not,\" you say, placing the crab in your bucket. \"But we have to try.\"",
   			"effects" : [
@@ -210,6 +229,7 @@
   		},
   		{
   			"id" : "disagreeWithNegCoworker",
+        "avatar" : "protagonist",
   			"choiceLabel" : "\"What! Hey pick that bucket back up!\"",
   			"content" : "\"Look, I know things are bad with this project currently, but you can't just quit. There's more to it than just these crabs. Our work here gets reported back to other efforts, other teams that are part of the Conservancy Coordination Group. Even if we fail here, and the crabs die, we can use that knowledge to help other species. We're still making progress.\"<br/><br/>{name|volunteer} slowly picks up his bucket. \"I...suppose so. Sorry.\"",
   			"effects" : [
@@ -219,6 +239,7 @@
   		},
   {
     "id": "protagonistRejoinder",
+    "avatar" : "protagonist",
     "content": "\"Hey c'mon, {name|volunteer}, let's keep at it. Shift isn't over until two.\"<br/>\"I'm serious, {name|protagonist}.\" {name|volunteer}'s got his gloves off, rubbing a hand through his hair. \"Like...what are we even doing?\"<br/>",
     "choices": [
     	 {"condition" : "answerQuestion eq true"},
@@ -233,6 +254,7 @@
   },
   		{
   			"id" : "justAJob",
+        "avatar" : "protagonist",
   			"choiceLabel" : "{ifState|protagonistOptimism|low|Our jobs, I guess.|What are you saying?}",
   			"content" : "{ifState|protagonistOptimism|low|({ifState|protagonistIdentity|academic|(\"...and at least we have ones,\" you say. You meant it to be reassuring, but {name|volunteer} looks angry now. \"Oh, so now it's just a job, huh? Great. You just switch careers when it suits you, I suppose? This was just the convenient option?\"<br/><br/>He stops, shakes his head. \"Sorry. I just...let's just finish up, ok?\" He gets back to work.)|(\"What? You've been doing this longer than me, and that's what you say? God it must really be hopeless.\"<br/><br/>\"I was just trying to-\" he waves it aside. \"Let's just get back to work.\")})|({ifState|protagonistIdentity|academic|(\"It just seems like too much.\" {name|volunteer} gestures around. \"I mean, it's ridiculous when you think about it.\"<br/><br/>\"I didn't start working here because I thought it'd be easy. It's hard work, {name|volunteer}. But it's important work. Maybe the most important work. The front lines.\"<br/><br/>{name|volunteer} nods, slowly putting his gloves back on. \"Sorry. Yeah, yeah I suppose.\")|(\"That maybe this is a waste of time.\" {name|volunteer} crosses his arms.<br/><br/>\"Look, I've been doing this a lot longer than you. You're just going to have to trust me. This work...we're on the front lines. This is where we make a difference. Even if it's small, but all of us together are what make the impact, {name|volunteer}.\"<br/><br/>He nods reluctantly, and pulls his gloves back on.)})}",
   			"effects" : [
@@ -241,6 +263,7 @@
   		},
   {
     "id": "dropSadKnowledge",
+    "avatar" : "protagonist",
     "content": "\"What about the Barrier Reef?\" {name|volunteer} says. \"I mean there wasn't anything we could do to save any of those species once it collapsed, and that was a billion dollar international collaboration. How many went extinct?\"<br/><br/>\"Look, you and I both knew when we got into this work that it was going to be an uphill battle.\" You set the bucket down. \"But that doesn't make it less important.\"",
     "effects" : [
       "set dropSadKnowledge true"
@@ -253,6 +276,7 @@
   
   {
     "id": "coworkerOptimism_low",
+    "avatar" : "volunteer",
     "content": "\"I don't know, {name|protagonist},\" {name|volunteer} said. \"I mean, we've been pushing this project for what, five years? At what point do we admit we're just not making a difference?\"",
     "choices" : [
       {"gotoId" : "cheerUp"},
@@ -268,6 +292,7 @@
 
   {
     "id" : "cheerUp",
+    "avatar" : "protagonist",
     "choiceLabel" : "{ifState|protagonistOptimism|low|Well...uh...|Hey, cheer up!}",
     "content" : "{ifState|protagonistOptimism|low|(\"I hear you. I mean, I'll admit I'm not feeling terribly optimistic about the future either. Sometimes it even keeps me up at night. But it doesn't help to be down about it. I mean we're doing something, so that counts for something? I guess?\"<br/><br/>{name|volunteer} looks extremely unconvinced.)|(\"Come on, {name|volunteer}! Stop being so doom and gloom! I mean, it's a job, right? So at the least we can be happy we're doing something for a 9 to 5. Could be worse?\"<br/><br/>{name|volunteer} looks extremely unconvinced.)}",
     "conditions" : [
@@ -276,6 +301,7 @@
   },
   {
     "id" : "differenceSmallOrBig",
+    "avatar" : "protagonist",
     "choiceLabel" : "But we are making a difference.",
     "content" : "{ifState|protagonistOptimism|low|(\"I mean, it may not be a <i>big</i> difference,\" you say. \"Heck, even after the stuff I've done, it's hard sometimes to see if it matters. But the most important thing is that we're out here trying. Doing the best we can. Some days that's enough. So let's get back to work and see what we can do, huh?\"<br/><br/>{name|volunteer} nods. \"Yeah, I guess you're right. Thanks, {name|protagonist}.\")|(\"These things are all inter-connected. That's what makes climate change so challenging to study. We sometimes have trouble seeing the importance or scale of all the different aspects. You and I are doing good work out here. Trust me.\"<br/><br/>{name|volunteer} nods. \"Well, ok I suppose. I mean, that's why I signed up, right? Got tired of just sitting around doing nothing about it. Thanks, Emma.\")}",
     "conditions" : [
@@ -289,6 +315,7 @@
 
   {
     "id": "coworkerOptimism_high",
+    "avatar" : "volunteer",
     "content": "\"Yeah...it may not seem like a lot, given everything else happening, but I really think we're making a difference here.\" {name|volunteer} looked down at his bucket. \"I mean, it's not the most glamorous or exciting thing in the world, but we're doing what we can.\"",
     "effects" : [
       "set showCoworkerOptimism true"
@@ -299,6 +326,7 @@
   },
   {
     "id": "protagonistOptimism_high",
+    "avatar" : "protagonist",
     "choiceLabel": "We're saving a species' life.",
     "content": "\"We're doing our best.\" You carefully lift one of the crabs from your bucket. \"It may not be a lot, and it may not even be enough, but it's what we can do, the best way we know how. These crabs are symbolic, {name|volunteer}.\" You set the crab back down. \"They're a symbol for how we can change, or try to change, to set things right and prepare them for what's to come.\"<br/><br/>{name|volunteer} sniffs, and says nothing.",
     "effects" : [
@@ -311,6 +339,7 @@
   },
   {
     "id": "protagonistOptimism_low",
+    "avatar" : "protagonist",
     "choiceLabel": "Yeah, this does seem pretty hopeless.",
     "content": "You look at the crabs in your bucket, swimming in useless circles. Mortality rates on the transplants were already pretty high, and it was estimated only 10% of the population would survive another relocation...all of a sudden the hopelessness of the situation washes over you. \"Honestly I...I don't know. God, what are we doing? How is this making any difference at all?\"",
     "effects" : [
@@ -323,6 +352,7 @@
   },
   {
     "id": "protagonistIdentity_academic",
+    "avatar" : "protagonist",
     "content": "\"You know I used to be an academic, right?\"<br/>Rodrigo laughs. \"No kidding? Where at?\"<br/>\"I taught a bit over at Chesterton, after I got my PhD.\"<br/>\"Huh.\" {name|volunteer} poked in the water, searching idly. \"How'd you end up here?\"<br/>You flash back to Dean Smith's office. The confrontation. \"I'm doing more good here, getting my hands dirty.\" You pull another crab from the water. \"At least here, I know exactly how I'm helping.\"",
     "effects" : [
       "set protagonistIdentity academic"
@@ -332,6 +362,7 @@
   },
   {
     "id": "protagonistIdentity_activist",
+    "avatar" : "protagonist",
     "content": "\"Yeah you've been doing this what, five years?\"<br/>\"Try fifteen,\" you laugh.<br/>\"Woah! Wait really?\"<br/>\"Yeah. You ever hear of Shelly Milton? She kind of started this whole operation.\"<br/>\"Yeah...I think so.\"<br/>\"Well, she and I go way back.\" You think back to that fateful dinner, before your PhD defense. \"She actually opened my eyes to a lot of things.\"",
     "effects" : [
       "set protagonistIdentity activist"
@@ -341,6 +372,7 @@
   },
 	{
 		"id": "sceneOutro",
+    "avatar" : "protagonist",
 		"content": "You check the time. 2:30. \"Whoops! Shift's over...lost track of time. How many you got, {name|volunteer}?\"<br/>\"Eh...fifteen, no wait sixteen.\"<br/>\"Ok so with mine we have...34. Hmm.\" That was less than half what you'd hoped. You wearily pick up the crab cage. \"You guys are the lucky few. We're gonna find you a better home.\" You cast one last look over the sand and water. \"Somewhere safe, this time.\"",
 		"choices": [
 			{"gotoId" : "endDummy"}
@@ -352,6 +384,7 @@
 	},
 	{   
 		"id" : "endDummy",
+    "avatar" : "protagonist",
 		"choiceLabel" : "Start next scene.",
 		"content" : " ",
 		"conditions" : [],
@@ -366,6 +399,7 @@
 //PROGRESS GATING FRAGMENTS----------------------------------------------------------------
   {   
     "id" : "doWork1AlreadyDone",
+    "avatar" : "protagonist",
     "choiceLabel" : "[Check your bucket]",
     "content": "You go back to finding crabs. The repetition of the movements--scan, swish, grab, transfer--is soothing, if a bit mind-numbing.",
     "choices": [
@@ -380,6 +414,7 @@
   },
 	{   
 		"id" : "doWork1",
+    "avatar" : "protagonist",
 		"choiceLabel" : "[Return to finding crabs]",
 		"content": "You go back to finding crabs. The repetition of the movements--scan, swish, grab, transfer--is soothing, if a bit mind-numbing.",
 		"choices": [
@@ -395,6 +430,7 @@
 	},
 	{   
 		"id" : "breakTheSilence1",
+    "avatar" : "protagonist",
 		"unavailableChoiceLabel" : "I should do more work before talking to {name|volunteer}",
 		"choiceLabel" : "Break the silence",
 		"content" : "After about half an hour of quietly working, you feel the need to hear another human voice. You clear your throat. {name|volunteer} looks up.",

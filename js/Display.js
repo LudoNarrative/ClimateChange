@@ -5,11 +5,14 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var gameModeChosen = "";				//holder for if game is chosen through UI knobs for scene
 	var interfaceMode = "normal";			//how scenes progress...a timeline that's returned to ("timeline"), or progress scene-to-scene ("normal")
+	var avatarMode = "oneMain";				//oneMain means just one main character, otherwise "normal" RPG style
 
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
 		State = _State;
 		Coordinator = _Coordinator;
+
+		State.set("displayType", "notEditor");		//this is so we properly end scenes, etc. and don't do editor/viz stuff
 	}
 
 	var makeLink = function(_coordinator, id, content, target) {
@@ -87,9 +90,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			}
 		}).appendTo('body');
 
+		var offset = "0px;"
+		if (Coordinator.gameVersion == "release") {offset = "300px"; }
 		$('<h2/>', {
 		    text: 'Scene Selection',
-		    id: 'sceneSelectTitle'
+		    id: 'sceneSelectTitle',
+		    style: 'margin-top:' + offset
 		}).appendTo('body');
 		
 
@@ -486,6 +492,11 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		    //text: ''
 		}).appendTo('body');
 
+		if (avatarMode == "oneMain") {
+			$("#statsContainer").addClass("oneMain");
+			$("#storyContainer").addClass("oneMain");
+		}
+
 		initStatsUI(State);
 	}
 
@@ -509,61 +520,106 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		
 		if (typeof State.get("characters") !== "undefined") {
 			State.get("characters").forEach(function(char, pos) {
-			var url = false;
-			var defaultTag;
-			var avatar = State.avatars.filter(function( avatar ) { return avatar.id == char.id; })[0];
+				var url = false;
+				var defaultTag;
+				var avatar = State.avatars.filter(function( avatar ) { return avatar.id == char.id; })[0];
 
-			for (var x=0; x < avatar.states.length; x++) {			//check all avatar states to find true one
-				var correctAvatar = false;
-				if (avatar.states[x].state[0] == "default") {
-					defaultTag = avatar.states[x].tag;
-				}
-				else {			//don't evaluate default avatars
-					var allTrue = true;
-					for (var y=0; y < avatar.states[x].state.length; y++) {
-						if (!State.isTrue(avatar.states[x].state[y])) {
-							allTrue = false;
+				for (var x=0; x < avatar.states.length; x++) {			//check all avatar states to find true one
+					var correctAvatar = false;
+					if (avatar.states[x].state[0] == "default") {
+						defaultTag = avatar.states[x].tag;
+					}
+					else {			//don't evaluate default avatars
+						var allTrue = true;
+						for (var y=0; y < avatar.states[x].state.length; y++) {
+							if (!State.isTrue(avatar.states[x].state[y])) {
+								allTrue = false;
+								break;
+							}
+						}
+						if (allTrue) {			//if it's valid...
+							url = getAvatar(avatar.graphics, avatar.age, avatar.states[x].tag);		//get avatar URL
 							break;
 						}
 					}
-					if (allTrue) {			//if it's valid...
-						url = getAvatar(avatar.graphics, avatar.age, avatar.states[x].tag);		//get avatar URL
-						break;
+				}
+
+				//fallback to default if no state valid
+				if (!url) { 
+
+					url = getAvatar(avatar.graphics, avatar.age, defaultTag); 
+				}
+
+				var picClass = "supportingChar";
+				if (pos == 0) { picClass = "mainChar" }
+
+				if (avatarMode == "oneMain") {		//if we're in the mode where there's just one portrait for the main character...
+
+					var fragmentPortraitChar = State.get("currentAvatar");		//grab the avatar for this fragment. If there isn't one, default to main character
+					if (typeof fragmentPortraitChar == "undefined") {
+						fragmentPortraitChar = State.get("characters")[0].id;
+					}
+					if (avatar.id == fragmentPortraitChar) {
+						if (document.getElementById('mainAvatar') == null){			//if div doesn't exist, create it
+							$('<div/>', {
+								id: "mainAvatarDiv",
+								class: 'statContainer oneMain'
+							}).appendTo('#statsContainer');
+
+							$('<div/>', {			//create avatarBox and stat-holding box for character
+							    id: "mainAvatar",
+							    class: picClass + " oneMain"
+							}).appendTo('#mainAvatarDiv');
+
+							createStats();
+						}
+
+						$('#mainAvatar').css("background-image", "url("+url+")"); 					//set avatar
+						$('#mainAvatar').html("<div class='nameLabel'>" + char.name + "</div>");	//set name label
+					}
+
+					else {
+						if (document.getElementById(char.id) == null){			//if div doesn't exist, create it
+							$('<div/>', {
+								id: char.id,
+								class: 'statContainer hidden'
+							}).appendTo('#statsContainer');
+
+							$('<div/>', {			//create avatarBox and stat-holding box for character
+							    id: 'charPic_' + char.id,
+							    class: picClass + " hidden"
+							}).appendTo('#' + char.id);
+
+							createStats();
+						}
+					}
+
+				}
+
+				else {				//otherwise if it's one portrait per character...(rpg style)
+					if (document.getElementById(char.id) == null){			//if div doesn't exist, create it
+						$('<div/>', {
+							id: char.id,
+							class: 'statContainer'
+						}).appendTo('#statsContainer');
+
+						$('<div/>', {			//create avatarBox and stat-holding box for character
+						    id: 'charPic_' + char.id,
+						    class: picClass
+						}).appendTo('#' + char.id);
+
+						createStats();
+					}
+					
+					if (url) { 		//set avatar
+						//$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
+						$('#charPic_' + char.id).css("background-image", "url("+url+")"); 
+					}
+
+					if (picClass == "supportingChar") { 
+						$('#charPic_' + char.id).html("<div class='nameLabel'>" + char.name + "</div>");
 					}
 				}
-			}
-
-			//fallback to default if no state valid
-			if (!url) { 
-
-				url = getAvatar(avatar.graphics, avatar.age, defaultTag); 
-			}
-
-			var picClass = "supportingChar";
-			if (pos == 0) { picClass = "mainChar" }
-
-			if (document.getElementById(char.id) == null){			//if div doesn't exist, create it
-				$('<div/>', {
-					id: char.id,
-					class: 'statContainer'
-				}).appendTo('#statsContainer');
-
-				$('<div/>', {			//create avatarBox and stat-holding box for character
-				    id: 'charPic_' + char.id,
-				    class: picClass
-				}).appendTo('#' + char.id);
-
-				createStats();
-			}
-			
-			if (url) { 		//set avatar
-				//$('#charPic').css("background-image", "url(/assets/avatar/"+ theAvatar.src +")"); 
-				$('#charPic_' + char.id).css("background-image", "url("+url+")"); 
-			}
-
-			if (picClass == "supportingChar") {
-				$('#charPic_' + char.id).html("<div class='nameLabel'>" + char.name + "</div>");
-			}
 			});
 		}	
 	}
@@ -599,6 +655,9 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				}
 			});
 
+			var statClass = "stat";
+			if (avatarMode == "oneMain") { statClass += " hidden";	}
+
 			stats.forEach(function(stat, pos) {
 
 				for (var x=0; x < stat.characters.length; x++) { //for each character...
@@ -606,7 +665,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 					if (document.getElementById(stat.characters[x] + "_" + stat.varName) == null) {
 						$('<div/>', {		//make progressbar divs
 							id: stat.characters[x] + "_" + stat.varName,
-					    	class: 'stat',
+					    	class: statClass,
 					    	html: "<div class='stat-label'>"+ stat.label + "</div>"
 						}).appendTo("#"+stat.characters[x] + "_barContainer");
 					}
@@ -620,12 +679,13 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var setStats = function() {
 		var stats = State.get("storyUIvars");
-
-		stats.forEach(function(stat, pos) {
-			for (var x=0; x < stat.characters.length; x++) { //for each character...
-				setBarWidth(stat.characters[x] + "_" + stat.varName);
-			}
-		});
+		if (typeof stats !== "undefined") {
+			stats.forEach(function(stat, pos) {
+				for (var x=0; x < stat.characters.length; x++) { //for each character...
+					setBarWidth(stat.characters[x] + "_" + stat.varName);
+				}
+			});
+		}
 
 	}
 
@@ -638,7 +698,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		})[0];
 		var newWidth = State.get(statName)/(stat.range[1] - stat.range[0]) * 100;
 
-		if (statsContainer.firstChild !== null && typeof statsContainer.firstChild.children[1].children[2] !== "undefined") {
+		if (avatarMode !== "oneMain" && statsContainer.firstChild !== null && typeof statsContainer.firstChild.children[1].children[2] !== "undefined") {
 			var statName1 = statsContainer.firstChild.children[1].firstChild.id;
 			var statName2 = statsContainer.firstChild.children[1].children[2].id;
 
@@ -1059,6 +1119,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		startScene : startScene,
 		addGameDiagnostics : addGameDiagnostics,
 		processWishlistSettings : processWishlistSettings,
-		interfaceMode : interfaceMode
+		interfaceMode : interfaceMode,
+		avatarMode : avatarMode
 	} 
 });

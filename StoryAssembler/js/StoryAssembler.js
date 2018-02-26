@@ -157,7 +157,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 	//used to tell the narrative system to refresh
 	var refreshNarrative = function() {
-		if (State.get("refreshEnabled")) {
+		if (typeof State !== "undefined" && State.get("refreshEnabled")) {					//(if State is undefined, we're getting a refreshNarrative event from an intro explain game and shouldn't process)
 			//check for interrupt story fragments, and set flag for interrupt if found
 			interruptBestPath = getBestPath(chunkLibrary);
 			var interruptPossible = false;
@@ -210,13 +210,16 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 
 		//If the chunk specifies who the speaker should be, use that. Otherwise use the speaker determined 
 		//through earlier call to Character.getBestSpeaker
-		if(chunk.speaker !== undefined){
+		if (chunk.speaker !== undefined){
 			chunkSpeaker = chunk.speaker
 			State.set("speaker", chunkSpeaker)
 		}
-		else{
-			chunkSpeaker = State.get("speaker")
-		}
+		else { chunkSpeaker = State.get("speaker"); }
+
+		if (Display.avatarMode == "oneMain") { 		//if we're using the mode where you can manually set avatars for each fragment, do that
+			State.set("currentAvatar", chunk.avatar);
+			Display.setAvatars(); 
+		}		
 
 		var text = chunk.content;
 		
@@ -453,12 +456,14 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				eval("var newWant = " + effect.substring(effect.indexOf("{"), effect.indexOf("}")+1));
 				wishlist.add(newWant);
 			}
+			else if (effect.indexOf("endScene") > -1) {
+				endScene();
+			}
 			else { State.change(effect); }
 		});
 		wishlist.removeSatisfiedWants();
-		if (typeof Display !== "undefined") {			//if we're not running tests, update the storyStats on the display
-			Display.setStats("storyStats");
-		}
+		//if we're not running tests, update the storyStats on the display
+		if (typeof Display !== "undefined") { Display.setStats("storyStats"); }
 	}
 
 	var doStoryBreak = function() {
