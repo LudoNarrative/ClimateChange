@@ -92,21 +92,24 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 		var offset = "0px;"
 		if (Coordinator.gameVersion == "release") {offset = "300px"; }
-		$('<h2/>', {
-		    text: 'Scene Selection',
-		    id: 'sceneSelectTitle',
-		    style: 'margin-top:' + offset
-		}).appendTo('body');
-		
 
-		// For each scene, make a link to start it.
-		scenes.forEach(function(scene, pos) {
-			var el = makeLink(_Coordinator, scene, scene, "#");
-			$('body').append(el);
-			$('body').append("<div id='hiddenKnobs'></div>");
-			createKnobs(scene, "hiddenKnobs");
-			populateKnobs(scene, _Coordinator, _State, scenes);
-		});
+		if (Coordinator.gameVersion != "release") {
+
+			$('<h2/>', {
+			    text: 'Scene Selection',
+			    id: 'sceneSelectTitle',
+			    style: 'margin-top:' + offset
+			}).appendTo('body');
+
+			// For each scene, make a link to start it.
+			scenes.forEach(function(scene, pos) {
+				var el = makeLink(_Coordinator, scene, scene, "#");
+				$('body').append(el);
+				$('body').append("<div id='hiddenKnobs'></div>");
+				createKnobs(scene, "hiddenKnobs");
+				populateKnobs(scene, _Coordinator, _State, scenes);
+			});
+		}
 
 		$('<div/>', {
 		    id: 'blackout'
