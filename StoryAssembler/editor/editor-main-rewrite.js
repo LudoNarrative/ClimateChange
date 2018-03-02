@@ -89,7 +89,7 @@ requirejs.config({
 		"jQueryUI": "../lib/jquery-ui.min",
 		"jsonEditor": "../lib/jsonEditor/jsoneditor",
 
-		"Game" : "../GameGenerator/js/game",
+		"Game" : "../Gemini/js/game",
 		"AspPhaserGenerator" : "../asp-phaser-generator-2/index",
 		"translateAsp" : '../asp-phaser-generator-2/src/asp-to-cygnus-2',
 		"rensa" : '../asp-phaser-generator-2/src/brain',
@@ -109,7 +109,7 @@ requirejs.config({
 
 		
 		//"Phaser" : "../../lib/phaser",
-		//"Game" : "../../GameGenerator/js/game",
+		//"Game" : "../../Gemini/js/game",
 		//"AspPhaserGenerator" : "../../asp-phaser-generator-2/index",
 		/*"translateAsp" : '../../asp-phaser-generator-2/src/asp-to-cygnus',
 		"rensa" : '../../asp-phaser-generator-2/src/brain',

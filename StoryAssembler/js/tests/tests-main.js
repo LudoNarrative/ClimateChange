@@ -16,7 +16,7 @@ requirejs.config({
 	paths: {
     "domReady": "../../lib/domReady",
     "QUnit": "../../lib/qunit-1.23.1",
-    //"Game" : "../../../GameGenerator/js/game",
+    //"Game" : "../../../Gemini/js/game",
 
     "Condition": "../../js/Condition",
     "Request": "../../js/Request",
