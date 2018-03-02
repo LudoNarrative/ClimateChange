@@ -1,4 +1,4 @@
-label(entity(e_1_XX_),food).
+label(entity(e_1_XX_),dish).
 label(entity(e_2_XX_),friend).
 label(resource(r_1_XX_),satiation,write).
 label(resource(r_2_XX_),appetite,private).
