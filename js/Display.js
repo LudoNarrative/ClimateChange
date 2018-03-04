@@ -728,6 +728,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		}
 		else { linkText = "Continue"; }
 
+		$("#gameContainer").css("visibility","hidden"); // hide the empty game container during intro or interstitial scene
+
 		var begin = $('<h2/>', {
 			text: linkText,
 			click: function() {
@@ -745,6 +747,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 					Coordinator.startGame(id);				//start real game
 					$("#sceneIntro").fadeOut( "slow" );
 					$("#blackout").fadeOut( "slow" );
+					$("#gameContainer").css("visibility","visible"); // unhide the game container
 					State.set("refreshEnabled", true);		//enable refreshNarrative for game hook up
 					State.setPlaythroughData(State.get("currentTextId"), State.get("currentChoices"));	//set playthrough data
 				}
