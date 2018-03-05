@@ -1,6 +1,6 @@
-label(entity(e_1_XX_),self-love).
+label(entity(e_1_XX_),fact).
 label(resource(r_1_XX_),concentration,write).
-label(entity(e_2_XX_),self-hate).
+label(entity(e_2_XX_),superstition).
 
 entity(e_1_XX_).
 entity(e_2_XX_).
