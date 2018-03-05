@@ -4,6 +4,10 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 	var State;
 	var Coordinator;
 	var gameIndex = -999
+
+	// Flag for whether to parse instructions using the original parseInstructions() function,
+	// or just append a simple <p> 
+	var simpleInstructions = true; 
 /*
 	Initializes the game
 		-introGame: whether this is being called to show the game in the introduction screen
@@ -46,6 +50,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		jQuery.get(aspFilepath, function(data) {
 	    	aspGame = data.split("==========")[0];
 	    	aspGameInstructions = iconParse(data.split("==========")[1]);
+	    	console.log("instructions:",aspGameInstructions);
 
 	    	jQuery.get('asp-phaser-generator-2/src/initial-phaser-file.json', function(data2) {
 	    		initialPhaserFile = data2;
@@ -106,6 +111,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 		eval(generatedGame);
 
+		// Append game instructions
 		if (document.getElementById("gameInstructions") == null) {
 
 			var theId;
@@ -113,12 +119,18 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 			var appendDest;
 			if (introGame) { appendDest = "#introGame"} else { appendDest = "#gameContainer"; }
 			
+			if (!simpleInstructions) { 
+				aspGameInstructions = parseInstructions(aspGameInstructions);
+			}
+
 			$('<div/>', {
 			    id: theId,
-			    html: parseInstructions(aspGameInstructions)
+			    html: aspGameInstructions 
 			}).appendTo(appendDest);
 
-			if (introGame) { $("#introGameInstructions").html(parseInstructions(aspGameInstructions)); }
+			if (introGame) { 
+				$("#introGameInstructions").html(aspGameInstructions); 
+			}
 		}
 		else { 
 			$("#gameInstructions").html(aspGameInstructions); 

@@ -56,15 +56,4 @@ reading(good,outcome(o_1_XX_)).
 reading(stakes(low),resource(r_1_XX_)).
 reading(grinding,resource(r_1_XX_)).
 ==========
-<ul>
-<li>games/beach_2.lp</li>
-<li>GOAL:<ul>
-</ul></li>
-
-<li>SUBGOALS:<ul>
-<li>
-attempting to make a [[red|triangle]] and [[red|triangle]] touch
-</li>
-</ul></li>
-<li>CONTROLS:<ul>
-</ul></ul>
+<p>Wait for people to filter in. Drag them together to coordinate efforts.</p>

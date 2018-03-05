@@ -112,21 +112,4 @@ reading(stakes(low),resource(r_1_XX_)).
 reading(stakes(low),resource(r_2_XX_)).
 reading(outcome_helps,relation(outcome(o_4_XX_),resource(r_1_XX_))).
 ==========
-<ul>
-<li>games/dinner_1.lp</li>
-<li>GOAL:<ul>
-<li>Produce satiation</li>
-</ul></li>
-
-<li>SUBGOALS:<ul>
-<li>
-	clicking on a [[blue|triangle]]
-</li>
-<li>
-having appetite be high
-	 at the same time as
-attempting to make a [[blue|triangle]] and [[red|triangle]] touch
-</li>
-</ul></li>
-<li>CONTROLS:<ul>
-</ul></ul>
+<p>Click friends to make food. Use the mouse to pass dishes around.</p>

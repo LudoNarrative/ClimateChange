@@ -39,6 +39,7 @@ body {
 }
 
 #gameInstructions {
+    padding-top: 20px;
     margin-top: 360px;
 }
 

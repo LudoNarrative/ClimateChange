@@ -1,4 +1,4 @@
-label(entity(e_1_XX_),thought).
+label(entity(e_1_XX_),calm).
 label(resource(r_1_XX_),concentration,write).
 label(entity(e_2_XX_),Emma).
 
@@ -88,25 +88,4 @@ reading(help,relation(entity(e_2_XX_),player)).
 reading(tradeoff,entity(e_1_XX_)).
 reading(tradeoff,entity(e_2_XX_)).
 ==========
-<ul>
-<li>games/lecture_attractMode_1.lp</li>
-<li>GOAL:</li>
-<li>Produce concentration</li>
-
-<li>SUBGOALS:<ul>
-<li>
-	holding the mouse button
-	 at the same time as
-attempting to make a [[blue|triangle]] and [[red|triangle]] touch
-</li>
-</ul></li>
-<li>AVOID:<ul>
-<li>
-	attempting to make a [[blue|triangle]] and [[red|triangle]] touch
-</li>
-</ul>
-<li>CONTROLS:<ul>
-<li>	controlling [[red|triangle]] by making it orbit the cursor 
-by holding the mouse button
-</li>
-</ul></ul>
+<p>Hold and position the mouse to guide calm to a nervous Emma</p>

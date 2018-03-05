@@ -91,25 +91,4 @@ reading(tradeoff,entity(e_1_XX_)).
 reading(tradeoff,entity(e_2_XX_)).
 reading(outcome_helps,relation(outcome(o_2_XX_),resource(r_1_XX_))).
 ==========
-<ul>
-<li>games/lecture_dodgeMode_1.lp</li>
-<li>GOAL:</li>
-<li>Produce concentration</li>
-
-<li>SUBGOALS:<ul>
-<li>
-	holding the mouse button
-	 at the same time as
-attempting to make a [[blue|triangle]] and [[red|triangle]] touch
-</li>
-</ul></li>
-<li>AVOID:<ul>
-<li>
-	attempting to make a [[blue|triangle]] and [[red|triangle]] touch
-</li>
-</ul>
-<li>CONTROLS:<ul>
-<li>	controlling [[red|triangle]] by making it flee the cursor 
-by holding the mouse button
-</li>
-</ul></ul>
+<p>Hold and position the mouse to deliver ideas to your audience.</p> 
