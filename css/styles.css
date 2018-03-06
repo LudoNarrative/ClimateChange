@@ -8,7 +8,7 @@ body {
     font-family: 'Droid Sans', 'Arial', sans-serif;
     color: white;
     height:100%;
-    overflow:hidden;
+    
 }
 
 #storyContainer, #gameContainer {
@@ -74,6 +74,16 @@ h1#title {
 
 h1, h2, p.titleLink {
     text-align:center;
+}
+
+h2 a {
+    text-decoration:none;
+    color: #43d9ff;
+}
+
+h2 a:hover {
+    text-decoration: underline;
+    color: yellow;
 }
 
 #begin {

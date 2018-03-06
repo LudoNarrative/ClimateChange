@@ -20,10 +20,21 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 		var useGamestring = false;		//if true, will use the gameString variable in the gameSpec as the game code to eval
 		var aspFilepath;
-		if(gameIndex === -999){
-			gameIndex = Math.floor(Math.random()*gameSpec.aspFilepaths.length);
+		//if(gameIndex === -999){
+			if (introGame) {
+				gameIndex = Math.floor(Math.random()*gameSpec.aspFilepaths.length);
+				localStorage.setItem('sceneGameId', gameIndex);
+			}
+			else {
+				var storedIndex = localStorage.getItem('sceneGameId');
+				if (typeof storedIndex !== "undefined") { 
+					gameIndex = storedIndex; 
+					localStorage.removeItem("sceneGameId");
+				}
+				else { gameIndex = Math.floor(Math.random()*gameSpec.aspFilepaths.length); }
+			}
 			//aspFilepath = gameSpec.aspFilepaths[Math.floor(Math.random()*gameSpec.aspFilepaths.length)];		//pick a random aspfile if there are 1+
-		}
+		//}
 		aspFilepath = gameSpec.aspFilepaths[gameIndex];
 		console.log("PICKING GAME FILE: " , aspFilepath);
 		console.log("PICKING GAME INDEX: " , gameIndex);

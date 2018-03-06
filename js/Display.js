@@ -90,10 +90,12 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			}
 		}).appendTo('body');
 
+		$("body").append("<h2><a href='https://docs.google.com/forms/d/1ZF2XaZMxnn3f321c2LjIWYvXiqKzQCeby8ttOfb7_pg' target=_blank>Fill Out Survey</a></h2>");
+
 		var offset = "0px;"
 		if (Coordinator.gameVersion == "release") {offset = "300px"; }
 
-		if (Coordinator.gameVersion != "release") {
+		//if (Coordinator.gameVersion != "release") {
 
 			$('<h2/>', {
 			    text: 'Scene Selection',
@@ -109,7 +111,9 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 				createKnobs(scene, "hiddenKnobs");
 				populateKnobs(scene, _Coordinator, _State, scenes);
 			});
-		}
+		//}
+
+
 
 		$('<div/>', {
 		    id: 'blackout'
