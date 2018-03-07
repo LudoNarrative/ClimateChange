@@ -41,6 +41,7 @@ label(entity(e(2)),friend).
 
 :- 1 {pool(entity(e(1)),_,_,_)} 1.
 
+:- condition(compare(_,amount(clear),_)).
 
 :- not reading(sharing,relation(entity(e(1)),entity(e(2)))).
 
