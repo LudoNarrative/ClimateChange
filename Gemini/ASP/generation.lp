@@ -49,19 +49,19 @@ total_count(Entity,N) :- N = PerPlace*Places,
 			 entity(Entity).
 
 
-{max_resource(M)} :- M =min_resources..max_resources.
+{max_resource(M)} :- M = min_resources..max_resources.
 
 resource(resource(r(M))) :- M = 1..min_resources..N, max_resource(N).
 
 
-{max_outcome(M)} :- M =min_outcomes..max_outcomes.
+{max_outcome(M)} :- M = min_outcomes..max_outcomes.
 
 standard_outcome(outcome(o(M))) :- M = 1..N, max_outcome(N).
 {outcome(tick)}.
 
 outcome(O) :- standard_outcome(O).
 
-{max_timer(M)} :- M =min_timers..max_timers.
+{max_timer(M)} :- M = min_timers..max_timers.
 
 timer(t(M)) :- M = 1..N, max_timer(N).
 

@@ -14,6 +14,7 @@ logic(L) :- collision_logic(L).
   collider(C2),
   not 1{init(L, blocking(C1, C2, B)):bool(B)}1.
 
+% For now, collision checkability is fixed
 
 % * (Alter/Check) which entities could be said to collide with which other entities or regions of space (e.g. collision layers or flags, or hurt vs hit boxes)
 %   Skip for now

@@ -37,12 +37,13 @@ a_op(L, set_charmstate(CM, S)) :-
   charm(L, CM),
   charmstate(L, CM, S).
 
-prerequisite(L, set_charmstate(CM, S2), charmstate(CM, S1, true)) :-
+% We don't have disjunction so the prereq is the conjunction of "not in any state that can't get to S2"
+prerequisite(L, set_charmstate(CM, S2), charmstate(CM, S1, false)) :-
   charstate_logic(L),
   charm(L, CM),
   charmstate(L, CM, S1),
   charmstate(L, CM, S2),
-  charmedge(L, CM, S1, S2).
+  not charmedge(L, CM, S1, S2).
 
 {feedback(L, charmstate(CM, S, true), LocOrGlob) :
   charstate_logic(L),

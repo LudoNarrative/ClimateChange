@@ -1,30 +1,65 @@
 % Use collision logics
 collision_logic(collision).
 % In the collision logic col, these are reasonable distances to check between objects
-distance(collision, 50).
-distance(collision, 500).
+distance(collision, s(50)) :- collision_logic(collision).
+distance(collision, s(500)) :- collision_logic(collision).
+
+% use default "maybe X blocks Y" initialization
+
+% TODO: spaces/locations in the world, symbolic is OK
+
+% TODO: object positions
+
+% TODO: color drawing
 
 % structural synthesis with collision
 %  one entity:one collider
-collider(collision, E) :- entity(E).
+collider(collision, E) :- collision_logic(collision), entity(E).
+
+% TODO: physics logic
 
 % Use character-state logics (alive/dead)
 charstate_logic(charstate).
 % structural synthesis with character-state logics
 %  one entity:one char machine
-charm(charstate, E) :- entity(E).
+charm(charstate, E) :- charstate_logic(charstate), entity(E).
 %  one char machine:two states
-charmstate(charstate, E, alive) :- entity(E).
-charmstate(charstate, E, dead) :- entity(E).
+charmstate(charstate, E, alive) :- charstate_logic(charstate), entity(E).
+charmstate(charstate, E, dead) :- charstate_logic(charstate), entity(E).
 %    and one edge
-charmedge(charstate, E, alive, dead) :- entity(E).
+charmedge(charstate, E, alive, dead) :- charstate_logic(charstate), entity(E).
 
 % always require starting with at least one alive thing
-:- {init(charstate, charmstate(E, alive))}0.
+:- charstate_logic(charstate), {init(charstate, charmstate(E, alive))}0.
+
+% TODO: put in steering behaviors as separate machines for each agent?  or additional states that also go to dead?
+
+% Resource logics
+resource_logic(resource).
+%  Valid resource quantities for rules
+resource_amount(resource, s(0)) :- resource_logic(resource).
+resource_amount(resource, s(3)) :- resource_logic(resource).
+resource_amount(resource, s(5)) :- resource_logic(resource).
+resource_amount(resource, s(7)) :- resource_logic(resource).
+resource_amount(resource, s(10)) :- resource_logic(resource).
+resource_pool(resource, health(E)) :- resource_logic(resource), entity(E).
+resource_pool(resource, R) :- resource_logic(resource), resource(R).
+resource_pool_capacity(resource, P, s(10)) :- resource_logic(resource), resource_pool(resource, P).
+
+% TODO: color pools, prevent altering those pools by resource transactions
+
+% Control logics
+control_logic(control).
+
+% TODO: control logics
 
 % Extra gemini concepts (technically structural synthesis)
 {max_entity(M)} :- M = min_entities..max_entities.
 entity(entity(e(M))) :- M = 1..N, max_entity(N).
+
+{max_resource(M)} :- resource_logic(resource), M = min_resources..max_resources.
+resource(resource(r(M))) :- resource_logic(resource), M = 1..min_resources..N, max_resource(N).
+
 precondition(tick, tick).
 
 % Gemini's operational integrations are all like this:
@@ -42,6 +77,12 @@ precondition(tick, tick).
   a_op(L, A).}
 
 :- outcome(O), not result(O, _).
+
+% Prevent any outcome that moves resource into or out of agent health
+:- resource_logic(resource), outcome(O), result(O, move_resource(health(_), _, _)).
+:- resource_logic(resource), outcome(O), result(O, move_resource(_, health(_), _)).
+
+% TODO: bottom if there's a rule where any of the preconditions or effects has no feedback?
 
 % Some queries might have other implicit queries
 :- precondition(Q, O),
@@ -67,10 +108,19 @@ precondition(tick, tick).
 
 % We also have some special case ones like entities dying when they're out of health
 precondition(charmstate(E, alive, true), die(E)) :-
+  charstate_logic(charstate),
+  q_op(charstate, charmstate(E, alive, true)),
   entity(E).
-precondition(has_resource(health(E), le, 0), die(E)) :-
-  entity(E).
-outcome(die(E)).
-result(die(E), set_charmstate(E, dead)) :-
+precondition(has_resource(health(E), le, s(0)), die(E)) :-
+  resource_logic(resource),
+  q_op(resource, has_resource(health(E), le, s(0))),
   entity(E).
 
+% Must be at least a few reasons to die (in state alive, has edge, and X)
+:- entity(E), not 3{precondition(Q, die(E)):logic(L), q_op(L, Q)}.
+
+outcome(die(E)).
+
+result(die(E), set_charmstate(E, dead)) :-
+  charstate_logic(charstate),
+  entity(E).
