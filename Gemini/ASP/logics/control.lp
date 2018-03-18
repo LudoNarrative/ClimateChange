@@ -31,12 +31,12 @@ a_op(L, do_action(Ag, Ac)) :-
   control_logic(L),
   q_op(L, control_action(Ag, Ac)).
 
-prerequisite(L, do_action(Ag, Ac), control_action(Ag, Ac)) :-
+prerequisite(L, do_action(Ag, Ac), L, control_action(Ag, Ac)) :-
   control_logic(L),
   q_op(L, control_action(Ag, Ac)),
   a_op(L, do_action(Ag, Ac)).
 
-prerequisite(L, control_action(Ag, Ac), do_action(Ag, Ac)) :-
+prerequisite(L, control_action(Ag, Ac), L, do_action(Ag, Ac)) :-
   control_logic(L),
   q_op(L, control_action(Ag, Ac)),
   a_op(L, do_action(Ag, Ac)).

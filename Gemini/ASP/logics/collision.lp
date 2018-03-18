@@ -26,10 +26,10 @@ q_op(L, touching(C1, C2, B)) :-
   collider(L, C2),
   bool(B).
 
-{feedback(L, touching(C1, C2, B), LocOrGlob) :
+{feedback(L, touching(C1, C2, B), LocOrGlob)} :-
   collision_logic(L),
   feedback_site(LocOrGlob),
-  q_op(L, touching(C1, C2, B))}.
+  q_op(L, touching(C1, C2, B)).
 
 % * (Alter/Check) the region of space taken up by an entity (e.g. grow or shrink an entity or change its collision polygon)
 %   Implicit
@@ -44,9 +44,9 @@ q_op(L, blocking(C1, C2, B)) :-
   collider(L, C2),
   bool(B).
 
-{feedback(L, blocking(C1, C2, B), local) :
+{feedback(L, blocking(C1, C2, B), local)} :-
   collision_logic(L),
-  q_op(L, blocking(C1, C2, B))}.
+  q_op(L, blocking(C1, C2, B)).
 
 a_op(L, set_blocking(C1, C2, B)) :-
   collision_logic(L),
@@ -54,9 +54,9 @@ a_op(L, set_blocking(C1, C2, B)) :-
   collider(L, C2),
   bool(B).
 
-{feedback(L, set_blocking(C1, C2, B), local) :
+{feedback(L, set_blocking(C1, C2, B), local)} :-
   collision_logic(L),
-  a_op(L, set_blocking(C1, C2, B))}.
+  a_op(L, set_blocking(C1, C2, B)).
 
 
 % * Determine how far an entity could move towards another entity or region without touching or causing an overlap

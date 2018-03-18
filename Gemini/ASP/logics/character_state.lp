@@ -45,15 +45,15 @@ prerequisite(L, set_charmstate(CM, S2), charmstate(CM, S1, false)) :-
   charmstate(L, CM, S2),
   not charmedge(L, CM, S1, S2).
 
-{feedback(L, charmstate(CM, S, true), LocOrGlob) :
+{feedback(L, charmstate(CM, S, true), LocOrGlob)} :-
   charstate_logic(L),
   feedback_site(LocOrGlob),
-  q_op(L, charmstate(CM, S, true))}.
+  q_op(L, charmstate(CM, S, true)).
 
-{feedback(L, set_charmstate(CM, S), LocOrGlob) :
+{feedback(L, set_charmstate(CM, S), LocOrGlob)} :-
   charstate_logic(L),
   feedback_site(LocOrGlob),
-  a_op(L, set_charmstate(CM, S0, S))}.
+  a_op(L, set_charmstate(CM, S0, S)).
 
 % * Whenever an entity's discrete state changes, perform some operators of this or another logic.
 %   Implicit in Gemini

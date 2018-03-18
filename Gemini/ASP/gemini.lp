@@ -4,20 +4,48 @@
 #include "logics/collision.lp"
 collision_logic(collision).
 % In the collision logic col, these are reasonable distances to check between objects
-distance(collision, s(50)) :- collision_logic(collision).
-distance(collision, s(500)) :- collision_logic(collision).
+distance(collision, d(50)) :- collision_logic(collision).
+distance(collision, d(500)) :- collision_logic(collision).
 
 % use default "maybe X blocks Y" initialization
 
 % TODO: color drawing
+%   these will be entities spaced at uniform positions of one type per color.  they might even be blocking which will give us terrain!
 
 % structural synthesis with collision
 %  one entity:one collider
 collider(collision, E) :- collision_logic(collision), entity(E).
 
-% TODO: physics logic
 #include "logics/physics.lp"
+physics_logic(physics).
+physics_body(physics, E) :- entity(E).
 
+physics_quantity(physics,p())
+
+% Tie physics and character states together
+
+physics_mode(physics, E, M) :-
+  entity(E),
+  charstate_logic(charstate),
+  charmstate(charstate, E, M),
+  M /= dead.
+
+physics_mode(physics, E, dead) :-
+  entity(E).
+
+prerequisite(charstate, set_charmstate(E, M),
+             physics, set_physics_mode(E, M)).
+
+prerequisite(physics, set_physics_mode(E, M),
+             charstate, set_charmstate(E, M)).
+
+steering(stay;seek;flee).
+% steering(pursue;avoid). % could also be implemented as adding locs for ahead_of(E) when entity(E).
+
+{steering_mode(E, M, Steer):steering(Steer)} :-
+  physics_mode(physics, E, M).
+
+% Even the idea of "character X chases character Y" is more than what a physics logic provides.  Right?  Physics logics govern smooth movement, but can we say that it's smooth movement towards targets?  In HyPED we assume the target is nondeterministically given but the style of movement is sort of provided.  so does it make sense to put steering_mode into physics?  or is it more like "approach loc" where loc can be something or other in the physics world?  I really don't feel like destinations belong there...
 
 % Use character-state logics (alive/dead)
 #include "logics/charstate.lp"
@@ -31,24 +59,30 @@ charmstate(charstate, E, dead) :- charstate_logic(charstate), entity(E).
 %    and one edge
 charmedge(charstate, E, normal, dead) :- charstate_logic(charstate), entity(E).
 
+% TODO: maybe generate new states but give them all transitions to dead
+%  and give some transitions between the new states too
+
 % always require starting with at least one alive thing
 :- charstate_logic(charstate),
-  {init(charstate, charmstate(E, normal))}0.
-
-% TODO: put in steering behaviors as separate machines for each agent?  or additional states that also go to dead?
+  {init(charstate, charmstate(E, dead)):entity(E)} = K,
+  not max_entity(K).
 
 % Resource logics
 #include "logics/resource.lp"
 resource_logic(resource).
 %  Valid resource quantities for rules
-resource_amount(resource, s(0)) :- resource_logic(resource).
-resource_amount(resource, s(3)) :- resource_logic(resource).
-resource_amount(resource, s(5)) :- resource_logic(resource).
-resource_amount(resource, s(7)) :- resource_logic(resource).
-resource_amount(resource, s(10)) :- resource_logic(resource).
+resource_amount(resource, r(0)) :- resource_logic(resource).
+resource_amount(resource, r(-1)) :- resource_logic(resource).
+resource_amount(resource, r(1)) :- resource_logic(resource).
+resource_amount(resource, r(-3)) :- resource_logic(resource).
+resource_amount(resource, r(3)) :- resource_logic(resource).
+resource_amount(resource, r(-5)) :- resource_logic(resource).
+resource_amount(resource, r(5)) :- resource_logic(resource).
+resource_amount(resource, r(-10)) :- resource_logic(resource).
+resource_amount(resource, r(10)) :- resource_logic(resource).
 resource_pool(resource, health(E)) :- resource_logic(resource), entity(E).
 resource_pool(resource, R) :- resource_logic(resource), resource(R).
-resource_pool_capacity(resource, P, s(10)) :- resource_logic(resource), resource_pool(resource, P).
+resource_pool_capacity(resource, P, r(10)) :- resource_logic(resource), resource_pool(resource, P).
 
 % TODO: color pools, prevent altering those pools by resource transactions
 
@@ -69,6 +103,7 @@ input(L, (button(mouse,(up;down));point(mouse))) :-
   control_logic(L),
   agent(L, Agent),
   action(L, Agent, Action).
+  
 % TODO add keyboard buttons
 agent(control, E) :-
   control_logic(control),
@@ -83,19 +118,21 @@ action(control, E, change_state(S)) :-
   charstate_logic(charstate),
   agent(control, E),
   charmstate(charstate, E, S).
-% NOTE: to go from action to control for that action you have to use the input_map predicate. 
+% NOTE: to go from action to control for that action you have to use the input_map predicate.
+
 
 % Extra gemini concepts (technically structural synthesis)
 loc(mouse).
 loc(E) :- entity(E).
-loc(dir(nw;n;ne;w;mid;e;sw;s;se)).
+loc(target(E)) :- entity(E).
+%loc(behind(E)) :- entity(E). 
+%loc(ahead_of(E)) :- entity(E). 
+% loc(awayfrom(E)) :- entity(E).
+dir(towards(L)) :- loc(L).
+dir(nw;n;ne;w;e;sw;s;se).
 
 {max_entity(M)} :- M = min_entities..max_entities.
 entity(entity(e(M))) :- M = 1..N, max_entity(N).
-
-target(E, L) :-
-  entity(E),
-  loc(L).
 
 {max_resource(M)} :-
   resource_logic(resource),
@@ -108,6 +145,8 @@ resource(resource(r(M))) :-
 % steering defined at this level?  Or in the physics logic itself?
 % steering(seek, ...)?  or physics_mode(L, Ent, Behavior)?
 %   there needs to be a way to figure out the physics mode _at a given time_ without re-solving.  like with input_map.  maybe based on preconditions or character states explicitly.
+% TODO: steering here to combine info about target position, accels, max vels into controllers?
+% TODO: something like "mouse down to drive towards" will probably require a new state for the controlled character, right?
 
 precondition(tick, tick).
 
@@ -135,30 +174,30 @@ precondition(tick, tick).
 
 % Some queries might have other implicit queries
 :- precondition(Q, O),
-  q_op(L, Q),
-  prerequisite(L, Q, Q2),
-  q_op(L, Q2),
+  q_op(L1, Q),
+  prerequisite(L1, Q, L2, Q2),
+  q_op(L2, Q2),
   not precondition(Q2, O).
 
 % Some conditions might be forced to go with certain outcomes
 :- precondition(Q, O),
-  q_op(L, A),
-  prerequisite(L, Q, A),
-  a_op(L, A),
+  q_op(L1, A),
+  prerequisite(L1, Q, L2, A),
+  a_op(L2, A),
   not result(O, A).
 
 % Some actions might have implicit preconditions
 :- result(O, A),
-  a_op(L, A),
-  prerequisite(L, A, Q),
-  q_op(L, Q),
+  a_op(L1, A),
+  prerequisite(L1, A, L2, Q),
+  q_op(L2, Q),
   not precondition(Q, O).
 
 % Some actions might have implicit dependent actions
 :- result(O, A),
-  a_op(L, A),
-  prerequisite(L, A, A2),
-  a_op(L, A2),
+  a_op(L1, A),
+  prerequisite(L1, A, L2, A2),
+  a_op(L2, A2),
   not result(O, A2).
 
 
