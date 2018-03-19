@@ -111,7 +111,7 @@ agent(control, E) :-
 action(control, E, set_target(Loc)) :-
   control_logic(control), 
   agent(control, E),
-  loc(Loc).
+  loc(collision, Loc).
 action(control, E, change_state(S)) :-
   S /= dead,
   control_logic(control),
@@ -121,16 +121,34 @@ action(control, E, change_state(S)) :-
 % NOTE: to go from action to control for that action you have to use the input_map predicate.
 
 
-% Extra gemini concepts (technically structural synthesis)
-loc(mouse).
-loc(E) :- entity(E).
-loc(target(E)) :- entity(E).
-%loc(behind(E)) :- entity(E). 
-%loc(ahead_of(E)) :- entity(E). 
-% loc(awayfrom(E)) :- entity(E).
-dir(towards(L)) :- loc(L).
-dir(nw;n;ne;w;e;sw;s;se).
+% Structural synthesis between collision and physics
+loc(collision, mouse) :- logic(collision).
+loc(collision, E) :- logic(collision), entity(E).
+loc(collision, target(E)) :- logic(collision), entity(E).
+%loc(collision, behind(E)) :- entity(E). 
+%loc(collision, ahead_of(E)) :- entity(E). 
+% loc(collision, awayfrom(E)) :- entity(E).
+dir(physics, aheadof(E)) :- logic(physics), entity(E). 
+dir(physics, behind(E)) :- logic(physics), entity(E).
+dir(physics, (nw;n;ne;w;e;sw;s;se)) :- logic(physics).
+physics_lvel(physics,lvel(1)).
+physics_avel(physics,avel(1)).
+%loc(physics, L) :- logic(collision), loc(collision, L).
 
+% TODO spawning
+
+#include "logics/gamemode.lp"
+gamemode_logic(gamemode).
+gamemode(gamemode, (playing;stuck)).
+init(gamemode, gamemode(playing)).
+:- 2{result(O, set_gamemode(_)):outcome(O)}.
+% Only ever do anything when in playing mode, rely on outer game to kick us out of stuck when we get stuck?
+prerequisite(L, Op, gamemode, gamemode(playing)) :-
+  logic(L),
+  (q_op(L,Op);a_op(L,Op))
+  L /= gamemode.
+
+% Extra gemini stuff
 {max_entity(M)} :- M = min_entities..max_entities.
 entity(entity(e(M))) :- M = 1..N, max_entity(N).
 

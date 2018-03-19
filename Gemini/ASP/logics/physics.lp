@@ -2,6 +2,7 @@ logic(L) :- physics_logic(L).
 
 % Validity
 :- physics_body(L,B), not physics_logic(L).
+
 :- physics_body(L,B), not physics_mode(L, B, _).
 :- physics_mode(L,_,_), not physics_logic(L).
 :- physics_mode(L,B,_), not physics_body(L,B).
@@ -10,57 +11,44 @@ logic(L) :- physics_logic(L).
   physics_logic(L),
   physics_body(L, B).
 
-% * Determine an object's physical quantities based on terms from some other logic (e.g., character-state, resource).
+physics_lvel(L,lvel(0)) :- physics_logic(L).
+physics_avel(L,avel(0)) :- physics_logic(L).
 
-physics_max_lvel(L,lvel(0)) :- physics_logic(L).
-physics_max_avel(L,avel(0)) :- physics_logic(L).
-physics_lacc(L,lacc(0)) :- physics_logic(L).
-physics_aacc(L,aacc(0)) :- physics_logic(L).
-physics_lacc(L,pinf) :- physics_logic(L).
-physics_lacc(L,ninf) :- physics_logic(L).
-physics_aacc(L,pinf) :- physics_logic(L).
-physics_aacc(L,ninf) :- physics_logic(L).
-
-1{physics_mode_max_lvel(L,B,M,Q):physics_max_lvel(L,Q)}1 :-
+% Linear and angular targets.  One per body*mode in this logic.
+% TODO in the future add in external forces like gravity or velocity overrides or whatever.
+1{physics_mode_ltarget(L,B,M,Dir):dir(L,Dir)}1 :-
   physics_logic(L),
   physics_mode(L,B,M).
 
-:- physics_mode(L,B,M), not physics_mode_max_lvel(L,B,M,Q).
-:- physics_mode_max_lvel(L,B,M,Q), not physics_max_lvel(L,Q).
-
-1{physics_mode_max_avel(L,B,M,Q):physics_max_avel(L,Q)}1 :-
+1{physics_mode_atarget(L,B,M,Dir):dir(Dir)}1 :-
   physics_logic(L),
   physics_mode(L,B,M).
 
-:- physics_mode(L,B,M), not physics_mode_max_avel(L,B,M,Q).
-:- physics_mode_max_avel(L,B,M,Q), not physics_max_avel(L,Q).
-
-1{physics_mode_lacc(L,B,M,Q):physics_lacc(L,Q)}1 :-
+% Linear and angular velocities
+1{physics_mode_lvel(L,B,M,Q):physics_lvel(L,Q)}1 :-
   physics_logic(L),
   physics_mode(L,B,M).
 
-:- physics_mode(L,B,M), not physics_mode_lacc(L,B,M,Q).
-:- physics_mode_max_lacc(L,B,M,Q), not physics_max_lacc(L,Q).
+:- physics_mode(L,B,M), not physics_mode_lvel(L,B,M,Q).
+:- physics_mode_lvel(L,B,M,Q), not physics_lvel(L,Q).
 
-1{physics_mode_aacc(L,B,M,Q):physics_aacc(L,Q)}1 :-
+1{physics_mode_avel(L,B,M,Q):physics_avel(L,Q)}1 :-
   physics_logic(L),
   physics_mode(L,B,M).
 
-:- physics_mode(L,B,M), not physics_mode_aacc(L,B,M,Q).
-:- physics_mode_max_aacc(L,B,M,Q), not physics_max_aacc(L,Q).
+:- physics_mode(L,B,M), not physics_mode_avel(L,B,M,Q).
+:- physics_mode_avel(L,B,M,Q), not physics_avel(L,Q).
 
-% let's say steering behaviors are the composition that handle low level physics: adjusting velocities, accelerations, etc
-
+% Mode changes
 q_op(L, physics_mode(B, M)) :-
   physics_logic(L),
   physics_mode(L, B, M).
-
 a_op(L, set_physics_mode(B, M)) :-
-  physics_logic(L),
   physics_mode(L, B, M).
-
 {state_feedback(L, physics_mode(B, M), LocOrGlob)} :-
   feedback_site(LocOrGlob),
-  physics_logic(L),
   physics_mode(L, B, M).
 
+%% TODO max vel in different dimensions distinct?
+%% TODO the idea of controlled vs uncontrolled dimensions??????
+%% future physics logics could be more sophisticated, support accelerations, etc.

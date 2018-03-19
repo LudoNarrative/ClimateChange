@@ -16,6 +16,19 @@ logic(L) :- collision_logic(L).
 
 % For now, collision checkability is fixed
 
+1{init(L, at(C, Loc)):loc(L, Loc)}1 :-
+  collision_logic(L),
+  collider(C).
+:- collision_logic(L),
+  collider(C),
+  not 1{init(L, at(C, Loc)):loc(L, Loc)}1.
+
+{feedback(L, at_loc(C, Loc), LocOrGlob)} :-
+  feedback_site(LocOrGlob),
+  collision_logic(L),
+  collider(C),
+  loc(L, Loc).
+
 % * (Alter/Check) which entities could be said to collide with which other entities or regions of space (e.g. collision layers or flags, or hurt vs hit boxes)
 %   Skip for now
 
@@ -30,6 +43,12 @@ q_op(L, touching(C1, C2, B)) :-
   collision_logic(L),
   feedback_site(LocOrGlob),
   q_op(L, touching(C1, C2, B)).
+
+q_op(L, at_loc(C, Loc, B)) :-
+  collision_logic(L),
+  collider(L, C),
+  loc(L, Loc),
+  bool(B).
 
 % * (Alter/Check) the region of space taken up by an entity (e.g. grow or shrink an entity or change its collision polygon)
 %   Implicit
@@ -67,6 +86,17 @@ q_op(L, proximity(C1, C2, Threshold, B)) :-
   collider(L, C2),
   distance(Threshold),
   bool(B).
+
+a_op(L, move_to(C, Loc)) :-
+  collision_logic(L),
+  collider(C),
+  loc(Loc).
+
+prerequisite(L, move_to(C1, Loc), L, at_loc(C2, Loc, false)) :-
+  collision_logic(L),
+  collider(C1),
+  loc(L, Loc),
+  collider(C2).
 
 % * Whenever a combination of the above checks becomes true (or remains true, or becomes false), perform some abstract operation of this or another operational logic involving the objects considered in those checks
 %   Implicit in Gemini
