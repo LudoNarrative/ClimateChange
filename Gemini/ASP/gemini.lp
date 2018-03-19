@@ -9,8 +9,11 @@ distance(collision, d(500)) :- collision_logic(collision).
 
 % use default "maybe X blocks Y" initialization
 
-% TODO: color drawing
+% color drawing
 %   these will be entities spaced at uniform positions of one type per color.  they might even be blocking which will give us terrain!
+{paint(C)} :- palette(C).
+collider(collision, C) :- collision_logic(collision), paint(C).
+loc(collision, ).
 
 % structural synthesis with collision
 %  one entity:one collider
@@ -82,9 +85,15 @@ resource_amount(resource, r(-10)) :- resource_logic(resource).
 resource_amount(resource, r(10)) :- resource_logic(resource).
 resource_pool(resource, health(E)) :- resource_logic(resource), entity(E).
 resource_pool(resource, R) :- resource_logic(resource), resource(R).
-resource_pool_capacity(resource, P, r(10)) :- resource_logic(resource), resource_pool(resource, P).
+resource_pool_capacity(resource, P, r(10)) :- resource_logic(resource), resource_pool(resource, P), not paint_pool(P).
 
-% TODO: color pools, prevent altering those pools by resource transactions
+% color pools, prevent altering those pools by resource transactions
+paint_pool(paint(P)) :- paint(P).
+resource_pool(resource, paint(P)) :- resource_logic(resource), paint(P).
+resource_pool_capacity(resource, P, inf) :- resource_logic(resource), resource_pool(resource, P), paint_pool(P).
+:- paint_pool(P), result(_, alter_resource(P, _, _)).
+:- paint_pool(P), result(_, move_resource(P, _, _)).
+:- paint_pool(P), result(_, move_resource(_, P, _)).
 
 % Control logics
 #include "logics/control.lp"
@@ -123,19 +132,17 @@ action(control, E, change_state(S)) :-
 
 % Structural synthesis between collision and physics
 loc(collision, mouse) :- logic(collision).
-loc(collision, E) :- logic(collision), entity(E).
+loc(collision, C) :- logic(collision), collider(collision, C).
 loc(collision, target(E)) :- logic(collision), entity(E).
-%loc(collision, behind(E)) :- entity(E). 
-%loc(collision, ahead_of(E)) :- entity(E). 
-% loc(collision, awayfrom(E)) :- entity(E).
 dir(physics, aheadof(E)) :- logic(physics), entity(E). 
 dir(physics, behind(E)) :- logic(physics), entity(E).
 dir(physics, (nw;n;ne;w;e;sw;s;se)) :- logic(physics).
 physics_lvel(physics,lvel(1)).
 physics_avel(physics,avel(1)).
-%loc(physics, L) :- logic(collision), loc(collision, L).
 
-% TODO spawning
+% TODO spawning and color drawing, destroying and color clearing
+% is dying really different from disappearing?  probably!  so rather than have actions when dead put a prereq on entering the dying state that you also just despawn.
+
 
 #include "logics/gamemode.lp"
 gamemode_logic(gamemode).
