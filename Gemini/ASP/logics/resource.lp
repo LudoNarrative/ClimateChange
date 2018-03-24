@@ -1,15 +1,20 @@
 logic(L) :- resource_logic(L).
 
-resource_amount(L, r(0)).
-resource_amount(L, inf).
-resource_amount(L, ninf).
-resource_amount(L, P) :- resource_pool(L, P).
+resource_change_direction(inc;dec).
+
+resource_amount(L, r(0)) :- resource_logic(L).
+resource_amount(L, inf) :- resource_logic(L).
+resource_amount(L, ninf) :- resource_logic(L).
+resource_amount(L, P) :- resource_logic(L), resource_pool(L, P).
 
 % For now pool capacities are fixed
-{resource_pool_capacity(L, P, Amt) :
-  resource_logic(L),
+1{resource_pool_capacity(L, P, Amt) :
   resource_amount(L, Amt),
-  (Amt = r(_) ; Amt = inf)} :-
+  Amt = r(_) ;
+  resource_pool_capacity(L, P, Amt) :
+  resource_amount(L, Amt),
+  Amt = inf}1 :-
+  resource_logic(L),
   resource_pool(L, P).
 
 :- resource_pool(L, _), not resource_logic(L).
@@ -24,10 +29,9 @@ resource_amount(L, P) :- resource_pool(L, P).
   resource_pool(L, P),
   not 1{init(L, has_resource(P, _))}1.
 
-{state_feedback(L, resource_pool(P), LocOrGlob)} :-
-  feedback_site(LocOrGlob),
-  resource_logic(L),
-  resource_pool(L, P).
+% state_feedback(L, resource_pool(P)) :-
+%   resource_logic(L),
+%   resource_pool(L, P).
 
 
 % * Check if a transaction involving some units of certain resources is possible for some given locations.
@@ -43,10 +47,9 @@ q_op(L, has_resource(P, Cmp, Amt)) :-
   resource_amount(L, Amt),
   comparator(Cmp).
 
-{feedback(L, has_resource(P, Cmp, Amt), LocOrGlob)} :-
-  resource_logic(L),
-  feedback_site(LocOrGlob),
-  q_op(L, has_resource(P, Cmp, Amt)).
+% feedback(L, has_resource(P, Cmp, Amt)) :-
+%   resource_logic(L),
+%   q_op(L, has_resource(P, Cmp, Amt)).
 
 % Implicitly assume decreases past 0 and increases past max saturate.
 % Could reify those as preconditions but don't need to right now.
@@ -56,7 +59,7 @@ a_op(L, alter_resource(P, IncDec, Amt)) :-
   resource_pool(L, P),
   resource_amount(L, Amt),
   resource_change_direction(IncDec),
-  Amt /= r(0).
+  Amt != r(0).
 
 % but this one requires that P1 has at least Amt
 a_op(L, move_resource(P1, P2, Amt)) :-
@@ -64,10 +67,11 @@ a_op(L, move_resource(P1, P2, Amt)) :-
   resource_pool(L, P1),
   resource_pool(L, P2),
   resource_amount(L, Amt),
-  Amt /= r(0).
+  Amt != r(0).
 
 prerequisite(L, move_resource(P1, P2, Amt), L, has_resource(P1, ge, Amt)) :-
   resource_logic(L),
   resource_pool(L, P1),
   resource_pool(L, P2),
-  Amt /= inf.
+  resource_amount(L, Amt),
+  Amt != inf.

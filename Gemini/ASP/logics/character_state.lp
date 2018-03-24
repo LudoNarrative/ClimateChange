@@ -9,7 +9,7 @@ logic(L) :- charstate_logic(L).
 % "guess a default but admit overriding with explicit facts"
 1{init(L, charmstate(M, S)) : charmstate(L, M, S)}1 :-
   charstate_logic(L),
-  charm(M).
+  charm(L, M).
 :- charstate_logic(L),
   charm(L, M),
   not 1{init(L, charmstate(M, S)):charmstate(L,M,S)}1.
@@ -45,15 +45,13 @@ prerequisite(L, set_charmstate(CM, S2), charmstate(CM, S1, false)) :-
   charmstate(L, CM, S2),
   not charmedge(L, CM, S1, S2).
 
-{feedback(L, charmstate(CM, S, true), LocOrGlob)} :-
-  charstate_logic(L),
-  feedback_site(LocOrGlob),
-  q_op(L, charmstate(CM, S, true)).
+% feedback(L, charmstate(CM, S, true)) :-
+%   charstate_logic(L),
+%   q_op(L, charmstate(CM, S, true)).
 
-{feedback(L, set_charmstate(CM, S), LocOrGlob)} :-
-  charstate_logic(L),
-  feedback_site(LocOrGlob),
-  a_op(L, set_charmstate(CM, S0, S)).
+% feedback(L, set_charmstate(CM, S)) :-
+%   charstate_logic(L),
+%   a_op(L, set_charmstate(CM, S0, S)).
 
 % * Whenever an entity's discrete state changes, perform some operators of this or another logic.
 %   Implicit in Gemini

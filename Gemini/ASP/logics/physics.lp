@@ -20,7 +20,7 @@ physics_avel(L,avel(0)) :- physics_logic(L).
   physics_logic(L),
   physics_mode(L,B,M).
 
-1{physics_mode_atarget(L,B,M,Dir):dir(Dir)}1 :-
+1{physics_mode_atarget(L,B,M,Dir):dir(L,Dir)}1 :-
   physics_logic(L),
   physics_mode(L,B,M).
 
@@ -29,15 +29,19 @@ physics_avel(L,avel(0)) :- physics_logic(L).
   physics_logic(L),
   physics_mode(L,B,M).
 
-:- physics_mode(L,B,M), not physics_mode_lvel(L,B,M,Q).
-:- physics_mode_lvel(L,B,M,Q), not physics_lvel(L,Q).
+:- physics_logic(L), physics_mode(L,B,M),
+  not physics_mode_lvel(L,B,M,_).
+:- physics_logic(L), physics_mode(L,B,M),
+  physics_mode_lvel(L,B,M,Q), not physics_lvel(L,Q).
 
 1{physics_mode_avel(L,B,M,Q):physics_avel(L,Q)}1 :-
   physics_logic(L),
   physics_mode(L,B,M).
 
-:- physics_mode(L,B,M), not physics_mode_avel(L,B,M,Q).
-:- physics_mode_avel(L,B,M,Q), not physics_avel(L,Q).
+:- physics_logic(L), physics_mode(L,B,M),
+  not physics_mode_avel(L,B,M,_).
+:- physics_logic(L), physics_mode(L,B,M),
+  physics_mode_avel(L,B,M,Q), not physics_avel(L,Q).
 
 % Mode changes
 q_op(L, physics_mode(B, M)) :-
@@ -45,9 +49,8 @@ q_op(L, physics_mode(B, M)) :-
   physics_mode(L, B, M).
 a_op(L, set_physics_mode(B, M)) :-
   physics_mode(L, B, M).
-{state_feedback(L, physics_mode(B, M), LocOrGlob)} :-
-  feedback_site(LocOrGlob),
-  physics_mode(L, B, M).
+% state_feedback(L, physics_mode(B, M)) :-
+%   physics_mode(L, B, M).
 
 %% TODO max vel in different dimensions distinct?
 %% TODO the idea of controlled vs uncontrolled dimensions??????

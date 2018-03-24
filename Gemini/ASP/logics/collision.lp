@@ -7,27 +7,26 @@ logic(L) :- collision_logic(L).
 % "guess a default but admit overriding with explicit facts"
 1{init(L, blocking(C1, C2, B)) : bool(B)}1 :-
   collision_logic(L),
-  collider(C1),
-  collider(C2).
+  collider(L, C1),
+  collider(L, C2).
 :- collision_logic(L),
-  collider(C1),
-  collider(C2),
+  collider(L, C1),
+  collider(L, C2),
   not 1{init(L, blocking(C1, C2, B)):bool(B)}1.
 
 % For now, collision checkability is fixed
 
 1{init(L, at(C, Loc)):loc(L, Loc)}1 :-
   collision_logic(L),
-  collider(C).
+  collider(L, C).
 :- collision_logic(L),
-  collider(C),
+  collider(L, C),
   not 1{init(L, at(C, Loc)):loc(L, Loc)}1.
 
-{feedback(L, at_loc(C, Loc), LocOrGlob)} :-
-  feedback_site(LocOrGlob),
-  collision_logic(L),
-  collider(C),
-  loc(L, Loc).
+% feedback(L, at_loc(C, Loc)) :-
+%   collision_logic(L),
+%   collider(L, C),
+%   loc(L, Loc).
 
 % * (Alter/Check) which entities could be said to collide with which other entities or regions of space (e.g. collision layers or flags, or hurt vs hit boxes)
 %   Skip for now
@@ -39,10 +38,9 @@ q_op(L, touching(C1, C2, B)) :-
   collider(L, C2),
   bool(B).
 
-{feedback(L, touching(C1, C2, B), LocOrGlob)} :-
-  collision_logic(L),
-  feedback_site(LocOrGlob),
-  q_op(L, touching(C1, C2, B)).
+% feedback(L, touching(C1, C2, B)) :-
+%   collision_logic(L),
+%   q_op(L, touching(C1, C2, B)).
 
 q_op(L, at_loc(C, Loc, B)) :-
   collision_logic(L),
@@ -63,9 +61,9 @@ q_op(L, blocking(C1, C2, B)) :-
   collider(L, C2),
   bool(B).
 
-{feedback(L, blocking(C1, C2, B), local)} :-
-  collision_logic(L),
-  q_op(L, blocking(C1, C2, B)).
+% feedback(L, blocking(C1, C2, B)) :-
+%   collision_logic(L),
+%   q_op(L, blocking(C1, C2, B)).
 
 a_op(L, set_blocking(C1, C2, B)) :-
   collision_logic(L),
@@ -73,9 +71,9 @@ a_op(L, set_blocking(C1, C2, B)) :-
   collider(L, C2),
   bool(B).
 
-{feedback(L, set_blocking(C1, C2, B), local)} :-
-  collision_logic(L),
-  a_op(L, set_blocking(C1, C2, B)).
+% feedback(L, set_blocking(C1, C2, B)) :-
+%   collision_logic(L),
+%   a_op(L, set_blocking(C1, C2, B)).
 
 
 % * Determine how far an entity could move towards another entity or region without touching or causing an overlap
@@ -84,19 +82,19 @@ q_op(L, proximity(C1, C2, Threshold, B)) :-
   collision_logic(L),
   collider(L, C1),
   collider(L, C2),
-  distance(Threshold),
+  distance(L, Threshold),
   bool(B).
 
 a_op(L, move_to(C, Loc)) :-
   collision_logic(L),
-  collider(C),
-  loc(Loc).
+  collider(L, C),
+  loc(L, Loc).
 
 prerequisite(L, move_to(C1, Loc), L, at_loc(C2, Loc, false)) :-
   collision_logic(L),
-  collider(C1),
+  collider(L, C1),
   loc(L, Loc),
-  collider(C2).
+  collider(L, C2).
 
 % * Whenever a combination of the above checks becomes true (or remains true, or becomes false), perform some abstract operation of this or another operational logic involving the objects considered in those checks
 %   Implicit in Gemini

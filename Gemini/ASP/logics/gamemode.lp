@@ -6,8 +6,8 @@ logic(L) :- gamemode_logic(L).
 
 q_op(L, gamemode(G)) :-
   gamemode_logic(L),
-  gamemode(G).
+  gamemode(L, G).
 
 a_op(L, set_gamemode(G)) :-
   gamemode_logic(L),
-  gamemode(G).
+  gamemode(L, G).
