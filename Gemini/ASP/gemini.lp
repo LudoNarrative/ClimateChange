@@ -35,11 +35,15 @@ physics_mode(physics, E, dead) :-
 
 prerequisite(charstate, set_charmstate(E, M),
              physics, set_physics_mode(E, M)) :-
+  charstate_logic(charstate),
+  physics_logic(physics),
   a_op(charstate, set_charmstate(E, M)),
   a_op(physics, set_physics_mode(E, M)).
 
 prerequisite(physics, set_physics_mode(E, M),
              charstate, set_charmstate(E, M)) :-
+  charstate_logic(charstate),
+  physics_logic(physics),
   a_op(charstate, set_charmstate(E, M)),
   a_op(physics, set_physics_mode(E, M)).
 
@@ -102,10 +106,10 @@ resource_pool(resource, paint(P)) :-
   resource_logic(resource), paint(P).
 resource_pool_capacity(resource, P, inf) :-
   resource_logic(resource), resource_pool(resource, P), paint_pool(P).
-% TODO URGENT: Decide whether it's the case that nothing can alter the paint pools OR that only events that add or remove paint can alter the paint pools, and if so only by one unit.
-:- paint_pool(P), result(_, alter_resource(P, _, _)).
-:- paint_pool(P), result(_, move_resource(P, _, _)).
-:- paint_pool(P), result(_, move_resource(_, P, _)).
+% TODO URGENT: Decide whether it's the case that nothing can alter the paint pools OR that only events that add or remove paint can alter the paint pools, and if so only by one unit (if paint was not there already).
+% :- paint_pool(P), result(_, alter_resource(P, _, _)).
+% :- paint_pool(P), result(_, move_resource(P, _, _)).
+% :- paint_pool(P), result(_, move_resource(_, P, _)).
 
 % Control logics
 #include "logics/control.lp".
@@ -124,13 +128,14 @@ input(L, (button(mouse,(up;down));point(mouse))) :-
   control_logic(L),
   agent(L, Agent),
   action(L, Agent, Action).
-  
+
 % TODO add keyboard buttons
 agent(control, E) :-
   control_logic(control),
-  agent(control, E).
+  entity(E).
 action(control, E, set_target(Loc)) :-
-  control_logic(control), 
+  control_logic(control),
+  entity(E),
   agent(control, E),
   loc(collision, Loc).
 % NOTE: to go from action to control for that action you have to use the input_map predicate.
@@ -148,17 +153,17 @@ action(control, E1, create(E2, Loc)) :-
   entity(E2),
   loc(collision, Loc).
 
-% TODO URGENT: what about AI actions?  Do those have to be caused by something in the input map, or do they need to be implemented as a_ops somewhere?
-%  Does this suffice?
-% action(control, E, A) :-
-%   control_logic(control),
-%   logic(L),
-%   entity(E),
-%   % TODO: connect E to A somehow?
-%   L != control,
-%   a_op(L, A).
+% % TODO URGENT: what about AI actions?  Do those have to be caused by something in the input map, or do they need to be implemented as a_ops somewhere?
+% %  Does this suffice?
+% % action(control, E, A) :-
+% %   control_logic(control),
+% %   logic(L),
+% %   entity(E),
+% %   % TODO: connect E to A somehow?
+% %   L != control,
+% %   a_op(L, A).
 
-% Structural synthesis between collision and physics
+% % Structural synthesis between collision and physics
 loc(collision, mouse) :- logic(collision).
 loc(collision, C) :- logic(collision), collider(collision, C).
 loc(collision, target(E)) :- logic(collision), entity(E).
@@ -167,35 +172,48 @@ dir(physics, aheadof(E)) :- logic(physics), entity(E).
 dir(physics, behind(E)) :- logic(physics), entity(E).
 dir(physics, (nw;n;ne;w;e;sw;s;se)) :- logic(physics).
 dir(physics, arb) :- logic(physics).
-physics_lvel(physics,lvel(1)).
-physics_avel(physics,avel(1)).
+physics_lvel(physics,lvel(auto(-1;1))).
+physics_avel(physics,avel(auto(-1;1))).
 
 #include "logics/gamemode.lp".
 gamemode_logic(gamemode).
-gamemode(gamemode, (playing;stuck)).
-init(gamemode, gamemode(playing)).
-:- 2{result(O, set_gamemode(_)):outcome(O)}.
-% Only ever do anything when in playing mode, rely on outer game to kick us out of stuck when we get stuck?
-prerequisite(L, Op, gamemode, gamemode(playing)) :-
+gamemode(gamemode, (playing;stuck)) :- gamemode_logic(gamemode).
+init(gamemode, gamemode(playing)) :- gamemode_logic(gamemode).
+% Only ever do anything when in non-stuck modes, rely on outer game to kick us out of stuck when we get stuck?
+prerequisite(L, Op, gamemode, gamemode(stuck, false)) :-
   logic(L),
   q_op(L,Op),
+  logic(gamemode),
   L != gamemode.
-prerequisite(L, Op, gamemode, gamemode(playing)) :-
+prerequisite(L, Op, gamemode, gamemode(stuck, false)) :-
   logic(L),
   a_op(L,Op),
+  logic(gamemode),
   L != gamemode.
 
-% Extra gemini stuff
-{max_entity(M)} :- M = min_entities..max_entities.
-entity(entity(e(M))) :- M = 1..N, max_entity(N).
+:- outcome(O),
+  gamemode_logic(gamemode),
+  precondition(gamemode(G1, true), O),
+  precondition(gamemode(G2, true), O),
+  gamemode(gamemode,G1),
+  gamemode(gamemode,G2),
+  G1 != G2.
 
-{max_generated_outcome(M)} :- M = min_outcomes..max_outcomes.
+:- outcome(O),
+  gamemode_logic(gamemode),
+  precondition(O, gamemode(stuck, true)).
+% Prevent more than one thing changing game modes
+%:- 1{result(O, set_gamemode(_)):outcome(O)}.
+
+% Extra gemini stuff
+1{max_entity(min_entities..max_entities)}1.
+entity(e(M)) :- M = 1..N, max_entity(N).
+
+1{max_generated_outcome(min_outcomes..max_outcomes)}1.
 generated_outcome(o(M)) :- M = 1..N, max_generated_outcome(N).
 
-{max_resource(M)} :-
-  resource_logic(resource),
-  M = min_resources..max_resources.
-resource(resource(r(M))) :-
+1{max_resource(min_resources..max_resources)}1 :- resource_logic(resource).
+resource(r(M)) :-
   resource_logic(resource),
   M = 1..min_resources..N,
   max_resource(N).
@@ -205,8 +223,6 @@ resource(resource(r(M))) :-
 %   there needs to be a way to figure out the physics mode _at a given time_ without re-solving.  like with input_map.  maybe based on preconditions or character states explicitly.
 % TODO: steering here to combine info about target position, accels, max vels into controllers?
 % TODO: something like "mouse down to drive towards" will probably require a new state for the controlled character, right?
-
-precondition(tick, tick).
 
 % Gemini's operational integrations are all like this:
 
@@ -288,6 +304,26 @@ result(die(E), set_charmstate(E, dead)) :-
   charstate_logic(charstate),
   entity(E).
 
+%% dying acts like a generated outcome in other ways
+
+{precondition(Q, die(E))} :-
+  entity(E),
+  logic(L),
+  q_op(L, Q).
+
+{result(die(E), A)} :-
+  entity(E),
+  logic(L),
+  a_op(L, A).
+
+% ticking is also a special case thing with its own special results
+precondition(tick, tick).
+% Generate results for ticks
+{result(tick, A)} :-
+  logic(L),
+  a_op(L, A).
+
+
 % TODO some kind of 'reset' that I can use in spawn to reset entity instance health, state, etc...
 
 %% TODO URGENT Create collider and destroy collider should be operators of collision logic, likewise create/destroy resource pool and create/destroy physics entity and control agent and charstate machine.  then this glue can make sure that those all come together.  that gives us a way to phrase creation and destruction simply, and handles both colors and entities.  also need a good story for actions vs a_ops vs outcomes:  what's being generated?  are ai knobs and player knobs all the same?
@@ -300,3 +336,6 @@ palette(blue).
 #const max_resources = 2.
 #const min_outcomes = 3.
 #const max_outcomes = 5.
+
+#show precondition/2.
+#show result/2.

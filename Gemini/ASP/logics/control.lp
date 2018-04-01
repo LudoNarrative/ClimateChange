@@ -16,9 +16,11 @@ logic(L) :- control_logic(L).
 
 % Validity
 :- agent(L, _), not control_logic(L).
+:- control_logic(L), not agent(L, _).
 :- action(L, _, _), not control_logic(L).
-:- control_logic(L), not input_map(L, _, _, _).
-
+:- control_logic(L), not action(L, _, _).
+:- control_logic(L), {input_map(L, _, _, _)}0.
+:- control_logic(L), input_map(L, I, _, _), not input(L, I). 
 % TODO runtime changes to input map?  agent assignments? etc
 
 q_op(L, control_action(Ag, Ac)) :-
