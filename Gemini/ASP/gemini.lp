@@ -1,5 +1,15 @@
 #include "logics/logics.lp".
 
+% * Constants
+palette(blue).
+#const min_entities = 1.
+#const max_entities = 3.
+#const min_resources = 1.
+#const max_resources = 2.
+#const min_outcomes = 3.
+#const max_outcomes = 5.
+
+% * Collision
 % Use collision logics
 #include "logics/collision.lp".
 collision_logic(collision).
@@ -18,6 +28,7 @@ collider(collision, C) :- collision_logic(collision), paint(C).
 %  one entity:one collider
 collider(collision, E) :- collision_logic(collision), entity(E).
 
+% * Physics
 #include "logics/physics.lp".
 physics_logic(physics).
 physics_body(physics, E) :- entity(E).
@@ -47,6 +58,7 @@ prerequisite(physics, set_physics_mode(E, M),
   a_op(charstate, set_charmstate(E, M)),
   a_op(physics, set_physics_mode(E, M)).
 
+% ** Steering
 steering(stay;seek;flee).
 % steering(pursue;avoid). % could also be implemented as adding locs for ahead_of(E) when entity(E).
 
@@ -55,6 +67,7 @@ steering(stay;seek;flee).
 
 % Even the idea of "character X chases character Y" is more than what a physics logic provides.  Right?  Physics logics govern smooth movement, but can we say that it's smooth movement towards targets?  In HyPED we assume the target is nondeterministically given but the style of movement is sort of provided.  so does it make sense to put steering_mode into physics?  or is it more like "approach loc" where loc can be something or other in the physics world?  I really don't feel like destinations belong there...
 
+% * Character-state
 % Use character-state logics (alive/dead)
 #include "logics/character_state.lp".
 charstate_logic(charstate).
@@ -75,7 +88,7 @@ charmedge(charstate, E, normal, dead) :- charstate_logic(charstate), entity(E).
 %   {init(charstate, charmstate(E, dead)):entity(E)} = K,
 %   not max_entity(K).
 
-
+% * Resource
 % Resource logics
 #include "logics/resource.lp".
 resource_logic(resource).
@@ -97,7 +110,7 @@ resource_pool_capacity(resource, P, r(10)) :-
   not paint_pool(P),
   not entity_pool(P).
 
-% color pools, prevent altering those pools by resource transactions
+% ** color pools, prevent altering those pools by resource transactions
 paint_pool(paint(P)) :- paint(P).
 resource_pool(resource, paint(P)) :-
   resource_logic(resource), paint(P).
@@ -133,7 +146,7 @@ prerequisite(collision, add_collider(paint(P), Loc),
   paint(P2),
   loc(collision, Loc).
 
-% Entity count pools
+% ** Entity count pools
 
 entity_pool(entity(E)) :- entity(E).
 resource_pool(resource, entity(E)) :-
@@ -160,7 +173,7 @@ birequisite(collision, add_collider(entity(E), Loc),
   entity(E).
 
 
-% Control logics
+% * Control logics
 #include "logics/control.lp".
 control_logic(control).
 
@@ -212,7 +225,7 @@ action(control, E1, create(E2, Loc)) :-
 % %   L != control,
 % %   a_op(L, A).
 
-% % Structural synthesis between collision and physics
+% * Structural synthesis between collision and physics
 loc(collision, mouse) :- logic(collision).
 loc(collision, C) :- logic(collision), collider(collision, C).
 loc(collision, target(E)) :- logic(collision), entity(E).
@@ -224,6 +237,7 @@ dir(physics, arb) :- logic(physics).
 physics_lvel(physics,lvel(auto(-1;1))).
 physics_avel(physics,avel(auto(-1;1))).
 
+% * Game-mode
 #include "logics/gamemode.lp".
 gamemode_logic(gamemode).
 gamemode(gamemode, (playing;stuck)) :- gamemode_logic(gamemode).
@@ -254,7 +268,7 @@ prerequisite(L, Op, gamemode, gamemode(stuck, false)) :-
 % Prevent more than one thing changing game modes
 :- 1{result(O, set_gamemode(_)):outcome(O)}.
 
-% Extra gemini stuff
+% * Extra gemini concepts
 1{max_entity(min_entities..max_entities)}1.
 entity(e(M)) :- M = 1..N, max_entity(N).
 
@@ -273,7 +287,7 @@ resource(r(M)) :-
 % TODO: steering here to combine info about target position, accels, max vels into controllers?
 % TODO: something like "mouse down to drive towards" will probably require a new state for the controlled character, right?
 
-% Gemini's operational integrations are all like this:
+% ** Gemini's operational integrations
 
 {precondition(Q, O)} :-
   logic(L),
@@ -340,7 +354,7 @@ prerequisite(L1, Op1, L2, Op2) :-
   birequisite(L2, Op2, L1, Op1).
 
 
-% We also have some special case ones like entities dying when they're out of health
+% *** Entities dying when they're out of health
 precondition(charmstate(E, dead, false), die(E)) :-
   charstate_logic(charstate),
   q_op(charstate, charmstate(E, dead, false)),
@@ -372,7 +386,7 @@ result(die(E), set_charmstate(E, dead)) :-
   logic(L),
   a_op(L, A).
 
-% ticking is also a special case thing with its own special results
+% *** ticking is also a special case thing with its own special results
 precondition(tick, tick).
 % Generate results for ticks
 {result(tick, A)} :-
@@ -380,13 +394,9 @@ precondition(tick, tick).
   a_op(L, A).
 
 
-palette(blue).
-#const min_entities = 1.
-#const max_entities = 3.
-#const min_resources = 1.
-#const max_resources = 2.
-#const min_outcomes = 3.
-#const max_outcomes = 5.
+% * TODO gemini adaptation
+
 
 #show precondition/2.
 #show result/2.
+
