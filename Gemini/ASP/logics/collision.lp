@@ -98,3 +98,14 @@ prerequisite(L, move_to(C1, Loc), L, at_loc(C2, Loc, false)) :-
 
 % * Whenever a combination of the above checks becomes true (or remains true, or becomes false), perform some abstract operation of this or another operational logic involving the objects considered in those checks
 %   Implicit in Gemini
+
+% Add a collider of type C at Loc
+a_op(L, add_collider(C, Loc)) :-
+  collision_logic(L),
+  collider(L, C),
+  loc(L, Loc).
+
+% Remove a particular collider of some type, implicit from context (awkward)
+a_op(L, remove_collider(C)) :-
+  collision_logic(L),
+  collider(L, C).

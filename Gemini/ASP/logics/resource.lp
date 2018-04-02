@@ -8,17 +8,17 @@ resource_amount(L, ninf) :- resource_logic(L).
 resource_amount(L, P) :- resource_logic(L), resource_pool(L, P).
 
 % For now pool capacities are fixed
-1{resource_pool_capacity(L, P, Amt) :
-  resource_amount(L, Amt),
-  Amt = r(_) ;
-  resource_pool_capacity(L, P, Amt) :
-  resource_amount(L, Amt),
-  Amt = inf}1 :-
+{resource_pool_capacity(L, P, r(Amt))} :-
   resource_logic(L),
+  resource_amount(L, r(Amt)),
   resource_pool(L, P).
 
+{resource_pool_capacity(L, P, inf)} :-
+  resource_logic(L),
+  resource_pool(L, P).
+  
 :- resource_pool(L, _), not resource_logic(L).
-:- resource_pool(L, P), not resource_pool_capacity(L, P, _).
+:- resource_pool(L, P), not 1{resource_pool_capacity(L, P, _)}1.
 
 % pools need initial contents
 % "guess a default but admit overriding with explicit facts"

@@ -81,13 +81,9 @@ charmedge(charstate, E, normal, dead) :- charstate_logic(charstate), entity(E).
 resource_logic(resource).
 %  Valid resource quantities for rules
 resource_amount(resource, r(0)) :- resource_logic(resource).
-resource_amount(resource, r(-1)) :- resource_logic(resource).
 resource_amount(resource, r(1)) :- resource_logic(resource).
-resource_amount(resource, r(-3)) :- resource_logic(resource).
 resource_amount(resource, r(3)) :- resource_logic(resource).
-resource_amount(resource, r(-5)) :- resource_logic(resource).
 resource_amount(resource, r(5)) :- resource_logic(resource).
-resource_amount(resource, r(-10)) :- resource_logic(resource).
 resource_amount(resource, r(10)) :- resource_logic(resource).
 resource_pool(resource, health(E)) :-
   resource_logic(resource),
@@ -98,7 +94,8 @@ resource_pool(resource, R) :-
 resource_pool_capacity(resource, P, r(10)) :-
   resource_logic(resource),
   resource_pool(resource, P),
-  not paint_pool(P).
+  not paint_pool(P),
+  not entity_pool(P).
 
 % color pools, prevent altering those pools by resource transactions
 paint_pool(paint(P)) :- paint(P).
@@ -106,10 +103,62 @@ resource_pool(resource, paint(P)) :-
   resource_logic(resource), paint(P).
 resource_pool_capacity(resource, P, inf) :-
   resource_logic(resource), resource_pool(resource, P), paint_pool(P).
-% TODO URGENT: Decide whether it's the case that nothing can alter the paint pools OR that only events that add or remove paint can alter the paint pools, and if so only by one unit (if paint was not there already).
-% :- paint_pool(P), result(_, alter_resource(P, _, _)).
-% :- paint_pool(P), result(_, move_resource(P, _, _)).
-% :- paint_pool(P), result(_, move_resource(_, P, _)).
+
+% % TODO LATER: handle moving resources like paint and collider counts and remove these constraints
+:- paint_pool(P), result(_, move_resource(P, _, _)).
+:- paint_pool(P), result(_, move_resource(_, P, _)).
+
+birequisite(collision, remove_collider(paint(P)),
+            resource, alter_resource(paint(P), dec, r(1))) :-
+  logic(collision),
+  logic(resource),
+  paint(P).
+prerequisite(collision, remove_collider(paint(P), Loc),
+             collision, at_loc(paint(P), Loc, true)) :-
+  logic(collision),
+  paint(P),
+  loc(collision, Loc).
+
+birequisite(collision, add_collider(paint(P), Loc),
+            resource, alter_resource(paint(P), inc, r(1))) :-
+  logic(collision),
+  logic(resource),
+  loc(collision, Loc),
+  paint(P).
+% TODO: really want to say "if there is another paint remove it" but we'll go with this for now.
+prerequisite(collision, add_collider(paint(P), Loc),
+             collision, at_loc(paint(P2), Loc, false)) :-
+  logic(collision),
+  paint(P),
+  paint(P2),
+  loc(collision, Loc).
+
+% Entity count pools
+
+entity_pool(entity(E)) :- entity(E).
+resource_pool(resource, entity(E)) :-
+  logic(resource),
+  entity(E).
+resource_pool_capacity(resource, P, inf) :-
+  logic(resource),
+  entity_pool(P).
+
+% TODO LATER: handle moving resources like paint and collider counts and remove these constraints
+:- entity_pool(P), result(_, move_resource(P, _, _)).
+:- entity_pool(P), result(_, move_resource(_, P, _)).
+
+birequisite(collision, remove_collider(entity(E)),
+            resource, alter_resource(entity(E), dec, r(1))) :-
+  logic(collision),
+  logic(resource),
+  entity(E).
+birequisite(collision, add_collider(entity(E), Loc),
+            resource, alter_resource(entity(E), inc, r(1))) :-
+  logic(collision),
+  logic(resource),
+  loc(collision, Loc),
+  entity(E).
+
 
 % Control logics
 #include "logics/control.lp".
@@ -203,7 +252,7 @@ prerequisite(L, Op, gamemode, gamemode(stuck, false)) :-
   gamemode_logic(gamemode),
   precondition(O, gamemode(stuck, true)).
 % Prevent more than one thing changing game modes
-%:- 1{result(O, set_gamemode(_)):outcome(O)}.
+:- 1{result(O, set_gamemode(_)):outcome(O)}.
 
 % Extra gemini stuff
 1{max_entity(min_entities..max_entities)}1.
@@ -247,8 +296,8 @@ trivial_outcome(O) :- outcome(O), not result(O, _).
 :- trivial_outcome(_).
 
 % Example: prevent any outcome that moves resource into or out of agent health?
-%:- resource_logic(resource), outcome(O), result(O, move_resource(health(_), _, _)).
-%:- resource_logic(resource), outcome(O), result(O, move_resource(_, health(_), _)).
+% :- resource_logic(resource), outcome(O), result(O, move_resource(health(_), _, _)).
+% :- resource_logic(resource), outcome(O), result(O, move_resource(_, health(_), _)).
 
 % Some queries might have other implicit queries
 query_needs_query(Q, Q2, O) :-
@@ -283,6 +332,13 @@ unmet_action_action_req(A, A2, O) :-
   a_op(L2, A2),
   not result(O, A2).
 :- unmet_action_action_req(_, _, _).
+
+
+prerequisite(L1, Op1, L2, Op2) :-
+  birequisite(L1, Op1, L2, Op2).
+prerequisite(L1, Op1, L2, Op2) :-
+  birequisite(L2, Op2, L1, Op1).
+
 
 % We also have some special case ones like entities dying when they're out of health
 precondition(charmstate(E, dead, false), die(E)) :-
@@ -323,11 +379,6 @@ precondition(tick, tick).
   logic(L),
   a_op(L, A).
 
-
-% TODO some kind of 'reset' that I can use in spawn to reset entity instance health, state, etc...
-
-%% TODO URGENT Create collider and destroy collider should be operators of collision logic, likewise create/destroy resource pool and create/destroy physics entity and control agent and charstate machine.  then this glue can make sure that those all come together.  that gives us a way to phrase creation and destruction simply, and handles both colors and entities.  also need a good story for actions vs a_ops vs outcomes:  what's being generated?  are ai knobs and player knobs all the same?
-%% TODO URGENT debug no models.  I think the issue might be incomplete initializations required by the logics.
 
 palette(blue).
 #const min_entities = 1.
