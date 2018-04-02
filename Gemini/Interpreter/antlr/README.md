@@ -18,4 +18,7 @@ Or generate a lexer and parser in Javascript:
 
 	antlr -Dlanguage=JavaScript Cygnus.g4
 
+Once you've generated Javascript lexer and/or parser code, you need to download the Antlr runtime for node.js. The Javascript runtime is available from npm:
+
+	npm install antlr4
 

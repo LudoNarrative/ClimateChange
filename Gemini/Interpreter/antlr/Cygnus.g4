@@ -5,9 +5,10 @@ grammar Cygnus;
 
 // A game is made up of one or more declarations 
 // (TODO: followed by an optional instructions section, which is skipped)
-game : declaration* EOF ; 
+game : declaration* comment_section? EOF ; 
 
-declaration  : 	
+declaration  
+	: 	
 	( entity 
 	| resource 
 	| flag 
@@ -23,9 +24,12 @@ declaration  :
 	| precondition
 	| result
 
-	//| reading
+	| reading // Reading rules are not technically in the Cygnus language, but often exported with them
 	) '.'; // A declaration always has a period at the end
 
+comment_section : separator .* ;
+
+separator : '='+ ;
 
 entity 	 : 'entity' '(' identifier ')';
 resource : 'resource' '(' identifier ')';
@@ -53,6 +57,8 @@ initialize   : 'initialize' '(' action ')'
 
 precondition : 'precondition' '(' condition ',' outcome_name ')';
 result		 : 'result' '(' outcome_name ',' action ')';
+
+
 
 // TODO: a label can't have spaces right now (WS ignored). Decide whether we want to allow.
 label_name // A resource or entity label can be in quotes or not
@@ -85,7 +91,9 @@ initial_only_action : 'set_static' '(' entity ',' bool ')';
 action 
 	: 'add' '(' entity ',' value ',' point ')'
 	| 'delete' '(' entity ')' 
+	| 'draw' '(' point ',' WORD ')' // WORD should be a color
 	| 'clear' '(' point ')'
+	| 'fill' '(' 'all' ',' WORD ')' // WORD should be a color
 
 	| 'increase' '(' settable ',' value ')'
 	| 'decrease' '(' settable ',' value ')'
@@ -140,7 +148,10 @@ bool : BOOL | settable_bool ;
 
 location : 'location' '(' row ',' col ')' ;
 
-pool : 'pool' '(' entity ',' location ',' spawn_type ',' spawn_type ')';
+pool 
+	: 'pool' '(' entity ',' location ',' spawn_type ',' spawn_type ')'
+	| 'pool' '(' entity ')'
+	;
 
 control_event 
 	: 'click' '(' entity ')'
@@ -161,6 +172,8 @@ angular_direction : 'cw' | 'ccw';
 button 			: 'mouse' | 'key_up' | 'key_down' | 'key_left' | 'key_right' | 'key_space' ;
 button_state 	: 'pressed' | 'held' | 'released' ;
 
+reading : 'reading' '(' .*? ',' .*? ')';
+
 BOOL: 'true' | 'false';
 
 NUM : [0-9]+;
@@ -170,3 +183,6 @@ WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
 COMMENT: '%' ~[\n\r]* ( [\n\r] | EOF) -> channel(HIDDEN) ;
 MULTILINE_COMMENT: '/*' ( MULTILINE_COMMENT | . )*? ('*/' | EOF) -> channel(HIDDEN);
+
+ANYCHAR : . ;
+
