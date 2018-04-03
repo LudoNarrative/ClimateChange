@@ -148,7 +148,7 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		}
 
 		//create restart, reroll, and disable buttons
-		if (Coordinator.gameVersion !== "release") {
+		if (gameVersion !== "release") {
 		    if (document.getElementById("restartGame") == null) {
 				$('<div/>', {
 				    id: 'restartGame',

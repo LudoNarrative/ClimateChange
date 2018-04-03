@@ -10,12 +10,14 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 	var wishlist;
 	var StoryDisplay;
 	var Display;
+	var Coordinator;
 	
-	var beginScene = function(_wishlist, _chunkLibrary, _State, _StoryDisplay, _Display, _Character, params) {
+	var beginScene = function(_wishlist, _chunkLibrary, _State, _StoryDisplay, _Display, _Character, _Coordinator, params) {
 		chunkLibrary = _chunkLibrary;
 		State = _State;
 		StoryDisplay = _StoryDisplay;
 		Display = _Display;
+		Coordinator = _Coordinator;
 		wishlist = _wishlist;
 		params = params || {};
 		
@@ -175,7 +177,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				StoryDisplay.clearAll();
 				continueScene();
 			}
-			else { 				//if we didn't find an interrupt fragment, just refresh text display and choices
+			else if (typeof State.get("currentTextId") !== "undefined") { 				//if we didn't find an interrupt fragment, just refresh text display and choices
 
 				StoryDisplay.clearText();
 				displayChunkText(State.get("currentTextId"), "refresh");		//continue scene, but draw from whole library (so...refresh)
@@ -259,7 +261,12 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				if (!wish.persistent) { unsatisfiedWants = true; }
 			});
 
-			if (unsatisfiedWants) {	StoryDisplay.addStoryText("[No path found!]"); }			//we ended too soon, show error
+			if (unsatisfiedWants) {	
+				if (gameVersion !== "release") { StoryDisplay.addStoryText("[No path found!]"); } 		//we ended too soon, show error
+				else {
+					endScene(true);
+				}
+			}			
 			else { endScene(); }			//otherwise end the scene
 		}
 		else {
@@ -470,18 +477,27 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		StoryDisplay.addStoryText("<br><br>");
 	}
 
-	// Show the scene is over.
+	// Show the scene is over
+	//assemblyFailed: whether we're here because we couldn't assemble a path forward
 	var endScene = function(assemblyFailed) {
 		
 		if (typeof Display !== "undefined" && State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
-			State.setPlaythroughData("end", []);	//record last node
-			Display.setSceneOutro("Chapter complete!");
+			if (!assemblyFailed) {
+				State.setPlaythroughData("end", []);	//record last node
+				Display.setSceneOutro("Chapter complete!");
+			}
+			else {
+				var outroText = Coordinator.loadNoPathFallback(State.get("currentScene"));
+				if (outroText) {
+					Display.setSceneOutro(outroText);
+				}
+				else { Display.setSceneOutro("Scene finished early."); }
+				
+			}
 		}
 		else {				//if we're using the data viz or editor...
 			if (assemblyFailed) { State.set("dataVizState", "assemblyFailed"); }
-			else {
-				State.set("dataVizState", "playthroughFinished");
-			}
+			else { State.set("dataVizState", "playthroughFinished"); }
 		}
 	}
 

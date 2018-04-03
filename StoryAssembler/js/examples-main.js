@@ -167,7 +167,7 @@ requirejs(
 		}
 
 		document.getElementsByTagName("body")[0].innerHTML = "";
-		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, Display, Character);
+		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, Display, Character, Coordinator);
 	}
 
 	// For each example, make a link to start it.

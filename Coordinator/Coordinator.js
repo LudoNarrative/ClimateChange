@@ -1,7 +1,8 @@
 define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAssembler", "Templates", "Character","Game", "Hanson", "text!travelData", "text!workerData", "text!lectureData", "text!dinnerData", "text!generalistData", "text!newExampleData", "text!undergradDinnerData_talon", "text!undergradDinnerData_irapopor", "text!undergradDinnerData_sgadsby", "text!undergradDean_sgadsby", "text!undergradDean_talon", "text!undergradDean_irapopor", "text!undergradLecture_kply", "text!undergradLecture_sjsherma", "text!undergradTravel_sjsherma", "text!undergradTravel_kply", "text!undergradFamilyDinner_sgadsby", "text!undergradFamilyDinner_talon","text!undergradFamilyDinner_irapopor", "text!undergradUN_kply", "text!undergradUN_talon", "text!undergradUN_irapopor", "text!undergradBeach_madreed", "text!undergradBeach_sjsherma", "text!undergradBeach_sgadsby", "text!undergradFaculty_kply", "text!undergradFaculty_madreed", "text!undergradFaculty_sjsherma", "text!sjsherma_testfile","text!madreed_testfile", "text!talon_testfile","text!sgadsby_testfile","text!kply_testfile","text!irapopor_testfile", "text!finalDinner", "text!finalLecture", "text!finalDean", "text!finalTravel", "text!finalFamilyDinner", "text!finalUN", "text!finalBeach", "text!finalFaculty", "text!globalData"], function(Display, StoryDisplay, State, ChunkLibrary, Wishlist, StoryAssembler, Templates, Character, Game, Hanson, travelData, workerData, lectureData, dinnerData, generalistData, newExampleData, undergradDinnerData_talon, undergradDinnerData_irapopor, undergradDinnerData_sgadsby, undergradDean_sgadsby, undergradDean_talon, undergradDean_irapopor, undergradLecture_kply, undergradLecture_sjsherma, undergradTravel_sjsherma, undergradTravel_kply, undergradFamilyDinner_sgadsby, undergradFamilyDinner_talon, undergradFamilyDinner_irapopor, undergradUN_kply, undergradUN_talon, undergradUN_irapopor, undergradBeach_madreed, undergradBeach_sjsherma, undergradBeach_sgadsby, undergradFaculty_kply, undergradFaculty_madreed, undergradFaculty_sjsherma, sjsherma_testfile, madreed_testfile, talon_testfile, sgadsby_testfile, kply_testfile, irapopor_testfile, finalDinner, finalLecture, finalDean, finalTravel, finalFamilyDinner, finalUN, finalBeach, finalFaculty, globalData) {
 
-	var gameVersion = "release";		//if "release", will disable testing buttons and gears etc
+
 	var recordPlaythroughs = true;
+	var consoleLogs = []				//can be StoryAssembler, Gemini, or All...in an array so in the future we can be additive
 
 	/*
 		Initializing function
@@ -10,6 +11,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		State.init(Templates);
 
+
+		//setConsole();
 		
 
 		//selectable scenes from main menu
@@ -38,6 +41,22 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	//cleans all variables out of state that aren't supposed to cross over between scenes
 	var cleanState = function(id) {
 		State.set("characters", []);			//get rid of extraneous characters
+	}
+
+	//modifies the console functions for filtering statements
+	//TODO: make it do that (currently only disables it for release, which doesn't matter because players don't have the developer toolbar open)
+	var setConsole = function() {
+
+		if (gameVersion == "release") {
+			var console = {};
+			console.log = function(){};
+			console.info = function(){};
+			console.warn = function(){};
+			console.error = function(){};
+			console.assert = function(){};
+
+			window.console = console;
+		}
 	}
 
 	/*
@@ -75,7 +94,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		State.set("mode", story.mode);
 		State.set("storyUIvars", story.UIvars);
 		Display.setAvatars();
-		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
+		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character, this);
 		StoryDisplay.addVarChangers(story.UIvars, StoryAssembler.clickChangeState);		//add controls to change variable values in story (in diagnostics panel)
 	}
 
@@ -1089,6 +1108,25 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 		if (id == "all") { return storySpec; }
 		else { return storySpec.filter(function(v) { return v.id === id; })[0]; }
+	}
+
+	//fallback text to display if we're in release mode, so No Path Founds don't show up, but instead just end the scene early
+	//(only shows up if gameVersion is set to "release")
+	var loadNoPathFallback = function(id) {
+		var fallbacks = [
+			{
+				id : "finalDinner",
+				text : "no path found for the dinner scene!"
+			},
+			{
+				id : "finalLecture",
+				text : "no path found for the lecture scene!"
+			}
+		];
+
+		for (var x=0; x < fallbacks.length; x++) { if (fallbacks[x].id == id) { 
+			return Templates.render(fallbacks[x].text); } }
+		return false;
 	}
 
 	var loadSceneIntro = function(id) {
@@ -2757,12 +2795,12 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		loadTimelineDesc : loadTimelineDesc,
 		validateArtAssets : validateArtAssets,
 		loadSceneIntro : loadSceneIntro,
+		loadNoPathFallback : loadNoPathFallback,
 		getNextScene : getNextScene,
 		cleanState : cleanState,
 
 		startGame : startGame,
 		getStorySpec : getStorySpec,
-		recordPlaythroughs : recordPlaythroughs,
-		gameVersion : gameVersion
+		recordPlaythroughs : recordPlaythroughs
 	}
 });

@@ -292,7 +292,7 @@ requirejs(
 		State.set("mode", story.mode);
 		State.set("storyUIvars", story.UIvars);
 		Display.setAvatars();
-		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character);
+		StoryAssembler.beginScene(wishlist, ChunkLibrary, State, StoryDisplay, Display, Character, Coordinator);
 
 		$("#storyDiagnostics").hide();
 		$("#storyDiagnosticsButton").hide();

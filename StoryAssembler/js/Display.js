@@ -22,6 +22,8 @@ define([], function() {
 
 	// Set up the Display module to begin showing stories.
 	var init = function(_clickHandler, _varClickChanger) {
+
+		if (gameVersion == "release") { enableDiagnostics = false; }
 		clickHandler = _clickHandler;
 		varClickChangerFunc = _varClickChanger;
 		if (!document.getElementById("storyArea")) {

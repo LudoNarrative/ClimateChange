@@ -93,26 +93,22 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		$("body").append("<h2><a href='https://docs.google.com/forms/d/1ZF2XaZMxnn3f321c2LjIWYvXiqKzQCeby8ttOfb7_pg' target=_blank>Fill Out Survey</a></h2>");
 
 		var offset = "0px;"
-		if (Coordinator.gameVersion == "release") {offset = "300px"; }
+		if (gameVersion == "release") { offset = "300px"; }
 
-		//if (Coordinator.gameVersion != "release") {
+		$('<h2/>', {
+		    text: 'Scene Selection',
+		    id: 'sceneSelectTitle',
+		    style: 'margin-top:' + offset
+		}).appendTo('body');
 
-			$('<h2/>', {
-			    text: 'Scene Selection',
-			    id: 'sceneSelectTitle',
-			    style: 'margin-top:' + offset
-			}).appendTo('body');
-
-			// For each scene, make a link to start it.
-			scenes.forEach(function(scene, pos) {
-				var el = makeLink(_Coordinator, scene, scene, "#");
-				$('body').append(el);
-				$('body').append("<div id='hiddenKnobs'></div>");
-				createKnobs(scene, "hiddenKnobs");
-				populateKnobs(scene, _Coordinator, _State, scenes);
-			});
-		//}
-
+		// For each scene, make a link to start it.
+		scenes.forEach(function(scene, pos) {
+			var el = makeLink(_Coordinator, scene, scene, "#");
+			$('body').append(el);
+			$('body').append("<div id='hiddenKnobs'></div>");
+			createKnobs(scene, "hiddenKnobs");
+			populateKnobs(scene, _Coordinator, _State, scenes);
+		});
 
 
 		$('<div/>', {

@@ -105,6 +105,8 @@ requirejs.config({
 	}
 });
 
+gameVersion = "release";			//if "release", will disable testing buttons and gears etc
+
 requirejs(
 	["State", "StoryDisplay", "Display", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Game", "AspPhaserGenerator", "util", "domReady!"],
 	function(State, StoryDisplay, Display, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, AspPhaserGenerator) {
