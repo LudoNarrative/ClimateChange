@@ -1,84 +1,99 @@
 #include "logics/logics.lp".
 
 % * Constants
-palette(blue).
-#const min_entities = 1.
-#const max_entities = 3.
-#const min_resources = 1.
-#const max_resources = 2.
-#const min_outcomes = 3.
-#const max_outcomes = 5.
+palette_g3(blue).
+#const min_entities_g3 = 1.
+#const max_entities_g3 = 3.
+#const min_resources_g3 = 1.
+#const max_resources_g3 = 2.
+#const min_outcomes_g3 = 3.
+#const max_outcomes_g3 = 5.
 
 % * Collision
 % Use collision logics
 #include "logics/collision.lp".
-collision_logic(collision).
+collision_logic_g3(collision).
 % In the collision logic col, these are reasonable distances to check between objects
-distance(collision, d(50)) :- collision_logic(collision).
-distance(collision, d(500)) :- collision_logic(collision).
+distance_g3(collision, d(50)) :-
+  collision_logic_g3(collision).
+distance_g3(collision, d(500)) :-
+  collision_logic_g3(collision).
 
 % use default "maybe X blocks Y" initialization
 
 % color drawing
 %   these will be colliders spaced at uniform positions of one type per color.  they might even be blocking which will give us terrain!
-{paint(C)} :- palette(C).
-collider(collision, C) :- collision_logic(collision), paint(C).
+{paint_g3(C)} :- palette_g3(C).
+collider_g3(collision, C) :-
+  collision_logic_g3(collision),
+  paint_g3(C).
 
 % structural synthesis with collision
 %  one entity:one collider
-collider(collision, E) :- collision_logic(collision), entity(E).
+collider_g3(collision, E) :-
+  collision_logic_g3(collision),
+  entity_g3(E).
 
 % * Physics
 #include "logics/physics.lp".
-physics_logic(physics).
-physics_body(physics, E) :- entity(E).
+physics_logic_g3(physics).
+physics_body_g3(physics, E) :-
+  entity_g3(E).
 
 % Tie physics and character states together
 
-physics_mode(physics, E, M) :-
-  entity(E),
-  charstate_logic(charstate),
-  charmstate(charstate, E, M),
+physics_mode_g3(physics, E, M) :-
+  entity_g3(E),
+  charstate_logic_g3(charstate),
+  charmstate_g3(charstate, E, M),
   M != dead.
 
-physics_mode(physics, E, dead) :-
-  entity(E).
+physics_mode_g3(physics, E, dead) :-
+  entity_g3(E).
 
-prerequisite(charstate, set_charmstate(E, M),
-             physics, set_physics_mode(E, M)) :-
-  charstate_logic(charstate),
-  physics_logic(physics),
-  a_op(charstate, set_charmstate(E, M)),
-  a_op(physics, set_physics_mode(E, M)).
+prerequisite_g3(charstate, set_charmstate(E, M),
+                physics, set_physics_mode(E, M)) :-
+  charstate_logic_g3(charstate),
+  physics_logic_g3(physics),
+  a_op_g3(charstate, set_charmstate(E, M)),
+  a_op_g3(physics, set_physics_mode(E, M)).
 
-prerequisite(physics, set_physics_mode(E, M),
-             charstate, set_charmstate(E, M)) :-
-  charstate_logic(charstate),
-  physics_logic(physics),
-  a_op(charstate, set_charmstate(E, M)),
-  a_op(physics, set_physics_mode(E, M)).
+prerequisite_g3(physics, set_physics_mode(E, M),
+                charstate, set_charmstate(E, M)) :-
+  charstate_logic_g3(charstate),
+  physics_logic_g3(physics),
+  a_op_g3(charstate, set_charmstate(E, M)),
+  a_op_g3(physics, set_physics_mode(E, M)).
 
 % ** Steering
-steering(stay;seek;flee).
+steering_g3(stay;seek;flee).
 % steering(pursue;avoid). % could also be implemented as adding locs for ahead_of(E) when entity(E).
 
-{steering_mode(E, M, Steer):steering(Steer)} :-
-  physics_mode(physics, E, M).
+{steering_mode_g3(E, M, Steer):steering_g3(Steer)} :-
+  physics_mode_g3(physics, E, M).
 
 % Even the idea of "character X chases character Y" is more than what a physics logic provides.  Right?  Physics logics govern smooth movement, but can we say that it's smooth movement towards targets?  In HyPED we assume the target is nondeterministically given but the style of movement is sort of provided.  so does it make sense to put steering_mode into physics?  or is it more like "approach loc" where loc can be something or other in the physics world?  I really don't feel like destinations belong there...
 
 % * Character-state
 % Use character-state logics (alive/dead)
 #include "logics/character_state.lp".
-charstate_logic(charstate).
+charstate_logic_g3(charstate).
 % structural synthesis with character-state logics
 %  one entity:one char machine
-charm(charstate, E) :- charstate_logic(charstate), entity(E).
+charm_g3(charstate, E) :-
+  charstate_logic_g3(charstate),
+  entity_g3(E).
 %  one char machine:two states
-charmstate(charstate, E, normal) :- charstate_logic(charstate), entity(E).
-charmstate(charstate, E, dead) :- charstate_logic(charstate), entity(E).
+charmstate_g3(charstate, E, normal) :-
+  charstate_logic_g3(charstate),
+  entity_g3(E).
+charmstate_g3(charstate, E, dead) :-
+  charstate_logic_g3(charstate),
+  entity_g3(E).
 %    and one edge
-charmedge(charstate, E, normal, dead) :- charstate_logic(charstate), entity(E).
+charmedge_g3(charstate, E, normal, dead) :-
+  charstate_logic_g3(charstate),
+  entity_g3(E).
 
 % TODO: maybe generate new states but give them all transitions to dead
 %  and give some transitions between the new states too
@@ -91,195 +106,205 @@ charmedge(charstate, E, normal, dead) :- charstate_logic(charstate), entity(E).
 % * Resource
 % Resource logics
 #include "logics/resource.lp".
-resource_logic(resource).
+resource_logic_g3(resource).
 %  Valid resource quantities for rules
-resource_amount(resource, r(0)) :- resource_logic(resource).
-resource_amount(resource, r(1)) :- resource_logic(resource).
-resource_amount(resource, r(3)) :- resource_logic(resource).
-resource_amount(resource, r(5)) :- resource_logic(resource).
-resource_amount(resource, r(10)) :- resource_logic(resource).
-resource_pool(resource, health(E)) :-
-  resource_logic(resource),
-  entity(E).
-resource_pool(resource, R) :-
-  resource_logic(resource),
-  resource(R).
-resource_pool_capacity(resource, P, r(10)) :-
-  resource_logic(resource),
-  resource_pool(resource, P),
-  not paint_pool(P),
-  not entity_pool(P).
+resource_amount_g3(resource, r(0)) :-
+  resource_logic_g3(resource).
+resource_amount_g3(resource, r(1)) :-
+  resource_logic_g3(resource).
+resource_amount_g3(resource, r(3)) :-
+  resource_logic_g3(resource).
+resource_amount_g3(resource, r(5)) :-
+  resource_logic_g3(resource).
+resource_amount_g3(resource, r(10)) :-
+  resource_logic_g3(resource).
+resource_pool_g3(resource, health(E)) :-
+  resource_logic_g3(resource),
+  entity_g3(E).
+resource_pool_g3(resource, R) :-
+  resource_logic_g3(resource),
+  resource_g3(R).
+{resource_pool_capacity_g3(resource, P, r(10))} :-
+  resource_logic_g3(resource),
+  resource_pool_g3(resource, P).
 
 % ** color pools, prevent altering those pools by resource transactions
-paint_pool(paint(P)) :- paint(P).
-resource_pool(resource, paint(P)) :-
-  resource_logic(resource), paint(P).
-resource_pool_capacity(resource, P, inf) :-
-  resource_logic(resource), resource_pool(resource, P), paint_pool(P).
+paint_pool_g3(paint(P)) :- paint_g3(P).
+resource_pool_g3(resource, paint(P)) :-
+  resource_logic_g3(resource),
+  paint_g3(P).
+resource_pool_capacity_g3(resource, P, inf) :-
+  resource_logic_g3(resource),
+  resource_pool_g3(resource, P),
+  paint_pool_g3(P).
 
 % % TODO LATER: handle moving resources like paint and collider counts and remove these constraints
-:- paint_pool(P), result(_, move_resource(P, _, _)).
-:- paint_pool(P), result(_, move_resource(_, P, _)).
+:- paint_pool_g3(P),
+  result_g3(_, move_resource(P, _, _)).
+:- paint_pool_g3(P),
+  result_g3(_, move_resource(_, P, _)).
 
-birequisite(collision, remove_collider(paint(P)),
-            resource, alter_resource(paint(P), dec, r(1))) :-
-  logic(collision),
-  logic(resource),
-  paint(P).
-prerequisite(collision, remove_collider(paint(P), Loc),
-             collision, at_loc(paint(P), Loc, true)) :-
-  logic(collision),
-  paint(P),
-  loc(collision, Loc).
+birequisite_g3(collision, remove_collider(paint(P)),
+               resource, alter_resource(paint(P), dec, r(1))) :-
+  logic_g3(collision),
+  logic_g3(resource),
+  paint_g3(P).
+prerequisite_g3(collision, remove_collider(paint(P), Loc),
+                collision, at_loc(paint(P), Loc, true)) :-
+  logic_g3(collision),
+  paint_g3(P),
+  loc_g3(collision, Loc).
 
-birequisite(collision, add_collider(paint(P), Loc),
-            resource, alter_resource(paint(P), inc, r(1))) :-
-  logic(collision),
-  logic(resource),
-  loc(collision, Loc),
-  paint(P).
+birequisite_g3(collision, add_collider(paint(P), Loc),
+               resource, alter_resource(paint(P), inc, r(1))) :-
+  logic_g3(collision),
+  logic_g3(resource),
+  loc_g3(collision, Loc),
+  paint_g3(P).
 % TODO: really want to say "if there is another paint remove it" but we'll go with this for now.
-prerequisite(collision, add_collider(paint(P), Loc),
-             collision, at_loc(paint(P2), Loc, false)) :-
-  logic(collision),
-  paint(P),
-  paint(P2),
-  loc(collision, Loc).
+prerequisite_g3(collision, add_collider(paint(P), Loc),
+                collision, at_loc(paint(P2), Loc, false)) :-
+  logic_g3(collision),
+  paint_g3(P),
+  paint_g3(P2),
+  loc_g3(collision, Loc).
 
 % ** Entity count pools
 
-entity_pool(entity(E)) :- entity(E).
-resource_pool(resource, entity(E)) :-
-  logic(resource),
-  entity(E).
-resource_pool_capacity(resource, P, inf) :-
-  logic(resource),
-  entity_pool(P).
+entity_pool_g3(entity(E)) :-
+  entity_g3(E).
+resource_pool_g3(resource, entity(E)) :-
+  logic_g3(resource),
+  entity_g3(E).
+resource_pool_capacity_g3(resource, P, inf) :-
+  logic_g3(resource),
+  entity_pool_g3(P).
 
 % TODO LATER: handle moving resources like paint and collider counts and remove these constraints
-:- entity_pool(P), result(_, move_resource(P, _, _)).
-:- entity_pool(P), result(_, move_resource(_, P, _)).
+:- entity_pool_g3(P), result_g3(_, move_resource(P, _, _)).
+:- entity_pool_g3(P), result_g3(_, move_resource(_, P, _)).
 
-birequisite(collision, remove_collider(entity(E)),
-            resource, alter_resource(entity(E), dec, r(1))) :-
-  logic(collision),
-  logic(resource),
-  entity(E).
-birequisite(collision, add_collider(entity(E), Loc),
-            resource, alter_resource(entity(E), inc, r(1))) :-
-  logic(collision),
-  logic(resource),
-  loc(collision, Loc),
-  entity(E).
+birequisite_g3(collision, remove_collider(entity(E)),
+               resource, alter_resource(entity(E), dec, r(1))) :-
+  logic_g3(collision),
+  logic_g3(resource),
+  entity_g3(E).
+birequisite_g3(collision, add_collider(entity(E), Loc),
+               resource, alter_resource(entity(E), inc, r(1))) :-
+  logic_g3(collision),
+  logic_g3(resource),
+  loc_g3(collision, Loc),
+  entity_g3(E).
 
 
 % * Control logics
 #include "logics/control.lp".
-control_logic(control).
+control_logic_g3(control).
 
-input(L, (button(mouse,(up;down));point(mouse))) :-
-  control_logic(L).
+input_g3(L, (button(mouse,(up;down));point(mouse))) :-
+  control_logic_g3(L).
 
 % mouse is down somewhere
-{input_map(L, button(mouse, down), Agent, Action)} :-
-  control_logic(L),
-  agent(L, Agent),
-  action(L, Agent, Action).
+{input_map_g3(L, button(mouse, down), Agent, Action)} :-
+  control_logic_g3(L),
+  agent_g3(L, Agent),
+  action_g3(L, Agent, Action).
 % mouse position is somewhere
-{input_map(L, point(mouse), Agent, Action)} :-
-  control_logic(L),
-  agent(L, Agent),
-  action(L, Agent, Action).
+{input_map_g3(L, point(mouse), Agent, Action)} :-
+  control_logic_g3(L),
+  agent_g3(L, Agent),
+  action_g3(L, Agent, Action).
 
 % TODO add keyboard buttons
-agent(control, E) :-
-  control_logic(control),
-  entity(E).
-action(control, E, set_target(Loc)) :-
-  control_logic(control),
-  entity(E),
-  agent(control, E),
-  loc(collision, Loc).
-% NOTE: to go from action to control for that action you have to use the input_map predicate.
-action(control, E, drop_paint(P)) :-
-  control_logic(control),
-  agent(control, E),
-  paint(P).
-action(control, E, clear_paint) :-
-  control_logic(control),
-  agent(control, E),
-  1{paint(_)}.
-action(control, E1, create(E2, Loc)) :-
-  control_logic(control),
-  agent(control, E1),
-  entity(E2),
-  loc(collision, Loc).
-
-% % TODO URGENT: what about AI actions?  Do those have to be caused by something in the input map, or do they need to be implemented as a_ops somewhere?
-% %  Does this suffice?
-% % action(control, E, A) :-
-% %   control_logic(control),
-% %   logic(L),
-% %   entity(E),
-% %   % TODO: connect E to A somehow?
-% %   L != control,
-% %   a_op(L, A).
+agent_g3(control, E) :-
+  control_logic_g3(control),
+  entity_g3(E).
+action_g3(control, E, set_target(Loc)) :-
+  control_logic_g3(control),
+  entity_g3(E),
+  agent_g3(control, E),
+  loc_g3(collision, Loc).
+action_g3(control, E, A) :-
+  control_logic_g3(control),
+  agent_g3(control, E),
+  logic_g3(L),
+  L != control,
+  a_op_g3(L, A).
 
 % * Structural synthesis between collision and physics
-loc(collision, mouse) :- logic(collision).
-loc(collision, C) :- logic(collision), collider(collision, C).
-loc(collision, target(E)) :- logic(collision), entity(E).
-loc(collision, arb) :- logic(collision).
-dir(physics, aheadof(E)) :- logic(physics), entity(E). 
-dir(physics, behind(E)) :- logic(physics), entity(E).
-dir(physics, (nw;n;ne;w;e;sw;s;se)) :- logic(physics).
-dir(physics, arb) :- logic(physics).
-physics_lvel(physics,lvel(auto(-1;1))).
-physics_avel(physics,avel(auto(-1;1))).
+loc_g3(collision, mouse) :-
+  logic_g3(collision).
+loc_g3(collision, C) :-
+  logic_g3(collision),
+  collider_g3(collision, C).
+loc_g3(collision, target(E)) :-
+  logic_g3(collision),
+  entity_g3(E).
+loc_g3(collision, arb) :-
+  logic_g3(collision).
+dir_g3(physics, aheadof(E)) :-
+  logic_g3(physics),
+  entity_g3(E). 
+dir_g3(physics, behind(E)) :-
+  logic_g3(physics),
+  entity_g3(E).
+dir_g3(physics, (nw;n;ne;w;e;sw;s;se)) :-
+  logic_g3(physics).
+dir_g3(physics, arb) :-
+  logic_g3(physics).
+physics_lvel_g3(physics,lvel(auto(-1;1))).
+physics_avel_g3(physics,avel(auto(-1;1))).
 
 % * Game-mode
 #include "logics/gamemode.lp".
-gamemode_logic(gamemode).
-gamemode(gamemode, (playing;stuck)) :- gamemode_logic(gamemode).
-init(gamemode, gamemode(playing)) :- gamemode_logic(gamemode).
+gamemode_logic_g3(gamemode).
+gamemode_g3(gamemode, (playing;stuck)) :-
+  gamemode_logic_g3(gamemode).
+init_g3(gamemode, gamemode(playing)) :-
+  gamemode_logic_g3(gamemode).
 % Only ever do anything when in non-stuck modes, rely on outer game to kick us out of stuck when we get stuck?
-prerequisite(L, Op, gamemode, gamemode(stuck, false)) :-
-  logic(L),
-  q_op(L,Op),
-  logic(gamemode),
+prerequisite_g3(L, Op, gamemode, gamemode(stuck, false)) :-
+  logic_g3(L),
+  q_op_g3(L,Op),
+  logic_g3(gamemode),
   L != gamemode.
-prerequisite(L, Op, gamemode, gamemode(stuck, false)) :-
-  logic(L),
-  a_op(L,Op),
-  logic(gamemode),
+prerequisite_g3(L, Op, gamemode, gamemode(stuck, false)) :-
+  logic_g3(L),
+  a_op_g3(L,Op),
+  logic_g3(gamemode),
   L != gamemode.
 
-:- outcome(O),
-  gamemode_logic(gamemode),
-  precondition(gamemode(G1, true), O),
-  precondition(gamemode(G2, true), O),
-  gamemode(gamemode,G1),
-  gamemode(gamemode,G2),
+:- outcome_g3(O),
+  gamemode_logic_g3(gamemode),
+  precondition_g3(gamemode(G1, true), O),
+  precondition_g3(gamemode(G2, true), O),
+  gamemode_g3(gamemode,G1),
+  gamemode_g3(gamemode,G2),
   G1 != G2.
 
-:- outcome(O),
-  gamemode_logic(gamemode),
-  precondition(O, gamemode(stuck, true)).
+:- outcome_g3(O),
+  gamemode_logic_g3(gamemode),
+  precondition_g3(O, gamemode(stuck, true)).
 % Prevent more than one thing changing game modes
-:- 1{result(O, set_gamemode(_)):outcome(O)}.
+:- 1{result_g3(O, set_gamemode(_)):outcome_g3(O)}.
 
 % * Extra gemini concepts
-1{max_entity(min_entities..max_entities)}1.
-entity(e(M)) :- M = 1..N, max_entity(N).
+1{max_entity_g3(min_entities_g3..max_entities_g3)}1.
+entity_g3(e(M)) :-
+  M = 1..N,
+  max_entity_g3(N).
 
-1{max_generated_outcome(min_outcomes..max_outcomes)}1.
-generated_outcome(o(M)) :- M = 1..N, max_generated_outcome(N).
+1{max_generated_outcome_g3(min_outcomes_g3..max_outcomes_g3)}1.
+generated_outcome_g3(o(M)) :-
+  M = 1..N,
+  max_generated_outcome_g3(N).
 
-1{max_resource(min_resources..max_resources)}1 :- resource_logic(resource).
-resource(r(M)) :-
-  resource_logic(resource),
-  M = 1..min_resources..N,
-  max_resource(N).
+1{max_resource_g3(min_resources_g3..max_resources_g3)}1 :-
+  resource_logic_g3(resource).
+resource_g3(r(M)) :-
+  resource_logic_g3(resource),
+  M = 1..min_resources_g3..N,
+  max_resource_g3(N).
 
 % steering defined at this level?  Or in the physics logic itself?
 % steering(seek, ...)?  or physics_mode(L, Ent, Behavior)?
@@ -289,114 +314,117 @@ resource(r(M)) :-
 
 % ** Gemini's operational integrations
 
-{precondition(Q, O)} :-
-  logic(L),
-  q_op(L,Q),
-  generated_outcome(O).
+{precondition_g3(Q, O)} :-
+  logic_g3(L),
+  q_op_g3(L,Q),
+  generated_outcome_g3(O).
 
-outcome(O) :- generated_outcome(O).
+outcome_g3(O) :-
+  generated_outcome_g3(O).
 
-unchecked_outcome(O) :-
-  outcome(O),
-  not precondition(_, O).
-:- unchecked_outcome(_).
+unchecked_outcome_g3(O) :-
+  outcome_g3(O),
+  not precondition_g3(_, O).
+:- unchecked_outcome_g3(_).
 
-{result(O, A)} :-
-  generated_outcome(O),
-  logic(L),
-  a_op(L, A).
+{result_g3(O, A)} :-
+  generated_outcome_g3(O),
+  logic_g3(L),
+  a_op_g3(L, A).
 
-trivial_outcome(O) :- outcome(O), not result(O, _).
-:- trivial_outcome(_).
+trivial_outcome_g3(O) :-
+  outcome_g3(O),
+  not result_g3(O, _).
+:- trivial_outcome_g3(_).
 
 % Example: prevent any outcome that moves resource into or out of agent health?
 % :- resource_logic(resource), outcome(O), result(O, move_resource(health(_), _, _)).
 % :- resource_logic(resource), outcome(O), result(O, move_resource(_, health(_), _)).
 
 % Some queries might have other implicit queries
-query_needs_query(Q, Q2, O) :-
-  precondition(Q, O),
-  q_op(L1, Q),
-  prerequisite(L1, Q, L2, Q2),
-  q_op(L2, Q2),
-  not precondition(Q2, O).
-:- query_needs_query(_, _, _).
+query_needs_query_g3(Q, Q2, O) :-
+  precondition_g3(Q, O),
+  q_op_g3(L1, Q),
+  prerequisite_g3(L1, Q, L2, Q2),
+  q_op_g3(L2, Q2),
+  not precondition_g3(Q2, O).
+:- query_needs_query_g3(_, _, _).
 % Some conditions might be forced to go with certain outcomes
-query_needs_change(Q, A, O) :-
-  precondition(Q, O),
-  q_op(L1, A),
-  prerequisite(L1, Q, L2, A),
-  a_op(L2, A),
-  not result(O, A).
-:- query_needs_change(_, _, _).
+query_needs_change_g3(Q, A, O) :-
+  precondition_g3(Q, O),
+  q_op_g3(L1, A),
+  prerequisite_g3(L1, Q, L2, A),
+  a_op_g3(L2, A),
+  not result_g3(O, A).
+:- query_needs_change_g3(_, _, _).
 % Some actions might have implicit preconditions
-unchecked_action_pre(A, Q, O) :-
-  result(O, A),
-  a_op(L1, A),
-  prerequisite(L1, A, L2, Q),
-  q_op(L2, Q),
-  not precondition(Q, O).
-:- unchecked_action_pre(_, _, _).
+unchecked_action_pre_g3(A, Q, O) :-
+  result_g3(O, A),
+  a_op_g3(L1, A),
+  prerequisite_g3(L1, A, L2, Q),
+  q_op_g3(L2, Q),
+  not precondition_g3(Q, O).
+:- unchecked_action_pre_g3(_, _, _).
 
 % Some actions might have implicit dependent actions
-unmet_action_action_req(A, A2, O) :-
-  result(O, A),
-  a_op(L1, A),
-  prerequisite(L1, A, L2, A2),
-  a_op(L2, A2),
-  not result(O, A2).
-:- unmet_action_action_req(_, _, _).
+unmet_action_action_req_g3(A, A2, O) :-
+  result_g3(O, A),
+  a_op_g3(L1, A),
+  prerequisite_g3(L1, A, L2, A2),
+  a_op_g3(L2, A2),
+  not result_g3(O, A2).
+:- unmet_action_action_req_g3(_, _, _).
 
 
-prerequisite(L1, Op1, L2, Op2) :-
-  birequisite(L1, Op1, L2, Op2).
-prerequisite(L1, Op1, L2, Op2) :-
-  birequisite(L2, Op2, L1, Op1).
+prerequisite_g3(L1, Op1, L2, Op2) :-
+  birequisite_g3(L1, Op1, L2, Op2).
+prerequisite_g3(L1, Op1, L2, Op2) :-
+  birequisite_g3(L2, Op2, L1, Op1).
 
 
 % *** Entities dying when they're out of health
-precondition(charmstate(E, dead, false), die(E)) :-
-  charstate_logic(charstate),
-  q_op(charstate, charmstate(E, dead, false)),
-  entity(E).
-precondition(has_resource(health(E), le, s(0)), die(E)) :-
-  resource_logic(resource),
-  q_op(resource, has_resource(health(E), le, s(0))),
-  entity(E).
+precondition_g3(charmstate(E, dead, false), die(E)) :-
+  charstate_logic_g3(charstate),
+  q_op_g3(charstate, charmstate(E, dead, false)),
+  entity_g3(E).
+precondition_g3(has_resource(health(E), le, s(0)), die(E)) :-
+  resource_logic_g3(resource),
+  q_op_g3(resource, has_resource(health(E), le, s(0))),
+  entity_g3(E).
 
 % Must be at least a few reasons to die (in alive state, has edge, and X)
-arb_death :- entity(E), not 3{precondition(Q, die(E)):logic(L), q_op(L, Q)}.
-:- arb_death.
+arb_death_g3 :-
+  entity_g3(E),
+  not 3{precondition_g3(Q, die(E)):logic_g3(L), q_op_g3(L, Q)}.
+:- arb_death_g3.
 
-outcome(die(E)) :- entity(E).
+outcome_g3(die(E)) :-
+  entity_g3(E).
 
-result(die(E), set_charmstate(E, dead)) :-
-  charstate_logic(charstate),
-  entity(E).
+result_g3(die(E), set_charmstate(E, dead)) :-
+  charstate_logic_g3(charstate),
+  entity_g3(E).
 
 %% dying acts like a generated outcome in other ways
 
-{precondition(Q, die(E))} :-
-  entity(E),
-  logic(L),
-  q_op(L, Q).
+{precondition_g3(Q, die(E))} :-
+  entity_g3(E),
+  logic_g3(L),
+  q_op_g3(L, Q).
 
-{result(die(E), A)} :-
-  entity(E),
-  logic(L),
-  a_op(L, A).
+{result_g3(die(E), A)} :-
+  entity_g3(E),
+  logic_g3(L),
+  a_op_g3(L, A).
 
 % *** ticking is also a special case thing with its own special results
-precondition(tick, tick).
+precondition_g3(tick, tick).
 % Generate results for ticks
-{result(tick, A)} :-
-  logic(L),
-  a_op(L, A).
+{result_g3(tick, A)} :-
+  logic_g3(L),
+  a_op_g3(L, A).
 
+%#show precondition_g3/2.
+%#show result_g3/2.
 
-% * TODO gemini adaptation
-
-
-#show precondition/2.
-#show result/2.
-
+% TODO: g3-ification of all the logics/ predicates

@@ -1,4 +1,4 @@
-logic(L) :- control_logic(L).
+logic_g3(L) :- control_logic_g3(L).
 
 % Map button inputs, AI intentions, network socket messages, etc onto high-level game actions, possibly grouped onto specific loci of control like characters according to the event source.
 
@@ -15,30 +15,30 @@ logic(L) :- control_logic(L).
 % TODO see the email to melanie for more info
 
 % Validity
-:- agent(L, _), not control_logic(L).
-:- control_logic(L), not agent(L, _).
-:- action(L, _, _), not control_logic(L).
-:- control_logic(L), not action(L, _, _).
-:- control_logic(L), {input_map(L, _, _, _)}0.
-:- control_logic(L), input_map(L, I, _, _), not input(L, I). 
+:- agent_g3(L, _), not control_logic_g3(L).
+:- control_logic_g3(L), not agent_g3(L, _).
+:- action_g3(L, _, _), not control_logic_g3(L).
+:- control_logic_g3(L), not action_g3(L, _, _).
+:- control_logic_g3(L), {input_map_g3(L, _, _, _)}0.
+:- control_logic_g3(L), input_map_g3(L, I, _, _), not input_g3(L, I). 
 % TODO runtime changes to input map?  agent assignments? etc
 
-q_op(L, control_action(Ag, Ac)) :-
-  control_logic(L),
-  action(L, Ag, Ac),
-  agent(L, Ag),
-  input_map(L, I, Ag, Ac).
+q_op_g3(L, control_action(Ag, Ac)) :-
+  control_logic_g3(L),
+  action_g3(L, Ag, Ac),
+  agent_g3(L, Ag),
+  input_map_g3(L, I, Ag, Ac).
 
-a_op(L, do_action(Ag, Ac)) :-
-  control_logic(L),
-  q_op(L, control_action(Ag, Ac)).
+a_op_g3(L, do_action(Ag, Ac)) :-
+  control_logic_g3(L),
+  q_op_g3(L, control_action(Ag, Ac)).
 
-prerequisite(L, do_action(Ag, Ac), L, control_action(Ag, Ac)) :-
-  control_logic(L),
-  q_op(L, control_action(Ag, Ac)),
-  a_op(L, do_action(Ag, Ac)).
+prerequisite_g3(L, do_action(Ag, Ac), L, control_action(Ag, Ac)) :-
+  control_logic_g3(L),
+  q_op_g3(L, control_action(Ag, Ac)),
+  a_op_g3(L, do_action(Ag, Ac)).
 
-prerequisite(L, control_action(Ag, Ac), L, do_action(Ag, Ac)) :-
-  control_logic(L),
-  q_op(L, control_action(Ag, Ac)),
-  a_op(L, do_action(Ag, Ac)).
+prerequisite_g3(L, control_action(Ag, Ac), L, do_action(Ag, Ac)) :-
+  control_logic_g3(L),
+  q_op_g3(L, control_action(Ag, Ac)),
+  a_op_g3(L, do_action(Ag, Ac)).

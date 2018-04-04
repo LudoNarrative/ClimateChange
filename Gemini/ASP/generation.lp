@@ -328,7 +328,7 @@ comparison_direction(ge;le).
 { precondition(compare((ge;le),amount(Color),R),OUTCOME) : outcome(OUTCOME) } 
   :- palette(Color), resource(R).
 
-%{precondition(is_overlapping(}
+%{precondition(is_overlapping())}
 
 color_amount(1;5;9).
 { precondition(compare((ge;le),amount(Color),scalar(A)),OUTCOME) : outcome(OUTCOME), color_amount(A) } 

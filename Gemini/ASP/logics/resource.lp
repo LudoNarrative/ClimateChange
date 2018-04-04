@@ -1,37 +1,37 @@
-logic(L) :- resource_logic(L).
+logic_g3(L) :- resource_logic_g3(L).
 
-resource_change_direction(inc;dec).
+resource_change_direction_g3(inc;dec).
 
-resource_amount(L, r(0)) :- resource_logic(L).
-resource_amount(L, inf) :- resource_logic(L).
-resource_amount(L, ninf) :- resource_logic(L).
-resource_amount(L, P) :- resource_logic(L), resource_pool(L, P).
+resource_amount_g3(L, r(0)) :- resource_logic_g3(L).
+resource_amount_g3(L, inf) :- resource_logic_g3(L).
+resource_amount_g3(L, ninf) :- resource_logic_g3(L).
+resource_amount_g3(L, P) :- resource_logic_g3(L), resource_pool_g3(L, P).
 
 % For now pool capacities are fixed
-{resource_pool_capacity(L, P, r(Amt))} :-
-  resource_logic(L),
-  resource_amount(L, r(Amt)),
-  resource_pool(L, P).
+{resource_pool_capacity_g3(L, P, r(Amt))} :-
+  resource_logic_g3(L),
+  resource_amount_g3(L, r(Amt)),
+  resource_pool_g3(L, P).
 
-{resource_pool_capacity(L, P, inf)} :-
-  resource_logic(L),
-  resource_pool(L, P).
+{resource_pool_capacity_g3(L, P, inf)} :-
+  resource_logic_g3(L),
+  resource_pool_g3(L, P).
   
-:- resource_pool(L, _), not resource_logic(L).
-:- resource_pool(L, P), not 1{resource_pool_capacity(L, P, _)}1.
+:- resource_pool_g3(L, _), not resource_logic_g3(L).
+:- resource_pool_g3(L, P), not 1{resource_pool_capacity_g3(L, P, _)}1.
 
 % pools need initial contents
 % "guess a default but admit overriding with explicit facts"
-{init(L, has_resource(P, r(0)))} :-
-  resource_logic(L),
-  resource_pool(L, P).
-:- resource_logic(L),
-  resource_pool(L, P),
-  not 1{init(L, has_resource(P, _))}1.
+{init_g3(L, has_resource(P, r(0)))} :-
+  resource_logic_g3(L),
+  resource_pool_g3(L, P).
+:- resource_logic_g3(L),
+  resource_pool_g3(L, P),
+  not 1{init_g3(L, has_resource(P, _))}1.
 
-% state_feedback(L, resource_pool(P)) :-
-%   resource_logic(L),
-%   resource_pool(L, P).
+% state_feedback_g3(L, resource_pool(P)) :-
+%   resource_logic_g3(L),
+%   resource_pool_g3(L, P).
 
 
 % * Check if a transaction involving some units of certain resources is possible for some given locations.
@@ -41,37 +41,37 @@ resource_amount(L, P) :- resource_logic(L), resource_pool(L, P).
 
 % ^--- we use a simplified resource logic where the only transactions increase or decrease the amount of a uniform resource in a single pool, or move resource from one pool to another
 
-q_op(L, has_resource(P, Cmp, Amt)) :-
-  resource_logic(L),
-  resource_pool(L, P),
-  resource_amount(L, Amt),
-  comparator(Cmp).
+q_op_g3(L, has_resource(P, Cmp, Amt)) :-
+  resource_logic_g3(L),
+  resource_pool_g3(L, P),
+  resource_amount_g3(L, Amt),
+  comparator_g3(Cmp).
 
-% feedback(L, has_resource(P, Cmp, Amt)) :-
-%   resource_logic(L),
-%   q_op(L, has_resource(P, Cmp, Amt)).
+% feedback_g3(L, has_resource(P, Cmp, Amt)) :-
+%   resource_logic_g3(L),
+%   q_op_g3(L, has_resource(P, Cmp, Amt)).
 
 % Implicitly assume decreases past 0 and increases past max saturate.
 % Could reify those as preconditions but don't need to right now.
 
-a_op(L, alter_resource(P, IncDec, Amt)) :-
-  resource_logic(L),
-  resource_pool(L, P),
-  resource_amount(L, Amt),
-  resource_change_direction(IncDec),
+a_op_g3(L, alter_resource(P, IncDec, Amt)) :-
+  resource_logic_g3(L),
+  resource_pool_g3(L, P),
+  resource_amount_g3(L, Amt),
+  resource_change_direction_g3(IncDec),
   Amt != r(0).
 
 % but this one requires that P1 has at least Amt
-a_op(L, move_resource(P1, P2, Amt)) :-
-  resource_logic(L),
-  resource_pool(L, P1),
-  resource_pool(L, P2),
-  resource_amount(L, Amt),
+a_op_g3(L, move_resource(P1, P2, Amt)) :-
+  resource_logic_g3(L),
+  resource_pool_g3(L, P1),
+  resource_pool_g3(L, P2),
+  resource_amount_g3(L, Amt),
   Amt != r(0).
 
-prerequisite(L, move_resource(P1, P2, Amt), L, has_resource(P1, ge, Amt)) :-
-  resource_logic(L),
-  resource_pool(L, P1),
-  resource_pool(L, P2),
-  resource_amount(L, Amt),
+prerequisite_g3(L, move_resource(P1, P2, Amt), L, has_resource(P1, ge, Amt)) :-
+  resource_logic_g3(L),
+  resource_pool_g3(L, P1),
+  resource_pool_g3(L, P2),
+  resource_amount_g3(L, Amt),
   Amt != inf.
