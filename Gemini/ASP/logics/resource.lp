@@ -22,12 +22,10 @@ resource_amount_g3(L, P) :- resource_logic_g3(L), resource_pool_g3(L, P).
 
 % pools need initial contents
 % "guess a default but admit overriding with explicit facts"
-{init_g3(L, has_resource(P, r(0)))} :-
+init_ok_g3(L, alter_resource(P, inc, r(K))) :-
   resource_logic_g3(L),
-  resource_pool_g3(L, P).
-:- resource_logic_g3(L),
   resource_pool_g3(L, P),
-  not 1{init_g3(L, has_resource(P, _))}1.
+  resource_amount(L, r(K)).
 
 % state_feedback_g3(L, resource_pool(P)) :-
 %   resource_logic_g3(L),

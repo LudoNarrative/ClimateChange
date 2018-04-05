@@ -442,7 +442,7 @@ reading(good,Outcome) :-
 
 reading(difficulty,Resource) :-
     reading(hurt,relation(Entity,player)),
-    speed(Entity,O,Resource).
+    speed(Entity,_,Resource).
 
 % If the entity can hurt the player,
 % and a number of those entities equal to the resource are added

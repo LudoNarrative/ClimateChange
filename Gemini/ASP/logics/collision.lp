@@ -3,25 +3,7 @@ logic_g3(L) :- collision_logic_g3(L).
 % Validity
 :- collider_g3(L, _), not collision_logic_g3(L).
 
-% blocking relations must be initialized
-% "guess a default but admit overriding with explicit facts"
-1{init_g3(L, blocking(C1, C2, B)) : bool_g3(B)}1 :-
-  collision_logic_g3(L),
-  collider_g3(L, C1),
-  collider_g3(L, C2).
-:- collision_logic_g3(L),
-  collider_g3(L, C1),
-  collider_g3(L, C2),
-  not 1{init_g3(L, blocking(C1, C2, B)):bool_g3(B)}1.
-
 % For now, collision checkability is fixed
-
-1{init_g3(L, at(C, Loc)):loc_g3(L, Loc)}1 :-
-  collision_logic_g3(L),
-  collider_g3(L, C).
-:- collision_logic_g3(L),
-  collider_g3(L, C),
-  not 1{init_g3(L, at(C, Loc)):loc_g3(L, Loc)}1.
 
 % feedback_g3(L, at_loc(C, Loc)) :-
 %   collision_logic_g3(L),
@@ -104,6 +86,7 @@ a_op_g3(L, add_collider(C, Loc)) :-
   collision_logic_g3(L),
   collider_g3(L, C),
   loc_g3(L, Loc).
+
 
 % Remove a particular collider of some type, implicit from context (awkward)
 a_op_g3(L, remove_collider(C)) :-

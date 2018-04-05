@@ -39,9 +39,9 @@ acceptable_labels(appetite;fullness).
 label(entity(e(1)),food).
 label(entity(e(2)),friend).
 
-:- 1 {pool(entity(e(1)),_,_,_)} 1.
+% Need some translation between pools and places that colliders get added.
 
-:- condition(compare(_,amount(clear),_)).
+:- 1 {pool(entity(e(1)),_,_,_)} 1.
 
 :- not reading(sharing,relation(entity(e(1)),entity(e(2)))).
 
@@ -58,9 +58,9 @@ is_consumed(O) :- precondition(overlaps(entity(e(1))),O),
 :- 2 {action(mode_change(N))}.
 
 
-:- total_count(entity(e(2)),N),
+:- initial_count(entity(e(2)),N),
    N > 3.
-:- total_count(entity(e(2)),N),
+:- initial_count(entity(e(2)),N),
    N < 2.
 
 

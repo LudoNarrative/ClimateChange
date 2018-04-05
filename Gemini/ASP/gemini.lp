@@ -1,13 +1,26 @@
 #include "logics/logics.lp".
 
+% * TODO initialization as a_op applications
+% ** TODO ensure set_blocking is given at init time as are resource pools, gamemode, etc
+% ** TODO ensure we can have multiple add_collider for the same C and Loc?  nah, use rowcol locs for that?
+% ** TODO ensure newly created characters get their charmstates set
+% ** TODO remove initializers from OL files 
+
 % * Constants
-palette_g3(blue).
 #const min_entities_g3 = 1.
-#const max_entities_g3 = 3.
+#const max_entities_g3 = 2.
 #const min_resources_g3 = 1.
 #const max_resources_g3 = 2.
-#const min_outcomes_g3 = 3.
-#const max_outcomes_g3 = 5.
+#const min_outcomes_g3 = 2.
+#const max_outcomes_g3 = 6.
+#const min_timers_g3 = 0.
+#const max_timers_g3 = 2.
+
+#const min_end_outcomes_g3 = 1.
+#const max_end_outcomes_g3 = 1.
+#const max_resource_change_per_g3 = 2.
+#const max_conditions_per_g3 = 2.
+
 
 % * Collision
 % Use collision logics
@@ -23,7 +36,7 @@ distance_g3(collision, d(500)) :-
 
 % color drawing
 %   these will be colliders spaced at uniform positions of one type per color.  they might even be blocking which will give us terrain!
-{paint_g3(C)} :- palette_g3(C).
+{paint_g3(C)} :- palette(C).
 collider_g3(collision, C) :-
   collision_logic_g3(collision),
   paint_g3(C).
@@ -254,7 +267,9 @@ dir_g3(physics, arb) :-
   logic_g3(physics).
 physics_lvel_g3(physics,lvel(auto(-1;1))).
 physics_avel_g3(physics,avel(auto(-1;1))).
-
+physics_lvel_g3(physics,lvel(R)) :-
+  resource_pool(resource, R).
+  
 % * Game-mode
 #include "logics/gamemode.lp".
 gamemode_logic_g3(gamemode).
@@ -311,6 +326,22 @@ resource_g3(r(M)) :-
 %   there needs to be a way to figure out the physics mode _at a given time_ without re-solving.  like with input_map.  maybe based on preconditions or character states explicitly.
 % TODO: steering here to combine info about target position, accels, max vels into controllers?
 % TODO: something like "mouse down to drive towards" will probably require a new state for the controlled character, right?
+
+1{max_timer_g3(M)}1 :-
+  M = min_timers_g3..max_timers_g3.
+
+timer_g3(T) :-
+  max_timer_g3(T).
+
+:- timer_g3(T),
+  1 != {result_g3(_, timer(T,_,_))}.
+
+q_op_g3(gemini,timer(T,Interval,Oneshot)) :-
+  timer_g3(T),
+  timer_interval_g3(Interval),
+  bool_g3(Oneshot).
+
+timer_interval_g3(short;medium;long).
 
 % ** Gemini's operational integrations
 
@@ -427,4 +458,80 @@ precondition_g3(tick, tick).
 %#show precondition_g3/2.
 %#show result_g3/2.
 
-% TODO: g3-ification of all the logics/ predicates
+% * Initialization, in general
+{init_g3(L, A)} :-
+  logic_g3(L),
+  a_op_g3(L, A),
+  init_ok_g3(L, A).
+init_g3(L2, A2) :-
+  init_g3(L1, A1),
+  prerequisite(L1, A1, L2, A2),
+  a_op(L1, A1),
+  a_op(L2, A2).
+
+init_ok_g3(L, alter_resource(P, inc, inf)) :-
+  resource_logic_g3(L),
+  resource_pool_g3(L, P).
+  
+:- resource_logic_g3(L),
+  resource_pool_g3(L, P),
+  not 1{init_g3(L, alter_resource(P, inc, _))}1.
+
+init_ok_g3(L, set_charmstate(M, S)) :-
+  charstate_logic_g3(L),
+  charm_g3(L, M),
+  charmstate_g3(L, M, S).
+
+% Every machine must be initialized
+% "guess a default but admit overriding with explicit facts"
+:- charstate_logic_g3(L),
+  charm_g3(L, M),
+  not 1{init_g3(L, set_charmstate(M, S)):charmstate_g3(L,M,S)}1.
+
+row_g3(top;middle;bottom).
+col_g3(left;center;right).
+
+loc_g3(collision,grid(Row, Col)) :-
+  row_g3(Row),
+  col_g3(Col).
+init_loc_g3(collision, grid(Row, Col)) :-
+  row_g3(Row),
+  col_g3(Col).
+
+
+init_ok_g3(L, set_blocking(C1, C2, B)) :-
+  a_op_g3(L, set_blocking(C1, C2, B)).
+init_ok_g3(L, add_collider(C, Loc)) :-
+  collision_logic_g3(L),
+  a_op_g3(L, add_collider(C, Loc)),
+  init_loc_g3(L, Loc).
+init_ok_g3(L, set_gamemode(G)) :-
+  gamemode_logic_g3(L),
+  a_op_g3(L, set_gamemode(G)).
+
+:- gamemode_logic_g3(L), not 1{init_g3(L, set_gamemode(_))}1.
+
+% * Decorations and gemini-specific stuff
+1{init_g3(gemini, set_sprite(Entity, Sprite)) : sprite(Sprite)}1 :-
+  entity_g3(Entity).
+1{init_g3(gemini, set_color(Entity, Color)) : colors(Color)}1 :-
+  entity_g3(Entity).
+
+% * Other world model stuff
+
+boundary_types(torus;closed).
+1{boundary(Type):boundary_types(Type)}1.
+
+
+% * Readings
+
+#include "generation_constraints.lp".
+#include "generation_rules.lp".
+#include "generation_atoms.lp".
+#include "gemini_3to2.lp".
+#include "structure_rules.lp".
+#include "banned_list.lp".
+#include "readings.lp".
+#include "simplicity_tuning.lp".
+#include "player_model.lp".
+% #include "replacements.lp".

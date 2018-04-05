@@ -5,18 +5,12 @@ logic_g3(L) :- charstate_logic_g3(L).
 :- charm_g3(L, _), not charstate_logic_g3(L).
 :- charmedge_g3(L, _, _, _), not charstate_logic_g3(L).
 
-% Every machine must be initialized
-% "guess a default but admit overriding with explicit facts"
-1{init_g3(L, charmstate(M, S)) : charmstate_g3(L, M, S)}1 :-
-  charstate_logic_g3(L),
-  charm_g3(L, M).
-:- charstate_logic_g3(L),
-  charm_g3(L, M),
-  not 1{init_g3(L, charmstate(M, S)):charmstate_g3(L,M,S)}1.
 
 % Constraints:
 % No machine without states
-:- charstate_logic_g3(L), charm_g3(L, C), {charmstate_g3(L, C, _)}0.
+:- charstate_logic_g3(L),
+  charm_g3(L, C),
+  {charmstate_g3(L, C, _)}0.
 % No machine with a state with no incoming or outgoing edge
 :- charstate_logic_g3(L),
   charm_g3(L, C),

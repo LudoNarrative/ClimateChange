@@ -704,16 +704,6 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 
 
 
-%%%DONT GET STUCK ON WALLS
-
-:- precondition(timer_elapsed(T),O),
-   result(O,rotates(E,_,_)),
-   speed(E,tick,scalar(V)),
-   timer_logic(timer(T),scalar(DT),loop),
-   60*DT*V > 200.
-
-
-
 %If the player wants E1 and E2 to touch, and controls E1, E1 should be faster than E2.
 :- precondition(overlaps(E1,E2,true),O),
    player_model(O,player_will_attempt),
