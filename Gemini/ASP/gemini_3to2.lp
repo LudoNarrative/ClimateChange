@@ -8,25 +8,27 @@ entity(E) :-
   entity_3to2(E3,E).
 entity_3to2(E3,entity(E3)) :-
   entity_g3(E3).
+
 initialize(set_sprite(E, S)) :-
   entity_3to2(E3,E),
-  init_g3(gemini, set_sprite(E3, S)).
+  result_g3(init, set_sprite(E3, S)).
 initialize(set_color(E, Col)) :-
   entity_3to2(E3,E),
-  init_g3(gemini, set_color(E3, Col))
+  result_g3(init, set_color(E3, Col))
 
-% TODO grind through the rest of these then the remainder of generation.lp and friends; then make sure no initialize() or other generation terms show up in intent files, and maybe even add constraints to prevent that somehow?
 singular(E) :-
   entity_3to2(E3,E),
   initial_count(E,1),
-  not result_g3(_, add_collider(E3,_)).
+  0{result_g3(Outcome, add_collider(E3,_)):outcome_g3(Outcome),Outcome != init}.
 many(E) :-
   entity_3to2(E3,E),
   initial_count(E,N),
   N != 1.
 many(E) :-
   entity_3to2(E3,E),
-  result_g3(_, add_collider(E3,_)).
+  result_g3(O, add_collider(E3,_)),
+  outcome_g3(O),
+  O != init.
 :- many(E),
   singular(E).
 :- entity(E),
@@ -34,23 +36,23 @@ many(E) :-
   not singular(E).
 
 initialize(add(E,scalar(1),location(Row,Col))) :-
-  init_g3(collision,add_collider(E3,grid(Row, Col))),
+  result_g3(init,add_collider(E3,grid(Row, Col))),
   entity_3to2(E3, E).
 
 initial_count(Entity,Number) :-
   entity(Entity),
   entity_3to2(E3, Entity),
-  Number = {init_g3(collision,add_collider(E3,_))}.
+  Number = {result_g3(init,add_collider(E3,_))}.
 
 initialize(fill(all,Color)) :-
   Rows = {row_g3(_)},
   Cols = {col_g3(_)},
   paint_g3(Color),
-  Rows*Cols = {init_g3(collision,add_collider(P,_))}.
+  Rows*Cols = {result_g3(init,add_collider(P,_))}.
 
 initialize(fill(location(Row,Col),Color)) :-
   paint_g3(Color),
-  init_g3(collision,add_collider(P,grid(Row,Col))).
+  result_g3(init,add_collider(P,grid(Row,Col))).
 
 speed(E,Fastest,S) :-
   entity(E),
@@ -68,7 +70,8 @@ max_resource(M) :- max_resource_g3(M).
 resource(resource(R)) :- resource_g3(R).
 max_outcome(M) :- max_generated_outcome_g3(M).
 standard_outcome(outcome(M)) :- generated_outcome_g3(M).
-outcome(O) :- outcome_g3(O).
+outcome(O) :- outcome_g3(O), not generated_outcome_g3(O).
+outcome(O) :- standard_outcome(O).
 timer(T) :- timer_g3(T).
 max_timer(T) :- max_timer_g3(T).
 %%%DONT GET STUCK ON WALLS
@@ -77,27 +80,141 @@ max_timer(T) :- max_timer_g3(T).
 %    speed(E,tick,scalar(V)),
 %    timer_logic(timer(T),scalar(DT),loop),
 %    60*DT*V > 200.
-avatar(E) :- player_controls(E).
+{avatar(E)} :- player_controls(E).
+{avatar(cursor)}.
 
-% precondition(control_event(click(E)),O) :-
-  % ....%
+angle_speeds(K) :- physics_avel_g3(physics, K).
+angle_speeds_discrete(K) :- angle_speeds(K).
 
-% resource comparisons
+outcome_3to2(O3, outcome(O3)) :-
+  outcome_g3(O3).
 
-% overlaps
+mousestate_3to2(up, up;press,pressed;down, held).
+precondition(control_event(click(E)), O) :-
+  outcome(O),
+  outcome_3to2(O3,O),
+  entity(E),
+  entity_3to2(E3,E),
+  precondition_g3(control_action(E3, Ac), O3),
+  input_map_g3(control, button(mouse,press), E3, Ac),
+  precondition_g3(touching(E3, cursor, true), O3).
+precondition(control_event(button(mouse, State)), O) :-
+  outcome_3to2(O3, O),
+  entity_g3(E3),
+  mousestate_3to2(State3,State),
+  precondition_g3(control_action(E3, Ac), O3),
+  input_map_g3(control, button(mouse, State3), E3, Ac).
 
-% timer
+% compare(cmp, dist(), Scalar)
+precondition(compare(Cmp, distance(EA, EB, nearest), scalar(Amt)), O) :-
+  outcome_3to2(O3, O),
+  comparison_direction(Cmp),
+  entity_3to2(EA3, EA),
+  entity_3to2(EB3, EB),
+  distance_g3(Amt),
+  precondition_g3(proximity(EA, EB, Amt, Cmp), O3).
+  
+% compare(cmp, Color, Scalar)
+precondition(compare(Cmp, amount(Col), scalar(A)), O) :-
+  outcome_3to2(O3, O),
+  paint_g3(Col),
+  paint_pool_g3(paint(Col)),
+  precondition_g3(has_resource(paint(Col), Cmp, r(A)), O3).
+% compare(cmp, Color, Rsrc)
+precondition(compare(Cmp, amount(Col), resource(R)), O) :-
+  outcome_3to2(O3, O),
+  paint_g3(Col),
+  paint_pool_g3(paint(Col)),
+  resource_g3(R),
+  precondition_g3(has_resource(paint(Col), Cmp, R), O3).
+% compare(cmp, Rsrc, Rsrc)
+precondition(compare(Cmp, resource(RA), resource(RB))), O) :-
+  outcome_3to2(O3, O),
+  resource_g3(RA),
+  resource_g3(RB),
+  precondition_g3(has_resource(RA, Cmp, RB), O3).
+% compare(cmp, Rsrc, Scalar)
+precondition(compare(Cmp, resource(RA), scalar(B)), O) :-
+  outcome_3to2(O3, O),
+  resource_g3(RA),
+  resource_amount_g3(resource, r(B)),
+  precondition_g3(has_resource(RA, Cmp, r(B)), O3).
+
+% precondition(timer_elapsed)
+precondition(timer_elapsed(T), O) :-
+  timer_g3(T),
+  outcome_3to2(O3, O),
+  precondition_g3(timer(T,_,_),O3).
+interval_qual2quant(short,3;medium,5;long,7).
+timer_logic(timer(T),scalar(N),loop) :-
+  timer_g3(T),
+  interval_qual2quant(Q, N),
+  precondition_g3(timer(T,Q,true),_).
+% precondition(overlaps)
+precondition(overlaps(A, B, Bool), O) :-
+  outcome_3to2(O3, O),
+  entity_3to2(A3, A),
+  entity_3to2(B3, B),
+  bool_g3(Bool),
+  precondition_g3(touching(A3, B3, Bool), O3).
+
+place(P) :- loc_g3(collision, P).
 
 % results:
 
 % delete, add
+result(O, delete(E)) :-
+  entity_3to2(E3, E),
+  outcome_3to2(O3, O),
+  result_g3(O3, remove_collider(E3, Loc)),
+  loc_g3(collision, Loc).
+result(O, add(E,scalar(1),Loc)) :-
+  entity_3to2(E3, E),
+  outcome_3to2(O3, O),
+  result_g3(O3, add_collider(E3, Loc)).
 % clear
-% modify resource
-% entity health property
+result(O, clear(Entity)) :-
+  outcome_3to2(O3, O),
+  entity_3to2(E3,Entity),
+  paint_g3(P),
+  result_g3(O3, remove_collider(P, Entity)).
+result(O, clear(cursor)) :-
+  outcome_3to2(O3, O),
+  paint_g3(P),
+  result_g3(O3, remove_collider(P, cursor)).
+% modify resource, entity health
+incdec_3to2(inc,increment;dec,decrement).
+result(O, modify(IncDec, resource(R), Amt)) :-
+  resource_g3(R),
+  outcome_3to2(O3, O),
+  incdec_3to2(IncDec3, IncDec),
+  result_g3(alter_resource(R, IncDec3, Amt)).
+result(O, modify(IncDec, property(Entity, health), Amt)) :-
+  entity_3to2(Entity3, Entity),
+  outcome_3to2(O3, O),
+  incdec_3to2(IncDec3, IncDec),
+  result_g3(alter_resource(health(Entity3), IncDec3, Amt)).
+result(O, modify(decrease, resource(R1), Amt)) :-
+  resource_g3(R1),
+  resource_g3(R2),
+  outcome_3to2(O3, O),
+  result_g3(move_resource(R1, R2, Amt), O3).
+result(O, modify(increase, resource(R2))) :-
+  resource_g3(R1),
+  resource_g3(R2),
+  outcome_3to2(O3, O),
+  result_g3(move_resource(R1, R2, Amt), O3).
+result(O, set_value(R, amount(C))) :-
+  resource(R),
+  paint_g3(C),
+  outcome_3to2(O3, O),
+  resource_change_direction_g3(IncDec),
+  result_g3(alter_resource(R, IncDec, Amt), O3).
+  
 % drawing on the world
-% entity movement
+% entity movement, look_at
 % game mode change outcomes
 % tick outcome
-% restitution
+% tick: restitution, just restitute everything that's initialized to blocking
 % behaviors
 % for behaviors and other weird stuff, check to make sure we acutally need it

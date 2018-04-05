@@ -43,7 +43,9 @@ q_op_g3(L, has_resource(P, Cmp, Amt)) :-
   resource_logic_g3(L),
   resource_pool_g3(L, P),
   resource_amount_g3(L, Amt),
-  comparator_g3(Cmp).
+  comparator_g3(Cmp),
+  Amt != inf,
+  Amt != ninf.
 
 % feedback_g3(L, has_resource(P, Cmp, Amt)) :-
 %   resource_logic_g3(L),

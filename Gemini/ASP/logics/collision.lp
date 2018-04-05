@@ -20,6 +20,23 @@ q_op_g3(L, touching(C1, C2, B)) :-
   collider_g3(L, C2),
   bool_g3(B).
 
+prerequisite_g3(L, touching(C1, C2, B),
+                L, touching(C2, C1, B)) :-
+  collision_logic_g3(L),
+  collider_g3(L, C1),
+  collider_g3(L, C2),
+  bool_g3(B).
+
+%% TODO: more conflicts in other logics, like resource alterations and so on?
+conflict_g3(L, touching(C1, C2, B1),
+            L, touching(C1, C2, B2)) :-
+  collision_logic_g3(L),
+  collider_g3(L, C1),
+  collider_g3(L, C2),
+  bool_g3(B1),
+  bool_g3(B2),
+  B1 != B2.
+
 % feedback_g3(L, touching(C1, C2, B)) :-
 %   collision_logic_g3(L),
 %   q_op_g3(L, touching(C1, C2, B)).
@@ -57,15 +74,24 @@ a_op_g3(L, set_blocking(C1, C2, B)) :-
 %   collision_logic_g3(L),
 %   a_op_g3(L, set_blocking(C1, C2, B)).
 
+prerequisite_g3(L, set_blocking(C1, C2, B),
+                L, set_blocking(C2, C1, B)) :-
+  collision_logic_g3(L),
+  collider_g3(C1),
+  collider_g3(C2),
+  bool_g3(B).
 
 % * Determine how far an entity could move towards another entity or region without touching or causing an overlap
 %   Sort-of:
-q_op_g3(L, proximity(C1, C2, Threshold, B)) :-
+q_op_g3(L, proximity(C1, C2, Threshold, Cmp)) :-
   collision_logic_g3(L),
   collider_g3(L, C1),
   collider_g3(L, C2),
   distance_g3(L, Threshold),
-  bool_g3(B).
+  comparator_g3(B).
+
+distance_g3(0).
+distance_g3(arb).
 
 a_op_g3(L, move_to(C, Loc)) :-
   collision_logic_g3(L),
@@ -88,7 +114,14 @@ a_op_g3(L, add_collider(C, Loc)) :-
   loc_g3(L, Loc).
 
 
-% Remove a particular collider of some type, implicit from context (awkward)
-a_op_g3(L, remove_collider(C)) :-
+% Remove a particular collider of some type at Loc
+a_op_g3(L, remove_collider(C, Loc)) :-
   collision_logic_g3(L),
-  collider_g3(L, C).
+  collider_g3(L, C),
+  loc_g3(L, Loc).
+
+prerequisite_g3(L, remove_collider(C, Loc),
+                L, at_loc(C, Loc, true)) :-
+  collision_logic_g3(L),
+  collider_g3(L, C),
+  loc_g3(L, Loc).

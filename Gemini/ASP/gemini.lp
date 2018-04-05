@@ -47,6 +47,11 @@ collider_g3(collision, E) :-
   collision_logic_g3(collision),
   entity_g3(E).
 
+collider_g3(collision, cursor) :-
+  collision_logic_g3(collision).
+
+:- result_g3(_,set_blocking(cursor,_)).
+
 % * Physics
 #include "logics/physics.lp".
 physics_logic_g3(physics).
@@ -58,11 +63,10 @@ physics_body_g3(physics, E) :-
 physics_mode_g3(physics, E, M) :-
   entity_g3(E),
   charstate_logic_g3(charstate),
-  charmstate_g3(charstate, E, M),
-  M != dead.
+  charmstate_g3(charstate, E, M).
 
-physics_mode_g3(physics, E, dead) :-
-  entity_g3(E).
+% physics_mode_g3(physics, E, dead) :-
+  % entity_g3(E).
 
 prerequisite_g3(charstate, set_charmstate(E, M),
                 physics, set_physics_mode(E, M)) :-
@@ -96,18 +100,40 @@ charstate_logic_g3(charstate).
 charm_g3(charstate, E) :-
   charstate_logic_g3(charstate),
   entity_g3(E).
-%  one char machine:two states
+%  one char machine:one state for sure
 charmstate_g3(charstate, E, normal) :-
   charstate_logic_g3(charstate),
   entity_g3(E).
-charmstate_g3(charstate, E, dead) :-
+% charmstate_g3(charstate, E, dead) :-
+  % charstate_logic_g3(charstate),
+  % entity_g3(E).
+   % and one edge
+% charmedge_g3(charstate, E, normal, dead) :-
+  % charstate_logic_g3(charstate),
+  % entity_g3(E).
+% maybe more states
+1{max_entity_states_g3(E,S)}1 :-
+  entity_g3(E),
+  S = min_entity_states_g3..max_entity_states_g3.
+{charmstate_g3(charstate, E, state(S))} :-
   charstate_logic_g3(charstate),
-  entity_g3(E).
-%    and one edge
-charmedge_g3(charstate, E, normal, dead) :-
+  max_entity_states_g3(E, S2),
+  S < S2,
+  entity(E).
+{charmedge_g3(charstate, E, S1, S2)} :-
   charstate_logic_g3(charstate),
-  entity_g3(E).
+  charmstate_g3(charstate, E, S1),
+  charmstate_g3(charstate, E, S2).
 
+% FIXME: for now constrain state machines so that every generated state at least has a cycle with normal (other edges are allowed too but we don't want to worry about full blown reachability and everything right now) 
+:- charstate_logic_g3(charstate),
+  charmstate_g3(charstate, E, S),
+  S != normal,
+  not charmstate_edge_g3(charstate, E, normal, S).
+:- charstate_logic_g3(charstate),
+  charmstate_g3(charstate, E, S),
+  S != normal,
+  not charmstate_edge_g3(charstate, E, S, normal).
 % TODO: maybe generate new states but give them all transitions to dead
 %  and give some transitions between the new states too
 
@@ -157,26 +183,22 @@ resource_pool_capacity_g3(resource, P, inf) :-
 :- paint_pool_g3(P),
   result_g3(_, move_resource(_, P, _)).
 
-birequisite_g3(collision, remove_collider(paint(P)),
+birequisite_g3(collision, remove_collider(P, Loc),
                resource, alter_resource(paint(P), dec, r(1))) :-
   logic_g3(collision),
   logic_g3(resource),
+  loc_g3(collision, Loc),
   paint_g3(P).
-prerequisite_g3(collision, remove_collider(paint(P), Loc),
-                collision, at_loc(paint(P), Loc, true)) :-
-  logic_g3(collision),
-  paint_g3(P),
-  loc_g3(collision, Loc).
 
-birequisite_g3(collision, add_collider(paint(P), Loc),
+birequisite_g3(collision, add_collider(P, Loc),
                resource, alter_resource(paint(P), inc, r(1))) :-
   logic_g3(collision),
   logic_g3(resource),
   loc_g3(collision, Loc),
   paint_g3(P).
 % TODO: really want to say "if there is another paint remove it" but we'll go with this for now.
-prerequisite_g3(collision, add_collider(paint(P), Loc),
-                collision, at_loc(paint(P2), Loc, false)) :-
+prerequisite_g3(collision, add_collider(P, Loc),
+                collision, at_loc(P2, Loc, false)) :-
   logic_g3(collision),
   paint_g3(P),
   paint_g3(P2),
@@ -197,10 +219,11 @@ resource_pool_capacity_g3(resource, P, inf) :-
 :- entity_pool_g3(P), result_g3(_, move_resource(P, _, _)).
 :- entity_pool_g3(P), result_g3(_, move_resource(_, P, _)).
 
-birequisite_g3(collision, remove_collider(entity(E)),
+birequisite_g3(collision, remove_collider(entity(E), Loc),
                resource, alter_resource(entity(E), dec, r(1))) :-
   logic_g3(collision),
   logic_g3(resource),
+  loc_g3(collision, Loc),
   entity_g3(E).
 birequisite_g3(collision, add_collider(entity(E), Loc),
                resource, alter_resource(entity(E), inc, r(1))) :-
@@ -214,17 +237,12 @@ birequisite_g3(collision, add_collider(entity(E), Loc),
 #include "logics/control.lp".
 control_logic_g3(control).
 
-input_g3(L, (button(mouse,(up;down));point(mouse))) :-
+input_g3(L, (button(mouse,(up;press;down)))) :-
   control_logic_g3(L).
 
-% mouse is down somewhere
-{input_map_g3(L, button(mouse, down), Agent, Action)} :-
+{input_map_g3(L, I, Agent, Action)} :-
   control_logic_g3(L),
-  agent_g3(L, Agent),
-  action_g3(L, Agent, Action).
-% mouse position is somewhere
-{input_map_g3(L, point(mouse), Agent, Action)} :-
-  control_logic_g3(L),
+  input_g3(L, I),
   agent_g3(L, Agent),
   action_g3(L, Agent, Action).
 
@@ -273,17 +291,16 @@ physics_lvel_g3(physics,lvel(R)) :-
 % * Game-mode
 #include "logics/gamemode.lp".
 gamemode_logic_g3(gamemode).
-gamemode_g3(gamemode, (playing;stuck)) :-
-  gamemode_logic_g3(gamemode).
-init_g3(gamemode, gamemode(playing)) :-
+gamemode_g3(gamemode, (playing;game_loss;game_win;narrative_gating;narrative_progress)) :-
   gamemode_logic_g3(gamemode).
 % Only ever do anything when in non-stuck modes, rely on outer game to kick us out of stuck when we get stuck?
-prerequisite_g3(L, Op, gamemode, gamemode(stuck, false)) :-
+% TODO: future: generate new game modes too
+prerequisite_g3(L, Op, gamemode, gamemode(playing, true)) :-
   logic_g3(L),
   q_op_g3(L,Op),
   logic_g3(gamemode),
   L != gamemode.
-prerequisite_g3(L, Op, gamemode, gamemode(stuck, false)) :-
+prerequisite_g3(L, Op, gamemode, gamemode(playing, true)) :-
   logic_g3(L),
   a_op_g3(L,Op),
   logic_g3(gamemode),
@@ -299,9 +316,10 @@ prerequisite_g3(L, Op, gamemode, gamemode(stuck, false)) :-
 
 :- outcome_g3(O),
   gamemode_logic_g3(gamemode),
-  precondition_g3(O, gamemode(stuck, true)).
-% Prevent more than one thing changing game modes
-:- 1{result_g3(O, set_gamemode(_)):outcome_g3(O)}.
+  precondition_g3(O, gamemode(M, true)),
+  M != playing.
+:- outcome_g3(O),
+  2{result_g3(O, set_gamemode(M)):gamemode_g3(gamemode, M)}.
 
 % * Extra gemini concepts
 1{max_entity_g3(min_entities_g3..max_entities_g3)}1.
@@ -334,8 +352,9 @@ timer_g3(T) :-
   max_timer_g3(T).
 
 :- timer_g3(T),
-  1 != {result_g3(_, timer(T,_,_))}.
+  1 != {precondition_g3(timer(T,_,_),_)}.
 
+% TODO: not really sure about this being in gemini or being a q_op?
 q_op_g3(gemini,timer(T,Interval,Oneshot)) :-
   timer_g3(T),
   timer_interval_g3(Interval),
@@ -391,13 +410,17 @@ query_needs_change_g3(Q, A, O) :-
 % Some actions might have implicit preconditions
 unchecked_action_pre_g3(A, Q, O) :-
   result_g3(O, A),
+  % But special-cased actions don't have this property
+  O != tick,
+  O != init,
+  % OK, continue
   a_op_g3(L1, A),
   prerequisite_g3(L1, A, L2, Q),
   q_op_g3(L2, Q),
   not precondition_g3(Q, O).
 :- unchecked_action_pre_g3(_, _, _).
 
-% Some actions might have implicit dependent actions
+% Some actions might have implicit dependent actions; this is true for tick and init too
 unmet_action_action_req_g3(A, A2, O) :-
   result_g3(O, A),
   a_op_g3(L1, A),
@@ -412,41 +435,46 @@ prerequisite_g3(L1, Op1, L2, Op2) :-
 prerequisite_g3(L1, Op1, L2, Op2) :-
   birequisite_g3(L2, Op2, L1, Op1).
 
+:- conflict_g3(L1, Op1, L2, Op2),
+  logic_g3(L1),
+  logic_g3(L2),
+  (q_op(L1, Op1) ; a_op(L1, Op1)),
+  (q_op(L2, Op2) ; a_op(L2, Op2)).
 
-% *** Entities dying when they're out of health
-precondition_g3(charmstate(E, dead, false), die(E)) :-
-  charstate_logic_g3(charstate),
-  q_op_g3(charstate, charmstate(E, dead, false)),
-  entity_g3(E).
-precondition_g3(has_resource(health(E), le, s(0)), die(E)) :-
-  resource_logic_g3(resource),
-  q_op_g3(resource, has_resource(health(E), le, s(0))),
-  entity_g3(E).
+% *** Unused so far; Entities dying when they're out of health
+% precondition_g3(charmstate(E, dead, false), die(E)) :-
+%   charstate_logic_g3(charstate),
+%   q_op_g3(charstate, charmstate(E, dead, false)),
+%   entity_g3(E).
+% precondition_g3(has_resource(health(E), le, s(0)), die(E)) :-
+  % resource_logic_g3(resource),
+  % q_op_g3(resource, has_resource(health(E), le, s(0))),
+  % entity_g3(E).
 
 % Must be at least a few reasons to die (in alive state, has edge, and X)
-arb_death_g3 :-
-  entity_g3(E),
-  not 3{precondition_g3(Q, die(E)):logic_g3(L), q_op_g3(L, Q)}.
-:- arb_death_g3.
+% arb_death_g3 :-
+  % entity_g3(E),
+  % not 3{precondition_g3(Q, die(E)):logic_g3(L), q_op_g3(L, Q)}.
+% :- arb_death_g3.
 
-outcome_g3(die(E)) :-
-  entity_g3(E).
+% outcome_g3(die(E)) :-
+  % entity_g3(E).
 
-result_g3(die(E), set_charmstate(E, dead)) :-
-  charstate_logic_g3(charstate),
-  entity_g3(E).
+% result_g3(die(E), set_charmstate(E, dead)) :-
+  % charstate_logic_g3(charstate),
+  % entity_g3(E).
 
 %% dying acts like a generated outcome in other ways
 
-{precondition_g3(Q, die(E))} :-
-  entity_g3(E),
-  logic_g3(L),
-  q_op_g3(L, Q).
+% {precondition_g3(Q, die(E))} :-
+  % entity_g3(E),
+  % logic_g3(L),
+  % q_op_g3(L, Q).
 
-{result_g3(die(E), A)} :-
-  entity_g3(E),
-  logic_g3(L),
-  a_op_g3(L, A).
+% {result_g3(die(E), A)} :-
+  % entity_g3(E),
+  % logic_g3(L),
+  % a_op_g3(L, A).
 
 % *** ticking is also a special case thing with its own special results
 precondition_g3(tick, tick).
@@ -459,15 +487,12 @@ precondition_g3(tick, tick).
 %#show result_g3/2.
 
 % * Initialization, in general
-{init_g3(L, A)} :-
+outcome_g3(init).
+precondition_g3(init, init).
+{result_g3(init, A)} :-
   logic_g3(L),
   a_op_g3(L, A),
   init_ok_g3(L, A).
-init_g3(L2, A2) :-
-  init_g3(L1, A1),
-  prerequisite(L1, A1, L2, A2),
-  a_op(L1, A1),
-  a_op(L2, A2).
 
 init_ok_g3(L, alter_resource(P, inc, inf)) :-
   resource_logic_g3(L),
@@ -475,7 +500,7 @@ init_ok_g3(L, alter_resource(P, inc, inf)) :-
   
 :- resource_logic_g3(L),
   resource_pool_g3(L, P),
-  not 1{init_g3(L, alter_resource(P, inc, _))}1.
+  not 1{result_g3(init, alter_resource(P, inc, _))}1.
 
 init_ok_g3(L, set_charmstate(M, S)) :-
   charstate_logic_g3(L),
@@ -486,7 +511,7 @@ init_ok_g3(L, set_charmstate(M, S)) :-
 % "guess a default but admit overriding with explicit facts"
 :- charstate_logic_g3(L),
   charm_g3(L, M),
-  not 1{init_g3(L, set_charmstate(M, S)):charmstate_g3(L,M,S)}1.
+  not 1{result_g3(init, set_charmstate(M, S)):charmstate_g3(L,M,S)}1.
 
 row_g3(top;middle;bottom).
 col_g3(left;center;right).
@@ -505,16 +530,16 @@ init_ok_g3(L, add_collider(C, Loc)) :-
   collision_logic_g3(L),
   a_op_g3(L, add_collider(C, Loc)),
   init_loc_g3(L, Loc).
-init_ok_g3(L, set_gamemode(G)) :-
-  gamemode_logic_g3(L),
-  a_op_g3(L, set_gamemode(G)).
+init_ok_g3(L, set_gamemode(playing)) :-
+  gamemode_logic_g3(L).
 
-:- gamemode_logic_g3(L), not 1{init_g3(L, set_gamemode(_))}1.
+:- gamemode_logic_g3(L), not 1{result_g3(init, set_gamemode(_))}1.
 
 % * Decorations and gemini-specific stuff
-1{init_g3(gemini, set_sprite(Entity, Sprite)) : sprite(Sprite)}1 :-
+% ** TODO: move these into collision logic or something
+1{result_g3(init, set_sprite(Entity, Sprite)) : sprite(Sprite)}1 :-
   entity_g3(Entity).
-1{init_g3(gemini, set_color(Entity, Color)) : colors(Color)}1 :-
+1{result_g3(init, set_color(Entity, Color)) : colors(Color)}1 :-
   entity_g3(Entity).
 
 % * Other world model stuff
@@ -525,6 +550,7 @@ boundary_types(torus;closed).
 
 % * Readings
 
+% #include "generation.lp". % Handled by 3to2 
 #include "generation_constraints.lp".
 #include "generation_rules.lp".
 #include "generation_atoms.lp".
