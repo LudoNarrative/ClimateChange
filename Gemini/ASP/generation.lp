@@ -409,7 +409,7 @@ amount_to_spawn(Resource) :- resource(Resource).
 properties(health).
 
 
-% * TODO Can set the color of entities, resources, and cursor
+% * Can set the color of entities, resources, and cursor
 
 { result(OUTCOME,draw(Entity,Color)) : outcome(OUTCOME) } :- 
     entity(Entity), palette(Color).
@@ -421,7 +421,7 @@ properties(health).
     palette(Color).
 
 
-% * TODO Entities can move towards or away from another entity, or the cursor
+% * Entities can move towards or away from another entity, or the cursor
 
 % { result(OUTCOME, move(ENTITY1,direction(towards,ENTITY2)))
 %   : outcome(OUTCOME),
@@ -442,24 +442,24 @@ properties(health).
 %     entity(ENTITY1) }.
 
 
-% * TODO Game modes (e.g., game_win, game_lose, narrative_pause,..)
+% * Game modes (e.g., game_win, game_lose, narrative_pause,..)
 min_end_outcomes 
 { result(OUTCOME,mode_change(MODE)) : modes(MODE), outcome(OUTCOME) }
 max_end_outcomes.
 
-% * TODO Generate the null precondition to match the outcome, tick (triggered every tick)
+% * Generate the null precondition to match the outcome, tick (triggered every tick)
 precondition(tick,tick) :- outcome(tick).
 
-% * TODO An entity can be singular or many, not both
+% * An entity can be singular or many, not both
 1 { many(Entity); singular(Entity) } 1 :- entity(Entity).
 
-% * TODO Two entities can have restitution applied to them 
+% * Two entities can have restitution applied to them 
 % Should there be a check that they aren't the same entity, or okay?
 { result(tick, apply_restitution(Entity1,Entity2)) :
   entity(Entity1), entity(Entity2) }.
 
 
-% * TODO ENTITY BEHAVIORS
+% * TODO NYI ENTITY BEHAVIORS
 
 %% behaviors(chase;
 %% 	  flee;

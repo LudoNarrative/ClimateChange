@@ -14,7 +14,7 @@ initialize(set_sprite(E, S)) :-
   result_g3(init, set_sprite(E3, S)).
 initialize(set_color(E, Col)) :-
   entity_3to2(E3,E),
-  result_g3(init, set_color(E3, Col))
+  result_g3(init, set_color(E3, Col)).
 
 singular(E) :-
   entity_3to2(E3,E),
@@ -66,8 +66,12 @@ static(E) :-
   entity_3to2(E3,E),
   0 = {physics_mode_lvel_g3(physics,E3,_,S):physics_lvel_g3(physics,S),S != 0}.
 
+moving(E) :-
+  entity(E),
+  not static(E).
+
 max_resource(M) :- max_resource_g3(M).
-resource(resource(R)) :- resource_g3(R).
+resource(R) :- resource_g3(R).
 max_outcome(M) :- max_generated_outcome_g3(M).
 standard_outcome(outcome(M)) :- generated_outcome_g3(M).
 outcome(O) :- outcome_g3(O), not generated_outcome_g3(O).
@@ -82,6 +86,10 @@ max_timer(T) :- max_timer_g3(T).
 %    60*DT*V > 200.
 {avatar(E)} :- player_controls(E).
 {avatar(cursor)}.
+
+player_controls(E) :-
+  entity_3to2(E3,E),
+  input_map_g3(control, _, E3, _).
 
 angle_speeds(K) :- physics_avel_g3(physics, K).
 angle_speeds_discrete(K) :- angle_speeds(K).
@@ -108,7 +116,7 @@ precondition(control_event(button(mouse, State)), O) :-
 % compare(cmp, dist(), Scalar)
 precondition(compare(Cmp, distance(EA, EB, nearest), scalar(Amt)), O) :-
   outcome_3to2(O3, O),
-  comparison_direction(Cmp),
+  comparator_g3(Cmp),
   entity_3to2(EA3, EA),
   entity_3to2(EB3, EB),
   distance_g3(Amt),
@@ -128,7 +136,7 @@ precondition(compare(Cmp, amount(Col), resource(R)), O) :-
   resource_g3(R),
   precondition_g3(has_resource(paint(Col), Cmp, R), O3).
 % compare(cmp, Rsrc, Rsrc)
-precondition(compare(Cmp, resource(RA), resource(RB))), O) :-
+precondition(compare(Cmp, resource(RA), resource(RB)), O) :-
   outcome_3to2(O3, O),
   resource_g3(RA),
   resource_g3(RB),
@@ -188,33 +196,114 @@ result(O, modify(IncDec, resource(R), Amt)) :-
   resource_g3(R),
   outcome_3to2(O3, O),
   incdec_3to2(IncDec3, IncDec),
-  result_g3(alter_resource(R, IncDec3, Amt)).
+  result_g3(O3, alter_resource(R, IncDec3, Amt)).
 result(O, modify(IncDec, property(Entity, health), Amt)) :-
   entity_3to2(Entity3, Entity),
   outcome_3to2(O3, O),
   incdec_3to2(IncDec3, IncDec),
-  result_g3(alter_resource(health(Entity3), IncDec3, Amt)).
+  result_g3(O3, alter_resource(health(Entity3), IncDec3, Amt)).
 result(O, modify(decrease, resource(R1), Amt)) :-
   resource_g3(R1),
   resource_g3(R2),
   outcome_3to2(O3, O),
-  result_g3(move_resource(R1, R2, Amt), O3).
+  result_g3(O3, move_resource(R1, R2, Amt)).
 result(O, modify(increase, resource(R2))) :-
   resource_g3(R1),
   resource_g3(R2),
   outcome_3to2(O3, O),
-  result_g3(move_resource(R1, R2, Amt), O3).
+  result_g3(O3, move_resource(R1, R2, Amt)).
 result(O, set_value(R, amount(C))) :-
   resource(R),
   paint_g3(C),
   outcome_3to2(O3, O),
   resource_change_direction_g3(IncDec),
-  result_g3(alter_resource(R, IncDec, Amt), O3).
+  result_g3(O3, alter_resource(R, IncDec, Amt)).
   
 % drawing on the world
-% entity movement, look_at
+result(O, draw(Entity,Color)) :-
+  outcome_3to2(O3,O),
+  entity_3to2(E3,Entity),
+  paint_g3(Color),
+  result_g3(O3,add_collider(Color,Entity)).
+result(O, draw(cursor,Color)) :-
+  outcome_3to2(O3,O),
+  paint_g3(Color),
+  result_g3(O3,add_collider(Color,cursor)).
+  
+% entity movement, look_at:
+%   [ ] physics_mode_ltarget_g3 in particular modes (move(E,Dir,Amt))
+outcome(outcome(entity_physics(E, M))) :-
+  entity_3to2(E3, E),
+  physics_mode_g3(physics, E3, M).
+precondition(in_behavior(E, M), entity_physics(E, M)) :-
+  entity_3to2(E3, E),
+  physics_mode_g3(physics, E3, M).
+result(outcome(in_behavior(E, M)), move(E, Direction, Speed)) :-
+  entity_3to2(E3, E),
+  physics_mode_g3(physics, E3, M),
+  physics_mode_lvel_g3(physics, E3, M, Speed),
+  physics_mode_ltarget_g3(physics, E3, M, Direction),
+  Speed != 0.
+result(outcome(in_behavior(E, M)), look_at(E, Direction, nearest)) :-
+  entity_3to2(E3, E),
+  physics_mode_g3(physics, E3, M),
+  physics_mode_atarget_g3(physics, E3, M, Direction),
+  Direction != same.
+result(outcome(in_behavior(E, M)), rotates(E, cw)) :-
+  entity_3to2(E3, E),
+  physics_mode_g3(physics, E3, M),
+  physics_mode_avel_g3(physics, E3, M, Speed),
+  Speed > 0.
+result(outcome(in_behavior(E, M)), rotates(E, ccw)) :-
+  entity_3to2(E3, E),
+  physics_mode_g3(physics, E3, M),
+  physics_mode_avel_g3(physics, E3, M, Speed),
+  Speed < 0.
+
 % game mode change outcomes
-% tick outcome
+result(O, mode_change(Mode)) :-
+  outcome_3to2(O3, O),
+  result_g3(O3, set_gamemode(Mode)).
+
+precondition(tick, tick) :- outcome_g3(tick).
+outcome(tick) :- outcome_g3(tick).
+
 % tick: restitution, just restitute everything that's initialized to blocking
+result(tick, apply_restitution(EA, EB)) :-
+  entity(EA),
+  entity(EB).
+
 % behaviors
 % for behaviors and other weird stuff, check to make sure we acutally need it
+
+% etc
+
+control_event(E,delete(E2)) :- 
+	precondition(control_event(E),O),
+	result(O,delete(E2)).
+control_event(E,add(E2)) :-
+	precondition(control_event(E),O),
+	result(O,add(E2,_,_)).
+
+control_event(E,modify(R)) :- 
+	precondition(control_event(E),O),
+	result(O,modify(D,R)).
+
+controlLogic(draggable(E)) :-
+  entity_3to2(E3,E),
+  % a physics state where E3 follows the mouse
+  physics_mode_ltarget_g3(physics, E3, DragMode, cursor),
+  physics_mode_lvel_g3(physics, E3, DragMode, inf),
+  % which is entered when mouse down and cursor overlapping E3
+  outcome_g3(OA),
+  result_g3(OA, set_physics_mode(E3, DragMode)),
+  precondition_g3(control_action(E3, Ac), OA),
+  input_map_g3(control, button(mouse,press), E3, Ac),
+  precondition_g3(touching(E3, cursor), OA),
+  % and is exited when mouse up while in that state
+  outcome_g3(OB),
+  result_g3(OB, set_physics_mode(E3, NotDragMode)),
+  NotDragMode != DragMode,
+  precondition_g3(physics_mode(E3, DragMode), OB),
+  precondition_g3(control_action(E3, AcB), OB),
+  input_map_g3(control, button(mouse,up), E3, AcB).  

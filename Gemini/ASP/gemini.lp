@@ -112,11 +112,11 @@ charmstate_g3(charstate, E, normal) :-
   % charstate_logic_g3(charstate),
   % entity_g3(E).
 % maybe more states
-1{max_entity_states_g3(E,S)}1 :-
-  entity_g3(E),
-  S = min_entity_states_g3..max_entity_states_g3.
+1{max_entity_states_g3(E,S):S = min_entity_states_g3..max_entity_states_g3}1 :-
+  entity_g3(E).
 {charmstate_g3(charstate, E, state(S))} :-
   charstate_logic_g3(charstate),
+  S = min_entity_states_g3..max_entity_states_g3,
   max_entity_states_g3(E, S2),
   S < S2,
   entity(E).
@@ -129,11 +129,11 @@ charmstate_g3(charstate, E, normal) :-
 :- charstate_logic_g3(charstate),
   charmstate_g3(charstate, E, S),
   S != normal,
-  not charmstate_edge_g3(charstate, E, normal, S).
+  not charmedge_g3(charstate, E, normal, S).
 :- charstate_logic_g3(charstate),
   charmstate_g3(charstate, E, S),
   S != normal,
-  not charmstate_edge_g3(charstate, E, S, normal).
+  not charmedge_g3(charstate, E, S, normal).
 % TODO: maybe generate new states but give them all transitions to dead
 %  and give some transitions between the new states too
 
@@ -263,8 +263,6 @@ action_g3(control, E, A) :-
   a_op_g3(L, A).
 
 % * Structural synthesis between collision and physics
-loc_g3(collision, mouse) :-
-  logic_g3(collision).
 loc_g3(collision, C) :-
   logic_g3(collision),
   collider_g3(collision, C).
@@ -273,6 +271,8 @@ loc_g3(collision, target(E)) :-
   entity_g3(E).
 loc_g3(collision, arb) :-
   logic_g3(collision).
+dir_g3(physics, L) :-
+  collider_g3(collision, L).
 dir_g3(physics, aheadof(E)) :-
   logic_g3(physics),
   entity_g3(E). 
@@ -283,11 +283,16 @@ dir_g3(physics, (nw;n;ne;w;e;sw;s;se)) :-
   logic_g3(physics).
 dir_g3(physics, arb) :-
   logic_g3(physics).
-physics_lvel_g3(physics,lvel(auto(-1;1))).
-physics_avel_g3(physics,avel(auto(-1;1))).
-physics_lvel_g3(physics,lvel(R)) :-
-  resource_pool(resource, R).
-  
+dir_g3(physics, same) :-
+  logic_g3(physics).
+physics_avel_g3(physics,avel(arb;narb)).
+physics_lvel_g3(physics,lvel(arb;narb)).
+physics_lvel_g3(physics,lvel(R;-R)) :-
+  resource_pool_g3(resource, R).
+physics_lvel_g3(physics,(inf;ninf)).
+% Prevent collision logic driven low level moves, do all movement by physics logic
+:- result_g3(_, move_to(_, _)).
+
 % * Game-mode
 #include "logics/gamemode.lp".
 gamemode_logic_g3(gamemode).
@@ -438,9 +443,24 @@ prerequisite_g3(L1, Op1, L2, Op2) :-
 :- conflict_g3(L1, Op1, L2, Op2),
   logic_g3(L1),
   logic_g3(L2),
-  (q_op(L1, Op1) ; a_op(L1, Op1)),
-  (q_op(L2, Op2) ; a_op(L2, Op2)).
-
+  q_op_g3(L1, Op1),
+  q_op_g3(L2, Op2).
+:- conflict_g3(L1, Op1, L2, Op2),
+  logic_g3(L1),
+  logic_g3(L2),
+  q_op_g3(L1, Op1),
+  a_op_g3(L2, Op2).
+:- conflict_g3(L1, Op1, L2, Op2),
+  logic_g3(L1),
+  logic_g3(L2),
+  a_op_g3(L1, Op1),
+  q_op_g3(L2, Op2).
+:- conflict_g3(L1, Op1, L2, Op2),
+  logic_g3(L1),
+  logic_g3(L2),
+  a_op_g3(L1, Op1),
+  a_op_g3(L2, Op2).
+  
 % *** Unused so far; Entities dying when they're out of health
 % precondition_g3(charmstate(E, dead, false), die(E)) :-
 %   charstate_logic_g3(charstate),

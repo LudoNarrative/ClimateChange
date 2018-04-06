@@ -88,7 +88,7 @@ q_op_g3(L, proximity(C1, C2, Threshold, Cmp)) :-
   collider_g3(L, C1),
   collider_g3(L, C2),
   distance_g3(L, Threshold),
-  comparator_g3(B).
+  comparator_g3(Cmp).
 
 distance_g3(0).
 distance_g3(arb).

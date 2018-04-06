@@ -237,11 +237,11 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 	result(O1,modify(_,_,_)).
 
 :- precondition(compare(POLARITY1,distance(E1,E2,Comparison),Amount), O1),
-	result(O1,move(E,direction(forward))),
-	result(O1,look_at(E,Other)),
+	result(O1,move(E,direction(forward),_)),
+	result(O1,look_at(E,Other,_)),
 	precondition(compare(POLARITY2,distance(E1,E2,Comparison),Amount), O2),
-	result(O2,look_at(E,Other)),
-	result(O2,move(E,direction(backward))).
+	result(O2,look_at(E,Other,_)),
+	result(O2,move(E,direction(backward),_)).
 
 :- boundary(torus),
    not torus_safe(O),
