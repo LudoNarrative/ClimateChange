@@ -141,7 +141,7 @@ function drawUpToPresent(){
 	}
 //end timeline animations
 
-function circleClicked(timestep, level) {
+function circleClicked(timestep, level, theElement) {
 
 	if ($("#mainText").css("display") == "none") { $("#mainText").fadeIn(1000);	}
 
@@ -171,11 +171,11 @@ function circleClicked(timestep, level) {
 function startIntro() {
 
 	var introTexts = [
-		"Our world is changing, something something...",
+		"Our world is changing...warming in an ever-accelerating<br/>reaction to humanity's continued development.",
 		"We all have a part to play, together, in this...but each journey is also our own",
-		"...steering into one of many possible futures",
-		"Maybe we do cool things",
-		"Maybe things aren't so great",
+		"...steering into one of many possible futures.",
+		"Maybe we can turn the tide to stem the worst of the changes.",
+		"Maybe our action comes just too little, too late.",
 		"Or maybe we let the chance to save our world slip through our fingers.",
 		"What will you choose?"
 	];
@@ -184,7 +184,7 @@ function startIntro() {
 		$('#centerText').html(introTexts[0]);
 	    return $('#centerText').fadeIn(1000);				//"Our world is changing, something something..."
 	}, function() {
-		return $('body').delay(2000);							//wait
+		return $('body').delay(3000);							//wait
 	}, function() {
 		return $('#blackout').fadeTo(1000, 0.5);					//fade in graph
 	}, function() {

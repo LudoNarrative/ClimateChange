@@ -113,6 +113,9 @@ html, body {
     display:none;
     color: white;
     z-index:2;
+    font-size: 24px;
+    text-align: center;
+    text-shadow: 2px 2px 2px #000000c7;
 }
 
 
