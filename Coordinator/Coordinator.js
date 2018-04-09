@@ -1120,7 +1120,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalLecture",
-				text : "no path found for the lecture scene!"
+				text : "<p>The lecture continued on...over the years the specifics faded. But one thing was certain: the events of that first class cast a long shadow over your future as an academic.</p>"
 			}
 		];
 

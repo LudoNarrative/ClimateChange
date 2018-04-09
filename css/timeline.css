@@ -1,0 +1,84 @@
+html, body {
+    height:100%;
+    overflow:hidden;
+}
+
+#mainText {
+    background-color: rgba(247, 231, 185, 0.89);
+    width: 45%;
+    padding: 0px 0px 0px 15px;
+    min-height: 38%;
+    max-height: 75%;
+    position: relative;
+    left: 175px;
+    top: 15px;
+    border-radius: 13px;
+}
+
+#mainTextContent {
+    overflow-y:auto;
+    max-height:275px;
+}
+
+#playButton {
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    background-color: blue;
+    position: absolute;
+    right: -16px;
+    bottom: -16px;
+}
+
+#timelineContainer {
+    
+    width:95%;
+    margin:auto;
+    height:90%;
+    min-height:500px;
+    position:relative;
+    top:4%;
+}
+
+#timelineContainer svg {
+    position:absolute;
+    z-index:-1;
+    width:100%;
+    height:100%;
+}
+
+#climateFacts {
+    background-color: #49a2ff73;
+    position: absolute;
+    width: 38%;
+    height: 28%;
+    left: 272px;
+    bottom: 194px;
+    border-radius: 13px;
+}
+
+#climateFacts .title {
+    margin-left: 88px;
+    font-size: 31px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#climateFacts .text {
+    width: 75%;
+    float: right;
+    margin-right: 20px;
+}
+
+#artAccent {
+    background-image:url("https://i.pinimg.com/564x/29/f5/43/29f543256aca395cb06b5e90032b03ce.jpg");
+    background-size:contain;
+    border: 1px solid green;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: green;
+    position: relative;
+    left: 157px;
+    top: 43px;
+}
