@@ -13,6 +13,7 @@ html, body {
     left: 175px;
     top: 15px;
     border-radius: 13px;
+    opacity: 0; /* hidden at start, shown later by JS */
 }
 
 #mainTextContent {
@@ -55,6 +56,7 @@ html, body {
     left: 272px;
     bottom: 194px;
     border-radius: 13px;
+    opacity: 0; /* hidden at start, shown later by JS */
 }
 
 #climateFacts .title {
@@ -81,4 +83,55 @@ html, body {
     position: relative;
     left: 157px;
     top: 43px;
+    opacity: 0; /* hidden at start, shown later by JS */
+}
+
+/* CSS animations */
+
+#upToPresent {
+    fill: none;
+    stroke: red;
+    stroke-width: 2;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+}
+
+#futureTop, #futureMiddle, #futureBottom {
+    fill: none;
+    stroke: red;
+    stroke-width: 2;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+}
+
+#futureGradient {
+    opacity: 0;
+}
+
+.point {
+    opacity: 0;
+}
+
+.fade-in {
+    animation: fade-in 5s linear forwards;
+}
+
+.fade-in-fast {
+    animation: fade-in 2s linear forwards;
+}
+
+@keyframes fade-in {
+    to {
+        opacity: 1;
+    }
+}
+
+.draw-in {
+    animation: draw-in 5s linear forwards;
+}
+
+@keyframes draw-in {
+    to {
+        stroke-dashoffset: 0;
+    }
 }
