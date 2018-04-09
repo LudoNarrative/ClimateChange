@@ -25,7 +25,7 @@ resource_amount_g3(L, P) :- resource_logic_g3(L), resource_pool_g3(L, P).
 init_ok_g3(L, alter_resource(P, inc, r(K))) :-
   resource_logic_g3(L),
   resource_pool_g3(L, P),
-  resource_amount(L, r(K)).
+  resource_amount_g3(L, r(K)).
 
 % state_feedback_g3(L, resource_pool(P)) :-
 %   resource_logic_g3(L),
@@ -45,7 +45,8 @@ q_op_g3(L, has_resource(P, Cmp, Amt)) :-
   resource_amount_g3(L, Amt),
   comparator_g3(Cmp),
   Amt != inf,
-  Amt != ninf.
+  Amt != ninf,
+  P != Amt.
 
 % feedback_g3(L, has_resource(P, Cmp, Amt)) :-
 %   resource_logic_g3(L),
@@ -59,19 +60,20 @@ a_op_g3(L, alter_resource(P, IncDec, Amt)) :-
   resource_pool_g3(L, P),
   resource_amount_g3(L, Amt),
   resource_change_direction_g3(IncDec),
-  Amt != r(0).
+  Amt != r(0),
+  P != Amt.
 
 % but this one requires that P1 has at least Amt
-a_op_g3(L, move_resource(P1, P2, Amt)) :-
-  resource_logic_g3(L),
-  resource_pool_g3(L, P1),
-  resource_pool_g3(L, P2),
-  resource_amount_g3(L, Amt),
-  Amt != r(0).
+% a_op_g3(L, move_resource(P1, P2, Amt)) :-
+  % resource_logic_g3(L),
+  % resource_pool_g3(L, P1),
+  % resource_pool_g3(L, P2),
+  % resource_amount_g3(L, Amt),
+  % Amt != r(0).
 
-prerequisite_g3(L, move_resource(P1, P2, Amt), L, has_resource(P1, ge, Amt)) :-
-  resource_logic_g3(L),
-  resource_pool_g3(L, P1),
-  resource_pool_g3(L, P2),
-  resource_amount_g3(L, Amt),
-  Amt != inf.
+% prerequisite_g3(L, move_resource(P1, P2, Amt), L, has_resource(P1, ge, Amt)) :-
+  % resource_logic_g3(L),
+  % resource_pool_g3(L, P1),
+  % resource_pool_g3(L, P2),
+  % resource_amount_g3(L, Amt),
+  % Amt != inf.

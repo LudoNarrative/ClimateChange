@@ -35,6 +35,10 @@ many(E) :-
   not many(E),
   not singular(E).
 
+pool(E, location(Row,Col), ordered, ordered) :-
+  result_g3(_,add_collider(E3,grid(Row, Col))),
+  entity_3to2(E3, E).
+spawn_types(ordered).
 initialize(add(E,scalar(1),location(Row,Col))) :-
   result_g3(init,add_collider(E3,grid(Row, Col))),
   entity_3to2(E3, E).
@@ -129,20 +133,20 @@ precondition(compare(Cmp, amount(Col), scalar(A)), O) :-
   paint_pool_g3(paint(Col)),
   precondition_g3(has_resource(paint(Col), Cmp, r(A)), O3).
 % compare(cmp, Color, Rsrc)
-precondition(compare(Cmp, amount(Col), resource(R)), O) :-
+precondition(compare(Cmp, amount(Col), R), O) :-
   outcome_3to2(O3, O),
   paint_g3(Col),
   paint_pool_g3(paint(Col)),
   resource_g3(R),
   precondition_g3(has_resource(paint(Col), Cmp, R), O3).
 % compare(cmp, Rsrc, Rsrc)
-precondition(compare(Cmp, resource(RA), resource(RB)), O) :-
+precondition(compare(Cmp, RA, RB), O) :-
   outcome_3to2(O3, O),
   resource_g3(RA),
   resource_g3(RB),
   precondition_g3(has_resource(RA, Cmp, RB), O3).
 % compare(cmp, Rsrc, Scalar)
-precondition(compare(Cmp, resource(RA), scalar(B)), O) :-
+precondition(compare(Cmp, RA, scalar(B)), O) :-
   outcome_3to2(O3, O),
   resource_g3(RA),
   resource_amount_g3(resource, r(B)),
@@ -235,30 +239,73 @@ result(O, draw(cursor,Color)) :-
 outcome(outcome(entity_physics(E, M))) :-
   entity_3to2(E3, E),
   physics_mode_g3(physics, E3, M).
-precondition(in_behavior(E, M), entity_physics(E, M)) :-
+precondition(in_behavior(E, M), outcome(entity_physics(E, M))) :-
   entity_3to2(E3, E),
   physics_mode_g3(physics, E3, M).
-result(outcome(in_behavior(E, M)), move(E, Direction, Speed)) :-
+
+% For 3to2, force that entities move in the direction relative to their facing
+:- physics_mode_ltarget_g3(physics, _, _, Dir),
+  Dir != forward,
+  Dir != right.
+
+gt0(arb;inf).
+gt0(lvel(S)) :-
+  S > 0,
+  physics_lvel_g3(physics, lvel(S)).
+gt0(avel(S)) :-
+  S > 0,
+  physics_avel_g3(physics, avel(S)).
+lt0(narb;ninf).
+lt0(lvel(S)) :-
+  S < 0,
+  physics_lvel_g3(physics, lvel(S)).
+lt0(avel(S)) :-
+  S < 0,
+  physics_avel_g3(physics, avel(S)).
+neg_lvel(narb, arb;arb, narb).
+neg_lvel(ninf, inf;inf, ninf).
+neg_lvel(lvel(S), lvel(-S)) :-
+  physics_lvel_g3(physics, lvel(S)).
+direction_speed_3to2(forward, S3, direction(forward), S3) :-
+  S3 > 0,
+  gt0(S3),
+  physics_lvel_g3(physics, S3).
+direction_speed_3to2(forward, S3, direction(backward), S) :-
+  lt0(S3),
+  neg_lvel(S3,S),
+  physics_lvel_g3(physics, S3).
+direction_speed_3to2(right, S3, direction(right), S3) :-
+  S3 > 0,
+  gt0(S3),
+  physics_lvel_g3(physics, S3).
+direction_speed_3to2(right, S3, direction(left), S) :-
+  lt0(S3),
+  neg_lvel(S3,S),
+  physics_lvel_g3(physics, S3).
+
+result(outcome(entity_physics(E, M)), move(E, Direction, Speed)) :-
   entity_3to2(E3, E),
   physics_mode_g3(physics, E3, M),
-  physics_mode_lvel_g3(physics, E3, M, Speed),
-  physics_mode_ltarget_g3(physics, E3, M, Direction),
-  Speed != 0.
-result(outcome(in_behavior(E, M)), look_at(E, Direction, nearest)) :-
+  physics_mode_lvel_g3(physics, E3, M, Speed3),
+  physics_mode_ltarget_g3(physics, E3, M, Direction3),
+  Speed3 != lvel(0),
+  Speed3 = lvel(Speed),
+  direction_speed_3to2(Direction3, Speed3, Direction, Speed).
+result(outcome(entity_physics(E, M)), look_at(E, Direction, nearest)) :-
   entity_3to2(E3, E),
   physics_mode_g3(physics, E3, M),
   physics_mode_atarget_g3(physics, E3, M, Direction),
   Direction != same.
-result(outcome(in_behavior(E, M)), rotates(E, cw)) :-
+result(outcome(entity_physics(E, M)), rotates(E, cw)) :-
   entity_3to2(E3, E),
   physics_mode_g3(physics, E3, M),
   physics_mode_avel_g3(physics, E3, M, Speed),
-  Speed > 0.
-result(outcome(in_behavior(E, M)), rotates(E, ccw)) :-
+  gt0(Speed).
+result(outcome(entity_physics(E, M)), rotates(E, ccw)) :-
   entity_3to2(E3, E),
   physics_mode_g3(physics, E3, M),
   physics_mode_avel_g3(physics, E3, M, Speed),
-  Speed < 0.
+  lt0(Speed).
 
 % game mode change outcomes
 result(O, mode_change(Mode)) :-
@@ -289,6 +336,11 @@ control_event(E,modify(R)) :-
 	precondition(control_event(E),O),
 	result(O,modify(D,R)).
 
+flees(E1, E2) :-
+  entity_movement(E1, flees(E2)).
+chases(E1, E2) :-
+  entity_movement(E1, chases(E2)).
+
 controlLogic(draggable(E)) :-
   entity_3to2(E3,E),
   % a physics state where E3 follows the mouse
@@ -307,3 +359,15 @@ controlLogic(draggable(E)) :-
   precondition_g3(physics_mode(E3, DragMode), OB),
   precondition_g3(control_action(E3, AcB), OB),
   input_map_g3(control, button(mouse,up), E3, AcB).  
+
+
+reachableCondition(in_behavior(E,normal)) :-
+  entity(E).
+reachableCondition(in_behavior(E,M)) :-
+  entity_3to2(E3,E),
+  result_g3(set_physics_mode(E3,M),O3),
+  outcome_3to2(O3,O),
+  reachableOutcome(O).
+ignoredCondition(init).
+% chases(E1, E2) and flees should fall out of the restrictions above and translations of movement
+% try to fix as many warnings as possible

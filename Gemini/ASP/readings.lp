@@ -245,25 +245,25 @@ required(consumes) :- required(sharing).
     
 reading(consumes,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
-    result(Outcome,modify(decrease,Resource1)).
+    result(Outcome,modify(decrease,Resource1,_)).
 
 reading(consumes,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
-    result(Outcome,modify(decrease,Resource1)).
+    result(Outcome,modify(decrease,Resource1,_)).
 
 
 reading(produces,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity1,Entity2,true),Outcome),
-    result(Outcome,modify(increase,Resource1)).
+    result(Outcome,modify(increase,Resource1,_)).
 
 reading(produces,relation(Entity1,Resource1)) :-
     precondition(overlaps(Entity2,Entity1,true),Outcome),
-    result(Outcome,modify(increase,Resource1)).
+    result(Outcome,modify(increase,Resource1,_)).
 
 
 reading(costs,relation(Entity1,Resource1)) :-
     result(Outcome,add(Entity1,_,_)),
-    result(Outcome,modify(decrease,Resource1)).
+    result(Outcome,modify(decrease,Resource1,_)).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -289,11 +289,11 @@ reading(goal(produce),Resource) :-
 
 
 reading(goal(produce),Resource) :-
-    precondition(compare(le,Resource),Outcome),
+    precondition(compare(le,Resource,_),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
 
 reading(goal(produce),Resource) :-
-    precondition(compare(ge,Resource),Outcome),
+    precondition(compare(ge,Resource,_),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
 
@@ -307,11 +307,11 @@ reading(goal(produce),Color) :-
 
     
 reading(goal(reduce),Resource) :-
-    precondition(compare(ge,Resource),Outcome),
+    precondition(compare(ge,Resource,_),Outcome),
     result(Outcome,mode_change(game_loss;narrative_gating)).
     
 reading(goal(reduce),Resource) :-
-    precondition(compare(le,Resource),Outcome),
+    precondition(compare(le,Resource,_),Outcome),
     result(Outcome,mode_change(game_win;narrative_progress)).
 
     
@@ -373,19 +373,19 @@ reading(bad,Entity) :-
 % Good/bad outcomes derived from their relationship to Resources
 
 reading(good,Outcome) :-
-    result(Outcome,modify(increase,Resource)),
+    result(Outcome,modify(increase,Resource,_)),
     reading(good,Resource).
 
 reading(bad,Outcome) :-
-    result(Outcome,modify(decrease,Resource)),
+    result(Outcome,modify(decrease,Resource,_)),
     reading(good,Resource).
 
 reading(bad,Outcome) :-
-    result(Outcome,modify(increase,Resource)),
+    result(Outcome,modify(increase,Resource,_)),
     reading(bad,Resource).
 
 reading(good,Outcome) :-
-    result(Outcome,modify(decrease,Resource)),
+    result(Outcome,modify(decrease,Resource,_)),
     reading(bad,Resource).
 
 
@@ -536,8 +536,8 @@ required(bad) :- required(tradeoff).
 { reading(maintenance,Resource) } :-
     reading(good,Resource),
     player_controls_outcome(Outcome),
-    result(Outcome,modify(increase,Resource)),
-    result(OverTime,modify(decrease,Resource)),
+    result(Outcome,modify(increase,Resource,_)),
+    result(OverTime,modify(decrease,Resource,_)),
     over_time(OverTime).
 
 % TODO: required(maintenance) isnt implied by reading(maintenance,Resource)?
@@ -548,8 +548,8 @@ required(good) :- required(maintenance).
 { reading(maintenance,Resource) } :-
     reading(bad,Resource),
     player_controls_outcome(Outcome),
-    result(Outcome,modify(decrease,Resource)),
-    result(OverTime,modify(increase,Resource)),
+    result(Outcome,modify(decrease,Resource,_)),
+    result(OverTime,modify(increase,Resource,_)),
     over_time(OverTime).
 
 required(bad) :- required(maintenance).
@@ -563,11 +563,11 @@ required(bad) :- required(maintenance).
 % And low otherwise
 
 { reading(stakes(high),Resource) } :-
-    precondition(compare(ge,Resource),Outcome),
+    precondition(compare(ge,Resource,_),Outcome),
     result(Outcome,mode_change(game_loss)).
     
 { reading(stakes(high),Resource) } :-
-    precondition(compare(le,Resource),Outcome),
+    precondition(compare(le,Resource,_),Outcome),
     result(Outcome,mode_change(game_win)).
 
 %{ reading(stakes(high),property(Entity,health)) } :-
@@ -623,12 +623,12 @@ required(risk) :- required(grinding).
 required(outcome_hurts) :- required(risk).
 
 { reading(outcome_helps,relation(Outcome,Resource)) } :-
-    result(Outcome,modify(increase,Resource)),
+    result(Outcome,modify(increase,Resource,_)),
     player_controls_outcome(Outcome),
     reading(good,Resource).
 
 { reading(outcome_helps,relation(Outcome,Resource)) } :-
-    result(Outcome,modify(decrease,Resource)),
+    result(Outcome,modify(decrease,Resource,_)),
     player_controls_outcome(Outcome),
     reading(bad,Resource).
 
@@ -638,12 +638,12 @@ required(bad) :- required(outcome_helps).
 
 
 { reading(outcome_hurts,relation(Outcome,Resource)) } :-
-    result(Outcome,modify(decrease,Resource)),
+    result(Outcome,modify(decrease,Resource,_)),
     player_controls_outcome(Outcome),
     reading(good,Resource).
 
 { reading(outcome_hurts,relation(Outcome,Resource)) } :-
-    result(Outcome,modify(increase,Resource)),
+    result(Outcome,modify(increase,Resource,_)),
     player_controls_outcome(Outcome),
     reading(bad,Resource).
 
@@ -688,15 +688,15 @@ reading_about(Thing) :-
 % outcome_creates_condition : (not used anywhere)
 
 outcome_creates_condition(Outcome,compare(le,Resource)) :-
-    result(Outcome,modify(decrease,Resource)),
+    result(Outcome,modify(decrease,Resource,_)),
     condition(compare(le,Resource)).
 
 outcome_creates_condition(Outcome,compare(ge,Resource)) :-
-    result(Outcome,modify(increase,Resource)),
+    result(Outcome,modify(increase,Resource,_)),
     condition(compare(ge,Resource)).
 
 outcome_creates_condition(Outcome,overlaps(Entity)) :-
-    result(Outcome,move(Entity,direction(_,_))),
+    result(Outcome,move(Entity,direction(_,_),_)),
     condition(overlaps(Entity)).
 
 

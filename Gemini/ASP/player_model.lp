@@ -27,19 +27,15 @@ player_model(Outcome ,player_will_attempt) :- player_controls_outcome(Outcome),
 invalidated(Outcome,P) :-  player_model(Outcome,Other),
 			   priority(Other,P).
 
-player_model(Outcome,player_must_do) :- result(Outcome, move(Entity,_)),
+player_model(Outcome,player_must_do) :- result(Outcome, move(Entity,_,_)),
 					     player_controls(Entity),
 					      not invalidated(Outcome,player_must_do).
 
-player_model(Outcome,player_must_do) :- result(Outcome, rotates(Entity,_,_)),
+player_model(Outcome,player_must_do) :- result(Outcome, rotates(Entity,_)),
 					     player_controls(Entity),
 					     not invalidated(Outcome,player_must_do).
 
 player_model(Outcome,player_must_do) :- result(Outcome, look_at(Entity,_,_)),
-					     player_controls(Entity),
-					     not invalidated(Outcome,player_must_do).
-
-player_model(Outcome,player_must_do) :- result(Outcome, rotate_to(Entity,_)),
 					     player_controls(Entity),
 					     not invalidated(Outcome,player_must_do).
 

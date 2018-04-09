@@ -1,18 +1,18 @@
 
 
 cooldown(Comparison,Outcome,Resource) :-
-    precondition(compare(Comparison,Resource),Outcome),
-    result(Outcome,modify(ResultModification,Resource)),
+    precondition(compare(Comparison,Resource,_),Outcome),
+    result(Outcome,modify(ResultModification,Resource,_)),
     not satisfies(Comparison,ResultModification),
     satisfies(Comparison,Modification),
     result(tick,modify(Modification,Resource)).
 
 cooldown(Comparison,Outcome,Resource) :-
-    precondition(compare(Comparison,Resource),Outcome),
-    result(Outcome,modify(ResultModification,Resource)),
+    precondition(compare(Comparison,Resource,_),Outcome),
+    result(Outcome,modify(ResultModification,Resource,_)),
     not satisfies(Comparison,ResultModification),
     satisfies(Comparison,Modification),
-    result(TimerOutcome,modify(Modification,Resource)),
+    result(TimerOutcome,modify(Modification,Resource,_)),
     precondition(timer_elapsed(T),TimerOutcome).
 
 creates_freely(O,E) :-
@@ -23,7 +23,7 @@ creates_freely(O,E) :-
 
 satisfies(ge,increase).
 
-moving(Entity) :- result(_,move(Entity,_)).
+moving(Entity) :- result(_,move(Entity,_,_)).
 moving(Entity) :- controlLogic(draggable(Entity)).
 
 static(Entity) :- entity(Entity), not moving(Entity).
@@ -39,29 +39,29 @@ synced(R,V) :- result(tick,set_value(R,V)),
 
 player_controls_by(E,control_event(C)) :- precondition(control_event(C),O),
 					  1 {result(O,look_at(E,E2,_));
-					     result(O,move(E,_));
-					     result(O,rotates(E,_,_))},
+					     result(O,move(E,_,_));
+					     result(O,rotates(E,_))},
 					  entity(E).
 
 entity_movement(E,chases(E2)) :- result(O,look_at(E,E2,_)),
-				result(O,move(E,direction(forward))).
+				result(O,move(E,direction(forward),_)).
 
 entity_movement(E,flees(E2)) :- result(O,look_at(E,E2,_)),
-			       result(O,move(E,direction(backward))).
+			       result(O,move(E,direction(backward),_)).
 
 entity_movement(E,orbits(E2)) :- result(O,look_at(E,E2,_)),
-			       result(O,move(E,direction(left))).
+			       result(O,move(E,direction(left),_)).
 entity_movement(E,orbits(E2)) :- result(O,look_at(E,E2,_)),
-				result(O,move(E,direction(right))).
+				result(O,move(E,direction(right),_)).
 
 entity_movement(E,click_and_drag) :- controlLogic(draggable(E)).
-entity_movement(E,pivots) :- result(O,rotates(E,_,_)).
+entity_movement(E,pivots) :- result(O,rotates(E,_)).
 
 
 
 
 torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),A),O),
-		 result(O,move(ENTITY,direction(forward))),
+		 result(O,move(ENTITY,direction(forward),_)),
 		 result(O,look_at(ENTITY,OTHER,_)).
 torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),_),O),
 		 result(O,move(ENTITY,direction(forward),_)),
@@ -69,7 +69,7 @@ torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),_),O),
 
 
 torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),A),O),
-		 result(O,move(ENTITY,direction(backward))),
+		 result(O,move(ENTITY,direction(backward),_)),
 		 result(O,look_at(ENTITY,OTHER,_)).
 torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),_),O),
 		 result(O,move(ENTITY,direction(backward),_)),
@@ -78,16 +78,13 @@ torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),_),O),
 
 
 torus_safe(O) :- precondition(compare(ge,distance(OTHER,ENTITY,_),A),O),
-		 result(O,move(ENTITY,direction(forward))),
+		 result(O,move(ENTITY,direction(forward),_)),
 		 result(O,look_at(ENTITY,OTHER,_)).
-torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER),_),O),
+torus_safe(O) :- precondition(compare(ge,distance(ENTITY,OTHER,_),_),O),
 		 result(O,move(ENTITY,direction(forward),_)),
 		 result(O,look_at(ENTITY,OTHER,_)).
 
 
-torus_safe(O) :- precondition(compare(le,distance(OTHER,ENTITY,_),A),O),
-		 result(O,move(ENTITY,direction(backward))),
-		 result(O,look_at(ENTITY,OTHER,_)).
 torus_safe(O) :- precondition(compare(le,distance(ENTITY,OTHER,_),_),O),
 		 result(O,move(ENTITY,direction(backward),_)),
 		 result(O,look_at(ENTITY,OTHER,_)).
@@ -119,11 +116,9 @@ playerControls :- controlLogic(_).
 player_controls(Entity) :-  controlLogic(draggable(Entity)).
 player_controls(Entity) :-  action(move(Entity,direction(_,cursor))).
 player_controls(Entity) :-  action(look_at(Entity,cursor,_)).
-player_controls(Entity) :-  result(Outcome,move(Entity,direction(_,_))),
+player_controls(Entity) :-  result(Outcome,move(Entity,direction(_,_,_),_)),
 			    precondition(control_event(EVENT),Outcome).
-player_controls(Entity) :-  result(Outcome,rotates(Entity,_,_)),
-			    precondition(control_event(EVENT),Outcome).
-player_controls(Entity) :-  result(Outcome,rotate_to(Entity,_)),
+player_controls(Entity) :-  result(Outcome,rotates(Entity,_)),
 			    precondition(control_event(EVENT),Outcome).
 player_controls(Entity) :-  result(Outcome,look_at(Entity,_,_)),
 			    precondition(control_event(EVENT),Outcome).
@@ -145,7 +140,7 @@ spatial_condition(E2,E1) :- precondition(compare(Polarity,distance(E1,E2,P),A),O
 
 
 
-moves(E) :- result(_,move(E,_)).
+moves(E) :- result(_,move(E,_,_)).
 moves(E) :- controlLogic(draggable(E)).
 
 
@@ -171,21 +166,21 @@ required(Entity) :- result(_,apply_restitution(_,Entity)).
 freeResource(Change,Resource) :- 
     resource(Resource), 
     result(Outcome,modify(Change,Resource)),
-    not precondition(compare(_,_),Outcome),
+    not precondition(compare(_,_,_),Outcome),
     outcome(Outcome).
 
 %or if it's conditioned in the proper way on a free resource
 freeResource(Change,Resource) :- 
     resource(Resource), 
     result(Outcome,modify(Change,Resource)),
-    precondition(compare(ge,Resource2),Outcome),
+    precondition(compare(ge,Resource2,_),Outcome),
     freeResource(increase,Resource2),
     outcome(Outcome).
 
 freeResource(Change,Resource) :- 
     resource(Resource), 
     result(Outcome,modify(Change,Resource)),
-    precondition(compare(le,Resource2),Outcome),
+    precondition(compare(le,Resource2,_),Outcome),
     freeResource(decrease,Resource2),
     outcome(Outcome).
 
@@ -293,12 +288,14 @@ reachableOutcome(Outcome) :- outcome(Outcome),
 
 only_one_precondition(Outcome) :- 1 {precondition(_,Outcome)} 1, outcome(Outcome).
 
-    
-balanced(property(Property,E)) :- action(modify(increase,property(Property,E))),
-                                  action(modfiy(decrease,property(Property,E))).
-                                  
-frivolous(Resource) :- not condition(compare(_,Resource)),
-                        resource(Resource).
+
+balanced(property(Property,E)) :- action(modify(increase,property(Property,E),_)),
+                                  action(modfiy(decrease,property(Property,E),_)).
+
+frivolous(Resource) :-
+  not precondition(compare(_,Resource,_),_),
+  not precondition(compare(_,_,Resource),_),
+  resource(Resource).
 
 
 constant(Entity) :- entity(Entity),
@@ -411,24 +408,24 @@ trivial(O) :-
 
 trivial(O) :- 
     precondition(compare(le,distance(E1,E2,_),_),O),
-	result(O,look_at(E1,E2)),
-    result(O,move(E1,direction(forward))).
+	result(O,look_at(E1,E2,_)),
+    result(O,move(E1,direction(forward),_)).
 
 trivial(O) :- 
     precondition(compare(ge,distance(E1,E2,_),_),O),
-	result(O,look_at(E1,E2)),
-    result(O,move(E1,direction(backward))).
+	result(O,look_at(E1,E2,_)),
+    result(O,move(E1,direction(backward),_)).
 
 
 trivial(O) :- 
     precondition(compare(le,distance(E1,E2,_),_),O),
-	result(O,look_at(E2,E1)),
-    result(O,move(E2,direction(forward))).
+	result(O,look_at(E2,E1,_)),
+    result(O,move(E2,direction(forward),_)).
 
 trivial(O) :- 
     precondition(compare(ge,distance(E1,E2,_),_),O),
-	result(O,look_at(E2,E1)),
-    result(O,move(E2,direction(backward))).
+	result(O,look_at(E2,E1,_)),
+    result(O,move(E2,direction(backward),_)).
 
 
 allowed(frivolous(Resource)) :- read_only(Resource).

@@ -16,6 +16,8 @@
 #const min_timers_g3 = 0.
 #const max_timers_g3 = 2.
 
+#const min_entity_states_g3 = 1.
+#const max_entity_states_g3 = 2.
 #const min_end_outcomes_g3 = 1.
 #const max_end_outcomes_g3 = 1.
 #const max_resource_change_per_g3 = 2.
@@ -119,7 +121,7 @@ charmstate_g3(charstate, E, normal) :-
   S = min_entity_states_g3..max_entity_states_g3,
   max_entity_states_g3(E, S2),
   S < S2,
-  entity(E).
+  entity_g3(E).
 {charmedge_g3(charstate, E, S1, S2)} :-
   charstate_logic_g3(charstate),
   charmstate_g3(charstate, E, S1),
@@ -250,11 +252,11 @@ input_g3(L, (button(mouse,(up;press;down)))) :-
 agent_g3(control, E) :-
   control_logic_g3(control),
   entity_g3(E).
-action_g3(control, E, set_target(Loc)) :-
-  control_logic_g3(control),
-  entity_g3(E),
-  agent_g3(control, E),
-  loc_g3(collision, Loc).
+% action_g3(control, E, set_target(Loc)) :-
+  % control_logic_g3(control),
+  % entity_g3(E),
+  % agent_g3(control, E),
+  % loc_g3(collision, Loc).
 action_g3(control, E, A) :-
   control_logic_g3(control),
   agent_g3(control, E),
@@ -283,10 +285,10 @@ dir_g3(physics, (nw;n;ne;w;e;sw;s;se)) :-
   logic_g3(physics).
 dir_g3(physics, arb) :-
   logic_g3(physics).
-dir_g3(physics, same) :-
+dir_g3(physics, (forward;right)) :-
   logic_g3(physics).
-physics_avel_g3(physics,avel(arb;narb)).
-physics_lvel_g3(physics,lvel(arb;narb)).
+physics_avel_g3(physics,(arb;narb)).
+physics_lvel_g3(physics,(arb;narb)).
 physics_lvel_g3(physics,lvel(R;-R)) :-
   resource_pool_g3(resource, R).
 physics_lvel_g3(physics,(inf;ninf)).
@@ -339,7 +341,7 @@ generated_outcome_g3(o(M)) :-
 
 1{max_resource_g3(min_resources_g3..max_resources_g3)}1 :-
   resource_logic_g3(resource).
-resource_g3(r(M)) :-
+resource_g3(rsrc(M)) :-
   resource_logic_g3(resource),
   M = 1..min_resources_g3..N,
   max_resource_g3(N).
@@ -350,11 +352,11 @@ resource_g3(r(M)) :-
 % TODO: steering here to combine info about target position, accels, max vels into controllers?
 % TODO: something like "mouse down to drive towards" will probably require a new state for the controlled character, right?
 
-1{max_timer_g3(M)}1 :-
-  M = min_timers_g3..max_timers_g3.
+1{max_timer_g3(M) : M = min_timers_g3..max_timers_g3}1.
 
 timer_g3(T) :-
-  max_timer_g3(T).
+  max_timer_g3(T),
+  T > 0.
 
 :- timer_g3(T),
   1 != {precondition_g3(timer(T,_,_),_)}.
@@ -444,23 +446,31 @@ prerequisite_g3(L1, Op1, L2, Op2) :-
   logic_g3(L1),
   logic_g3(L2),
   q_op_g3(L1, Op1),
-  q_op_g3(L2, Op2).
+  q_op_g3(L2, Op2),
+  precondition_g3(Op1, O),
+  precondition_g3(Op2, O).
 :- conflict_g3(L1, Op1, L2, Op2),
   logic_g3(L1),
   logic_g3(L2),
   q_op_g3(L1, Op1),
-  a_op_g3(L2, Op2).
+  a_op_g3(L2, Op2),
+  precondition_g3(Op1, O),
+  result_g3(O, Op2).
 :- conflict_g3(L1, Op1, L2, Op2),
   logic_g3(L1),
   logic_g3(L2),
   a_op_g3(L1, Op1),
-  q_op_g3(L2, Op2).
+  q_op_g3(L2, Op2),
+  result_g3(O, Op1),
+  precondition_g3(Op2, O).
 :- conflict_g3(L1, Op1, L2, Op2),
   logic_g3(L1),
   logic_g3(L2),
   a_op_g3(L1, Op1),
-  a_op_g3(L2, Op2).
-  
+  a_op_g3(L2, Op2),
+  result_g3(O, Op1),
+  result_g3(O, Op2).
+
 % *** Unused so far; Entities dying when they're out of health
 % precondition_g3(charmstate(E, dead, false), die(E)) :-
 %   charstate_logic_g3(charstate),
@@ -503,9 +513,6 @@ precondition_g3(tick, tick).
   logic_g3(L),
   a_op_g3(L, A).
 
-%#show precondition_g3/2.
-%#show result_g3/2.
-
 % * Initialization, in general
 outcome_g3(init).
 precondition_g3(init, init).
@@ -529,9 +536,9 @@ init_ok_g3(L, set_charmstate(M, S)) :-
 
 % Every machine must be initialized
 % "guess a default but admit overriding with explicit facts"
-:- charstate_logic_g3(L),
-  charm_g3(L, M),
-  not 1{result_g3(init, set_charmstate(M, S)):charmstate_g3(L,M,S)}1.
+% :- charstate_logic_g3(L),
+  % charm_g3(L, M),
+  % not 1{result_g3(init, set_charmstate(M, S)):charmstate_g3(L,M,S)}1.
 
 row_g3(top;middle;bottom).
 col_g3(left;center;right).
@@ -562,22 +569,25 @@ init_ok_g3(L, set_gamemode(playing)) :-
 1{result_g3(init, set_color(Entity, Color)) : colors(Color)}1 :-
   entity_g3(Entity).
 
+sprite(triangle).
+colors(red;blue).
+palette(blue).
+
 % * Other world model stuff
 
 boundary_types(torus;closed).
 1{boundary(Type):boundary_types(Type)}1.
 
-
 % * Readings
 
 % #include "generation.lp". % Handled by 3to2 
+#include "gemini_3to2.lp".
 #include "generation_constraints.lp".
 #include "generation_rules.lp".
 #include "generation_atoms.lp".
-#include "gemini_3to2.lp".
 #include "structure_rules.lp".
 #include "banned_list.lp".
 #include "readings.lp".
 #include "simplicity_tuning.lp".
 #include "player_model.lp".
-% #include "replacements.lp".
+% % #include "replacements.lp".

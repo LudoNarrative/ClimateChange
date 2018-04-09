@@ -11,18 +11,18 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 :- action(add(E,_,cursor)).
 :- action(add(E,resource(R),_)).
 
-:- action(modify(_,_,_)).
-:- precondition(compare(_,_),O),
+%:- action(modify(_,_,_)).
+:- precondition(compare(_,_,_),O),
     precondition(control_event(click(_)),O).
 
 
 % RUNNING OUT OF GAS
-:- precondition(compare(_,_),O),
+:- precondition(compare(_,_,_),O),
     precondition(control_event(_),O).
 	
     
 % PROPERTIES DONT WORK
-:- condition(compare(_,property(_,_))).
+:- condition(compare(_,property(_,_),_)).
 
 :- replace(result(O,move(E,D)),result(O,apply_impulse(E,D,_))).
 
@@ -39,10 +39,6 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 
 :-  precondition(control_event(click(E1)),O),
     result(O,modify(D,property(E2,_),_)),
-    E1 != E2.
-
-:-  precondition(control_event(click(E1)),O),
-    result(O,modify(D,property(E2,_))),
     E1 != E2.
 
 :- precondition(control_event(click(E)),O),

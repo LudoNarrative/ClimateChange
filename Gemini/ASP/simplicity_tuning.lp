@@ -37,7 +37,7 @@ preconditions_allowed(N) :- N = 2+(E+1)*(R+1) + A  + C - D,
 
 simple(R) :- resource(R),
 	     {result(_,modify(_,R));
-	      precondition(compare(_,R),_)} 3.
+	      precondition(compare(_,R,_),_)} 3.
 complex(R) :- not simple(R), resource(R).
 
 simple(E) :- entity(E),

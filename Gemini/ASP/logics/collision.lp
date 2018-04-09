@@ -28,15 +28,12 @@ prerequisite_g3(L, touching(C1, C2, B),
   bool_g3(B).
 
 %% TODO: more conflicts in other logics, like resource alterations and so on?
-conflict_g3(L, touching(C1, C2, B1),
-            L, touching(C1, C2, B2)) :-
+conflict_g3(L, touching(C1, C2, true),
+            L, touching(C1, C2, false)) :-
   collision_logic_g3(L),
   collider_g3(L, C1),
-  collider_g3(L, C2),
-  bool_g3(B1),
-  bool_g3(B2),
-  B1 != B2.
-
+  collider_g3(L, C2).
+  
 % feedback_g3(L, touching(C1, C2, B)) :-
 %   collision_logic_g3(L),
 %   q_op_g3(L, touching(C1, C2, B)).
@@ -77,8 +74,8 @@ a_op_g3(L, set_blocking(C1, C2, B)) :-
 prerequisite_g3(L, set_blocking(C1, C2, B),
                 L, set_blocking(C2, C1, B)) :-
   collision_logic_g3(L),
-  collider_g3(C1),
-  collider_g3(C2),
+  collider_g3(L, C1),
+  collider_g3(L, C2),
   bool_g3(B).
 
 % * Determine how far an entity could move towards another entity or region without touching or causing an overlap
