@@ -58,6 +58,7 @@ collider_g3(collision, cursor) :-
 #include "logics/physics.lp".
 physics_logic_g3(physics).
 physics_body_g3(physics, E) :-
+  physics_logic_g3(physics),
   entity_g3(E).
 
 % Tie physics and character states together
@@ -70,15 +71,8 @@ physics_mode_g3(physics, E, M) :-
 % physics_mode_g3(physics, E, dead) :-
   % entity_g3(E).
 
-prerequisite_g3(charstate, set_charmstate(E, M),
-                physics, set_physics_mode(E, M)) :-
-  charstate_logic_g3(charstate),
-  physics_logic_g3(physics),
-  a_op_g3(charstate, set_charmstate(E, M)),
-  a_op_g3(physics, set_physics_mode(E, M)).
-
-prerequisite_g3(physics, set_physics_mode(E, M),
-                charstate, set_charmstate(E, M)) :-
+birequisite_g3(charstate, set_charmstate(E, M),
+               physics, set_physics_mode(E, M)) :-
   charstate_logic_g3(charstate),
   physics_logic_g3(physics),
   a_op_g3(charstate, set_charmstate(E, M)),
@@ -362,6 +356,7 @@ timer_g3(T) :-
   1 != {precondition_g3(timer(T,_,_),_)}.
 
 % TODO: not really sure about this being in gemini or being a q_op?
+logic_g3(gemini).
 q_op_g3(gemini,timer(T,Interval,Oneshot)) :-
   timer_g3(T),
   timer_interval_g3(Interval),
@@ -371,28 +366,16 @@ timer_interval_g3(short;medium;long).
 
 % ** Gemini's operational integrations
 
-{precondition_g3(Q, O)} :-
-  logic_g3(L),
-  q_op_g3(L,Q),
+1{precondition_g3(Q, O)
+  : logic_g3(q_op_g3(L, Q)} :-
+  generated_outcome_g3(O).
+
+1{result_g3(O, A)
+  : logic_g3(L), a_op_g3(L, Q)} :-
   generated_outcome_g3(O).
 
 outcome_g3(O) :-
   generated_outcome_g3(O).
-
-unchecked_outcome_g3(O) :-
-  outcome_g3(O),
-  not precondition_g3(_, O).
-:- unchecked_outcome_g3(_).
-
-{result_g3(O, A)} :-
-  generated_outcome_g3(O),
-  logic_g3(L),
-  a_op_g3(L, A).
-
-trivial_outcome_g3(O) :-
-  outcome_g3(O),
-  not result_g3(O, _).
-:- trivial_outcome_g3(_).
 
 % Example: prevent any outcome that moves resource into or out of agent health?
 % :- resource_logic(resource), outcome(O), result(O, move_resource(health(_), _, _)).
