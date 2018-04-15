@@ -9,6 +9,8 @@ js:
 javatest:
 	java -cp /usr/local/lib/antlr-4.7.1-complete.jar:. org.antlr.v4.gui.TestRig Cygnus game tests/syntax.lp -gui
 	
+spotless: clean
+	rm CygnusListener.js *Lexer.js *Parser.js 
 
 clean:
-	rm *.interp *.tokens *.java *.class *Listener.js *Lexer.js *Parser.js 
+	rm *.interp *.tokens *.java *.class 

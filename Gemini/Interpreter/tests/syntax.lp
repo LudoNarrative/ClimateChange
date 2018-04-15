@@ -80,7 +80,9 @@ initialize(set_point(entity(r_1_XX_),location(bottom,right))).
 initialize(set_bool(flag(questflag),true)).
 
 % Pool
-initialize(set_point(entity(e_1),pool(entity(e_1_XX_),location(top,right),random,ordered))).
+initialize(set_point(entity(e_1),pool(entity(e_1_XX_)))).
+initialize(set_point(entity(e_1),pool(pool1))).
+result(outcome(o_6_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
 
 % Move
 initialize(moves(entity(e1),right,scalar(2))).

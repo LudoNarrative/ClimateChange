@@ -18,7 +18,7 @@ declaration
 	| boundary
 	| control_logic // (Redundant with initialize(set_draggable(..)). Will be removed from Cygnus eventually)
 	| timer_logic
-	| pool
+	| pool_decl
 
 	| initialize
 	| precondition
@@ -51,9 +51,7 @@ control_logic : 'controlLogic' '(' 'draggable' '(' entity ')' ')';
 
 timer_logic : 'timer_logic' '(' timer ',' value ',' loop_type ')';
 
-initialize   : 'initialize' '(' action ')'
-			 | 'initialize' '(' initial_only_action ')'
-			 ;
+initialize   : 'initialize' '(' action ')' ;
 
 precondition : 'precondition' '(' condition ',' outcome_name ')';
 result		 : 'result' '(' outcome_name ',' action ')';
@@ -86,14 +84,12 @@ condition
 	| 'tick'
 	; 
 
-initial_only_action : 'set_static' '(' entity ',' bool ')'; 
-
 action 
 	: 'add' '(' entity ',' value ',' point ')'
 	| 'delete' '(' entity ')' 
 	| 'draw' '(' point ',' WORD ')' // WORD should be a color
 	| 'clear' '(' point ')'
-	| 'fill' '(' 'all' ',' WORD ')' // WORD should be a color
+	| 'fill' '(' ('all'|location) ',' WORD ')' // WORD should be a color
 
 	| 'increase' '(' settable ',' value ')'
 	| 'decrease' '(' settable ',' value ')'
@@ -119,6 +115,7 @@ action
 	| 'set_size' '(' entity ',' value ')' // Red in BNF
 	| 'set_bounce' '(' entity ',' value ')' // Red in BNF
 	| 'set_draggable' '(' entity ',' bool ')'
+	| 'set_static' '(' entity ',' bool ')'
 
 	| 'mode_change' '(' WORD ')' // WORD should be a mode
 	;
@@ -133,7 +130,7 @@ value
 
 scalar : 'scalar' '(' NUM ')';
 
-settable 		: resource | property |  ;
+settable 		: resource | property ;
 settable_point 	: entity | property ; // Is an entity property only settable as a point if it's a point type? 
 settable_bool	: flag | property ; // ""
 
@@ -148,10 +145,11 @@ bool : BOOL | settable_bool ;
 
 location : 'location' '(' row ',' col ')' ;
 
-pool 
-	: 'pool' '(' entity ',' location ',' spawn_type ',' spawn_type ')'
-	| 'pool' '(' entity ')'
-	;
+pool_decl : 'pool' '(' pool_name ',' location ',' spawn_type ',' spawn_type ')' ;
+
+pool : 'pool' '(' pool_name ')' ;
+
+pool_name : entity | identifier ; // e.g., pool(entity(e_1_XX_)) or pool(pool1)
 
 control_event 
 	: 'click' '(' entity ')'
