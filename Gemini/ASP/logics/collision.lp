@@ -95,11 +95,13 @@ a_op_g3(L, move_to(C, Loc)) :-
   collider_g3(L, C),
   loc_g3(L, Loc).
 
-prerequisite_g3(L, move_to(C1, Loc), L, at_loc(C2, Loc, false)) :-
-  collision_logic_g3(L),
-  collider_g3(L, C1),
-  loc_g3(L, Loc),
-  collider_g3(L, C2).
+% TODO really this should be "nothing that blocks C1 at Loc"
+% prerequisite_g3(L, move_to(C1, Loc), L, at_loc(C2, Loc, false)) :-
+  % collision_logic_g3(L),
+  % collider_g3(L, C1),
+  % loc_g3(L, Loc),
+  % collider_g3(L, C2),
+  % C1 != C2.
 
 % * Whenever a combination of the above checks becomes true (or remains true, or becomes false), perform some abstract operation of this or another operational logic involving the objects considered in those checks
 %   Implicit in Gemini
