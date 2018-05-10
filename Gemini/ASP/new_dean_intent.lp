@@ -35,7 +35,10 @@ goes_down(R) :-
 :- goes_up(property(_,health)).
 
 :- many(entity(e(1))).
-%:- many(entity(e(2))).
+% :- many(entity(e(2))).
+
+:- outcome(orbit_the_cursor(_)).
+:- controlScheme(_,orbit_the_cursor).
 
 % :- not player_controls(entity(e(1))).
 
@@ -45,4 +48,4 @@ goes_down(R) :-
 % (soft win/lose).
 reading(goal(produce),resource(r(2))).
 % This should imply that r2 is good
-% :- not reading(good,resource(r(2))).
+:- not reading(good,resource(r(2))).

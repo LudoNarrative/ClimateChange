@@ -30,10 +30,11 @@ def solve(args, num_to_gen):
         stderr=subprocess.PIPE,
         shell=True
     ) as clingo:
-        out, err = clingo.communicate()
+        outb, err = clingo.communicate()
         print('CLINGO DONE')
     if err:
         print(err)
+    out = outb.decode("utf-8")
     with open('dump.lp', 'w') as outfile:
         result = json.loads(out)
         witness = result['Call'][0]['Witnesses'][-1]['Value']
@@ -992,3 +993,5 @@ if __name__ == '__main__':
                 with open('{}_{}.lp'.format(output_name, output_ind + 1 + (ii + 1) * len(outs)), 'w') as outfile:
 
                     outfile.write(out_str)
+
+    exit(0)
