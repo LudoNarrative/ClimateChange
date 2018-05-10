@@ -24,14 +24,14 @@ def solve(args, num_to_gen):
     print_args = ['clingo'] + list(args) + [' | tr [:space:] \\\\n | sort ']
     args = ['clingo', '--outf=2'] + args
     print(' '.join(print_args))
-    clingo = subprocess.Popen(
+    with subprocess.Popen(
         ' '.join(args),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True
-    )
-    out, err = clingo.communicate()
-    print('CLINGO DONE')
+    ) as clingo:
+        out, err = clingo.communicate()
+        print('CLINGO DONE')
     if err:
         print(err)
     with open('dump.lp', 'w') as outfile:
@@ -467,6 +467,12 @@ if __name__ == '__main__':
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
         toolbox = base.Toolbox()
+        # nbCPU = multiprocessing.cpu_count()
+        # chunk = len(pop) / nbCPU
+        # print('workers=', nbCPU, 'chunksize=', chunk)
+        pool = multiprocessing.Pool(14)
+        toolbox.register("map", pool.map)
+
 
         def rand_range(min_, max_):
             def gen():
@@ -534,12 +540,6 @@ if __name__ == '__main__':
         toolbox.decorate("mutate", checkBounds(1.0, max_value))
         pop = toolbox.population(n=POP_COUNT)
 
-        # nbCPU = multiprocessing.cpu_count()
-        # chunk = len(pop) / nbCPU
-        # print('workers=', nbCPU, 'chunksize=', chunk)
-        pool = multiprocessing.Pool(6)
-        toolbox.register("map", pool.map)
-
         # Evaluate the entire population
         fitnesses = toolbox.map(toolbox.evaluate, pop)
         for ind, fit in zip(pop, fitnesses):
@@ -580,6 +580,8 @@ if __name__ == '__main__':
                 best_ind = ind
         print(best)
         # print '=========='
+
+        pool.terminate()
 
         good_vars = set([])
         bad_vars = set([])

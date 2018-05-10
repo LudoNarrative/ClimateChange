@@ -112,6 +112,9 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- condition(over_color(_,Color)),
    not uses_color(Color).
 
+% TODO: prevent _any_ comparison against clear?
+:- precondition(compare(_,amount(clear),_),O),
+  0{uses_color(C):palette(C),C != clear}0.
 
 :- precondition(overlaps(E,E,true),O),
    result(O,delete(E)),
@@ -203,6 +206,8 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 	action(modify(_,Resource)).
 :- read_only(Resource),
 	action(modify(_,Resource,_)).
+:- read_only(Resource),
+  action(set_value(Resource,_)).
 
 
 :- precondition(overlaps(E1,E2,_),O),
