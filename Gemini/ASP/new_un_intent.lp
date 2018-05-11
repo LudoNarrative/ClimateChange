@@ -28,7 +28,7 @@ label(entity(e(3)),objection).
 %   - audience creates objections, knock out objections to proceed
 
 % :- reading(bad,_).
-% :- many(entity(e(1))).
+:- many(entity(e(1))).
 % :- not many(entity(e(3))).
 % :- not player_controls(entity(e(1))).
 % Some way that E2 makes a third thing

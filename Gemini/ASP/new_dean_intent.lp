@@ -37,6 +37,9 @@ goes_down(R) :-
 :- many(entity(e(1))).
 % :- many(entity(e(2))).
 
+:- trivial(O), result(O, modify(increase,resource(r(2)))).
+:- trivial(O), result(O, modify(increase,resource(r(2)),_)).
+
 :- outcome(orbit_the_cursor(_)).
 :- controlScheme(_,orbit_the_cursor).
 
