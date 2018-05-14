@@ -25,11 +25,14 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		//var finalScenes = ["finalDinner", "finalLecture", "finalTravel", "finalDean", "finalFamilyDinner", "finalBeach", "finalUN", "finalFaculty"];
 
 		//scenes played when you hit Begin
-		var playGameScenes = ["finalDinner", "finalLecture", "intro:deanOrTravel", "intro:tempDinnerWithFam", "finalBeach", "intro:theEnd"];
+		var playGameScenes = ["finalDinner", "finalLecture", "finalBeach", "intro:theEnd"];
 		State.set("scenes", playGameScenes);
 
 		if (Display.interfaceMode == "timeline") {
 			Display.initTimelineScreen(this, State, scenes, playGameScenes);		//start up Timeline UI
+		}
+		else if (Display.interfaceMode == "graph") {
+			Display.initGraphScreen(this, State, scenes, playGameScenes);
 		}
 		else {
 			Display.initTitleScreen(this, State, scenes, playGameScenes);		//start up scene list UI
@@ -402,7 +405,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			}
 		},
 		
-		//---------FINAL SCENES START HERE
+		//-------------------------FINAL SCENES START HERE------------------------------------------------
 		{
 			id: "finalDinner",
 			year: 2025,
@@ -508,6 +511,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				// end new items
 
 				"set satiation 5",					//this is the game interfacing variable
+
+				//for final release, variable tempTimeline will be set through graph to low, medium, or high (eg "set tempTimeline high")
 
 				"set friend1Relationship 5",			//on a scale between 1 to 10 (1 bad, 10 best)
 				"set friend2Relationship 5",		//on a scale between 1 to 10 (1 bad, 10 best)
@@ -655,6 +660,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set optimism 7",
 
 				"set questionsLeft 3",
+				//for final release, variable tempTimeline will be set through graph to low, medium, or high (eg "set tempTimeline high")
 			],
 			UIvars: [
 			{
@@ -726,6 +732,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set hope 5",	//global stat
 				"set optimism 5",	//global stat
 				"set composure 5"
+
+				//for final release, variable tempTimeline will be set through graph to low, medium, or high (eg "set tempTimeline high")
 			],
 			UIvars: [
 				{
@@ -743,6 +751,193 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				responder: "protagonist"
 			}
 		},
+		
+		//final UN scene
+		{
+			id: "finalUN",
+			year: 2042,
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"UN1": {name: "Mikkel Retna", gender: "male"},
+				"UN2": {name: "Kurt Branegan", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "atUNMeeting eq true"},
+				{ condition: "representingResearchGroup eq true"},
+				{ condition: "looksOverCommittee eq true"},
+				{ condition: "introducesResearch eq true"},
+				{ condition: "presentFacts eq true"},
+				{ condition: "factsLooped eq 6"},
+				{ condition: "kurtInterrupts eq true"},
+				{ condition: "lostTrainOfThought eq true"},
+				{ condition: "callForLocalAction eq true"},
+				{ condition: "endingArgument eq true"},
+				{ condition: "emmaReflection eq true"},
+				{ condition: "inHallway eq true"}
+			],
+			dataFiles: [
+				"text!finalUN"
+			],
+			startState: [
+				"set atUNMeeting false",
+				"set representingResearchGroup false",
+				"set looksOverCommittee false",
+				"set introducesResearch false",
+				"set presentFacts false",
+				"set kurtInterrupts false",
+				"set lostTrainOfThought false",
+				"set callForLocalAction false",
+				"set endingArgument false",
+				"set emmaReflection false",
+				"set inHallway false",
+
+				"set academicEnthusiasm 0",			//global stat
+				"set curiosity 5",	//global stat
+				"set hope 5",	//global stat
+				"set optimism 5",	//global stat
+
+				"set confidence 5",
+				"set persuasion 0",
+				"set composure 0",
+
+				"set charactersIntroduced 0",
+				"set factsPresented 0"
+
+				//for final release, variable tempTimeline will be set through graph to low, medium, or high (eg "set tempTimeline high")
+			],
+			UIvars: [
+				{
+					"varName" : "confidence",
+					"label" : "Confidence",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "persuasion",
+					"label" : "Persuasion",
+					"characters" : ["UN1", "UN2"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "composure",
+					"label" : "Composure",
+					"characters" : ["protagonist"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				}
+
+			],
+			mode: {
+				type: "narration"
+			}
+		},
+		//final Beach scene
+		{
+			id: "finalBeach",
+			year: 2042,
+			characters: {
+				"protagonist": {name: "Emma", gender: "female"},
+				"volunteer": {name: "Rodrigo", gender: "male"}
+			},
+			wishlist: [
+				{ condition: "onABeach eq true", order: "first"},
+				{ condition: "talkAboutSpecies eq true"},
+				{ condition: "talkAboutUNPlan eq true"},
+				{ condition: "volunteerInitialReaction eq true"},
+				{ condition: "protagonistRejoinder eq true"},
+				{ condition: "dropSadKnowledge eq true"},
+				{ condition: "beachOutro eq true", order: "last"},
+
+				{ condition: "expendEffort eq true", persistent: true},
+				
+				{ condition: "showCoworkerRelation eq true"},
+				{ condition: "showCoworkerIdentity eq true"},
+				{ condition: "showCoworkerOptimism eq true"},
+				{ condition: "showProtagonistOptimism eq true"},
+				
+
+				{
+					condition: "state: set coworkerRelation eq [unfamiliar|familiar]", 
+					label: "Co-worker Familiarity", 
+					hoverText: "Is your co-worker someone you know, or someone you don't?"
+				},
+				{
+					condition: "state: set coworkerIdentity [activist|academic]", 
+					label: "Co-worker Identity", 
+					hoverText: "Is your co-worker an academic, or a local activist?"
+				},
+				{
+					condition: "state: set coworkerOptimism [low|high]", 
+					label: "Co-worker Optimism", 
+					hoverText: "How optimistic is your co-worker?"
+				},
+				{
+					condition: "state: set protagonistOptimism eq [high|low]", 
+					label: "Emma's Optimism", 
+					hoverText: "How optimistic is Emma?"
+				},
+				{
+					condition: "protagonistIdentity eq [academic|activist]", 
+					label: "Emma's Identity", 
+					hoverText: "What is Emma's identity at this stage of her life?"
+				}
+			],
+			dataFiles: [
+				"text!finalBeach"
+			],
+			startState: [
+				"set onABeach false",
+				"set talkAboutSpecies false",
+				"set talkAboutUNPlan false",
+				"set volunteerInitialReaction false",
+				"set protagonistRejoinder false",
+				"set dropSadKnowledge false",
+				"set sceneOutro false",
+				"set progression 0",
+
+				"set academicEnthusiasm 0",			//global stat
+
+
+				"set patience 5",
+				"set optimism 0",
+				"set effort 0"
+
+				//for final release, variable tempTimeline will be set through graph to low, medium, or high (eg "set tempTimeline high")
+			],
+			UIvars: [
+			/*
+				{
+					"varName" : "protagonistOptimism",
+					"label" : "Optimism",
+					"characters" : ["protagonist", "volunteer"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "optimism",
+					"label" : "Optimism",
+					"characters" : ["protagnoist", "volunteer"],
+					"affectedBy" : "both",
+					"range" : [0,10]
+				},
+				{
+					"varName" : "progression",
+					"label" : "Progression",
+					"characters" : ["protagonist"],
+					"affectedBy" : "game",
+					"range" : [0,10]
+				}
+			*/
+			],
+			mode: {
+				type: "narration"
+			}
+		},
+
+		//---------END OF SCENES FOR FINAL 2018 RELEASE, SCENES BELOW ARE FINAL UNDERGRAD VERSIONS----------------
+
 		//final travel scene
 		{
 			id: "finalTravel",
@@ -875,185 +1070,6 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				type: "dialogue",
 				initiator: "mom",
 				responder: "protagonist"
-			}
-		},
-		//final UN scene
-		{
-			id: "finalUN",
-			year: 2042,
-			characters: {
-				"protagonist": {name: "Emma", gender: "female"},
-				"UN1": {name: "Mikkel Retna", gender: "male"},
-				"UN2": {name: "Kurt Branegan", gender: "male"}
-			},
-			wishlist: [
-				{ condition: "atUNMeeting eq true"},
-				{ condition: "representingResearchGroup eq true"},
-				{ condition: "looksOverCommittee eq true"},
-				{ condition: "introducesResearch eq true"},
-				{ condition: "presentFacts eq true"},
-				{ condition: "factsLooped eq 6"},
-				{ condition: "kurtInterrupts eq true"},
-				{ condition: "lostTrainOfThought eq true"},
-				{ condition: "callForLocalAction eq true"},
-				{ condition: "endingArgument eq true"},
-				{ condition: "emmaReflection eq true"},
-				{ condition: "inHallway eq true"}
-			],
-			dataFiles: [
-				"text!finalUN"
-			],
-			startState: [
-				"set atUNMeeting false",
-				"set representingResearchGroup false",
-				"set looksOverCommittee false",
-				"set introducesResearch false",
-				"set presentFacts false",
-				"set kurtInterrupts false",
-				"set lostTrainOfThought false",
-				"set callForLocalAction false",
-				"set endingArgument false",
-				"set emmaReflection false",
-				"set inHallway false",
-
-				"set academicEnthusiasm 0",			//global stat
-				"set curiosity 5",	//global stat
-				"set hope 5",	//global stat
-				"set optimism 5",	//global stat
-
-				"set confidence 5",
-				"set persuasion 0",
-				"set composure 0",
-
-				"set charactersIntroduced 0",
-				"set factsPresented 0"
-			],
-			UIvars: [
-				{
-					"varName" : "confidence",
-					"label" : "Confidence",
-					"characters" : ["protagonist"],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "persuasion",
-					"label" : "Persuasion",
-					"characters" : ["UN1", "UN2"],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "composure",
-					"label" : "Composure",
-					"characters" : ["protagonist"],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				}
-
-			],
-			mode: {
-				type: "narration"
-			}
-		},
-		//final Beach scene
-		{
-			id: "finalBeach",
-			year: 2042,
-			characters: {
-				"protagonist": {name: "Emma", gender: "female"},
-				"volunteer": {name: "Rodrigo", gender: "male"}
-			},
-			wishlist: [
-				{ condition: "onABeach eq true", order: "first"},
-				{ condition: "talkAboutSpecies eq true"},
-				{ condition: "talkAboutUNPlan eq true"},
-				{ condition: "volunteerInitialReaction eq true"},
-				{ condition: "protagonistRejoinder eq true"},
-				{ condition: "dropSadKnowledge eq true"},
-				{ condition: "beachOutro eq true", order: "last"},
-
-				{ condition: "expendEffort eq true", persistent: true},
-				
-				{ condition: "showCoworkerRelation eq true"},
-				{ condition: "showCoworkerIdentity eq true"},
-				{ condition: "showCoworkerOptimism eq true"},
-				{ condition: "showProtagonistOptimism eq true"},
-				
-
-				{
-					condition: "state: set coworkerRelation eq [unfamiliar|familiar]", 
-					label: "Co-worker Familiarity", 
-					hoverText: "Is your co-worker someone you know, or someone you don't?"
-				},
-				{
-					condition: "state: set coworkerIdentity [activist|academic]", 
-					label: "Co-worker Identity", 
-					hoverText: "Is your co-worker an academic, or a local activist?"
-				},
-				{
-					condition: "state: set coworkerOptimism [low|high]", 
-					label: "Co-worker Optimism", 
-					hoverText: "How optimistic is your co-worker?"
-				},
-				{
-					condition: "state: set protagonistOptimism eq [high|low]", 
-					label: "Emma's Optimism", 
-					hoverText: "How optimistic is Emma?"
-				},
-				{
-					condition: "protagonistIdentity eq [academic|activist]", 
-					label: "Emma's Identity", 
-					hoverText: "What is Emma's identity at this stage of her life?"
-				}
-			],
-			dataFiles: [
-				"text!finalBeach"
-			],
-			startState: [
-				"set onABeach false",
-				"set talkAboutSpecies false",
-				"set talkAboutUNPlan false",
-				"set volunteerInitialReaction false",
-				"set protagonistRejoinder false",
-				"set dropSadKnowledge false",
-				"set sceneOutro false",
-				"set progression 0",
-
-				"set academicEnthusiasm 0",			//global stat
-
-
-				"set patience 5",
-				"set optimism 0",
-				"set effort 0"
-			],
-			UIvars: [
-			/*
-				{
-					"varName" : "protagonistOptimism",
-					"label" : "Optimism",
-					"characters" : ["protagonist", "volunteer"],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "optimism",
-					"label" : "Optimism",
-					"characters" : ["protagnoist", "volunteer"],
-					"affectedBy" : "both",
-					"range" : [0,10]
-				},
-				{
-					"varName" : "progression",
-					"label" : "Progression",
-					"characters" : ["protagonist"],
-					"affectedBy" : "game",
-					"range" : [0,10]
-				}
-			*/
-			],
-			mode: {
-				type: "narration"
 			}
 		},
 		//final Faculty scene

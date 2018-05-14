@@ -2,70 +2,133 @@ html, body {
     height:100%;
     overflow:hidden;
     font-family: 'Open Sans', sans-serif;
+    margin:0px;
+    padding:0px;
 }
 
+body { background-color:black; }
+
 #mainText {
-    background-color: rgba(247, 231, 185, 0.89);
-    width: 45%;
+    background-color: #f1cf7f;
+    box-shadow: 3px 3px 9px #00000073;
+    width: 51%;
     padding: 0px 0px 0px 15px;
     min-height: 38%;
     max-height: 75%;
     position: relative;
-    left: 175px;
+    left: 110px;
     top: 15px;
     border-radius: 13px;
     display:none;
-    z-index:1;
+    z-index:3;
 }
 
 #mainTextContent {
     overflow-y:auto;
     max-height:275px;
+    color:#584a26;
+    width:510px;
+}
+
+#mainTextContent h3 {
+    font-size:22px;
+    color:#3a82cc;
 }
 
 #playButton {
     border-radius: 50%;
     width: 70px;
     height: 70px;
-    background-color: blue;
+    background-color: #886530;
+    background-image: url('/assets/ui/play.png');
+    background-position: center;
+    background-size: 57px;
+    background-repeat: no-repeat;
+    box-shadow: 3px 3px 9px #00000073;
     position: absolute;
     right: -16px;
     bottom: -16px;
 }
 
-#timelineContainer {
-    
-    width:95%;
+#playButton:hover {
+    background-image: url('/assets/ui/play_hover.png');
+}
+
+#graphContainer {
+    width:1050px;
     margin:auto;
-    height:90%;
+    height:768px;
     min-height:500px;
     position:relative;
-    top:4%;
+    top:10px;
+    background: linear-gradient(#152638, #102133);
+    border-radius: 15px;
 }
 
-#timelineContainer svg {
-    position:absolute;
-    z-index:1;
+#graphValuesContainer {
     width:100%;
     height:100%;
+    position:absolute;
+    z-index:1;
 }
 
+#graphLinesContainer {
+    width:100%;
+    height:100%;
+    position:absolute;
+    z-index:2;
+}
+
+#graphWiper {
+    position:absolute;
+    right:0px;
+    height:100%;
+    width:100%;
+    background-color:white;
+    z-index:2;
+    display:none;
+    
+}
+
+#graphClickBlocker {
+    display:none;
+    width:100%;
+    height:100%;
+    position:absolute;
+    right:0px;
+    z-index:2;
+}
+
+.tempArea { display:none; }
+
+
+#sandbox { display:none; }
+/* svg circle { display:none; } */
+
+#graphLinesContainer svg text { fill:#7d7d7d; }
+#graphLinesContainer svg line { fill:#7d7d7d; stroke: #7d7d7d; }
+
 #climateFacts {
-    background-color: #49a2ff73;
+    background: linear-gradient(#3d7cbda8,#3d7cbddb);
+    box-shadow: 3px 3px 9px #00000073;
     position: absolute;
-    width: 38%;
+    width: 42%;
     height: 28%;
-    left: 272px;
+    left: 183px;
     bottom: 194px;
     border-radius: 13px;
     display:none;
-    z-index:1;
+    z-index:3;
 }
 
 #climateFacts .title {
     margin-left: 88px;
-    font-size: 31px;
+    margin-bottom: 15px;
+    width:330px;
+    font-size: 28px;
     font-weight: bold;
+    text-shadow:2px 2px 6px #00000094;
+    color: #f1cf7f;
     margin-top: 10px;
     display:none;
 }
@@ -74,25 +137,26 @@ html, body {
     width: 75%;
     float: right;
     margin-right: 20px;
+    color:#ffeec2;
+    text-shadow: 1px 1px 1px #0000006e;
     display:none;
 }
 
 #artAccent {
     background-image:url("https://i.pinimg.com/564x/29/f5/43/29f543256aca395cb06b5e90032b03ce.jpg");
     background-size:contain;
-    border: 1px solid green;
-    width: 200px;
-    height: 200px;
+    box-shadow: 4px 0px 2px #0000007a;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    background-color: green;
-    position: relative;
-    left: 157px;
-    top: 43px;
+    position: absolute;
+    left: -75px;
+    top: 30px;
     display:none;
-    z-index:1;
+    z-index:3;
 }
 
-#blackout {
+#graphBlackout {
     width: 100%;
     height:100%;
     position:absolute;
@@ -121,18 +185,7 @@ html, body {
 
 /* Timeline SVG styles */
 
-#upToPresent {
-    fill: none;
-    stroke: red;
-    stroke-width: 2;
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-}
-
-#futureTop, #futureMiddle, #futureBottom {
-    fill: none;
-    stroke: red;
-    stroke-width: 2;
+.tempPath { 
     stroke-dasharray: 1000;
     stroke-dashoffset: 1000;
 }
@@ -145,26 +198,12 @@ html, body {
     opacity: 0;
 }
 
-.fade-in {
-    animation: fade-in 5s linear forwards;
-}
-
-.fade-in-fast {
-    animation: fade-in 2s linear forwards;
-}
-
-@keyframes fade-in {
-    to {
-        opacity: 1;
-    }
-}
-
 .draw-in {
-    animation: draw-in 5s linear forwards;
+    animation: draw-in 2s linear forwards;
 }
 
 @keyframes draw-in {
     to {
-        stroke-dashoffset: 0;
+        stroke-dashoffset: 2000;
     }
 }
