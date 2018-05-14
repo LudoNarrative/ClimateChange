@@ -126,9 +126,10 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 		if (document.getElementById("gameInstructions") == null) {
 
 			var theId;
-			if (introGame) { theId = "introGameInstructions"; } else { theId = "gameInstructions"; }
+			var labeling = "<h3>Instructions</h3>";
+			if (introGame) { theId = "introGameInstructions"; } else { theId = "gameInstructions"; labeling = ""; }
 			var appendDest;
-			if (introGame) { appendDest = "#introGame"} else { appendDest = "#gameContainer"; }
+			if (introGame) { appendDest = "#introGame"} else { appendDest = "#gameContainer"; labeling = ""; }
 			
 			if (!simpleInstructions) { 
 				aspGameInstructions = parseInstructions(aspGameInstructions);
@@ -136,12 +137,9 @@ define(["Phaser", "StoryAssembler", "AspPhaserGenerator"], function(Phaser, Stor
 
 			$('<div/>', {
 			    id: theId,
-			    html: aspGameInstructions 
+			    html: labeling + aspGameInstructions 
 			}).appendTo(appendDest);
 
-			if (introGame) { 
-				$("#introGameInstructions").html(aspGameInstructions); 
-			}
 		}
 		else { 
 			$("#gameInstructions").html(aspGameInstructions); 

@@ -140,7 +140,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 */
 //================Functions for the graph UI=====================================
 	
-	var circleClicked = function(_Coordinator, timestep, level, theElement) {
+	var circleClicked = function(_Coordinator, timestep, level, theElement, playFirstClicked=false) {
 
 	var content = {
 		"0_low" : {
@@ -321,61 +321,68 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		}
 	};
 
-	if ($("#mainText").css("display") == "none") { $("#mainText").fadeIn(1000);	}
-
 	$("#playButton").unbind();			//if we clicked more than one thing, unbind all previous click assignments
 
+	if (!playFirstClicked && State.get("introCompleted") !== true) {
+		State.remove("sceneTimeline");
+	}
+
 	$("#playButton").click(function(evnt){
-		if (State.get("sceneTimeline") == null) {
-			State.set("firstTime", "true");
+		evnt.stopPropagation();
+
+		if (State.get("sceneTimeline") == null && State.get("introCompleted") !== true) {	//if it's the first time they've clicked the play button...
 			switch(level) {
 				case "low":
 					State.set("sceneTimeline", "low");		//set low state variables
 					State.set("sceneIndex", 0);
 					timestep = "timeline";
-					timelineFocus("low");
 					break;
 				case "medium":
 					State.set("sceneTimeline", "medium");	//set medium state variables
 					State.set("sceneIndex", 0);
 					timestep = "timeline";
-					timelineFocus("medium");
 					break;
 				case "high":
 					State.set("sceneTimeline", "high");		//set high state variables
 					State.set("sceneIndex", 0);
 					timestep = "timeline";
-					timelineFocus("high");
 					break;
 				default:
 					console.error(level + " is not a valid level selection!");
 			}
+
+			State.set("UIsecondClick", "true");
+
+			circleClicked(_Coordinator, 0, level, $("#playButton"), true);
 		}
-		evnt.stopPropagation();
-		if (State.get("firstTime") == "true") {
-			State.set("firstTime", "false");
-			circleClicked(_Coordinator, 0, level, $("#playButton"));
+		
+		else { 
+			State.set("introCompleted", true);
+			startGraphScene(_Coordinator, content[timestep + "_" + level].beginScene, true); 
 		}
-		else { startGraphScene(_Coordinator, content[timestep + "_" + level].beginScene, true); }
 
 	});
 
-	graphInterstitialAnimationNextScene(timestep + "_" + level);
+	graphInterstitialAnimationNextScene(level + "_" + timestep);
 
 	var animations = $.chain(function() {
 		$("#climateFacts").fadeOut(1000);
-	    return $("#mainTextContent").fadeOut(1000);				//fadeout current text
+	    return $("#mainText").fadeOut(1000);				//fadeout current text
 	}, function() {
+		
 		var contentIndex;
-		if (State.get("sceneTimeline") == null) { contentIndex = "timeline_" + level; }		//if we haven't played a scene yet...
+		if (State.get("sceneTimeline") == null && State.get("introCompleted") !== true) { 	//if we haven't played a scene yet...
+			contentIndex = "timeline_" + level; 
+			}		
 		else { contentIndex = timestep + "_" + level; }
 		$("#mainTextContent").html(content[contentIndex].text);
 		$("#climateFacts .title").html(content[contentIndex].climateFacts[0].title);
 		$("#climateFacts .text").html(content[contentIndex].climateFacts[0].text);
+		timelineFocus(level);
 		$("#climateFacts .title").fadeIn(1000);
 		$("#climateFacts .text").fadeIn(1000);
 		$("#climateFacts").fadeIn(1000);
-		return $("#mainTextContent").fadeIn(1000);				//"Our world is changing, something something..."
+		return $("#mainText").fadeIn(1000);				//Fade in main text
 	});
 
 	$.when( animations ).done(function() {
@@ -389,15 +396,93 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	
 	//adjusts opacity on different timelines so one is in focus
 	var timelineFocus = function(level) {
+		var fadeLow = function() {
+			$("#tempArea_low").fadeTo("slow", 0.3);
+			$("#path_low_0").fadeTo("slow", 0.2);
+			$("#path_low_1").fadeTo("slow", 0.2);
+			$("#path_low_2").fadeTo("slow", 0.2);
+			$("#path_low_3").fadeTo("slow", 0.2);
+			$("#path_low_4").fadeTo("slow", 0.2);
+			$("#low_3").fadeTo("slow", 0.4);
+			$("#climateFacts").removeClass("lowFacts");
+			$("#mainTextContent h3").removeClass("low");
+		};
+		var fadeMedium = function() {
+			$("#tempArea_medium").fadeTo("slow", 0.3);
+			$("#path_medium_0").fadeTo("slow", 0.2);
+			$("#path_medium_1").fadeTo("slow", 0.2);
+			$("#path_medium_2").fadeTo("slow", 0.2);
+			$("#path_medium_3").fadeTo("slow", 0.2);
+			$("#path_medium_4").fadeTo("slow", 0.2);
+			$("#medium_3").fadeTo("slow", 0.4);
+			$("#climateFacts").removeClass("mediumFacts");
+			$("#mainTextContent h3").removeClass("medium");
+		};
+		var fadeHigh = function() {
+			$("#tempArea_high").fadeTo("slow", 0.3);
+			$("#path_high_0").fadeTo("slow", 0.2);
+			$("#path_high_1").fadeTo("slow", 0.2);
+			$("#path_high_2").fadeTo("slow", 0.2);
+			$("#path_high_3").fadeTo("slow", 0.2);
+			$("#path_high_4").fadeTo("slow", 0.2);
+			$("#high_3").fadeTo("slow", 0.4);
+			$("#climateFacts").removeClass("highFacts");
+			$("#mainTextContent h3").removeClass("high");
+		};
+		switch (level) {
+			case "high":
+				$("#tempArea_high").fadeTo("slow", 0.6);
+				$("#climateFacts").addClass("highFacts");
+				$("#mainTextContent h3").addClass("high");
+				$("#path_high_0").fadeTo("slow", 1);
+				$("#path_high_1").fadeTo("slow", 1);
+				$("#path_high_2").fadeTo("slow", 1);
+				$("#path_high_3").fadeTo("slow", 1);
+				$("#path_high_4").fadeTo("slow", 1);
+				$("#high_3").fadeTo("slow", 1);
+				fadeLow();
+				fadeMedium();
+				break;
+			case "medium":
+				$("#tempArea_medium").fadeTo("slow", 0.6);
+				$("#climateFacts").addClass("mediumFacts");
+				$("#mainTextContent h3").addClass("medium");
+				$("#path_medium_0").fadeTo("slow", 1);
+				$("#path_medium_1").fadeTo("slow", 1);
+				$("#path_medium_2").fadeTo("slow", 1);
+				$("#path_medium_3").fadeTo("slow", 1);
+				$("#path_medium_4").fadeTo("slow", 1);
+				$("#medium_3").fadeTo("slow", 1);
+				fadeHigh();
+				fadeLow();
+				break;
+			case "low":
+				$("#tempArea_low").fadeTo("slow", 0.6);
+				$("#climateFacts").addClass("lowFacts");
+				$("#mainTextContent h3").addClass("low");
+				$("#path_low_0").fadeTo("slow", 1);
+				$("#path_low_1").fadeTo("slow", 1);
+				$("#path_low_2").fadeTo("slow", 1);
+				$("#path_low_3").fadeTo("slow", 1);
+				$("#path_low_4").fadeTo("slow", 1);
+				$("#low_3").fadeTo("slow", 1);
+				fadeHigh();
+				fadeMedium();
+				break;
+		}
 
 	}
 
 	//trigger animation on graph and prepare play button for next scene
 	var graphInterstitialAnimationNextScene = function(buttonId) {
-
+		if (!State.get("introCompleted")) {
+			$("#low_0").hide();
+			$("#medium_0").hide();
+			$("#high_0").hide();
+		}
+		
 		$("#" + buttonId).show();
-
-
+		
 	}
 
 	var initGraphScreen = function(_Coordinator, _State, scenes) {
@@ -440,12 +525,13 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 
 		/*var animations = $.chain(function() {
+			
 			$('#centerText').html(introTexts[0]);
 		    return $('#centerText').fadeIn(1000);				//"Our world is changing, something something..."
 		}, function() {
 			return $('body').delay(3000);							//wait
 		}, function() {
-			return $('#graphBlackout').fadeTo(1000, 0.5);					//fade in graph
+			return $('#graphBlackout').fadeTo(1000, 0.4);			//fade in graph
 		}, function() {
 			drawUpToPresent();										//starts drawing to current day
 		}, function() {
@@ -505,7 +591,9 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			$(".point:not(.last)").fadeOut(1000);			//fade out all but end points
 			$(".point.last").addClass("pointFlash");
 		}
-		); */
+		);
+*/
+
 
 		var animations = $.chain(function() {
 			$('#graphBlackout').fadeOut(1000);					//fade in graph all the way
@@ -515,18 +603,18 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 			drawFutureMiddle();								//draw in middle line
 			drawFutureBottom();								//draw in bottom line
 			drawFutureTop();
-			/*
+			
 		    return $('#centerText').fadeOut(1000);			//fade out text
 		}, function() {
 			$(".point:not(.last)").fadeOut(1000);			//fade out all but end points
 			$(".point.last").addClass("pointFlash");
 		}
 		);
-
+/*
 		$.when( animations ).done(function() {
 		    // ALL ANIMATIONS HAVE BEEN DONE IN SEQUENCE
-		    */
-		});
+		   
+		}); */
 
 		//circleClicked(0, "low");						//trigger click action on first timeline dot
 	}
@@ -534,9 +622,10 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	//Timeline animations
 	var drawUpToPresent = function(){
 		$("#graphWiper").animate({
-			width: "51%"
+			width: "52%"
 		}, 5000, function() {
-			//once it finishes animation
+			$("#graphWiper").hide();
+			$("#graphLinesContainer").css("z-index", 0);
 		});
 	}
 
@@ -551,9 +640,14 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		$("#path_low_2").addClass("draw-in");
 		$("#path_low_3").addClass("draw-in");
 		$("#path_low_4").addClass("draw-in");
+		
+		$("#low_3").fadeIn();
+		/*
 		document.querySelectorAll('.point.futureBottom').forEach(function(point){
 			point.style.opacity = 1;
 		});
+		*/
+
 	}
 
 	var drawFutureMiddle = function(){
@@ -563,9 +657,13 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		$("#path_medium_2").addClass("draw-in");
 		$("#path_medium_3").addClass("draw-in");
 		$("#path_medium_4").addClass("draw-in");
+		
+		$("#medium_3").fadeIn();
+		/*
 		document.querySelectorAll('.point.futureMiddle').forEach(function(point){
 			point.style.opacity = 1;
 		});
+		*/
 
 	}
 
@@ -576,6 +674,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		$("#path_high_2").addClass("draw-in");
 		$("#path_high_3").addClass("draw-in");
 		$("#path_high_4").addClass("draw-in");
+
+		$("#high_3").fadeIn();
 	}
 //end timeline animations
 
@@ -600,6 +700,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		else {
 			State.set("sceneIndex", nextSceneIndex);
 			$("#graphClickBlocker").show();					//disable clicks on graph (full-screen div that covers anything below 2 z-index)
+			
 			circleClicked(Coordinator, State.get("sceneIndex"), State.get("sceneTimeline"), null);
 		}
 	}
@@ -1223,7 +1324,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 	var setSceneIntro = function(sceneText, id) {
 		$("#blackout").show();
 
-		$("#sceneIntro").html("<div id='introGame'></div>");
+		$("#sceneIntro").html("<div id='introText'>In this scene you'll have to balance exploring the narrative with playing this game. Try it out to get the hang of it before starting!</div><div id='introGame'></div>");
 		if (id.substring(0,6) == "intro:") { 
 			$("#sceneIntro").html("<div id='introText' style='width:100%'>" + sceneText + "</div>");
 		}
@@ -1231,7 +1332,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 		var linkText = "";
 		if (id.substring(0,6) !== "intro:") {	//if we're not using the intro as an interstitial scene, start game...
 			Coordinator.startGame(id, true, true);		//start intro game
-			linkText = "Begin";
+			linkText = "Start Scene";
 		}
 		else { linkText = "Continue"; }
 
@@ -1239,6 +1340,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 		var begin = $('<h2/>', {
 			text: linkText,
+			id: "introLink",
 			click: function() {
 				if (id.substring(0,6) == "intro:") {	//if this is interstitial, clicking the link starts the next scene
 					initGraphScreen(Coordinator, State, State.get("scenes"));					//reinitialize title screen (terrible)
@@ -1257,6 +1359,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 					
 				}
 				else {			//otherwise, it closes the intro window and starts the scene
+					$("#gameContainer").show();
 					Coordinator.startGame(id);				//start real game
 					$("#sceneIntro").fadeOut( "slow" );
 					$("#blackout").fadeOut( "slow" );
@@ -1271,11 +1374,13 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var setSceneOutro = function(endText) {
 
+		$("#gameContainer").hide();
+
 		var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
 		var nextScene = State.get("scenes")[nextIndex];
 		$( "#blackout" ).delay(1600).fadeIn( "slow", function() {
-	    	$("#sceneIntro").html(endText);
-
+	    	$("#sceneIntro").html("<div id='outroText'>" + endText + "</div>");
+	    	/*
 	    	$('<h3/>', {
 	    		text : 'Stats',
 	    	}).appendTo("#sceneIntro");
@@ -1298,7 +1403,7 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 					}).appendTo('#'+stat.varName+'ContainerOutro');
 				}
 			});
-
+			*/
 
 	    	var begin = $('<h2/>', {
 			text: 'Next',
@@ -1330,7 +1435,8 @@ define(["Game", "jsonEditor", "HealthBar", "text!avatars", "jQuery", "jQueryUI"]
 
 	var addGameDiagnostics = function(gameSpec, aspFilepath, aspGame, aspGameInstructions, initialPhaserFile) {
 		if (document.getElementById("gameDiagnostics") !== null) {
-		  document.getElementById("gameDiagnostics").remove();
+		  $("#gameDiagnostics").remove();
+		  $("#gameDiagnosticsButton").remove();
 		}
 		$('<div/>', {
 			id: "gameDiagnostics",

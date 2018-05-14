@@ -1132,7 +1132,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		var fallbacks = [
 			{
 				id : "finalDinner",
-				text : "no path found for the dinner scene!"
+				text : "<p>The rest of the details are faded, but you remembered that your friends' support proved critical as you started your path as an academic.</p>"
 			},
 			{
 				id : "finalLecture",
@@ -2163,9 +2163,9 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 					{
 						id: "protagonist",
 						graphics: "char3",
-						age: "30s",
+						age: "50s",
 						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "neutral"},
+							{ state: ["default"], tag: "confused"},
 							{ state: ["protagonistOptimism eq low"], tag: "disappointed"},
 							{ state: ["protagonistOptimism eq high"], tag: "happy"},
 

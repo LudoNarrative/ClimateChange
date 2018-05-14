@@ -32,8 +32,11 @@ body { background-color:black; }
 
 #mainTextContent h3 {
     font-size:22px;
-    color:#3a82cc;
 }
+
+#mainTextContent h3.low { color:#3a82cc; }
+#mainTextContent h3.medium { color:#cc8000; }
+#mainTextContent h3.high { color:#b90000; } 
 
 #playButton {
     border-radius: 50%;
@@ -84,9 +87,8 @@ body { background-color:black; }
     right:0px;
     height:100%;
     width:100%;
-    background-color:white;
+    background:linear-gradient(#152638, #102133);
     z-index:2;
-    display:none;
     
 }
 
@@ -103,13 +105,12 @@ body { background-color:black; }
 
 
 #sandbox { display:none; }
-/* svg circle { display:none; } */
+svg circle { display:none; }
 
 #graphLinesContainer svg text { fill:#7d7d7d; }
 #graphLinesContainer svg line { fill:#7d7d7d; stroke: #7d7d7d; }
 
 #climateFacts {
-    background: linear-gradient(#3d7cbda8,#3d7cbddb);
     box-shadow: 3px 3px 9px #00000073;
     position: absolute;
     width: 42%;
@@ -156,6 +157,18 @@ body { background-color:black; }
     z-index:3;
 }
 
+.highFacts {
+    background: linear-gradient(#e5200063,#e52000ba);
+}
+
+.mediumFacts {
+    background: linear-gradient(#ffb1007a,#ffb100d9);
+}
+
+.lowFacts {
+    background: linear-gradient(#3d7cbda8,#3d7cbddb);
+}
+
 #graphBlackout {
     width: 100%;
     height:100%;
@@ -164,7 +177,6 @@ body { background-color:black; }
     left:0px;
     background-color:black;
     z-index:2;
-    
 }
 
 #centerText {
@@ -180,6 +192,22 @@ body { background-color:black; }
     font-size: 24px;
     text-align: center;
     text-shadow: 2px 2px 2px #000000c7;
+}
+
+#sceneIntro {
+    min-width: 1000px;
+}
+
+#outroText {
+    width: 75%;
+    margin: 25% 10% 0 10%;
+}
+
+#introLink {
+    margin-top:40px;
+    width:50%;
+    min-width:500px;
+    float:left;
 }
 
 
