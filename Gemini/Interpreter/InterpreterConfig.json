@@ -1,0 +1,15 @@
+{
+	
+	"sprites" : 
+		{
+			"circle" : "assets/sprites/circle.png",
+			"triangle" : "assets/sprites/triangle.png",
+			"square" : "assets/sprites/square.png"
+		},
+	"sounds" :
+		{
+			"good_sound" : "assets/sounds/good.wav",
+			"bad_sound" : "assets/sounds/bad.wav"
+		}
+
+}

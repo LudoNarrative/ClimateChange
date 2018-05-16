@@ -43,7 +43,7 @@ var Interpreter = ( function () {
         var tree = parser.game();
         console.log("Parsed:",tree);
     
-        var data = new Data();
+        var data = new Collector();
     
         var gameListener = new GameListener(data);
         antlr4.tree.ParseTreeWalker.DEFAULT.walk(gameListener, tree);
@@ -53,16 +53,50 @@ var Interpreter = ( function () {
         console.log("Game pools:",data.getPools());
         console.log("Game rules:",data.getRules());
 
-        initGame();
+        initGame(data);
     
     }
 
-    function initGame () {
-        PhaserDriver.init();
+    function initGame (data) {
+
+
+
+        PhaserDriver.init(data);
     }
     
+    /* 
+     * Called by the driver with the current state object, 
+     * conditions checked by the driver, and the difference between now and last step time
+     */
+    function step (currentState, externalConditions, deltaTime) {
+
+        // Clone current state
+
+
+        // Check conditions
+        //checkInternalConditions (currentState);
+
+
+        // Apply outcomes for triggered rules
+
+        
+        // Update entity state (velocity, acceleration, etc)
+        // (Position updates are handled by the driver)
+
+
+        // Return next state
+
+    }
+
+    function checkInternalConditions (currentState) {
+
+        //for 
+
+    }
+
     return {
-        openFile : openFile
+        openFile : openFile,
+        step : step
     }
 
 })(); 

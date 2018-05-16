@@ -1,60 +1,10 @@
-function Data () {
+function Collector () {
 
 	var entities = {}, // An object whose keys are entity IDs and values are objects with entity info
 		resources = {},
 		pools = {}, // An object whose keys are pool names and values are each an array of subpools
-		gameInfo = {};
-		rules = {};
-
-	var conditionMap = 
-		{
-			"ge" : "comparison",
-			"le" : "comparison",
-			"overlaps" : "collision",
-			"control_event" : "control",
-			"timer_elapsed" : "timer",
-			"tick" : "tick"
-		};
-
-	// Constructors
-	function Entity (label="", many=true) {
-		this.label = label;
-		this.many = many;
-	}
-
-	function Resource (label="", privacy="private", initialValue=0) {
-		this.label = label;
-		this.privacy = privacy;
-		this.initialValue = initialValue;
-	}
-
-	function Pool () {
-		this.subpools = [];
-	}
-
-	function Subpool (row, col, locationType, withinType) {
-		this.row = row;
-		this.col = col;
-		this.locationType = locationType;
-		this.withinType = withinType;
-	}
-
-	function Rule () {
-		this.conditions = [];
-		this.actions = [];
-
-		this.allConditionsMet = false;
-	}
-
-	function Condition (operation, args, text) {
-		this.operation = operation; 
-		this.type = conditionMap[operation];
-		this.text = text;
-
-		this.args = args; // expect an array
-
-		this.conditionMet = false;
-	}
+		rules = {},
+		state = {};
 
 	// Getters
 	function getEntities () { return entities; }
@@ -90,6 +40,30 @@ function Data () {
 		}
 	}
 
+	function isBaseCase (actionArg) {
+		switch (actionArg) {
+			case "scalar": 
+			case "bool": 
+			case "WORD": 
+				return true;
+			default: 
+				return false;
+		}
+	}
+
+	// Recursively build an action
+	// Return that complex action
+	function createAction (operation, args) {
+
+		//console.log("action:",operation);
+		//args.forEach (function (arg) {
+		//	if ( !isBaseCase(arg) ){
+			//console.log("-arg:",arg);
+		//});
+
+		return new Action (operation,args);
+	}
+
 	function registerEntityProperty (entityID, propertyName, value) {
 		entities[entityID][propertyName] = value;
 	}
@@ -99,12 +73,20 @@ function Data () {
 	}
 
 	function registerSubpool (poolID, row, col, locationType, withinType) {
-		pools[poolID].subpools.push(new Subpool(row, col, locationType, withinType));
+		pools[poolID].addSubpool(row, col, locationType, withinType);
 	}
 
 	function registerCondition (ruleID, operation, args, text) {
 		// expect args to be an array
-		rules[ruleID].conditions.push(new Condition(operation, args, text));
+		rules[ruleID].addCondition(operation, args, text);
+	}
+
+	function registerAction (operation, args, ruleID=null) {
+
+		if (ruleID==null) {
+			// This action is in an 'initialize' statement (no ruleID)
+		}
+
 	}
 
 	return {
@@ -117,11 +99,13 @@ function Data () {
 		registerResource : registerResource,
 		registerPool : registerPool,
 		registerRule : registerRule,
+		createAction : createAction,
 
 		registerEntityProperty : registerEntityProperty,
 		registerResourceProperty : registerResourceProperty,
 		registerSubpool : registerSubpool,
-		registerCondition : registerCondition
+		registerCondition : registerCondition,
+
 	}
 
 }

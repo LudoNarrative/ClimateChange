@@ -122,13 +122,17 @@ action
 
 value 
 	: scalar
-	| 'amount' '(' (WORD|'clear') ')' // WORD should specify a color that the interpreter's graphics module can represent (checked later)
-	| 'distance' '(' entity ',' entity ',' look_criterion ')'
-	| 'random_int' '(' scalar ',' scalar ')' // Red in BNF - may not be implemented in Gemini, compiler, or both
+	| amount
+	| distance
+	| random_int
 	| settable
 	;
 
 scalar : 'scalar' '(' NUM ')';
+
+amount     : 'amount' '(' (WORD|'clear') ')'; // WORD should specify a color
+distance   : 'distance' '(' entity ',' entity ',' look_criterion ')'; 
+random_int : 'random_int' '(' scalar ',' scalar ')'; // Red in BNF - may not be implemented in Gemini, compiler, or both
 
 settable 		: resource | property ;
 settable_point 	: entity | property ; // Is an entity property only settable as a point if it's a point type? 

@@ -4,7 +4,12 @@
 
 var PhaserDriver = ( function () {
 
-	var game;
+	var phaserGame;
+	var gameData; // Data object populated by Interpreter and GameListener
+
+	var previousState;
+	var nextState;
+	var driverConditions; // Conditions that the driver needs to check and return to Interpreter
 
 	// var game = new Phaser.Game(500, 400, Phaser.AUTO, 'game', { preload: preload, create: create, update: update }, true);
 
@@ -15,12 +20,13 @@ var PhaserDriver = ( function () {
 	    parent: 'game',
 	};
 	
-	function init () {
+	function init (data) {
 
-		game = new Phaser.Game(config);
-		game.state.add('Game', Game);
-		game.state.start('Game');
+		gameData = data;
 
+		phaserGame = new Phaser.Game(config);
+		phaserGame.state.add('Game', Game);
+		phaserGame.state.start('Game');
 	}
 
 	// Main game state 
@@ -28,16 +34,37 @@ var PhaserDriver = ( function () {
 
 		preload : function () {
 
+			// Load images and sounds
+			phaserGame.load.image('circle','assets/sprites/circle.png');
+			phaserGame.load.image('triangle','assets/sprites/triangle.png');
+			phaserGame.load.image('square','assets/sprites/square.png');
+			phaserGame.load.image('triangle','assets/sprites/triangle.png');
+		
+			phaserGame.load.audio('good_sound', 'assets/sounds/good.wav');
+			phaserGame.load.audio('bad_sound', 'assets/sounds/bad.wav');
+
 		},
 
 		create : function () { 
 
 			console.log("from within Phaser create()");
+			console.log("Game entities:", gameData.getEntities());
+
 		},
 
 		update : function () {
 
+			// Check external conditions 
+			//checkExternalConditions(); 
+
+			// Get updated state from the Interpeter
+			// nextState = Interpreter.step (previousState, driverConditions)
+
 		}
+
+	}
+
+	function checkExternalConditions () {
 
 	}
 

@@ -236,6 +236,33 @@ CygnusListener.prototype.exitScalar = function(ctx) {
 };
 
 
+// Enter a parse tree produced by CygnusParser#amount.
+CygnusListener.prototype.enterAmount = function(ctx) {
+};
+
+// Exit a parse tree produced by CygnusParser#amount.
+CygnusListener.prototype.exitAmount = function(ctx) {
+};
+
+
+// Enter a parse tree produced by CygnusParser#distance.
+CygnusListener.prototype.enterDistance = function(ctx) {
+};
+
+// Exit a parse tree produced by CygnusParser#distance.
+CygnusListener.prototype.exitDistance = function(ctx) {
+};
+
+
+// Enter a parse tree produced by CygnusParser#random_int.
+CygnusListener.prototype.enterRandom_int = function(ctx) {
+};
+
+// Exit a parse tree produced by CygnusParser#random_int.
+CygnusListener.prototype.exitRandom_int = function(ctx) {
+};
+
+
 // Enter a parse tree produced by CygnusParser#settable.
 CygnusListener.prototype.enterSettable = function(ctx) {
 };
