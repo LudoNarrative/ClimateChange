@@ -31,6 +31,10 @@ label(entity(e(3)),objection).
 :- many(entity(e(1))).
 % :- not many(entity(e(3))).
 % :- not player_controls(entity(e(1))).
+:- not player_controls(entity(e(1))).
+:- player_controls(entity(e(2))).
+:- player_controls(entity(e(3))).
+
 % Some way that E2 makes a third thing
 :- not reading(produces, relation(entity(e(2)), entity(e(3)))).
 :- not reading(consumes, relation(entity(e(1)), entity(e(3)))).
