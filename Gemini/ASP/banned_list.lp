@@ -5,8 +5,10 @@ keyboard(space;up_arrow;down_arrow;left_arrow;right_arrow).
 
 
 :- action(add(E,_,E2)),
-   entity(E2).
+   entity(E2),
+   not entity_spawn_ok_loc(E2).
 
+entity_spawn_ok_loc(none).
 
 :- action(add(E,_,cursor)).
 :- action(add(E,resource(R),_)).

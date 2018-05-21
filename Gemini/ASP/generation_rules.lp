@@ -277,7 +277,7 @@ reachableCondition(compare(le,S,Resource)) :-
 
 compare_direction(ge;le).
 reachableCondition(compare(D,Resource)) :-
-    label(Resource,_,read_only),
+    read_only(Resource),
     compare_direction(D).
     
 
@@ -431,6 +431,7 @@ trivial(O) :-
     result(O,move(E2,direction(backward))).
 
 
+read_only(Resource) :- label(Resource,_,read_only).
 allowed(frivolous(Resource)) :- read_only(Resource).
 frivolous(Resource) :- read_only(Resource).
 

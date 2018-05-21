@@ -381,7 +381,7 @@ amount_to_spawn(Resource) :- resource(Resource).
 
 % Resources can increase
 { result(OUTCOME,modify(increase,RESOURCE))
-  : outcome(OUTCOME),resource(RESOURCE) }.
+  : outcome(OUTCOME),resource(RESOURCE),not label(RESOURCE,_,readonly) }.
 % Or decrease
 { result(OUTCOME,modify(decrease,RESOURCE)) 
   : outcome(OUTCOME),resource(RESOURCE) }.

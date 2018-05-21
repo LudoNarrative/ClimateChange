@@ -452,6 +452,13 @@ reading(difficulty,Resource) :-
     reading(hurt,relation(Entity,player)),
     action(add(Entity,Resource,_)).
 
+% If we care whether the player overlaps the entity, but the entity's
+% speed is equal to the resource, then the difficulty is the resource.
+reading(difficulty,Resource) :-
+    entity(E2),
+    not player_controls(E2),
+    speed(E2,_,Resource).
+
 % If a resource is good and theres an action which decreases it
 % by an amount equal to another resource, 
 % difficulty is the second resource. 
