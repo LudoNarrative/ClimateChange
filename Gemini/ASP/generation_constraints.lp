@@ -202,6 +202,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- spatial_condition(E1,E2), not moves(E1), not moves(E2).
 
 :- relative(greater,result(Outcome,modify(Direction,Resource)),result(Outcome,modify(Direction,Resource))).
+
 :- read_only(Resource),
 	action(modify(_,Resource)).
 :- read_only(Resource),

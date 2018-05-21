@@ -468,10 +468,11 @@ if __name__ == '__main__':
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
         toolbox = base.Toolbox()
-        # nbCPU = multiprocessing.cpu_count()
+        nbCPU = multiprocessing.cpu_count()
         # chunk = len(pop) / nbCPU
         # print('workers=', nbCPU, 'chunksize=', chunk)
-        pool = multiprocessing.Pool(14)
+        # Leave a couple of cores free to be polite
+        pool = multiprocessing.Pool(nbCPU-2)
         toolbox.register("map", pool.map)
 
 

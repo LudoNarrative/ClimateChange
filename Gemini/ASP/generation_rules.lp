@@ -432,6 +432,7 @@ trivial(O) :-
 
 
 read_only(Resource) :- label(Resource,_,read_only).
+
 allowed(frivolous(Resource)) :- read_only(Resource).
 frivolous(Resource) :- read_only(Resource).
 
