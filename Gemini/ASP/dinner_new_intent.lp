@@ -49,7 +49,6 @@ label(resource(r(1)),tension,write).
 :- not reading(bad,resource(r(1))).
 initialize(set_value(resource(r(1)),scalar(0))).
 
-read_only(resource(r(2))) :- resource(resource(r(2))).
 label(resource(r(2)),activism,read_only) :- resource(resource(r(2))).
 
 :- resource(resource(r(2))), reading(good, resource(r(2))).

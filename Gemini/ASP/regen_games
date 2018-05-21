@@ -1,18 +1,17 @@
 #!/bin/bash
+PYTHON=python
+THREADC=14
+$PYTHON simulate.py games/beach $@ $(./common.sh ) scrubbing_intent.lp  --project 0 -t $THREADC
+$PYTHON simulate.py games/dinner $@ $(./common.sh ) dinner_intent.lp  --project 0 -t $THREADC
 
-python simulate.py games/beach $@ $(./common.sh ) scrubbing_intent.lp  --project 0 -t 6
+$PYTHON simulate.py games/lecture_attractMode $@ $(./common.sh ) lecture_intent_attract.lp  --project 0 -t $THREADC
+$PYTHON simulate.py games/lecture_dodgeMode $@ $(./common.sh ) lecture_intent_avoid.lp  --project 0 -t $THREADC
+$PYTHON simulate.py games/lecture_scrubMode $@ $(./common.sh ) lecture_intent_clear.lp  --project 0 -t $THREADC
+$PYTHON simulate.py games/lecture_drawMode $@ $(./common.sh ) lecture_intent_drop.lp  --project 0 -t $THREADC
 
 
-python simulate.py games/dinner $@ $(./common.sh ) dinner_intent.lp  --project 0 -t 6
+#$PYTHON simulate.py games/lecture $@ $(./common.sh ) lecture_intent.lp  --project 0 -t $THREADC
 
-python simulate.py games/lecture_attractMode $@ $(./common.sh ) lecture_intent_attract.lp  --project 0 -t 6
-python simulate.py games/lecture_dodgeMode $@ $(./common.sh ) lecture_intent_avoid.lp  --project 0 -t 6
-python simulate.py games/lecture_scrubMode $@ $(./common.sh ) lecture_intent_clear.lp  --project 0 -t 6
-python simulate.py games/lecture_drawMode $@ $(./common.sh ) lecture_intent_drop.lp  --project 0 -t 6
+#$PYTHON simulate.py games/travel $@ $(./common.sh ) travel_intent.lp  --project 0 -t $THREADC
 
-
-python simulate.py games/lecture $@ $(./common.sh ) lecture_intent.lp  --project 0 -t 6
-
-python simulate.py games/travel $@ $(./common.sh ) travel_intent.lp  --project 0 -t 6
-
-python simulate.py games/dean $@ $(./common.sh ) dean_intent.lp  --project 0 -t 6
+$PYTHON simulate.py games/dean $@ $(./common.sh ) dean_intent.lp  --project 0 -t $THREADC

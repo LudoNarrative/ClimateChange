@@ -23,7 +23,6 @@ label(entity(e(2)),help).
 label(entity(e(3)),harm).
 
 
-read_only(resource(r(2))).
 :- many(entity(e(1))).
 
 :- not same_movement(entity(e(2)),entity(e(3))).
