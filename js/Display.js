@@ -979,6 +979,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				var bbWishlistValues = parseBlackboardWishlist()[id];
 				if (bbWishlistValues == undefined) { throw "dynamic wishlist item (" + story.wishlist[x].condition + ") but no dynamic shimmers used to set them!"}
 				var value = bbWishlistValues[story.wishlist[x].condition];
+				if (value == undefined) { throw "no shimmertext value for " + story.wishlist[x].condition; }
 				if (stateSetter) {
 					var key = story.wishlist[x].condition.replace("state:","").trim().split(" ")[1];
 					State.set(key, value);
