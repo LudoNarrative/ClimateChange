@@ -10,11 +10,15 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 
 	//var State;
 	var Character;
+	var Coordinator;
+	var Display;
 	var currentSpeaker = "";
 
-	var init = function(_Character) {
+	var init = function(_Character, _Coordinator, _Display) {
 		//State = _State;
 		Character = _Character;
+		Coordinator = _Coordinator;
+		Display = _Display
 	}
 
 	/* The built-in list of templates and how they should be processed is defined in this object. addTemplateCommand() can also be called to add new ones at run-time.
@@ -198,7 +202,22 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			}
 			console.log("doof:" + State.get(params[0]) + parseFloat(params[1]));
 			return State.get(params[0]) + parseFloat(params[1]);
+		},
+
+		//{shimmer|studyShimmer|phytoplankton}
+		//{shimmer|shimmerFuncName|initialvalue}
+		"shimmer": function(params, text) {
+			var shimmer = $('<span/>', {
+			text: params[1],
+			class: "shimmer",
+			id: "shimmer" + $('.shimmer').length,
+			});
+
+			textEvents.push({elemId: "shimmer" + $('.shimmer').length, clickEvent: Display.shimmerFuncs, funcName: params[0]});
+			return shimmer[0].outerHTML;
 		}
+
+
 		// Template stub demonstrating how you might show a random character trait. Look up the current speaker, and print something based on the first found property we have code for.
 		//para
 		/*
@@ -221,6 +240,8 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		*/
 	}
 
+	var textEvents = [];			//array of {id: div/spanid, clickEvent: function you're attaching}
+
 	// Add a new template command at run-time. (Probably mostly only useful for testing, or to load in template commands from an external definition file. Normally, you would add them to the "templates" object above.)
 	var addTemplateCommand = function(cmd, func) {
 		templates[cmd] = func;
@@ -242,8 +263,10 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 
 		// strip opening/closing characters, verify no nesting, and make into an array
 		var strippedText = text.slice(1, text.length - 1);
+		var sanity = 1000;
 
-		while (strippedText.search(/[\{\}]/g) >= 0) {		//if there's nesting...
+		while (strippedText.search(/[\{\}]/g) >= 0 && sanity>0) {		//if there's nesting...
+			sanity--;
 			var start = strippedText.indexOf("(");
 			var end = strippedText.indexOf(")");
 			var numOpen = 1;
@@ -260,11 +283,13 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 				console.log("'" + strippedText + "' portion of '" + text + "' has non-matching opening and closing parentheses!");
 				return "()";
 			}
-			var processedNested = render(strippedText.substring(start+1, end), undefined, undefined);
+			var processedNested = _render(strippedText.substring(start+1, end), undefined, undefined);
 			strippedText = strippedText.replace(strippedText.substring(start,end+1), processedNested);	//replace what was in ( and ) with processedNested
 			//console.error("Nested params are not allowed in template '" + strippedText + "'");
 			//return "()";
 		}
+
+		if (sanity == 0) { alert('whaaat'); }
 
 		var texts = strippedText.split("|");
 
@@ -292,7 +317,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 	}
 
 	// Main public interface. Given text with grammars, return its content with any templates rendered into fully realized text.
-	var render = function(rawText, speaker, mode) {
+	var _render = function(rawText, speaker, mode) {
 
 		var currentSpeaker = speaker;
 		var txt;
@@ -354,10 +379,22 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		return txt;
 	}
 
+	//mode to just return text (this is what's usually returned)
+	var render = function(rawText, speaker, mode) {
+		return _render(rawText, speaker, mode);		//call internal render function
+	}
+
+	//mode that returns both text and an array of clickEvent objects {id: divId, clickEvent: doop(){} } to attach
+	var interactiveRender = function(rawText, speaker, mode) {
+		textEvents = [];		//reset clickEvents so we don't inadvertantly cache clickEvents
+		return {txt:_render(rawText, speaker, mode), textEvents: textEvents};		//call internal render function
+	}
+
 	// PUBLIC INTERFACE
 	return {
 		init: init,
 		render: render,
+		interactiveRender: interactiveRender,
 		addTemplateCommand: addTemplateCommand
 	}
 

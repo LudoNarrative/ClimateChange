@@ -9,6 +9,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	*/
 	var init = function() {
 
+		Templates.init(Character, this, Display);
 		State.init(Templates);
 
 
@@ -16,7 +17,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		
 
 		//selectable scenes from main menu
-		var scenes = ["finalDinner", "finalLecture", "intro:deanOrTravel", "intro:tempDinnerWithFam", "finalBeach", "intro:theEnd"];
+		var scenes = ["finalDinner", "finalLecture", "intro:deanOrTravel", "intro:tempDinnerWithFam", "finalBeach", "finalUN", "intro:theEnd"];
 
 
 		//for reference, easy access to old temporary scenes.
@@ -1274,7 +1275,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "theEnd",
-				text : "<p>As the years progressed, you watched the world around you changing. Knowing that you'd had a hand, even in some small way, in how things turned out.</p><p>(Thanks for playing! Please hit 'refresh' on the browser window to finish)</p>"
+				text : "<p>As the years progressed, you watched the world around you changing. Knowing that you'd had a hand, even in some small way, in how things turned out.</p><p>(Playthrough complete! Sandbox mode unlocked...feel free to explore other scenes to see how things would play out under different circumstances!)</p>"
 			}
 		]
 		
@@ -1289,6 +1290,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 	};
 
 	//returns a scene description written for the timeline
+	/*
 	var loadTimelineDesc = function(id) {
 		var timelineDesc = [
 			{
@@ -1330,7 +1332,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		for (var x=0; x < timelineDesc.length; x++) { if (timelineDesc[x].id == id) { 
 			return Templates.render(timelineDesc[x].text); } }
 		return "";
-	}
+	}*/
 
 	//loads background, for now this is based on scene id
 	var loadBackground = function(id) {
@@ -2808,7 +2810,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 		loadStoryMaterials : loadStoryMaterials,
 		loadAvatars : loadAvatars,
 		loadBackground : loadBackground,
-		loadTimelineDesc : loadTimelineDesc,
+		//loadTimelineDesc : loadTimelineDesc,
 		validateArtAssets : validateArtAssets,
 		loadSceneIntro : loadSceneIntro,
 		loadNoPathFallback : loadNoPathFallback,

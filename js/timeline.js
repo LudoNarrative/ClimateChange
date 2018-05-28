@@ -134,11 +134,7 @@ function drawUpToPresent(){
 		});
 	}
 
-	function showFirstScene(){
-		document.getElementById('mainText').classList.add('fade-in-fast');
-		document.getElementById('climateFacts').classList.add('fade-in-fast');
-		document.getElementById('artAccent').classList.add('fade-in-fast');
-	}
+
 //end timeline animations
 
 function circleClicked(timestep, level, theElement) {
@@ -243,11 +239,14 @@ function startIntro() {
 		$('#blackout').fadeOut(1000);					//fade in graph all the way
 	    return $('#centerText').fadeOut(1000);			//fade out text
 	}, function() {
-		circleClicked(0, "low");						//trigger click action on first timeline dot
+		$(".point:not(.last)").fadeOut(1000);			//fade out all but end points
+		$(".point.last").addClass("pointFlash");
 	}
 	);
 
 	$.when( animations ).done(function() {
 	    // ALL ANIMATIONS HAVE BEEN DONE IN SEQUENCE
 	});
+
+	//circleClicked(0, "low");						//trigger click action on first timeline dot
 }

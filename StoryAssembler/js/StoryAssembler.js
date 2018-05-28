@@ -22,7 +22,6 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		params = params || {};
 		
 		StoryDisplay.init(handleChoiceSelection, refreshNarrative);
-		Templates.init(_Character);
 		continueScene();
 	}
 
