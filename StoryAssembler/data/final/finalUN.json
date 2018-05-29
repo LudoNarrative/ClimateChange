@@ -513,7 +513,7 @@ persuasion:
     "id": "endingArgument_good_t",
     "speaker": "protagonist",
     "choiceLabel" : "\"Thank you\"",
-    "content": "The room applauds once more. Your eyes fall on someone in particular -- Kurt. A small part of yourself is thankful they didn’t give you a mic to hold for your speech. You would have definitely been more tempted, at that moment, to outstretch your arm and drop it in front of the attendees.",
+    "content": "The room applauds once more. Your eyes fall on Kurt. A small part of yourself is thankful they didn’t give you a mic to hold for your speech. You'd definitely have been tempted, at this point, to outstretch your arm and drop it in front of the attendees.",
     "choices": [
       {"gotoId" : "emmaReflection_start_t"},
     ],
@@ -527,7 +527,7 @@ persuasion:
     "id": "endingArgument_med_t",
     "speaker": "protagonist",
     "choiceLabel" : "\"Thank you\"",
-    "content": "The room applauds once more. The water you’d brought with you wasn’t enough to help address the dryness in your throat.<br><br><em>At least it’s over. The next one will go better.</em><br>Your eyes reluctantly land on Kurt. He was applauding, slow, sitting comfortably in his chair.<br><br><em>Maybe a drink in the hotel lobby until my flight?</em><br><br><em>Yeah… That seems about right, right about now.</em>",
+    "content": "The room applauds once more. Your throat is dry; the water you brought with you isn't enough.<br><br><em>At least it’s over. The next one will go better.</em><br>Your eyes fall on Kurt, slowly applauding, sitting back in his chair.",
     "choices": [
       {"gotoId" : "emmaReflection_start_t"},
     ],
@@ -542,7 +542,7 @@ persuasion:
     "id": "endingArgument_bad_t",
     "speaker": "protagonist",
     "choiceLabel" : "\"Thank you\"",
-    "content": "The room applauds once more. You avoid landing on the seat which you know Kurt is sitting in as you nod toward everyone -- a plastic smile glued to your face. Every fiber of your being tells you to walk quickly out of the room and back to your hotel room, but that would be very unprofessional.<br><br><em>You can throw up later</em>, you tell yourself.",
+    "content": "The room applauds once more. You avoid looking at the seat where you know Kurt is sitting as you nod toward the audience, a plastic smile glued to your face. Every fiber of your being tells you to walk quickly out of the room and retreat to your hotel, but you know you're expected to hang around for the meet-and-greet afterwards. At least it'll give you a chance to salvage <em>something</em> after that disastrous presentation.",
     "choices": [
       {"gotoId" : "emmaReflection_start_t"},
     ],
