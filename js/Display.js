@@ -181,9 +181,18 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			"artAccentSrc" : "",
 			"beginScene" : "finalBeach",
 			"climateFacts" : [{
-					"title" : "2035 Climate Fact",
-					"text" : "Most of the native bird population in Europe has collapsed, due to falling insect populations brought on by inclement weather. The ripples in the food chain have affected most of the agricultural output for those countries."
-				}]
+				"title" : "2035 Climate Fact",
+				"text" : "Most of the native bird population in Europe has collapsed, due to falling insect populations brought on by inclement weather. The ripples in the food chain have affected most of the agricultural output for those countries."
+			}]
+		},
+		"3_low_alt" : {
+			"text" : "<h3>UN Scene-Low</h3>",
+			"artAccentSrc" : "",
+			"beginScene" : "finalUN",
+			"climateFacts" : [{
+				"title" : "2035 Climate Fact",
+				"text" : "Most of the native bird population in Europe has collapsed, due to falling insect populations brought on by inclement weather. The ripples in the food chain have affected most of the agricultural output for those countries."
+			}]
 		},
 		"4_low" : {
 			"text" : "<h3>Epilogue-Low</h3>",
@@ -234,6 +243,15 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 					"text" : "Most of the native bird population in Europe has collapsed, due to falling insect populations brought on by inclement weather. The ripples in the food chain have affected most of the agricultural output for those countries."
 				}]
 		},
+		"3_medium_alt" : {
+			"text" : "<h3>UN Scene-Medium</h3>",
+			"artAccentSrc" : "",
+			"beginScene" : "finalUN",
+			"climateFacts" : [{
+				"title" : "2035 Climate Fact",
+				"text" : "Most of the native bird population in Europe has collapsed, due to falling insect populations brought on by inclement weather. The ripples in the food chain have affected most of the agricultural output for those countries."
+			}]
+		},
 		"4_medium" : {
 			"text" : "<h3>Epilogue-Medium</h3>",
 			"artAccentSrc" : "",
@@ -282,6 +300,15 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 					"title" : "2035 Climate Fact",
 					"text" : "Most of the native bird population in Europe has collapsed, due to falling insect populations brought on by inclement weather. The ripples in the food chain have affected most of the agricultural output for those countries."
 				}]
+		},
+		"3_high_alt" : {
+			"text" : "<h3>UN Scene-High</h3>",
+			"artAccentSrc" : "",
+			"beginScene" : "finalUN",
+			"climateFacts" : [{
+				"title" : "2035 Climate Fact",
+				"text" : "Most of the native bird population in Europe has collapsed, due to falling insect populations brought on by inclement weather. The ripples in the food chain have affected most of the agricultural output for those countries."
+			}]
 		},
 		"4_high": {
 			"text" : "<h3>Epilogue-High</h3>",
@@ -359,7 +386,13 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		
 		else { 
 			State.set("introCompleted", true);
-			startGraphScene(_Coordinator, content[timestep + "_" + level].beginScene, true); 
+
+			if (timestep == 3 && State.get("lifelongAcademic") == true) {
+				startGraphScene(_Coordinator, content[timestep + "_" + level + "_alt"].beginScene, true); 
+			}
+			else {
+				startGraphScene(_Coordinator, content[timestep + "_" + level].beginScene, true); 
+			}
 		}
 
 	});
@@ -374,6 +407,10 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		var contentIndex;
 		if (State.get("sceneTimeline") == null && State.get("introCompleted") !== true) { 	//if we haven't played a scene yet...
 			contentIndex = "timeline_" + level; 
+		}
+		else if (timestep == 3) {		//if we're on the UN scene / beach scene bridge...
+			if (State.get("lifelongAcademic") != true) { contentIndex = timestep + "_" + level}		//set to beach if you're not academic
+			else { contentIndex = timestep + "_" + level + "_alt"; }			//otherwise, UN
 		}
 
 		else { contentIndex = timestep + "_" + level; }

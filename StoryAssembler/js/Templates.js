@@ -337,7 +337,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		var txt;
 		if (typeof rawText == "object") { txt = rawText[0]; }		//if rawText is coming from chunk content, it's an array, otherwise string
 		else { txt = rawText; }
-
+		if (txt == undefined) { return "{undefined}"; }
 		/*
 		var re = /{[^}]*}/g;  // matches every pair of {} characters with contents
 		var match;
