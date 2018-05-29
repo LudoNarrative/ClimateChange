@@ -207,13 +207,14 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		//{shimmer|studyShimmer|phytoplankton}
 		//{shimmer|shimmerFuncName|initialvalue}
 		"shimmer": function(params, text) {
+			var shimmerNum = incrShimmers();
 			var shimmer = $('<span/>', {
 			text: params[1],
 			class: "shimmer",
-			id: "shimmer" + $('.shimmer').length,
+			id: "shimmer" + shimmerNum,
 			});
 
-			textEvents.push({elemId: "shimmer" + $('.shimmer').length, clickEvent: Display.shimmerFuncs, funcName: params[0]});
+			textEvents.push({elemId: "shimmer" + shimmerNum, clickEvent: Display.shimmerFuncs, funcName: params[0]});
 			return shimmer[0].outerHTML;
 		}
 
@@ -240,7 +241,20 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 		*/
 	}
 
-	var textEvents = [];			//array of {id: div/spanid, clickEvent: function you're attaching}
+	var textEvents = [];			//array of {id: div/spanid, clickEvent: function you're attaching} (used in shimmer)
+
+	var incrShimmers = function() {
+		var currentShimmers = State.get("totalShimmers");
+		if (currentShimmers == undefined) {
+			State.set("totalShimmers", 0);
+			currentShimmers = 0;
+		}
+		else {
+			currentShimmers++;
+			State.set("totalShimmers", currentShimmers);
+		}
+		return currentShimmers;
+	}
 
 	// Add a new template command at run-time. (Probably mostly only useful for testing, or to load in template commands from an external definition file. Normally, you would add them to the "templates" object above.)
 	var addTemplateCommand = function(cmd, func) {

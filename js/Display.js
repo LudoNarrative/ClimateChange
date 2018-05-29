@@ -144,7 +144,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 
 	var content = {
 		"0_low" : {
-			"text" : "<h3>Dinner With Friends-Low</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
+			"text" : "<h3>Dinner With Friends-Low</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDinner",
 			"climateFacts" : [
@@ -403,27 +403,59 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 	var attachClickEvents = function(textEventsArray) {
 		for (var x=0; x < textEventsArray.length; x++) {
 			var textEvent = textEventsArray[x];
-			$("#" + textEvent.elemId).bind("click", function() {
-				textClickFuncs(textEvent.funcName, this.innerHTML, this.id);
-			});
-			textClickFuncs(textEvent.funcName, this.innerHTML, this.id);		//hacky: run it once to populate dynamic wishlist variables in localstorage
+			$("#" + textEvent.elemId).on("click", {
+				funcName: textEvent.funcName
+			}, textClickFuncs);
+			
+			$("#" + textEvent.elemId).trigger("click");	//hacky: run it once to populate dynamic wishlist variables in localstorage
 		}
 	}
 
 	//functions attached to shimmer text
-	var textClickFuncs = function(functionName, oldVal, divId) {
+	//var textClickFuncs = function(functionName, oldVal, divId) {
+	var textClickFuncs = function(event) {
+		var functionName = event.data.funcName;
+		var oldVal = event.target.innerHTML;
+		var divId = event.target.id;
 	
 		var funcs = {
 			"studyShimmer" : function(oldVal) {
-				var wishlist;
-				var shimmerVals = ["phytoplankton", "coral", "lobsters"];
 
+				var shimmerVals = ["phytoplankton", "coral", "lobsters"];
 				var i = shimmerVals.indexOf(oldVal) + 1;
 				if (i == shimmerVals.length) { i = 0; }
 
 				setDynamicWishlistItem("state: set areaOfExpertise [phytoplankton|lobsters|coral]", shimmerVals[i]);
 				
 				return shimmerVals[i];
+			},
+			"friendBalance" : function(oldVal) {
+				var shimmerVals = [
+					{text : "They're both activists, unlike you.", val1 : 0, val2 : 2}, 
+					{text : "One of them is an academic like you, and one is an activist.", val1 : 1, val2 : 1}, 
+					{text : "Both of them are academics like you.", val1 : 2, val2 : 0}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("state: set academicFriend [0-2:1]", shimmerVals[i].val1);
+				setDynamicWishlistItem("state: set activistFriend [0-2:1]", shimmerVals[i].val2);
+				return shimmerVals[i].text;
+
+			},
+			"friendSupport" : function(oldVal) {
+				var shimmerVals = [
+					{text : "Both of them are a bit critical.", val1 : 0, val2: 2}, 
+					{text : "One of them is supportive, but the other is more critical.", val1 : 1, val2: 1}, 
+					{text : "Both of them are supportive.", val1 : 2, val2: 2}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("state: set supportiveFriend [0-2:1]", shimmerVals[i].val1);
+				setDynamicWishlistItem("state: set challengingFriend [0-2:1]", shimmerVals[i].val2);
+				
+				return shimmerVals[i].text;
 			}
 		}
 
