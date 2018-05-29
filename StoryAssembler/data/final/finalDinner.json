@@ -49,7 +49,7 @@
     "id": "friendIsInAcademiaEnthusiastici2",
     "avatar": "friend2",
     "choiceLabel": "Continue",
-    "content": "{name|friend2} stabs a carrot with her fork. \"That <em>does</em> sound adorable! Will you also be snickering about the peasant undergrads as they go to their fifth class that day?\"",
+    "content": "{name|friend2} stabs a carrot with her fork. \"That <em>does</em> sound adorable! {ifState|sceneTimeline|low|You can sit outside and drink warm coffee in the middle of the winter when it's freezing cold!|({ifState|sceneTimeline|high|You can sit outside and sip iced tea when it's 90° in the shade again this summer!|Will you also be snickering about the peasant undergrads as they go to their fifth class that day?})}\"",
     "choices": [ // TODO don't like these being attached to a fragment that doesn't explicitly discuss the thermos
       {"gotoId": "lovei"},
       {"gotoId": "tooMuchi"}
@@ -264,7 +264,7 @@
       "choiceLabel" : "She's fine. She can deal with it.",
       "content" : "{name|friend2} finishes her dinner table structure and her eyes seem to glaze over as she scans it. It looks like she might be ready to leave."
     },
-    {
+    { // TODO Max how has this bit survived so long do not let this ship
       "id": "positiveShelli",
       "avatar": "friend2",
       "choiceLabel" : "\"You setting up some sort of barrier around your plate there?\"",
@@ -363,7 +363,7 @@
         "id": "wineQuestion1_t",
         "avatar": "friend2",
         "choiceLabel": "\"No, my stomach's been off. Too nervous.\"",
-        "content": "\"Come on, {name|protagonist}, you stick-in-the-mud,\" {name|friend2} says, fiddling with the metal cage on a bottle of champagne.<br><br>\"That’s for after dinner, {name|friend2},\" {name|friend1} says. She crosses her arms. \"And she doesn’t need to drink if she doesn’t want to.\" {name|friend1} takes the bottle from {name|friend2} and puts it back in the fridge.",
+        "content": "\"C'mon, {name|protagonist}, {ifState|sceneTimeline|high|drink it while you still can! We won't be able to grow grapes around here forever|you stick-in-the-mud},\" {name|friend2} says, fiddling with the metal cage on a bottle of champagne.<br><br>\"That’s for after dinner, {name|friend2},\" {name|friend1} says. She crosses her arms. \"And she doesn’t need to drink if she doesn’t want to.\" {name|friend1} takes the bottle from {name|friend2} and puts it back in the fridge.",
         "choices": [
             {"gotoId" : "sceneSetUp_end_t"},
         ],
@@ -746,7 +746,7 @@
         "id": "large",
         "avatar": "protagonist",
         "choiceLabel": "\"Give me the large class, I can handle it!\"",
-        "content": "{name|friend2} laughs. \"Thata girl! I know you can.\" <p>You smile. \"Plus, I can impact lots of students.\"</p> <p>\"Or they'll just ignore you and forget everything after the class...\"</p>",
+        "content": "{name|friend2} laughs. \"Thata girl! I know you can.\" <p>You smile. \"Plus, I can impact lots of students.\"</p> <p>{ifState|sceneTimeline|high|\"Good thing, too. Have you seen the latest sea level rise projections? We're gonna need all the help we can get.\"|\"Or they'll just ignore you and forget everything after the class...\"}</p>",
         "choices" : [
             {"gotoId": "argue1"},
             {"gotoId": "argue2"}
