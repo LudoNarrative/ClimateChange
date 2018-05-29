@@ -343,7 +343,7 @@
     "speaker": "protagonist",
     "choiceLabel": "Florida will be flooded",
     "unavailableChoiceLabel": "Already presented that fact",
-    "content": "\"One study that was conducted in Florida suggests that the rising sea level will swallow the majority of the state of Florida by the year 2040.\" Murmurs between the panel members can be hear throughout the room, subsiding slowly after a few seconds.",
+    "content": "\"One study suggests that the rising sea level will swallow the majority of the state of Florida by the year {ifState|sceneTimeline|high|2040|({ifState|sceneTimeline|low|2050|2045})}, potentially displacing up to 20 million people within the United States alone.\" Murmurs between the panel members can be hear throughout the room, subsiding slowly after a few seconds.",
     "effects": [
       "incr factsPresented 1",
       "incr factsLooped 1"
@@ -494,12 +494,10 @@ persuasion:
 */
 
 //Setting up the initial scene. This will be the same for every path
-
-// TODO basically everything after this point needs to be completely rewritten still!
   {
     "id": "talonSceneStart_t",
     "speaker": "protagonist",
-    "content": "As the last echoes of your words begin to fade, a soft chorus of chatting begins. You look around the room, lights shine in your eyes. {ifStateCondition|confidence gte 5|They put a little sparkle in them|They're brighter than you thought they'd be for such a small conference.}<br><br>You stand,{ifStateCondition|confidence gte 5|back straight|back stiff} in front of your laptop close the lid. {ifStateCondition|confidence gte 5||<em>At least it’s over</em>.} Your eyes bounce from person to person.", 
+    "content": "Time to wrap it up. You stand,{ifStateCondition|confidence gte 5|back straight|back stiff}, in front of your laptop and shut the lid. {ifStateCondition|confidence gte 5||<em>At least it’s over</em>.} You {ifStateCondition|confidence gte 5|calmly|} scan the crowd.",
     "effects" : [
       "set endingArgument true"
     ],
@@ -513,7 +511,7 @@ persuasion:
     "id": "endingArgument_good_t",
     "speaker": "protagonist",
     "choiceLabel" : "\"Thank you\"",
-    "content": "The room applauds once more. Your eyes fall on Kurt. A small part of yourself is thankful they didn’t give you a mic to hold for your speech. You'd definitely have been tempted, at this point, to outstretch your arm and drop it in front of the attendees.",
+    "content": "The room applauds once more, and your eyes fall on Kurt. A small part of yourself is thankful they didn’t give you a mic to hold for your speech. You'd definitely have been tempted, at this point, to outstretch your arm and drop it in front of the attendees.",
     "choices": [
       {"gotoId" : "emmaReflection_start_t"},
     ],
@@ -557,7 +555,7 @@ persuasion:
   {
     "id": "emmaReflection_start_t",
     "speaker": "protagonist",
-    "content": "You turn and take your leave, stage right, walking {ifStateCondition|confidence gte 5|briskly|hurriedly} to the door. The participants of this UN Climate Change Council presentation begin to stir and stand and talk amongst themselves before finally making their way to the door. You take your post, just outside the door, fingers laced together as you softly thank them for their time. You listen to the half-started sentences and broken murmurs of what they thought of your talk.",
+    "content": "You turn and take your leave, stepping down from the stage and walking {ifStateCondition|confidence gte 4|briskly|hurriedly} to the door as the audience too starts to file out of the room. As you pass through the crowd, you can't help but overhear broken snippets of conversation reflecting what they thought of your talk.",
     "effects" : [
       "set emmaReflection true"
     ],
@@ -570,7 +568,7 @@ persuasion:
   {
     "id": "emmaReflection_good1_t",
     "speaker": "UN2",
-    "content": "You’re waiting for Mikkel. You know he likes to mingle, he’ll probably be one of the last ones out.<br>Kurt exits from the doors and begins walking away.<br><br>\"Kurt!\" You yell -- loud. Several members of the council turn and look at you; you’re only looking at one -- Kurt.<br>\"Emma,\" he says, matter-of-factly, looking back at you. He walks straight into the outpouring of people to greet you.<br>\"Kurt,\" you look him in the eyes. He’s a good few inches taller than you but you tower over him at this moment. You extend your hand to meet his, grip -- hard -- and shake. His expression changed in your favor as you realize you’ve caught him off guard. You pounce.",
+    "content": "Kurt exits the conference room and begins walking into the crowd.<br><br>\"Kurt!\" you yell, catching his attention.<br>\"Ah, Emma,\" he says, matter-of-factly, looking back at you. You stride over to him and look him in the eyes. He’s a good few inches taller than you, but you tower over him at this moment. You extend your hand to meet his, grip firmly, and shake. His expression changes, and you realize you’ve caught him off guard. You pounce.",
     "choices": [
       {"gotoId" : "emmaReflection_good2_t"},
     ],
@@ -582,8 +580,8 @@ persuasion:
   {
     "id": "emmaReflection_good2_t",
     "speaker": "UN2",
-    "choiceLabel": "\"Kurt, you seemed a bit shaken by the end of my presentation,\"",
-    "content": "You held his hard firm, \"I hope I didn’t make you feel too bad in there.\"<br>\"Not at all, Emma. I…\" He hesitated. A small spark shot through you. \"...I’m big enough to admit that I have been defeated.\" His grip on your hand slackened; yours did, too. \"You did good. You’ve convinced me to change the way I think.\"",
+    "choiceLabel": "\"Kurt, you seemed a bit shaken by the end of my presentation.\"",
+    "content": "\"I hope I didn’t make you feel too bad in there.\"<br>\"Not at all, Emma. I…\" He hesitates. \"...I’m big enough to admit when I've been defeated. You did good. You’ve convinced me to change the way I think.\"",
     "choices": [
       {"gotoId" : "emmaReflection_good3_t"},
     ],
@@ -592,11 +590,12 @@ persuasion:
       "emmaReflection eq true"
     ]
   },
+// TODO the "good"  (after 2) and "middle" routes still need to be rewritten
   {
     "id": "emmaReflection_good3_t",
     "speaker": "UN1",
-    "choiceLabel": "\"That makes me happy,\" you say.",
-    "content": "At that moment, Mikkel walks out from the conference room. You raise your hand to grab his attention but Kurt interrupts your action.<br>\"Mikkel!\" Kurt boasts, and Mikkel turns to your direction. \"Mikkel, have you met Emma?\"<br><br>Your eyes light and your back straightens as Kurt turns and smiles at you. He places a hand on your shoulder, gentle, and extends an arm towards Mikkel for your benefit.",
+    "choiceLabel": "\"That's great to hear,\" you say.",
+    "content": "At that moment, Mikkel walks out from the conference room. You raise your hand to grab his attention but Kurt interrupts your action.<br>\"Ah, Mikkel!\" Kurt exclaims, and Mikkel turns to your direction. \"Mikkel, have you met Emma?\"<br><br>Your eyes light and your back straightens as Kurt turns and smiles at you. He places a hand on your shoulder, gentle, and extends an arm towards Mikkel for your benefit.",
     "choices": [
       {"gotoId" : "emmaReflection_good4_t"},
     ],
@@ -716,11 +715,12 @@ persuasion:
       "endingArgument eq true"
     ]
   },
+  // TODO insertion point here for the reflective choice
   {
     "id": "emmaReflection_bad2_t",
     "speaker": "UN2",
     "choiceLabel": "\"Yes… Uh, well…\" you stammer.",
-    "content": "\"I wanted to introduce myself to you,\" he interrupted. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br>\"That’s...\" you start again. You still can’t look him in the eye. You feel your face turning into a grimace as your back presses against the wall. Your gaze shifts past Kurt and you see that Mikkel walked out of the door. \"Excuse --\"",
+    "content": "\"I wanted to introduce myself to you,\" he interrupted. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br>\"That’s...\" you start again. Your gaze shifts past Kurt, and you catch a glimpse of Mikkel as he walks past you toward the door. \"Excuse --\"",
     "choices": [
       {"gotoId" : "emmaReflection_bad3_t"},
     ],
@@ -732,7 +732,7 @@ persuasion:
   { // TODO
     "id": "emmaReflection_bad3_t",
     "speaker": "UN2",
-    "content": "\"It’s too bad about your speech tonight,\" Kurt continues, \"but give me a call if you’re willing to set those <em>high</em> morals of yours down for a minute and join a team that’s doing real work.\" Kurt turned and took his leave. You could hear him laughing as he walked away. You don’t wait for your shock to subside before you turn and walk the opposite direction, back towards your hotel, and waited for when you can get on your plane and go home.",
+    "content": "\"It’s too bad about your speech tonight,\" Kurt continues, \"but give me a call if you’re willing to set those <em>high</em> morals of yours down for a minute and join a team that’s doing real work.\" With that, he turns abruptly and takes his leave. You hurry after Mikkel, but it's too late; he's already gone. Nothing left to do now but return to your hotel and prepare for your flight back home.",
     "effects" : [
       "set emmaReflection true"
     ],
