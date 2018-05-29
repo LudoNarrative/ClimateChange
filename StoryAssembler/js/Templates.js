@@ -210,7 +210,7 @@ define(["util", "Condition", "State"], function(util, Condition, State) {
 			var shimmerNum = incrShimmers();
 			var shimmer = $('<span/>', {
 			text: params[1],
-			class: "shimmer",
+			class: "mutable",
 			id: "shimmer" + shimmerNum,
 			});
 

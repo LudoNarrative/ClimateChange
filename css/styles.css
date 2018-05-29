@@ -644,8 +644,8 @@ input:checked + .slider:before {
 .sceneWindows.active { opacity:1; }
 
 .mutable { 
-    border: 1px dashed black;
-    padding: 3px;
+    text-decoration:underline;
+    color:#0172a0;
 }
 
 .beginScene {

@@ -592,12 +592,13 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "talkToStudent gte 3" },
 				{ condition: "followUp eq true" },
 				{ condition: "lectureEnd eq true" },
-
+/*
 				{
 					condition: "game_mode eq [random|attractMode|dodgeMode|drawMode]",
 					label: "Game mode",
 					hoverText: "What mode do you want the game to be in?"
 				},
+*/
 				{ 	condition: "lectureTopic eq [acidity|warming]", 
 					label: "Lecture Topic", 
 					hoverText: "What will your lecture to the students be about?",

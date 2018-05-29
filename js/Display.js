@@ -144,7 +144,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 
 	var content = {
 		"0_low" : {
-			"text" : "<h3>Dinner With Friends-Low</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
+			"text" : "<h3>Dinner With Friends-Low</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p>Were you able to field their questions, while still passing food around the table?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDinner",
 			"climateFacts" : [
@@ -155,7 +155,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			]
 		},
 		"1_low" : {
-			"text" : "<h3>First Lecture-Low</h3><p>You wonder how your first lecture will go. Will you be in front of hundreds of students? Or maybe a smaller class? What will you talk about? It's hard to say, since you're still wrapping up work on your dissertation. Hopefully once you have your PhD, things will solidify.</p>",
+			"text" : "<h3>First Lecture-Low</h3><p>Your first lecture. You've started as an adjunct, teaching how {shimmer|topicShimmer|acidity} is affecting {shimmer|subjectShimmer|phytoplankton}. They've started you with a {shimmer|classSizeShimmer|small seminar}, {shimmer|classFriendliness|which should mesh well with the friendliness of the students}.</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalLecture",
 			"climateFacts" : [
@@ -177,7 +177,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			]
 		},
 		"3_low" : {
-			"text" : "<h3>Beach Scene-Low</h3><p>You took Mom's words to heart, and later on got involved with a local group helping with habitat remediation for crabs.</p><p>You managed to keep the Oxbow Marshes designated as a wildlife refuge, and pushed for tighter regulations of the local paper mill. Sometimes it feels hopeless, given global events, but you've kept working. One day you have a memorable conversation with your co-worker about this very thing.</p>",
+			"text" : "<h3>Beach Scene-Low</h3><p>You later {shimmer|protagIdentity|left academia and} got involved with a local group helping with habitat remediation for crabs.</p><p>You managed to keep the Oxbow Marshes designated as a wildlife refuge, and pushed for tighter regulations of the local paper mill. Sometimes it feels hopeless, given global events, but you've kept working. One day you have a memorable conversation with your {shimmer|coworkerRelationShimmer|new} co-worker, {shimmer|coworkerIdentity|a fellow former academic}, about this very thing. Hopefully your {shimmer|protagOptimism|pessimism doesn't rub him the wrong way}, given his {shimmer|coworkerOptimism|pessimism}</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalBeach",
 			"climateFacts" : [{
@@ -195,7 +195,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"0_medium" : {
-			"text" : "<h3>Dinner With Friends-Medium</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
+			"text" : "<h3>Dinner With Friends-Medium</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDinner",
 			"climateFacts" : [
@@ -206,7 +206,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			]
 		},
 		"1_medium" : {
-			"text" : "<h3>First Lecture-Medium</h3><p>You wonder how your first lecture will go. Will you be in front of hundreds of students? Or maybe a smaller class? What will you talk about? It's hard to say, since you're still wrapping up work on your dissertation. Hopefully once you have your PhD, things will solidify.</p>",
+			"text" : "<h3>First Lecture-Medium</h3><p>Your first lecture. You've started as an adjunct, teaching how {shimmer|topicShimmer|acidity} is affecting {shimmer|subjectShimmer|phytoplankton}. They've started you with a {shimmer|classSizeShimmer|small seminar}, {shimmer|classFriendliness|which should mesh well with the friendliness of the students}.</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalLecture",
 			"climateFacts" : [{
@@ -226,7 +226,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			]
 		},
 		"3_medium" : {
-			"text" : "<h3>Beach Scene-Medium</h3>",
+			"text" : "<h3>Beach Scene-Medium</h3><p>You later {shimmer|protagIdentity|left academia and} got involved with a local group helping with habitat remediation for crabs.</p><p>You managed to keep the Oxbow Marshes designated as a wildlife refuge, and pushed for tighter regulations of the local paper mill. Sometimes it feels hopeless, given global events, but you've kept working. One day you have a memorable conversation with your {shimmer|coworkerRelationShimmer|new} co-worker, {shimmer|coworkerIdentity|a fellow former academic}, about this very thing. Hopefully your {shimmer|protagOptimism|pessimism doesn't rub him the wrong way}, given his {shimmer|coworkerOptimism|pessimism}</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalBeach",
 			"climateFacts" : [{
@@ -244,7 +244,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"0_high" : {
-			"text" : "<h3>Dinner With Friends-High</h3><p>You are Emma Richards, a PhD student who studies <span class='mutable'>shrimp</span>.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you.</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
+			"text" : "<h3>Dinner With Friends-High</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDinner",
 			"climateFacts" : [
@@ -255,7 +255,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			]
 		},
 		"1_high" : {
-			"text" : "<h3>First Lecture-Hot</h3><p>You wonder how your first lecture will go. Will you be in front of hundreds of students? Or maybe a smaller class? What will you talk about? It's hard to say, since you're still wrapping up work on your dissertation. Hopefully once you have your PhD, things will solidify.</p>",
+			"text" : "<h3>First Lecture-High</h3><p>Your first lecture. You've started as an adjunct, teaching how {shimmer|topicShimmer|acidity} is affecting {shimmer|subjectShimmer|phytoplankton}. They've started you with a {shimmer|classSizeShimmer|small seminar}, {shimmer|classFriendliness|which should mesh well with the friendliness of the students}.</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalLecture",
 			"climateFacts" : [{
@@ -275,7 +275,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			]
 		},
 		"3_high": {
-			"text" : "<h3>Beach Scene-High</h3>",
+			"text" : "<h3>Beach Scene-High</h3><p>You later {shimmer|protagIdentity|left academia and} got involved with a local group helping with habitat remediation for crabs.</p><p>You managed to keep the Oxbow Marshes designated as a wildlife refuge, and pushed for tighter regulations of the local paper mill. Sometimes it feels hopeless, given global events, but you've kept working. One day you have a memorable conversation with your {shimmer|coworkerRelationShimmer|new} co-worker, {shimmer|coworkerIdentity|a fellow former academic}, about this very thing. Hopefully your {shimmer|protagOptimism|pessimism doesn't rub him the wrong way}, given his {shimmer|coworkerOptimism|pessimism}</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalBeach",
 			"climateFacts" : [{
@@ -374,11 +374,12 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		var contentIndex;
 		if (State.get("sceneTimeline") == null && State.get("introCompleted") !== true) { 	//if we haven't played a scene yet...
 			contentIndex = "timeline_" + level; 
-			}		
+		}
+
 		else { contentIndex = timestep + "_" + level; }
 
+		State.set("UIselectedLevel", content[timestep + "_" + level].beginScene);
 		var mainTextAssets = Templates.interactiveRender(content[contentIndex].text);
-
 		$("#mainTextContent").html(mainTextAssets.txt);
 		attachClickEvents(mainTextAssets.textEvents);
 		$("#climateFacts .title").html(content[contentIndex].climateFacts[0].title);
@@ -419,6 +420,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		var divId = event.target.id;
 	
 		var funcs = {
+			//Dinner Scene funcs-----------------------------
 			"studyShimmer" : function(oldVal) {
 
 				var shimmerVals = ["phytoplankton", "coral", "lobsters"];
@@ -447,7 +449,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				var shimmerVals = [
 					{text : "Both of them are a bit critical.", val1 : 0, val2: 2}, 
 					{text : "One of them is supportive, but the other is more critical.", val1 : 1, val2: 1}, 
-					{text : "Both of them are supportive.", val1 : 2, val2: 2}
+					{text : "Both of them are supportive.", val1 : 2, val2: 0}
 				];
 				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
 				if (i == shimmerVals.length) { i = 0; }
@@ -456,7 +458,123 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				setDynamicWishlistItem("state: set challengingFriend [0-2:1]", shimmerVals[i].val2);
 				
 				return shimmerVals[i].text;
-			}
+			},
+
+			//Lecture Scene funcs---------------------------
+			"topicShimmer" : function(oldVal) {
+
+				var shimmerVals = ["acidity", "warming"];
+				var i = shimmerVals.indexOf(oldVal) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("lectureTopic eq [acidity|warming]", shimmerVals[i]);
+				
+				return shimmerVals[i];
+			},
+			"subjectShimmer" : function(oldVal) {
+
+				var shimmerVals = ["phytoplankton", "lobsters", "coral"];
+				var i = shimmerVals.indexOf(oldVal) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("areaOfExpertise eq [phytoplankton|lobsters|coral]", shimmerVals[i]);
+				
+				return shimmerVals[i];
+			},
+			"classSizeShimmer" : function(oldVal) {
+
+				var shimmerVals = [
+					{text : "large lecture", val : "lecture"}, 
+					{text : "small seminar", val : "seminar"}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("classSize eq [lecture|seminar]", shimmerVals[i].val);
+				
+				return shimmerVals[i].text;
+			},
+			"classFriendliness" : function(oldVal) {
+				var shimmerVals = [
+					{text : "which should mesh well with the friendliness of the students", val1 : 0, val2: 3}, 
+					{text : "which should help with the mix of pessimistic and mostly optimistic students", val1 : 1, val2: 2}, 
+					{text : "which should help with the mix of mostly pessimistic and optimistic students", val1 : 2, val2: 1}, 
+					{text : "which will hopefully help with the notoriously antagonistic students", val1 : 3, val2: 0}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("state: optimisticStudent eq [0-3:2]", shimmerVals[i].val1);
+				setDynamicWishlistItem("state: antagonisticStudent eq [0-3:1]", shimmerVals[i].val2);
+				
+				return shimmerVals[i].text;
+			},
+			//Beach scene funcs---------------------------------------------
+			"protagIdentity" : function(oldVal) {
+
+				var shimmerVals = [
+					{text : "left academia and", val : "academic"}, 
+					{text : "shifted your activist focus and", val : "activist"}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("protagonistIdentity eq [academic|activist]", shimmerVals[i].val);
+				
+				return shimmerVals[i].text;
+			},
+			"coworkerRelationShimmer" : function(oldVal) {
+
+				var shimmerVals = [
+					{text : "new", val : "unfamiliar"}, 
+					{text : "long-time", val : "familiar"}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("state: set coworkerRelation eq [unfamiliar|familiar]", shimmerVals[i].val);
+				
+				return shimmerVals[i].text;
+			},
+			"coworkerIdentity" : function(oldVal) {
+
+				var shimmerVals = [
+					{text : "an activist", val : "activist"}, 
+					{text : "a fellow former academic", val : "academic"}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("state: set coworkerIdentity [activist|academic]", shimmerVals[i].val);
+				
+				return shimmerVals[i].text;
+			},
+			"protagOptimism" : function(oldVal) {
+
+				var shimmerVals = [
+					{text : "pessimism doesn't rub him the wrong way", val : "low"}, 
+					{text : "optimism rubs off on him a bit", val : "high"}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("state: set protagonistOptimism eq [high|low]", shimmerVals[i].val);
+				
+				return shimmerVals[i].text;
+			},
+			"coworkerOptimism" : function(oldVal) {
+
+				var shimmerVals = [
+					{text : "pessimism", val : "low"}, 
+					{text : "optimism", val : "high"}
+				];
+				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
+				if (i == shimmerVals.length) { i = 0; }
+
+				setDynamicWishlistItem("state: set coworkerOptimism [low|high]", shimmerVals[i].val);
+				
+				return shimmerVals[i].text;
+			},
 		}
 
 		$("#" + divId).html(funcs[functionName]($("#" + divId).html()));
