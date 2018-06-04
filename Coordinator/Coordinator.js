@@ -662,6 +662,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set optimism 7",
 
 				"set questionsLeft 3",
+				"set lectureFail false"		//global variable for whether you fail at the lecture
 				//for final release, variable tempTimeline will be set through graph to low, medium, or high (eg "set tempTimeline high")
 			],
 			UIvars: [
@@ -711,10 +712,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			wishlist: [
 				{ condition: "sceneSet eq true"},
-				{ condition: "troubleWithLecture eq true"},
-				{ condition: "reasonForTrouble eq true"},
-				{ condition: "pathChoiceMade eq true"},
-				{ condition: "deanReaction eq true"},
+				{ condition: "deanRequestMade eq true"},
+				{ condition: "talkAboutIt gte 3"},
+				{ condition: "conversationBeats gte 3"},
+				{ condition: "deanDecision eq true"},
+				{ condition: "deanOutro eq true"}
 			],
 			dataFiles: [
 				"text!finalDean"
@@ -722,11 +724,16 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 
 			startState: [
 				"set sceneSet false",
-				"set troubleWithLecture false",
-				"set reasonForTrouble false",
-				"set pathChoiceMade false",
-				"set deanReaction false",
+				"set establishLectureQuality false",
+				"set talkAboutIt 0",
 				"set tension 1",
+				"set power 1",
+				"set respond false",
+				"set conversationBeats 0",
+				"set deanDecision false",
+				"set deanOutro false",
+				"set disagreementLevel 0",
+				"set deanGetsHisWay false",			//whether Dean gets you to do what he wants
 
 				"set confidence 5",
 				"set academicEnthusiasm 0",			//global stat
@@ -1139,6 +1146,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id : "finalLecture",
 				text : "<p>The lecture continued on...over the years the specifics faded. But one thing was certain: the events of that first class cast a long shadow over your future as an academic.</p>"
+			},
+			{
+				id : "finalDean",
+				text : "<p>The rest of the meeting was essentially different flavors of the same thing: Dean Smith trying to get you to do what he wanted. Either way, you ended up sticking it out in academia, and continuing until you became quite skilled at communicating different aspects of climate change!</p>"
 			}
 		];
 
@@ -2059,7 +2070,11 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						graphics: "char3",
 						age: "20s",
 						states: [	//happy, neutral, upset
-							{ state: ["default"], tag: "happy"}
+							{ state: ["default"], tag: "neutral"},
+							{ state: ["tension lte 3"], tag: "happy"},
+							{ state: ["power gte 4", "tension gte 2"], tag: "neutral"},
+							{ state: ["power gte 8"], tag: "happy"},
+							{ state: ["power lte 4", "tension gte 1"], tag: "upset"}
 						]
 					},
 					{
@@ -2067,7 +2082,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 						graphics: "char1",
 						age: "50s",
 						states: [	//"happy", "neutral", "disappointed"
-							{ state: ["default"], tag: "happy" }
+							{ state: ["default"], tag: "neutral" },
+							{ state: ["tension lte 3"], tag: "happy"},
+							{ state: ["tension gt 3", "tension lt 8"], tag: "neutral"},
+							{ state: ["tension gte 8"], tag: "disappointed"},
 						]
 					}
 				]

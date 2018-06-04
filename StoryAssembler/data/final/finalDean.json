@@ -1,10 +1,10 @@
 [
 /*
 set scene
-dean says why you're there
+dean says why you're there (set sceneSet true)
     -you're so good at lectures
     -you're not so good at lectures
-dean suggests next course of action
+dean suggests next course of action (set deanSuggestionBeat true)
     -you should lecture more
     -you should take a lab position
 you...
@@ -30,6 +30,655 @@ deciding whether or not to continue as an academic is
 "set lifelongAcademic true"
 
 */
+
+{
+    "id": "intro1",
+    "avatar" : "protagonist",
+    "content" : "<p>You climb the stairs slowly to the Dean Smith's office. {ifStateCondition|lectureFail eq true|It's like they wanted to give you time to think over the reason you've been called in.|Should have taken the elevator.}</p>",
+    "choices" : [
+        {"gotoId" : "intro2"}
+    ],
+    "effects" : [
+        "set sceneSet true",
+        "set lectureFail true"
+    ]
+},
+
+{
+    "id": "intro2",
+    "avatar" : "protagonist",
+    "choiceLabel": "Continue",
+    "content" : "<p>The air is hot and stifling--yet another record-breaking summer bearing down on the vacated campus. Everyone's feeling it at this point--the local newspaper's even running stories on the bird die-offs in the nearby Muscagokee marshland.</p><p>At least the AC held through the end of classes this quarter. Next year...</p>",
+    "choices" : [
+        { "condition" : "establishLectureQuality eq true" },
+        { "condition" : "distractFromThoughts eq true"}
+    ],
+    "effects" : [
+        "set sceneSet true"
+    ]
+},
+
+{
+    "id": "goodLecturer",
+    "avatar" : "protagonist",
+    "choiceLabel": "...maybe try something a bit experimental.",
+    "content" : "<p>...next year you're thinking of holding your Intro to Climate Studies course outdoors, to drive home the point. Let Mother Nature do a little co-teaching with you.</p><p>You've built up a reputation on campus as a gifted lecturer, so you'll probably have some leeway if you want to try it out.</p><p>Maybe you'll ask the Dean at the end of this meeting.</p>",
+    "choices" : [
+        {"gotoId" : "deanHello"}
+    ],
+    "conditions" : [
+        "lectureFail eq false"
+    ],
+    "effects" : [
+        "set establishLectureQuality true"
+    ]
+},
+
+{
+    "id": "badLecturer",
+    "avatar" : "protagonist",
+    "choiceLabel": "...if you're still here next year, that is.",
+    "content" : "<p>...because of course that's why you're having this meeting. To talk about \"departmental pedagogical concerns\". Or in plainer terms: whether you're going to get fired for flubbing too many lectures. You'd hoped it'd get better with time and practice, but clearly that hasn't been the case.</p><p>A bead of sweat trickles down your neck. You're here.</p>",
+    "choices" : [
+        {"gotoId" : "deanHello"}
+    ],
+    "conditions" : [
+        "lectureFail eq true"
+    ],
+    "effects" : [
+        "set establishLectureQuality true",
+        "incr tension 1"
+    ]
+},
+
+{
+    "id": "goodLecturerDistract",
+    "avatar" : "protagonist",
+    "choiceLabel": "...things will be even worse.",
+    "content" : "<p>Who knows if there even will be a Muscagokee marshland this time next year? Yet another big development project is eyeing real estate, and it feels like everyone's so tired from fighting off the last one, the developers will grease enough palms at city council to sneak it through.</p><p>You shake your head. <i>Focus, Emma</i>. You knock briskly. You hear the Dean call out to come in.</p>",
+    "choices" : [
+        {"gotoId" : "deanHello"}
+    ],
+    "conditions" : [
+        "lectureFail eq false"
+    ],
+    "effects" : [
+        "set distractFromThoughts true"
+    ]
+},
+
+{
+    "id": "badLecturerDistract",
+    "avatar" : "protagonist",
+    "choiceLabel": "...better not continue that train of thought.",
+    "content" : "<p>...because you'll still have this job. Totally.</p><p>I mean even if you don't, you could still use your degree. Maybe drum up some interest with the local activist group, work with them on local issues directly.</p><p>But that doesn't matter, because you're totally not about to be fired.</p><p>A bead of sweat trickles down your neck. You're here.</p>",
+    "choices" : [
+        {"gotoId" : "deanHello"}
+    ],
+    "conditions" : [
+        "lectureFail eq true"
+    ],
+    "effects" : [
+        "set distractFromThoughts true",
+        "incr tension 1"
+    ]
+},
+
+{
+    "id": "deanHello",
+    "avatar" : "authorityFigure",
+    "choiceLabel" : "Enter office.",
+    "content" : "<p>\"Hello Emma.\"</p><p>You remember how Dean Smith seemed so intimidating when you interviewed for this position. He'd started off by asking you a detailed technical question about your dissertation. \"Just to show I'm no intellectual lightweight\", he'd laughed.</p>{ifStateCondition|lectureFail eq true|<p>Actually, he's still pretty intimidating.</p>|<p>It was good to know he was invested in what you taught as well.}</p>",
+    "choices" : [
+        {"gotoId" : "deanHello2"}
+    ],
+    "conditions" : [
+        "sceneSet eq true"
+    ]
+},
+
+{
+    "id": "deanHello2",
+    "avatar" : "authorityFigure",
+    "choiceLabel" : "Continue",
+    "content" : "<p>\"I've been looking over your performance these past two years.\" He holds up a binder.{ifStateCondition|lectureFail eq true| You wonder if that has the student evaluations in it.|} \"And I thought we should have a talk about your future role here at the University.\"</p>",
+    "choices" : [
+        {"condition" : "deanRequestMade eq true"},
+        {"gotoId" : "deanRequestNerves"}
+    ],
+    "conditions" : [
+        "sceneSet eq true"
+    ]
+},
+
+{
+    "id": "deanRequestResearch",
+    "avatar" : "authorityFigure",
+    //"unavailableChoiceLabel" : "We should discuss more. (unavailable)",
+    "choiceLabel" : "...my role?",
+    "content" : "{ifStateCondition|requestNerves eq true|\"A researcher,\" he repeats patiently.|\"I'm starting a new lab initiative, and I need a lead researcher.\" He smiles.} \"It's still early days, but I've found enough funding to support you for one year. After that, well...that depends on you.\" He folds his hands.",
+    "choices" : [
+        {"gotoId" : "emmaRespond1Agree"},
+        {"gotoId" : "emmaRespond1Disagree"}
+    ],
+    "conditions" : [
+        "lectureFail eq true"
+    ],
+    "effects" : [
+        "set deanRequestMade true"
+    ]
+},
+{
+    "id": "deanRequestTeach",
+    "avatar" : "authorityFigure",
+    "choiceLabel" : "...my role?",
+    "content" : "<p>{ifStateCondition|requestNerves eq true|\"I'm spearheading a new climate change lecture series,\" he repeats patiently.|\"I want you to be one of the central lecturers for a new climate change lecture series I'm spearheading.\"} He passes you a sheet with an...ambitious weekly schedule.</p><p>\"I want you to take on the main three lectures next year. We may even wrangle a way to stream them online!\"",
+    "choices" : [
+        {"gotoId" : "emmaRespond1Agree"},
+        {"gotoId" : "emmaRespond1Disagree"}
+    ],
+    "conditions" : [
+        "lectureFail eq false"
+    ],
+    "effects" : [
+        "set deanRequestMade true"
+    ]
+},
+
+{
+    "id": "deanRequestNerves",
+    "avatar" : "authorityFigure",
+    "choiceLabel" : "{ifStateCondition|lectureFail eq true|Look those student evals are wrong and-|Look I'm a good lecturer I don't see-}",
+    "content" : "<p>Dean Smith raises an eyebrow. \"...{ifStateCondition|lectureFail eq true|as a researcher for a new lab initiative I'm starting.|as a special topics lecturer in a program I'm spearheading.}\"</p><p>You're so busy trying to formulate arguments you almost miss it. \"What?\"</p>",
+    "choices" : [
+        {"gotoId" : "deanRequestNerves2"}
+    ],
+    "conditions" : [
+        "sceneSet eq true"
+    ],
+    "effects" : [
+        "incr tension 1",
+        "set requestNerves true"
+    ]
+},
+{
+    "id": "deanRequestNerves2",
+    "avatar" : "authorityFigure",
+    "choiceLabel" : "Continue",
+    "content" : "<p>\"Let's talk about your role in this new plan of mine.\"</p>",
+    "choices" : [
+        {"condition" : "deanRequestMade eq true"}
+    ],
+    "conditions" : [
+        "sceneSet eq true",
+        "requestNerves eq true"
+    ]
+    
+},
+
+
+{
+    "id": "emmaRespond1Agree",
+    "avatar" : "protagonist",
+    "choiceLabel" : "Yes! This sounds great!",
+    "content" : "<p>{ifStateCondition|lectureFail eq true|You feel relief wash over you. You actually half-collapse in your chair. Another chance.|Wow, your own lecture series!} You look closer at the sheet. It's got your name on there and everything, front and center. {ifStateCondition|lectureFail eq true|Lead Interim Researcher|Central Lecturer}. Sounds perfect!</p>",
+    "conditions" : [
+    ],
+    "effects" : [
+        "set respond true",
+        "incr conversationBeats 1",
+        "decr tension 1"
+    ]
+},
+{
+    "id": "emmaRespond1Disagree",
+    "avatar" : "protagonist",
+    "choiceLabel" : "I don't think this is right for me.",
+    "content" : "<p>\"I don't think that's right for me\" you say.",
+    "conditions" : [
+    ],
+    "choices" : [
+        {"gotoId" : "onTheSpotBridge"}
+    ],
+    "effects" : [
+        "set respond true",
+        "incr conversationBeats 1",
+        "incr tension 1",
+        "set disagree1 true"
+    ]
+},
+
+{
+    "id": "deanRespondDisagreeTeach1",
+    "avatar" : "authorityFigure",
+    "content" : "\"You don't want to?? Why the heck not??\"",
+    "choices" : [
+        {"gotoId" : "emmaRespond2Agree"},
+        {"gotoId" : "emmaRespond2Disagree"}
+    ],
+    "conditions" : [
+        "conversationBeats eq 2",
+        "disagree1 eq true",
+        "deanDecision eq false"
+    ],
+    "effects" : [
+        "set respond false",
+        "incr tension 1",
+        "incr disagreementLevel 1"
+    ]
+},
+
+{
+    "id": "emmaRespond2Disagree",
+    "avatar" : "protagonist",
+    "choiceLabel" : "Stick to your guns.",
+    "content" : "<p>\"It's just not\" you say.",
+    "conditions" : [
+        "conversationBeats eq 2"
+    ],
+    "effects" : [
+        "set respond2 true",
+        "incr conversationBeats 1",
+        "incr tension 1",
+        "incr disagreementLevel 1"
+    ]
+},
+
+{
+    "id": "emmaRespond2Agree",
+    "avatar" : "protagonist",
+    "choiceLabel" : "Give in.",
+    "content" : "<p>\"Oh wait, haha just kidding (sweats)\" you say.",
+    "conditions" : [
+        "conversationBeats eq 2"
+    ],
+    "effects" : [
+        "set respond2 true",
+        "incr conversationBeats 1",
+        "decr tension 1"
+    ]
+},
+
+
+{
+    "id": "deanRequestDetails",
+    "avatar" : "authorityFigure",
+    "content" : "<p>Good! So here are the details. {ifStateCondition|lectureFail eq true|You'll have a slight pay cut, unfortunately. It's not something I have control over.|You'll have to keep your old course load in addition to these new courses...but they'll be upper division!}</p>",
+    "choices" : [
+        {"gotoId" : "detailsAgree"},
+        {"gotoId" : "detailsPushback"}
+    ],
+    "conditions" : [
+        "deanDecision eq false"
+    ],
+    "effects" : [
+    ]
+},
+
+    {
+        "id": "detailsAgree",
+        "avatar" : "protagonist",
+        "choiceLabel" : "Oh...ok!",
+        "content" : "I'm really excited!",
+        "choices" : [
+            {"gotoId" : "totallyAgree"}
+        ],
+        "conditions" : [
+        ],
+        "effects" : [
+        ]
+    },
+
+    {
+        "id": "detailsPushback",
+        "avatar" : "protagonist",
+        "choiceLabel" : "Well...",
+        "content" : "<p>\"I'm really excited about this opportunity,\" you say, choosing your words carefully. \"But if that's going to be the case, then there are some things I'd want as well to balance out {ifStateCondition|lectureFail eq true|the salary cut|the added workload}.\"</p>",
+        "choices" : [
+            {"gotoId" : "haggleDetailsBridge"}
+        ],
+        "conditions" : [
+        ],
+        "effects" : [
+            "incr disagreementLevel 1"
+        ]
+    },
+
+{
+    "id": "onTheSpotBridge",
+    "choiceLabel": "Continue",
+    "request": {"gotoId": "onTheSpot"}
+},
+
+{   //if you're REALLY just not going along
+    "id": "onTheSpot",
+    "avatar" : "authorityFigure",
+    "content" : "<p>\"Is that so, Emma?\" Dean pinches the bridge of his nose. \"Then what is it exactly you think is the best use of your skills?\"</p>",
+    "choices" : [
+        {"gotoId" : "highRisk"},
+        {"gotoId" : "mediumRisk"},
+        {"gotoId" : "lowRisk"}
+    ],
+    "conditions" : [
+        "disagreementLevel gt 1",
+        "deanDecision eq false"
+    ],
+    "effects" : [
+    ]
+},
+
+{
+    "id": "haggleDetailsBridge",
+    "choiceLabel": "Continue",
+    "request": {"gotoId": "haggleDetails"}
+},
+
+
+{
+    "id": "haggleDetails",
+    "avatar" : "authorityFigure",
+    "content" : "<p>\"Oh? Is that so?\" Dean Smith's smile fades to an impassive poker face, but he doesn't seem angry. You take a deep breath.</p>",
+    "choices" : [
+        {"gotoId" : "highRiskDetail"},
+        {"gotoId" : "mediumRiskDetail"},
+        {"gotoId" : "lowRiskDetail"}
+    ],
+    "conditions" : [
+        "deanDecesion eq false"
+    ],
+    "effects" : [
+    ]
+},
+{
+    "id": "highRiskDetail",
+    "avatar" : "protagonist",
+    "choiceLabel" : "{ifStateCondition|lectureFail eq true|I want full control of the lab and the research (high risk)|I want you to convert this position into a tenure track job (high risk)}",
+    "content" : "Lemme do the thing my way.",
+    "choices" : [
+        {"gotoId" : "high_strongConvince"},
+        {"gotoId" : "high_grudgingConvince"},
+        {"gotoId" : "high_strongDisagree"}
+    ],
+    "conditions" : [
+
+    ],
+    "effects" : [
+        "incr tension 3"
+    ]
+},
+
+{
+    "id": "mediumRiskDetail",
+    "avatar" : "protagonist",
+    "choiceLabel" : "{ifStateCondition|lectureFail eq true|I want two years of funding guaranteed. (medium risk)|I want the University to sponsor me as a speaker for the 2032 Paris Climate Summit}",
+    "content" : "Let's do the thing maybe? How you wanna do it?",
+    "choices" : [
+        {"gotoId" : "medium_strongConvince"},
+        {"gotoId" : "medium_grudgingConvince"},
+        {"gotoId" : "medium_strongDisagree"}
+    ],
+    "conditions" : [
+    ],
+    "effects" : [
+        "incr tension 2"
+    ]
+},
+{
+    "id": "lowRiskDetail",
+    "avatar" : "protagonist",
+    "choiceLabel" : "{ifStateCondition|lectureFail eq true|I actually want to keep the same salary. (low risk)|I want a pay raise. (low risk)}",
+    "content" : "I'd like to do this version of your thing.",
+    "choices" : [
+        {"gotoId" : "low_strongConvince"},
+        {"gotoId" : "low_grudgingConvince"},
+        {"gotoId" : "low_strongDisagree"}
+    ],
+    "conditions" : [
+    ],
+    "effects" : [
+        "incr tension 1"
+    ]
+},
+
+{
+    "id": "highRisk",
+    "avatar" : "protagonist",
+    "choiceLabel" : "{ifStateCondition|lectureFail eq true|I want you to let me teach my own upper division courses.|I want you to let me convert to a full-time research position.} (high risk)",
+    "content" : "Lemme do the thing my way.",
+    "choices" : [
+        {"gotoId" : "high_strongConvince"},
+        {"gotoId" : "high_grudgingConvince"},
+        {"gotoId" : "high_strongDisagree"}
+    ],
+    "conditions" : [
+    ],
+    "effects" : [
+        "incr tension 5"
+    ]
+},
+
+{
+    "id": "mediumRisk",
+    "avatar" : "protagonist",
+    "choiceLabel" : "{ifStateCondition|lectureFail eq true|I still want to teach...even if that means less classes|I want to substitute one class with a part-time research position} (medium risk)",
+    "content" : "Let's do the thing maybe? How you wanna do it?",
+    "choices" : [
+        {"gotoId" : "medium_strongConvince"},
+        {"gotoId" : "medium_grudgingConvince"},
+        {"gotoId" : "medium_strongDisagree"}
+    ],
+    "conditions" : [
+    ],
+    "effects" : [
+        "incr tension 3"
+    ]
+},
+{
+    "id": "lowRisk",
+    "avatar" : "protagonist",
+    "choiceLabel" : "{ifStateCondition|lectureFail eq true|I want to teach no matter what.|I want to do research...maybe as a class?} (low risk)",
+    "content" : "I'd like to do this version of your thing.",
+    "choices" : [
+        {"gotoId" : "low_strongConvince"},
+        {"gotoId" : "low_grudgingConvince"},
+        {"gotoId" : "low_strongDisagree"}
+    ],
+    "conditions" : [
+    ],
+    "effects" : [
+        "incr tension 1"
+    ]
+},
+
+
+
+
+{   //Dean totally buys it
+    "id": "totallyAgree",
+    "avatar" : "authorityFigure",
+    "choiceLabel" : "This all sounds um great, sure.",
+    "content" : "\"Good, good! I'll have my secretary send you the paperwork to fill out.\"",
+    "conditions" : [
+    ],
+    "effects" : [
+        "set deanDecision true",
+        "set deanGetsHisWay true",
+        "set tension 0"
+    ]
+},
+
+
+{
+    "id": "low_strongConvince",
+    "choiceLabel": "Point out some obvious advantages.",
+    "request": {"gotoId": "strongConvince"}
+},
+{
+    "id": "medium_strongConvince",
+    "choiceLabel": "Make an especially eloquent case.",
+    "request": {"gotoId": "strongConvince"}
+},
+{
+    "id": "high_strongConvince",
+    "choiceLabel": "Use your powers of persuasion like never before.",
+    "request": {"gotoId": "strongConvince"}
+},
+{   //Dean totally buys it
+    "id": "strongConvince",
+    "avatar" : "authorityFigure",
+    "content" : "\"You know, you really are more suited to be a {ifStateCondition|lectureFail eq true|lecturer|researcher}, aren't you?\" Dean smiles. \"I don't know why I didn't see it before. Thanks for your input. I think this will end up being a better situation for everyone.\"",
+    "conditions" : [
+        "power eq 10"
+    ],
+    "effects" : [
+        "set deanDecision true",
+        "set deanGetsHisWay false",
+        "set tension 0"
+    ]
+},
+
+{
+    "id": "low_grudgingConvince",
+    "choiceLabel": "Falteringly make some points in your favor.",
+    "request": {"gotoId": "grudgingConvince"}
+},
+{
+    "id": "medium_grudgingConvince",
+    "choiceLabel": "Collect your thoughts and state them clearly.",
+    "request": {"gotoId": "grudgingConvince"}
+},
+{
+    "id": "high_grudgingConvince",
+    "choiceLabel": "The stakes are high, so go safe.",
+    "request": {"gotoId": "grudgingConvince"}
+},
+{   //Dean is ok with it, he supposes....
+    "id": "grudgingConvince",
+    "avatar" : "authorityFigure",
+    "content" : "\"I suppose you do raise some good points...\" Dean shuffles some papers. \"I think we can make that happen. You'll be a {ifStateCondition|lectureFail eq true|lecturer|researcher}, then.\"",
+    "conditions" : [
+        "lectureFail eq true",
+        "power gt 5"
+    ],
+    "effects" : [
+        "set tension 0",
+        "set deanDecision true",
+        "set deanGetsHisWay false",
+    ]
+},
+
+{
+    "id": "low_strongDisagree",
+    "choiceLabel": "I-I...well...I um...er...",
+    "request": {"gotoId": "strongDisagree"}
+},
+{
+    "id": "medium_strongDisagree",
+    "choiceLabel": "Look the thing...the thing is...look..",
+    "request": {"gotoId": "strongDisagree"}
+},
+{
+    "id": "high_strongDisagree",
+    "choiceLabel": "Oh god, you can tell you pushed it too far.",
+    "request": {"gotoId": "strongDisagree"}
+},
+{   //Dean's not gonna let you get away with it
+    "id": "strongDisagree",
+    "avatar" : "authorityFigure",
+    "content" : "\"I don't think so, Emma.\" Dean shuffles his papers, face grim. \"We're going to do this my way. If you want to continue being part of this institution, I suggest you find a way to fit that into your future, however you choose to imagine it.\"",
+    "conditions" : [
+        "power gt 5"
+    ],
+    "effects" : [
+        "set deanDecision true",
+        "set deanGetsHisWay true"
+    ]
+},
+
+
+
+
+
+
+
+
+
+
+{
+    "id": "sceneOutro1",
+    "avatar" : "protagonist",
+    "content": "<p>You continue to talk with Dean Smith, the previous tension over your position dissipated in a flurry of details on new course syllabi and potential class sizes.</p><p>It felt good to stand up for your passions, and you're sure with some more practice, you can become a great educator.</p>",
+    "choices": [
+        {"gotoId" : "endDummy"}
+    ],
+    "conditions" : [
+        "lectureFail eq true",
+        "deanGetsHisWay eq false",
+    ],
+    "effects": [
+        "set lifelongAcademic true",
+    ]
+},
+{
+    "id": "sceneOutro2",
+    "avatar" : "protagonist",
+    "content": "<p>Your whole career has always been about the students first, so taking on more work isn't so bad, when weighed against your passion to educate. With the Dean's support, you're sure you'll soon be impacting even more people, educating them about the swiftly changing climate.</p>",
+    "choices": [
+        {"gotoId" : "endDummy"}
+    ],
+    "conditions" : [
+        "lectureFail eq false",
+        "deanGetsHisWay eq true",
+    ],
+    "effects": [
+        "set lifelongAcademic true",
+    ]
+},
+{
+    "id": "sceneOutro3",
+    "avatar" : "protagonist",
+    "content": "<p>You're so relieved you weren't fired, the rest of the conversation goes by in a blur. You've always felt you were more suited to research anyway. To be honest, it's where your true passion is. Leave it to others to share the knowledge. You'll be getting your hands dirty!</p>",
+    "choices": [
+        {"gotoId" : "endDummy"}
+    ],
+    "conditions" : [
+        "lectureFail eq true",
+        "deanGetsHisWay eq true",
+    ],
+    "effects": [
+        "set lifelongAcademic false",
+    ]
+},
+{
+    "id": "sceneOutro4",
+    "avatar" : "protagonist",
+    "content": "<p>Despite the Dean's misgivings, you managed to win him over. You know you'll make a great researcher, and honestly? Direct action and activism seems to be the fastest way forward. And it's too late in the game for anything slower.</p>",
+    "choices": [
+        {"gotoId" : "endDummy"}
+    ],
+    "conditions" : [
+        "lectureFail eq false",
+        "deanGetsHisWay eq false",
+    ],
+    "effects": [
+        "set lifelongAcademic true",
+    ]
+},
+{   
+    "id" : "endDummy",
+    "avatar" : "protagonist",
+    "choiceLabel" : "Start next scene.",
+    "content" : " ",
+    "conditions" : [],
+    "effects": [
+        "set deanOutro true"
+    ]
+},
+
+
+
+
+/*
 {
     "id": "midTensionStarti",
     "avatar" : "authorityFigure",
@@ -59,6 +708,7 @@ deciding whether or not to continue as an academic is
     "effects": [
       "set lifelongAcademic false"
     ],
-  },
+  }
+ */ 
    
 ]
