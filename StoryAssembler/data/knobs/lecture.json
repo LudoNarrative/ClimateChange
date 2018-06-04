@@ -32,7 +32,10 @@ Todo:
           {"gotoId" : "failEnding"}
         ],
         "conditions" : [
-          "concentration lte 1"
+          "concentration lte 1",
+        ],
+        "effects" : [
+            "set lectureFail true"
         ]
     },
     {
