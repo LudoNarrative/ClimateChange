@@ -444,7 +444,7 @@ deciding whether or not to continue as an academic is
     "id": "highRisk",
     "avatar" : "protagonist",
     "choiceLabel" : "{ifStateCondition|lectureFail eq true|I want you to let me teach my own upper division courses.|I want you to let me convert to a full-time research position.} (high risk)",
-    "content" : "Lemme do the thing my way.",
+    "content" : "<p>{ifStateCondition|lectureFail eq true|\"I'm not good with lower division students, I'll give you that...\" What the hell. You go for it. \"...Buuut if you let me teach the senior capstone courses, and some graduate seminars, it'd be a better use of my specialized research background, anyway!\"</p>|I know I'm a good lecturer, but that's only because I'm an even better researcher. The best use of my skills is with direct action. That's where I can make the most impact for the University.\"}<p>Hard to tell if you're convincing him. You wrack your brain.</p>",
     "choices" : [
         {"gotoId" : "high_strongConvince"},
         {"gotoId" : "high_grudgingConvince"},
@@ -461,7 +461,7 @@ deciding whether or not to continue as an academic is
     "id": "mediumRisk",
     "avatar" : "protagonist",
     "choiceLabel" : "{ifStateCondition|lectureFail eq true|I still want to teach...even if that means less classes|I want to substitute one class with a part-time research position} (medium risk)",
-    "content" : "Let's do the thing maybe? How you wanna do it?",
+    "content" : "<p>{ifStateCondition|lectureFail eq true|\"I still feel like I can do some good as a lecturer,\" you say. \"I mean even if you have to keep me to the intro courses, I can eventually work up to taking on a full courseload?\"|\"Research is really important to me. Even if I can't do it full-time, I understand. But let me sub out one class with a research slot. A two-prong approach makes use of all my skills!\"}</p><p>It's not like you're asking for the moon, here. Surely he'll see your side of it. You wrack your brain for more reasons.</p>",
     "choices" : [
         {"gotoId" : "medium_strongConvince"},
         {"gotoId" : "medium_grudgingConvince"},
@@ -477,7 +477,7 @@ deciding whether or not to continue as an academic is
     "id": "lowRisk",
     "avatar" : "protagonist",
     "choiceLabel" : "{ifStateCondition|lectureFail eq true|I want to teach no matter what.|I want to do research...maybe as a class?} (low risk)",
-    "content" : "I'd like to do this version of your thing.",
+    "content" : "<p>{ifStateCondition|lectureFail eq true|\"I don't care what I'm teaching, I just want to teach.\" You try to not make it sound too much like you're begging. \"Please don't take that chance away from me.\"|\"What if I...taught a research methods course?\" You know this isn't the same as actual research, but you're willing to settle for anything. \"Please? It would be the best of both worlds!\"}</p><p>He's gotta go for it. I mean this isn't exactly a hard sell. Or is it? You try to marshal your arguments.</p>",
     "choices" : [
         {"gotoId" : "low_strongConvince"},
         {"gotoId" : "low_grudgingConvince"},
@@ -511,25 +511,31 @@ deciding whether or not to continue as an academic is
 {
     "id": "low_strongConvince",
     "choiceLabel": "Point out some obvious advantages.",
-    "request": {"gotoId": "strongConvince"}
+    "request": {"gotoId": "strongConvince"},
+    "conditions" : [
+        "power eq 6"
+    ],
 },
 {
     "id": "medium_strongConvince",
-    "choiceLabel": "Make an especially eloquent case.",
-    "request": {"gotoId": "strongConvince"}
+    "choiceLabel": "Make a fairly eloquent case.",
+    "request": {"gotoId": "strongConvince"},
+    "conditions" : [
+        "power eq 8"
+    ],
 },
 {
     "id": "high_strongConvince",
     "choiceLabel": "Use your powers of persuasion like never before.",
-    "request": {"gotoId": "strongConvince"}
+    "request": {"gotoId": "strongConvince"},
+    "conditions" : [
+        "power eq 10"
+    ],
 },
 {   //Dean totally buys it
     "id": "strongConvince",
     "avatar" : "authorityFigure",
     "content" : "\"You know, you really are more suited to be a {ifStateCondition|lectureFail eq true|lecturer|researcher}, aren't you?\" Dean smiles. \"I don't know why I didn't see it before. Thanks for your input. I think this will end up being a better situation for everyone.\"",
-    "conditions" : [
-        "power eq 10"
-    ],
     "effects" : [
         "set deanDecision true",
         "set deanGetsHisWay false",
@@ -540,26 +546,31 @@ deciding whether or not to continue as an academic is
 {
     "id": "low_grudgingConvince",
     "choiceLabel": "Falteringly make some points in your favor.",
-    "request": {"gotoId": "grudgingConvince"}
+    "request": {"gotoId": "grudgingConvince"},
+    "conditions" : [
+        "power gt 3"
+    ],
 },
 {
     "id": "medium_grudgingConvince",
     "choiceLabel": "Collect your thoughts and state them clearly.",
-    "request": {"gotoId": "grudgingConvince"}
+    "request": {"gotoId": "grudgingConvince"},
+    "conditions" : [
+        "power gt 5"
+    ],
 },
 {
     "id": "high_grudgingConvince",
     "choiceLabel": "The stakes are high, so go safe.",
-    "request": {"gotoId": "grudgingConvince"}
+    "request": {"gotoId": "grudgingConvince"},
+    "conditions" : [
+        "power gt 8"
+    ],
 },
 {   //Dean is ok with it, he supposes....
     "id": "grudgingConvince",
     "avatar" : "authorityFigure",
     "content" : "\"I suppose you do raise some good points...\" Dean shuffles some papers. \"I think we can make that happen. You'll be a {ifStateCondition|lectureFail eq true|lecturer|researcher}, then.\"",
-    "conditions" : [
-        "lectureFail eq true",
-        "power gt 5"
-    ],
     "effects" : [
         "set tension 0",
         "set deanDecision true",
@@ -586,12 +597,10 @@ deciding whether or not to continue as an academic is
     "id": "strongDisagree",
     "avatar" : "authorityFigure",
     "content" : "\"I don't think so, Emma.\" Dean shuffles his papers, face grim. \"We're going to do this my way. If you want to continue being part of this institution, I suggest you find a way to fit that into your future, however you choose to imagine it.\"",
-    "conditions" : [
-        "power gt 5"
-    ],
     "effects" : [
         "set deanDecision true",
-        "set deanGetsHisWay true"
+        "set deanGetsHisWay true",
+        "set emmaFailed true"
     ]
 },
 
@@ -622,7 +631,7 @@ deciding whether or not to continue as an academic is
 {
     "id": "sceneOutro2",
     "avatar" : "protagonist",
-    "content": "<p>Your whole career has always been about the students first, so taking on more work isn't so bad, when weighed against your passion to educate. With the Dean's support, you're sure you'll soon be impacting even more people, educating them about the swiftly changing climate.</p>",
+    "content": "<p>Your whole career has always been about the students first, so taking on more work isn't so bad, when weighed against your passion to educate. {ifStateCondition|emmaFailed eq true|You can't believe you risked losing your job trying to become a researcher! Anyway, with|With} the Dean's support, you're sure you'll soon be impacting even more people, educating them about the swiftly changing climate.</p>",
     "choices": [
         {"gotoId" : "endDummy"}
     ],
@@ -637,7 +646,7 @@ deciding whether or not to continue as an academic is
 {
     "id": "sceneOutro3",
     "avatar" : "protagonist",
-    "content": "<p>You're so relieved you weren't fired, the rest of the conversation goes by in a blur. You've always felt you were more suited to research anyway. To be honest, it's where your true passion is. Leave it to others to share the knowledge. You'll be getting your hands dirty!</p>",
+    "content": "<p>You're so relieved you weren't fired, the rest of the conversation goes by in a blur. {ifStateCondition|emmaFailed eq true|You can't believe you risked losing your job trying to keep teaching! |}You've always felt you were more suited to research anyway. To be honest, it's where your true passion is. Leave it to others to share the knowledge. You'll be getting your hands dirty!</p>",
     "choices": [
         {"gotoId" : "endDummy"}
     ],

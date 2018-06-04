@@ -27,8 +27,6 @@ initialize(set_sprite(entity(e_1_XX_),triangle)).
 initialize(set_sprite(entity(e_2_XX_),triangle)).
 initialize(set_color(entity(e_2_XX_),blue)).
 
-timer_logic(timer(t_1_XX_),scalar(3),loop).
-
 pool(entity(e_2_XX_),location(top,left),random,ordered).
 pool(entity(e_2_XX_),location(top,center),random,ordered).
 pool(entity(e_2_XX_),location(top,right),random,ordered).
@@ -48,7 +46,7 @@ pool(entity(e_1_XX_),location(bottom,right),ordered,random).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(10))).
+initialize(set_value(resource(r_1_XX_),scalar(3))).
 initialize(set_value(resource(r_2_XX_),scalar(7))).
 
 precondition(control_event(button(mouse,held)),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
@@ -65,15 +63,15 @@ result(outcome(o_2_XX_),set_value(resource(r_2_XX_),amount(clear))).
 precondition(ge(resource(r_1_XX_),scalar(1)),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),set_value(resource(r_2_XX_),amount(clear))).
 
-precondition(timer_elapsed(t_1_XX_),outcome(o_4_XX_)).
+precondition(le(resource(r_1_XX_),scalar(10)),outcome(o_4_XX_)).
 result(outcome(o_4_XX_),set_value(resource(r_2_XX_),amount(clear))).
 
-precondition(le(resource(r_2_XX_),scalar(9)),outcome(o_5_XX_)).
+precondition(le(resource(r_2_XX_),scalar(3)),outcome(o_5_XX_)).
 result(outcome(o_5_XX_),set_value(resource(r_2_XX_),amount(clear))).
 result(outcome(o_5_XX_),moves(entity(e_2_XX_),left,resource(r_1_XX_))).
 result(outcome(o_5_XX_),look_at(entity(e_2_XX_),entity(e_1_XX_),nearest)).
 
-precondition(ge(resource(r_2_XX_),scalar(1)),outcome(o_6_XX_)).
+precondition(ge(resource(r_2_XX_),scalar(5)),outcome(o_6_XX_)).
 result(outcome(o_6_XX_),moves(entity(e_2_XX_),right,resource(r_1_XX_))).
 result(outcome(o_6_XX_),look_at(entity(e_2_XX_),entity(e_1_XX_),nearest)).
 
@@ -101,7 +99,7 @@ reading(risk,outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
 reading(outcome_helps,relation(outcome(o_1_XX_),resource(r_2_XX_))).
 ==========
 <ul>
-<li>games/dean_12.lp</li>
+<li>games/dean_30.lp</li>
 <li>GOAL:<ul>
 <li>Produce power</li>
 </ul></li>

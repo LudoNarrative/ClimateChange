@@ -14,6 +14,7 @@ resource(r_2_XX_).
 many(entity(e_1_XX_)).
 many(entity(e_2_XX_)).
 
+initialize(fill(all,clear)).
 initialize(add(entity(e_1_XX_),scalar(1),location(middle,left))).
 initialize(add(entity(e_1_XX_),scalar(1),location(top,center))).
 initialize(add(entity(e_1_XX_),scalar(1),location(bottom,center))).
@@ -29,14 +30,15 @@ initialize(set_color(entity(e_2_XX_),blue)).
 
 timer_logic(timer(t_1_XX_),scalar(3),loop).
 
-pool(entity(e_2_XX_),location(top,left),random,ordered).
-pool(entity(e_2_XX_),location(top,center),random,ordered).
-pool(entity(e_2_XX_),location(top,right),random,ordered).
-pool(entity(e_2_XX_),location(middle,left),random,ordered).
-pool(entity(e_2_XX_),location(middle,center),random,ordered).
-pool(entity(e_2_XX_),location(bottom,left),random,ordered).
-pool(entity(e_2_XX_),location(bottom,center),random,ordered).
-pool(entity(e_2_XX_),location(bottom,right),random,ordered).
+pool(entity(e_2_XX_),location(top,left),random,random).
+pool(entity(e_2_XX_),location(top,center),random,random).
+pool(entity(e_2_XX_),location(top,right),random,random).
+pool(entity(e_2_XX_),location(middle,left),random,random).
+pool(entity(e_2_XX_),location(middle,center),random,random).
+pool(entity(e_2_XX_),location(middle,right),random,random).
+pool(entity(e_2_XX_),location(bottom,left),random,random).
+pool(entity(e_2_XX_),location(bottom,center),random,random).
+pool(entity(e_2_XX_),location(bottom,right),random,random).
 pool(entity(e_1_XX_),location(top,left),ordered,random).
 pool(entity(e_1_XX_),location(top,center),ordered,random).
 pool(entity(e_1_XX_),location(top,right),ordered,random).
@@ -48,8 +50,8 @@ pool(entity(e_1_XX_),location(bottom,right),ordered,random).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(10))).
-initialize(set_value(resource(r_2_XX_),scalar(7))).
+initialize(set_value(resource(r_1_XX_),scalar(8))).
+initialize(set_value(resource(r_2_XX_),scalar(8))).
 
 precondition(control_event(button(mouse,held)),outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
 result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),decrease_over_time(resource(r_2_XX_),scalar(2))).
@@ -58,7 +60,7 @@ result(outcome(click_to_spin_entity_e_1_XX__XX__XX_),rotates(entity(e_1_XX_),ccw
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
 result(outcome(o_1_XX_),increase_over_time(resource(r_2_XX_),scalar(4))).
 
-precondition(ge(resource(r_2_XX_),scalar(1)),outcome(o_2_XX_)).
+precondition(ge(resource(r_2_XX_),scalar(4)),outcome(o_2_XX_)).
 precondition(overlaps(entity(e_1_XX_),entity(e_2_XX_),true),outcome(o_2_XX_)).
 result(outcome(o_2_XX_),set_value(resource(r_2_XX_),amount(clear))).
 
@@ -68,13 +70,13 @@ result(outcome(o_3_XX_),set_value(resource(r_2_XX_),amount(clear))).
 precondition(timer_elapsed(t_1_XX_),outcome(o_4_XX_)).
 result(outcome(o_4_XX_),set_value(resource(r_2_XX_),amount(clear))).
 
-precondition(le(resource(r_2_XX_),scalar(9)),outcome(o_5_XX_)).
+precondition(le(resource(r_2_XX_),scalar(10)),outcome(o_5_XX_)).
 result(outcome(o_5_XX_),set_value(resource(r_2_XX_),amount(clear))).
-result(outcome(o_5_XX_),moves(entity(e_2_XX_),left,resource(r_1_XX_))).
+result(outcome(o_5_XX_),moves(entity(e_2_XX_),backward,resource(r_1_XX_))).
 result(outcome(o_5_XX_),look_at(entity(e_2_XX_),entity(e_1_XX_),nearest)).
 
 precondition(ge(resource(r_2_XX_),scalar(1)),outcome(o_6_XX_)).
-result(outcome(o_6_XX_),moves(entity(e_2_XX_),right,resource(r_1_XX_))).
+result(outcome(o_6_XX_),moves(entity(e_2_XX_),left,resource(r_1_XX_))).
 result(outcome(o_6_XX_),look_at(entity(e_2_XX_),entity(e_1_XX_),nearest)).
 
 precondition(tick,tick).
@@ -101,7 +103,7 @@ reading(risk,outcome(click_to_spin_entity_e_1_XX__XX__XX_)).
 reading(outcome_helps,relation(outcome(o_1_XX_),resource(r_2_XX_))).
 ==========
 <ul>
-<li>games/dean_12.lp</li>
+<li>games/dean_26.lp</li>
 <li>GOAL:<ul>
 <li>Produce power</li>
 </ul></li>

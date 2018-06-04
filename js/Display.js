@@ -7,6 +7,8 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 	var interfaceMode = "graph";			//how scenes progress...a timeline that's returned to ("timeline"), progress scene-to-scene ("normal"), or "graph"
 	var avatarMode = "oneMain";				//oneMain means just one main character, otherwise "normal" RPG style
 
+	var sandboxMode = false;
+
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
 		State = _State;
@@ -204,7 +206,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"0_medium" : {
-			"text" : "<h3>Dinner With Friends-Medium</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
+			"text" : "<h3>Dinner With Friends-Medium</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p>Were you able to field their questions, while still passing food around the table?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDinner",
 			"climateFacts" : [
@@ -262,7 +264,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"0_high" : {
-			"text" : "<h3>Dinner With Friends-High</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p><span class='mutable'>Were you able to field their questions, while still passing food around the table?</span></p>",
+			"text" : "<h3>Dinner With Friends-High</h3><p>You are Emma Richards, a PhD student who studies {shimmer|studyShimmer|phytoplankton}.</p><p>Tomorrow, you'll be defending your thesis. Your friends decided to throw a dinner party for you. {shimmer|friendBalance|One of them is an academic like you, and one is an activist.} {shimmer|friendSupport|They both support you.}</p><p>Were you able to field their questions, while still passing food around the table?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDinner",
 			"climateFacts" : [
@@ -857,6 +859,8 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		}, function() {
 			$(".point:not(.last)").fadeOut(1000);			//fade out all but end points
 			$(".point.last").addClass("pointFlash");
+
+			startSandboxMode();		//put in so that sandbox mode starts immediately
 		}
 		);
 
@@ -865,9 +869,9 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 /*
 		$.when( animations ).done(function() {
 		    // ALL ANIMATIONS HAVE BEEN DONE IN SEQUENCE
-		   
-		}); */
 
+		});
+*/
 		//circleClicked(0, "low");						//trigger click action on first timeline dot
 	}
 
@@ -962,8 +966,9 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		$("#graphClickBlocker").hide();
 		$("svg circle").show();
 
-
 		$("#sandbox").show();
+		State.set("introCompleted", true);
+		sandboxMode = true;
 	}
 
 
