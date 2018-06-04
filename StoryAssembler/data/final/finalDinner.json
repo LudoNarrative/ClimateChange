@@ -35,7 +35,7 @@
   {
     "id": "friendIsInAcademiaEnthusiastici",
     "avatar": "friend1",
-    "content": "\"So {nickname|protagonist}, I got you something.\" {name|friend1} pulls out a coffee thermos from under the table. \"It says 'Trust me, I'm a doctor'. I have one too. Whenever we're both on campus we can stop by that little cafe and drink some mocha on the patio. It'll be adorable!\"",
+    "content": "\"So {nickname|protagonist}, I got you something.\" {name|friend1} pulls out a coffee thermos from under the table. \"It says \"Trust me, I'm a doctor\". {ifStateCondition|academicFriends gt 0|I have one too. Whenever we're both on campus we can stop by that little cafe and drink some mocha on the patio.|Whenever you're on campus you can stop by that little cafe and drink some mocha on the patio.} It'll be adorable!\"",
     "choices": [
       {"gotoId": "friendIsInAcademiaEnthusiastici2"}
     ],

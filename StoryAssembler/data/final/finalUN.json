@@ -581,7 +581,7 @@ persuasion:
     "id": "emmaReflection_good2_t",
     "speaker": "UN2",
     "choiceLabel": "\"Kurt, you seemed a bit shaken by the end of my presentation.\"",
-    "content": "\"I hope I didn’t make you feel too bad in there.\"<br>\"Not at all, Emma. I…\" He hesitates. \"...I’m big enough to admit when I've been defeated. You did good. You’ve convinced me to change the way I think.\"",
+    "content": "\"I hope I didn’t make you feel too bad in there.\"<br><br>\"Not at all, Emma. I…\" He hesitates. \"…I’m big enough to admit when I've been defeated. You did good. You’ve convinced me to change the way I think.\"",
     "choices": [
       {"gotoId" : "emmaReflection_good3_t"},
     ],
@@ -590,12 +590,11 @@ persuasion:
       "emmaReflection eq true"
     ]
   },
-// TODO the "good"  (after 2) and "middle" routes still need to be rewritten
   {
     "id": "emmaReflection_good3_t",
     "speaker": "UN1",
     "choiceLabel": "\"That's great to hear,\" you say.",
-    "content": "At that moment, Mikkel walks out from the conference room. You raise your hand to grab his attention but Kurt interrupts your action.<br>\"Ah, Mikkel!\" Kurt exclaims, and Mikkel turns to your direction. \"Mikkel, have you met Emma?\"<br><br>Your eyes light and your back straightens as Kurt turns and smiles at you. He places a hand on your shoulder, gentle, and extends an arm towards Mikkel for your benefit.",
+    "content": "At that moment, Mikkel walks out of the conference room. You raise your hand to grab his attention but Kurt interrupts your action.<br><br>\"Ah, Mikkel!\" Kurt exclaims, and Mikkel turns in your direction. \"Mikkel, have you met Emma?\"<br><br>Your eyes brighten and your back straightens as Kurt turns and smiles at you.",
     "choices": [
       {"gotoId" : "emmaReflection_good4_t"},
     ],
@@ -608,7 +607,7 @@ persuasion:
     "id": "emmaReflection_good4_t",
     "speaker": "UN1",
     "choiceLabel": "Continue",
-    "content": "Mikkel speaks: \"no,\" he says, \"but I knew I needed to shake your hand before I left the conference today.\"<br>\"It’s good to meet you, Mikkel, I’m Emma.\"<br>\"I know who you are. Everyone knows who <em>you</em> are, now.\"<br>\"Oh…\" You blush.<br><br>\"Don’t be modest, Emma, you changed hearts and minds in there this evening.\"<br>\"She changed my mind,\" Kurt said.<br>\"Good work, Emma.\"<br>\"Yeah, Good work.\"<br>Emma felt tears begin to well in her eyes and forced them down. \"Thank you,\" she said, \"both of you.\"<br>They all shook hands and took their respect leaves. Emma set her path back towards the hotel.",
+    "content": "\"Emma! Good to see you again,\" Mikkel says. \"That was a phenomenal presentation – you changed hearts and minds in there.\"<br><br>\"Hell, somehow she even changed <em>my</em> mind,\" Kurt interjects.",
     "choices": [
       {"gotoId" : "emmaReflection_good5_t"},
     ],
@@ -619,9 +618,9 @@ persuasion:
   },
   {
     "id": "emmaReflection_good5_t",
-    "speaker": "protagonist",
+    "speaker": "UN1",
     "choiceLabel": "Continue",
-    "content": "Maybe a bath. You thought. A bath and a good book before my flight. That sounds good. You walked through the cold breeze of the city to your hotel, looking at the sunset colors in the clouds as you went.",
+    "content": "\"I know you've probably got a flight to catch,\" Mikkel continues, \"but would you like to come get dinner with us before you leave? I suspect this might be the beginning of a long and fruitful collaboration.\"<br><br>Obviously, you accept.",
     "effects" : [
       "set emmaReflection true"
     ],
@@ -632,10 +631,11 @@ persuasion:
   },
 
 //MED//
+// TODO the "middle" route still needs to be rewritten
   {
     "id": "emmaReflection_med1_t",
     "speaker": "UN2",
-    "content": "You’re waiting for Mikkel. You know he likes to mingle, he’ll probably be one of the last ones out.<br>Kurt exits from the doors and begins walking away from you.<br><br>You clear your throat -- loud. Several members of the council turn and look at you; you’re only looking at one -- Kurt.<br>\"Emma,\" he says, matter-of-factly, looking back at you. He walks straight into the outpouring of people to greet you. \"Emma,\" he says again, \"I’ve did my research on you.\"<br>\"Kurt,\" you say, a hand outstretched, \"I’ve also done my research.\"<br><br>He takes your hand and grips it -- firm -- you grip back just as firm.",
+    "content": "You’re waiting for Mikkel. You know he likes to mingle, so he’ll probably be one of the last ones out. But then, Kurt glances in your direction and catches your eye. You're not especially enthusiastic about talking to him right now, but you might as well get it out of the way.<br><br>He walks straight into the outpouring of people to greet you. \"Emma,\" he says. \"I’ve done my research on you.\"<br><br>\"Kurt,\" you say, hand outstretched. \"I’ve also done my research.\"<br><br>He takes your hand and grips it firmly; you grip back, just as firmly.",
     "choices": [
       {"gotoId" : "emmaReflection_med2_t"},
     ],
@@ -649,7 +649,7 @@ persuasion:
     "id": "emmaReflection_med2_t",
     "speaker": "UN2",
     "choiceLabel": "\"You almost convinced me, sweetheart,\" Kurt said.",
-    "content": "\"Don’t call me sweetheart, cupcake.\"<br>\"My apologies,\" Kurt pauses, deliberately, before speaking again, \"ma’am.\" He said with a smile.<br>\"I come from a land in time where my mama would have smacked me upside my head if I didn’t respect my elders.\"<br><em>Ohh... it’s on.</em> You think.<br>\"Your mother sounds like a smart lady, Kurt. I would’ve probably smacked you upside your head, too, if I had the chance.\" You say, returning Kurt’s smile.",
+    "content": "\"[TODO there's a small bug after this so I'm using the old text temporarily to keep the scene stable]<br><br>Don’t call me sweetheart, cupcake.\"<br>\"My apologies,\" Kurt pauses, deliberately, before speaking again, \"ma’am.\" He said with a smile.<br>\"I come from a land in time where my mama would have smacked me upside my head if I didn’t respect my elders.\"<br><em>Ohh... it’s on.</em> You think.<br>\"Your mother sounds like a smart lady, Kurt. I would’ve probably smacked you upside your head, too, if I had the chance.\" You say, returning Kurt’s smile.",
     "choices": [
       {"gotoId" : "emmaReflection_med3_t"},
     ],
@@ -709,18 +709,31 @@ persuasion:
     "content": "Kurt's the last person you want to talk to right now, but despite your best efforts to blend into the crowd, he strides briskly towards you with predatorial efficiency, trapping you in a corner. \"Kurt Brannegan\", he says, presenting his hand for you to shake. \"I did my research on you, Ms. Richards.\"",
     "choices": [
       {"gotoId" : "emmaReflection_bad2_t"},
+      {"gotoId" : "emmaReflection_bad2_tALT"},
     ],
     "conditions" : [
       "confidence lte 3",
       "endingArgument eq true"
     ]
   },
-  // TODO insertion point here for the reflective choice
   {
     "id": "emmaReflection_bad2_t",
     "speaker": "UN2",
+    "choiceLabel": "\"Actually, it's, uh, <em>Dr.</em> Richards…\"",
+    "content": "\"I wanted to introduce myself to you,\" he continues. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br>\"That’s…\" you start again. Your gaze shifts past Kurt, and you catch a glimpse of Mikkel as he walks past you toward the door. \"Excuse –\"",
+    "choices": [
+      {"gotoId" : "emmaReflection_bad3_t"},
+    ],
+    "conditions" : [
+      "confidence lte 3",
+      "endingArgument eq true"
+    ]
+  },
+  {
+    "id": "emmaReflection_bad2_tALT",
+    "speaker": "UN2",
     "choiceLabel": "\"Yes… Uh, well…\" you stammer.",
-    "content": "\"I wanted to introduce myself to you,\" he interrupted. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br>\"That’s...\" you start again. Your gaze shifts past Kurt, and you catch a glimpse of Mikkel as he walks past you toward the door. \"Excuse --\"",
+    "content": "\"I wanted to introduce myself to you,\" he continues. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br>\"That’s…\" you start again. Your gaze shifts past Kurt, and you catch a glimpse of Mikkel as he walks past you toward the door. \"Excuse –\"",
     "choices": [
       {"gotoId" : "emmaReflection_bad3_t"},
     ],
