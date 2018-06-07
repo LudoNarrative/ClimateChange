@@ -627,7 +627,16 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			},
 		}
 
-		$("#" + divId).html(funcs[functionName]($("#" + divId).html()));
+		var animations = $.chain(function() {
+		    return $("#" + divId).toggle("highlight");
+		}, function() {
+
+			return $("#" + divId).html(funcs[functionName]($("#" + divId).html()));
+		}, function() {
+			return $("#" + divId).fadeIn("fast");
+		});
+
+		
 	}
 
 	//sets wishlist items from when knobs are twiddled
@@ -776,7 +785,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 
 		var introTexts = [
 			"Our world is changing...warming in an ever-accelerating<br/>reaction to humanity's continued development.",
-			"We all have a part to play, together, in this...but each journey is also our own",
+			"We all have a part to play in this...but each journey is also our own",
 			"...steering into one of many possible futures.",
 			"Maybe we can turn the tide to stem the worst of the changes.",
 			"Maybe our action comes just too little, too late.",
@@ -902,13 +911,15 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 
 	var drawFutureBottom = function(){
 		$("#tempArea_low").fadeTo(5000, 0.4);
-		$("#path_low_0").addClass("draw-in");
-		$("#path_low_1").addClass("draw-in");
-		$("#path_low_2").addClass("draw-in");
-		$("#path_low_3").addClass("draw-in");
-		$("#path_low_4").addClass("draw-in");
-		
+
+		$("#path_low_0").fadeTo(3000, 1.0);
+		$("#path_low_1").fadeTo(3000, 1.0);
+		$("#path_low_2").fadeTo(3000, 1.0);
+		$("#path_low_3").fadeTo(3000, 1.0);
+		$("#path_low_4").fadeTo(3000, 1.0);
+
 		$("#low_3").fadeIn();
+
 		/*
 		document.querySelectorAll('.point.futureBottom').forEach(function(point){
 			point.style.opacity = 1;
@@ -919,11 +930,11 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 
 	var drawFutureMiddle = function(){
 		$("#tempArea_medium").fadeTo(5000, 0.4);
-		$("#path_medium_0").addClass("draw-in");
-		$("#path_medium_1").addClass("draw-in");
-		$("#path_medium_2").addClass("draw-in");
-		$("#path_medium_3").addClass("draw-in");
-		$("#path_medium_4").addClass("draw-in");
+		$("#path_medium_0").fadeTo(3000, 1.0);
+		$("#path_medium_1").fadeTo(3000, 1.0);
+		$("#path_medium_2").fadeTo(3000, 1.0);
+		$("#path_medium_3").fadeTo(3000, 1.0);
+		$("#path_medium_4").fadeTo(3000, 1.0);
 		
 		$("#medium_3").fadeIn();
 		/*
@@ -936,11 +947,11 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 
 	var drawFutureTop = function(){
 		$("#tempArea_high").fadeTo(5000, 0.4);
-		$("#path_high_0").addClass("draw-in");
-		$("#path_high_1").addClass("draw-in");
-		$("#path_high_2").addClass("draw-in");
-		$("#path_high_3").addClass("draw-in");
-		$("#path_high_4").addClass("draw-in");
+		$("#path_high_0").fadeTo(3000, 1.0);
+		$("#path_high_1").fadeTo(3000, 1.0);
+		$("#path_high_2").fadeTo(3000, 1.0);
+		$("#path_high_3").fadeTo(3000, 1.0);
+		$("#path_high_4").fadeTo(3000, 1.0);
 
 		$("#high_3").fadeIn();
 	}

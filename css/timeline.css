@@ -218,8 +218,11 @@ svg circle {
 /* Timeline SVG styles */
 
 .tempPath { 
+    /*
     stroke-dasharray: 1000;
     stroke-dashoffset: 1000;
+    */
+    display:none;
 }
 
 #futureGradient {
