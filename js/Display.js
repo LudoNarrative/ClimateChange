@@ -407,17 +407,28 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 	}, function() {
 		
 		var contentIndex;
-		if (State.get("sceneTimeline") == null && State.get("introCompleted") !== true) { 	//if we haven't played a scene yet...
-			contentIndex = "timeline_" + level; 
-		}
-		else if (timestep == 3) {		//if we're on the UN scene / beach scene bridge...
-			if (State.get("lifelongAcademic") != true) { contentIndex = timestep + "_" + level}		//set to beach if you're not academic
-			else { contentIndex = timestep + "_" + level + "_alt"; }			//otherwise, UN
+
+		if (State.get("introCompleted") !== true) {
+			if (State.get("sceneTimeline") == null) { 		//if we haven't played a scene yet...
+				contentIndex = "timeline_" + level; 
+			}
+			else if (timestep == 3) {		//if we're on the UN scene / beach scene bridge...
+				if (State.get("lifelongAcademic") != true) { contentIndex = timestep + "_" + level}		//set to beach if you're not academic
+				else { contentIndex = timestep + "_" + level + "_alt"; }			//otherwise, UN
+			}
+
+			else { contentIndex = timestep + "_" + level; }
 		}
 
-		else { contentIndex = timestep + "_" + level; }
+		else {			//if we're in sandbox mode...
+			contentIndex = timestep + "_" + level;
+			//if (State.get("UIlastContentIndex") == undefined) { contentIndex = "0_low"; }
+			//else { contentIndex = State.get("UIlastContentIndex"); }
+		}
+		
 
-		State.set("UIselectedLevel", content[timestep + "_" + level].beginScene);
+		State.set("UIselectedLevel", content[contentIndex].beginScene);
+		State.set("UIlastContentIndex", contentIndex);
 		var mainTextAssets = Templates.interactiveRender(content[contentIndex].text);
 		$("#mainTextContent").html(mainTextAssets.txt);
 		attachClickEvents(mainTextAssets.textEvents);
@@ -536,8 +547,8 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			"classFriendliness" : function(oldVal) {
 				var shimmerVals = [
 					{text : "which should mesh well with the friendliness of the students", val1 : 0, val2: 3}, 
-					{text : "which should help with the mix of pessimistic and mostly optimistic students", val1 : 1, val2: 2}, 
-					{text : "which should help with the mix of mostly pessimistic and optimistic students", val1 : 2, val2: 1}, 
+					{text : "which should help with the mostly friendly students", val1 : 1, val2: 2}, 
+					{text : "which should help with the mix of mostly antagonistic students", val1 : 2, val2: 1}, 
 					{text : "which will hopefully help with the notoriously antagonistic students", val1 : 3, val2: 0}
 				];
 				var i = shimmerVals.findIndex(function(ele) { return ele.text==oldVal}) + 1;
@@ -951,7 +962,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		$('body').css("background-color", "black");
 		$("#graphContainer").show();
 		var nextSceneIndex = State.get("sceneIndex")+1;
-		if (nextSceneIndex > State.get("scenes").length) {
+		if (nextSceneIndex > State.get("scenes").length || State.get("sceneIndex") == undefined) {
 			startSandboxMode();
 		}
 		else {
