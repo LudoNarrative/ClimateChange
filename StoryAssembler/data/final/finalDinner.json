@@ -559,8 +559,8 @@
         "avatar": "friend2",
         "choiceLabel": "Continue",
         "content": "\"Knock ‘em dead, kid.\" {name|friend2} shoots you a finger gun and blows away the smoke.<br><br>Tomorrow will be upon you in less than eight hours, and your dissertation defense in less than twelve. You can hardly wait. The anticipation is almost making you sick.",
-        "effects": [
-            "set outro true"
+        "choices": [
+            {"gotoId": "endDummy"}
         ]
     },
     {
@@ -843,5 +843,17 @@
         "effects" : [
             "incr confidence 1", "decr tension 1"
         ],
+    },
+
+// final wrap-up fragment (to prevent early fadeout)
+    {
+        "id" : "endDummy",
+        "avatar" : "protagonist",
+        "choiceLabel" : "Start next scene.",
+        "content" : " ",
+        "conditions" : [],
+        "effects": [
+            "set outro true"
+        ]
     }
 ]

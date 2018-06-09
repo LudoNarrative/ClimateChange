@@ -185,7 +185,7 @@
         "incr confidence 1"
       ]
     },
-    { // TODO definitely fix
+    {
     "id": "introduceResearchPart1",
     "avatar": "protagonist",
     "content": "The room slowly grows quieter, and before you know it, it's time for you to begin. \"Good afternoon. Thank you for taking the time to listen to what I have to say today.\"{ifStateCondition|composure lte 3| You can hear your voice waver slightly, and you hope it isn't quite as obvious to the audience as it is to you.|}",
@@ -331,7 +331,7 @@
     "avatar": "protagonist",
     "choiceLabel": "CO2 levels are increasing",
     "unavailableChoiceLabel": "Already presented that fact",
-    "content": "Pointing at the powerpoint slide behind you, \"As you can see by the increasing slope of this line, CO2 levels are increasing faster than it ever has before.\"By the looks of the panel members' faces, they are not impressed by your evidence.",
+    "content": "\"As you can see by the increasing slope of this line,\" you say, gesturing at the slide behind you, \"carbon dioxide levels are increasing faster than ever before.\" By the looks of the panel members' faces, they are not impressed by your evidence.",
     "effects": [
       "decr persuasion 1",
       "incr factsPresented 1",
@@ -343,7 +343,7 @@
     "avatar": "protagonist",
     "choiceLabel": "Florida will be flooded",
     "unavailableChoiceLabel": "Already presented that fact",
-    "content": "\"One study suggests that the rising sea level will swallow the majority of the state of Florida by the year {ifState|sceneTimeline|high|2040|({ifState|sceneTimeline|low|2050|2045})}, potentially displacing up to 20 million people within the United States alone.\" Murmurs between the panel members can be hear throughout the room, subsiding slowly after a few seconds.",
+    "content": "\"One study suggests that the rising sea level will swallow the majority of the state of Florida by the year {ifState|sceneTimeline|high|2040|({ifState|sceneTimeline|low|2050|2045})}, potentially displacing up to 20 million people within the United States alone.\" Murmurs between the panel members can be heard throughout the room, subsiding slowly after a few seconds.",
     "effects": [
       "incr factsPresented 1",
       "incr factsLooped 1"
@@ -403,7 +403,7 @@
   {
     "id": "respondToKurtGood",
     "avatar": "protagonist",
-    "content": "After taking a second to process the question, a small smile slowly emerges on your face. \"While it true that funding those things would be very beneficial to current efforts to stop climate change, funding education would help a lot more in the long run.\"",
+    "content": "After taking a second to process the question, a small smile slowly emerges on your face. \"While it's true that funding those things would be very beneficial to current efforts to stop climate change, funding education would help a lot more in the long run.\"",
     "choiceLabel": "\"You need to look at the bigger picture\"",
     "choices": [{
       "gotoId": "respondToKurtGood2"
@@ -422,7 +422,7 @@
 
 
 
-  { // TODO
+  {
     "id": "respondToKurtBad",
     "avatar": "protagonist",
     "content": "The sudden attack catches you off guard. \"I understand your point, but I believe that funding education will be more effective in the long run.\" You hope that your facts are good enough to make up for your poor answer.",
@@ -497,7 +497,7 @@ persuasion:
   {
     "id": "talonSceneStart_t",
     "avatar": "protagonist",
-    "content": "Time to wrap it up. You stand,{ifStateCondition|confidence gte 5|back straight|back stiff}, in front of your laptop and shut the lid. {ifStateCondition|confidence gte 5||<em>At least it’s over</em>.} You {ifStateCondition|confidence gte 5|calmly|} scan the crowd.",
+    "content": "Time to wrap it up. You stand, {ifStateCondition|confidence gte 5|back straight|back stiff}, in front of your laptop and shut the lid. {ifStateCondition|confidence gte 5||<em>At least it’s over</em>.} You {ifStateCondition|confidence gte 5|calmly|} scan the crowd.",
     "effects" : [
       "set endingArgument true"
     ],
@@ -568,7 +568,7 @@ persuasion:
   {
     "id": "emmaReflection_good1_t",
     "avatar": "UN2",
-    "content": "Kurt exits the conference room and begins walking into the crowd.<br><br>\"Kurt!\" you yell, catching his attention.<br>\"Ah, Emma,\" he says, matter-of-factly, looking back at you. You stride over to him and look him in the eyes. He’s a good few inches taller than you, but you tower over him at this moment. You extend your hand to meet his, grip firmly, and shake. His expression changes, and you realize you’ve caught him off guard. You pounce.",
+    "content": "Kurt exits the conference room and begins walking into the crowd.<br><br>\"Kurt!\" you yell, catching his attention.<br><br>\"Ah, Emma,\" he says, matter-of-factly, looking back at you. You stride over to him and look him in the eyes. He’s a good few inches taller than you, but you tower over him at this moment. You extend your hand to meet his, grip firmly, and shake. His expression changes, and you realize you’ve caught him off guard. You pounce.",
     "choices": [
       {"gotoId" : "emmaReflection_good2_t"},
     ],
@@ -621,8 +621,8 @@ persuasion:
     "avatar": "UN1",
     "choiceLabel": "Continue",
     "content": "\"I know you've probably got a flight to catch,\" Mikkel continues, \"but would you like to come get dinner with us before you leave? I suspect this might be the beginning of a long and fruitful collaboration.\"<br><br>Obviously, you accept.",
-    "effects" : [
-      "set emmaReflection true"
+    "choices" : [
+      {"gotoId" : "endDummy"}
     ],
     "conditions" : [
       "confidence gte 8",
@@ -692,8 +692,8 @@ persuasion:
     "avatar": "UN1",
     "choiceLabel": "\"Thank you, Mikkel.\"",
     "content": "Kurt turned away and began to walk with the crowd.<br>\"And sometimes you need a drink!\" He said, turning back to Emma and Mikkel as he left, laughing.<br>You studied the pattern on the floor.<br>\"And sometimes you’ll meet someone like that, that’s just miserable for no good reason. And that’s okay, too.\" Mikkel sounded like he’d given this speech before; You took it nonetheless.\"It’ll get there… Someday.\" You say.<br>\"Yes it will. I’ve got to run. It was nice speaking with you.\"<br>Mikkel joined the crowd as they all went their separate ways. You, however, lingered.<br><em>Maybe I’ll have that drink.</em> You think to yourself. <em>A toast to my presentation well done.</em>",
-    "effects" : [
-      "set emmaReflection true"
+    "choices" : [
+      {"gotoId" : "endDummy"}
     ],
     "conditions" : [
       "confidence gte 4",
@@ -720,7 +720,7 @@ persuasion:
     "id": "emmaReflection_bad2_t",
     "avatar": "UN2",
     "choiceLabel": "\"Actually, it's, uh, <em>Dr.</em> Richards…\"",
-    "content": "\"I wanted to introduce myself to you,\" he continues. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br>\"That’s…\" you start again. Your gaze shifts past Kurt, and you catch a glimpse of Mikkel as he walks past you toward the door. \"Excuse –\"",
+    "content": "\"I wanted to introduce myself to you,\" he continues. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br><br>\"That’s…\" you start again. Your gaze shifts past Kurt, and you catch a glimpse of Mikkel as he walks past you toward the door. \"Excuse –\"",
     "choices": [
       {"gotoId" : "emmaReflection_bad3_t"},
     ],
@@ -733,7 +733,7 @@ persuasion:
     "id": "emmaReflection_bad2_tALT",
     "avatar": "UN2",
     "choiceLabel": "\"Yes… Uh, well…\" you stammer.",
-    "content": "\"I wanted to introduce myself to you,\" he continues. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br>\"That’s…\" you start again. Your gaze shifts past Kurt, and you catch a glimpse of Mikkel as he walks past you toward the door. \"Excuse –\"",
+    "content": "\"I wanted to introduce myself to you,\" he continues. \"I could see you just fine, naturally, but I was all the way in the back and I’m sure you couldn’t see me very well. I wanted to give you the opportunity to put a face to a name.\"<br><br>\"That’s…\" you start again. Your gaze shifts past Kurt, and you catch a glimpse of Mikkel as he walks past you toward the door. \"Excuse –\"",
     "choices": [
       {"gotoId" : "emmaReflection_bad3_t"},
     ],
@@ -742,16 +742,28 @@ persuasion:
       "endingArgument eq true"
     ]
   },
-  { // TODO
+  {
     "id": "emmaReflection_bad3_t",
     "avatar": "UN2",
     "content": "\"It’s too bad about your speech tonight,\" Kurt continues, \"but give me a call if you’re willing to set those <em>high</em> morals of yours down for a minute and join a team that’s doing real work.\" With that, he turns abruptly and takes his leave. You hurry after Mikkel, but it's too late; he's already gone. Nothing left to do now but return to your hotel and prepare for your flight back home.",
-    "effects" : [
-      "set emmaReflection true"
+    "choices" : [
+      {"gotoId" : "endDummy"}
     ],
     "conditions" : [
       "confidence lte 3",
       "endingArgument eq true"
+    ]
+  },
+
+// final wrap-up fragment (to prevent early fadeout)
+  {
+    "id" : "endDummy",
+    "avatar" : "protagonist",
+    "choiceLabel" : "Start next scene.",
+    "content" : " ",
+    "conditions" : [],
+    "effects": [
+      "set emmaReflection true"
     ]
   }
 ]
