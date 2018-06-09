@@ -1255,7 +1255,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id : "finalDean",
-				text : "<p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprardy!</p>"
+				text : "<p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprady!</p>"
 			},
 			{
 				id : "finalTravel",
@@ -2748,7 +2748,33 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			},
 			{
 				id: "finalUN",
-				aspFilepaths: ['asp-phaser-generator-2/test/fixtures/games-5-18/lecture_test_10.lp'],
+				aspFilepaths: [
+					"Gemini/ASP/games/un_1.lp",
+					"Gemini/ASP/games/un_2.lp",
+					"Gemini/ASP/games/un_3.lp",
+					"Gemini/ASP/games/un_4.lp",
+					"Gemini/ASP/games/un_5.lp",
+					"Gemini/ASP/games/un_6.lp",
+					"Gemini/ASP/games/un_7.lp",
+					"Gemini/ASP/games/un_8.lp",
+					"Gemini/ASP/games/un_9.lp",
+					"Gemini/ASP/games/un_10.lp",
+					"Gemini/ASP/games/un_11.lp",
+					"Gemini/ASP/games/un_12.lp",
+					"Gemini/ASP/games/un_13.lp",
+					"Gemini/ASP/games/un_14.lp",
+					"Gemini/ASP/games/un_15.lp",
+					"Gemini/ASP/games/un_16.lp",
+					"Gemini/ASP/games/un_17.lp",
+					"Gemini/ASP/games/un_18.lp",
+					"Gemini/ASP/games/un_19.lp",
+					"Gemini/ASP/games/un_20.lp",
+					"Gemini/ASP/games/un_21.lp",
+					"Gemini/ASP/games/un_22.lp",
+					"Gemini/ASP/games/un_23.lp",
+					"Gemini/ASP/games/un_24.lp",
+					"Gemini/ASP/games/un_25.lp",
+				],
 				gameString : "var variables;function preload(){};function create(){};function update(){};function getAspGoals(){}"
 			},
 			{

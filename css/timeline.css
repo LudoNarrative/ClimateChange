@@ -43,7 +43,7 @@ body { background-color:black; }
     width: 70px;
     height: 70px;
     background-color: #886530;
-    background-image: url('/assets/ui/play.png');
+    background-image: url('/assets/UI/play.png');
     background-position: center;
     background-size: 57px;
     background-repeat: no-repeat;
@@ -55,7 +55,7 @@ body { background-color:black; }
 }
 
 #playButton:hover {
-    background-image: url('/assets/ui/play_hover.png');
+    background-image: url('/assets/UI/play_hover.png');
 }
 
 #graphContainer {
@@ -218,8 +218,11 @@ svg circle {
 /* Timeline SVG styles */
 
 .tempPath { 
+    /*
     stroke-dasharray: 1000;
     stroke-dashoffset: 1000;
+    */
+    display:none;
 }
 
 #futureGradient {

@@ -34,7 +34,7 @@ deciding whether or not to continue as an academic is
 {
     "id": "intro1",
     "avatar" : "protagonist",
-    "content" : "<p>You climb the stairs slowly to the Dean Smith's office. {ifStateCondition|lectureFail eq true|It's like they wanted to give you time to think over the reason you've been called in.|Should have taken the elevator.}</p>",
+    "content" : "<p>You climb the stairs slowly to Dean Smith's office. {ifStateCondition|lectureFail eq true|It's like they wanted to give you time to think over the reason you've been called in.|Should have taken the elevator.}</p>",
     "choices" : [
         {"gotoId" : "intro2"}
     ],
@@ -48,7 +48,7 @@ deciding whether or not to continue as an academic is
     "id": "intro2",
     "avatar" : "protagonist",
     "choiceLabel": "Continue",
-    "content" : "<p>The air is hot and stifling--yet another record-breaking summer bearing down on the vacated campus. Everyone's feeling it at this point--the local newspaper's even running stories on the bird die-offs in the nearby Muscagokee marshland.</p><p>At least the AC held through the end of classes this quarter. Next year...</p>",
+    "content" : "<p>The air is hot and stifling--yet another record-breaking summer bearing down on the vacated campus. Everyone's feeling it at this point--the local newspaper's even running stories on the bird die-offs in the nearby Muscagokee marshland.</p><p>At least the A/C held through the end of classes this quarter. Next year...</p>",
     "choices" : [
         { "condition" : "establishLectureQuality eq true" },
         { "condition" : "distractFromThoughts eq true"}
@@ -303,7 +303,7 @@ deciding whether or not to continue as an academic is
 {
     "id": "deanRequestDetails",
     "avatar" : "authorityFigure",
-    "content" : "<p>Good! So here are the details. {ifStateCondition|lectureFail eq true|You'll have a slight pay cut, unfortunately. It's not something I have control over.|You'll have to keep your old course load in addition to these new courses...but they'll be upper division!}</p>",
+    "content" : "<p>\"Good! So here are the details. {ifStateCondition|lectureFail eq true|You'll have a slight pay cut, unfortunately. It's not something I have control over.|You'll have to keep your old course load in addition to these new courses...but they'll be upper division!}</p>",
     "choices" : [
         {"gotoId" : "detailsAgree"},
         {"gotoId" : "detailsPushback"}
@@ -535,7 +535,7 @@ deciding whether or not to continue as an academic is
 {   //Dean totally buys it
     "id": "strongConvince",
     "avatar" : "authorityFigure",
-    "content" : "\"You know, you really are more suited to be a {ifStateCondition|lectureFail eq true|lecturer|researcher}, aren't you?\" Dean smiles. \"I don't know why I didn't see it before. Thanks for your input. I think this will end up being a better situation for everyone.\"",
+    "content" : "\"You know, you really are more suited to be a {ifStateCondition|lectureFail eq true|lecturer|researcher}, aren't you?\" Dean Smith smiles. \"I don't know why I didn't see it before. Thanks for your input. I think this will end up being a better situation for everyone.\"",
     "effects" : [
         "set deanDecision true",
         "set deanGetsHisWay false",
@@ -616,7 +616,7 @@ deciding whether or not to continue as an academic is
 {
     "id": "sceneOutro1",
     "avatar" : "protagonist",
-    "content": "<p>You continue to talk with Dean Smith, the previous tension over your position dissipated in a flurry of details on new course syllabi and potential class sizes.</p><p>It felt good to stand up for your passions, and you're sure with some more practice, you can become a great educator.</p>",
+    "content": "<p>You continue to talk with Dean Smith, the tension over your position dissipating in a flurry of details on new course syllabi and potential class sizes.</p><p>It felt good to stand up for your passions, and you're sure with some more practice, you can become a great educator.</p>",
     "choices": [
         {"gotoId" : "endDummy"}
     ],
