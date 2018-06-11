@@ -34,3 +34,7 @@ required(maintenance).
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
 
+:- controlScheme(_,orbit_the_cursor).
+:- outcome(outcome(orbit_the_cursor(_))).
+:- controlScheme(_,repeled_from_cursor).
+:- outcome(outcome(repeled_from_cursor(_))).

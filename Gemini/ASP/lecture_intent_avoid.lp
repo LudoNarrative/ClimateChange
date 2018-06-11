@@ -17,8 +17,8 @@
 required(hand_eye_coordination).
 :- not reading(hand_eye_coordination,game).
 
-required(risk_reward).
-:- not reading(risk_reward,control_event(_)).
+% required(risk_reward).
+% :- not reading(risk_reward,control_event(_)).
 
 
 label(resource(r(1)),concentration,write) :- reading(good,resource(r(1))).
@@ -39,3 +39,10 @@ attract_mode :- precondition(overlaps(E1,E2,true),O),
 						
 :- not attract_mode.
 
+:- controlScheme(_,orbit_the_cursor).
+:- outcome(outcome(orbit_the_cursor(_))).
+:- controlScheme(_,repeled_from_cursor).
+:- outcome(outcome(repeled_from_cursor(_))).
+
+:- result(O, modify(increase,resource(r(1)))),
+  super_trivial(O).

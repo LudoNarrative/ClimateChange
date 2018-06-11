@@ -848,4 +848,4 @@ pruned_action(modify(Dir,R)) :- action(modify(Dir,R)).
 pruned_action(rotates(E,D,V)) :- action(rotates(E,D,V)).
 pruned_action(rotate_to(E)) :- action(rotate_to(E)).
 pruned_action(look_at(E,E2,C)) :- action(look_at(E,E2,C)).
-pruned_aciton(move(E,D)) :- action(move(E,D)).
+pruned_action(move(E,D)) :- action(move(E,D)).

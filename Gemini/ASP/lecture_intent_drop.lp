@@ -36,3 +36,12 @@ lose_if_too_low :- precondition(compare(le,amount(_),scalar(1)),O),
 :- not synced(resource(r(1)),amount(blue)).
 
 allowed(frivolous(resource(r(1)))).
+
+:- controlScheme(_,orbit_the_cursor).
+:- outcome(outcome(orbit_the_cursor(_))).
+:- controlScheme(_,repeled_from_cursor).
+:- outcome(outcome(repeled_from_cursor(_))).
+
+:- result(O, modify(increase,resource(r(1)))),
+  super_trivial(O).
+  

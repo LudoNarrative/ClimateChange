@@ -50,6 +50,12 @@
 :- result(Outcome,modify(decrease,Resource,_)),
    precondition(compare(le,Resource),Outcome).
 
+% Don't set a resource on a check of it, that's confusing
+:- precondition(ge(resource(R),_),O),
+  result(O,set_value(resource(R),_)).
+:- precondition(le(resource(R),_),O),
+  result(O,set_value(resource(R),_)).
+  
 :- result(O,delete(E1)),
    not precondition(overlaps(_,E1,true),O),
    not precondition(overlaps(E1,_,true),O),
@@ -98,6 +104,11 @@ has_both(O) :-   precondition(control_event(click(_)),O),
       initialize(fill(location(_,_),_));
       action(draw(_,_))} 0.
 
+:- condition(compare(_,_,amount(clear(_)))),   
+   0 {initialize(fill(all,C)):uses_color(C);
+      initialize(fill(location(_,_),C)):uses_color(C);
+      action(draw(_,_))} 0.
+
 :- 2{initialize(fill(location(R,C),_))},
    row(R),
    col(C).
@@ -112,9 +123,12 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- condition(over_color(_,Color)),
    not uses_color(Color).
 
+
 % TODO: prevent _any_ comparison against clear?
 :- precondition(compare(_,amount(clear),_),O),
-  0{uses_color(C):palette(C),C != clear}0.
+  0{uses_color(_)}0.
+:- precondition(compare(_,_,amount(clear)),O),
+  0{uses_color(_)}0.
 
 :- precondition(overlaps(E,E,true),O),
    result(O,delete(E)),
@@ -879,4 +893,10 @@ player_controls_resource(R,Dir) :-
    result(O1,delete(E2)),
    only_one_precondition(O1).
 
-   
+% I think it's confusing when you have a control event that "transacts" a resource
+:- precondition(control_event(_),O),
+  result(O,set_value(_,_)).
+
+:- result(_,set_value(_,amount(clear))),
+  not uses_color.
+

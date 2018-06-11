@@ -341,14 +341,17 @@ monotonic(Color,decrease) :-
 
 uses_color(Color) :-
     action(clear(_)),
-    initialize(fill(_,Color)).
+    initialize(fill(_,Color)),
+    palette(Color),
+    Color != clear.
 
 uses_color(Color) :-
     not initialize(fill(_,Color)),
-    action(draw(_,Color)).
+    action(draw(_,Color)),
+    palette(Color),
+    Color != clear.
 
-
-uses_color :- uses_color(Color).
+uses_color :- uses_color(_).
 
 
 

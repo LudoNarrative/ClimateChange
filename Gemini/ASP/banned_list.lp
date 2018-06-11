@@ -25,6 +25,7 @@ entity_spawn_ok_loc(none).
     
 % PROPERTIES DONT WORK
 :- condition(compare(_,property(_,_))).
+% :- result(_,modify(_,property(_,_))).
 
 :- replace(result(O,move(E,D)),result(O,apply_impulse(E,D,_))).
 
@@ -50,3 +51,7 @@ entity_spawn_ok_loc(none).
 :- precondition(control_event(click(E)),O),
    result(O,clear(E2)),
    E2 != E.
+
+:- precondition(control_event(button(mouse,held)),O),
+  precondition(overlaps(_,_,true),O),
+  result(O,modify(_,_)).

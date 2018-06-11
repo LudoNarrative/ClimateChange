@@ -12,19 +12,14 @@
 #const max_resource_change_per = 2.
 #const max_conditions_per = 2.
 
+% required(hand_eye_coordination).
+% :- not reading(hand_eye_coordination,game).
 
-
-required(hand_eye_coordination).
-:- not reading(hand_eye_coordination,game).
-
-required(risk_reward).
-:- not reading(risk_reward,control_event(_)).
-
+% required(risk_reward).
+% :- not reading(risk_reward,control_event(_)).
 
 label(resource(r(1)),concentration,write) :- reading(good,resource(r(1))).
 :- not reading(good,resource(r(1))).
-
-
 
 label(entity(e(1)),e1).
 
@@ -34,8 +29,16 @@ required(maintenance).
 :- not action(mode_change(game_loss)).
 :- 2 {action(mode_change(N))}.
 
-attract_mode :- precondition(overlaps(E1,E2,true),O),
+attract_mode :-
+    precondition(overlaps(E1,E2,true),O),
 		reading(good,O),
 		not reading(bad,O).	
-						
 :- not attract_mode.
+
+:- controlScheme(_,orbit_the_cursor).
+:- outcome(outcome(orbit_the_cursor(_))).
+:- controlScheme(_,repeled_from_cursor).
+:- outcome(outcome(repeled_from_cursor(_))).
+
+:- result(O, modify(increase,resource(r(1)))),
+  super_trivial(O).

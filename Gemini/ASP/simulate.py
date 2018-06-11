@@ -437,7 +437,7 @@ if __name__ == '__main__':
                     print(prettify(tt))
         settings, free_variables, rules, replacements, free_variable_count, ignore_press = parse_game(out)
         print("GAME ", output_ind)
-        simulation_count = 50
+        simulation_count = 100
         depth = 10
         CXPB, MUTPB, NGEN, POP_COUNT = 0.5, 0.2, 50, 200
         display = False
