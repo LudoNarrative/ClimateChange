@@ -111,6 +111,14 @@ requirejs(
 	["State", "StoryDisplay", "Display", "Coordinator", "ChunkLibrary", "Wishlist", "StoryAssembler", "Character", "Game", "AspPhaserGenerator", "util", "domReady!"],
 	function(State, StoryDisplay, Display, Coordinator, ChunkLibrary, Wishlist, StoryAssembler, Character, Game, AspPhaserGenerator) {
 
+	$('body').keyup(function(e){		//refresh if backspace is pressed
+		   if(e.keyCode == 8){
+		       // user has pressed backspace
+		       location.reload();
+		   }
+
+		});
+
 	Coordinator.init();
 
 

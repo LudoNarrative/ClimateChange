@@ -243,7 +243,9 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 				if (State.get('displayType') !== "editor") {
 					throw new Error("Tried to get text for '" + chunkId + "' and it had no content, so we tried to recurse through bestPath, but did not find anything.");
 				}
-				else { endScene(true); }
+				else { 
+					console.log("ENDED EARLY. WISHLIST:",wishlist); 
+					endScene(true); }
 			}
 			else {
 				doChunkText(chunkId, bestPath);		//display text from search
@@ -263,6 +265,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 			if (unsatisfiedWants) {	
 				if (gameVersion !== "release") { StoryDisplay.addStoryText("[No path found!]"); } 		//we ended too soon, show error
 				else {
+					console.log("ENDED EARLY. WISHLISTWANTS:",wishlistWants); 
 					endScene(true);
 				}
 			}			

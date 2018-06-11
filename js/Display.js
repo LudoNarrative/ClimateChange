@@ -7,7 +7,9 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 	var interfaceMode = "graph";			//how scenes progress...a timeline that's returned to ("timeline"), progress scene-to-scene ("normal"), or "graph"
 	var avatarMode = "oneMain";				//oneMain means just one main character, otherwise "normal" RPG style
 
-	var sandboxMode = false;
+	var sandboxMode = false;				//whether to start it in sandbox mode with everything activated
+	
+	var displayClimateFacts = false;		//whether to display climate facts or not (switch to true once we have facts in circleClicked())
 
 	//initializes our copy of State and Coordinator
 	var init = function(_Coordinator, _State) {
@@ -168,7 +170,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			]
 		},
 		"2_low" : {
-			"text" : "<h3>A Meeting With the Dean-Low</h3><p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprardy!</p>",
+			"text" : "<h3>A Meeting With the Dean-Low</h3><p>{ifStateCondition|lectureFail eq true|You've been having a somewhat rough time with your lectures.|Your lectures have been going off without a hitch, and you've made quite a sensation since starting as an adjunct.} It looks like your superiors are starting to notice, as Dean Smith has called you to come meet with him in private.</p><p>{ifStateCondition|lectureFail eq true|Choose what Emma says, but make sure to keep your cool or your job might be in jeopardy!|Choose what Emma says, but don't let the Dean push you around!}</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDean",
 			"climateFacts" : [
@@ -226,7 +228,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"2_medium" : {
-			"text" : "<h3>A Meeting With the Dean-Medium</h3><p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprardy!</p>",
+			"text" : "<h3>A Meeting With the Dean-Medium</h3><p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeopardy!</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDean",
 			"climateFacts" : [
@@ -284,7 +286,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"2_high" : {
-			"text" : "<h3>A Meeting With the Dean-High</h3><p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeoprardy!</p>",
+			"text" : "<h3>A Meeting With the Dean-High</h3><p>You've been having a somewhat rough time with your lectures. It looks like your superiors are starting to notice as Dean Smith has called you to come meet with him in private.</p><p>Choose what Emma says, but make sure to keep your cool or your job might be in jeopardy!</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalDean",
 			"climateFacts" : [
@@ -322,7 +324,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"timeline_high" : {
-			"text" : "<h3>High Temperature Change</h3><p>This timeline is with a large amount of effects from climate change</p>",
+			"text" : "<h3>High Temperature Change</h3><p>Carbon emissions continue rising through to mid-century. Population growth is high, with energy consumption growing to three times its current level. Oil use increases until 2070, and coal is used to provide the bulk of energy consumption. Crop and grass areas continue to grow, and forested areas continue to decline.</p>",
 			"beginScene" : "finalDinner",
 			"artAccentSrc" : "",
 			"climateFacts" : [{
@@ -331,7 +333,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			}]
 		},
 		"timeline_medium" : {
-			"text" : "<h3>Medium Temperature Change</h3><p>This timeline is with a fair amount of effects from climate change</p>",
+			"text" : "<h3>Medium Temperature Change</h3><p>The world is somewhat slow to act, where energy consumption continues to climb until 2060 but levels off. Oil consumption remains high, and alternative sources like biofuel and nuclear are only used sparingly. Grassland area is reduced dramatically, but reforestation helps increase natural vegetation worldwide.</p>",
 			"beginScene" : "finalDinner",
 			"artAccentSrc" : "",
 			"climateFacts" : [{
@@ -340,7 +342,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			}]
 		},
 		"timeline_low" : {
-			"text" : "<h3>Low Temperature Change</h3><p>This timeline is with a low amount of effects from climate change</p>",
+			"text" : "<h3>Low Temperature Change</h3><p>Countries around the world are able enact major turnarounds in climate policies, such that CO2 emissions peak by 2020. The use of oil goes down, other fossil fuel use increases, but is offset by carbon dioxide capture and storage. Renewable energy sources like solar and wind increase, but remain low. Reforestation efforts help increase natural vegetation worldwide.</p>",
 			"beginScene" : "finalDinner",
 			"artAccentSrc" : "",
 			"climateFacts" : [{
@@ -402,11 +404,12 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 	graphInterstitialAnimationNextScene(level + "_" + timestep);
 
 	var animations = $.chain(function() {
-		$("#climateFacts").fadeOut(1000);
+		if (displayClimateFacts) { $("#climateFacts").fadeOut(1000); }
 	    return $("#mainText").fadeOut(1000);				//fadeout current text
 	}, function() {
 		
 		var contentIndex;
+		var toggleableTitle = false;
 
 		if (State.get("introCompleted") !== true) {
 			if (State.get("sceneTimeline") == null) { 		//if we haven't played a scene yet...
@@ -422,22 +425,19 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 
 		else {			//if we're in sandbox mode...
 			contentIndex = timestep + "_" + level;
-			//if (State.get("UIlastContentIndex") == undefined) { contentIndex = "0_low"; }
-			//else { contentIndex = State.get("UIlastContentIndex"); }
+			if (timestep == 3) { toggleableTitle = true; }
 		}
 		
 
-		State.set("UIselectedLevel", content[contentIndex].beginScene);
-		State.set("UIlastContentIndex", contentIndex);
-		var mainTextAssets = Templates.interactiveRender(content[contentIndex].text);
-		$("#mainTextContent").html(mainTextAssets.txt);
-		attachClickEvents(mainTextAssets.textEvents);
-		$("#climateFacts .title").html(content[contentIndex].climateFacts[0].title);
-		$("#climateFacts .text").html(content[contentIndex].climateFacts[0].text);
+		setUISceneContent(content, contentIndex, toggleableTitle);
+
+
 		timelineFocus(level);
-		$("#climateFacts .title").fadeIn(1000);
-		$("#climateFacts .text").fadeIn(1000);
-		$("#climateFacts").fadeIn(1000);
+		if (displayClimateFacts) {
+			$("#climateFacts .title").fadeIn(1000);
+			$("#climateFacts .text").fadeIn(1000);
+			$("#climateFacts").fadeIn(1000);
+		}
 		return $("#mainText").fadeIn(1000);				//Fade in main text
 	});
 
@@ -445,10 +445,36 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 	    // ALL ANIMATIONS HAVE BEEN DONE IN SEQUENCE
 	});
 	
-	if ($("#artAccent").css("display") == "none") { $("#artAccent").fadeIn(1000);	}		//artAccent
+	if (displayClimateFacts && $("#artAccent").css("display") == "none") { $("#artAccent").fadeIn(1000);	}		//artAccent
 	
-	if ($("#climateFacts").css("display") == "none") { $("#climateFacts").fadeIn(1000);	}		//climateFacts
+	if (displayClimateFacts && $("#climateFacts").css("display") == "none") { $("#climateFacts").fadeIn(1000);	}		//climateFacts
 }
+
+	var setUISceneContent = function(content, contentIndex, toggleableTitle) {
+		State.set("UIselectedLevel", content[contentIndex].beginScene);
+		State.set("UIlastContentIndex", contentIndex);
+
+		var mainTextAssets = Templates.interactiveRender(content[contentIndex].text);
+		$("#mainTextContent").html(mainTextAssets.txt);
+		attachClickEvents(mainTextAssets.textEvents);
+		$("#climateFacts .title").html(content[contentIndex].climateFacts[0].title);
+		$("#climateFacts .text").html(content[contentIndex].climateFacts[0].text);
+
+		if (toggleableTitle) {
+			$("#mainTextContent h3").addClass("mutable");
+
+			$("#mainTextContent h3").on( "click", function(event) {
+				if ($("#mainTextContent h3").html().includes("UN Scene")) {
+					State.set("lifelongAcademic", false);
+					setUISceneContent(content, contentIndex.substr(0, contentIndex.lastIndexOf("_")), toggleableTitle);
+				}
+				else {
+					State.set("lifelongAcademic", true);
+					setUISceneContent(content, contentIndex + "_alt", toggleableTitle);
+				}
+			});
+		}
+	}
 
 	//simple helper function that binds click events to template text
 	var attachClickEvents = function(textEventsArray) {
@@ -778,7 +804,19 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			$("#sandbox #high_1").click(function() { circleClicked(_Coordinator, 1, 'high', this); });
 			$("#sandbox #high_2").click(function() { circleClicked(_Coordinator, 2, 'high', this); });
 
+			if (!displayClimateFacts) { $("#climateFacts").hide(); }
+
+			
+
 			startIntro();		//start animation intro
+
+			$('body').keyup(function(e){		//refresh if backspace is pressed
+
+		   if (e.keyCode == 32) {			//sandbox mode if space bar is pressed
+		   		if (localStorage.getItem("sandboxKeyPress") == "true") { localStorage.setItem("sandboxKeyPress", "false"); }
+		   		else { localStorage.setItem("sandboxKeyPress", "true"); }
+		   }
+		});
 	}
 
 	var startIntro = function() {
@@ -793,96 +831,100 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			"What will you choose?"
 		];
 
+		var animations;
+		
+		if (localStorage.getItem("sandboxKeyPress") == "true") { sandboxMode = true; }
 
-/*
-		var animations = $.chain(function() {
-			
-			$('#centerText').html(introTexts[0]);
-		    return $('#centerText').fadeIn(1000);				//"Our world is changing, something something..."
-		}, function() {
-			return $('body').delay(3000);							//wait
-		}, function() {
-			return $('#graphBlackout').fadeTo(1000, 0.2);			//fade in graph
-		}, function() {
-			drawUpToPresent();										//starts drawing to current day
-		}, function() {
-			return $('body').delay(2000);							//wait
-		}, function() {
-		    return $('#centerText').fadeOut(1000);			//fade out text
-		}, function() {
+		if (!sandboxMode) {
+			animations = $.chain(function() {
+				
+				$('#centerText').html(introTexts[0]);
+			    return $('#centerText').fadeIn(1000);				//"Our world is changing, something something..."
+			}, function() {
+				return $('body').delay(3000);							//wait
+			}, function() {
+				return $('#graphBlackout').fadeTo(1000, 0.2);			//fade in graph
+			}, function() {
+				drawUpToPresent();										//starts drawing to current day
+			}, function() {
+				return $('body').delay(2000);							//wait
+			}, function() {
+			    return $('#centerText').fadeOut(1000);			//fade out text
+			}, function() {
 
-		}, function() {
-			$('#centerText').html(introTexts[1]);
-			return $('#centerText').fadeIn(1000);			//"We all have a part to play, together, in this...but each journey is also our own"
-		}, function() {
-			return $('body').delay(3000);					//wait
-		}, function() {
-		    return $('#centerText').fadeOut(1000);			//fade out text
-		}, function() {
-			fadeFutureGradient();							//start animating gradient cone thingie
-			$('#centerText').html(introTexts[2]);			//"...steering into one of many possible futures"
-			return $('#centerText').fadeIn(1000);
-		}, function() {
-			return $('body').delay(3000);					//wait
-		}, function() {
-		    return $('#centerText').fadeOut(1000);			//fade out text
-		}, function() {
-			drawFutureBottom();								//draw in bottom line
-			$('#centerText').html(introTexts[3]);			//"Maybe we do cool things"
-			return $('#centerText').fadeIn(1000);
-		}, function() {
-			return $('body').delay(3000);					//wait
-		}, function() {
-		    return $('#centerText').fadeOut(1000);			//fade out text
-		}, function() {
-			drawFutureMiddle();								//draw in middle line
-			$('#centerText').html(introTexts[4]);			//"Maybe things aren't so great"
-			return $('#centerText').fadeIn(1000);
-		}, function() {
-			return $('body').delay(3000);					//wait
-		}, function() {
-		    return $('#centerText').fadeOut(1000);			//fade out text
-		}, function() {
-			drawFutureTop();								//draw in top line
-			$('#centerText').html(introTexts[5]);			//"Or maybe we let the chance to save our world slip through our fingers."
-			return $('#centerText').fadeIn(1000);
-		}, function() {
-			return $('body').delay(3000);					//wait
-		}, function() {
-		    return $('#centerText').fadeOut(1000);			//fade out text
-		}, function() {
-			$('#centerText').html(introTexts[6]);			//"What will you choose?"
-			return $('#centerText').fadeIn(1000);
-		}, function() {
-			return $('body').delay(3000);					//wait
-		}, function() {
-			$('#graphBlackout').fadeOut(1000);					//fade in graph all the way
-		    return $('#centerText').fadeOut(1000);			//fade out text
-		}, function() {
-			$(".point:not(.last)").fadeOut(1000);			//fade out all but end points
-			$(".point.last").addClass("pointFlash");
+			}, function() {
+				$('#centerText').html(introTexts[1]);
+				return $('#centerText').fadeIn(1000);			//"We all have a part to play, together, in this...but each journey is also our own"
+			}, function() {
+				return $('body').delay(3000);					//wait
+			}, function() {
+			    return $('#centerText').fadeOut(1000);			//fade out text
+			}, function() {
+				fadeFutureGradient();							//start animating gradient cone thingie
+				$('#centerText').html(introTexts[2]);			//"...steering into one of many possible futures"
+				return $('#centerText').fadeIn(1000);
+			}, function() {
+				return $('body').delay(3000);					//wait
+			}, function() {
+			    return $('#centerText').fadeOut(1000);			//fade out text
+			}, function() {
+				drawFutureBottom();								//draw in bottom line
+				$('#centerText').html(introTexts[3]);			//"Maybe we do cool things"
+				return $('#centerText').fadeIn(1000);
+			}, function() {
+				return $('body').delay(3000);					//wait
+			}, function() {
+			    return $('#centerText').fadeOut(1000);			//fade out text
+			}, function() {
+				drawFutureMiddle();								//draw in middle line
+				$('#centerText').html(introTexts[4]);			//"Maybe things aren't so great"
+				return $('#centerText').fadeIn(1000);
+			}, function() {
+				return $('body').delay(3000);					//wait
+			}, function() {
+			    return $('#centerText').fadeOut(1000);			//fade out text
+			}, function() {
+				drawFutureTop();								//draw in top line
+				$('#centerText').html(introTexts[5]);			//"Or maybe we let the chance to save our world slip through our fingers."
+				return $('#centerText').fadeIn(1000);
+			}, function() {
+				return $('body').delay(3000);					//wait
+			}, function() {
+			    return $('#centerText').fadeOut(1000);			//fade out text
+			}, function() {
+				$('#centerText').html(introTexts[6]);			//"What will you choose?"
+				return $('#centerText').fadeIn(1000);
+			}, function() {
+				return $('body').delay(3000);					//wait
+			}, function() {
+				$('#graphBlackout').fadeOut(1000);					//fade in graph all the way
+			    return $('#centerText').fadeOut(1000);			//fade out text
+			}, function() {
+				$(".point:not(.last)").fadeOut(1000);			//fade out all but end points
+				$(".point.last").addClass("pointFlash");
+			}
+			);
 		}
-		);
-*/
 
+		else {
 
-		var animations = $.chain(function() {
-			$('#graphBlackout').fadeOut(1000);					//fade in graph all the way
-			$("#graphLinesContainer").css("z-index", 0);
-			
-			drawUpToPresent();
-			drawFutureMiddle();								//draw in middle line
-			drawFutureBottom();								//draw in bottom line
-			drawFutureTop();
-			
-		    return $('#centerText').fadeOut(1000);			//fade out text
-		}, function() {
-			$(".point:not(.last)").fadeOut(1000);			//fade out all but end points
-			$(".point.last").addClass("pointFlash");
+			animations = $.chain(function() {
+				$('#graphBlackout').fadeOut(1000);					//fade in graph all the way
+				$("#graphLinesContainer").css("z-index", 0);
+				
+				drawUpToPresent();
+				drawFutureMiddle();								//draw in middle line
+				drawFutureBottom();								//draw in bottom line
+				drawFutureTop();
+				
+			    return $('#centerText').fadeOut(1000);			//fade out text
+			}, function() {
+				$(".point:not(.last)").fadeOut(1000);			//fade out all but end points
+				$(".point.last").addClass("pointFlash");
 
-			startSandboxMode();		//put in so that sandbox mode starts immediately
+				startSandboxMode();		//put in so that sandbox mode starts immediately
+			});
 		}
-		);
 
 
 
@@ -993,122 +1035,6 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		sandboxMode = true;
 	}
 
-
-
-//---------Functions for the timeline UI-----------------------------
-/*
-	var initTimelineScreen = function(_Coordinator, _State, scenes) {
-		init(_Coordinator, _State);				//initialize our copy of the coordinator and state
-
-		var theDiv = $('<div/>', {			//make container
-		    id: 'timeline'
-		}).appendTo('body');
-
-		$('<div/>', {
-		    id: 'blackout'
-		    //text: ''
-		}).appendTo('body');
-
-		scenes.forEach(function(scene, pos) {			//make scene / knob containers
-
-
-			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
-
-			var yearStr;
-			if (_Coordinator.getStorySpec(scene))
-
-			var date = $('<div/>', {
-				id: 'date_' + scene,
-				class: 'date',
-				html: '<span>' + _Coordinator.getStorySpec(scene).year + '</span>'
-			}).appendTo("#" + scene + '-panel');
-
-			var theDiv = $('<div/>', {
-			    id: 'scene_' + scene,
-			    class: 'sceneWindows',
-			    html: '<p>' + _Coordinator.loadTimelineDesc(scene) + '</p>'
-			}).appendTo("#" + scene + '-panel');
-
-			$("#scene_" + scene).click(function() {
-				$('.sceneKnobs:visible').slideToggle("slow", function() {});
-				$('#knobs_' + scene).slideToggle("slow", function() {});
-
-				$('.sceneWindows.active').toggleClass('active', 500);
-				$(this).toggleClass('active', 500);
-			});
-
-			var targetDiv = scene + '-panel';
-			createKnobs(scene, targetDiv);
-			populateKnobs(scene, _Coordinator, _State, scenes);
-		});
-
-		initMetaKnobs(_Coordinator, _State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
-
-		activateBegins(_Coordinator, _State, scenes);
-
-		//if we haven't sent form data yet, send it
-		postTrackingStats();
-		
-		//if we don't have a unique tracking identifier for the player, set it	
-		if (localStorage.getItem("playerIdentifier") == null) { setPlayerIdentifier(); }
-	}
-	*/
-/*
-	var returnToTimelineScreen = function(scenes) {
-
-		$('body').empty();			//reset all html
-		$('body').css("background-image", "none");
-
-		var theDiv = $('<div/>', {			//make container
-		    id: 'timeline'
-		}).appendTo('body');
-
-		$('<div/>', {
-		    id: 'blackout'
-		    //text: ''
-		}).appendTo('body');
-
-		scenes.forEach(function(scene, pos) {			//make scene / knob containers
-
-
-			$("#timeline").append("<div id='"+scene+"-panel' class='scenePanel'></div>");
-
-			var date = $('<div/>', {
-				id: 'date_' + scene,
-				class: 'date',
-				html: '<span>' + Coordinator.getStorySpec(scene).year + '</span>'
-			}).appendTo("#" + scene + '-panel');
-
-			var theDiv = $('<div/>', {
-			    id: 'scene_' + scene,
-			    class: 'sceneWindows',
-			    html: '<p>' + Coordinator.loadTimelineDesc(scene) + '</p>'
-			}).appendTo("#" + scene + '-panel');
-
-			$("#scene_" + scene).click(function() {
-				$('.sceneKnobs:visible').slideToggle("slow", function() {});
-				$('#knobs_' + scene).slideToggle("slow", function() {});
-
-				$('.sceneWindows.active').toggleClass('active', 500);
-				$(this).toggleClass('active', 500);
-			});
-
-			var theKnobs = $('<div/>', {
-			    id: 'knobs_' + scene,
-			    class: 'sceneKnobs closed'
-			}).appendTo("#" + scene + '-panel');
-
-			populateKnobs(scene, Coordinator, State, scenes);
-		});
-
-		initMetaKnobs(Coordinator, State);	//initiate meta knobs (after we've made scene knobs, so we can give default meta-knob values)
-
-		activateBegins(Coordinator, State, scenes);
-
-		//if we haven't sent form data yet, send it
-		postTrackingStats();
-	}
-*/
 	//process the wishlist for the passed in story according to its current settings in the UI
 	var processWishlistSettings = function(_Coordinator, id) {
 
@@ -1224,18 +1150,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		State.set("knobsWishlistStateSettingsCache", knobsWishlistStateSettingsCache);
 
 	}
-/*
-	//activate begin links in timeline
-	var activateBegins = function(_Coordinator, _State, scenes) {
-		$(".beginScene").click(function(evnt) { 
-			evnt.stopPropagation(); 
-			var sceneId = $(this).attr( "id" ).split("-")[1];
-			$( "#blackout" ).fadeIn( "slow", function() {
-    			startScene(_Coordinator, sceneId, true);
-			});
-		});
-	}
-*/
+
 	var initMetaKnobs = function(_Coordinator, _State) {
 		//TODO
 	}

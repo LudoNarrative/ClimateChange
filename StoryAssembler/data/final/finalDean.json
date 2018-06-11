@@ -234,7 +234,7 @@ deciding whether or not to continue as an academic is
     "id": "emmaRespond1Disagree",
     "avatar" : "protagonist",
     "choiceLabel" : "I don't think this is right for me.",
-    "content" : "<p>\"I don't think that's right for me\" you say.",
+    "content" : "<p>\"I don't think that's right for me\" you say.</p>",
     "conditions" : [
     ],
     "choices" : [
@@ -251,7 +251,7 @@ deciding whether or not to continue as an academic is
 {
     "id": "deanRespondDisagreeTeach1",
     "avatar" : "authorityFigure",
-    "content" : "\"You don't want to?? Why the heck not??\"",
+    "content" : "Dean Smith frowns, and pushes back in his chair. \"No? What's the issue?\"",
     "choices" : [
         {"gotoId" : "emmaRespond2Agree"},
         {"gotoId" : "emmaRespond2Disagree"}
@@ -272,7 +272,7 @@ deciding whether or not to continue as an academic is
     "id": "emmaRespond2Disagree",
     "avatar" : "protagonist",
     "choiceLabel" : "Stick to your guns.",
-    "content" : "<p>\"It's just not\" you say.",
+    "content" : "<p>{ifStateCondition|lectureFail eq true|I could be a great educator. I just need some leeway while I get my footing. These sorts of topics aren't easy to get across, you know.|I respect the role education has to play, but I really feel like I need to get my hands dirty.}</p>",
     "conditions" : [
         "conversationBeats eq 2"
     ],
@@ -288,7 +288,7 @@ deciding whether or not to continue as an academic is
     "id": "emmaRespond2Agree",
     "avatar" : "protagonist",
     "choiceLabel" : "Give in.",
-    "content" : "<p>\"Oh wait, haha just kidding (sweats)\" you say.",
+    "content" : "<p>\"I uh, I was...I mean...I misunderstood what you said\" you lie. \"No, that actually sounds...fine.\" Your nails are digging into your palms.</p>",
     "conditions" : [
         "conversationBeats eq 2"
     ],
@@ -319,7 +319,7 @@ deciding whether or not to continue as an academic is
         "id": "detailsAgree",
         "avatar" : "protagonist",
         "choiceLabel" : "Oh...ok!",
-        "content" : "I'm really excited!",
+        "content" : "<p>{ifStateCondition|lectureFail eq true|I mean, it's not like you're in a position to fight this. Better to just go along with it. If you put up too much of a fuss, maybe he'll just fire you...\"I totally understand.\"|It's a mixed blessing, but aren't all things in academia? You've been wanting to cut your teeth on upper division courses...maybe after a couple semesters you can petition to have your teaching load decreased. But better not to make waves now. \"Sounds...great!\"}</p>",
         "choices" : [
             {"gotoId" : "totallyAgree"}
         ],
@@ -393,7 +393,7 @@ deciding whether or not to continue as an academic is
     "id": "highRiskDetail",
     "avatar" : "protagonist",
     "choiceLabel" : "{ifStateCondition|lectureFail eq true|I want full control of the lab and the research (high risk)|I want you to convert this position into a tenure track job (high risk)}",
-    "content" : "Lemme do the thing my way.",
+    "content" : "I'll do what you want, but {ifStateCondition|lectureFail eq true|I want full control of the lab and the research|I want you to convert this position into a tenure track job}.",
     "choices" : [
         {"gotoId" : "high_strongConvince"},
         {"gotoId" : "high_grudgingConvince"},
@@ -411,7 +411,7 @@ deciding whether or not to continue as an academic is
     "id": "mediumRiskDetail",
     "avatar" : "protagonist",
     "choiceLabel" : "{ifStateCondition|lectureFail eq true|I want two years of funding guaranteed. (medium risk)|I want the University to sponsor me as a speaker for the 2032 Paris Climate Summit}",
-    "content" : "Let's do the thing maybe? How you wanna do it?",
+    "content" : "Ok, I suppose that sounds good? But um...{ifStateCondition|lectureFail eq true|I want two years of funding|I want the University to sponsor me as a speaker for the 2032 Paris Climate Summit}.",
     "choices" : [
         {"gotoId" : "medium_strongConvince"},
         {"gotoId" : "medium_grudgingConvince"},
@@ -427,7 +427,7 @@ deciding whether or not to continue as an academic is
     "id": "lowRiskDetail",
     "avatar" : "protagonist",
     "choiceLabel" : "{ifStateCondition|lectureFail eq true|I actually want to keep the same salary. (low risk)|I want a pay raise. (low risk)}",
-    "content" : "I'd like to do this version of your thing.",
+    "content" : "I uh...well...{ifStateCondition|lectureFail eq true|I actually want to keep the same salary.|I want a pay raise.}",
     "choices" : [
         {"gotoId" : "low_strongConvince"},
         {"gotoId" : "low_grudgingConvince"},

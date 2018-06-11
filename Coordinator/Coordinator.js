@@ -713,8 +713,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			wishlist: [
 				{ condition: "sceneSet eq true"},
 				{ condition: "deanRequestMade eq true"},
-				{ condition: "talkAboutIt gte 3"},
-				{ condition: "conversationBeats gte 3"},
+				{ condition: "conversationBeats gte 2"},
 				{ condition: "deanDecision eq true"},
 				{ condition: "deanOutro eq true"}
 			],

@@ -3,10 +3,10 @@
 
   {
     "id" : "gameInterrupt",
-    "avatar": "friend1",
+    "avatar": "friend2",
     "gameInterrupt" : true,           //this fragment can be used by the game to immediately interrupt the narrative
     "repeatable" : true,
-    "content" : "Hey, pass the potatoes, will you? I'm starving!",
+    "content" : "<p>{ifStateCondition|establishSettingDinner eq true|Hey, pass the potatoes, will you? I'm starving!|\"Hey, mind topping me up?\" Shelly gestures at the wine bottle sitting behind you.}</p>",
     "choices" : [
       {"gotoId" : "satisfyGameInterrupt"}
     ],
@@ -16,9 +16,9 @@
   },
   {
     "id" : "satisfyGameInterrupt",
-    "avatar": "friend1",
+    "avatar": "friend2",
     "repeatable" : true,
-    "choiceLabel" : "Oh, here. Sorry!",
+    "choiceLabel" : "{ifStateCondition|establishSettingDinner eq true|Oh, here you go!|Oh, here you go. Sorry!}",
     "content" : "Thanks. What were we talking about again?",
     "conditions" : [
       "satiation gte 3"
