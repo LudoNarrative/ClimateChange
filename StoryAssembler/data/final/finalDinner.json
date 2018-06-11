@@ -3,10 +3,10 @@
 
   {
     "id" : "gameInterrupt",
-    "avatar": "friend1",
+    "avatar": "friend2",
     "gameInterrupt" : true,           //this fragment can be used by the game to immediately interrupt the narrative
     "repeatable" : true,
-    "content" : "Hey, pass the potatoes, will you? I'm starving!",
+    "content" : "<p>{ifStateCondition|establishSettingDinner eq true|Hey, pass the potatoes, will you? I'm starving!|\"Hey, mind topping me up?\" Shelly gestures at the wine bottle sitting behind you.}</p>",
     "choices" : [
       {"gotoId" : "satisfyGameInterrupt"}
     ],
@@ -16,9 +16,9 @@
   },
   {
     "id" : "satisfyGameInterrupt",
-    "avatar": "friend1",
+    "avatar": "friend2",
     "repeatable" : true,
-    "choiceLabel" : "Oh, here. Sorry!",
+    "choiceLabel" : "{ifStateCondition|establishSettingDinner eq true|Oh, here you go!|Oh, here you go. Sorry!}",
     "content" : "Thanks. What were we talking about again?",
     "conditions" : [
       "satiation gte 3"
@@ -35,7 +35,7 @@
   {
     "id": "friendIsInAcademiaEnthusiastici",
     "avatar": "friend1",
-    "content": "\"So {nickname|protagonist}, I got you something.\" {name|friend1} pulls out a coffee thermos from under the table. \"It says 'Trust me, I'm a doctor'. I have one too. Whenever we're both on campus we can stop by that little cafe and drink some mocha on the patio. It'll be adorable!\"",
+    "content": "\"So {nickname|protagonist}, I got you something.\" {name|friend1} pulls out a coffee thermos from under the table. \"It says \"Trust me, I'm a doctor\". {ifStateCondition|academicFriend gt 0|I have one too. Whenever we're both on campus we can stop by that little cafe and drink some mocha on the patio.|Whenever you're on campus you can stop by that little cafe and drink some mocha on the patio.} It'll be adorable!\"",
     "choices": [
       {"gotoId": "friendIsInAcademiaEnthusiastici2"}
     ],
@@ -559,8 +559,8 @@
         "avatar": "friend2",
         "choiceLabel": "Continue",
         "content": "\"Knock ‘em dead, kid.\" {name|friend2} shoots you a finger gun and blows away the smoke.<br><br>Tomorrow will be upon you in less than eight hours, and your dissertation defense in less than twelve. You can hardly wait. The anticipation is almost making you sick.",
-        "effects": [
-            "set outro true"
+        "choices": [
+            {"gotoId": "endDummy"}
         ]
     },
     {
@@ -843,5 +843,17 @@
         "effects" : [
             "incr confidence 1", "decr tension 1"
         ],
+    },
+
+// final wrap-up fragment (to prevent early fadeout)
+    {
+        "id" : "endDummy",
+        "avatar" : "protagonist",
+        "choiceLabel" : "Start next scene.",
+        "content" : " ",
+        "conditions" : [],
+        "effects": [
+            "set outro true"
+        ]
     }
 ]
