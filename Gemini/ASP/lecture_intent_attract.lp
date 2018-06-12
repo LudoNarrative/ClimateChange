@@ -42,3 +42,5 @@ attract_mode :-
 
 :- result(O, modify(increase,resource(r(1)))),
   super_trivial(O).
+:- precondition(control_event(_),O),
+  result(O,modify(increase,resource(r(1)))).

@@ -295,7 +295,7 @@ only_one_precondition(Outcome) :- 1 {precondition(_,Outcome)} 1, outcome(Outcome
 
     
 balanced(property(Property,E)) :- action(modify(increase,property(Property,E))),
-                                  action(modfiy(decrease,property(Property,E))).
+                                  action(modify(decrease,property(Property,E))).
                                   
 frivolous(Resource) :- not condition(compare(_,Resource)),
                         resource(Resource).

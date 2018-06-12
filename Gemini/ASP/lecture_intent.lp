@@ -38,3 +38,5 @@ required(maintenance).
 :- outcome(outcome(orbit_the_cursor(_))).
 :- controlScheme(_,repeled_from_cursor).
 :- outcome(outcome(repeled_from_cursor(_))).
+:- precondition(control_event(_),O),
+  result(O,modify(increase,resource(r(1)))).

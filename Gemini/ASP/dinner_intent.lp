@@ -58,11 +58,12 @@ is_consumed(O) :- precondition(overlaps(entity(e(1))),O),
 :- 2 {action(mode_change(N))}.
 
 
+% :- total_count(entity(e(2)),N),
+%    N > 3.
+% :- total_count(entity(e(2)),N),
+%    N < 2.
 :- total_count(entity(e(2)),N),
-   N > 3.
-:- total_count(entity(e(2)),N),
-   N < 2.
-
+   N != 3.
 
 :- not constant(entity(e(2))).
 

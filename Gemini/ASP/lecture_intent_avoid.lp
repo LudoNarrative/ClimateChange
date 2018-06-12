@@ -46,3 +46,5 @@ attract_mode :- precondition(overlaps(E1,E2,true),O),
 
 :- result(O, modify(increase,resource(r(1)))),
   super_trivial(O).
+:- precondition(control_event(_),O),
+  result(O,modify(increase,resource(r(1)))).

@@ -16,6 +16,8 @@ initialize(set_color(entity(e_1_XX_),red)).
 
 controlLogic(draggable(entity(e_1_XX_))).
 
+timer_logic(timer(t_1_XX_),scalar(3),loop).
+
 pool(entity(e_1_XX_),location(top,left),random,ordered).
 pool(entity(e_1_XX_),location(top,center),random,ordered).
 pool(entity(e_1_XX_),location(top,right),random,ordered).
@@ -29,21 +31,15 @@ pool(entity(e_1_XX_),location(bottom,right),random,ordered).
 boundary(closed).
 
 initialize(set_value(resource(r_1_XX_),scalar(0))).
-initialize(set_value(resource(r_1_XX_),scalar(1))).
+initialize(set_value(resource(r_1_XX_),scalar(3))).
 
-precondition(overlaps(entity(e_1_XX_),entity(e_1_XX_),true),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),increase(resource(r_1_XX_),scalar(1))).
-result(outcome(o_1_XX_),clear(entity(e_1_XX_))).
-result(outcome(o_1_XX_),delete(entity(e_1_XX_))).
+precondition(timer_elapsed(t_1_XX_),outcome(o_1_XX_)).
+result(outcome(o_1_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
 
-precondition(control_event(button(mouse,pressed)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),decrease(property(entity(e_1_XX_),health),scalar(9))).
+precondition(overlaps(entity(e_1_XX_),entity(e_1_XX_),true),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),increase(resource(r_1_XX_),scalar(1))).
 result(outcome(o_2_XX_),clear(entity(e_1_XX_))).
-result(outcome(o_2_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
-
-precondition(ge(resource(r_1_XX_),scalar(6)),outcome(o_3_XX_)).
-precondition(le(amount(orange),scalar(1)),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),decrease_over_time(property(entity(e_1_XX_),health),scalar(9))).
+result(outcome(o_2_XX_),delete(entity(e_1_XX_))).
 
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
@@ -52,20 +48,15 @@ reading(bad,orange).
 reading(produces,relation(pool(entity(e_1_XX_)),entity(e_1_XX_))).
 reading(produces,relation(entity(e_1_XX_),resource(r_1_XX_))).
 reading(good,outcome(o_2_XX_)).
-reading(good,outcome(o_1_XX_)).
-reading(costs,relation(entity(e_1_XX_),property(entity(e_1_XX_),health))).
 reading(stakes(low),resource(r_1_XX_)).
 reading(grinding,resource(r_1_XX_)).
 ==========
 <ul>
-<li>games/beach_2.lp</li>
+<li>games/beach_10.lp</li>
 <li>GOAL:<ul>
 </ul></li>
 
 <li>SUBGOALS:<ul>
-<li>
-	pressing the mouse button
-</li>
 <li>
 attempting to make a [[red|triangle]] and [[red|triangle]] touch
 </li>

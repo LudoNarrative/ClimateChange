@@ -104,7 +104,8 @@ has_both(O) :-   precondition(control_event(click(_)),O),
       initialize(fill(location(_,_),_));
       action(draw(_,_))} 0.
 
-:- condition(compare(_,_,amount(clear(_)))),   
+% THIS GUY, "have to compare against clear".  why??
+:- condition(compare(_,_,amount(clear))),
    0 {initialize(fill(all,C)):uses_color(C);
       initialize(fill(location(_,_),C)):uses_color(C);
       action(draw(_,_))} 0.
@@ -117,18 +118,25 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    result(O,mode_change(_)),
    not initialize(fill(all,C)).
    
-:- condition(compare(_,_,amount(Color))),
-   not uses_color(Color).
+% :- palette(Color),
+%   Color != clear,
+%   1{condition(compare(_,_,amount(Color)));
+%     condition(compare(_,amount(Color)));
+%     condition(compare(_,amount(Color),_));
+%     condition(over_color(_,Color));
+%     condition(over_color(Color,_))},
+%   not uses_color(Color).
 
-:- condition(over_color(_,Color)),
-   not uses_color(Color).
+% :- 1{condition(compare(_,_,amount(clear)));
+%     condition(compare(_,amount(clear)));
+%     condition(compare(_,amount(clear),_))},
+%   not uses_color.
 
 
-% TODO: prevent _any_ comparison against clear?
-:- precondition(compare(_,amount(clear),_),O),
-  0{uses_color(_)}0.
-:- precondition(compare(_,_,amount(clear)),O),
-  0{uses_color(_)}0.
+% :- precondition(compare(_,amount(clear),_),O),
+%   0{uses_color(_)}0.
+% :- precondition(compare(_,_,amount(clear)),O),
+%   0{uses_color(_)}0.
 
 :- precondition(overlaps(E,E,true),O),
    result(O,delete(E)),
@@ -137,22 +145,19 @@ has_both(O) :-   precondition(control_event(click(_)),O),
 :- precondition(timer_elapsed(_),O),
    result(O,clear(_)).
 
-
 :- not uses_color,
    action(clear(_)).
 
 :- uses_color(Color),
    not condition(compare(_,amount(Color),_)),
-   not condition(over_color(_,Color)).
-
+   not condition(over_color(_,Color)),
+   not allowed(frivolous_color(Color)).
 
 :- reading(good,O),
    trivial(O),
    not entity_related(O).
-    
-
-
-:-  result(Outcome,mode_change(game_loss;narrative_gating)),
+   
+:- result(Outcome,mode_change(game_loss;narrative_gating)),
     player_controls_outcome(Outcome).
 
 :- condition(overlaps(E1,E2,_)),
@@ -277,7 +282,7 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    result(tick,look_at(E,_,_)),
    result(tick,move(E,direction(left;right))).
 
-% only allow something to decrease on tick if it can be increased
+% only allow something to increase on tick if it can be decreased
 :- 1 {result(tick, modify(increase,R));
 		result(tick, modify(increase,R,_))},
 	resource(R),
@@ -574,9 +579,10 @@ has_both(O) :-   precondition(control_event(click(_)),O),
    
 
 :- not over_time(Change,Resource),
-   precondition(compare(Dir,Resource),O),
-   player_model(O,player_will_attempt),
-   satisfies(Dir,Change).
+  resource(Resource),
+  precondition(compare(Dir,Resource),O),
+  player_model(O,player_will_attempt),
+  satisfies(Dir,Change).
 
     
 
@@ -814,8 +820,10 @@ player_controls_resource(R,Dir) :-
 player_controls_resource(R,Dir) :-
     result(O,modify(R,Dir,_)),
     player_controls(O).
-:- resource(R),
-   precondition(compare(R,_),O),
+
+:-  resource(R),
+   precondition(compare(_,R),O),
+   resource(R),
    player_controls(O),
    not player_controls_resource(R,_).
    

@@ -64,8 +64,20 @@ goes_down(R) :-
 % :- not reading(good,resource(r(2))).
 
 :- precondition(control_event(_),O),
-  outcome(O,modify(decrease,resource(r(2)))).
+  result(O,modify(decrease,resource(r(2)))).
 
 :- precondition(control_event(_),O),
-  outcome(O,modify(decrease,resource(r(2)),_)).
+  result(O,modify(decrease,resource(r(2)),_)).
 
+:- result(tick,modify(decrease,resource(r(2)))).
+:- result(tick,modify(decrease,resource(r(2)),_)).
+
+:- precondition(overlap(A,A,true),O),
+  entity(A),
+  result(O,modify(_,resource(r(2)))).
+
+allowed(frivolous(resource(r(1)))).
+allowed(frivolous(resource(r(2)))).
+:- precondition(compare(_,resource(r(2))),_).
+:- precondition(compare(_,resource(r(2)),_),_).
+:- precondition(compare(_,_,resource(r(2))),_).

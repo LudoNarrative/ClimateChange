@@ -15,10 +15,11 @@
 required(maintenance).
 
 reading(bad,orange).
+% reading(goal(produce),orange).
 
 palette(orange).
 allowed(monotonic(orange)).
-allowed(monotonic(orange)).
+
 label(resource(r(1)),effort,write).
 allowed(monotonic(resource(r(1)))).
 allowed(monotonic(r(1))).
@@ -37,11 +38,21 @@ allowed(superfluous(resource(r(1)))).
 
 :- player_model(O,player_must_do),
    not result(O,modify(increase,resource(r(1)))).
-
-
-
+   
 :- not monotonic(resource(r(1)),increase).
 
 initialize(set_value(resource(r(1)),scalar(0))).
 
-%:- not condition(compare(_,_,amount(_))).
+allowed(frivolous(resource(r(1)))).
+allowed(frivolous_color(orange)).
+allowed(frivolous_color(clear)).
+:- condition(compare(_,resource(r(1)))).
+:- condition(compare(_,resource(r(1)),_)).
+% TODO: try to use the following three constraints as well; the color ones are probably blocked on something about uses color?? 
+:- condition(compare(_,amount(_))).
+:- condition(compare(_,amount(_),_)).
+
+:- action(modify(_,property(_,_))).
+
+:- result(O,modify(increase,_)),
+  super_trivial(O).

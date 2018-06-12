@@ -49,53 +49,45 @@ pool(entity(e_2_XX_),location(bottom,right),random,random).
 
 boundary(closed).
 
-initialize(set_value(resource(r_1_XX_),scalar(2))).
+initialize(set_value(resource(r_1_XX_),scalar(10))).
 
-precondition(timer_elapsed(t_1_XX_),outcome(o_1_XX_)).
-result(outcome(o_1_XX_),add(entity(e_2_XX_),scalar(1),pool(entity(e_2_XX_)))).
+precondition(overlaps(entity(e_2_XX_),entity(e_2_XX_),true),outcome(o_1_XX_)).
+result(outcome(o_1_XX_),increase(resource(r_1_XX_),scalar(4))).
+result(outcome(o_1_XX_),delete(entity(e_2_XX_))).
 
-precondition(le(resource(r_1_XX_),scalar(2)),outcome(o_2_XX_)).
-result(outcome(o_2_XX_),mode_change(game_loss)).
+precondition(timer_elapsed(t_2_XX_),outcome(o_2_XX_)).
+result(outcome(o_2_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
 
-precondition(overlaps(entity(e_2_XX_),entity(e_2_XX_),true),outcome(o_3_XX_)).
-result(outcome(o_3_XX_),decrease(property(entity(e_1_XX_),health),scalar(2))).
+precondition(timer_elapsed(t_1_XX_),outcome(o_3_XX_)).
 result(outcome(o_3_XX_),add(entity(e_1_XX_),scalar(1),pool(entity(e_1_XX_)))).
-result(outcome(o_3_XX_),delete(entity(e_2_XX_))).
 
-precondition(timer_elapsed(t_2_XX_),outcome(o_4_XX_)).
+precondition(overlaps(entity(e_1_XX_),entity(e_1_XX_),true),outcome(o_4_XX_)).
 result(outcome(o_4_XX_),add(entity(e_2_XX_),scalar(1),pool(entity(e_2_XX_)))).
+result(outcome(o_4_XX_),delete(entity(e_1_XX_))).
 
-precondition(overlaps(entity(e_1_XX_),entity(e_1_XX_),true),outcome(o_5_XX_)).
-result(outcome(o_5_XX_),decrease(property(entity(e_2_XX_),health),scalar(9))).
-result(outcome(o_5_XX_),increase(resource(r_1_XX_),scalar(4))).
-result(outcome(o_5_XX_),delete(entity(e_1_XX_))).
+precondition(le(resource(r_1_XX_),scalar(1)),outcome(o_5_XX_)).
+result(outcome(o_5_XX_),mode_change(game_loss)).
 
 precondition(tick,tick).
 result(tick,apply_restitution(entity(e_1_XX_),entity(e_1_XX_))).
 result(tick,apply_restitution(entity(e_2_XX_),entity(e_2_XX_))).
-result(tick,decrease_over_time(property(entity(e_1_XX_),health),scalar(3))).
-result(tick,decrease_over_time(property(entity(e_2_XX_),health),scalar(9))).
-result(tick,increase_over_time(property(entity(e_1_XX_),health),scalar(6))).
 result(tick,decrease_over_time(resource(r_1_XX_),scalar(1))).
 
 reading(goal(produce),resource(r_1_XX_)).
 reading(good,resource(r_1_XX_)).
-reading(produces,relation(pool(entity(e_2_XX_)),entity(e_2_XX_))).
-reading(produces,relation(entity(e_1_XX_),resource(r_1_XX_))).
-reading(consumes,relation(entity(e_1_XX_),property(entity(e_2_XX_),health))).
-reading(consumes,relation(entity(e_2_XX_),property(entity(e_1_XX_),health))).
-reading(bad,outcome(o_5_XX_)).
+reading(produces,relation(pool(entity(e_1_XX_)),entity(e_1_XX_))).
+reading(produces,relation(entity(e_2_XX_),resource(r_1_XX_))).
+reading(bad,outcome(o_1_XX_)).
 reading(bad,tick).
-reading(good,outcome(o_5_XX_)).
-reading(good,outcome(o_3_XX_)).
-reading(good,entity(e_1_XX_)).
+reading(good,outcome(o_4_XX_)).
+reading(good,outcome(o_1_XX_)).
+reading(good,entity(e_2_XX_)).
 reading(maintenance,resource(r_1_XX_)).
-reading(hurt,relation(entity(e_2_XX_),entity(e_2_XX_))).
-reading(costs,relation(entity(e_1_XX_),property(entity(e_1_XX_),health))).
-reading(risk_reward,overlaps(entity(e_1_XX_),entity(e_1_XX_),true)).
-reading(risk_reward,overlaps(entity(e_1_XX_))).
-reading(tradeoff,outcome(o_5_XX_)).
-reading(outcome_helps,relation(outcome(o_5_XX_),resource(r_1_XX_))).
+reading(hurt,relation(entity(e_1_XX_),entity(e_1_XX_))).
+reading(risk_reward,overlaps(entity(e_2_XX_),entity(e_2_XX_),true)).
+reading(risk_reward,overlaps(entity(e_2_XX_))).
+reading(tradeoff,outcome(o_1_XX_)).
+reading(outcome_helps,relation(outcome(o_1_XX_),resource(r_1_XX_))).
 ==========
 <ul>
 <li>games/lecture_attractMode_20.lp</li>
@@ -105,7 +97,7 @@ reading(outcome_helps,relation(outcome(o_5_XX_),resource(r_1_XX_))).
 
 <li>SUBGOALS:<ul>
 <li>
-attempting to make a [[blue|triangle]] and [[blue|triangle]] touch
+attempting to make a [[red|triangle]] and [[red|triangle]] touch
 </li>
 </ul></li>
 <li>CONTROLS:<ul>

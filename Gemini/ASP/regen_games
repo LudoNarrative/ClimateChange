@@ -1,6 +1,6 @@
 #!/bin/bash
 PYTHON=python3
-THREADC=14
+THREADC=8
 MODELC=0
 
 set -e
