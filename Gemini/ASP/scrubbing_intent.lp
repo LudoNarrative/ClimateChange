@@ -55,4 +55,10 @@ allowed(frivolous_color(clear)).
 :- action(modify(_,property(_,_))).
 
 :- result(O,modify(increase,_)),
-  super_trivial(O).
+  not result(O,clear(_)).
+
+:- result(O,clear(_)),
+  not result(O,modify(increase,_)).
+
+:- precondition(control_event(_),O),
+  result(O,modify(increase,_)).

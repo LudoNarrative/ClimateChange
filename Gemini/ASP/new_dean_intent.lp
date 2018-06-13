@@ -81,3 +81,24 @@ allowed(frivolous(resource(r(2)))).
 :- precondition(compare(_,resource(r(2))),_).
 :- precondition(compare(_,resource(r(2)),_),_).
 :- precondition(compare(_,_,resource(r(2))),_).
+:- precondition(control_event(_),O),
+  precondition(overlap(_,_,_),O).
+
+:- precondition(overlap(A,B,true),O),
+  entity(A),
+  entity(B),
+  A != B,
+  not result(O,modify(_,resource(r(2)))).
+
+:- precondition(control_event(click(_)),O),
+  result(O,modify(_,resource(r(2)))).
+
+:- precondition(overlap(A,B,true),O),
+  precondition(overlap(A,B,true),O2),
+  outcome(O),
+  outcome(O2),
+  O != O2,
+  entity(A),
+  entity(B),
+  result(O,modify(_,resource(r(2)))),
+  result(O2,modify(_,resource(r(2)))).  
