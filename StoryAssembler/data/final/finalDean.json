@@ -303,7 +303,7 @@ deciding whether or not to continue as an academic is
 {
     "id": "deanRequestDetails",
     "avatar" : "authorityFigure",
-    "content" : "<p>\"Good! So here are the details. {ifStateCondition|lectureFail eq true|You'll have a slight pay cut, unfortunately. It's not something I have control over.|You'll have to keep your old course load in addition to these new courses...but they'll be upper division!}</p>",
+    "content" : "<p>\"Good! So here are the details. {ifStateCondition|lectureFail eq true|You'll have a slight pay cut, unfortunately. It's not something I have control over.|You'll have to keep your old course load in addition to these new courses...but they'll be upper division!}\"</p>",
     "choices" : [
         {"gotoId" : "detailsAgree"},
         {"gotoId" : "detailsPushback"}

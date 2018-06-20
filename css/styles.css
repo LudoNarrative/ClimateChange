@@ -66,10 +66,10 @@ body {
 
 .hidden { display:none; }
 
-h1#title {
-    text-align: center;
-    margin-top: 114px;
-    font-size: 70px;
+img#title {
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 200px;
 }
 
 h1, h2, p.titleLink {
@@ -79,10 +79,11 @@ h1, h2, p.titleLink {
 h2 a {
     text-decoration:none;
     color: #43d9ff;
+    text-shadow: 2px 2px 2px #0000008a;
 }
 
 h2 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
     color: yellow;
 }
 
@@ -106,6 +107,164 @@ p.titleLink a {
 p.titleLink a:hover {
     color:yellow;
 }
+
+#subtitle {
+    text-align: center;
+    font-size: 22px;
+    text-shadow: 2px 2px 2px #0000008c;
+}
+
+hr.title {
+    border: 0;
+    height: 5px;
+    background-image: linear-gradient(to right, #3330, #3330, #ccc, #3330, #3330);
+    margin-top:50px;
+    margin-bottom:80px;
+}
+
+#bgOverlay { 
+    background-color:black;
+    opacity:0.7;
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+#titleBackground {
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+#titleBackground div {
+    position:absolute;
+    top:0px;
+    left:0px;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    -webkit-animation-name: cf4FadeInOut;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 8s;
+    -moz-animation-name: cf4FadeInOut;
+    -moz-animation-timing-function: ease-in-out;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-duration: 8s;
+    -o-animation-name: cf4FadeInOut;
+    -o-animation-timing-function: ease-in-out;
+    -o-animation-iteration-count: infinite;
+    -o-animation-duration: 8s;
+    animation-name: cf4FadeInOut;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-duration: 32s;
+}
+
+.bg { 
+    background-size:cover;
+    
+}
+#bg1 { background-image:url("../assets/bgs/UNroom.png"); }
+#bg2 { background-image:url("../assets/bgs/lecturehall.png"); }
+#bg3 { background-image:url("../assets/bgs/beach.png"); }
+#bg4 { background-image:url("../assets/bgs/office.png"); }
+
+@keyframes cf4FadeInOut {
+  0% {
+    opacity:1;
+  }
+  17% {
+    opacity:1;
+  }
+  25% {
+    opacity:0;
+  }
+  92% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}
+
+#titleBackground div:nth-of-type(1) {
+  animation-delay: 24s;
+}
+#titleBackground div:nth-of-type(2) {
+  animation-delay: 16s;
+}
+#titleBackground div:nth-of-type(3) {
+  animation-delay: 8s;
+}
+#titleBackground div:nth-of-type(4) {
+  animation-delay: 0s;
+}
+
+/*
+--------------Research page CSS---------------------
+*/
+
+p.abstract {
+    margin:0px 25%;
+    text-align: justify;
+    text-shadow: 1px 1px 1px #000;
+}
+
+p.authors { 
+    text-align:center; 
+    color:#ffed8a;;
+}
+
+p.venue {
+    text-align: center;
+    color: gray;
+}
+
+.research hr {
+    border: 0;
+    height: 5px;
+    background-image: linear-gradient(to right, #3330, #3330, #ccc, #3330, #3330);
+    margin-top:50px;
+    margin-bottom:80px;
+}
+
+.research {
+    overflow: auto !important;
+}
+
+.research h1 {
+    font-size:4em;
+}
+
+/*
+--------------Credits CSS---------------------
+*/
+#credits { overflow:auto; }
+
+#credits h1 {
+    font-size:4em;
+    text-shadow: 2px 2px 2px #000000ad;
+}
+
+#credits h2 {
+    color: #43d9ff;
+    text-shadow: 2px 2px 2px #0000008a;
+    margin-top:60px;
+}
+
+#credits h3 {
+    text-align:center;
+    text-shadow: 1px 1px 1px #000000ad;
+    color:#ffed8a;
+}
+
 
 /*
 --------------Stats CSS---------------------

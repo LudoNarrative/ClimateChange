@@ -304,7 +304,7 @@ Todo:
         "id": "seminarBridge",
         "avatar" : "protagonist",
         "choiceLabel": "Open it up to discussion",
-        "content": "\"{ifStateCondition|concentration gte 5|Well that's enough talking from me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|concentration gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
+        "content": "\"{ifStateCondition|concentration gte 5|Well, that's enough talking from me.|Oh umm, I think I might be talking a bit too much.} Because this is not a lecture, {ifStateCondition|concentration gte 5|we should have a discussion about climate change.|umm, I guess we can try to have a discussion about climate change.} Does anyone want to start off with a question?\"",
         "effects": [
             "set bridgeFinished true",
             "set doneTalking true"
