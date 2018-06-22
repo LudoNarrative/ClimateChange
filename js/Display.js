@@ -1576,23 +1576,31 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		}
 
 		var linkText = "";
+		var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
+		var nextScene = State.get("scenes")[nextIndex];
+
 		if (id.substring(0,6) !== "intro:") {	//if we're not using the intro as an interstitial scene, start game...
 			Coordinator.startGame(id, true, true);		//start intro game
 			linkText = "Start Scene";
 		}
+		else if (nextScene == undefined) { linkText = "Start Sandbox Mode"; }
 		else { linkText = "Continue"; }
 
 		$("#gameContainer").css("visibility","hidden"); // hide the empty game container during intro or interstitial scene
 
+		var linkClass = "";
+		if (id.substring(0,6) == "intro:") { linkClass = "soloLink"; }		//if we don't have a game, set CSS class so "Continue" is centered
+
 		var begin = $('<h2/>', {
 			text: linkText,
 			id: "introLink",
+			class: linkClass,
 			click: function() {
 				if (id.substring(0,6) == "intro:") {	//if this is interstitial, clicking the link starts the next scene
 					//initGraphScreen(Coordinator, State, State.get("scenes"));					//reinitialize title screen (terrible)
 					//initTitleScreen(Coordinator, State, State.get("scenes"), State.get("scenes"));		//reinitialize title screen (terrible)
-					var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
-					var nextScene = State.get("scenes")[nextIndex];
+					//var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
+					//var nextScene = State.get("scenes")[nextIndex];
 					if (nextScene == undefined) {		//if there's no next scene, we're at the end, so go back to title
 						State.set("playthroughCompleted", true);
 						returnToGraphScreen();

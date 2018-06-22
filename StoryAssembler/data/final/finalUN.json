@@ -745,6 +745,7 @@ persuasion:
   {
     "id": "emmaReflection_bad3_t",
     "avatar": "UN2",
+    "choiceLabel" : "Continue",
     "content": "\"It’s too bad about your speech tonight,\" Kurt continues, \"but give me a call if you’re willing to set those <em>high</em> morals of yours down for a minute and join a team that’s doing real work.\" With that, he turns abruptly and takes his leave. You hurry after Mikkel, but it's too late; he's already gone. Nothing left to do now but return to your hotel and prepare for your flight back home.",
     "choices" : [
       {"gotoId" : "endDummy"}

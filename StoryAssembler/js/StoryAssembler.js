@@ -486,7 +486,7 @@ define(["Request", "Templates", "Want", "Wishlist", "Character"], function(Reque
 		if (typeof Display !== "undefined" && State.get("displayType") !== "editor") {		//if we're not running tests, display scene outro
 			if (!assemblyFailed) {
 				State.setPlaythroughData("end", []);	//record last node
-				Display.setSceneOutro("Chapter complete!");
+				Display.setSceneOutro("<p style='text-align:center'>Chapter complete!</p>");
 			}
 			else {
 				var outroText = Coordinator.loadNoPathFallback(State.get("currentScene"));
