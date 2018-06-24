@@ -1148,6 +1148,10 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			{
 				id : "finalDean",
 				text : "<p>The rest of the meeting was essentially different flavors of the same thing: Dean Smith trying to get you to do what he wanted. Either way, you ended up sticking it out in academia, and continuing until you became quite skilled at communicating different aspects of climate change!</p>"
+			},
+			{
+				id : "finalUN",
+				text : "<p>The rest of the day passed by in a blur – your mind always goes blank when there's a high-stakes presentation involved. Nevertheless, though, one thing is certain: you stuck it out and made a solid case for your work to one of the toughest audiences you'd ever encountered.</p>"
 			}
 		];
 
