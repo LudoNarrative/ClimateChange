@@ -767,7 +767,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 			characters: {
 				"protagonist": {name: "Emma", gender: "female"},
 				"UN1": {name: "Mikkel Retna", gender: "male"},
-				"UN2": {name: "Kurt Branegan", gender: "male"}
+				"UN2": {name: "Kurt Brannegan", gender: "male"}
 			},
 			wishlist: [
 				{ condition: "atUNMeeting eq true"},
@@ -780,8 +780,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "lostTrainOfThought eq true"},
 				{ condition: "callForLocalAction eq true"},
 				{ condition: "endingArgument eq true"},
-				{ condition: "emmaReflection eq true"},
-				{ condition: "inHallway eq true"}
+				{ condition: "emmaReflection eq true"}
 			],
 			dataFiles: [
 				"text!finalUN"
