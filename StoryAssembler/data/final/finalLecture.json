@@ -622,7 +622,7 @@ wishlist: [
       {
         "id" : "pessimisticResponse",
         "choiceLabel" : "Humans can never change.",
-        "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celcius, so...}\" <br/><br/>You stop abruptly, noticing {name|shyStudent}'s face crumple.",
+        "content" : "\"True, it's not looking good for us, sadly. {ifStateCondition|concentration lt 3|Humans are selfish and...and greedy creatures who won't change because we're too busy thinking about ourselves to realize this impacts us too!|Even if we magically stopped emitting greenhouse gases, the earth would still warm at least a degree Celsius, so...}\" <br/><br/>You stop abruptly, noticing {name|shyStudent}'s face crumple.",
         "effects" : [
           "decr optimism 1",
           "decr hope 1",

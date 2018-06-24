@@ -648,8 +648,8 @@ persuasion:
   {
     "id": "emmaReflection_med2_t",
     "avatar": "UN2",
-    "choiceLabel": "\"You almost convinced me, sweetheart,\" Kurt said.",
-    "content": "\"[TODO there's a small bug after this so I'm using the old text temporarily to keep the scene stable]<br><br>Don’t call me sweetheart, cupcake.\"<br>\"My apologies,\" Kurt pauses, deliberately, before speaking again, \"ma’am.\" He said with a smile.<br>\"I come from a land in time where my mama would have smacked me upside my head if I didn’t respect my elders.\"<br><em>Ohh... it’s on.</em> You think.<br>\"Your mother sounds like a smart lady, Kurt. I would’ve probably smacked you upside your head, too, if I had the chance.\" You say, returning Kurt’s smile.",
+    "choiceLabel": "Continue",
+    "content": "\"I thought you might like to know,\" Kurt says, \"that you <em>almost</em> convinced me in there. An admirable attempt, really.\"<br><br>He hands you a business card. \"I could use someone like you on my team,\" he continues. \"If you ever decide you're ready to move on from that dead-end public education stuff, be sure to give me a call.\"",
     "choices": [
       {"gotoId" : "emmaReflection_med3_t"},
     ],
@@ -663,7 +663,7 @@ persuasion:
     "id": "emmaReflection_med3_t",
     "avatar": "UN1",
     "choiceLabel": "Continue",
-    "content": "At that moment, Mikkel walks out from the conference room.<br>\"Mikkel,\" you bost! \"Just the man I wanted to see.\" You quickly turn your attention back to Kurt and exclaim \"it’s been a pleasure, but I have some real business to attend to.\" Kurt looks to where you are gesturing.<br><br>\"Senior Mikkel, eh?\" Kurt exclaims.<br><br>Mikkel makes his way to you and Kurt. He is very business in the way he presents himself.<br>\"Good evening, Emma. That was a lovely presentation tonight.\"",
+    "content": "Suddenly, out of the corner of your eye, you see Mikkel leaving the conference room. \"Thanks for the offer, Kurt,\" you say, \"but I don't think I'm ready to give up on the dead-end public education stuff just yet.\"<br><br>You make your way over to Mikkel, and he turns to greet you as you approach. \"Good evening, Emma. That was a lovely presentation tonight.\"",
     "choices": [
       {"gotoId" : "emmaReflection_med4_t"},
     ],
@@ -677,7 +677,7 @@ persuasion:
     "id": "emmaReflection_med4_t",
     "avatar": "UN1",
     "choiceLabel": "\"Thank you, Mikkel.\"",
-    "content": "\"That is very kind of you to say.\" You look at Mikkel and Kurt \"Yes, Emma, very good. It’s a shame you won’t be getting the money you requested.\"Emma looked at Kurt. As nice as it was to come back at Kurt’s smug sense of self, she simply looked at him in that moment. At that moment, she had not much else to say.\"Emma,\" Mikkel said. Emma’s eyes wavered to a place past Mikkel’s shoulders. \"Emma, look at me.\" Mikkel said again. You looked. \"Sometimes it takes more than one round to knock ‘em down.\"Emma began to slither into herself. Mikkel continued. \"Sometimes it takes a lifetime and even then you might not see the change that you want to see.\" You looked at Mikkel. Mikkel placed warm hand on your shoulder. \"And you know what? That’s okay.\" Emma swallowed the lump in her throat. \"You are doing the best you can and that’s all you can say.\"",
+    "content": "You exchange a few more pleasantries and try to turn the conversation to the specifics of your project, hoping to make good use of Mikkel's undivided attention while it lasts. But before long, his demeanor shifts. \"Well, I wish I could stay and chat,\" he remarks, \"but I've got a few more meetings lined up today...\"<br><br>And before you know it, a couple of handshakes and cordial goodbyes later, Mikkel has politely excused himself from both the conversation and the room.",
     "choices": [
       {"gotoId" : "emmaReflection_med5_t"},
     ],
@@ -689,9 +689,9 @@ persuasion:
   },
   {
     "id": "emmaReflection_med5_t",
-    "avatar": "UN1",
-    "choiceLabel": "\"Thank you, Mikkel.\"",
-    "content": "Kurt turned away and began to walk with the crowd.<br>\"And sometimes you need a drink!\" He said, turning back to Emma and Mikkel as he left, laughing.<br>You studied the pattern on the floor.<br>\"And sometimes you’ll meet someone like that, that’s just miserable for no good reason. And that’s okay, too.\" Mikkel sounded like he’d given this speech before; You took it nonetheless.\"It’ll get there… Someday.\" You say.<br>\"Yes it will. I’ve got to run. It was nice speaking with you.\"<br>Mikkel joined the crowd as they all went their separate ways. You, however, lingered.<br><em>Maybe I’ll have that drink.</em> You think to yourself. <em>A toast to my presentation well done.</em>",
+    "avatar": "protagonist",
+    "choiceLabel": "Continue",
+    "content": "<em>Oh well</em>, you think to yourself. That didn't go <em>well,</em> exactly, but it could've been much worse. And now that your foot's in the door, you might even be invited back to present another time.<br><br>Maybe you'll treat yourself to a drink in the hotel bar before your flight back home. Yeah, a drink sounds nice right about now...",
     "choices" : [
       {"gotoId" : "endDummy"}
     ],
@@ -764,7 +764,8 @@ persuasion:
     "content" : " ",
     "conditions" : [],
     "effects": [
-      "set emmaReflection true"
+      "set emmaReflection true",
+      "set lostTrainOfThought true"
     ]
   }
 ]

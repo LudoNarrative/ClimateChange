@@ -190,7 +190,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			}]
 		},
 		"3_low_alt" : {
-			"text" : "<h3>UN Scene-Low</h3>",
+			"text" : "<h3>UN Scene-Low</h3><p>In what feels like the culmination of all your efforts to date, you've been invited to give a presentation on your work in front of the UN Committee on Climate Change. Can you convince the key delegates, argumentative though they may be, that your efforts at expanding and improving local education programs will be impactful enough to merit funding?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalUN",
 			"climateFacts" : [{
@@ -199,7 +199,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			}]
 		},
 		"4_low" : {
-			"text" : "{ifStateCondition|playthroughCompleted eq true|<h3>Sandbox Mode Unlocked</h3><p>Now that you've completed a playthrough, you can select any of the scenes on any temperature timeline to try them out! Try different versions of scenes by clicking the links in the descriptions!</p>|<h3>Epilogue-Low</h3>}",
+			"text" : "<h3>Epilogue-Low</h3>",
 			"artAccentSrc" : "",
 			"beginScene" : "intro:theEnd",
 			"climateFacts" : [{
@@ -248,7 +248,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"3_medium_alt" : {
-			"text" : "<h3>UN Scene-Medium</h3>",
+			"text" : "<h3>UN Scene-Medium</h3><p>In what feels like the culmination of all your efforts to date, you've been invited to give a presentation on your work in front of the UN Committee on Climate Change. Can you convince the key delegates, argumentative though they may be, that your efforts at expanding and improving local education programs will be impactful enough to merit funding?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalUN",
 			"climateFacts" : [{
@@ -257,7 +257,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			}]
 		},
 		"4_medium" : {
-			"text" : "{ifStateCondition|playthroughCompleted eq true|<h3>Sandbox Mode Unlocked</h3><p>Now that you've completed a playthrough, you can select any of the scenes on any temperature timeline to try them out! Try different versions of scenes by clicking the links in the descriptions!</p>|<h3>Epilogue-Medium</h3>}",
+			"text" : "<h3>Epilogue-Medium</h3>",
 			"artAccentSrc" : "",
 			"beginScene" : "intro:theEnd",
 			"climateFacts" : [{
@@ -306,7 +306,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"3_high_alt" : {
-			"text" : "{ifStateCondition|playthroughCompleted eq true|<h3>Sandbox Mode Unlocked</h3><p>Now that you've completed a playthrough, you can select any of the scenes on any temperature timeline to try them out! Try different versions of scenes by clicking the links in the descriptions!</p>|<h3>UN Scene-High</h3>}",
+			"text" : "<h3>UN Scene-High</h3><p>In what feels like the culmination of all your efforts to date, you've been invited to give a presentation on your work in front of the UN Committee on Climate Change. Can you convince the key delegates, argumentative though they may be, that your efforts at expanding and improving local education programs will be impactful enough to merit funding?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalUN",
 			"climateFacts" : [{
@@ -390,8 +390,6 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		
 		else { 
 			State.set("introCompleted", true);
-
-			$(".titleLink").hide();			//hide return link
 
 			if (timestep == 3 && State.get("lifelongAcademic") == true) {
 				startGraphScene(_Coordinator, content[timestep + "_" + level + "_alt"].beginScene, true); 
@@ -1015,10 +1013,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 		$("#totalGameContainer").hide();
 		$('body').css("background-image", "none");
 		$('body').css("background-color", "black");
-
-		$(".titleLink").show();
 		$("#graphContainer").show();
-		
 		var nextSceneIndex = State.get("sceneIndex")+1;
 		if (nextSceneIndex > State.get("scenes").length || State.get("sceneIndex") == undefined) {
 			startSandboxMode();
@@ -1032,9 +1027,6 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 	}
 
 	var startSandboxMode = function() {
-
-		circleClicked(Coordinator, State.get("sceneIndex"), State.get("sceneTimeline"), null);
-
 		$("#graphClickBlocker").hide();
 		$("svg circle").show();
 
@@ -1591,7 +1583,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			Coordinator.startGame(id, true, true);		//start intro game
 			linkText = "Start Scene";
 		}
-		else if (nextScene == "intro:theEnd") { linkText = "Start Sandbox Mode"; }
+		else if (nextScene == undefined) { linkText = "Start Sandbox Mode"; }
 		else { linkText = "Continue"; }
 
 		$("#gameContainer").css("visibility","hidden"); // hide the empty game container during intro or interstitial scene
@@ -1607,8 +1599,8 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				if (id.substring(0,6) == "intro:") {	//if this is interstitial, clicking the link starts the next scene
 					//initGraphScreen(Coordinator, State, State.get("scenes"));					//reinitialize title screen (terrible)
 					//initTitleScreen(Coordinator, State, State.get("scenes"), State.get("scenes"));		//reinitialize title screen (terrible)
-					nextIndex = Coordinator.getNextScene(State.get("currentScene"));
-					nextScene = State.get("scenes")[nextIndex];
+					//var nextIndex = Coordinator.getNextScene(State.get("currentScene"));
+					//var nextScene = State.get("scenes")[nextIndex];
 					if (nextScene == undefined) {		//if there's no next scene, we're at the end, so go back to title
 						State.set("playthroughCompleted", true);
 						returnToGraphScreen();
