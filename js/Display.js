@@ -190,7 +190,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 			}]
 		},
 		"3_low_alt" : {
-			"text" : "<h3>UN Scene-Low</h3>",
+			"text" : "<h3>UN Scene-Low</h3><p>In what feels like the culmination of all your efforts to date, you've been invited to give a presentation on your work in front of the UN Committee on Climate Change. Can you convince the key delegates, argumentative though they may be, that your efforts at expanding and improving local education programs will be impactful enough to merit funding?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalUN",
 			"climateFacts" : [{
@@ -248,7 +248,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"3_medium_alt" : {
-			"text" : "<h3>UN Scene-Medium</h3>",
+			"text" : "<h3>UN Scene-Medium</h3><p>In what feels like the culmination of all your efforts to date, you've been invited to give a presentation on your work in front of the UN Committee on Climate Change. Can you convince the key delegates, argumentative though they may be, that your efforts at expanding and improving local education programs will be impactful enough to merit funding?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalUN",
 			"climateFacts" : [{
@@ -306,7 +306,7 @@ define(["Game", "Templates", "jsonEditor", "HealthBar", "text!avatars", "jQuery"
 				}]
 		},
 		"3_high_alt" : {
-			"text" : "<h3>UN Scene-High</h3>",
+			"text" : "<h3>UN Scene-High</h3><p>In what feels like the culmination of all your efforts to date, you've been invited to give a presentation on your work in front of the UN Committee on Climate Change. Can you convince the key delegates, argumentative though they may be, that your efforts at expanding and improving local education programs will be impactful enough to merit funding?</p>",
 			"artAccentSrc" : "",
 			"beginScene" : "finalUN",
 			"climateFacts" : [{
