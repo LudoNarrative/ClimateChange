@@ -764,7 +764,8 @@ persuasion:
     "content" : " ",
     "conditions" : [],
     "effects": [
-      "set emmaReflection true"
+      "set emmaReflection true",
+      "set lostTrainOfThought true"
     ]
   }
 ]
