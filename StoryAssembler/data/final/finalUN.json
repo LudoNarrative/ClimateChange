@@ -115,7 +115,7 @@
   ],
   "conditions" : [
     "representingResearchGroup eq true",
-    "charactersIntroduced lt 2"
+    "charactersIntroduced lt 4"
   ],
   "repeatable" : "true"
 },
@@ -124,6 +124,7 @@
     "id": "KurtI",
     "avatar": "UN2",
     "choiceLabel" : "Look for Kurt Brannegan",
+    "unavailableChoiceLabel" : "Already looked for Kurt Brannegan",
     "content": "You've never met Kurt, but you know him by reputation: a perennial skeptic with an overbearing, brash personality and a notoriously intense style of questioning that sometimes borders on interrogation. If you want to convince him to get behind your proposal, you've got your work cut out for you.",
     "choices" : [
       {"gotoId" : "lowConfResearchKurtI"},
@@ -157,6 +158,7 @@
     "id": "MikkelI",
     "avatar": "UN1",
     "choiceLabel" : "Look for Mikkel Retna",
+    "unavailableChoiceLabel" : "Already looked for Mikkel Retna",
     "content": "You've met Mikkel in passing a couple times before, and always come away from your conversations with the impression that he's someone you could work with. A good thing, too: despite his outwardly soft-spoken demeanor, he's said to hold a tremendous amount of sway over the other delegates. Convincing him to back your plan might mean the difference between victory and defeat.",
     "choices" : [
       {"gotoId" : "lowConfResearchMikkelI"},
@@ -196,7 +198,7 @@
     ],
     "conditions": [
       "looksOverCommittee eq true",
-      "charactersIntroduced gte 2"
+      "charactersIntroduced gte 4"
     ],
     "effects": [
       "set introducesResearch true"
@@ -298,17 +300,18 @@
     "content": "Glancing down at your notecards, you pick from a few prepared facts to get them on your side.",
     "choices": [
       {
-        "condition": "factsPresented incr 1"
+        "gotoId": "unpersuasiveFact1"
       },
       {
-        "condition": "factsPresented incr 1"
+        "gotoId": "neutralFact1"
       },
       {
-        "condition": "factsPresented incr 1"
+        "gotoId": "persuasiveFact1"
       }
     ],
     "conditions": [
-      "introducesResearch eq true"
+      "introducesResearch eq true",
+      "factsPresented lt 4"
     ],
     "effects": [
       "set presentFacts true",
@@ -572,6 +575,9 @@ persuasion:
     "choices": [
       {"gotoId" : "emmaReflection_good2_t"},
     ],
+    "effects": [
+      "set endRoute good"
+    ],
     "conditions" : [
       "confidence gte 8",
       "emmaReflection eq true"
@@ -586,8 +592,7 @@ persuasion:
       {"gotoId" : "emmaReflection_good3_t"},
     ],
     "conditions" : [
-      "confidence gte 8",
-      "emmaReflection eq true"
+      "endRoute eq good"
     ]
   },
   {
@@ -599,8 +604,7 @@ persuasion:
       {"gotoId" : "emmaReflection_good4_t"},
     ],
     "conditions" : [
-      "confidence gte 8",
-      "emmaReflection eq true"
+      "endRoute eq good"
     ]
   },
   {
@@ -612,8 +616,7 @@ persuasion:
       {"gotoId" : "emmaReflection_good5_t"},
     ],
     "conditions" : [
-      "confidence gte 8",
-      "emmaReflection eq true"
+      "endRoute eq good"
     ]
   },
   {
@@ -624,20 +627,24 @@ persuasion:
     "choices" : [
       {"gotoId" : "endDummy"}
     ],
+    "effects" : [
+      "set canEndScene true"
+    ],
     "conditions" : [
-      "confidence gte 8",
-      "emmaReflection eq true"
+      "endRoute eq good"
     ]
   },
 
 //MED//
-// TODO the "middle" route still needs to be rewritten
   {
     "id": "emmaReflection_med1_t",
     "avatar": "UN2",
     "content": "You’re waiting for Mikkel. You know he likes to mingle, so he’ll probably be one of the last ones out. But then, Kurt glances in your direction and catches your eye. You're not especially enthusiastic about talking to him right now, but you might as well get it out of the way.<br><br>He walks straight into the outpouring of people to greet you. \"Emma,\" he says. \"I’ve done my research on you.\"<br><br>\"Kurt,\" you say, hand outstretched. \"I’ve also done my research.\"<br><br>He takes your hand and grips it firmly; you grip back, just as firmly.",
     "choices": [
       {"gotoId" : "emmaReflection_med2_t"},
+    ],
+    "effects": [
+      "set endRoute med"
     ],
     "conditions" : [
       "confidence gte 4",
@@ -654,9 +661,7 @@ persuasion:
       {"gotoId" : "emmaReflection_med3_t"},
     ],
     "conditions" : [
-      "confidence gte 4",
-      "confidence lte 7",
-      "emmaReflection eq true"
+      "endRoute eq med"
     ]
   },
   {
@@ -668,9 +673,7 @@ persuasion:
       {"gotoId" : "emmaReflection_med4_t"},
     ],
     "conditions" : [
-      "confidence gte 4",
-      "confidence lte 7",
-      "emmaReflection eq true"
+      "endRoute eq med"
     ]
   },
   {
@@ -682,9 +685,7 @@ persuasion:
       {"gotoId" : "emmaReflection_med5_t"},
     ],
     "conditions" : [
-      "confidence gte 4",
-      "confidence lte 7",
-      "emmaReflection eq true"
+      "endRoute eq med"
     ]
   },
   {
@@ -695,10 +696,11 @@ persuasion:
     "choices" : [
       {"gotoId" : "endDummy"}
     ],
+    "effects" : [
+      "set canEndScene true"
+    ],
     "conditions" : [
-      "confidence gte 4",
-      "confidence lte 7",
-      "emmaReflection eq true"
+      "endRoute eq med"
     ]
   },
 
@@ -710,6 +712,9 @@ persuasion:
     "choices": [
       {"gotoId" : "emmaReflection_bad2_t"},
       {"gotoId" : "emmaReflection_bad2_tALT"},
+    ],
+    "effects": [
+      "set endRoute bad"
     ],
     "conditions" : [
       "confidence lte 3",
@@ -725,8 +730,7 @@ persuasion:
       {"gotoId" : "emmaReflection_bad3_t"},
     ],
     "conditions" : [
-      "confidence lte 3",
-      "endingArgument eq true"
+      "endRoute eq bad"
     ]
   },
   {
@@ -738,8 +742,7 @@ persuasion:
       {"gotoId" : "emmaReflection_bad3_t"},
     ],
     "conditions" : [
-      "confidence lte 3",
-      "endingArgument eq true"
+      "endRoute eq bad"
     ]
   },
   {
@@ -750,9 +753,11 @@ persuasion:
     "choices" : [
       {"gotoId" : "endDummy"}
     ],
+    "effects" : [
+      "set canEndScene true"
+    ],
     "conditions" : [
-      "confidence lte 3",
-      "endingArgument eq true"
+      "endRoute eq bad"
     ]
   },
 
@@ -762,7 +767,7 @@ persuasion:
     "avatar" : "protagonist",
     "choiceLabel" : "Start next scene.",
     "content" : " ",
-    "conditions" : [],
+    "conditions" : ["canEndScene eq true"],
     "effects": [
       "set emmaReflection true",
       "set lostTrainOfThought true"

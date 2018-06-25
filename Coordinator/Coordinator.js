@@ -780,7 +780,8 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				{ condition: "lostTrainOfThought eq true"},
 				{ condition: "callForLocalAction eq true"},
 				{ condition: "endingArgument eq true"},
-				{ condition: "emmaReflection eq true"}
+				{ condition: "emmaReflection eq true"},
+				{ condition: "canEndScene eq true"}
 			],
 			dataFiles: [
 				"text!finalUN"
@@ -796,7 +797,7 @@ define(["Display", "StoryDisplay", "State", "ChunkLibrary", "Wishlist", "StoryAs
 				"set callForLocalAction false",
 				"set endingArgument false",
 				"set emmaReflection false",
-				"set inHallway false",
+				"set canEndScene false",
 
 				"set academicEnthusiasm 0",			//global stat
 				"set curiosity 5",	//global stat
