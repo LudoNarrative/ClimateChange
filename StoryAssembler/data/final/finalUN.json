@@ -575,6 +575,9 @@ persuasion:
     "choices": [
       {"gotoId" : "emmaReflection_good2_t"},
     ],
+    "effects": [
+      "set endRoute good"
+    ],
     "conditions" : [
       "confidence gte 8",
       "emmaReflection eq true"
@@ -589,8 +592,7 @@ persuasion:
       {"gotoId" : "emmaReflection_good3_t"},
     ],
     "conditions" : [
-      "confidence gte 8",
-      "emmaReflection eq true"
+      "endRoute eq good"
     ]
   },
   {
@@ -602,8 +604,7 @@ persuasion:
       {"gotoId" : "emmaReflection_good4_t"},
     ],
     "conditions" : [
-      "confidence gte 8",
-      "emmaReflection eq true"
+      "endRoute eq good"
     ]
   },
   {
@@ -615,8 +616,7 @@ persuasion:
       {"gotoId" : "emmaReflection_good5_t"},
     ],
     "conditions" : [
-      "confidence gte 8",
-      "emmaReflection eq true"
+      "endRoute eq good"
     ]
   },
   {
@@ -631,19 +631,20 @@ persuasion:
       "set canEndScene true"
     ],
     "conditions" : [
-      "confidence gte 8",
-      "emmaReflection eq true"
+      "endRoute eq good"
     ]
   },
 
 //MED//
-// TODO the "middle" route still needs to be rewritten
   {
     "id": "emmaReflection_med1_t",
     "avatar": "UN2",
     "content": "You’re waiting for Mikkel. You know he likes to mingle, so he’ll probably be one of the last ones out. But then, Kurt glances in your direction and catches your eye. You're not especially enthusiastic about talking to him right now, but you might as well get it out of the way.<br><br>He walks straight into the outpouring of people to greet you. \"Emma,\" he says. \"I’ve done my research on you.\"<br><br>\"Kurt,\" you say, hand outstretched. \"I’ve also done my research.\"<br><br>He takes your hand and grips it firmly; you grip back, just as firmly.",
     "choices": [
       {"gotoId" : "emmaReflection_med2_t"},
+    ],
+    "effects": [
+      "set endRoute med"
     ],
     "conditions" : [
       "confidence gte 4",
@@ -660,9 +661,7 @@ persuasion:
       {"gotoId" : "emmaReflection_med3_t"},
     ],
     "conditions" : [
-      "confidence gte 4",
-      "confidence lte 7",
-      "emmaReflection eq true"
+      "endRoute eq med"
     ]
   },
   {
@@ -674,9 +673,7 @@ persuasion:
       {"gotoId" : "emmaReflection_med4_t"},
     ],
     "conditions" : [
-      "confidence gte 4",
-      "confidence lte 7",
-      "emmaReflection eq true"
+      "endRoute eq med"
     ]
   },
   {
@@ -688,9 +685,7 @@ persuasion:
       {"gotoId" : "emmaReflection_med5_t"},
     ],
     "conditions" : [
-      "confidence gte 4",
-      "confidence lte 7",
-      "emmaReflection eq true"
+      "endRoute eq med"
     ]
   },
   {
@@ -705,9 +700,7 @@ persuasion:
       "set canEndScene true"
     ],
     "conditions" : [
-      "confidence gte 4",
-      "confidence lte 7",
-      "emmaReflection eq true"
+      "endRoute eq med"
     ]
   },
 
@@ -719,6 +712,9 @@ persuasion:
     "choices": [
       {"gotoId" : "emmaReflection_bad2_t"},
       {"gotoId" : "emmaReflection_bad2_tALT"},
+    ],
+    "effects": [
+      "set endRoute bad"
     ],
     "conditions" : [
       "confidence lte 3",
@@ -734,8 +730,7 @@ persuasion:
       {"gotoId" : "emmaReflection_bad3_t"},
     ],
     "conditions" : [
-      "confidence lte 3",
-      "endingArgument eq true"
+      "endRoute eq bad"
     ]
   },
   {
@@ -747,8 +742,7 @@ persuasion:
       {"gotoId" : "emmaReflection_bad3_t"},
     ],
     "conditions" : [
-      "confidence lte 3",
-      "endingArgument eq true"
+      "endRoute eq bad"
     ]
   },
   {
@@ -763,8 +757,7 @@ persuasion:
       "set canEndScene true"
     ],
     "conditions" : [
-      "confidence lte 3",
-      "endingArgument eq true"
+      "endRoute eq bad"
     ]
   },
 
