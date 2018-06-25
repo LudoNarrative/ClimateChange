@@ -241,10 +241,10 @@
       ]
     },
 
-  { // TODO rewrite this whole beat
+  {
     "id": "checkWithDisagreerShellyi",
     "avatar": "friend2",
-    "content": "{name|friend2} has begun fidgeting with utensils on the table, setting up a wall of salt and pepper shakers. It looks like she might be feeling defensive. Maybe you should check in on her.",
+    "content": "You look over at {name|friend2} and notice that she's fidgeting absentmindedly with her utensils on the table. It looks like she might be feeling defensive. Maybe you should check in on her.",
     "choices" : [
       {"gotoId": "maybeIshouldn'tShelli"},
       {"gotoId": "positiveShelli"},
@@ -262,20 +262,20 @@
       "id": "maybeIshouldn'tShelli",
       "avatar": "friend2",
       "choiceLabel" : "She's fine. She can deal with it.",
-      "content" : "{name|friend2} finishes her dinner table structure and her eyes seem to glaze over as she scans it. It looks like she might be ready to leave."
+      "content" : "{name|friend2} looks down at her plate and sighs, her eyes seeming to glaze over as she scans it. It looks like she might be ready to leave."
     },
-    { // TODO Max how has this bit survived so long do not let this ship
+    {
       "id": "positiveShelli",
       "avatar": "friend2",
-      "choiceLabel" : "\"You setting up some sort of barrier around your plate there?\"",
-      "content" : "\"I'm defending my dinner from oncoming vegetable hordes.\" She winks at you and turns her attention back to the conversation.",
+      "choiceLabel" : "\"You okay there, {name|friend2}?\"",
+      "content" : "\"Huh? Oh, yeah – my mind's just wandering a bit. It's been a long day – you know how it is.\" She smiles at you and turns her attention back to the conversation.",
       "effects" : ["decr tension 1"]
     },
     {
       "id": "negativeShelli",
       "avatar": "friend2",
       "choiceLabel" : "\"So {name|friend2}, how has your volunteering been going?\"",
-      "content" : "\"Ehh, fine I guess. You probably don't want to hear about it though.\" She returns to her construction.",
+      "content" : "\"Ehh, fine I guess. You probably don't want to hear about it though.\" She goes back to staring disinterestedly at her plate.",
       "effects" : ["incr tension 1"]
     },
   {
